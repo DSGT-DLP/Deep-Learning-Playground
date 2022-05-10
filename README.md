@@ -3,3 +3,6 @@ Web Application where people new to Deep Learning can input a dataset and toy ar
 
 ## Conda Env Setup
 `conda env create -f environment.yml` in the `/conda` directory
+
+## Backend Infra
+`python driver.py` in the `/backend` directory

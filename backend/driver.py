@@ -1,13 +1,12 @@
 import pandas as pd
 from loss import LossFunctions
 from optimizer import get_optimizer
-from parser import parse_user_architecture
+from input_parser import parse_user_architecture
 from trainer import train_model
 from utils import get_dataloaders
 from model import DLModel
 import torch
 import torch.nn as nn
-import parser
 from torch.autograd import Variable
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split

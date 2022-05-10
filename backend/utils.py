@@ -1,9 +1,9 @@
 from torch.utils.data import TensorDataset, DataLoader
-import matplotlib.pyplot as plt 
+
 
 def get_dataloaders(X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size):
     """
-    Helper function to get Dataloaders for X_train, y_train, X_tes, y_test
+    Helper function to get Dataloaders for X_train, y_train, X_test, y_test
     Args:
         X_train_tensor (torch.Tensor)
         y_train_tensor (torch.Tensor)

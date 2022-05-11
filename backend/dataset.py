@@ -1,6 +1,7 @@
 import pandas as pd
 import urllib.request as request
 import csv
+import traceback
 from constants import CSV_FILE_NAME
 
 def read_dataset(url):
@@ -10,23 +11,35 @@ def read_dataset(url):
     Args:
         url (str): URL to dataset
     """
-    r = request.urlopen(url).read().decode('utf8').split("\n")
-    reader = csv.reader(r)
-    with open(CSV_FILE_NAME, mode="w") as f:
-        for line in reader:
-            print(f"line: {line}")
-            f.write(str(line))
+    try:
+        r = request.urlopen(url).read().decode('utf8').split("\n")
+        reader = csv.reader(r)
+        with open(CSV_FILE_NAME, mode="w", newline="") as f:
+            csvwriter = csv.writer(f)
+            for line in reader:
+                csvwriter.writerow(line)
+    except Exception:
+        traceback.print_exc()
 
-def read_csv_file(file_path):
+def read_local_csv_file(file_path):
     """
-    Given a file path or the "uploaded CSV file", read it in pandas dataframe
+    Given a local file path or the "uploaded CSV file", read it in pandas dataframe
 
     Args:
         file_path (str): file path
     
-    Returns:
-        pd.DataFrame
     """
-    return pd.read_csv(file_path)
+    try:
+        with open(file_path, mode="r") as data_file:
+            with open(CSV_FILE_NAME, mode="w", newline="") as f:
+                csvwriter = csv.writer(f)
+                for line in data_file:
+                    csvwriter.writerow(line)
+    except Exception:
+        traceback.print_exc()
+        
+    
 
-read_dataset("https://raw.githubusercontent.com/karkir0003/dummy/main/job.csv")
+if __name__ == "__main__":
+    read_dataset("https://raw.githubusercontent.com/karkir0003/dummy/main/job.csv")
+    read_local_csv_file("test.csv")

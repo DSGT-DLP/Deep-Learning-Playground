@@ -15,4 +15,5 @@ class DLModel(nn.Module):
         self.model = nn.Sequential(*layer_list)
     
     def forward(self, x: torch.Tensor):
-        return self.model(x) #apply model on input x
+        pred = self.model(x) #apply model on input x
+        return pred

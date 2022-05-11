@@ -7,5 +7,7 @@ class LossFunctions(Enum):
     L1LOSS = nn.L1Loss()
     MSELOSS = nn.MSELoss()
     BCELOSS = nn.BCELoss()
-    CELOSS = nn.CrossEntropyLoss() 
+    CELOSS = nn.CrossEntropyLoss(reduction="mean") 
     
+    def get_loss_obj(self):
+        return self.value

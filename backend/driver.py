@@ -12,13 +12,14 @@ from torch.autograd import Variable
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
-def drive(user_arch, criterion, problem_type, target=None, default=False, test_size=0.2, epochs=5, shuffle=True):
+def drive(user_arch, criterion, optimizer_name, problem_type, target=None, default=False, test_size=0.2, epochs=5, shuffle=True):
     """
     Driver function/entrypoint into backend
 
     Args:
         user_arch (list): list that contains user defined deep learning architecture
         criterion (str): What loss function to use
+        optimizer (str): What optimizer does the user wants to use (Adam or SGD for now, but more support in later iterations)
         problem type (str): "classification" or "regression" problem
         target (str): name of target column
         default (bool, optional): use the iris dataset or not. Defaults to False.
@@ -59,7 +60,7 @@ def drive(user_arch, criterion, problem_type, target=None, default=False, test_s
     #Build the Deep Learning model that the user wants
     model = DLModel(parse_user_architecture(user_arch))
     print(f"model: {model}")
-    optimizer = get_optimizer(model, "sgd", learning_rate=0.05)
+    optimizer = get_optimizer(model, optimizer_name=optimizer_name, learning_rate=0.05)
     criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
     print(f"loss criterion: {criterion}")
     train_loader, test_loader = get_dataloaders(X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=20)
@@ -68,7 +69,7 @@ def drive(user_arch, criterion, problem_type, target=None, default=False, test_s
     print(f"test loss: {test_loss}")
 
 if __name__ == "__main__":
-    drive(["nn.Linear(4, 10)", "nn.Linear(10, 3)"], "CELOSS", problem_type="classification", default=True, epochs=10)
+    drive(["nn.Linear(4, 10)", "nn.Linear(10, 3)"], "CELOSS", "SGD", problem_type="classification", default=True, epochs=10)
     
     
     

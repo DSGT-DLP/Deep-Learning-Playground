@@ -1,14 +1,12 @@
 import pandas as pd
+
+from utils import *
 from constants import CSV_FILE_NAME
 from loss import LossFunctions
 from optimizer import get_optimizer
 from input_parser import parse_user_architecture
 from trainer import train_model
-from utils import get_dataloaders
 from model import DLModel
-import torch
-import torch.nn as nn
-from torch.autograd import Variable
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
@@ -46,15 +44,7 @@ def drive(user_arch, criterion, optimizer_name, problem_type, target=None, defau
     
     #Convert to tensor
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=0, shuffle=shuffle)
-    X_train_tensor = Variable(torch.Tensor(X_train.to_numpy()))
-    y_train_tensor = Variable(torch.Tensor(y_train.to_numpy()))
-    X_train_tensor = torch.reshape(X_train_tensor, (X_train_tensor.size()[0], 1, X_train_tensor.size()[1]))
-    y_train_tensor = torch.reshape(y_train_tensor, (y_train_tensor.size()[0], 1))
-    
-    X_test_tensor = Variable(torch.Tensor(X_test.to_numpy()))
-    y_test_tensor = Variable(torch.Tensor(y_test.to_numpy()))
-    X_test_tensor = torch.reshape(X_test_tensor, (X_test_tensor.size()[0], 1, X_test_tensor.size()[1]))
-    y_test_tensor = torch.reshape(y_test_tensor, (y_test_tensor.size()[0], 1))
+    X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor = get_tensors(X_train, X_test, y_train, y_test)
     
     
     #Build the Deep Learning model that the user wants

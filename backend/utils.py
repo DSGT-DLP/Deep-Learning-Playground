@@ -1,9 +1,15 @@
 import torch
-
+from enum import Enum
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
 
-
+class ProblemType(Enum):
+    #Are we solving a Classification or Regression problem
+    CLASSIFICATION = "CLASSIFICATION"
+    REGRESSION = "REGRESSION"
+    
+    def get_problem_obj(self):
+        return self.value
 
 def get_tensors(X_train, X_test, y_train, y_test):
     """

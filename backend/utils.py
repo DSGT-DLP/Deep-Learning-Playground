@@ -1,4 +1,6 @@
+from constants import LOSS_VIZ
 import torch
+import matplotlib.pyplot as plt
 from enum import Enum
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
@@ -35,6 +37,8 @@ def get_tensors(X_train, X_test, y_train, y_test):
     X_test_tensor = torch.reshape(X_test_tensor, (X_test_tensor.size()[0], 1, X_test_tensor.size()[1]))
     y_test_tensor = torch.reshape(y_test_tensor, (y_test_tensor.size()[0], 1))
     
+    X_train_tensor.requires_grad_(True)
+    X_test_tensor.requires_grad_(True)
     return X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor
 
 def get_dataloaders(X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size):
@@ -52,3 +56,22 @@ def get_dataloaders(X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor
     train_loader = DataLoader(train, batch_size=batch_size, shuffle=False, drop_last=True)
     test_loader = DataLoader(test, batch_size=batch_size, shuffle=False, drop_last=True)
     return train_loader, test_loader 
+
+def generate_loss_plot(train_loss, test_loss):
+    """
+    Given train/test loss from the training phase, plot the loss in a matplotlib plot
+
+    Args:
+        train_loss (list): train loss per epoch
+        test_loss (list): test loss per epoch
+    """
+    assert (len(train_loss) == len(test_loss))
+    x_axis = [i for i in range(1, len(train_loss) + 1)]
+    plt.scatter(x_axis, train_loss, c="r", label="train loss")
+    plt.scatter(x_axis, test_loss, c="b", label="test loss")
+    plt.legend()
+    plt.title("Train vs. Test loss for your Deep Learning Model")
+    plt.xlabel("Epoch Number")
+    plt.ylabel("Loss")
+    plt.savefig(LOSS_VIZ)
+    

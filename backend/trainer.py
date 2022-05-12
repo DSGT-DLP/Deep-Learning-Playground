@@ -91,6 +91,7 @@ def train_regression_model(model, train_loader, test_loader, optimizer, criterio
             batch_loss.append(loss_test.detach().numpy())
         test_loss.append(np.mean(batch_loss))
         print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
+    
     return train_loss, test_loss
 
 def train_model(model, train_loader, test_loader, optimizer, criterion, epochs, problem_type):
@@ -112,8 +113,8 @@ def train_model(model, train_loader, test_loader, optimizer, criterion, epochs, 
             
 def get_predictions(model: nn.Module, test_loader):
     """
-    Given a trained torch model and a test loader, get the predictions vs. actual value
-    (this function will also undo the scaler transform through inverse_transform())
+    Given a trained torch model and a test loader, get predictions vs. ground truth
+    
     Args:
         model (nn.Module): trained torch model
         test_loader (torch.DataLoader): 
@@ -127,5 +128,8 @@ def get_predictions(model: nn.Module, test_loader):
             yhat = model(input)
             predictions.append(yhat.detach().numpy().ravel())
             ground_truth_values.append(labels.detach().numpy().ravel())
-        
-    return np.array(predictions), np.array(ground_truth_values)
+    
+    prediction_tensor = torch.from_numpy(np.array(predictions).T)
+    ground_truth_tensor = torch.from_numpy(np.array(ground_truth_values).T)
+    
+    return prediction_tensor, ground_truth_tensor

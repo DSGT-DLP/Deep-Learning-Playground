@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { COLORS } from "./constants";
-import { BackgroundLayout, DnD, Layer, RectContainer } from "./components";
+import { BackgroundLayout, DnD, AddedLayer, RectContainer } from "./components";
 
 const Home = (props) => {
   return (
@@ -10,8 +10,8 @@ const Home = (props) => {
 
       <BackgroundLayout>
         <RectContainer style={{backgroundColor: COLORS.input}} />
-        <Layer />
-        <Layer />
+        <AddedLayer />
+        <AddedLayer />
       </BackgroundLayout>
 
       <DnD />

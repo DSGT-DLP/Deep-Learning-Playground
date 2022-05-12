@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../constants";
 
-const Layer = (props) => {
+const AddedLayer = (props) => {
   return (
     <RectContainer style={{ backgroundColor: COLORS.layer }}>
       <p style={{ ...GENERAL_STYLES.p, color: COLORS.white, fontSize: 30 }}>
@@ -13,6 +13,6 @@ const Layer = (props) => {
   );
 };
 
-Layer.propTypes = {};
+AddedLayer.propTypes = {};
 
-export default Layer;
+export default AddedLayer;

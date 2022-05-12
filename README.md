@@ -6,3 +6,11 @@ Web Application where people new to Deep Learning can input a dataset and toy ar
 
 ## Backend Infra
 `python driver.py` in the `/backend` directory
+
+## Frontend Startup
+To start the development server, after installing nodeJS v16+, run the following commands:
+```
+cd frontend\playground-frontend
+npm install
+npm start
+```

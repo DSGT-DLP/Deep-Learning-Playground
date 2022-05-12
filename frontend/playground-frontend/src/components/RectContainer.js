@@ -21,6 +21,7 @@ const styles = {
     height: 50,
     padding: 20,
     marginRight: 10,
+    border: `5px solid transparent`,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

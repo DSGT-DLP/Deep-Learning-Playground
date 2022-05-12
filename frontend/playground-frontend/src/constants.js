@@ -30,3 +30,7 @@ export const GENERAL_STYLES = {
     fontWeight: "bold",
   },
 };
+
+export const ITEM_TYPES = {
+  NEW_LAYER: "new_layer",
+};

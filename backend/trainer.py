@@ -1,3 +1,4 @@
+from utils import ProblemType
 import torch #pytorch
 import torch.nn as nn
 import matplotlib.pyplot as plt
@@ -41,7 +42,8 @@ def train_classification_model(model, train_loader, test_loader, optimizer, crit
             loss.backward() #backpropagation
             optimizer.step() #adjust optimizer weights
             batch_loss.append(loss.detach().numpy())
-        train_loss.append(np.mean(batch_loss))
+        mean_train_loss = np.mean(batch_loss)
+        train_loss.append(mean_train_loss)
         
         model.train(False) #test the model on test set
         batch_loss = []
@@ -49,7 +51,8 @@ def train_classification_model(model, train_loader, test_loader, optimizer, crit
             input, labels = data 
             loss_test = model(input)
             batch_loss.append(loss_test.detach().numpy())
-        test_loss.append(np.mean(batch_loss))
+        mean_test_loss = np.mean(batch_loss)
+        test_loss.append(mean_test_loss)
         print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
     return train_loss, test_loss
 
@@ -88,6 +91,7 @@ def train_regression_model(model, train_loader, test_loader, optimizer, criterio
             batch_loss.append(loss_test.detach().numpy())
         test_loss.append(np.mean(batch_loss))
         print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
+    
     return train_loss, test_loss
 
 def train_model(model, train_loader, test_loader, optimizer, criterion, epochs, problem_type):
@@ -101,15 +105,16 @@ def train_model(model, train_loader, test_loader, optimizer, criterion, epochs, 
         epochs (int): number of epochs
         problem type (str): "classification" or "regression"
     """
-    if (problem_type.upper() == "CLASSIFICATION"):
+    
+    if (problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION)):
         return train_classification_model(model, train_loader, test_loader, optimizer, criterion, epochs)
-    elif (problem_type.upper() == "REGRESSION"):
+    elif (problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION)):
         return train_regression_model(model, train_loader, test_loader, optimizer, epochs)
             
 def get_predictions(model: nn.Module, test_loader):
     """
-    Given a trained torch model and a test loader, get the predictions vs. actual value
-    (this function will also undo the scaler transform through inverse_transform())
+    Given a trained torch model and a test loader, get predictions vs. ground truth
+    
     Args:
         model (nn.Module): trained torch model
         test_loader (torch.DataLoader): 
@@ -123,5 +128,8 @@ def get_predictions(model: nn.Module, test_loader):
             yhat = model(input)
             predictions.append(yhat.detach().numpy().ravel())
             ground_truth_values.append(labels.detach().numpy().ravel())
-        
-    return np.array(predictions), np.array(ground_truth_values)
+    
+    prediction_tensor = torch.from_numpy(np.array(predictions).T)
+    ground_truth_tensor = torch.from_numpy(np.array(ground_truth_values).T)
+    
+    return prediction_tensor, ground_truth_tensor

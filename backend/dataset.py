@@ -6,7 +6,7 @@ from constants import CSV_FILE_NAME
 
 def read_dataset(url):
     """
-    Given a url to a CSV dataset, read it and convert to pandas dataframe
+    Given a url to a CSV dataset, read it and build temporary csv file
 
     Args:
         url (str): URL to dataset

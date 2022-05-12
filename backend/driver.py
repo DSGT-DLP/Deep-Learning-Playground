@@ -1,15 +1,16 @@
 import pandas as pd
-import traceback 
+import traceback
 
 from utils import *
-from constants import CSV_FILE_NAME
+from constants import CSV_FILE_NAME, ONNX_MODEL
 from loss import LossFunctions
 from optimizer import get_optimizer
 from model_parser import parse_user_architecture
-from trainer import train_model
+from trainer import train_model, get_predictions
 from model import DLModel
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
+from torchviz import make_dot
 
 def drive(user_arch, criterion, optimizer_name, problem_type, target=None, default=False, test_size=0.2, epochs=5, shuffle=True):
     """
@@ -59,11 +60,14 @@ def drive(user_arch, criterion, optimizer_name, problem_type, target=None, defau
         train_loss, test_loss = train_model(model, train_loader, test_loader, optimizer, criterion, epochs, problem_type)
         print(f"train loss: {train_loss}")
         print(f"test loss: {test_loss}")
+        pred, ground_truth = get_predictions(model, test_loader)
+        generate_loss_plot(train_loss, test_loss)
+        
     except Exception:
         return traceback.format_exc() #give exception in string format
 
 if __name__ == "__main__":
-    drive(["nn.Linear(4, 10)", "nn.Linear(10, 3)"], "CELOSS", "SGD", problem_type="classification", default=True, epochs=10)
+    print(drive(["nn.Linear(4, 10)", "nn.Linear(10, 3)"], "CELOSS", "SGD", problem_type="classification", default=True, epochs=10))
     
     
     

@@ -2,7 +2,7 @@ import pandas as pd
 import urllib.request as request
 import csv
 import traceback
-from constants import CSV_FILE_NAME
+from backend.constants import *
 
 def read_dataset(url):
     """
@@ -14,7 +14,7 @@ def read_dataset(url):
     try:
         r = request.urlopen(url).read().decode('utf8').split("\n")
         reader = csv.reader(r)
-        with open(CSV_FILE_NAME, mode="w", newline="") as f:
+        with open(CSV_FILE_PATH, mode="w", newline="") as f:
             csvwriter = csv.writer(f)
             for line in reader:
                 csvwriter.writerow(line)
@@ -31,7 +31,7 @@ def read_local_csv_file(file_path):
     """
     try:
         with open(file_path, mode="r") as data_file:
-            with open(CSV_FILE_NAME, mode="w", newline="") as f:
+            with open(CSV_FILE_PATH, mode="w", newline="") as f:
                 csvwriter = csv.writer(f)
                 for line in data_file:
                     csvwriter.writerow(line)

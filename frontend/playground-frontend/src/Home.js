@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { COLORS, GENERAL_STYLES } from "./constants";
 import {
@@ -14,6 +14,8 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 const Home = (props) => {
+  const [addedLayers, setAddedLayers] = useState(["Linear"]);
+
   return (
     <div style={{ padding: 20 }}>
       <h1 style={styles.h1}>Deep Learning Playground</h1>
@@ -21,19 +23,19 @@ const Home = (props) => {
       <DndProvider backend={HTML5Backend}>
         <BackgroundLayout>
           <RectContainer style={{ backgroundColor: COLORS.input }} />
-          <AddedLayer />
-          <AddedLayer />
+          {addedLayers.map((e, i) => (
+            <AddedLayer text={e} key={i} />
+          ))}
           <AddNewLayer />
         </BackgroundLayout>
 
         <div style={{ marginTop: 20 }} />
 
         <BackgroundLayout>
-          <LayerChoice text="Linear" />
-          <LayerChoice text="Non-linear" />
-          <LayerChoice text="Other Linear" />
+          {POSSIBLE_LAYERS.map((e) => (
+            <LayerChoice text={e} key={e} />
+          ))}
         </BackgroundLayout>
-
       </DndProvider>
     </div>
   );
@@ -50,3 +52,5 @@ const styles = {
     margin: 0,
   },
 };
+
+const POSSIBLE_LAYERS = ["Linear", "Non-linear", "Other linear"];

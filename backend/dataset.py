@@ -1,4 +1,3 @@
-from msilib.schema import Error
 import pandas as pd
 import urllib.request as request
 import csv

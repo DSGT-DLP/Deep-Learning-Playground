@@ -1,5 +1,6 @@
 import pandas as pd
 import traceback
+import os 
 
 from utils import *
 from constants import CSV_FILE_NAME, ONNX_MODEL
@@ -11,11 +12,10 @@ from model import DLModel
 from webdriver import open_onnx_file
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
-#from torchviz import make_dot
 
 def drive(user_arch, criterion, optimizer_name, problem_type, target=None, default=False, test_size=0.2, epochs=5, shuffle=True):
     """
-    Driver function/entrypoint into backend
+    Driver function/entrypoint into backend. Onnx file is generated containing model architecture for user to visualize in netron.app
 
     Args:
         user_arch (list): list that contains user defined deep learning architecture
@@ -65,11 +65,6 @@ def drive(user_arch, criterion, optimizer_name, problem_type, target=None, defau
         generate_train_time_csv(epoch_time)
         pred, ground_truth = get_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
-        open_onnx_file(ONNX_MODEL)
-        
-        #viz = make_dot(pred, params=dict(list(model.named_parameters()))).render("rnn_torchviz", format="png")
-        #viz = make_dot(pred, params=dict(model.named_parameters()), show_attrs=True, show_saved=True)
-        #viz.render("my_viz.png")
         
     except Exception:
         return traceback.format_exc() #give exception in string format

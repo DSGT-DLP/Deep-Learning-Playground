@@ -12,10 +12,12 @@ def open_onnx_file(onnx_model):
         onnx_model (file name/path): path to onnx model
     """
     print("opening chrome")
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome("C:/Users/karki/Downloads/chromedriver_win32/chromedriver.exe")
     print("going to netron.app")
     driver.get(NETRON_URL)
     print("uploading onnx model")
-    element = driver.find_element_by_id(OPEN_FILE_BUTTON)
+    element = driver.find_element_by_xpath("//input[@type='file']")
+    driver.implicitly_wait(200)
+    #element = driver.find_element_by_id(OPEN_FILE_BUTTON).click()
     element.send_keys(ONNX_MODEL)
     

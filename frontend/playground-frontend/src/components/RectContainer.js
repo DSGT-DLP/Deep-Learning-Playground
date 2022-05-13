@@ -4,13 +4,21 @@ import { COLORS } from "../constants";
 
 const RectContainer = (props) => {
   return (
-    <div style={{ ...styles.container, ...props.style }}>{props.children}</div>
+    <div
+      style={{ ...styles.container, ...props.style }}
+      ref={props.ref2}
+      data-testid={props.dataTestid}
+    >
+      {props.children}
+    </div>
   );
 };
 
 RectContainer.propTypes = {
   children: PropTypes.node,
   style: PropTypes.object,
+  ref2: PropTypes.node,
+  dataTestid: PropTypes.node,
 };
 
 export default RectContainer;

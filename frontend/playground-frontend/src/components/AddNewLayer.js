@@ -5,26 +5,26 @@ import { COLORS, ITEM_TYPES } from "../constants";
 import { useDrop } from "react-dnd";
 
 const AddNewLayer = (props) => {
-  // const [{ canDrop, isOver }, drop] = useDrop(() => ({
-  //   accept: ITEM_TYPES.NEW_LAYER,
-  //   drop: () => ({ name: "AddNewLayer" }),
-  //   collect: (monitor) => ({
-  //     isOver: monitor.isOver(),
-  //     canDrop: monitor.canDrop(),
-  //   }),
-  // }));
-  // const isActive = canDrop && isOver;
-  // let backgroundColor = COLORS.addLayer;
-  // if (isActive) {
-  //   backgroundColor = "darkgreen";
-  // } else if (canDrop) {
-  //   backgroundColor = "darkkhaki";
-  // }
+  const [{ canDrop, isOver }, drop] = useDrop(() => ({
+    accept: ITEM_TYPES.NEW_LAYER,
+    drop: () => ({ name: "AddNewLayer" }),
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  }));
+  const isActive = canDrop && isOver;
+  let backgroundColor = COLORS.addLayer;
+  if (isActive) {
+    backgroundColor = "darkgreen";
+  } else if (canDrop) {
+    backgroundColor = "darkkhaki";
+  }
   return (
     <RectContainer
-      // ref={drop}
+      ref2={drop}
       style={{ ...styles.container }}
-      // data-testid="dustbin"
+      dataTestid="dustbin"
     >
       <p style={{ fontSize: 50, fontWeight: "1000", color: COLORS.layer }}>+</p>
     </RectContainer>

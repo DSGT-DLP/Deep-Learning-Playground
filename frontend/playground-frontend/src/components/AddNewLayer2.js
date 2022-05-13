@@ -1,5 +1,6 @@
 import { useDrop } from "react-dnd";
-import { ItemTypes } from "./ItemTypes.js";
+import { ITEM_TYPES } from "../constants";
+
 const style = {
   height: "12rem",
   width: "12rem",
@@ -12,9 +13,9 @@ const style = {
   lineHeight: "normal",
   float: "left",
 };
-export const Dustbin = () => {
+const AddNewLayer2 = () => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
-    accept: ItemTypes.BOX,
+    accept: ITEM_TYPES.NEW_LAYER,
     drop: () => ({ name: "Dustbin" }),
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -34,3 +35,5 @@ export const Dustbin = () => {
     </div>
   );
 };
+
+export default AddNewLayer2;

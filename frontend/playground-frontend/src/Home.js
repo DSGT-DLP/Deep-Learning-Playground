@@ -24,7 +24,15 @@ const Home = (props) => {
         <BackgroundLayout>
           <RectContainer style={{ backgroundColor: COLORS.input }} />
           {addedLayers.map((e, i) => (
-            <AddedLayer text={e} key={i} />
+            <AddedLayer
+              text={e}
+              key={i}
+              onDelete={() => {
+                const currentLayers = [...addedLayers];
+                currentLayers.splice(i);
+                setAddedLayers(currentLayers);
+              }}
+            />
           ))}
           <AddNewLayer />
         </BackgroundLayout>
@@ -33,7 +41,17 @@ const Home = (props) => {
 
         <BackgroundLayout>
           {POSSIBLE_LAYERS.map((e) => (
-            <LayerChoice text={e} key={e} />
+            <LayerChoice
+              text={e}
+              key={e}
+              onDrop={(newLayerName) => {
+                setAddedLayers((currentAddedLayers) => {
+                  const copyCurrent = [...currentAddedLayers];
+                  copyCurrent.push(newLayerName);
+                  return copyCurrent;
+                });
+              }}
+            />
           ))}
         </BackgroundLayout>
       </DndProvider>

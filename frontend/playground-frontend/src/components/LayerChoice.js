@@ -11,7 +11,8 @@ const LayerChoice = (props) => {
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
       if (item && dropResult) {
-        alert(`You dropped ${props.text} into ${dropResult.name}!`);
+        props.onDrop(props.text);
+        // alert(`You dropped ${props.text} into ${dropResult.name}!`);
       }
     },
     collect: (monitor) => ({
@@ -33,6 +34,7 @@ const LayerChoice = (props) => {
 
 LayerChoice.propTypes = {
   text: PropTypes.string.isRequired,
+  onDrop: PropTypes.func,
 };
 
 export default LayerChoice;

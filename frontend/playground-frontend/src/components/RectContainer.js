@@ -17,7 +17,10 @@ const RectContainer = (props) => {
 RectContainer.propTypes = {
   children: PropTypes.node,
   style: PropTypes.object,
-  ref2: PropTypes.any,
+  ref2: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  ]),
   dataTestid: PropTypes.node,
 };
 
@@ -33,5 +36,6 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    position: "relative",
   },
 };

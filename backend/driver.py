@@ -13,6 +13,16 @@ from sklearn.model_selection import train_test_split
 from torchviz import make_dot
 
 def drive(user_arch, criterion, optimizer_name, problem_type, target=None, default=False, test_size=0.2, epochs=5, shuffle=True):
+    print('user_arch: ' + str(user_arch))
+    print('criterion: ' + str(criterion))
+    print('optimizer_name: ' + str(optimizer_name))
+    print('problem_type: ' + str(problem_type))
+    print('target: ' + str(target))
+    print('default: ' + str(default))
+    print('test_size: ' + str(test_size))
+    print('epochs: ' + str(epochs))
+    print('shuffle: ' + str(shuffle))
+
     """
     Driver function/entrypoint into backend
 

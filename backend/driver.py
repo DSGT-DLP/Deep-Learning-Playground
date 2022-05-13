@@ -65,7 +65,6 @@ def drive(user_arch, criterion, optimizer_name, problem_type, target=None, defau
         generate_train_time_csv(epoch_time)
         pred, ground_truth = get_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
-        open_onnx_file(ONNX_MODEL)
         
     except Exception:
         return traceback.format_exc() #give exception in string format

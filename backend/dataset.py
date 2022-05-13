@@ -2,7 +2,11 @@ import pandas as pd
 import urllib.request as request
 import csv
 import traceback
-from constants import CSV_FILE_NAME
+
+
+
+from backend.constants import *
+
 
 def read_dataset(url):
     """

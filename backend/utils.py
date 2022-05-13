@@ -1,4 +1,5 @@
-from constants import LOSS_VIZ
+from constants import LOSS_VIZ, TRAIN_TIME_CSV
+import pandas as pd
 import torch
 import matplotlib.pyplot as plt
 from enum import Enum
@@ -74,4 +75,14 @@ def generate_loss_plot(train_loss, test_loss):
     plt.xlabel("Epoch Number")
     plt.ylabel("Loss")
     plt.savefig(LOSS_VIZ)
-    
+
+def generate_train_time_csv(epoch_time):
+    """
+    Given the time taken to run each epoch, generate CSV of the DataFrame
+
+    Args:
+        epoch_time (list): array consisting of train time for each epoch
+    """
+    epoch = [i for i in range(1, len(epoch_time) + 1)]
+    df = pd.DataFrame({"Train Time": epoch_time}, index=epoch, columns=["Train Time"])
+    df.to_csv(TRAIN_TIME_CSV)

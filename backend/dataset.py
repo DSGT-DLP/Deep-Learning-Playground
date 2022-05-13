@@ -1,3 +1,4 @@
+from msilib.schema import Error
 import pandas as pd
 import urllib.request as request
 import csv
@@ -18,8 +19,9 @@ def read_dataset(url):
             csvwriter = csv.writer(f)
             for line in reader:
                 csvwriter.writerow(line)
-    except Exception:
+    except Exception as e:
         traceback.print_exc()
+        raise Exception("Reading Dataset from URL failed. Might want to check the validity of the URL")
 
 def read_local_csv_file(file_path):
     """
@@ -35,8 +37,9 @@ def read_local_csv_file(file_path):
                 csvwriter = csv.writer(f)
                 for line in data_file:
                     csvwriter.writerow(line)
-    except Exception:
+    except Exception as e:
         traceback.print_exc()
+        raise Exception("Reading Local CSV failed. Might want to check that you uploaded a proper CSV file")
         
     
 

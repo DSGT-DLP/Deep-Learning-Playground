@@ -17,7 +17,7 @@ const RectContainer = (props) => {
 RectContainer.propTypes = {
   children: PropTypes.node,
   style: PropTypes.object,
-  ref2: PropTypes.node,
+  ref2: PropTypes.any,
   dataTestid: PropTypes.node,
 };
 

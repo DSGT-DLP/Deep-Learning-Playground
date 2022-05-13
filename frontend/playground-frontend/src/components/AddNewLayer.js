@@ -16,14 +16,14 @@ const AddNewLayer = (props) => {
   const isActive = canDrop && isOver;
   let backgroundColor = COLORS.addLayer;
   if (isActive) {
-    backgroundColor = "darkgreen";
+    backgroundColor = COLORS.layer;
   } else if (canDrop) {
-    backgroundColor = "darkkhaki";
+    backgroundColor = "white";
   }
   return (
     <RectContainer
       ref2={drop}
-      style={{ ...styles.container }}
+      style={{ ...styles.container, backgroundColor }}
       dataTestid="dustbin"
     >
       <p style={{ fontSize: 50, fontWeight: "1000", color: COLORS.layer }}>+</p>

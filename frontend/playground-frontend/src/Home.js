@@ -34,7 +34,6 @@ const Home = (props) => {
           <LayerChoice text="Other Linear" />
         </BackgroundLayout>
 
-        <Container />
       </DndProvider>
     </div>
   );

@@ -1,6 +1,6 @@
 import pandas as pd
 import traceback
-import os 
+import os
 
 from utils import *
 from constants import CSV_FILE_NAME, ONNX_MODEL
@@ -13,16 +13,18 @@ from webdriver import open_onnx_file
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
-def drive(user_arch, criterion, optimizer_name, problem_type, target=None, default=False, test_size=0.2, epochs=5, shuffle=True):
-    print('user_arch: ' + str(user_arch))
-    print('criterion: ' + str(criterion))
-    print('optimizer_name: ' + str(optimizer_name))
-    print('problem_type: ' + str(problem_type))
-    print('target: ' + str(target))
-    print('default: ' + str(default))
-    print('test_size: ' + str(test_size))
-    print('epochs: ' + str(epochs))
-    print('shuffle: ' + str(shuffle))
+
+def drive(
+    user_arch,
+    criterion,
+    optimizer_name,
+    problem_type,
+    target=None,
+    default=False,
+    test_size=0.2,
+    epochs=5,
+    shuffle=True,
+):
 
     """
     Driver function/entrypoint into backend. Onnx file is generated containing model architecture for user to visualize in netron.app
@@ -42,47 +44,67 @@ def drive(user_arch, criterion, optimizer_name, problem_type, target=None, defau
          CSV_FILE_NAME is the data csv file for the torch model. Assumed that you have one dataset file
     """
     try:
-        if (default):
-            #If the user specifies no dataset, use iris as the default
+        if default:
+            # If the user specifies no dataset, use iris as the default
             dataset = load_iris()
             input_df = pd.DataFrame(dataset.data)
-            input_df['class']=dataset.target
-            input_df.columns=['sepal_len', 'sepal_wid', 'petal_len', 'petal_wid', 'class']
-            input_df.dropna(how="all", inplace=True) # remove any empty lines
+            input_df["class"] = dataset.target
+            input_df.columns = [
+                "sepal_len",
+                "sepal_wid",
+                "petal_len",
+                "petal_wid",
+                "class",
+            ]
+            input_df.dropna(how="all", inplace=True)  # remove any empty lines
             y = input_df["class"]
             X = input_df.drop("class", axis=1, inplace=False)
         else:
             input_df = pd.read_csv(CSV_FILE_NAME)
             y = input_df[target]
             X = input_df.drop(target, axis=1, inplace=False)
-        
-        #Convert to tensor
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=0, shuffle=shuffle)
-        X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor = get_tensors(X_train, X_test, y_train, y_test)
-        
-        
-        #Build the Deep Learning model that the user wants
+
+        # Convert to tensor
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=test_size, random_state=0, shuffle=shuffle
+        )
+        X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor = get_tensors(
+            X_train, X_test, y_train, y_test
+        )
+
+        # Build the Deep Learning model that the user wants
         model = DLModel(parse_user_architecture(user_arch))
         print(f"model: {model}")
-        optimizer = get_optimizer(model, optimizer_name=optimizer_name, learning_rate=0.05)
+        optimizer = get_optimizer(
+            model, optimizer_name=optimizer_name, learning_rate=0.05
+        )
         criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
         print(f"loss criterion: {criterion}")
-        train_loader, test_loader = get_dataloaders(X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=20)
-        train_loss, test_loss, epoch_time = train_model(model, train_loader, test_loader, optimizer, criterion, epochs, problem_type)
+        train_loader, test_loader = get_dataloaders(
+            X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=20
+        )
+        train_loss, test_loss, epoch_time = train_model(
+            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
+        )
         print(f"train loss: {train_loss}")
         print(f"test loss: {test_loss}")
         generate_loss_plot(train_loss, test_loss)
         generate_train_time_csv(epoch_time)
         pred, ground_truth = get_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
-        
+
     except Exception:
-        return traceback.format_exc() #give exception in string format
+        return traceback.format_exc()  # give exception in string format
+
 
 if __name__ == "__main__":
-    print(drive(["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)"], "CELOSS", "SGD", problem_type="classification", default=True, epochs=10))
-    
-    
-    
-    
-    
+    print(
+        drive(
+            ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)"],
+            "CELOSS",
+            "SGD",
+            problem_type="classification",
+            default=True,
+            epochs=10,
+        )
+    )

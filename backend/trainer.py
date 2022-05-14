@@ -1,5 +1,5 @@
 from utils import ProblemType
-import torch #pytorch
+import torch  # pytorch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 import numpy as np
@@ -15,7 +15,9 @@ https://towardsdatascience.com/building-rnn-lstm-and-gru-for-time-series-using-p
 """
 
 
-def train_classification_model(model, train_loader, test_loader, optimizer, criterion, epochs):
+def train_classification_model(
+    model, train_loader, test_loader, optimizer, criterion, epochs
+):
     """
     Function for training pytorch model for classification. This function also times how long it takes to complete each epoch
 
@@ -27,40 +29,45 @@ def train_classification_model(model, train_loader, test_loader, optimizer, crit
         criterion: Loss function
         epochs (int): number of epochs
     """
-    train_loss = [] #accumulate training loss over each epoch
-    test_loss = [] #accumulate testing loss over each epoch
-    epoch_time = [] #how much time it takes for each epoch
+    train_loss = []  # accumulate training loss over each epoch
+    test_loss = []  # accumulate testing loss over each epoch
+    epoch_time = []  # how much time it takes for each epoch
     for epoch in range(epochs):
         start_time = time.time()
-        model.train(True) #set model to train mode
-        batch_loss = [] #accumulate list of loss per batch
+        model.train(True)  # set model to train mode
+        batch_loss = []  # accumulate list of loss per batch
         for i, data in enumerate(train_loader):
-            input, labels = data #each batch is (input, label) pair in dataloader
-            optimizer.zero_grad() #zero out gradient for each batch
-            output = model(input) #make prediction on input
+            input, labels = data  # each batch is (input, label) pair in dataloader
+            optimizer.zero_grad()  # zero out gradient for each batch
+            output = model(input)  # make prediction on input
             # output = torch.argmax(output, dim=2)
             output = torch.reshape(output, (output.shape[0], output.shape[2]))
             labels = labels.squeeze_()
-            loss = criterion(output, labels.long()) #compute the loss
-            loss.backward() #backpropagation
-            optimizer.step() #adjust optimizer weights
+            loss = criterion(output, labels.long())  # compute the loss
+            loss.backward()  # backpropagation
+            optimizer.step()  # adjust optimizer weights
             batch_loss.append(loss.detach().numpy())
         epoch_time.append(time.time() - start_time)
         mean_train_loss = np.mean(batch_loss)
         train_loss.append(mean_train_loss)
-        
-        model.train(False) #test the model on test set
+
+        model.train(False)  # test the model on test set
         batch_loss = []
         for i, data in enumerate(test_loader):
-            input, labels = data 
+            input, labels = data
             loss_test = model(input)
             batch_loss.append(loss_test.detach().numpy())
         mean_test_loss = np.mean(batch_loss)
         test_loss.append(mean_test_loss)
-        print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
+        print(
+            f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}"
+        )
     return train_loss, test_loss, epoch_time
 
-def train_regression_model(model, train_loader, test_loader, optimizer, criterion, epochs):
+
+def train_regression_model(
+    model, train_loader, test_loader, optimizer, criterion, epochs
+):
     """
     Train Regression model in Pytorch. This function also times how long it takes to complete each epoch
 
@@ -72,36 +79,41 @@ def train_regression_model(model, train_loader, test_loader, optimizer, criterio
         criterion: Loss function
         epochs (int): number of epochs
     """
-    train_loss = [] #accumulate training loss over each epoch
-    test_loss = [] #accumulate testing loss over each epoch
-    epoch_time = [] #how much time it takes for each epoch
+    train_loss = []  # accumulate training loss over each epoch
+    test_loss = []  # accumulate testing loss over each epoch
+    epoch_time = []  # how much time it takes for each epoch
     for epoch in range(epochs):
         start_time = time.time()
-        model.train(True) #set model to train mode
-        batch_loss = [] #accumulate list of loss per batch
+        model.train(True)  # set model to train mode
+        batch_loss = []  # accumulate list of loss per batch
         for i, data in enumerate(train_loader):
-            input, labels = data #each batch is (input, label) pair in dataloader
-            optimizer.zero_grad() #zero out gradient for each batch
-            output = model(input) #make prediction on input
-            loss = criterion(output, labels) #compute the loss
-            loss.backward() #backpropagation
-            optimizer.step() #adjust optimizer weights
+            input, labels = data  # each batch is (input, label) pair in dataloader
+            optimizer.zero_grad()  # zero out gradient for each batch
+            output = model(input)  # make prediction on input
+            loss = criterion(output, labels)  # compute the loss
+            loss.backward()  # backpropagation
+            optimizer.step()  # adjust optimizer weights
             batch_loss.append(loss.detach().numpy())
         epoch_time.append(time.time() - start_time)
         train_loss.append(np.mean(batch_loss))
-        
-        model.train(False) #test the model on test set
+
+        model.train(False)  # test the model on test set
         batch_loss = []
         for i, data in enumerate(test_loader):
-            input, labels = data 
+            input, labels = data
             loss_test = model(input)
             batch_loss.append(loss_test.detach().numpy())
         test_loss.append(np.mean(batch_loss))
-        print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
-    
+        print(
+            f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}"
+        )
+
     return train_loss, test_loss, epoch_time
 
-def train_model(model, train_loader, test_loader, optimizer, criterion, epochs, problem_type):
+
+def train_model(
+    model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
+):
     """
     Given train loader, train torch model
     Args:
@@ -112,31 +124,36 @@ def train_model(model, train_loader, test_loader, optimizer, criterion, epochs, 
         epochs (int): number of epochs
         problem type (str): "classification" or "regression"
     """
-    
-    if (problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION)):
-        return train_classification_model(model, train_loader, test_loader, optimizer, criterion, epochs)
-    elif (problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION)):
-        return train_regression_model(model, train_loader, test_loader, optimizer, epochs)
-            
+
+    if problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION):
+        return train_classification_model(
+            model, train_loader, test_loader, optimizer, criterion, epochs
+        )
+    elif problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION):
+        return train_regression_model(
+            model, train_loader, test_loader, optimizer, epochs
+        )
+
+
 def get_predictions(model: nn.Module, test_loader):
     """
     Given a trained torch model and a test loader, get predictions vs. ground truth
-    
+
     Args:
         model (nn.Module): trained torch model
-        test_loader (torch.DataLoader): 
+        test_loader (torch.DataLoader):
     """
     predictions = []
     ground_truth_values = []
     with torch.no_grad():
         for i, data in enumerate(test_loader):
             input, labels = data
-            model.eval() #evaluation mode 
+            model.eval()  # evaluation mode
             yhat = model(input)
             predictions.append(yhat.detach().numpy().ravel())
             ground_truth_values.append(labels.detach().numpy().ravel())
-    
+
     prediction_tensor = torch.from_numpy(np.array(predictions).T)
     ground_truth_tensor = torch.from_numpy(np.array(ground_truth_values).T)
-    
+
     return prediction_tensor, ground_truth_tensor

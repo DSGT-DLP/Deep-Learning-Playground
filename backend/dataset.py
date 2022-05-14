@@ -5,6 +5,7 @@ import csv
 import traceback
 from backend.constants import *
 
+
 def read_dataset(url):
     """
     Given a url to a CSV dataset, read it and build temporary csv file
@@ -13,7 +14,7 @@ def read_dataset(url):
         url (str): URL to dataset
     """
     try:
-        r = request.urlopen(url).read().decode('utf8').split("\n")
+        r = request.urlopen(url).read().decode("utf8").split("\n")
         reader = csv.reader(r)
         with open(CSV_FILE_PATH, mode="w", newline="") as f:
             csvwriter = csv.writer(f)
@@ -21,7 +22,10 @@ def read_dataset(url):
                 csvwriter.writerow(line)
     except Exception as e:
         traceback.print_exc()
-        raise Exception("Reading Dataset from URL failed. Might want to check the validity of the URL")
+        raise Exception(
+            "Reading Dataset from URL failed. Might want to check the validity of the URL"
+        )
+
 
 def read_local_csv_file(file_path):
     """
@@ -29,7 +33,7 @@ def read_local_csv_file(file_path):
 
     Args:
         file_path (str): file path
-    
+
     """
     try:
         with open(file_path, mode="r") as data_file:
@@ -39,9 +43,10 @@ def read_local_csv_file(file_path):
                     csvwriter.writerow(line)
     except Exception as e:
         traceback.print_exc()
-        raise Exception("Reading Local CSV failed. Might want to check that you uploaded a proper CSV file")
-        
-    
+        raise Exception(
+            "Reading Local CSV failed. Might want to check that you uploaded a proper CSV file"
+        )
+
 
 if __name__ == "__main__":
     read_dataset("https://raw.githubusercontent.com/karkir0003/dummy/main/job.csv")

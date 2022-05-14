@@ -14,7 +14,6 @@ https://towardsdatascience.com/building-rnn-lstm-and-gru-for-time-series-using-p
  
 """
 
-
 def train_classification_model(model, train_loader, test_loader, optimizer, criterion, epochs):
     """
     Function for training pytorch model for classification. This function also times how long it takes to complete each epoch

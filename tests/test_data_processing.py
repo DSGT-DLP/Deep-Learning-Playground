@@ -16,7 +16,7 @@ def test_dataset_url_reading(url, path_to_file):
             reader2 = csv.reader(f2)
             assert [line for line in reader1][:-1] == [line for line in reader2]
 
-@pytest.mark.parametrize("url,path_to_file", [("https://csv.com/jobs.csv", './tests/expected/jobs.csv'), ("https://csv.com/cars.csv", "./tests/expected/cars.csv")])
+@pytest.mark.parametrize("url,path_to_file", [("csv.com/jobs.csv", './tests/expected/jobs.csv'), ("csv.com/cars.csv", "./tests/expected/cars.csv")])
 def test_dataset_invalid_url(url, path_to_file):
     with pytest.raises(Exception):
         read_dataset(url)

@@ -28,9 +28,9 @@ export default RectContainer;
 
 const styles = {
   container: {
-    width: 100,
+    width: 110,
     height: 50,
-    padding: 20,
+    padding: 10,
     marginRight: 10,
     border: `5px solid transparent`,
     display: "flex",

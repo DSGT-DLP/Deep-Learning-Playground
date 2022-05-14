@@ -12,13 +12,17 @@ import {
 } from "./components";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import DSGTLogo from "./images/logos/dsgt-logo-light.png";
 
 const Home = (props) => {
   const [addedLayers, setAddedLayers] = useState(["Linear"]);
 
   return (
     <div style={{ padding: 20 }}>
-      <h1 style={styles.h1}>Deep Learning Playground</h1>
+      <h1 style={styles.h1}>
+        <img src={DSGTLogo} alt="DSGT Logo" width="60" height="60" />
+        Deep Learning Playground
+      </h1>
 
       <DndProvider backend={HTML5Backend}>
         <BackgroundLayout>
@@ -67,7 +71,9 @@ const styles = {
   h1: {
     fontFamily: "Arial, Helvetica, sans-serif",
     padding: 0,
-    margin: 0,
+    margin: "0 0 20px 0",
+    display: "flex",
+    alignItems: "center",
   },
 };
 

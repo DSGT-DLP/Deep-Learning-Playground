@@ -18,4 +18,6 @@ dependencies:
   - pip
   - statsmodels
   - pytorch
-  - torchviz
+  - selenium
+  - sendgrid
+  - black

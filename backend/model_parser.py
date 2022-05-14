@@ -22,8 +22,11 @@ def parse_user_architecture(user_model):
     #JSON file will contain name of model along with what hyperparameters need to be specified
     parsed_modules = []
     for element in user_model:
+        print('element: ' + str(element))
         layer = get_torch_object(element)
+        print('layer: ' + str(layer))
         parsed_modules.append(layer)
+    print('parsed_modules: ' + str(parsed_modules))
     return parsed_modules
 
 

@@ -3,6 +3,7 @@ import torch #pytorch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 """
 This file contains helpful functions to aid in training and evaluation
@@ -16,7 +17,7 @@ https://towardsdatascience.com/building-rnn-lstm-and-gru-for-time-series-using-p
 
 def train_classification_model(model, train_loader, test_loader, optimizer, criterion, epochs):
     """
-    Function for training pytorch model for classification
+    Function for training pytorch model for classification. This function also times how long it takes to complete each epoch
 
     Args:
         model (nn.Module): Torch Model to train
@@ -28,7 +29,9 @@ def train_classification_model(model, train_loader, test_loader, optimizer, crit
     """
     train_loss = [] #accumulate training loss over each epoch
     test_loss = [] #accumulate testing loss over each epoch
+    epoch_time = [] #how much time it takes for each epoch
     for epoch in range(epochs):
+        start_time = time.time()
         model.train(True) #set model to train mode
         batch_loss = [] #accumulate list of loss per batch
         for i, data in enumerate(train_loader):
@@ -42,6 +45,7 @@ def train_classification_model(model, train_loader, test_loader, optimizer, crit
             loss.backward() #backpropagation
             optimizer.step() #adjust optimizer weights
             batch_loss.append(loss.detach().numpy())
+        epoch_time.append(time.time() - start_time)
         mean_train_loss = np.mean(batch_loss)
         train_loss.append(mean_train_loss)
         
@@ -54,11 +58,11 @@ def train_classification_model(model, train_loader, test_loader, optimizer, crit
         mean_test_loss = np.mean(batch_loss)
         test_loss.append(mean_test_loss)
         print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
-    return train_loss, test_loss
+    return train_loss, test_loss, epoch_time
 
 def train_regression_model(model, train_loader, test_loader, optimizer, criterion, epochs):
     """
-    Train Regression model in Pytorch
+    Train Regression model in Pytorch. This function also times how long it takes to complete each epoch
 
     Args:
         model (nn.Module): Torch Model to train
@@ -70,7 +74,9 @@ def train_regression_model(model, train_loader, test_loader, optimizer, criterio
     """
     train_loss = [] #accumulate training loss over each epoch
     test_loss = [] #accumulate testing loss over each epoch
+    epoch_time = [] #how much time it takes for each epoch
     for epoch in range(epochs):
+        start_time = time.time()
         model.train(True) #set model to train mode
         batch_loss = [] #accumulate list of loss per batch
         for i, data in enumerate(train_loader):
@@ -81,6 +87,7 @@ def train_regression_model(model, train_loader, test_loader, optimizer, criterio
             loss.backward() #backpropagation
             optimizer.step() #adjust optimizer weights
             batch_loss.append(loss.detach().numpy())
+        epoch_time.append(time.time() - start_time)
         train_loss.append(np.mean(batch_loss))
         
         model.train(False) #test the model on test set
@@ -92,7 +99,7 @@ def train_regression_model(model, train_loader, test_loader, optimizer, criterio
         test_loss.append(np.mean(batch_loss))
         print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
     
-    return train_loss, test_loss
+    return train_loss, test_loss, epoch_time
 
 def train_model(model, train_loader, test_loader, optimizer, criterion, epochs, problem_type):
     """

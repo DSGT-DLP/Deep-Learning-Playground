@@ -3,6 +3,7 @@ import traceback
 import os 
 
 from utils import *
+from enum import Enum
 from constants import CSV_FILE_NAME, ONNX_MODEL
 from loss import LossFunctions
 from optimizer import get_optimizer
@@ -13,29 +14,29 @@ from webdriver import open_onnx_file
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
 
+
 def get_default_dataset(dataset):
     """
     If user doesn't specify dataset
-
     Args:
-        dataset (): dataset using scikit learn built in functions like load_boston(), load_iris()
+        dataset_name (str): Which default dataset are you using (built in functions like load_boston(), load_iris())
     Returns:
         X: input (default dataset)
         y: target (default dataset)
     """
     input_df = pd.DataFrame(dataset.data)
     input_df['class'] = dataset.target
-    input_df.columns = dataset.feature_names
+    input_df.columns = dataset.feature_names + ['class']
     input_df.dropna(how="all", inplace=True) # remove any empty lines
-    y = input_df["class"]
-    X = input_df.drop("class", axis=1, inplace=False)
+    y = pd.Series(dataset.target)
+    X = input_df[dataset.feature_names]
+    print(f"iris dataset = {input_df.head()}")
     return X, y
     
 
 def drive(user_arch, criterion, optimizer_name, problem_type, target=None, features=None, default=False, test_size=0.2, epochs=5, shuffle=True):
     """
     Driver function/entrypoint into backend. Onnx file is generated containing model architecture for user to visualize in netron.app
-
     Args:
         user_arch (list): list that contains user defined deep learning architecture
         criterion (str): What loss function to use
@@ -56,6 +57,7 @@ def drive(user_arch, criterion, optimizer_name, problem_type, target=None, featu
             #If the user specifies no dataset, use iris as the default classification
             dataset = load_iris()
             X, y = get_default_dataset(dataset)
+            print(y.head())
         elif (default and problem_type.upper() == "REGRESSION"):
             #If the user specifies no dataset, use california housing as default regression
             dataset = fetch_california_housing()
@@ -64,6 +66,12 @@ def drive(user_arch, criterion, optimizer_name, problem_type, target=None, featu
             input_df = pd.read_csv(CSV_FILE_NAME)
             y = input_df[target]
             X = input_df[features]
+        
+        if (problem_type.upper() == "CLASSIFICATION"):
+            #label encode the categorical values to numbers
+            y = y.astype("category")
+            y = y.cat.codes 
+            print(y.head())
         
         #Convert to tensor
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=0, shuffle=shuffle)
@@ -77,11 +85,7 @@ def drive(user_arch, criterion, optimizer_name, problem_type, target=None, featu
         criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
         print(f"loss criterion: {criterion}")
         train_loader, test_loader = get_dataloaders(X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=20)
-        train_loss, test_loss, epoch_time = train_model(model, train_loader, test_loader, optimizer, criterion, epochs, problem_type)
-        print(f"train loss: {train_loss}")
-        print(f"test loss: {test_loss}")
-        generate_loss_plot(train_loss, test_loss)
-        generate_train_time_csv(epoch_time)
+        train_model(model, train_loader, test_loader, optimizer, criterion, epochs, problem_type)
         pred, ground_truth = get_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
         
@@ -89,9 +93,4 @@ def drive(user_arch, criterion, optimizer_name, problem_type, target=None, featu
         return traceback.format_exc() #give exception in string format
 
 if __name__ == "__main__":
-    print(drive(["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)"], "CELOSS", "SGD", problem_type="classification", default=True, epochs=10))
-    
-    
-    
-    
-    
+    print(drive(["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"], "CELOSS", "SGD", problem_type="classification", default=True, epochs=10))

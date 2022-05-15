@@ -3,6 +3,7 @@ import traceback
 import os 
 
 from utils import *
+from enum import Enum
 from constants import CSV_FILE_NAME, ONNX_MODEL
 from loss import LossFunctions
 from optimizer import get_optimizer
@@ -13,22 +14,23 @@ from webdriver import open_onnx_file
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
 
+
 def get_default_dataset(dataset):
     """
     If user doesn't specify dataset
 
     Args:
-        dataset (): dataset using scikit learn built in functions like load_boston(), load_iris()
+        dataset_name (str): Which default dataset are you using (built in functions like load_boston(), load_iris())
     Returns:
         X: input (default dataset)
         y: target (default dataset)
     """
     input_df = pd.DataFrame(dataset.data)
     input_df['class'] = dataset.target
-    input_df.columns = dataset.feature_names
+    input_df.columns = dataset.feature_names + ['class']
     input_df.dropna(how="all", inplace=True) # remove any empty lines
-    y = input_df["class"]
-    X = input_df.drop("class", axis=1, inplace=False)
+    y = pd.Series(dataset.target)
+    X = input_df[dataset.feature_names]
     return X, y
     
 

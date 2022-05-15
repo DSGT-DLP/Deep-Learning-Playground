@@ -24,8 +24,3 @@ def test_parse_user_architecture(user_model, expected):
     )
     print("expected: " + str(expected))
     assert [i == j for i, j in zip(parse_user_architecture(user_model), expected)]
-
-
-# @pytest.mark.parametrize("user_model,expected", [(["nn.Linear(10,40)", "nn.Linear(40,3)"], [nn.Linear(10,40), nn.Linear(40,3)])])
-# def test_get_torch_object(user_model, expected):
-#     pass

@@ -72,12 +72,11 @@ def train_classification_model(model, train_loader, test_loader, optimizer, crit
         val_acc.append(mean_test_acc)
         
         print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}")
-    result_table = pd.DataFrame({"epoch": [i for i in range(1, epochs + 1)], "train_loss": train_loss, "test_loss": test_loss, "train_acc": train_acc, "val/test acc": val_acc})
+    result_table = pd.DataFrame({"epoch": [i for i in range(1, epochs + 1)], "train time": epoch_time, "train_loss": train_loss, "test_loss": test_loss, "train_acc": train_acc, "val/test acc": val_acc})
     print(result_table.head())
     result_table.to_csv(RESULT_CSV_PATH)
     generate_acc_plot(train_acc, val_acc)
     generate_loss_plot(train_loss, test_loss)
-    generate_train_time_csv(epoch_time)
 
 def train_regression_model(model, train_loader, test_loader, optimizer, criterion, epochs):
     """
@@ -117,8 +116,7 @@ def train_regression_model(model, train_loader, test_loader, optimizer, criterio
         test_loss.append(np.mean(batch_loss))
         print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
     generate_loss_plot(train_loss, test_loss)
-    generate_train_time_csv(epoch_time)
-    result_table = pd.DataFrame({"epoch": [i for i in range(1, epochs + 1)], "train_loss": train_loss, "test_loss": test_loss, "train_acc": train_acc, "val/test acc": val_acc})
+    result_table = pd.DataFrame({"epoch": [i for i in range(1, epochs + 1)], "train time": epoch_time, "train_loss": train_loss, "test_loss": test_loss, "train_acc": train_acc, "val/test acc": val_acc})
     print(result_table.head())
     result_table.to_csv(RESULT_CSV_PATH)
 

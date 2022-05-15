@@ -1,4 +1,4 @@
-from constants import LOSS_VIZ, TRAIN_TIME_CSV
+from constants import LOSS_VIZ, ACC_VIZ, TRAIN_TIME_CSV
 import pandas as pd
 import torch
 import matplotlib.pyplot as plt
@@ -20,7 +20,6 @@ def get_tensors(X_train, X_test, y_train, y_test):
     """
     Helper function to convert X_train, X_test, y_train, y_test
     into tensors for dataloader
-
     Args:
         X_train (pd.DataFrame): X_train (train set)
         X_test (pd.DataFrame): X_test (test set)
@@ -73,7 +72,6 @@ def get_dataloaders(
 def generate_loss_plot(train_loss, test_loss):
     """
     Given train/test loss from the training phase, plot the loss in a matplotlib plot
-
     Args:
         train_loss (list): train loss per epoch
         test_loss (list): test loss per epoch
@@ -88,11 +86,26 @@ def generate_loss_plot(train_loss, test_loss):
     plt.ylabel("Loss")
     plt.savefig(LOSS_VIZ)
 
+def generate_acc_plot(train_acc, val_acc):
+    """
+    Given train/test loss from the training phase, plot the accuracy in a matplotlib plot
+    Args:
+        train_loss (list): train loss per epoch
+        test_loss (list): test loss per epoch
+    """
+    assert (len(train_acc) == len(val_acc))
+    x_axis = [i for i in range(1, len(train_acc) + 1)]
+    plt.scatter(x_axis, train_acc, c="r", label="train accuracy")
+    plt.scatter(x_axis, val_acc, c="b", label="test accuracy")
+    plt.legend()
+    plt.title("Train vs. Test accuracy for your Deep Learning Model")
+    plt.xlabel("Epoch Number")
+    plt.ylabel("Accuracy")
+    plt.savefig(ACC_VIZ)
 
 def generate_train_time_csv(epoch_time):
     """
     Given the time taken to run each epoch, generate CSV of the DataFrame
-
     Args:
         epoch_time (list): array consisting of train time for each epoch
     """

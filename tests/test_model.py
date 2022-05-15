@@ -1,22 +1,14 @@
 import pytest
 import torch.nn as nn
 from torch.autograd import Variable
-from backend.model_parser import *
+from backend.model import *
 
-@pytest.mark.parametrize(
-    "input_list,expected",
-    [
-        (
-            ["nn.Linear(10,40)", "nn.Linear(40,3)"],
-            [nn.Linear(10, 40), nn.Linear(40, 3)],
-        ),
-        (["nn.Linear(0,0)", "nn.Linear(0,0)"], [nn.Linear(0, 0), nn.Linear(0, 0)]),
-    ],
-)
-def test_DLModel(input_list, expected):
-    print(
-        "parse_user_architecture(user_model): "
-        + str(parse_user_architecture(user_model))
-    )
-    print("expected: " + str(expected))
-    assert [i == j for i, j in zip(parse_user_architecture(user_model), expected)]
+
+
+@pytest.mark.parametrize("input_list", [([nn.Linear(10, 5), nn.Linear(5, 3)]), ([nn.Linear(0, 0), nn.Linear(0, 0)]), ([nn.Linear(100, 50), nn.Linear(5, 3)])])
+def test_dlmodel(input_list):
+    print('input_list: ' + str(input_list) + ' is of type ' + str(type(input_list)))
+    my_model = DLModel(input_list)
+    print('my_model: ' + str(my_model) + ' is of type ' + str(type(my_model)))
+    print('[module for module in my_model.model.modules() if not isinstance(module, nn.Sequential)]: ' + str([module for module in my_model.model.modules() if not isinstance(module, nn.Sequential)] )) 
+    assert [module for module in my_model.model.modules() if not isinstance(module, nn.Sequential)] == input_list

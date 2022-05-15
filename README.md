@@ -14,7 +14,7 @@ Web Application where people new to Deep Learning can input a dataset and toy ar
  ┣ 📜data.csv - data csv file for use in the playground
  ┣ 📜dataset.py - read in the dataset through URL or file upload
  ┣ 📜driver.py - run the backend (entrypoint script)
- ┣ 📜input_parser.py - parse the user specified pytorch model
+ ┣ 📜model_parser.py - parse the user specified pytorch model
  ┣ 📜loss.py - loss function enum
  ┣ 📜model.py - torch model based on user specifications from drag and drop
  ┣ 📜optimizer.py - what optimizer to use (ie: SGD or Adam for now)
@@ -22,3 +22,4 @@ Web Application where people new to Deep Learning can input a dataset and toy ar
  ┣ 📜utils.py - utility functions that could be helpful
  ┗ 📜__init__.py
 ```
+

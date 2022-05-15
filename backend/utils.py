@@ -83,8 +83,8 @@ def generate_acc_plot(train_acc, val_acc):
     """
     assert (len(train_acc) == len(val_acc))
     x_axis = [i for i in range(1, len(train_acc) + 1)]
-    plt.scatter(x_axis, train_acc, c="r", label="train loss")
-    plt.scatter(x_axis, val_acc, c="b", label="test loss")
+    plt.scatter(x_axis, train_acc, c="r", label="train accuracy")
+    plt.scatter(x_axis, val_acc, c="b", label="test accuracy")
     plt.legend()
     plt.title("Train vs. Test accuracy for your Deep Learning Model")
     plt.xlabel("Epoch Number")

@@ -86,6 +86,7 @@ def generate_loss_plot(train_loss, test_loss):
     plt.ylabel("Loss")
     plt.savefig(LOSS_VIZ)
 
+
 def generate_acc_plot(train_acc, val_acc):
     """
     Given train/test loss from the training phase, plot the accuracy in a matplotlib plot
@@ -93,7 +94,7 @@ def generate_acc_plot(train_acc, val_acc):
         train_loss (list): train loss per epoch
         test_loss (list): test loss per epoch
     """
-    assert (len(train_acc) == len(val_acc))
+    assert len(train_acc) == len(val_acc)
     x_axis = [i for i in range(1, len(train_acc) + 1)]
     plt.scatter(x_axis, train_acc, c="r", label="train accuracy")
     plt.scatter(x_axis, val_acc, c="b", label="test accuracy")
@@ -102,6 +103,7 @@ def generate_acc_plot(train_acc, val_acc):
     plt.xlabel("Epoch Number")
     plt.ylabel("Accuracy")
     plt.savefig(ACC_VIZ)
+
 
 def generate_train_time_csv(epoch_time):
     """

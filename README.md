@@ -22,3 +22,11 @@ Web Application where people new to Deep Learning can input a dataset and toy ar
  ┣ 📜utils.py - utility functions that could be helpful
  ┗ 📜__init__.py
 ```
+
+## Frontend Startup
+To start the development server, after installing nodeJS v16+, run the following commands:
+```
+cd frontend\playground-frontend
+npm install
+npm start
+```

@@ -48,7 +48,7 @@ def drive(user_arch, criterion, optimizer_name, problem_type, target=None, featu
         test_size (float, optional): size of test set in train/test split. Defaults to 0.2.
         epochs (int, optional): number of epochs/rounds to run model on
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
-    
+
     NOTE:
          CSV_FILE_NAME is the data csv file for the torch model. Assumed that you have one dataset file
     """
@@ -81,7 +81,8 @@ def drive(user_arch, criterion, optimizer_name, problem_type, target=None, featu
         #Build the Deep Learning model that the user wants
         model = DLModel(parse_user_architecture(user_arch))
         print(f"model: {model}")
-        optimizer = get_optimizer(model, optimizer_name=optimizer_name, learning_rate=0.05)
+        optimizer = get_optimizer(
+            model, optimizer_name=optimizer_name, learning_rate=0.05)
         criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
         print(f"loss criterion: {criterion}")
         train_loader, test_loader = get_dataloaders(X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=20)
@@ -90,7 +91,8 @@ def drive(user_arch, criterion, optimizer_name, problem_type, target=None, featu
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
         
     except Exception:
-        return traceback.format_exc() #give exception in string format
+        return traceback.format_exc()  # give exception in string format
+
 
 if __name__ == "__main__":
     print(drive(["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"], "CELOSS", "SGD", problem_type="classification", default=True, epochs=10))

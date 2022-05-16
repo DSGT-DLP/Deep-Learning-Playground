@@ -7,11 +7,11 @@ import { useDrag } from "react-dnd";
 const LayerChoice = (props) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ITEM_TYPES.NEW_LAYER,
-    item: props.text,
+    item: props.layer,
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
       if (item && dropResult) {
-        props.onDrop(props.text);
+        props.onDrop(props.layer);
         // alert(`You dropped ${props.text} into ${dropResult.name}!`);
       }
     },
@@ -21,19 +21,20 @@ const LayerChoice = (props) => {
     }),
   }));
   const opacity = isDragging ? 0.4 : 1;
+  
   return (
     <RectContainer
       ref2={drag}
       style={{ backgroundColor: COLORS.addLayer }}
       dataTestid={`box`}
     >
-      <p style={{ ...styles.text, opacity }}>{props.text}</p>
+      <p style={{ ...styles.text, opacity }}>{props.layer.display_name}</p>
     </RectContainer>
   );
 };
 
 LayerChoice.propTypes = {
-  text: PropTypes.string.isRequired,
+  layer: PropTypes.object.isRequired,
   onDrop: PropTypes.func,
 };
 

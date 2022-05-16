@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "../constants";
 
 const InputOutputPromptResponse = (props) => {
-  const { isInput, value, setValue } = props;
-  const prompt = isInput ? "Input Size:" : "Output size:";
+  const { name, allParamInputs, setAllParamInputs } = props;
   return (
     <div style={{ ...LAYOUT.row, alignItems: "center" }}>
-      <p style={styles.input_prompt}>{prompt}</p>
+      <p style={styles.input_prompt}>{`${name}:`}</p>
       <input
-        type="number"
-        min={0}
-        max={1000}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        value={allParamInputs[name]}
+        onChange={(e) =>
+          setAllParamInputs((currentValue) => {
+            currentValue[name] = e.target.value;
+            return currentValue;
+          })
+        }
         style={styles.input_text}
       />
     </div>
@@ -22,8 +23,11 @@ const InputOutputPromptResponse = (props) => {
 };
 
 const AddedLayer = (props) => {
-  const [inputSize, setInputSize] = useState(5);
-  const [outputSize, setOutputSize] = useState(5);
+  const { display_name, parameters } = props.layer;
+
+  // *Example*
+  // "Input Size": undefined, "Output Size": 5,
+  const [allParameterInputs, setAllParameterInputs] = useState({});
 
   return (
     <div style={LAYOUT.column}>
@@ -31,25 +35,24 @@ const AddedLayer = (props) => {
         <button style={styles.delete_btn} onClick={props.onDelete}>
           ❌
         </button>
-        <p style={styles.text}>{props.text}</p>
+        <p style={styles.text}>{display_name}</p>
       </RectContainer>
       <div style={styles.input_box}>
-        <InputOutputPromptResponse
-          isInput
-          value={inputSize}
-          setValue={setInputSize}
-        />
-        <InputOutputPromptResponse
-          value={outputSize}
-          setValue={setOutputSize}
-        />
+        {parameters?.map((e) => (
+          <InputOutputPromptResponse
+            key={e.display_name}
+            name={e.display_name}
+            allParamInputs={allParameterInputs}
+            setAllParamInputs={setAllParameterInputs}
+          />
+        ))}
       </div>
     </div>
   );
 };
 
 AddedLayer.propTypes = {
-  text: PropTypes.string.isRequired,
+  layer: PropTypes.object.isRequired,
   onDelete: PropTypes.func,
 };
 

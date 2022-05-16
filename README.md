@@ -1,5 +1,5 @@
 # Deep-Learning-Playground
-Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules
+Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules through a drag and drop interface. 
 
 ## Conda Env Setup
 `conda env create -f environment.yml` in the `/conda` directory

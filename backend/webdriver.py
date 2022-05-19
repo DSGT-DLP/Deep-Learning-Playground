@@ -31,4 +31,3 @@ def open_onnx_file():
     # element.click()
 
 
-open_onnx_file()

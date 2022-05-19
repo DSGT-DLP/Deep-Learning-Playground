@@ -10,7 +10,6 @@ from optimizer import get_optimizer
 from model_parser import parse_user_architecture
 from trainer import train_model, get_predictions
 from model import DLModel
-from webdriver import open_onnx_file
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
 
@@ -110,13 +109,13 @@ def drive(
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
 
     except Exception:
-        return traceback.format_exc()  # give exception in string format
+        return traceback.format_exc(limit=1)  # give exception in string format
 
 
 if __name__ == "__main__":
     print(
         drive(
-            ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"],
+            ["nn.Linear(2, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"],
             "CELOSS",
             "SGD",
             problem_type="classification",

@@ -6,13 +6,15 @@ from enum import Enum
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
 
+
 class ProblemType(Enum):
-    #Are we solving a Classification or Regression problem
+    # Are we solving a Classification or Regression problem
     CLASSIFICATION = "CLASSIFICATION"
     REGRESSION = "REGRESSION"
-    
+
     def get_problem_obj(self):
         return self.value
+
 
 def get_tensors(X_train, X_test, y_train, y_test):
     """
@@ -23,25 +25,32 @@ def get_tensors(X_train, X_test, y_train, y_test):
         X_test (pd.DataFrame): X_test (test set)
         y_train (pd.Series): label/value of target for each row of X_train
         y_test (pd.Series): label/value of target for each row of X_test
-    
+
     Return:
         X_train, X_test, y_train, y_test in the form of tensor
     """
     X_train_tensor = Variable(torch.Tensor(X_train.to_numpy()))
     y_train_tensor = Variable(torch.Tensor(y_train.to_numpy()))
-    X_train_tensor = torch.reshape(X_train_tensor, (X_train_tensor.size()[0], 1, X_train_tensor.size()[1]))
+    X_train_tensor = torch.reshape(
+        X_train_tensor, (X_train_tensor.size()[0], 1, X_train_tensor.size()[1])
+    )
     y_train_tensor = torch.reshape(y_train_tensor, (y_train_tensor.size()[0], 1))
-    
+
     X_test_tensor = Variable(torch.Tensor(X_test.to_numpy()))
     y_test_tensor = Variable(torch.Tensor(y_test.to_numpy()))
-    X_test_tensor = torch.reshape(X_test_tensor, (X_test_tensor.size()[0], 1, X_test_tensor.size()[1]))
+    X_test_tensor = torch.reshape(
+        X_test_tensor, (X_test_tensor.size()[0], 1, X_test_tensor.size()[1])
+    )
     y_test_tensor = torch.reshape(y_test_tensor, (y_test_tensor.size()[0], 1))
-    
+
     X_train_tensor.requires_grad_(True)
     X_test_tensor.requires_grad_(True)
     return X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor
 
-def get_dataloaders(X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size):
+
+def get_dataloaders(
+    X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size
+):
     """
     Helper function to get Dataloaders for X_train, y_train, X_test, y_test
     Args:
@@ -53,9 +62,12 @@ def get_dataloaders(X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor
     """
     train = TensorDataset(X_train_tensor, y_train_tensor)
     test = TensorDataset(X_test_tensor, y_test_tensor)
-    train_loader = DataLoader(train, batch_size=batch_size, shuffle=False, drop_last=True)
+    train_loader = DataLoader(
+        train, batch_size=batch_size, shuffle=False, drop_last=True
+    )
     test_loader = DataLoader(test, batch_size=batch_size, shuffle=False, drop_last=True)
-    return train_loader, test_loader 
+    return train_loader, test_loader
+
 
 def generate_loss_plot(train_loss, test_loss):
     """
@@ -64,7 +76,7 @@ def generate_loss_plot(train_loss, test_loss):
         train_loss (list): train loss per epoch
         test_loss (list): test loss per epoch
     """
-    assert (len(train_loss) == len(test_loss))
+    assert len(train_loss) == len(test_loss)
     x_axis = [i for i in range(1, len(train_loss) + 1)]
     plt.scatter(x_axis, train_loss, c="r", label="train loss")
     plt.scatter(x_axis, test_loss, c="b", label="test loss")
@@ -74,6 +86,7 @@ def generate_loss_plot(train_loss, test_loss):
     plt.ylabel("Loss")
     plt.savefig(LOSS_VIZ)
 
+
 def generate_acc_plot(train_acc, val_acc):
     """
     Given train/test loss from the training phase, plot the accuracy in a matplotlib plot
@@ -81,7 +94,7 @@ def generate_acc_plot(train_acc, val_acc):
         train_loss (list): train loss per epoch
         test_loss (list): test loss per epoch
     """
-    assert (len(train_acc) == len(val_acc))
+    assert len(train_acc) == len(val_acc)
     x_axis = [i for i in range(1, len(train_acc) + 1)]
     plt.scatter(x_axis, train_acc, c="r", label="train accuracy")
     plt.scatter(x_axis, val_acc, c="b", label="test accuracy")
@@ -90,6 +103,7 @@ def generate_acc_plot(train_acc, val_acc):
     plt.xlabel("Epoch Number")
     plt.ylabel("Accuracy")
     plt.savefig(ACC_VIZ)
+
 
 def generate_train_time_csv(epoch_time):
     """

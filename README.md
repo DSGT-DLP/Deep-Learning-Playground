@@ -1,9 +1,10 @@
 # Deep-Learning-Playground
-Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules
+Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules through a drag and drop interface.
 
 ## Conda Env Setup
-`conda env create -f environment.yml` in the `/conda` directory
+* `conda env create -f environment.yml` in the `/conda` directory
 
+* Updating an environment: `conda env update -f environment.yml` in the `/conda` directory
 ## Backend Infra
 `python driver.py` in the `/backend` directory
 
@@ -12,6 +13,7 @@ Web Application where people new to Deep Learning can input a dataset and toy ar
 📦backend
  ┣ 📜constants.py - list of helpful constants
  ┣ 📜data.csv - data csv file for use in the playground
+ ┣ 📜dl_eval.py - Evaluation functions for deep learning models in Pytorch (eg: accuracy, loss, etc)
  ┣ 📜dataset.py - read in the dataset through URL or file upload
  ┣ 📜driver.py - run the backend (entrypoint script)
  ┣ 📜input_parser.py - parse the user specified pytorch model

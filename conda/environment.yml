@@ -21,3 +21,4 @@ dependencies:
   - selenium
   - sendgrid
   - black
+  - torchrecorder

@@ -1,9 +1,13 @@
+from sklearn.tree import *
+from sklearn.linear_model import *
+from sklearn.svm import *
+from sklearn.naive_bayes import *
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
 
 
-def parse_user_architecture(user_model):
+def parse_deep_user_architecture(user_model):
     """
     Given a list of user_models in a certain order,
     each layer should contain name and the values of each
@@ -23,15 +27,15 @@ def parse_user_architecture(user_model):
     # JSON file will contain name of model along with what hyperparameters need to be specified
     parsed_modules = []
     for element in user_model:
-        layer = get_torch_object(element)
+        layer = get_object(element)
         parsed_modules.append(layer)
     return parsed_modules
 
 
-def get_torch_object(element):
+def get_object(element):
     """
-    Given a string representation of a torch model layer or object, return the properly
-    instantiated torch object (nn.Module instance in most scenarios)
+    Given a string representation of a model layer or object, return the properly
+    instantiated object (nn.Module instance in most scenarios for deep learning)
 
     Args:
         element (string): string representation of torch module
@@ -47,7 +51,7 @@ def get_torch_object(element):
 if __name__ == "__main__":
     print("starting")
     print(
-        parse_user_architecture(
+        parse_deep_user_architecture(
             [
                 "nn.Linear(in_features=50, out_features=10)",
                 "nn.Conv2d(in_channels=3, out_channels=36, kernel_size=3, stride=2)",

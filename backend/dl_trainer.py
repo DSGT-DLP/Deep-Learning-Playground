@@ -1,7 +1,7 @@
 from dl_eval import compute_accuracy
 from utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv
 from utils import ProblemType
-from constants import RESULT_CSV_PATH
+from constants import DEEP_LEARNING_RESULT_CSV_PATH
 import torch  # pytorch
 import torch.nn as nn
 import matplotlib.pyplot as plt
@@ -19,7 +19,7 @@ https://towardsdatascience.com/building-rnn-lstm-and-gru-for-time-series-using-p
 """
 
 
-def train_classification_model(
+def train_deep_classification_model(
     model, train_loader, test_loader, optimizer, criterion, epochs
 ):
     """
@@ -87,12 +87,12 @@ def train_classification_model(
         }
     )
     print(result_table.head())
-    result_table.to_csv(RESULT_CSV_PATH, index=False)
+    result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
     generate_acc_plot(train_acc, val_acc)
     generate_loss_plot(train_loss, test_loss)
 
 
-def train_regression_model(
+def train_deep_regression_model(
     model, train_loader, test_loader, optimizer, criterion, epochs
 ):
     """
@@ -140,15 +140,13 @@ def train_regression_model(
             "train time": epoch_time,
             "train_loss": train_loss,
             "test_loss": test_loss,
-            "train_acc": train_acc,
-            "val/test acc": val_acc,
         }
     )
     print(result_table.head())
-    result_table.to_csv(RESULT_CSV_PATH, index=False)
+    result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
 
 
-def train_model(
+def train_deep_model(
     model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
 ):
     """
@@ -163,16 +161,16 @@ def train_model(
     """
 
     if problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION):
-        return train_classification_model(
+        return train_deep_classification_model(
             model, train_loader, test_loader, optimizer, criterion, epochs
         )
     elif problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION):
-        return train_regression_model(
+        return train_deep_regression_model(
             model, train_loader, test_loader, optimizer, epochs
         )
 
 
-def get_predictions(model: nn.Module, test_loader):
+def get_deep_predictions(model: nn.Module, test_loader):
     """
     Given a trained torch model and a test loader, get predictions vs. ground truth
 

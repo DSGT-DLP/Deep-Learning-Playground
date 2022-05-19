@@ -1,3 +1,4 @@
+from inspect import trace
 import pandas as pd
 import traceback
 import os
@@ -7,8 +8,9 @@ from enum import Enum
 from constants import CSV_FILE_NAME, ONNX_MODEL
 from loss import LossFunctions
 from optimizer import get_optimizer
-from model_parser import parse_user_architecture
-from trainer import train_model, get_predictions
+from model_parser import parse_deep_user_architecture, get_object
+from dl_trainer import train_deep_model, get_deep_predictions
+from ml_trainer import train_classical_ml_model
 from model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
@@ -32,8 +34,43 @@ def get_default_dataset(dataset):
     print(f"iris dataset = {input_df.head()}")
     return X, y
 
+def ml_drive(user_model, problem_type, target=None, features=None, default=False, test_size=0.2, shuffle=True):
+    """
+    Driver function/endpoint into backend for training a classical ML model (eg: SVC, SVR, DecisionTree, Naive Bayes, etc) 
 
-def drive(
+    Args:
+        user_model (str): What ML model and parameters does the user want
+        problem_type (str): "classification" or "regression" problem
+        target (str, optional): name of target column. Defaults to None.
+        features (list, optional): list of columns in dataframe for the feature based on user selection. Defaults to None.
+        default (bool, optional): use the iris dataset for default classifiction or california housing for default regression. Defaults to False.
+        test_size (float, optional): size of test set in train/test split (percentage). Defaults to 0.2.
+        shuffle (bool, optional): should the dataset be shuffled prior to train/test split
+    """
+    try:
+        if (default and problem_type.upper() == "CLASSIFICATION"):
+            dataset = load_iris()
+            X, y = get_default_dataset(dataset)
+            print(y.head())
+        elif default and problem_type.upper() == "REGRESSION":
+            # If the user specifies no dataset, use california housing as default regression
+            dataset = fetch_california_housing()
+            X, y = get_default_dataset(dataset)
+        else:
+            input_df = pd.read_csv(CSV_FILE_NAME)
+            y = input_df[target]
+            X = input_df[features]
+        
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=0, shuffle=shuffle)
+        model = get_object(user_model)
+        train_classical_ml_model(model, X_train, X_test, y_train, y_test, problem_type=problem_type)
+    except Exception:
+        traceback.print_exc()
+        return traceback.format_exc(limit=1)
+        
+        
+
+def dl_drive(
     user_arch,
     criterion,
     optimizer_name,
@@ -46,7 +83,7 @@ def drive(
     shuffle=True,
 ):
     """
-    Driver function/entrypoint into backend. Onnx file is generated containing model architecture for user to visualize in netron.app
+    Driver function/entrypoint into backend for deep learning model. Onnx file is generated containing model architecture for user to visualize in netron.app
     Args:
         user_arch (list): list that contains user defined deep learning architecture
         criterion (str): What loss function to use
@@ -54,8 +91,8 @@ def drive(
         problem type (str): "classification" or "regression" problem
         target (str): name of target column
         features (list): list of columns in dataframe for the feature based on user selection
-        default (bool, optional): use the iris dataset or not. Defaults to False.
-        test_size (float, optional): size of test set in train/test split. Defaults to 0.2.
+        default (bool, optional): use the iris dataset for default classifiction or california housing for default regression. Defaults to False.
+        test_size (float, optional): size of test set in train/test split (percentage). Defaults to 0.2.
         epochs (int, optional): number of epochs/rounds to run model on
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
 
@@ -92,7 +129,7 @@ def drive(
         )
 
         # Build the Deep Learning model that the user wants
-        model = DLModel(parse_user_architecture(user_arch))
+        model = DLModel(parse_deep_user_architecture(user_arch))
         print(f"model: {model}")
         optimizer = get_optimizer(
             model, optimizer_name=optimizer_name, learning_rate=0.05
@@ -102,10 +139,10 @@ def drive(
         train_loader, test_loader = get_dataloaders(
             X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=20
         )
-        train_model(
+        train_deep_model(
             model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
         )
-        pred, ground_truth = get_predictions(model, test_loader)
+        pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
 
     except Exception:
@@ -114,8 +151,8 @@ def drive(
 
 if __name__ == "__main__":
     print(
-        drive(
-            ["nn.Linear(2, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"],
+        dl_drive(
+            ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"],
             "CELOSS",
             "SGD",
             problem_type="classification",
@@ -123,3 +160,4 @@ if __name__ == "__main__":
             epochs=10,
         )
     )
+    print(ml_drive("DecisionTreeClassifier(max_depth=3, random_state=15)", problem_type="classification", default=True))

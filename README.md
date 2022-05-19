@@ -8,6 +8,7 @@ Web Application where people new to Deep Learning can input a dataset and toy ar
 ## Backend Infra
 `python driver.py` in the `/backend` directory
 
+The backend supports training of a deep learning model and/or a classical ML model!
 ## Backend Architecture
 ```
 📦backend
@@ -20,7 +21,9 @@ Web Application where people new to Deep Learning can input a dataset and toy ar
  ┣ 📜loss.py - loss function enum
  ┣ 📜model.py - torch model based on user specifications from drag and drop
  ┣ 📜optimizer.py - what optimizer to use (ie: SGD or Adam for now)
- ┣ 📜trainer.py - train the model on the dataset
+ ┣ 📜dl_trainer.py - train a deep learning model on the dataset
+ ┣ 📜ml_trainer.py - train a classical machine learning learning model on the dataset
  ┣ 📜utils.py - utility functions that could be helpful
+ ┣ 📜webdriver.py - Selenium Webdriver script to take a deep learning model in the form of an onnx file and upload it to netron.app to visualize (Work in Progress)
  ┗ 📜__init__.py
 ```

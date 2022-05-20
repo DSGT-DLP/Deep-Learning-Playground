@@ -66,7 +66,7 @@ const styles = {
     backgroundColor: "transparent",
     borderWidth: 0,
   },
-  text: { ...GENERAL_STYLES.p, color: COLORS.white, fontSize: 25 },
+  text: { ...GENERAL_STYLES.p, color: "white", fontSize: 25 },
   input_box: {
     marginTop: 10,
     backgroundColor: "white",

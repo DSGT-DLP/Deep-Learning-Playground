@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { COLORS, GENERAL_STYLES } from "./constants";
 import { POSSIBLE_LAYERS } from "./settings";
 import {
@@ -9,11 +8,21 @@ import {
   RectContainer,
   AddNewLayer,
   LayerChoice,
-  AddNewLayer2,
+  Input,
 } from "./components";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DSGTLogo from "./images/logos/dsgt-logo-light.png";
+
+const _TitleText = (props) => {
+  const { text } = props;
+
+  return (
+    <p style={{ ...GENERAL_STYLES.p, color: COLORS.layer, fontSize: 20 }}>
+      {text}
+    </p>
+  );
+};
 
 const Home = () => {
   const [addedLayers, setAddedLayers] = useState([]);
@@ -36,9 +45,7 @@ const Home = () => {
       </h1>
 
       <DndProvider backend={HTML5Backend}>
-        <p style={{ ...GENERAL_STYLES.p, color: COLORS.layer, fontSize: 20 }}>
-          Implemented Layers
-        </p>
+        <_TitleText>Implemented Layers</_TitleText>
         <BackgroundLayout>
           <RectContainer style={{ backgroundColor: COLORS.input }} />
           {addedLayers.map((e, i) => (
@@ -57,9 +64,8 @@ const Home = () => {
 
         <div style={{ marginTop: 20 }} />
 
-        <p style={{ ...GENERAL_STYLES.p, color: COLORS.layer, fontSize: 20 }}>
-          Layers Inventory
-        </p>
+        <_TitleText>Layers Inventory</_TitleText>
+
         <BackgroundLayout>
           {POSSIBLE_LAYERS.map((e) => {
             return (
@@ -81,7 +87,11 @@ const Home = () => {
 
       <div style={{ marginTop: 20 }} />
 
-      <BackgroundLayout></BackgroundLayout>
+      <_TitleText>Inputs</_TitleText>
+
+      <BackgroundLayout>
+        <Input></Input>
+      </BackgroundLayout>
     </div>
   );
 };

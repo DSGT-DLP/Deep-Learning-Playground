@@ -1,6 +1,4 @@
 export const COLORS = {
-  white: "#ffffff",
-  black: "#000000",
   input: "#E2E2E2",
   layer: "#CD7BFF",
   addLayer: "#F2ECFF",

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { COLORS, GENERAL_STYLES } from "./constants";
-import { POSSIBLE_LAYERS } from "./settings";
+import {
+  DEFAULT_OPTIONS,
+  OPTIMIZER_NAMES,
+  POSSIBLE_LAYERS,
+  PROBLEM_TYPES,
+} from "./settings";
 import {
   BackgroundLayout,
   Container,
@@ -13,6 +18,7 @@ import {
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DSGTLogo from "./images/logos/dsgt-logo-light.png";
+import { CRITERIONS } from "./settings";
 
 const _TitleText = (props) => {
   const { text } = props;
@@ -90,7 +96,13 @@ const Home = () => {
       <_TitleText>Inputs</_TitleText>
 
       <BackgroundLayout>
-        <Input></Input>
+        <Input queryText="Problem Type" options={PROBLEM_TYPES}></Input>
+        <Input queryText="Optimizer Name" options={OPTIMIZER_NAMES}></Input>
+        <Input queryText="Criterion" options={CRITERIONS}></Input>
+      </BackgroundLayout>
+      <BackgroundLayout>
+        <Input queryText="Default" options={DEFAULT_OPTIONS}></Input>
+        {/* <Input queryText="Epochs" options={CRITERIONS}></Input> */}
       </BackgroundLayout>
     </div>
   );

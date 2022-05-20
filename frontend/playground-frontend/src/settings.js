@@ -18,3 +18,16 @@ export const POSSIBLE_LAYERS = [
     parameters: [],
   },
 ];
+
+export const CRITERIONS = [{ label: "CELOSS", value: 0 }];
+
+export const PROBLEM_TYPES = [
+  { label: "Classification", value: 0 },
+  { label: "Regression", value: 1 },
+];
+
+export const DEFAULT_OPTIONS = [
+  { label: "False", value: 0 },
+  { label: "True", value: 1 },
+];
+export const OPTIMIZER_NAMES = [{ label: "SGD", value: 0 }];

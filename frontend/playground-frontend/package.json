@@ -12,6 +12,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.1.0",
+    "react-dropdown-select": "^4.8.4",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },

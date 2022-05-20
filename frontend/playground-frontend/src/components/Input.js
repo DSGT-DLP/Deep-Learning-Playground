@@ -2,27 +2,26 @@ import React from "react";
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "../constants";
+import { DropDown } from "../components";
+import { CRITERIONS } from "../settings";
 
 const Input = (props) => {
   return (
-    <div style={LAYOUT.row}>
+    <div style={{ ...LAYOUT.row, marginRight: 10 }}>
       <div style={styles.queryContainer}>
-        <p style={styles.queryText}>Criterion</p>
+        <p style={styles.queryText}>{props.queryText}</p>
       </div>
       <div style={styles.responseContainer}>
-        <button
-          style={styles.responseDropDownButton}
-          onClick={() => console.log(111)}
-        >
-          ▼
-        </button>
-        <p style={styles.responseText}>CELOSS</p>
+        <DropDown options={props.options} />
       </div>
     </div>
   );
 };
 
-Input.propTypes = {};
+Input.propTypes = {
+  queryText: PropTypes.string.isRequired,
+  options: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
 export default Input;
 
@@ -43,7 +42,7 @@ const styles = {
   },
   responseContainer: {
     height: 50,
-    width: 130,
+    width: 150,
     backgroundColor: COLORS.addLayer,
     display: "flex",
     justifyContent: "center",

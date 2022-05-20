@@ -31,13 +31,16 @@ The backend supports training of a deep learning model and/or a classical ML mod
 ## Frontend 
 
 ### Startup Instructions
-To start the development server, after installing [nodeJS v16](https://nodejs.org/en/download/), run the following commands:
+
+1. For complete functionality with the backend, first, start the backend using the instructions above. The backend will live in http://localhost:5000/run
+
+2. Then in a separate terminal, start the frontend development server. After installing [nodeJS v16](https://nodejs.org/en/download/), run the following commands:
 ```
 cd frontend\playground-frontend
 npm install
 npm start
 ```
-Then, go to http://localhost:3000/.
+3. Then, go to http://localhost:3000/
 
 ### How to Add New Layers
 Currently, there are three layers implemented in this playgroud—Linear, ReLU, and Softmax. A developer can easily add in a new layer to be used by the user through:

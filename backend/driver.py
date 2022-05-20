@@ -168,8 +168,8 @@ def hello():
         print(
             dl_drive(
                 user_arch=user_arch,
-                criterion="CELOSS",
-                optimizer_name="SGD",
+                criterion=criterion,
+                optimizer_name=optimizer_name,
                 problem_type=problem_type,
                 default=default,
                 epochs=epochs,

@@ -38,14 +38,32 @@ const Home = () => {
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
 
-  // useEffect(() => {
-  //   fetch("/members")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setData(data);
-  //       console.log(data);
-  //     });
-  // }, []);
+  useEffect(() => {
+    fetch("/run", {
+      method: "POST",
+      body: JSON.stringify({
+        user_arch: [
+          "nn.Linear(4, 10)",
+          "nn.ReLU()",
+          "nn.Linear(10, 3)",
+          "nn.Softmax()",
+        ],
+        criterion: "CELOSS",
+        optimizer_name: "SGD",
+        problem_type: "classification",
+        default: true,
+        epochs: 10,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // setData(data);
+        console.log(data);
+      });
+  }, []);
 
   return (
     <div style={{ padding: 20 }}>

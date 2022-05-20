@@ -2,6 +2,7 @@ from inspect import trace
 import pandas as pd
 import traceback
 import os
+from flask import Flask, json, request, jsonify
 
 from utils import *
 from enum import Enum
@@ -14,6 +15,8 @@ from ml_trainer import train_classical_ml_model
 from model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
+
+app = Flask(__name__)
 
 
 def get_default_dataset(dataset):
@@ -33,6 +36,7 @@ def get_default_dataset(dataset):
     X = input_df[dataset.feature_names]
     print(f"iris dataset = {input_df.head()}")
     return X, y
+
 
 def ml_drive(user_model, problem_type, target=None, features=None, default=False, test_size=0.2, shuffle=True):
     """
@@ -60,15 +64,16 @@ def ml_drive(user_model, problem_type, target=None, features=None, default=False
             input_df = pd.read_csv(CSV_FILE_NAME)
             y = input_df[target]
             X = input_df[features]
-        
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=0, shuffle=shuffle)
+
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=test_size, random_state=0, shuffle=shuffle)
         model = get_object(user_model)
-        train_classical_ml_model(model, X_train, X_test, y_train, y_test, problem_type=problem_type)
+        train_classical_ml_model(
+            model, X_train, X_test, y_train, y_test, problem_type=problem_type)
     except Exception:
         traceback.print_exc()
         return traceback.format_exc(limit=1)
-        
-        
+
 
 def dl_drive(
     user_arch,
@@ -149,15 +154,47 @@ def dl_drive(
         return traceback.format_exc(limit=1)  # give exception in string format
 
 
-if __name__ == "__main__":
-    print(
-        dl_drive(
-            ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"],
-            "CELOSS",
-            "SGD",
-            problem_type="classification",
-            default=True,
-            epochs=10,
+@app.route('/run', methods=['GET', 'POST'])
+def hello():
+    request_data = json.loads(request.data)
+    user_arch = request_data['user_arch']
+    criterion = request_data['criterion']
+    optimizer_name = request_data['optimizer_name']
+    problem_type = request_data['problem_type']
+    default = request_data['default']
+    epochs = request_data['epochs']
+
+    if request.method == 'POST':
+        print(
+            dl_drive(
+                user_arch=user_arch,
+                criterion="CELOSS",
+                optimizer_name="SGD",
+                problem_type=problem_type,
+                default=default,
+                epochs=epochs,
+            )
         )
-    )
-    print(ml_drive("DecisionTreeClassifier(max_depth=3, random_state=15)", problem_type="classification", default=True))
+        return jsonify({"success": True, "message": "Contact deleted successfully 22"}), 201
+
+    return jsonify({"success": True}), 200
+
+
+if __name__ == "__main__":
+    # TODO Faris complete frontend implementation and visualization
+    # print(
+    #     dl_drive(
+    #         ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"],
+    #         "CELOSS",
+    #         "SGD",
+    #         problem_type="classification",
+    #         default=True,
+    #         epochs=10,
+    #     )
+    # )
+
+
+    # TODO Faris to implement the frontend for this
+    # print(ml_drive("DecisionTreeClassifier(max_depth=3, random_state=15)",
+    #       problem_type="classification", default=True))
+    app.run(debug=True)

@@ -28,10 +28,21 @@ The backend supports training of a deep learning model and/or a classical ML mod
  ┗ 📜__init__.py
 ```
 
-## Frontend Startup
-To start the development server, after installing nodeJS v16+, run the following commands:
+## Frontend 
+
+### Startup Instructions
+To start the development server, after installing [nodeJS v16](https://nodejs.org/en/download/), run the following commands:
 ```
 cd frontend\playground-frontend
 npm install
 npm start
 ```
+Then, go to http://localhost:3000/.
+
+### How to Add New Layers
+Currently, there are three layers implemented in this playgroud—Linear, ReLU, and Softmax. A developer can easily add in a new layer to be used by the user through:
+1. Go to [settings.js](./frontend/playground-frontend/src/settings.js)
+2. Put in (* = required):
+    - `display_name`*: Name of layer to be displayed to user
+    - `object_name`*: Layer object to be passed into the backend, e.g., `nn.linear(...)`
+    - `parameters`: An array of JS objects with at least the display name of the parameters for the layer object

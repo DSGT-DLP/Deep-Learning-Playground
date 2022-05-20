@@ -26,7 +26,6 @@ export const LAYOUT = {
 export const GENERAL_STYLES = {
   p: {
     fontFamily: "Arial, Helvetica, sans-serif",
-    textAlign: "center",
     fontWeight: "bold",
   },
 };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { COLORS, GENERAL_STYLES } from "./constants";
+import { POSSIBLE_LAYERS } from "./settings";
 import {
   BackgroundLayout,
   Container,
@@ -35,6 +36,9 @@ const Home = () => {
       </h1>
 
       <DndProvider backend={HTML5Backend}>
+        <p style={{ ...GENERAL_STYLES.p, color: COLORS.layer, fontSize: 20 }}>
+          Implemented Layers
+        </p>
         <BackgroundLayout>
           <RectContainer style={{ backgroundColor: COLORS.input }} />
           {addedLayers.map((e, i) => (
@@ -53,6 +57,9 @@ const Home = () => {
 
         <div style={{ marginTop: 20 }} />
 
+        <p style={{ ...GENERAL_STYLES.p, color: COLORS.layer, fontSize: 20 }}>
+          Layers Inventory
+        </p>
         <BackgroundLayout>
           {POSSIBLE_LAYERS.map((e) => {
             return (
@@ -71,6 +78,10 @@ const Home = () => {
           })}
         </BackgroundLayout>
       </DndProvider>
+
+      <div style={{ marginTop: 20 }} />
+
+      <BackgroundLayout></BackgroundLayout>
     </div>
   );
 };
@@ -86,24 +97,3 @@ const styles = {
     alignItems: "center",
   },
 };
-
-const POSSIBLE_LAYERS = [
-  {
-    display_name: "Linear",
-    object_name: "nn.linear",
-    parameters: [
-      { display_name: "Input size" },
-      { display_name: "Output size" },
-    ],
-  },
-  {
-    display_name: "ReLU",
-    object_name: "nn.ReLU",
-    parameters: [],
-  },
-  {
-    display_name: "Softmax",
-    object_name: "nn.Softmax",
-    parameters: [],
-  },
-];

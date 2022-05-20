@@ -11,8 +11,8 @@ const LayerChoice = (props) => {
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
       if (item && dropResult) {
+        // Passes the layer information to AddedLayer
         props.onDrop(props.layer);
-        // alert(`You dropped ${props.text} into ${dropResult.name}!`);
       }
     },
     collect: (monitor) => ({

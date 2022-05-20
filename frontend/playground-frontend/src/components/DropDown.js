@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Select from "react-dropdown-select";
 import { GENERAL_STYLES } from "../constants";
@@ -15,7 +15,7 @@ const DropDown = (props) => {
 };
 
 DropDown.propTypes = {
-  options: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.arrayOf(PropTypes.object),
   onChange: PropTypes.func,
 };
 

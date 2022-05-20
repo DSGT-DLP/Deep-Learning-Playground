@@ -33,6 +33,11 @@ const _TitleText = (props) => {
 const Home = () => {
   const [addedLayers, setAddedLayers] = useState([]);
   const [data, setData] = useState([{}]);
+  const [problemType, setProblemType] = useState("");
+  const [criterion, setCriterion] = useState("");
+  const [optimizerName, setOptimizerName] = useState("");
+  const [usingDefaultDataset, setUsingDefaultDataset] = useState(false);
+  const [epochs, setEpochs] = useState();
 
   // useEffect(() => {
   //   fetch("/members")
@@ -96,13 +101,29 @@ const Home = () => {
       <_TitleText>Inputs</_TitleText>
 
       <BackgroundLayout>
-        <Input queryText="Problem Type" options={PROBLEM_TYPES}></Input>
-        <Input queryText="Optimizer Name" options={OPTIMIZER_NAMES}></Input>
-        <Input queryText="Criterion" options={CRITERIONS}></Input>
+        <Input
+          queryText="Problem Type"
+          options={PROBLEM_TYPES}
+          onChange={setProblemType}
+        />
+        <Input
+          queryText="Optimizer Name"
+          options={OPTIMIZER_NAMES}
+          onChange={setOptimizerName}
+        />
+        <Input
+          queryText="Criterion"
+          options={CRITERIONS}
+          onChange={setCriterion}
+        />
       </BackgroundLayout>
       <BackgroundLayout>
-        <Input queryText="Default" options={DEFAULT_OPTIONS}></Input>
-        {/* <Input queryText="Epochs" options={CRITERIONS}></Input> */}
+        <Input
+          queryText="Default"
+          options={DEFAULT_OPTIONS}
+          onChange={setUsingDefaultDataset}
+        />
+        <Input queryText="Epochs" inputType="number" onChange={setEpochs} />
       </BackgroundLayout>
     </div>
   );
@@ -112,7 +133,7 @@ export default Home;
 
 const styles = {
   h1: {
-    fontFamily: "Arial, Helvetica, sans-serif",
+    ...GENERAL_STYLES.p,
     padding: 0,
     margin: "0 0 20px 0",
     display: "flex",

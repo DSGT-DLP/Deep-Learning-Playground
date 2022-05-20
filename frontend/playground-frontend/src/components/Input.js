@@ -12,7 +12,16 @@ const Input = (props) => {
         <p style={styles.queryText}>{props.queryText}</p>
       </div>
       <div style={styles.responseContainer}>
-        <DropDown options={props.options} />
+        {props.options ? (
+          <DropDown options={props.options} onChange={props.onChange} />
+        ) : (
+          <input
+            style={styles.inputText}
+            placeholder="10"
+            maxLength={64}
+            type={props.inputType}
+          />
+        )}
       </div>
     </div>
   );
@@ -20,7 +29,9 @@ const Input = (props) => {
 
 Input.propTypes = {
   queryText: PropTypes.string.isRequired,
-  options: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.arrayOf(PropTypes.object),
+  onChange: PropTypes.func,
+  inputType: PropTypes.string,
 };
 
 export default Input;
@@ -55,4 +66,12 @@ const styles = {
     fontSize: 18,
   },
   responseDropDownButton: { border: "none", fontSize: 18, cursor: "pointer" },
+  inputText: {
+    ...GENERAL_STYLES.p,
+    border: "none",
+    backgroundColor: "transparent",
+    width: "100%",
+    textAlign: "center",
+    fontSize: 18,
+  },
 };

@@ -6,20 +6,28 @@ import { DropDown } from "../components";
 import { CRITERIONS } from "../settings";
 
 const Input = (props) => {
+  const { queryText, options, onChange, defaultValue, freeInputCustomProps } =
+    props;
+
   return (
-    <div style={{ ...LAYOUT.row, marginRight: 10 }}>
+    <div style={{ ...LAYOUT.row, marginRight: 15 }}>
       <div style={styles.queryContainer}>
-        <p style={styles.queryText}>{props.queryText}</p>
+        <p style={styles.queryText}>{queryText}</p>
       </div>
       <div style={styles.responseContainer}>
-        {props.options ? (
-          <DropDown options={props.options} onChange={props.onChange} />
+        {options ? (
+          <DropDown
+            options={options}
+            onChange={onChange}
+            defaultValue={defaultValue}
+          />
         ) : (
           <input
             style={styles.inputText}
-            placeholder="10"
+            placeholder="Type..."
             maxLength={64}
-            type={props.inputType}
+            {...freeInputCustomProps}
+            defaultValue={defaultValue}
           />
         )}
       </div>
@@ -31,7 +39,12 @@ Input.propTypes = {
   queryText: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(PropTypes.object),
   onChange: PropTypes.func,
-  inputType: PropTypes.string,
+  freeInputCustomProps: PropTypes.object,
+  defaultValue: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.number,
+    PropTypes.string,
+  ]),
 };
 
 export default Input;

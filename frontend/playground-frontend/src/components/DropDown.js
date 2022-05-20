@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import Select from "react-dropdown-select";
+import Select from "react-select";
 import { GENERAL_STYLES } from "../constants";
 
 const DropDown = (props) => {
@@ -8,8 +8,8 @@ const DropDown = (props) => {
     <Select
       options={props.options}
       onChange={props.onChange}
-      style={{ ...GENERAL_STYLES.p, border: "none" }}
-      sortBy="label"
+      styles={dropdownStyes}
+      defaultValue={props.defaultValue}
     />
   );
 };
@@ -17,6 +17,26 @@ const DropDown = (props) => {
 DropDown.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object),
   onChange: PropTypes.func,
+  defaultValue: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.number,
+    PropTypes.string,
+  ]),
 };
 
 export default DropDown;
+
+const dropdownStyes = {
+  control: (base) => ({
+    ...base,
+    ...GENERAL_STYLES.p,
+    border: "none",
+    backgroundColor: "transparent",
+    fontSize: 18,
+  }),
+  menu: (base) => ({
+    ...base,
+    ...GENERAL_STYLES.p,
+    fontSize: 18,
+  }),
+};

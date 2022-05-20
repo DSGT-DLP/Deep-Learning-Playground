@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { COLORS, GENERAL_STYLES } from "./constants";
 import {
-  DEFAULT_OPTIONS,
+  BOOL_OPTIONS,
   OPTIMIZER_NAMES,
   POSSIBLE_LAYERS,
   PROBLEM_TYPES,
@@ -22,22 +22,21 @@ import { CRITERIONS } from "./settings";
 
 const _TitleText = (props) => {
   const { text } = props;
-
-  return (
-    <p style={{ ...GENERAL_STYLES.p, color: COLORS.layer, fontSize: 20 }}>
-      {text}
-    </p>
-  );
+  return <p style={styles.titleText}>{text}</p>;
 };
 
 const Home = () => {
   const [addedLayers, setAddedLayers] = useState([]);
   const [data, setData] = useState([{}]);
-  const [problemType, setProblemType] = useState("");
-  const [criterion, setCriterion] = useState("");
-  const [optimizerName, setOptimizerName] = useState("");
-  const [usingDefaultDataset, setUsingDefaultDataset] = useState(false);
-  const [epochs, setEpochs] = useState();
+  const [problemType, setProblemType] = useState();
+  const [criterion, setCriterion] = useState();
+  const [optimizerName, setOptimizerName] = useState();
+  const [usingDefaultDataset, setUsingDefaultDataset] = useState(
+    BOOL_OPTIONS[0]
+  );
+  const [shuffle, setShuffle] = useState(BOOL_OPTIONS[0]);
+  const [epochs, setEpochs] = useState(5);
+  const [testSize, setTestSize] = useState(0.2);
 
   // useEffect(() => {
   //   fetch("/members")
@@ -56,7 +55,7 @@ const Home = () => {
       </h1>
 
       <DndProvider backend={HTML5Backend}>
-        <_TitleText>Implemented Layers</_TitleText>
+        <_TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <RectContainer style={{ backgroundColor: COLORS.input }} />
           {addedLayers.map((e, i) => (
@@ -75,7 +74,7 @@ const Home = () => {
 
         <div style={{ marginTop: 20 }} />
 
-        <_TitleText>Layers Inventory</_TitleText>
+        <_TitleText text="Layers Inventory" />
 
         <BackgroundLayout>
           {POSSIBLE_LAYERS.map((e) => {
@@ -98,7 +97,7 @@ const Home = () => {
 
       <div style={{ marginTop: 20 }} />
 
-      <_TitleText>Inputs</_TitleText>
+      <_TitleText text="Inputs" />
 
       <BackgroundLayout>
         <Input
@@ -120,10 +119,30 @@ const Home = () => {
       <BackgroundLayout>
         <Input
           queryText="Default"
-          options={DEFAULT_OPTIONS}
+          options={BOOL_OPTIONS}
           onChange={setUsingDefaultDataset}
+          defaultValue={usingDefaultDataset}
         />
-        <Input queryText="Epochs" inputType="number" onChange={setEpochs} />
+        <Input
+          queryText="Epochs"
+          freeInputCustomProps={{ type: "number", min: 0 }}
+          onChange={setEpochs}
+          defaultValue={epochs}
+        />
+        <Input
+          queryText="Shuffle"
+          options={BOOL_OPTIONS}
+          onChange={setShuffle}
+          defaultValue={shuffle}
+        />
+      </BackgroundLayout>
+      <BackgroundLayout>
+        <Input
+          queryText="Test Size"
+          onChange={setTestSize}
+          defaultValue={testSize}
+          freeInputCustomProps={{ type: "number", min: 0, max: 1, step: 0.1 }}
+        />
       </BackgroundLayout>
     </div>
   );
@@ -139,4 +158,5 @@ const styles = {
     display: "flex",
     alignItems: "center",
   },
+  titleText: { ...GENERAL_STYLES.p, color: COLORS.layer, fontSize: 20 },
 };

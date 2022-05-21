@@ -155,7 +155,7 @@ def dl_drive(
 
 
 @app.route('/run', methods=['GET', 'POST'])
-def hello():
+def train_and_output():
     request_data = json.loads(request.data)
     user_arch = request_data['user_arch']
     criterion = request_data['criterion']

@@ -167,17 +167,20 @@ def train_and_output():
     epochs = request_data['epochs']
 
     if request.method == 'POST':
-
-        # print(
-        #     dl_drive(
-        #         user_arch=user_arch,
-        #         criterion=criterion,
-        #         optimizer_name=optimizer_name,
-        #         problem_type=problem_type,
-        #         default=default,
-        #         epochs=epochs,
-        #     )
-        # )
+        print(
+            dl_drive(
+                user_arch=user_arch,
+                criterion=criterion,
+                optimizer_name=optimizer_name,
+                problem_type=problem_type,
+                target=target,
+                features=features,
+                default=default,
+                test_size=test_size,
+                epochs=epochs,
+                shuffle=shuffle,
+            )
+        )
         return jsonify({"success": True, "message": "Contact deleted successfully 22"}), 201
 
     return jsonify({"success": True}), 200

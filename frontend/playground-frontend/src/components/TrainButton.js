@@ -59,7 +59,7 @@ const TrainButton = (props) => {
     const user_arch = make_user_arch();
     if (!validateInputs(user_arch)) return;
 
-    console.log(
+    train_and_output(
       user_arch,
       criterion,
       optimizerName,

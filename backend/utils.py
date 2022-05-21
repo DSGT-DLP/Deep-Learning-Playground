@@ -77,6 +77,7 @@ def generate_loss_plot(train_loss, test_loss):
         test_loss (list): test loss per epoch
     """
     assert len(train_loss) == len(test_loss)
+    plt.figure("Loss Plot")
     x_axis = [i for i in range(1, len(train_loss) + 1)]
     plt.scatter(x_axis, train_loss, c="r", label="train loss")
     plt.scatter(x_axis, test_loss, c="b", label="test loss")

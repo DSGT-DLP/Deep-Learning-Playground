@@ -1,8 +1,8 @@
 # These owners will be the default owners for everything in
 # the repo. Unless a later match takes precedence,
-# @karkir0003 will be requested for
+# the contributors all will be requested for
 # review when someone opens a pull request.
-*       @karkir0003
+*       @karkir0003 @farisdurrani @LucasZhang58
 
 #For files in the /backend directory, @karkir0003 will be requested in a pull request
 /backend @karkir0003

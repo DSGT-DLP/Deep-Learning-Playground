@@ -19,5 +19,6 @@ const styles = {
     marginVertical: 10,
     display: "flex",
     flexDirection: "row",
+    flexWrap: "wrap",
   },
 };

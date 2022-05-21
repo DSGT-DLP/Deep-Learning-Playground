@@ -10,7 +10,7 @@ const Input = (props) => {
     props;
 
   return (
-    <div style={{ ...LAYOUT.row, marginRight: 15 }}>
+    <div style={{ ...LAYOUT.row, margin: "7.5px 15px" }}>
       <div style={styles.queryContainer}>
         <p style={styles.queryText}>{queryText}</p>
       </div>

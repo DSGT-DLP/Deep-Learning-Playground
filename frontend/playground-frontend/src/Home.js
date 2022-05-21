@@ -54,6 +54,11 @@ const Home = () => {
       </p>
     );
   });
+  const changeHandler = (event) => {
+    console.log(event.target.files[0]);
+    setSelectedFile(event.target.files[0]);
+    setIsFilePicked(true);
+  };
 
   // useEffect(() => {
   //   fetch("/run", {
@@ -81,11 +86,46 @@ const Home = () => {
   //     });
   // }, []);
 
-  const changeHandler = (event) => {
-    console.log(event.target.files[0]);
-    setSelectedFile(event.target.files[0]);
-    setIsFilePicked(true);
-  };
+  const input_query_responses = [
+    {
+      queryText: "Problem Type",
+      options: PROBLEM_TYPES,
+      onChange: setProblemType,
+    },
+    {
+      queryText: "Optimizer Name",
+      options: OPTIMIZER_NAMES,
+      onChange: setOptimizerName,
+    },
+    {
+      queryText: "Criterion",
+      options: CRITERIONS,
+      onChange: setCriterion,
+    },
+    {
+      queryText: "Default",
+      options: BOOL_OPTIONS,
+      onChange: setUsingDefaultDataset,
+    },
+    {
+      queryText: "Epochs",
+      freeInputCustomProps: { type: "number", min: 0 },
+      onChange: setEpochs,
+      defaultValue: epochs,
+    },
+    {
+      queryText: "Shuffle",
+      options: BOOL_OPTIONS,
+      onChange: setShuffle,
+      defaultValue: shuffle,
+    },
+    {
+      queryText: "Test Size",
+      onChange: setTestSize,
+      defaultValue: testSize,
+      freeInputCustomProps: { type: "number", min: 0, max: 1, step: 0.1 },
+    },
+  ];
 
   return (
     <div style={{ padding: 20 }}>
@@ -150,49 +190,9 @@ const Home = () => {
       <_TitleText text="Inputs" />
 
       <BackgroundLayout>
-        <Input
-          queryText="Problem Type"
-          options={PROBLEM_TYPES}
-          onChange={setProblemType}
-        />
-        <Input
-          queryText="Optimizer Name"
-          options={OPTIMIZER_NAMES}
-          onChange={setOptimizerName}
-        />
-        <Input
-          queryText="Criterion"
-          options={CRITERIONS}
-          onChange={setCriterion}
-        />
-      </BackgroundLayout>
-      <BackgroundLayout>
-        <Input
-          queryText="Default"
-          options={BOOL_OPTIONS}
-          onChange={setUsingDefaultDataset}
-          defaultValue={usingDefaultDataset}
-        />
-        <Input
-          queryText="Epochs"
-          freeInputCustomProps={{ type: "number", min: 0 }}
-          onChange={setEpochs}
-          defaultValue={epochs}
-        />
-        <Input
-          queryText="Shuffle"
-          options={BOOL_OPTIONS}
-          onChange={setShuffle}
-          defaultValue={shuffle}
-        />
-      </BackgroundLayout>
-      <BackgroundLayout>
-        <Input
-          queryText="Test Size"
-          onChange={setTestSize}
-          defaultValue={testSize}
-          freeInputCustomProps={{ type: "number", min: 0, max: 1, step: 0.1 }}
-        />
+        {input_query_responses.map((e) => (
+          <Input {...e} key={e.queryText} />
+        ))}
       </BackgroundLayout>
     </div>
   );

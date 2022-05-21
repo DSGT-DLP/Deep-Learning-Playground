@@ -2,10 +2,10 @@ export const POSSIBLE_LAYERS = [
   {
     display_name: "Linear",
     object_name: "nn.linear",
-    parameters: [
-      { display_name: "Input size" },
-      { display_name: "Output size" },
-    ],
+    parameters: {
+      inputSize: { parameter_name: "Input size" },
+      outputSize: { parameter_name: "Output size" },
+    },
   },
   {
     display_name: "ReLU",

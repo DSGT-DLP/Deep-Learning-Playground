@@ -45,31 +45,31 @@ const Home = () => {
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
 
-  // useEffect(() => {
-  //   fetch("/run", {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       user_arch: [
-  //         "nn.Linear(4, 10)",
-  //         "nn.ReLU()",
-  //         "nn.Linear(10, 3)",
-  //         "nn.Softmax()",
-  //       ],
-  //       criterion: "CELOSS",
-  //       optimizer_name: "SGD",
-  //       problem_type: "classification",
-  //       default: true,
-  //       epochs: 10,
-  //     }),
-  //     headers: {
-  //       "Content-type": "application/json; charset=UTF-8",
-  //     },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log(data);
-  //     });
-  // }, []);
+  const train_and_output = () => {
+    fetch("/run", {
+      method: "POST",
+      body: JSON.stringify({
+        user_arch: [
+          "nn.Linear(4, 10)",
+          "nn.ReLU()",
+          "nn.Linear(10, 3)",
+          "nn.Softmax()",
+        ],
+        criterion: "CELOSS",
+        optimizer_name: "SGD",
+        problem_type: "classification",
+        default: true,
+        epochs: 10,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
+  };
 
   const columnOptions = csvColumns.map((e, i) => ({ label: e.name, value: i }));
   const input_query_responses = [
@@ -124,6 +124,8 @@ const Home = () => {
     },
   ];
 
+  // console.log(addedLayers);
+
   return (
     <div style={{ padding: 20 }}>
       <h1 style={styles.h1}>
@@ -145,7 +147,9 @@ const Home = () => {
 
           {addedLayers.map((e, i) => (
             <AddedLayer
-              layer={e}
+              thisLayerIndex={i}
+              addedLayers={addedLayers}
+              setAddedLayers={setAddedLayers}
               key={i}
               onDelete={() => {
                 const currentLayers = [...addedLayers];
@@ -169,7 +173,11 @@ const Home = () => {
               onDrop={(newLayer) => {
                 setAddedLayers((currentAddedLayers) => {
                   const copyCurrent = [...currentAddedLayers];
-                  copyCurrent.push(newLayer);
+                  const layerCopy = deepCopyObj(newLayer);
+                  Object.values(layerCopy.parameters).forEach((val) => {
+                    val["value"] = "";
+                  });
+                  copyCurrent.push(layerCopy);
                   return copyCurrent;
                 });
               }}
@@ -203,6 +211,8 @@ const Home = () => {
 };
 
 export default Home;
+
+const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));
 
 const styles = {
   h1: {

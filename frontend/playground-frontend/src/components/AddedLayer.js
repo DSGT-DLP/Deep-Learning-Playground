@@ -3,17 +3,22 @@ import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "../constants";
 
-const InputOutputPromptResponse = (props) => {
-  const { name, allParamInputs, setAllParamInputs } = props;
+const _InputOutputPromptResponse = (props) => {
+  const { param_key, allParamInputs, setAddedLayers, thisLayerIndex } = props;
+  const { parameter_name, value } = allParamInputs[param_key];
+
   return (
     <div style={{ ...LAYOUT.row, alignItems: "center" }}>
-      <p style={styles.input_prompt}>{`${name}:`}</p>
+      <p style={styles.input_prompt}>{`${parameter_name}:`}</p>
       <input
-        value={allParamInputs[name]}
+        value={value}
         onChange={(e) =>
-          setAllParamInputs((currentValue) => {
-            currentValue[name] = e.target.value;
-            return currentValue;
+          // updates the addedLayers state with the current user input value of parameters
+          setAddedLayers((currentAddedLayers) => {
+            const copyCurrent = [...currentAddedLayers];
+            const parameters = copyCurrent[thisLayerIndex].parameters;
+            parameters[param_key].value = e.target.value;
+            return copyCurrent;
           })
         }
         style={styles.input_text}
@@ -23,37 +28,43 @@ const InputOutputPromptResponse = (props) => {
 };
 
 const AddedLayer = (props) => {
-  const { display_name, parameters } = props.layer;
+  const { thisLayerIndex, addedLayers, setAddedLayers, onDelete } = props;
+  const thisLayer = addedLayers[thisLayerIndex];
+  const { display_name, parameters } = thisLayer;
 
-  // *Example*
-  // "Input Size": undefined, "Output Size": 5,
-  const [allParameterInputs, setAllParameterInputs] = useState({});
+  // converts the parameters object for each layer into an array of parameter objects
+  const param_array = [];
+  Object.entries(parameters).forEach((entry) => {
+    const [key, value] = entry;
+    param_array.push(
+      <_InputOutputPromptResponse
+        key={key}
+        param_key={key}
+        allParamInputs={thisLayer.parameters}
+        setAddedLayers={setAddedLayers}
+        thisLayerIndex={thisLayerIndex}
+      />
+    );
+  });
 
   return (
     <div style={LAYOUT.column}>
       <RectContainer style={{ backgroundColor: COLORS.layer }}>
-        <button style={styles.delete_btn} onClick={props.onDelete}>
+        <button style={styles.delete_btn} onClick={onDelete}>
           ❌
         </button>
         <p style={styles.text}>{display_name}</p>
       </RectContainer>
-      <div style={styles.input_box}>
-        {parameters?.map((e) => (
-          <InputOutputPromptResponse
-            key={e.display_name}
-            name={e.display_name}
-            allParamInputs={allParameterInputs}
-            setAllParamInputs={setAllParameterInputs}
-          />
-        ))}
-      </div>
+      <div style={styles.input_box}>{param_array}</div>
     </div>
   );
 };
 
 AddedLayer.propTypes = {
-  layer: PropTypes.object.isRequired,
-  onDelete: PropTypes.func,
+  thisLayerIndex: PropTypes.number.isRequired, 
+  addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired, 
+  setAddedLayers: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default AddedLayer;

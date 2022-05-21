@@ -14,14 +14,13 @@ import {
   AddNewLayer,
   LayerChoice,
   Input,
+  CSVInput,
 } from "./components";
 import DSGTLogo from "./images/logos/dsgt-logo-light.png";
 import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useDropzone } from "react-dropzone";
-import * as XLSX from 'xlsx';
-import DataTable from 'react-data-table-component';
+import DataTable from "react-data-table-component";
 
 const _TitleText = (props) => {
   const { text } = props;
@@ -29,8 +28,8 @@ const _TitleText = (props) => {
 };
 
 const Home = () => {
-  const [selectedFile, setSelectedFile] = useState();
-  const [isFilePicked, setIsFilePicked] = useState(false);
+  const [csvData, setCSVData] = useState([]);
+  const [csvColumns, setCSVColumns] = useState([]);
 
   // input responses
   const [addedLayers, setAddedLayers] = useState([]);
@@ -43,28 +42,6 @@ const Home = () => {
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[0]);
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
-
-  const [columns, setColumns] = useState([]);
-  const [data, setData] = useState([]);
-
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    accept: { "text/csv": [".csv"] },
-    maxFiles: 1,
-  });
-
-  const files = acceptedFiles.map((file) => {
-    console.log(file.path);
-    return (
-      <p key={file.path} style={{ textAlign: "center" }}>
-        {file.path} - {file.size} bytes
-      </p>
-    );
-  });
-  const changeHandler = (event) => {
-    console.log(event.target.files[0]);
-    setSelectedFile(event.target.files[0]);
-    setIsFilePicked(true);
-  };
 
   // useEffect(() => {
   //   fetch("/run", {
@@ -144,15 +121,12 @@ const Home = () => {
         <_TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <RectContainer style={{ backgroundColor: COLORS.input, width: 200 }}>
-            <section className="container">
-              <div {...getRootProps({ className: "dropzone" })}>
-                <input {...getInputProps()} />
-                <p style={{ ...GENERAL_STYLES.p, textAlign: "center" }}>
-                  Drop/select File
-                </p>
-              </div>
-              {files}
-            </section>
+            <CSVInput
+              data={csvData}
+              columns={csvColumns}
+              setData={setCSVData}
+              setColumns={setCSVColumns}
+            />
           </RectContainer>
 
           {addedLayers.map((e, i) => (
@@ -192,13 +166,20 @@ const Home = () => {
 
       <div style={{ marginTop: 20 }} />
 
-      <_TitleText text="Inputs" />
+      <_TitleText text="Deep Learning Parameters" />
 
       <BackgroundLayout>
         {input_query_responses.map((e) => (
           <Input {...e} key={e.queryText} />
         ))}
       </BackgroundLayout>
+
+      <DataTable
+        pagination
+        highlightOnHover
+        columns={csvColumns}
+        data={csvData}
+      />
     </div>
   );
 };

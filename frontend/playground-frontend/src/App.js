@@ -1,4 +1,3 @@
-// import { ReadCSV } from "./components";
 import Home from "./Home";
 
 function App() {

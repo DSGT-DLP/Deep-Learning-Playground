@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import * as XLSX from "xlsx";
-import DataTable from "react-data-table-component";
 
 // src: https://www.cluemediator.com/read-csv-file-in-react
-const ReadCSV = (props) => {
-  const [columns, setColumns] = useState([]);
-  const [data, setData] = useState([]);
+const CSVInput = (props) => {
+  const { data, columns, setData, setColumns } = props;
 
   // process CSV data
   const processData = (dataString) => {
@@ -69,23 +67,15 @@ const ReadCSV = (props) => {
   };
 
   return (
-    <div>
-      <h3>
-        Read CSV file in React -{" "}
-        <a
-          href="https://www.cluemediator.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Clue Mediator
-        </a>
-      </h3>
-      <input type="file" accept=".csv,.xlsx,.xls" onChange={handleFileUpload} />
-      <DataTable pagination highlightOnHover columns={columns} data={data} />
-    </div>
+    <input type="file" accept=".csv,.xlsx,.xls" onChange={handleFileUpload} />
   );
 };
 
-ReadCSV.propTypes = {};
+CSVInput.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setData: PropTypes.func.isRequired,
+  setColumns: PropTypes.func.isRequired,
+};
 
-export default ReadCSV;
+export default CSVInput;

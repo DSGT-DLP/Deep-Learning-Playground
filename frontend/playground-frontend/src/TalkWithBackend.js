@@ -1,9 +1,9 @@
 export const train_and_output = (
   user_arch,
   criterion,
-  optimizer_name,
-  problem_type,
-  usingDefault,
+  optimizerName,
+  problemType,
+  usingDefaultDataset,
   epochs
 ) => {
   fetch("/run", {
@@ -11,9 +11,9 @@ export const train_and_output = (
     body: JSON.stringify({
       user_arch,
       criterion,
-      optimizer_name,
-      problem_type,
-      default: usingDefault,
+      optimizer_name: optimizerName,
+      problem_type: problemType,
+      default: usingDefaultDataset,
       epochs,
       // user_arch: [
       //   "nn.Linear(4, 10)",

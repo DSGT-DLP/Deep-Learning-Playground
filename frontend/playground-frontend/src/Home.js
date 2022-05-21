@@ -45,12 +45,24 @@ const Home = () => {
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[0]);
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
+  const input_responses = {
+    addedLayers,
+    targetCol: targetCol?.label,
+    features: features?.map(e => e.label),
+    problemType: problemType?.label,
+    criterion: criterion?.label,
+    optimizerName: optimizerName?.label,
+    usingDefaultDataset: usingDefaultDataset.value,
+    shuffle: shuffle?.value,
+    epochs,
+    testSize,
+  };
 
   const inputColumnOptions = csvColumns.map((e, i) => ({
     label: e.name,
     value: i,
   }));
-  const input_query_responses = [
+  const input_queries = [
     {
       queryText: "Target Column",
       options: inputColumnOptions,
@@ -136,7 +148,7 @@ const Home = () => {
           ))}
           <AddNewLayer />
 
-          <TrainButton />
+          <TrainButton {...input_responses} />
         </BackgroundLayout>
 
         <div style={{ marginTop: 20 }} />
@@ -169,7 +181,7 @@ const Home = () => {
       <_TitleText text="Deep Learning Parameters" />
 
       <BackgroundLayout>
-        {input_query_responses.map((e) => (
+        {input_queries.map((e) => (
           <Input {...e} key={e.queryText} />
         ))}
       </BackgroundLayout>
@@ -184,8 +196,6 @@ const Home = () => {
       />
 
       <_TitleText text="Output" />
-
-      <img src={DSGTLogo} alt="DSGT Logo" width="60" height="60" />
     </div>
   );
 };

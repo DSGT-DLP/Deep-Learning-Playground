@@ -21,6 +21,7 @@ import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DataTable from "react-data-table-component";
+import { train_and_output } from "./TalkWithBackend";
 
 const _TitleText = (props) => {
   const { text } = props;
@@ -44,32 +45,6 @@ const Home = () => {
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[0]);
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
-
-  const train_and_output = () => {
-    fetch("/run", {
-      method: "POST",
-      body: JSON.stringify({
-        user_arch: [
-          "nn.Linear(4, 10)",
-          "nn.ReLU()",
-          "nn.Linear(10, 3)",
-          "nn.Softmax()",
-        ],
-        criterion: "CELOSS",
-        optimizer_name: "SGD",
-        problem_type: "classification",
-        default: true,
-        epochs: 10,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      });
-  };
 
   const columnOptions = csvColumns.map((e, i) => ({ label: e.name, value: i }));
   const input_query_responses = [

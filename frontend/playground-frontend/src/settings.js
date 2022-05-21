@@ -1,7 +1,7 @@
 export const POSSIBLE_LAYERS = [
   {
     display_name: "Linear",
-    object_name: "nn.linear",
+    object_name: "nn.Linear",
     parameters: {
       inputSize: { index: 0, parameter_name: "Input size" },
       outputSize: { index: 1, parameter_name: "Output size" },
@@ -22,29 +22,29 @@ export const POSSIBLE_LAYERS = [
 export const CRITERIONS = [
   {
     label: "L1LOSS",
-    value: 0,
+    value: "L1LOSS",
     object_name: "nn.L1Loss()",
   },
   {
     label: "MSELOSS",
-    value: 1,
+    value: "MSELOSS",
     object_name: "nn.MSELoss()",
   },
   {
     label: "BCELOSS",
-    value: 2,
+    value: "BCELOSS",
     object_name: "nn.BCELoss()",
   },
   {
     label: "CELOSS",
-    value: 3,
+    value: "CELOSS",
     object_name: "nn.CrossEntropyLoss(reduction='mean')",
   },
 ];
 
 export const PROBLEM_TYPES = [
-  { label: "Classification", value: 0 },
-  { label: "Regression", value: 1 },
+  { label: "Classification", value: "classification" },
+  { label: "Regression", value: "regression" },
 ];
 
 export const BOOL_OPTIONS = [
@@ -52,6 +52,6 @@ export const BOOL_OPTIONS = [
   { label: "True", value: true },
 ];
 export const OPTIMIZER_NAMES = [
-  { label: "SGD", value: 0 },
-  { label: "Adam", value: 1 },
+  { label: "SGD", value: "SGD" },
+  { label: "Adam", value: "Adam" },
 ];

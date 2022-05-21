@@ -157,14 +157,17 @@ def dl_drive(
 @app.route('/run', methods=['GET', 'POST'])
 def train_and_output():
     request_data = json.loads(request.data)
-    print(request_data)
 
-    user_arch = request_data['user_arch']
-    criterion = request_data['criterion']
-    optimizer_name = request_data['optimizer_name']
-    problem_type = request_data['problem_type']
-    default = request_data['default']
-    epochs = request_data['epochs']
+    user_arch=request_data['user_arch']
+    criterion=request_data['criterion']
+    optimizer_name=request_data['optimizer_name']
+    problem_type=request_data['problem_type']
+    target=request_data['target']
+    features=request_data['features']
+    default=request_data['default']
+    test_size=request_data['test_size']
+    epochs=request_data['epochs']
+    shuffle=request_data['shuffle']
 
     if request.method == 'POST':
         print(

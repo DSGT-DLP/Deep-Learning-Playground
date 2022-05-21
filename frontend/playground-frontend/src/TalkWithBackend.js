@@ -3,8 +3,12 @@ export const train_and_output = (
   criterion,
   optimizerName,
   problemType,
+  targetCol,
+  features,
   usingDefaultDataset,
-  epochs
+  testSize,
+  epochs,
+  shuffle
 ) => {
   fetch("/run", {
     method: "POST",
@@ -13,8 +17,12 @@ export const train_and_output = (
       criterion,
       optimizer_name: optimizerName,
       problem_type: problemType,
+      target: targetCol,
+      features,
       default: usingDefaultDataset,
+      test_size: testSize,
       epochs,
+      shuffle,
       // user_arch: [
       //   "nn.Linear(4, 10)",
       //   "nn.ReLU()",

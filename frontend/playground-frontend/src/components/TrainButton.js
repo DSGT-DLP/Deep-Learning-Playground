@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../constants";
+import { train_and_output } from "../TalkWithBackend";
 
 const TrainButton = (props) => {
   const {
@@ -41,15 +42,34 @@ const TrainButton = (props) => {
     return user_arch;
   };
 
+  const validateInputs = (user_arch) => {
+    let alertMessage = "";
+    if (!user_arch) alertMessage += "At least one layer must be added. ";
+    if (!criterion) alertMessage += "A criterion must be specified. ";
+    if (!optimizerName) alertMessage += "An optimizer name must be specified. ";
+    if (!problemType) alertMessage +="A problem type must be specified. ";
+    
+    if (user_arch && criterion && optimizerName && problemType) return true;
+
+    alert(alertMessage);
+    return false;
+  };
+
   const onClick = () => {
     const user_arch = make_user_arch();
+    if (!validateInputs(user_arch)) return;
+
     console.log(
       user_arch,
       criterion,
       optimizerName,
       problemType,
+      targetCol,
+      features,
       usingDefaultDataset,
-      epochs
+      testSize,
+      epochs,
+      shuffle
     );
   };
 

@@ -93,6 +93,7 @@ const Home = () => {
       queryText: "Default",
       options: BOOL_OPTIONS,
       onChange: setUsingDefaultDataset,
+      defaultValue: usingDefaultDataset,
     },
     {
       queryText: "Epochs",

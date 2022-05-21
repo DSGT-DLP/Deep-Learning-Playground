@@ -15,11 +15,13 @@ import {
   LayerChoice,
   Input,
 } from "./components";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import DSGTLogo from "./images/logos/dsgt-logo-light.png";
 import { CRITERIONS } from "./settings";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { useDropzone } from "react-dropzone";
+import * as XLSX from 'xlsx';
+import DataTable from 'react-data-table-component';
 
 const _TitleText = (props) => {
   const { text } = props;
@@ -30,6 +32,7 @@ const Home = () => {
   const [selectedFile, setSelectedFile] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
 
+  // input responses
   const [addedLayers, setAddedLayers] = useState([]);
   const [problemType, setProblemType] = useState();
   const [criterion, setCriterion] = useState();
@@ -40,6 +43,9 @@ const Home = () => {
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[0]);
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
+
+  const [columns, setColumns] = useState([]);
+  const [data, setData] = useState([]);
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: { "text/csv": [".csv"] },
@@ -148,6 +154,7 @@ const Home = () => {
               {files}
             </section>
           </RectContainer>
+
           {addedLayers.map((e, i) => (
             <AddedLayer
               layer={e}
@@ -167,21 +174,19 @@ const Home = () => {
         <_TitleText text="Layers Inventory" />
 
         <BackgroundLayout>
-          {POSSIBLE_LAYERS.map((e) => {
-            return (
-              <LayerChoice
-                layer={e}
-                key={e.display_name}
-                onDrop={(newLayer) => {
-                  setAddedLayers((currentAddedLayers) => {
-                    const copyCurrent = [...currentAddedLayers];
-                    copyCurrent.push(newLayer);
-                    return copyCurrent;
-                  });
-                }}
-              />
-            );
-          })}
+          {POSSIBLE_LAYERS.map((e) => (
+            <LayerChoice
+              layer={e}
+              key={e.display_name}
+              onDrop={(newLayer) => {
+                setAddedLayers((currentAddedLayers) => {
+                  const copyCurrent = [...currentAddedLayers];
+                  copyCurrent.push(newLayer);
+                  return copyCurrent;
+                });
+              }}
+            />
+          ))}
         </BackgroundLayout>
       </DndProvider>
 

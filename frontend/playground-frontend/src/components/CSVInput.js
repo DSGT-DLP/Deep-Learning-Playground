@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 
 // src: https://www.cluemediator.com/read-csv-file-in-react
 const CSVInput = (props) => {
-  const { data, columns, setData, setColumns } = props;
+  const { setData, setColumns } = props;
 
   // process CSV data
   const processData = (dataString) => {
@@ -51,6 +51,7 @@ const CSVInput = (props) => {
   // handle file upload
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
+    console.log(file);
     const reader = new FileReader();
     reader.onload = (evt) => {
       /* Parse data */
@@ -72,8 +73,6 @@ const CSVInput = (props) => {
 };
 
 CSVInput.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object).isRequired,
-  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   setData: PropTypes.func.isRequired,
   setColumns: PropTypes.func.isRequired,
 };

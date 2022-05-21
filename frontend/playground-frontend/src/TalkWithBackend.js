@@ -31,8 +31,12 @@ export const train_and_output = (
       "Content-type": "application/json; charset=UTF-8",
     },
   })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-    });
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      throw new Error("Something went wrong");
+    })
+    .then((data) => console.log(data))
+    .catch((error) => console.log(error));
 };

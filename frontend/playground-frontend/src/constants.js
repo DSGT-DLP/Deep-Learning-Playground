@@ -3,6 +3,7 @@ export const COLORS = {
   layer: "#CD7BFF",
   addLayer: "#F2ECFF",
   background: "#F6F6FF",
+  dark_blue: "#003057",
 };
 
 export const LAYOUT = {

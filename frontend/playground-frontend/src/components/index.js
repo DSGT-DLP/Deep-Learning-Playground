@@ -6,3 +6,4 @@ export { default as LayerChoice } from "./LayerChoice";
 export { default as Input } from "./Input";
 export { default as DropDown } from "./DropDown";
 export { default as CSVInput } from "./CSVInput";
+export { default as TrainButton } from "./TrainButton";

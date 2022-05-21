@@ -33,6 +33,8 @@ const Home = () => {
 
   // input responses
   const [addedLayers, setAddedLayers] = useState([]);
+  const [targetCol, setTargetCol] = useState();
+  const [features, setFeatures] = useState([]);
   const [problemType, setProblemType] = useState();
   const [criterion, setCriterion] = useState();
   const [optimizerName, setOptimizerName] = useState();
@@ -69,7 +71,19 @@ const Home = () => {
   //     });
   // }, []);
 
+  const columnOptions = csvColumns.map((e, i) => ({ label: e.name, value: i }));
   const input_query_responses = [
+    {
+      queryText: "Target Column",
+      options: columnOptions,
+      onChange: setTargetCol,
+    },
+    {
+      queryText: "Features",
+      options: columnOptions,
+      onChange: setFeatures,
+      isMultiSelect: true,
+    },
     {
       queryText: "Problem Type",
       options: PROBLEM_TYPES,
@@ -174,12 +188,16 @@ const Home = () => {
         ))}
       </BackgroundLayout>
 
+      <_TitleText text="CSV Input" />
+
       <DataTable
         pagination
         highlightOnHover
         columns={csvColumns}
         data={csvData}
       />
+
+      <_TitleText text="Output" />
     </div>
   );
 };

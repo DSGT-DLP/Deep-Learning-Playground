@@ -6,11 +6,17 @@ import { DropDown } from "../components";
 import { CRITERIONS } from "../settings";
 
 const Input = (props) => {
-  const { queryText, options, onChange, defaultValue, freeInputCustomProps } =
-    props;
+  const {
+    queryText,
+    options,
+    onChange,
+    defaultValue,
+    freeInputCustomProps,
+    isMultiSelect,
+  } = props;
 
   return (
-    <div style={{ ...LAYOUT.row, margin: "7.5px 15px" }}>
+    <div style={{ ...LAYOUT.row, margin: 7.5 }}>
       <div style={styles.queryContainer}>
         <p style={styles.queryText}>{queryText}</p>
       </div>
@@ -20,6 +26,7 @@ const Input = (props) => {
             options={options}
             onChange={onChange}
             defaultValue={defaultValue}
+            isMulti={isMultiSelect}
           />
         ) : (
           <input
@@ -45,6 +52,7 @@ Input.propTypes = {
     PropTypes.number,
     PropTypes.string,
   ]),
+  isMultiSelect: PropTypes.bool,
 };
 
 export default Input;
@@ -66,7 +74,7 @@ const styles = {
   },
   responseContainer: {
     height: 50,
-    width: 150,
+    width: 170,
     backgroundColor: COLORS.addLayer,
     display: "flex",
     justifyContent: "center",

@@ -4,12 +4,15 @@ import Select from "react-select";
 import { GENERAL_STYLES } from "../constants";
 
 const DropDown = (props) => {
+  const { options, onChange, defaultValue, isMulti } = props;
+
   return (
     <Select
-      options={props.options}
-      onChange={props.onChange}
+      options={options}
+      onChange={onChange}
       styles={dropdownStyes}
-      defaultValue={props.defaultValue}
+      defaultValue={defaultValue}
+      isMulti={isMulti}
     />
   );
 };
@@ -22,6 +25,7 @@ DropDown.propTypes = {
     PropTypes.number,
     PropTypes.string,
   ]),
+  isMulti: PropTypes.bool,
 };
 
 export default DropDown;

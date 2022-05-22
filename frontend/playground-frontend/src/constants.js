@@ -32,3 +32,11 @@ export const GENERAL_STYLES = {
 export const ITEM_TYPES = {
   NEW_LAYER: "new_layer",
 };
+
+// Vis output paths must be the same as in backend/constants.py
+export const LOSS_VIZ =
+    "../frontend/playground-frontend/src/visualization_output/my_loss_plot.png",
+  ACC_VIZ =
+    "../frontend/playground-frontend/src/visualization_output/my_accuracy_plot.png",
+  CLASSICAL_ML_CONFUSION_MATRIX =
+    "../frontend/playground-frontend/src/visualization_output/confusion_matrix.png";

@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { COLORS, GENERAL_STYLES, LAYOUT } from "./constants";
+import {
+  COLORS,
+  GENERAL_STYLES,
+  LAYOUT,
+  ACC_VIZ,
+  LOSS_VIZ,
+  CLASSICAL_ML_CONFUSION_MATRIX,
+} from "./constants";
 import {
   BOOL_OPTIONS,
   OPTIMIZER_NAMES,

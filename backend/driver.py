@@ -1,13 +1,11 @@
-from inspect import trace
 import pandas as pd
 import traceback
 import os
 from flask import Flask, json, request, jsonify
 
 from utils import *
-from enum import Enum
 from constants import CSV_FILE_NAME, ONNX_MODEL
-from loss import LossFunctions
+from dataset import *
 from optimizer import get_optimizer
 from model_parser import parse_deep_user_architecture, get_object
 from dl_trainer import train_deep_model, get_deep_predictions
@@ -143,7 +141,7 @@ def dl_drive(
         optimizer = get_optimizer(
             model, optimizer_name=optimizer_name, learning_rate=0.05
         )
-        criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
+        #criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
         print(f"loss criterion: {criterion}")
         train_loader, test_loader = get_dataloaders(
             X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=20

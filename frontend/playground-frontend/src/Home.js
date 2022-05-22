@@ -24,7 +24,6 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import DataTable from "react-data-table-component";
 import LOSS_VIZ from "./visualization_output/my_loss_plot.png";
 import ACC_VIZ from "./visualization_output/my_accuracy_plot.png";
-// import CLASSICAL_ML_CONFUSION_MATRIX from "./visualization_output/confusion_matrix.png";
 
 const _TitleText = (props) => {
   const { text } = props;

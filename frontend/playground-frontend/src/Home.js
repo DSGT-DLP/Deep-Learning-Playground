@@ -212,8 +212,12 @@ const Home = () => {
         data={dl_results_data}
       />
 
-      <img src={ACC_VIZ} alt="ACC Viz" />
-      <img src={LOSS_VIZ} alt="ACC Viz" />
+      {dl_results_data?.length ? (
+        <>
+          <img src={ACC_VIZ} alt="ACC Viz" />
+          <img src={LOSS_VIZ} alt="ACC Viz" />
+        </>
+      ) : undefined}
     </div>
   );
 };

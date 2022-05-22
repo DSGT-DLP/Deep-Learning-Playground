@@ -50,7 +50,7 @@ const Home = () => {
   const [usingDefaultDataset, setUsingDefaultDataset] = useState(
     BOOL_OPTIONS[0]
   );
-  const [shuffle, setShuffle] = useState(BOOL_OPTIONS[0]);
+  const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
   const input_responses = {

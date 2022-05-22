@@ -9,7 +9,8 @@ export const train_and_output = async (
   testSize,
   epochs,
   shuffle,
-  set_dl_results_data
+  set_dl_results_data,
+  csvData,
 ) => {
   return await fetch("/run", {
     method: "POST",
@@ -24,6 +25,7 @@ export const train_and_output = async (
       test_size: testSize,
       epochs,
       shuffle,
+      csvData,
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",

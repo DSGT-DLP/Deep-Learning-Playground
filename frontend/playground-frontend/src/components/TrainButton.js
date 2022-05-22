@@ -17,6 +17,7 @@ const TrainButton = (props) => {
     epochs,
     testSize,
     set_dl_results_data,
+    csvData
   } = props;
 
   const [backgroundColor, setBackgroundColor] = useState(COLORS.dark_blue);
@@ -73,6 +74,8 @@ const TrainButton = (props) => {
     const user_arch = make_user_arch();
     if (!validateInputs(user_arch)) return;
 
+    const csvDataStr = JSON.stringify(csvData);
+
     const success = await train_and_output(
       user_arch,
       criterion,
@@ -84,7 +87,8 @@ const TrainButton = (props) => {
       testSize,
       epochs,
       shuffle,
-      set_dl_results_data
+      set_dl_results_data,
+      csvDataStr
     );
 
     if (success === true) {

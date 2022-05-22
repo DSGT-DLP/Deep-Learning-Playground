@@ -86,6 +86,7 @@ def dl_drive(
     test_size=0.2,
     epochs=5,
     shuffle=True,
+    json_csv_data_str=""
 ):
     """
     Driver function/entrypoint into backend for deep learning model. Onnx file is generated containing model architecture for user to visualize in netron.app
@@ -115,7 +116,11 @@ def dl_drive(
             dataset = fetch_california_housing()
             X, y = get_default_dataset(dataset)
         else:
-            input_df = pd.read_csv(CSV_FILE_NAME)
+            if json_csv_data_str:
+                input_df = pd.read_json(json_csv_data_str, orient='records')
+            else:
+                input_df = pd.read_csv(CSV_FILE_NAME)
+
             y = input_df[target]
             X = input_df[features]
 
@@ -168,6 +173,7 @@ def train_and_output():
     test_size = request_data['test_size']
     epochs = request_data['epochs']
     shuffle = request_data['shuffle']
+    csvDataStr = request_data['csvData']
 
     if request.method == 'POST':
         print(
@@ -182,6 +188,7 @@ def train_and_output():
                 test_size=test_size,
                 epochs=epochs,
                 shuffle=shuffle,
+                json_csv_data_str=csvDataStr,
             )
         )
         return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json()}), 200
@@ -197,7 +204,7 @@ if __name__ == "__main__":
     #         "CELOSS",
     #         "SGD",
     #         problem_type="classification",
-    #         default=True,
+    #         default=False,
     #         epochs=10,
     #     )
     # )

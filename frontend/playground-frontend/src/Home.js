@@ -155,6 +155,7 @@ const Home = () => {
           <TrainButton
             {...input_responses}
             set_dl_results_data={set_dl_results_data}
+            csvData={csvData}
           />
         </BackgroundLayout>
 

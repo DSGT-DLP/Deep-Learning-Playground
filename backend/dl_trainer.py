@@ -1,7 +1,7 @@
 from dl_eval import compute_accuracy
 from utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv
 from utils import ProblemType
-from constants import DEEP_LEARNING_RESULT_CSV_PATH
+from constants import DEEP_LEARNING_RESULT_CSV_PATH, EPOCH, TRAIN_TIME, TRAIN_LOSS, TEST_LOSS, TRAIN_ACC, TEST, VAL_TEST_ACC
 import torch  # pytorch
 import torch.nn as nn
 import matplotlib.pyplot as plt
@@ -81,18 +81,18 @@ def train_deep_classification_model(
             )
         result_table = pd.DataFrame(
             {
-                "epoch": [i for i in range(1, epochs + 1)],
-                "train time": epoch_time,
-                "train_loss": train_loss,
-                "test_loss": test_loss,
-                "train_acc": train_acc,
-                "val/test acc": val_acc,
+                EPOCH: [i for i in range(1, epochs + 1)],
+                TRAIN_TIME: epoch_time,
+                TRAIN_LOSS: train_loss,
+                TEST_LOSS: test_loss,
+                TRAIN_ACC: train_acc,
+                VAL_TEST_ACC: val_acc,
             }
         )
         print(result_table.head())
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
-        generate_acc_plot(train_acc, val_acc)
-        generate_loss_plot(train_loss, test_loss)
+        generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
     except Exception:
         raise Exception("Deep Learning classification didn't train properly")
 

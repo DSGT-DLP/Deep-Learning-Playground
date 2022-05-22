@@ -31,7 +31,7 @@ const styles = {
     width: 110,
     height: 50,
     padding: 10,
-    marginRight: 10,
+    margin: 7.5,
     border: `5px solid transparent`,
     display: "flex",
     alignItems: "center",

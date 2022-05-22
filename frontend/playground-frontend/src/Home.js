@@ -48,7 +48,7 @@ const Home = () => {
   const input_responses = {
     addedLayers,
     targetCol: targetCol?.label,
-    features: features?.map(e => e.label),
+    features: features?.map((e) => e.label),
     problemType: problemType?.value,
     criterion: criterion?.value,
     optimizerName: optimizerName?.value,
@@ -125,7 +125,9 @@ const Home = () => {
       <DndProvider backend={HTML5Backend}>
         <_TitleText text="Implemented Layers" />
         <BackgroundLayout>
-          <RectContainer style={{ backgroundColor: COLORS.input, width: 200 }}>
+          <RectContainer
+            style={{ backgroundColor: COLORS.input, width: 200}}
+          >
             <CSVInput
               data={csvData}
               columns={csvColumns}

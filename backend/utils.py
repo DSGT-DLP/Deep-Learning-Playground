@@ -1,10 +1,12 @@
-from constants import LOSS_VIZ, ACC_VIZ, TRAIN_TIME_CSV
+from constants import LOSS_VIZ, ACC_VIZ, TRAIN_TIME_CSV, DEEP_LEARNING_RESULT_CSV_PATH
 import pandas as pd
 import torch
 import matplotlib.pyplot as plt
 from enum import Enum
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
+import csv
+import json
 
 
 class ProblemType(Enum):
@@ -34,7 +36,8 @@ def get_tensors(X_train, X_test, y_train, y_test):
     X_train_tensor = torch.reshape(
         X_train_tensor, (X_train_tensor.size()[0], 1, X_train_tensor.size()[1])
     )
-    y_train_tensor = torch.reshape(y_train_tensor, (y_train_tensor.size()[0], 1))
+    y_train_tensor = torch.reshape(
+        y_train_tensor, (y_train_tensor.size()[0], 1))
 
     X_test_tensor = Variable(torch.Tensor(X_test.to_numpy()))
     y_test_tensor = Variable(torch.Tensor(y_test.to_numpy()))
@@ -65,7 +68,8 @@ def get_dataloaders(
     train_loader = DataLoader(
         train, batch_size=batch_size, shuffle=False, drop_last=True
     )
-    test_loader = DataLoader(test, batch_size=batch_size, shuffle=False, drop_last=True)
+    test_loader = DataLoader(test, batch_size=batch_size,
+                             shuffle=False, drop_last=True)
     return train_loader, test_loader
 
 
@@ -113,5 +117,41 @@ def generate_train_time_csv(epoch_time):
         epoch_time (list): array consisting of train time for each epoch
     """
     epoch = [i for i in range(1, len(epoch_time) + 1)]
-    df = pd.DataFrame({"Train Time": epoch_time}, index=epoch, columns=["Train Time"])
+    df = pd.DataFrame({"Train Time": epoch_time},
+                      index=epoch, columns=["Train Time"])
     df.to_csv(TRAIN_TIME_CSV)
+
+
+def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: str = None) -> str:
+    """
+    Creates a JSON data derived from the input CSV. Will return
+    the JSON data and create a JSON file with the data, if a jsonFilePath is
+    provided. src: https://pythonexamples.org/python-csv-to-json/
+
+    :param csvFilePath: optional, file path of csv input file
+    :param jsonFilePath: optional, output JSON file
+    :return: Converted CSV file in JSON format
+    """
+    jsonArray = []
+
+    # read csv file
+    with open(csvFilePath, encoding='utf-8') as csvf:
+        # load csv file data using csv library's dictionary reader
+        csvReader = csv.DictReader(csvf)
+
+        # convert each csv row into python dict
+        for row in csvReader:
+            # add this python dict to json array
+            jsonArray.append(row)
+
+    # creates the JSON string item and JSON data
+    jsonString = json.dumps(jsonArray, indent=4)
+    jsonData = json.loads(jsonString)    
+
+    # convert python jsonArray to JSON String and write to file, if path is
+    # provided
+    if jsonFilePath:
+        with open(jsonFilePath, 'w', encoding='utf-8') as jsonf:
+            jsonf.write(jsonString)
+
+    return jsonData

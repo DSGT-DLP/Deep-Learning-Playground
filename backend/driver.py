@@ -158,16 +158,16 @@ def dl_drive(
 def train_and_output():
     request_data = json.loads(request.data)
 
-    user_arch=request_data['user_arch']
-    criterion=request_data['criterion']
-    optimizer_name=request_data['optimizer_name']
-    problem_type=request_data['problem_type']
-    target=request_data['target']
-    features=request_data['features']
-    default=request_data['default']
-    test_size=request_data['test_size']
-    epochs=request_data['epochs']
-    shuffle=request_data['shuffle']
+    user_arch = request_data['user_arch']
+    criterion = request_data['criterion']
+    optimizer_name = request_data['optimizer_name']
+    problem_type = request_data['problem_type']
+    target = request_data['target']
+    features = request_data['features']
+    default = request_data['default']
+    test_size = request_data['test_size']
+    epochs = request_data['epochs']
+    shuffle = request_data['shuffle']
 
     if request.method == 'POST':
         print(
@@ -184,7 +184,7 @@ def train_and_output():
                 shuffle=shuffle,
             )
         )
-        return jsonify({"success": True, "message": "Contact deleted successfully 22"}), 201
+        return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json()}), 200
 
     return jsonify({"success": True}), 200
 

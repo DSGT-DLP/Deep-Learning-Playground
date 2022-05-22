@@ -1,4 +1,4 @@
-export const train_and_output = (
+export const train_and_output = async (
   user_arch,
   criterion,
   optimizerName,
@@ -11,7 +11,7 @@ export const train_and_output = (
   shuffle,
   set_dl_results_data
 ) => {
-  fetch("/run", {
+  return await fetch("/run", {
     method: "POST",
     body: JSON.stringify({
       user_arch,
@@ -35,6 +35,9 @@ export const train_and_output = (
       }
       throw new Error("Something went wrong");
     })
-    .then((data) => set_dl_results_data(data.dl_results))
-    .catch((error) => console.log(error));
+    .then((data) => {
+      set_dl_results_data(data.dl_results);
+      return Boolean(data.dl_results);
+    })
+    .catch((error) => error);
 };

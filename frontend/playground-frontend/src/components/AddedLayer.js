@@ -79,7 +79,7 @@ const styles = {
   },
   text: { ...GENERAL_STYLES.p, color: "white", fontSize: 25 },
   input_box: {
-    marginTop: 10,
+    margin: 7.5,
     backgroundColor: "white",
     width: 130,
     paddingInline: 5,

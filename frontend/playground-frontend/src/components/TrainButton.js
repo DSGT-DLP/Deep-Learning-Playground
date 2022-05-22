@@ -49,18 +49,24 @@ const TrainButton = (props) => {
     if (!criterion) alertMessage += "A criterion must be specified. ";
     if (!optimizerName) alertMessage += "An optimizer name must be specified. ";
     if (!problemType) alertMessage += "A problem type must be specified. ";
+    if (!usingDefaultDataset && (!targetCol || !features?.length))
+      alertMessage +=
+        "Must specify an input file, target, and features if not selecting default dataset.";
 
-    if (user_arch && criterion && optimizerName && problemType) return true;
+    if (user_arch && criterion && optimizerName && problemType) {
+      if (usingDefaultDataset) return true;
+      if (targetCol && features.length) return true;
+    }
 
     alert(alertMessage);
     return false;
   };
 
-  const onClick = () => {
+  const onClick = async() => {
     const user_arch = make_user_arch();
     if (!validateInputs(user_arch)) return;
 
-    train_and_output(
+    const success = await train_and_output(
       user_arch,
       criterion,
       optimizerName,
@@ -73,6 +79,12 @@ const TrainButton = (props) => {
       shuffle,
       set_dl_results_data
     );
+
+    if (success === true) {
+      alert("Training successful! Scroll to see results!");
+    } else {
+      alert("Training failed. Check inputs");
+    }
   };
 
   return (

@@ -1,7 +1,8 @@
+from loss import compute_loss
 from dl_eval import compute_accuracy
 from utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv
 from utils import ProblemType
-from constants import DEEP_LEARNING_RESULT_CSV_PATH
+from constants import DEEP_LEARNING_RESULT_CSV_PATH, EPOCH, TRAIN_TIME, TRAIN_LOSS, TEST_LOSS, TRAIN_ACC, TEST, VAL_TEST_ACC
 import torch  # pytorch
 import torch.nn as nn
 import matplotlib.pyplot as plt
@@ -30,11 +31,11 @@ def train_deep_classification_model(
         train_loader (torch.DataLoader): Train Dataset split into batches
         test_loader (torch.DataLoader): Test Dataset split into batches
         optimizer (torch.optim.Optimizer): Optimizer to use when training model
-        criterion: Loss function
+        criterion(str): Loss function
         epochs (int): number of epochs
     """
     try:
-        
+
         train_loss = []  # accumulate training loss over each epoch
         test_loss = []  # accumulate testing loss over each epoch
         epoch_time = []  # how much time it takes for each epoch
@@ -47,14 +48,13 @@ def train_deep_classification_model(
             model.train(True)  # set model to train mode
             batch_loss = []  # accumulate list of loss per batch
             for i, data in enumerate(train_loader):
-                input, labels = data  # each batch is (input, label) pair in dataloader
+                # each batch is (input, label) pair in dataloader
+                input, labels = data
                 optimizer.zero_grad()  # zero out gradient for each batch
                 output = model(input)  # make prediction on input
                 batch_train_acc.append(compute_accuracy(output, labels))
-                # output = torch.argmax(output, dim=2)
-                output = torch.reshape(output, (output.shape[0], output.shape[2]))
-                labels = labels.squeeze_()
-                loss = criterion(output, labels.long())  # compute the loss
+                
+                loss = compute_loss(criterion, output, labels)
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
                 batch_loss.append(loss.detach().numpy())
@@ -81,18 +81,18 @@ def train_deep_classification_model(
             )
         result_table = pd.DataFrame(
             {
-                "epoch": [i for i in range(1, epochs + 1)],
-                "train time": epoch_time,
-                "train_loss": train_loss,
-                "test_loss": test_loss,
-                "train_acc": train_acc,
-                "val/test acc": val_acc,
+                EPOCH: [i for i in range(1, epochs + 1)],
+                TRAIN_TIME: epoch_time,
+                TRAIN_LOSS: train_loss,
+                TEST_LOSS: test_loss,
+                TRAIN_ACC: train_acc,
+                VAL_TEST_ACC: val_acc,
             }
         )
         print(result_table.head())
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
-        generate_acc_plot(train_acc, val_acc)
-        generate_loss_plot(train_loss, test_loss)
+        generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
     except Exception:
         raise Exception("Deep Learning classification didn't train properly")
 
@@ -111,7 +111,7 @@ def train_deep_regression_model(
         epochs (int): number of epochs
     """
     try:
-        
+
         train_loss = []  # accumulate training loss over each epoch
         test_loss = []  # accumulate testing loss over each epoch
         epoch_time = []  # how much time it takes for each epoch
@@ -120,7 +120,8 @@ def train_deep_regression_model(
             model.train(True)  # set model to train mode
             batch_loss = []  # accumulate list of loss per batch
             for i, data in enumerate(train_loader):
-                input, labels = data  # each batch is (input, label) pair in dataloader
+                # each batch is (input, label) pair in dataloader
+                input, labels = data
                 optimizer.zero_grad()  # zero out gradient for each batch
                 output = model(input)  # make prediction on input
                 loss = criterion(output, labels)  # compute the loss
@@ -143,10 +144,10 @@ def train_deep_regression_model(
         generate_loss_plot(train_loss, test_loss)
         result_table = pd.DataFrame(
             {
-                "epoch": [i for i in range(1, epochs + 1)],
-                "train time": epoch_time,
-                "train_loss": train_loss,
-                "test_loss": test_loss,
+                EPOCH: [i for i in range(1, epochs + 1)],
+                TRAIN_TIME: epoch_time,
+                TRAIN_LOSS: train_loss,
+                TEST_LOSS: test_loss,
             }
         )
         print(result_table.head())

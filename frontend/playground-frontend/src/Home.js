@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  COLORS,
-  GENERAL_STYLES,
-  LAYOUT,
-  ACC_VIZ,
-  LOSS_VIZ,
-  CLASSICAL_ML_CONFUSION_MATRIX,
-} from "./constants";
+import { COLORS, GENERAL_STYLES, LAYOUT } from "./constants";
 import {
   BOOL_OPTIONS,
   OPTIMIZER_NAMES,
@@ -29,6 +22,9 @@ import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DataTable from "react-data-table-component";
+import LOSS_VIZ from "./visualization_output/my_loss_plot.png";
+import ACC_VIZ from "./visualization_output/my_accuracy_plot.png";
+// import CLASSICAL_ML_CONFUSION_MATRIX from "./visualization_output/confusion_matrix.png";
 
 const _TitleText = (props) => {
   const { text } = props;
@@ -215,6 +211,9 @@ const Home = () => {
         columns={csvDataToColumns(dl_results_data)}
         data={dl_results_data}
       />
+
+      <img src={ACC_VIZ} alt="ACC Viz" />
+      <img src={LOSS_VIZ} alt="ACC Viz" />
     </div>
   );
 };

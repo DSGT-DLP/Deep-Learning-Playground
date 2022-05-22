@@ -10,12 +10,14 @@ export const POSSIBLE_LAYERS = [
   {
     display_name: "ReLU",
     object_name: "nn.ReLU",
-    parameters: [],
+    parameters: {},
   },
   {
     display_name: "Softmax",
     object_name: "nn.Softmax",
-    parameters: [],
+    parameters: {
+      inputSize: { index: 0, parameter_name: "dim" },
+    },
   },
 ];
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../constants";
@@ -18,6 +18,8 @@ const TrainButton = (props) => {
     testSize,
     set_dl_results_data,
   } = props;
+
+  const [backgroundColor, setBackgroundColor] = useState(COLORS.dark_blue);
 
   const make_user_arch = () => {
     // making a user_arch array by including all added layers and their parameters to make something like:
@@ -62,7 +64,11 @@ const TrainButton = (props) => {
     return false;
   };
 
-  const onClick = async() => {
+  const onClick = async () => {
+    setBackgroundColor((currentColor) =>
+      currentColor === COLORS.dark_blue ? COLORS.gold : COLORS.dark_blue
+    );
+
     const user_arch = make_user_arch();
     if (!validateInputs(user_arch)) return;
 
@@ -88,7 +94,7 @@ const TrainButton = (props) => {
   };
 
   return (
-    <RectContainer style={styles.container}>
+    <RectContainer style={{ ...styles.container, backgroundColor }}>
       <button style={styles.button} onClick={onClick}>
         Train!
       </button>
@@ -114,7 +120,6 @@ export default TrainButton;
 
 const styles = {
   container: {
-    backgroundColor: COLORS.dark_blue,
     padding: 0,
     width: 130,
     height: 70,

@@ -76,21 +76,23 @@ def get_dataloaders(
 
 def generate_loss_plot(results_path):
     """
-    Given train/test loss from the training phase, plot the loss in a matplotlib plot
+    Given a training result file, plot the loss in a matplotlib plot
     Args:
-        train_loss (list): train loss per epoch
-        test_loss (list): test loss per epoch
+        results_path(str): path to csv file containing training result
     """
     results = pd.read_csv(results_path)
     train_loss = results[TRAIN_LOSS]
     test_loss = results[TEST_LOSS]
-
     assert len(train_loss) == len(test_loss)
     plt.figure("Loss Plot")
+    plt.clf()
     x_axis = [i for i in range(1, len(train_loss) + 1)]
     plt.scatter(x_axis, train_loss, c="r", label="train loss")
     plt.scatter(x_axis, test_loss, c="b", label="test loss")
-    plt.legend()
+    #get unique labels for legend
+    handles, labels = plt.gca().get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    plt.legend(by_label.values(), by_label.keys())
     plt.title("Train vs. Test loss for your Deep Learning Model")
     plt.xlabel("Epoch Number")
     plt.ylabel("Loss")
@@ -99,24 +101,27 @@ def generate_loss_plot(results_path):
 
 def generate_acc_plot(results_path):
     """
-    Given train/test loss from the training phase, plot the accuracy in a matplotlib plot
+    Given training result file, plot the accuracy in a matplotlib plot
     Args:
-        train_loss (list): train loss per epoch
-        test_loss (list): test loss per epoch
+        results_path(str): path to csv file containing training result
     """
     results = pd.read_csv(results_path)
     train_acc = results[TRAIN_ACC]
     val_acc = results[VAL_TEST_ACC]
     assert len(train_acc) == len(val_acc)
     plt.figure("Accuracy Plot")
+    plt.clf()
     x_axis = [i for i in range(1, len(train_acc) + 1)]
     plt.scatter(x_axis, train_acc, c="r", label="train accuracy")
     plt.scatter(x_axis, val_acc, c="b", label="test accuracy")
-    plt.legend()
+    #get unique labels for legend
+    handles, labels = plt.gca().get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    plt.legend(by_label.values(), by_label.keys())
     plt.title("Train vs. Test accuracy for your Deep Learning Model")
     plt.xlabel("Epoch Number")
     plt.ylabel("Accuracy")
-    plt.savefig(ACC_VIZ)
+    plt.savefig(ACC_VIZ) 
 
 
 def generate_train_time_csv(epoch_time):

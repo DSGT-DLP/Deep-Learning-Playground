@@ -3,7 +3,8 @@ export const COLORS = {
   layer: "#CD7BFF",
   addLayer: "#F2ECFF",
   background: "#F6F6FF",
-  dark_blue: "#003057",
+  dark_blue: "#003058",
+  gold: "#B3A36A",
 };
 
 export const LAYOUT = {
@@ -32,11 +33,3 @@ export const GENERAL_STYLES = {
 export const ITEM_TYPES = {
   NEW_LAYER: "new_layer",
 };
-
-// Vis output paths must be the same as in backend/constants.py
-export const LOSS_VIZ =
-    "../frontend/playground-frontend/src/visualization_output/my_loss_plot.png",
-  ACC_VIZ =
-    "../frontend/playground-frontend/src/visualization_output/my_accuracy_plot.png",
-  CLASSICAL_ML_CONFUSION_MATRIX =
-    "../frontend/playground-frontend/src/visualization_output/confusion_matrix.png";

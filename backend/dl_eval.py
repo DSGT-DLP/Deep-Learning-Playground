@@ -15,7 +15,7 @@ def compute_accuracy(predicted, actual):
     NOTE: Since we have our training data in "batch form", we will be getting an accuracy for each batch in the dataloader
     """
     prediction = torch.argmax(
-        predicted, dim=1
+        predicted, dim=-1
     )  # identify index of the most likely class
 
     performance = torch.where(

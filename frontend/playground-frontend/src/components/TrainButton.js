@@ -47,7 +47,8 @@ const TrainButton = (props) => {
 
   const validateInputs = (user_arch) => {
     let alertMessage = "";
-    if (!user_arch) alertMessage += "At least one layer must be added. ";
+    if (!user_arch?.length)
+      alertMessage += "At least one layer must be added. ";
     if (!criterion) alertMessage += "A criterion must be specified. ";
     if (!optimizerName) alertMessage += "An optimizer name must be specified. ";
     if (!problemType) alertMessage += "A problem type must be specified. ";

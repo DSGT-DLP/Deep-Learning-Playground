@@ -1,3 +1,4 @@
+from loss import compute_loss
 from dl_eval import compute_accuracy
 from utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv
 from utils import ProblemType
@@ -30,7 +31,7 @@ def train_deep_classification_model(
         train_loader (torch.DataLoader): Train Dataset split into batches
         test_loader (torch.DataLoader): Test Dataset split into batches
         optimizer (torch.optim.Optimizer): Optimizer to use when training model
-        criterion: Loss function
+        criterion(str): Loss function
         epochs (int): number of epochs
     """
     try:
@@ -52,11 +53,8 @@ def train_deep_classification_model(
                 optimizer.zero_grad()  # zero out gradient for each batch
                 output = model(input)  # make prediction on input
                 batch_train_acc.append(compute_accuracy(output, labels))
-                # output = torch.argmax(output, dim=2)
-                output = torch.reshape(
-                    output, (output.shape[0], output.shape[2]))
-                labels = labels.squeeze_()
-                loss = criterion(output, labels.long())  # compute the loss
+                
+                loss = compute_loss(criterion, output, labels)
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
                 batch_loss.append(loss.detach().numpy())

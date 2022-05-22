@@ -67,7 +67,12 @@ const CSVInput = (props) => {
   };
 
   return (
-    <input type="file" accept=".csv,.xlsx,.xls" onChange={handleFileUpload} />
+    <input
+      type="file"
+      accept=".csv,.xlsx,.xls"
+      onChange={handleFileUpload}
+      style={{ width: "100%" }}
+    />
   );
 };
 

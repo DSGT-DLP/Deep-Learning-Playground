@@ -36,6 +36,7 @@ const Home = () => {
   const [dl_results_data, set_dl_results_data] = useState([]);
 
   // input responses
+  const [fileURL, setFileURL] = useState("");
   const [addedLayers, setAddedLayers] = useState([]);
   const [targetCol, setTargetCol] = useState();
   const [features, setFeatures] = useState([]);
@@ -128,13 +129,19 @@ const Home = () => {
       <DndProvider backend={HTML5Backend}>
         <_TitleText text="Implemented Layers" />
         <BackgroundLayout>
-          <RectContainer style={{ backgroundColor: COLORS.input, width: 200 }}>
+          <RectContainer style={styles.fileInput}>
             <CSVInput
               data={csvData}
               columns={csvColumns}
               setData={setCSVData}
               setColumns={setCSVColumns}
             />
+            {/* <input
+              style={{ width: "100%" }}
+              placeholder="Or type in URL..."
+              value={fileURL}
+              onChange={e => setFileURL(e.target.value)}
+            /> */}
           </RectContainer>
 
           {addedLayers.map((e, i) => (
@@ -156,6 +163,7 @@ const Home = () => {
             {...input_responses}
             set_dl_results_data={set_dl_results_data}
             csvData={csvData}
+            // fileURL={fileURL}
           />
         </BackgroundLayout>
 
@@ -215,7 +223,7 @@ const Home = () => {
       {dl_results_data?.length ? (
         <>
           <img src={ACC_VIZ} alt="ACC Viz" />
-          <img src={LOSS_VIZ} alt="ACC Viz" />
+          <img src={LOSS_VIZ} alt="LOSS Viz" />
         </>
       ) : undefined}
     </div>
@@ -236,10 +244,10 @@ const styles = {
   },
   titleText: { ...GENERAL_STYLES.p, color: COLORS.layer, fontSize: 20 },
   fileInput: {
-    fontSize: 13,
-    borderRadius: 4,
-    fontWeight: 700,
-    cursor: "pointer",
+    backgroundColor: COLORS.input,
+    width: 200,
+    ...LAYOUT.column,
+    // justifyContent: "space-between",
   },
 };
 

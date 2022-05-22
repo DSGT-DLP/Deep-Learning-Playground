@@ -17,7 +17,8 @@ const TrainButton = (props) => {
     epochs,
     testSize,
     set_dl_results_data,
-    csvData
+    csvData = null,
+    fileURL = null,
   } = props;
 
   const [backgroundColor, setBackgroundColor] = useState(COLORS.dark_blue);
@@ -53,14 +54,18 @@ const TrainButton = (props) => {
     if (!criterion) alertMessage += "A criterion must be specified. ";
     if (!optimizerName) alertMessage += "An optimizer name must be specified. ";
     if (!problemType) alertMessage += "A problem type must be specified. ";
-    if (!usingDefaultDataset && (!targetCol || !features?.length))
-      alertMessage +=
-        "Must specify an input file, target, and features if not selecting default dataset.";
-
-    if (user_arch && criterion && optimizerName && problemType) {
-      if (usingDefaultDataset) return true;
-      if (targetCol && features.length) return true;
+    if (!usingDefaultDataset) {
+      if (!targetCol || !features?.length) {
+        alertMessage +=
+          "Must specify an input file, target, and features if not selecting default dataset.";
+      }
+      if (!csvData && !fileURL) {
+        alertMessage +=
+          "Must specify an input file either from local storage or from an internet URL.";
+      }
     }
+
+    if (alertMessage.length === 0) return true;
 
     alert(alertMessage);
     return false;
@@ -88,7 +93,8 @@ const TrainButton = (props) => {
       epochs,
       shuffle,
       set_dl_results_data,
-      csvDataStr
+      csvDataStr,
+      fileURL
     );
 
     if (success === true) {

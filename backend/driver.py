@@ -15,6 +15,7 @@ from ml_trainer import train_classical_ml_model
 from model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
+from dataset import read_local_csv_file, read_dataset
 
 app = Flask(__name__)
 
@@ -118,8 +119,6 @@ def dl_drive(
         else:
             if json_csv_data_str:
                 input_df = pd.read_json(json_csv_data_str, orient='records')
-            else:
-                input_df = pd.read_csv(CSV_FILE_NAME)
 
             y = input_df[target]
             X = input_df[features]
@@ -174,8 +173,18 @@ def train_and_output():
     epochs = request_data['epochs']
     shuffle = request_data['shuffle']
     csvDataStr = request_data['csvData']
+    fileURL = request_data['fileURL']
 
     if request.method == 'POST':
+        if not default:
+            if csvDataStr:
+                pass
+            elif fileURL:
+                read_dataset(fileURL)
+            else:
+                raise ValueError("Need a file input")
+                return
+
         print(
             dl_drive(
                 user_arch=user_arch,

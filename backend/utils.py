@@ -1,4 +1,4 @@
-from constants import LOSS_VIZ, ACC_VIZ, TRAIN_TIME_CSV
+from constants import LOSS_VIZ, ACC_VIZ, TRAIN_TIME_CSV, DEEP_LEARNING_RESULT_CSV_PATH, EPOCH, TRAIN_TIME, TRAIN_LOSS, TEST_LOSS, TRAIN_ACC, TEST, VAL_TEST_ACC
 import pandas as pd
 import torch
 import matplotlib.pyplot as plt
@@ -69,13 +69,17 @@ def get_dataloaders(
     return train_loader, test_loader
 
 
-def generate_loss_plot(train_loss, test_loss):
+def generate_loss_plot(results_path):
     """
-    Given train/test loss from the training phase, plot the loss in a matplotlib plot
+    Given result csv file from the training phase, plot the loss in a matplotlib plot
+    
     Args:
-        train_loss (list): train loss per epoch
-        test_loss (list): test loss per epoch
+        results_path(str): path to csv file containing the result of the training
     """
+    results = pd.read_csv(results_path)
+    train_loss = results[TRAIN_LOSS]
+    test_loss = results[TEST_LOSS]
+
     assert len(train_loss) == len(test_loss)
     plt.figure("Loss Plot")
     x_axis = [i for i in range(1, len(train_loss) + 1)]
@@ -88,14 +92,18 @@ def generate_loss_plot(train_loss, test_loss):
     plt.savefig(LOSS_VIZ)
 
 
-def generate_acc_plot(train_acc, val_acc):
+def generate_acc_plot(results_path):
     """
-    Given train/test loss from the training phase, plot the accuracy in a matplotlib plot
+    Given result csv file from the training phase, plot the accuracy in a matplotlib plot
+    
     Args:
-        train_loss (list): train loss per epoch
-        test_loss (list): test loss per epoch
+        results_path(str): path to csv file containing the result of the training
     """
+    results = pd.read_csv(results_path)
+    train_acc = results[TRAIN_ACC]
+    val_acc = results[VAL_TEST_ACC]
     assert len(train_acc) == len(val_acc)
+    plt.figure("Accuracy Plot")
     x_axis = [i for i in range(1, len(train_acc) + 1)]
     plt.scatter(x_axis, train_acc, c="r", label="train accuracy")
     plt.scatter(x_axis, val_acc, c="b", label="test accuracy")

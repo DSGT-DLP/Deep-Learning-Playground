@@ -1,13 +1,14 @@
 from dl_eval import compute_accuracy
 from utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv
 from utils import ProblemType
-from constants import DEEP_LEARNING_RESULT_CSV_PATH
+from constants import DEEP_LEARNING_RESULT_CSV_PATH, EPOCH, TRAIN_TIME, TRAIN_LOSS, TEST_LOSS, TRAIN_ACC, TEST, VAL_TEST_ACC
 import torch  # pytorch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 import numpy as np
 import time
 import pandas as pd
+import traceback
 
 """
 This file contains helpful functions to aid in training and evaluation
@@ -32,64 +33,68 @@ def train_deep_classification_model(
         criterion: Loss function
         epochs (int): number of epochs
     """
-    train_loss = []  # accumulate training loss over each epoch
-    test_loss = []  # accumulate testing loss over each epoch
-    epoch_time = []  # how much time it takes for each epoch
-    train_acc = []  # accuracy of training set
-    val_acc = []  # accuracy of test/validation set
-    for epoch in range(epochs):
-        batch_train_acc = []  # find train accuracy for each batch
-        batch_test_acc = []  # find test accuracy for each batch
-        start_time = time.time()
-        model.train(True)  # set model to train mode
-        batch_loss = []  # accumulate list of loss per batch
-        for i, data in enumerate(train_loader):
-            input, labels = data  # each batch is (input, label) pair in dataloader
-            optimizer.zero_grad()  # zero out gradient for each batch
-            output = model(input)  # make prediction on input
-            batch_train_acc.append(compute_accuracy(output, labels))
-            # output = torch.argmax(output, dim=2)
-            output = torch.reshape(output, (output.shape[0], output.shape[2]))
-            labels = labels.squeeze_()
-            loss = criterion(output, labels.long())  # compute the loss
-            loss.backward()  # backpropagation
-            optimizer.step()  # adjust optimizer weights
-            batch_loss.append(loss.detach().numpy())
-        epoch_time.append(time.time() - start_time)
-        mean_train_loss = np.mean(batch_loss)
-        mean_train_acc = np.mean(batch_train_acc)
-        train_loss.append(mean_train_loss)
-        train_acc.append(mean_train_acc)
+    try:
+        
+        train_loss = []  # accumulate training loss over each epoch
+        test_loss = []  # accumulate testing loss over each epoch
+        epoch_time = []  # how much time it takes for each epoch
+        train_acc = []  # accuracy of training set
+        val_acc = []  # accuracy of test/validation set
+        for epoch in range(epochs):
+            batch_train_acc = []  # find train accuracy for each batch
+            batch_test_acc = []  # find test accuracy for each batch
+            start_time = time.time()
+            model.train(True)  # set model to train mode
+            batch_loss = []  # accumulate list of loss per batch
+            for i, data in enumerate(train_loader):
+                input, labels = data  # each batch is (input, label) pair in dataloader
+                optimizer.zero_grad()  # zero out gradient for each batch
+                output = model(input)  # make prediction on input
+                batch_train_acc.append(compute_accuracy(output, labels))
+                # output = torch.argmax(output, dim=2)
+                output = torch.reshape(output, (output.shape[0], output.shape[2]))
+                labels = labels.squeeze_()
+                loss = criterion(output, labels.long())  # compute the loss
+                loss.backward()  # backpropagation
+                optimizer.step()  # adjust optimizer weights
+                batch_loss.append(loss.detach().numpy())
+            epoch_time.append(time.time() - start_time)
+            mean_train_loss = np.mean(batch_loss)
+            mean_train_acc = np.mean(batch_train_acc)
+            train_loss.append(mean_train_loss)
+            train_acc.append(mean_train_acc)
 
-        model.train(False)  # test the model on test set
-        batch_loss = []
-        for i, data in enumerate(test_loader):
-            input, labels = data
-            test_pred = model(input)
-            batch_test_acc.append(compute_accuracy(test_pred, labels))
-            batch_loss.append(test_pred.detach().numpy())
-        mean_test_loss = np.mean(batch_loss)
-        mean_test_acc = np.mean(batch_test_acc)
-        test_loss.append(mean_test_loss)
-        val_acc.append(mean_test_acc)
+            model.train(False)  # test the model on test set
+            batch_loss = []
+            for i, data in enumerate(test_loader):
+                input, labels = data
+                test_pred = model(input)
+                batch_test_acc.append(compute_accuracy(test_pred, labels))
+                batch_loss.append(test_pred.detach().numpy())
+            mean_test_loss = np.mean(batch_loss)
+            mean_test_acc = np.mean(batch_test_acc)
+            test_loss.append(mean_test_loss)
+            val_acc.append(mean_test_acc)
 
-        print(
-            f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}"
+            print(
+                f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}"
+            )
+        result_table = pd.DataFrame(
+            {
+                EPOCH: [i for i in range(1, epochs + 1)],
+                TRAIN_TIME: epoch_time,
+                TRAIN_LOSS: train_loss,
+                TEST_LOSS: test_loss,
+                TRAIN_ACC: train_acc,
+                VAL_TEST_ACC: val_acc,
+            }
         )
-    result_table = pd.DataFrame(
-        {
-            "epoch": [i for i in range(1, epochs + 1)],
-            "train time": epoch_time,
-            "train_loss": train_loss,
-            "test_loss": test_loss,
-            "train_acc": train_acc,
-            "val/test acc": val_acc,
-        }
-    )
-    print(result_table.head())
-    result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
-    generate_acc_plot(train_acc, val_acc)
-    generate_loss_plot(train_loss, test_loss)
+        print(result_table.head())
+        result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
+        generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+    except Exception:
+        raise Exception("Deep Learning classification didn't train properly")
 
 
 def train_deep_regression_model(
@@ -105,45 +110,49 @@ def train_deep_regression_model(
         criterion: Loss function
         epochs (int): number of epochs
     """
-    train_loss = []  # accumulate training loss over each epoch
-    test_loss = []  # accumulate testing loss over each epoch
-    epoch_time = []  # how much time it takes for each epoch
-    for epoch in range(epochs):
-        start_time = time.time()
-        model.train(True)  # set model to train mode
-        batch_loss = []  # accumulate list of loss per batch
-        for i, data in enumerate(train_loader):
-            input, labels = data  # each batch is (input, label) pair in dataloader
-            optimizer.zero_grad()  # zero out gradient for each batch
-            output = model(input)  # make prediction on input
-            loss = criterion(output, labels)  # compute the loss
-            loss.backward()  # backpropagation
-            optimizer.step()  # adjust optimizer weights
-            batch_loss.append(loss.detach().numpy())
-        epoch_time.append(time.time() - start_time)
-        train_loss.append(np.mean(batch_loss))
+    try:
+        
+        train_loss = []  # accumulate training loss over each epoch
+        test_loss = []  # accumulate testing loss over each epoch
+        epoch_time = []  # how much time it takes for each epoch
+        for epoch in range(epochs):
+            start_time = time.time()
+            model.train(True)  # set model to train mode
+            batch_loss = []  # accumulate list of loss per batch
+            for i, data in enumerate(train_loader):
+                input, labels = data  # each batch is (input, label) pair in dataloader
+                optimizer.zero_grad()  # zero out gradient for each batch
+                output = model(input)  # make prediction on input
+                loss = criterion(output, labels)  # compute the loss
+                loss.backward()  # backpropagation
+                optimizer.step()  # adjust optimizer weights
+                batch_loss.append(loss.detach().numpy())
+            epoch_time.append(time.time() - start_time)
+            train_loss.append(np.mean(batch_loss))
 
-        model.train(False)  # test the model on test set
-        batch_loss = []
-        for i, data in enumerate(test_loader):
-            input, labels = data
-            loss_test = model(input)
-            batch_loss.append(loss_test.detach().numpy())
-        test_loss.append(np.mean(batch_loss))
-        print(
-            f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}"
+            model.train(False)  # test the model on test set
+            batch_loss = []
+            for i, data in enumerate(test_loader):
+                input, labels = data
+                loss_test = model(input)
+                batch_loss.append(loss_test.detach().numpy())
+            test_loss.append(np.mean(batch_loss))
+            print(
+                f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}"
+            )
+        generate_loss_plot(train_loss, test_loss)
+        result_table = pd.DataFrame(
+            {
+                "epoch": [i for i in range(1, epochs + 1)],
+                "train time": epoch_time,
+                "train_loss": train_loss,
+                "test_loss": test_loss,
+            }
         )
-    generate_loss_plot(train_loss, test_loss)
-    result_table = pd.DataFrame(
-        {
-            "epoch": [i for i in range(1, epochs + 1)],
-            "train time": epoch_time,
-            "train_loss": train_loss,
-            "test_loss": test_loss,
-        }
-    )
-    print(result_table.head())
-    result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
+        print(result_table.head())
+        result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
+    except Exception:
+        raise Exception("Deep learning regression model didn't run properly")
 
 
 def train_deep_model(

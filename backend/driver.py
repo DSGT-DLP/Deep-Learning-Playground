@@ -160,4 +160,4 @@ if __name__ == "__main__":
             epochs=10,
         )
     )
-    print(ml_drive("DecisionTreeClassifier(max_depth=3, random_state=15)", problem_type="classification", default=True))
+    #print(ml_drive("DecisionTreeClassifier(max_depth=3, random_state=15)", problem_type="classification", default=True))

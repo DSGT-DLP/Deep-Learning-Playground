@@ -100,6 +100,7 @@ def generate_acc_plot(train_acc, val_acc):
         test_loss (list): test loss per epoch
     """
     assert len(train_acc) == len(val_acc)
+    plt.figure("Accuracy Plot")
     x_axis = [i for i in range(1, len(train_acc) + 1)]
     plt.scatter(x_axis, train_acc, c="r", label="train accuracy")
     plt.scatter(x_axis, val_acc, c="b", label="test accuracy")

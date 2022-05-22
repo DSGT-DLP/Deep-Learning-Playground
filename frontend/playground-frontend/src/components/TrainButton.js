@@ -126,7 +126,7 @@ const styles = {
     height: "100%",
     width: "100%",
     ...GENERAL_STYLES.p,
-    fontSize: 20,
+    fontSize: 25,
     color: "white",
   },
 };

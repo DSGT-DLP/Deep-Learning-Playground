@@ -1,4 +1,5 @@
-from constants import LOSS_VIZ, ACC_VIZ, TRAIN_TIME_CSV, DEEP_LEARNING_RESULT_CSV_PATH
+from constants import LOSS_VIZ, ACC_VIZ, TRAIN_TIME_CSV, DEEP_LEARNING_RESULT_CSV_PATH, EPOCH, TRAIN_TIME, TRAIN_LOSS, TEST_LOSS, TRAIN_ACC, TEST, VAL_TEST_ACC
+
 import pandas as pd
 import torch
 import matplotlib.pyplot as plt
@@ -73,13 +74,17 @@ def get_dataloaders(
     return train_loader, test_loader
 
 
-def generate_loss_plot(train_loss, test_loss):
+def generate_loss_plot(results_path):
     """
     Given train/test loss from the training phase, plot the loss in a matplotlib plot
     Args:
         train_loss (list): train loss per epoch
         test_loss (list): test loss per epoch
     """
+    results = pd.read_csv(results_path)
+    train_loss = results[TRAIN_LOSS]
+    test_loss = results[TEST_LOSS]
+
     assert len(train_loss) == len(test_loss)
     plt.figure("Loss Plot")
     x_axis = [i for i in range(1, len(train_loss) + 1)]
@@ -92,13 +97,16 @@ def generate_loss_plot(train_loss, test_loss):
     plt.savefig(LOSS_VIZ)
 
 
-def generate_acc_plot(train_acc, val_acc):
+def generate_acc_plot(results_path):
     """
     Given train/test loss from the training phase, plot the accuracy in a matplotlib plot
     Args:
         train_loss (list): train loss per epoch
         test_loss (list): test loss per epoch
     """
+    results = pd.read_csv(results_path)
+    train_acc = results[TRAIN_ACC]
+    val_acc = results[VAL_TEST_ACC]
     assert len(train_acc) == len(val_acc)
     plt.figure("Accuracy Plot")
     x_axis = [i for i in range(1, len(train_acc) + 1)]
@@ -147,7 +155,7 @@ def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: 
 
     # creates the JSON string item and JSON data
     jsonString = json.dumps(jsonArray, indent=4)
-    jsonData = json.loads(jsonString)    
+    jsonData = json.loads(jsonString)
 
     # convert python jsonArray to JSON String and write to file, if path is
     # provided

@@ -27,3 +27,25 @@ The backend supports training of a deep learning model and/or a classical ML mod
  ┣ 📜webdriver.py - Selenium Webdriver script to take a deep learning model in the form of an onnx file and upload it to netron.app to visualize (Work in Progress)
  ┗ 📜__init__.py
 ```
+
+## Frontend 
+
+### Startup Instructions
+
+1. For complete functionality with the backend, first, start the backend using the instructions above. The backend will live in http://localhost:5000/run
+
+2. Then in a separate terminal, start the frontend development server. After installing [nodeJS v16](https://nodejs.org/en/download/), run the following commands:
+```
+cd frontend\playground-frontend
+npm install
+npm start
+```
+3. Then, go to http://localhost:3000/
+
+### How to Add New Layers
+Currently, there are three layers implemented in this playgroud—Linear, ReLU, and Softmax. A developer can easily add in a new layer to be used by the user through:
+1. Go to [settings.js](./frontend/playground-frontend/src/settings.js)
+2. Put in (* = required):
+    - `display_name`*: Name of layer to be displayed to user
+    - `object_name`*: Layer object to be passed into the backend, e.g., `nn.linear(...)`
+    - `parameters`: An array of JS objects with at least the display name of the parameters for the layer object

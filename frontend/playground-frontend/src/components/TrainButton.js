@@ -16,6 +16,7 @@ const TrainButton = (props) => {
     shuffle,
     epochs,
     testSize,
+    set_dl_results_data,
   } = props;
 
   const make_user_arch = () => {
@@ -47,8 +48,8 @@ const TrainButton = (props) => {
     if (!user_arch) alertMessage += "At least one layer must be added. ";
     if (!criterion) alertMessage += "A criterion must be specified. ";
     if (!optimizerName) alertMessage += "An optimizer name must be specified. ";
-    if (!problemType) alertMessage +="A problem type must be specified. ";
-    
+    if (!problemType) alertMessage += "A problem type must be specified. ";
+
     if (user_arch && criterion && optimizerName && problemType) return true;
 
     alert(alertMessage);
@@ -69,7 +70,8 @@ const TrainButton = (props) => {
       usingDefaultDataset,
       testSize,
       epochs,
-      shuffle
+      shuffle,
+      set_dl_results_data
     );
   };
 
@@ -93,6 +95,7 @@ TrainButton.propTypes = {
   shuffle: PropTypes.bool,
   epochs: PropTypes.number,
   testSize: PropTypes.number,
+  set_dl_results_data: PropTypes.func.isRequired,
 };
 
 export default TrainButton;

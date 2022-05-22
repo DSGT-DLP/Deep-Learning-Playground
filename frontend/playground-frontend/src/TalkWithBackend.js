@@ -8,7 +8,8 @@ export const train_and_output = (
   usingDefaultDataset,
   testSize,
   epochs,
-  shuffle
+  shuffle,
+  set_dl_results_data
 ) => {
   fetch("/run", {
     method: "POST",
@@ -34,6 +35,6 @@ export const train_and_output = (
       }
       throw new Error("Something went wrong");
     })
-    .then((data) => console.log(data))
+    .then((data) => set_dl_results_data(data.dl_results))
     .catch((error) => console.log(error));
 };

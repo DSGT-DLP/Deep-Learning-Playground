@@ -31,6 +31,7 @@ const _TitleText = (props) => {
 const Home = () => {
   const [csvData, setCSVData] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
+  const [dl_results_data, set_dl_results_data] = useState([]);
 
   // input responses
   const [addedLayers, setAddedLayers] = useState([]);
@@ -125,9 +126,7 @@ const Home = () => {
       <DndProvider backend={HTML5Backend}>
         <_TitleText text="Implemented Layers" />
         <BackgroundLayout>
-          <RectContainer
-            style={{ backgroundColor: COLORS.input, width: 200}}
-          >
+          <RectContainer style={{ backgroundColor: COLORS.input, width: 200 }}>
             <CSVInput
               data={csvData}
               columns={csvColumns}
@@ -151,7 +150,10 @@ const Home = () => {
           ))}
           <AddNewLayer />
 
-          <TrainButton {...input_responses} />
+          <TrainButton
+            {...input_responses}
+            set_dl_results_data={set_dl_results_data}
+          />
         </BackgroundLayout>
 
         <div style={{ marginTop: 20 }} />
@@ -198,7 +200,14 @@ const Home = () => {
         data={csvData}
       />
 
-      <_TitleText text="Output" />
+      <_TitleText text="Deep Learning Results" />
+
+      <DataTable
+        pagination
+        highlightOnHover
+        columns={csvDataToColumns(dl_results_data)}
+        data={dl_results_data}
+      />
     </div>
   );
 };
@@ -222,4 +231,13 @@ const styles = {
     fontWeight: 700,
     cursor: "pointer",
   },
+};
+
+const csvDataToColumns = (data) => {
+  if (!data?.length) return;
+  const headers = Object.keys(data[0]);
+  return headers.map((c) => ({
+    name: c,
+    selector: (row) => row[c],
+  }));
 };

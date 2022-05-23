@@ -11,7 +11,7 @@ const Input = (props) => {
     options,
     onChange,
     defaultValue,
-    freeInputCustomProps,
+    freeInputCustomRestrictions,
     isMultiSelect,
   } = props;
 
@@ -33,8 +33,13 @@ const Input = (props) => {
             style={styles.inputText}
             placeholder="Type..."
             maxLength={64}
-            {...freeInputCustomProps}
+            {...freeInputCustomRestrictions}
             defaultValue={defaultValue}
+            onChange={(e) => {
+              if (freeInputCustomRestrictions?.type === "number")
+                onChange(Number(e.target.value));
+              else onChange(e.target.value);
+            }}
           />
         )}
       </div>

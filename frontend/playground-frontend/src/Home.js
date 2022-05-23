@@ -101,7 +101,7 @@ const Home = () => {
     },
     {
       queryText: "Epochs",
-      freeInputCustomProps: { type: "number", min: 0 },
+      freeInputCustomRestrictions: { type: "number", min: 0 },
       onChange: setEpochs,
       defaultValue: epochs,
     },
@@ -115,7 +115,7 @@ const Home = () => {
       queryText: "Test Size",
       onChange: setTestSize,
       defaultValue: testSize,
-      freeInputCustomProps: { type: "number", min: 0, max: 1, step: 0.1 },
+      freeInputCustomRestrictions: { type: "number", min: 0, step: 0.1 },
     },
   ];
 

@@ -124,7 +124,7 @@ def train_deep_regression_model(
                 input, labels = data
                 optimizer.zero_grad()  # zero out gradient for each batch
                 output = model(input)  # make prediction on input
-                loss = criterion(output, labels)  # compute the loss
+                loss = compute_loss(criterion, output, labels)
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
                 batch_loss.append(loss.detach().numpy())
@@ -169,14 +169,13 @@ def train_deep_model(
         epochs (int): number of epochs
         problem type (str): "classification" or "regression"
     """
-
     if problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION):
         return train_deep_classification_model(
             model, train_loader, test_loader, optimizer, criterion, epochs
         )
     elif problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION):
         return train_deep_regression_model(
-            model, train_loader, test_loader, optimizer, epochs
+            model, train_loader, test_loader, optimizer, criterion, epochs
         )
 
 

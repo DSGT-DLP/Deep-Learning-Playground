@@ -19,6 +19,23 @@ export const POSSIBLE_LAYERS = [
       inputSize: { index: 0, parameter_name: "dim" },
     },
   },
+  {
+    display_name: "Sigmoid",
+    object_name: "nn.Sigmoid",
+    parameters: {},
+  },
+  {
+    display_name: "Tanh",
+    object_name: "nn.Tanh",
+    parameters: {},
+  },
+  {
+    display_name: "LogSoftmax",
+    object_name: "nn.LogSoftmax",
+    parameters: {
+      inputSize: { index: 0, parameter_name: "dim" },
+    },
+  },
 ];
 
 export const CRITERIONS = [

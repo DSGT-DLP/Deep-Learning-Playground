@@ -13,27 +13,26 @@ from ml_trainer import train_classical_ml_model
 from model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
+from default_datasets import get_default_dataset
 
 app = Flask(__name__)
-
-
-def get_default_dataset(dataset):
-    """
-    If user doesn't specify dataset
-    Args:
-        dataset_name (str): Which default dataset are you using (built in functions like load_boston(), load_iris())
-    Returns:
-        X: input (default dataset)
-        y: target (default dataset)
-    """
-    input_df = pd.DataFrame(dataset.data)
-    input_df["class"] = dataset.target
-    input_df.columns = dataset.feature_names + ["class"]
-    input_df.dropna(how="all", inplace=True)  # remove any empty lines
-    y = pd.Series(dataset.target)
-    X = input_df[dataset.feature_names]
-    print(f"iris dataset = {input_df.head()}")
-    return X, y
+# def get_default_dataset(dataset):
+#     """
+#     If user doesn't specify dataset
+#     Args:
+#         dataset_name (str): Which default dataset are you using (built in functions like load_boston(), load_iris())
+#     Returns:
+#         X: input (default dataset)
+#         y: target (default dataset)
+#     """
+#     input_df = pd.DataFrame(dataset.data)
+#     input_df["class"] = dataset.target
+#     input_df.columns = dataset.feature_names + ["class"]
+#     input_df.dropna(how="all", inplace=True)  # remove any empty lines
+#     y = pd.Series(dataset.target)
+#     X = input_df[dataset.feature_names]
+#     print(f"iris dataset = {input_df.head()}")
+#     return X, y
 
 
 def ml_drive(user_model, problem_type, target=None, features=None, default=False, test_size=0.2, shuffle=True):
@@ -106,13 +105,11 @@ def dl_drive(
     try:
         if default and problem_type.upper() == "CLASSIFICATION":
             # If the user specifies no dataset, use iris as the default classification
-            dataset = load_iris()
-            X, y = get_default_dataset(dataset)
+            X, y = get_default_dataset("iris".upper())
             print(y.head())
         elif default and problem_type.upper() == "REGRESSION":
             # If the user specifies no dataset, use california housing as default regression
-            dataset = fetch_california_housing()
-            X, y = get_default_dataset(dataset)
+            X, y = get_default_dataset("CALIFORNIAHOUSING".upper())
         else:
             if json_csv_data_str:
                 input_df = pd.read_json(json_csv_data_str, orient='records')
@@ -203,7 +200,6 @@ def train_and_output():
 
 
 if __name__ == "__main__":
-    # TODO Faris complete frontend implementation and visualization
     # print(
     #     dl_drive(
     #         ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"],
@@ -215,7 +211,16 @@ if __name__ == "__main__":
     #     )
     # )
 
-    # TODO Faris to implement the frontend for this
+    # print(
+    #     dl_drive(
+    #         ["nn.Linear(8, 10)", "nn.ReLU()", "nn.Linear(10, 1)"],
+    #         "MSELOSS",
+    #         "SGD",
+    #         problem_type="regression",
+    #         default=True,
+    #         epochs=10,
+    #     )
+
     # print(ml_drive("DecisionTreeClassifier(max_depth=3, random_state=15)",
     #       problem_type="classification", default=True))
     app.run(debug=True)

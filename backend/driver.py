@@ -103,8 +103,7 @@ def dl_drive(
             print(y.head())
         elif default and problem_type.upper() == "REGRESSION":
             # If the user specifies no dataset, use california housing as default regression
-            dataset = fetch_california_housing()
-            X, y = get_default_dataset(dataset)
+            X, y = get_default_dataset("CALIFORNIAHOUSING".upper())
         else:
             input_df = pd.read_csv(CSV_FILE_NAME)
             y = input_df[target]
@@ -148,10 +147,10 @@ def dl_drive(
 if __name__ == "__main__":
     print(
         dl_drive(
-            ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"],
-            "CELOSS",
+            ["nn.Linear(8, 10)", "nn.ReLU()", "nn.Linear(10, 1)"],
+            "MSELOSS",
             "SGD",
-            problem_type="classification",
+            problem_type="regression",
             default=True,
             epochs=10,
         )

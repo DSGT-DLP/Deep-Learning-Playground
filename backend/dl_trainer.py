@@ -54,7 +54,7 @@ def train_deep_classification_model(
                 output = model(input)  # make prediction on input
                 batch_train_acc.append(compute_accuracy(output, labels))
                 
-                loss = compute_loss(criterion, output, labels)
+                loss = compute_loss(criterion, output, labels) #compute the loss
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
                 batch_loss.append(loss.detach().numpy())
@@ -124,7 +124,7 @@ def train_deep_regression_model(
                 input, labels = data
                 optimizer.zero_grad()  # zero out gradient for each batch
                 output = model(input)  # make prediction on input
-                loss = criterion(output, labels)  # compute the loss
+                loss = compute_loss(criterion, output, labels) #compute the loss
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
                 batch_loss.append(loss.detach().numpy())
@@ -141,7 +141,6 @@ def train_deep_regression_model(
             print(
                 f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}"
             )
-        generate_loss_plot(train_loss, test_loss)
         result_table = pd.DataFrame(
             {
                 EPOCH: [i for i in range(1, epochs + 1)],
@@ -152,6 +151,7 @@ def train_deep_regression_model(
         )
         print(result_table.head())
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
+        generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
     except Exception:
         raise Exception("Deep learning regression model didn't run properly")
 
@@ -176,7 +176,7 @@ def train_deep_model(
         )
     elif problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION):
         return train_deep_regression_model(
-            model, train_loader, test_loader, optimizer, epochs
+            model, train_loader, test_loader, optimizer, criterion, epochs
         )
 
 

@@ -36,6 +36,14 @@ def compute_loss(loss_function_name, output, labels):
         if (loss_function_name.upper() == "BCELOSS" or loss_function_name.upper() == "BCEWITHLOGITSLOSS"):
             #If target is say [20] but output is [20, 1], you need to unsqueeze target to be [20, 1] dimension
             return loss_obj(postprocess_output, postprocess_label.unsqueeze(1)) #get the dimensions to match up.
+        elif (loss_function_name.upper() == "MSELOSS" or loss_function_name.upper() == "L1LOSS"):
+            
+            postprocess_output = torch.reshape(
+                    postprocess_output, (postprocess_output.shape[0], postprocess_output.shape[2]))
+            
+            #print(f"output dims = {postprocess_output.size()}")
+            #print(f"label dims = {postprocess_label.size()}")
+            return loss_obj(postprocess_output, postprocess_label)  # compute the loss
         else:
             postprocess_output = torch.reshape(
                     postprocess_output, (postprocess_output.shape[0], postprocess_output.shape[2]))

@@ -17,3 +17,4 @@ TEST_LOSS= "test_loss"
 TRAIN_ACC= "train_acc"
 TEST= "test"
 VAL_TEST_ACC= "val/test acc"
+DEFAULT_DATASETS = {"IRIS": "load_iris()", "BREAST CANCER": "load_breast_cancer()", "CALIFORNIAHOUSING": "fetch_california_housing()", "DIABETES": "load_diabetes()",  "DIGITS": "load_digits()", "WINE": "load_wine()"}

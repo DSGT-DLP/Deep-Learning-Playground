@@ -74,3 +74,12 @@ export const OPTIMIZER_NAMES = [
   { label: "SGD", value: "SGD" },
   { label: "Adam", value: "Adam" },
 ];
+
+export const DEFAULT_DATASETS = [
+  { label: "IRIS", value: "IRIS" },
+  { label: "BREAST CANCER", value: "BREAST CANCER" },
+  { label: "CALIFORNIAHOUSING", value: "CALIFORNIAHOUSING" },
+  { label: "DIABETES", value: "DIABETES" },
+  { label: "DIGITS", value: "DIGITS" },
+  { label: "WINE", value: "WINE" },
+];

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "./constants";
 import {
   BOOL_OPTIONS,
+  DEFAULT_DATASETS,
   OPTIMIZER_NAMES,
   POSSIBLE_LAYERS,
   PROBLEM_TYPES,
@@ -34,6 +35,7 @@ const Home = () => {
   const [csvData, setCSVData] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
   const [dl_results_data, set_dl_results_data] = useState([]);
+  const [dlpBackendResponse, setDLPBackendResponse] = useState("");
 
   // input responses
   const [fileURL, setFileURL] = useState("");
@@ -43,9 +45,7 @@ const Home = () => {
   const [problemType, setProblemType] = useState();
   const [criterion, setCriterion] = useState();
   const [optimizerName, setOptimizerName] = useState();
-  const [usingDefaultDataset, setUsingDefaultDataset] = useState(
-    BOOL_OPTIONS[0]
-  );
+  const [usingDefaultDataset, setUsingDefaultDataset] = useState();
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
@@ -62,7 +62,7 @@ const Home = () => {
     problemType: problemType?.value,
     criterion: criterion?.value,
     optimizerName: optimizerName?.value,
-    usingDefaultDataset: usingDefaultDataset.value,
+    usingDefaultDataset: usingDefaultDataset?.value,
     shuffle: shuffle?.value,
     epochs,
     testSize,
@@ -109,9 +109,8 @@ const Home = () => {
     },
     {
       queryText: "Default",
-      options: BOOL_OPTIONS,
+      options: DEFAULT_DATASETS,
       onChange: setUsingDefaultDataset,
-      defaultValue: usingDefaultDataset,
     },
     {
       queryText: "Epochs",
@@ -177,6 +176,7 @@ const Home = () => {
             {...input_responses}
             set_dl_results_data={set_dl_results_data}
             csvData={csvData}
+            setDLPBackendResponse={setDLPBackendResponse}
             // fileURL={fileURL}
           />
         </BackgroundLayout>
@@ -236,8 +236,11 @@ const Home = () => {
 
       {dl_results_data?.length ? (
         <>
-          <img src={ACC_VIZ} alt="ACC Viz" />
-          <img src={LOSS_VIZ} alt="LOSS Viz" />
+          <img src={ACC_VIZ} alt="Test accuracy for your Deep Learning Model" />
+          <img
+            src={LOSS_VIZ}
+            alt="Train vs. Test for your Deep Learning Model"
+          />
         </>
       ) : undefined}
     </div>

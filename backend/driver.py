@@ -13,27 +13,27 @@ from ml_trainer import train_classical_ml_model
 from model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
+from default_datasets import get_default_dataset
 
 app = Flask(__name__)
 
-
-def get_default_dataset(dataset):
-    """
-    If user doesn't specify dataset
-    Args:
-        dataset_name (str): Which default dataset are you using (built in functions like load_boston(), load_iris())
-    Returns:
-        X: input (default dataset)
-        y: target (default dataset)
-    """
-    input_df = pd.DataFrame(dataset.data)
-    input_df["class"] = dataset.target
-    input_df.columns = dataset.feature_names + ["class"]
-    input_df.dropna(how="all", inplace=True)  # remove any empty lines
-    y = pd.Series(dataset.target)
-    X = input_df[dataset.feature_names]
-    print(f"iris dataset = {input_df.head()}")
-    return X, y
+# def get_default_dataset(dataset):
+#     """
+#     If user doesn't specify dataset
+#     Args:
+#         dataset_name (str): Which default dataset are you using (built in functions like load_boston(), load_iris())
+#     Returns:
+#         X: input (default dataset)
+#         y: target (default dataset)
+#     """
+#     input_df = pd.DataFrame(dataset.data)
+#     input_df["class"] = dataset.target
+#     input_df.columns = dataset.feature_names + ["class"]
+#     input_df.dropna(how="all", inplace=True)  # remove any empty lines
+#     y = pd.Series(dataset.target)
+#     X = input_df[dataset.feature_names]
+#     print(f"iris dataset = {input_df.head()}")
+#     return X, y
 
 
 def ml_drive(user_model, problem_type, target=None, features=None, default=False, test_size=0.2, shuffle=True):
@@ -80,7 +80,7 @@ def dl_drive(
     problem_type,
     target=None,
     features=None,
-    default=False,
+    default=None,
     test_size=0.2,
     epochs=5,
     shuffle=True,
@@ -106,13 +106,11 @@ def dl_drive(
     try:
         if default and problem_type.upper() == "CLASSIFICATION":
             # If the user specifies no dataset, use iris as the default classification
-            dataset = load_iris()
-            X, y = get_default_dataset(dataset)
+            X, y = get_default_dataset("iris".upper())
             print(y.head())
         elif default and problem_type.upper() == "REGRESSION":
             # If the user specifies no dataset, use california housing as default regression
-            dataset = fetch_california_housing()
-            X, y = get_default_dataset(dataset)
+            X, y = get_default_dataset("CALIFORNIAHOUSING".upper())
         else:
             if json_csv_data_str:
                 input_df = pd.read_json(json_csv_data_str, orient='records')
@@ -151,8 +149,8 @@ def dl_drive(
         pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
 
-    except Exception:
-        return traceback.format_exc(limit=1)  # give exception in string format
+    except Exception as e:
+        raise e
 
 
 @app.route('/run', methods=['GET', 'POST'])
@@ -182,28 +180,31 @@ def train_and_output():
                 raise ValueError("Need a file input")
                 return
 
-        print(
-            dl_drive(
-                user_arch=user_arch,
-                criterion=criterion,
-                optimizer_name=optimizer_name,
-                problem_type=problem_type,
-                target=target,
-                features=features,
-                default=default,
-                test_size=test_size,
-                epochs=epochs,
-                shuffle=shuffle,
-                json_csv_data_str=csvDataStr,
+        try:
+            print(
+                dl_drive(
+                    user_arch=user_arch,
+                    criterion=criterion,
+                    optimizer_name=optimizer_name,
+                    problem_type=problem_type,
+                    target=target,
+                    features=features,
+                    default=default,
+                    test_size=test_size,
+                    epochs=epochs,
+                    shuffle=shuffle,
+                    json_csv_data_str=csvDataStr,
+                )
             )
-        )
-        return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json()}), 200
+            return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json()}), 200
+
+        except Exception:
+            return jsonify({"success": False, "message": str(traceback.format_exc())}, 400)
 
     return jsonify({"success": True}), 200
 
 
 if __name__ == "__main__":
-    # TODO Faris complete frontend implementation and visualization
     # print(
     #     dl_drive(
     #         ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"],
@@ -215,7 +216,16 @@ if __name__ == "__main__":
     #     )
     # )
 
-    # TODO Faris to implement the frontend for this
+    # print(
+    #     dl_drive(
+    #         ["nn.Linear(8, 10)", "nn.ReLU()", "nn.Linear(10, 1)"],
+    #         "MSELOSS",
+    #         "SGD",
+    #         problem_type="regression",
+    #         default=True,
+    #         epochs=10,
+    #     )
+
     # print(ml_drive("DecisionTreeClassifier(max_depth=3, random_state=15)",
     #       problem_type="classification", default=True))
     app.run(debug=True)

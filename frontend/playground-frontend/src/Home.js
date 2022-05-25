@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "./constants";
 import {
   BOOL_OPTIONS,
+  DEFAULT_DATASETS,
   OPTIMIZER_NAMES,
   POSSIBLE_LAYERS,
   PROBLEM_TYPES,
@@ -43,12 +44,11 @@ const Home = () => {
   const [problemType, setProblemType] = useState();
   const [criterion, setCriterion] = useState();
   const [optimizerName, setOptimizerName] = useState();
-  const [usingDefaultDataset, setUsingDefaultDataset] = useState(
-    BOOL_OPTIONS[0]
-  );
+  const [usingDefaultDataset, setUsingDefaultDataset] = useState();
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
+  
   const input_responses = {
     addedLayers,
     targetCol: targetCol?.label,
@@ -56,7 +56,7 @@ const Home = () => {
     problemType: problemType?.value,
     criterion: criterion?.value,
     optimizerName: optimizerName?.value,
-    usingDefaultDataset: usingDefaultDataset.value,
+    usingDefaultDataset: usingDefaultDataset?.value,
     shuffle: shuffle?.value,
     epochs,
     testSize,
@@ -95,9 +95,8 @@ const Home = () => {
     },
     {
       queryText: "Default",
-      options: BOOL_OPTIONS,
+      options: DEFAULT_DATASETS,
       onChange: setUsingDefaultDataset,
-      defaultValue: usingDefaultDataset,
     },
     {
       queryText: "Epochs",

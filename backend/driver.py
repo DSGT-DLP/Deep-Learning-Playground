@@ -16,6 +16,7 @@ from sklearn.model_selection import train_test_split
 from default_datasets import get_default_dataset
 
 app = Flask(__name__)
+
 # def get_default_dataset(dataset):
 #     """
 #     If user doesn't specify dataset
@@ -79,7 +80,7 @@ def dl_drive(
     problem_type,
     target=None,
     features=None,
-    default=False,
+    default=None,
     test_size=0.2,
     epochs=5,
     shuffle=True,

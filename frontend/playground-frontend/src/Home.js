@@ -35,6 +35,7 @@ const Home = () => {
   const [csvData, setCSVData] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
   const [dl_results_data, set_dl_results_data] = useState([]);
+  const [dlpBackendResponse, setDLPBackendResponse] = useState("");
 
   // input responses
   const [fileURL, setFileURL] = useState("");
@@ -48,7 +49,7 @@ const Home = () => {
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
-  
+
   const input_responses = {
     addedLayers,
     targetCol: targetCol?.label,
@@ -66,6 +67,7 @@ const Home = () => {
     label: e.name,
     value: i,
   }));
+
   const input_queries = [
     {
       queryText: "Target Column",
@@ -162,6 +164,7 @@ const Home = () => {
             {...input_responses}
             set_dl_results_data={set_dl_results_data}
             csvData={csvData}
+            setDLPBackendResponse={setDLPBackendResponse}
             // fileURL={fileURL}
           />
         </BackgroundLayout>
@@ -221,8 +224,11 @@ const Home = () => {
 
       {dl_results_data?.length ? (
         <>
-          <img src={ACC_VIZ} alt="ACC Viz" />
-          <img src={LOSS_VIZ} alt="LOSS Viz" />
+          <img src={ACC_VIZ} alt="Test accuracy for your Deep Learning Model" />
+          <img
+            src={LOSS_VIZ}
+            alt="Train vs. Test for your Deep Learning Model"
+          />
         </>
       ) : undefined}
     </div>

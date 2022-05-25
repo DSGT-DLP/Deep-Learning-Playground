@@ -17,6 +17,7 @@ const TrainButton = (props) => {
     epochs,
     testSize,
     set_dl_results_data,
+    setDLPBackendResponse,
     csvData = null,
     fileURL = null,
   } = props;
@@ -81,7 +82,7 @@ const TrainButton = (props) => {
 
     const csvDataStr = JSON.stringify(csvData);
 
-    const success = await train_and_output(
+    const response = await train_and_output(
       user_arch,
       criterion,
       optimizerName,
@@ -92,15 +93,18 @@ const TrainButton = (props) => {
       testSize,
       epochs,
       shuffle,
-      set_dl_results_data,
       csvDataStr,
       fileURL
     );
 
-    if (success === true) {
+    if (response[0].success === true) {
+      set_dl_results_data(response[0].dl_results);
       alert("Training successful! Scroll to see results!");
+    } else if (response[0].message) {
+      setDLPBackendResponse(response[0].message);
+      alert("Training failed. Check output traceback message");
     } else {
-      alert("Training failed. Check inputs");
+      alert("Training failed. Check input");
     }
   };
 

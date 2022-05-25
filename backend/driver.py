@@ -149,8 +149,8 @@ def dl_drive(
         pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
 
-    except Exception:
-        return traceback.format_exc(limit=1)  # give exception in string format
+    except Exception as e:
+        raise e
 
 
 @app.route('/run', methods=['GET', 'POST'])
@@ -180,22 +180,26 @@ def train_and_output():
                 raise ValueError("Need a file input")
                 return
 
-        print(
-            dl_drive(
-                user_arch=user_arch,
-                criterion=criterion,
-                optimizer_name=optimizer_name,
-                problem_type=problem_type,
-                target=target,
-                features=features,
-                default=default,
-                test_size=test_size,
-                epochs=epochs,
-                shuffle=shuffle,
-                json_csv_data_str=csvDataStr,
+        try:
+            print(
+                dl_drive(
+                    user_arch=user_arch,
+                    criterion=criterion,
+                    optimizer_name=optimizer_name,
+                    problem_type=problem_type,
+                    target=target,
+                    features=features,
+                    default=default,
+                    test_size=test_size,
+                    epochs=epochs,
+                    shuffle=shuffle,
+                    json_csv_data_str=csvDataStr,
+                )
             )
-        )
-        return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json()}), 200
+            return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json()}), 200
+
+        except Exception:
+            return jsonify({"success": False, "message": str(traceback.format_exc())}, 400)
 
     return jsonify({"success": True}), 200
 

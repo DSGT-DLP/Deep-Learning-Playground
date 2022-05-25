@@ -9,11 +9,9 @@ export const train_and_output = async (
   testSize,
   epochs,
   shuffle,
-  set_dl_results_data,
   csvData = null,
   fileURL = null
 ) => {
-
   return await fetch("/run", {
     method: "POST",
     body: JSON.stringify({
@@ -41,8 +39,7 @@ export const train_and_output = async (
       throw new Error("Something went wrong");
     })
     .then((data) => {
-      set_dl_results_data(data.dl_results);
-      return Boolean(data.dl_results);
+      return data;
     })
     .catch((error) => error);
 };

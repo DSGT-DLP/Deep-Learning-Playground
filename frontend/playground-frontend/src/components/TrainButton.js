@@ -59,6 +59,12 @@ const TrainButton = (props) => {
         alertMessage +=
           "Must specify an input file, target, and features if not selecting default dataset.";
       }
+      for (let i = 0; i < features.length; i++) {
+        if (targetCol === features[i]) {
+          alertMessage +=
+            "A column that is selected as the target column cannot also be a feature column.";
+        }
+      }
       if (!csvData && !fileURL) {
         alertMessage +=
           "Must specify an input file either from local storage or from an internet URL.";

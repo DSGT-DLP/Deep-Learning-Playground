@@ -49,6 +49,12 @@ const Home = () => {
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
+  const [inputFeatureColumnOptions, setInputFeatureColumnOptions] = useState(
+    csvColumns.map((e, i) => ({
+      label: e.name,
+      value: i,
+    }))
+  );
   const input_responses = {
     addedLayers,
     targetCol: targetCol?.label,
@@ -66,15 +72,23 @@ const Home = () => {
     label: e.name,
     value: i,
   }));
+
+  const handleChange = (e) => {
+    setTargetCol(e);
+    const csvColumnsCopy = JSON.parse(JSON.stringify(inputColumnOptions));
+    csvColumnsCopy.splice(e["value"], 1);
+    setInputFeatureColumnOptions(csvColumnsCopy);
+  };
+
   const input_queries = [
     {
       queryText: "Target Column",
       options: inputColumnOptions,
-      onChange: setTargetCol,
+      onChange: handleChange,
     },
     {
       queryText: "Features",
-      options: inputColumnOptions,
+      options: inputFeatureColumnOptions,
       onChange: setFeatures,
       isMultiSelect: true,
     },

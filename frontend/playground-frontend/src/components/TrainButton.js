@@ -12,7 +12,7 @@ const TrainButton = (props) => {
     problemType,
     criterion,
     optimizerName,
-    usingDefaultDataset,
+    usingDefaultDataset = null,
     shuffle,
     epochs,
     testSize,

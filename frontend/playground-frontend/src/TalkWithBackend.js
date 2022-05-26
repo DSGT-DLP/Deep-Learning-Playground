@@ -5,7 +5,7 @@ export const train_and_output = async (
   problemType,
   targetCol = null,
   features = null,
-  usingDefaultDataset,
+  usingDefaultDataset = null,
   testSize,
   epochs,
   shuffle,

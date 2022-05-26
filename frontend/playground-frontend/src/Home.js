@@ -133,9 +133,7 @@ const Home = () => {
   ];
 
   const showResults = () => {
-    console.log(dlpBackendResponse);
-
-    if (dlpBackendResponse.success) {
+    if (dlpBackendResponse?.success) {
       return (
         <>
           <DataTable
@@ -145,10 +143,12 @@ const Home = () => {
             data={dl_results_data}
           />
           <>
-            <img
-              src={ACC_VIZ}
-              alt="Test accuracy for your Deep Learning Model"
-            />
+            {problemType.value === "classification" ? (
+              <img
+                src={ACC_VIZ}
+                alt="Test accuracy for your Deep Learning Model"
+              />
+            ) : undefined}
             <img
               src={LOSS_VIZ}
               alt="Train vs. Test for your Deep Learning Model"

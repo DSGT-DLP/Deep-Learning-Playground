@@ -33,13 +33,9 @@ export const train_and_output = async (
     },
   })
     .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      throw new Error("Something went wrong");
+      return res.json();
     })
     .then((data) => {
-      console.log(data);
       return data;
     })
     .catch((error) => error);

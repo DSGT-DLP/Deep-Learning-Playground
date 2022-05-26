@@ -196,7 +196,7 @@ def train_and_output():
             return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json()}), 200
 
         except Exception:
-            return jsonify({"success": False, "message": str(traceback.format_exc(limit=1))}, 400)
+            return jsonify({"success": False, "message": traceback.format_exc(limit=1)}), 400
 
     return jsonify({"success": False}), 500
 

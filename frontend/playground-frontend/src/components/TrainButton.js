@@ -7,8 +7,8 @@ import { train_and_output } from "../helper_functions/TalkWithBackend";
 const TrainButton = (props) => {
   const {
     addedLayers,
-    targetCol,
-    features,
+    targetCol = null,
+    features = null,
     problemType,
     criterion,
     optimizerName,
@@ -103,17 +103,15 @@ const TrainButton = (props) => {
       fileURL
     );
 
-    console.log(response);
-
     setDLPBackendResponse(response);
 
     if (response.success === true) {
       set_dl_results_data(response.dl_results);
-      alert("Training successful! Scroll to see results!");
+      alert("SUCCESS: Training successful! Scroll to see results!");
     } else if (response.message) {
-      alert("Training failed. Check output traceback message");
+      alert("FAILED: Training failed. Check output traceback message");
     } else {
-      alert("Training failed. Check input");
+      alert("FAILED: Training failed. Check your inputs");
     }
   };
 
@@ -133,7 +131,7 @@ TrainButton.propTypes = {
   problemType: PropTypes.string,
   criterion: PropTypes.string,
   optimizerName: PropTypes.string,
-  usingDefaultDataset: PropTypes.bool,
+  usingDefaultDataset: PropTypes.string,
   shuffle: PropTypes.bool,
   epochs: PropTypes.number,
   testSize: PropTypes.number,

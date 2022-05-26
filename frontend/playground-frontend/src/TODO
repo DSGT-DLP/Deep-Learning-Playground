@@ -1,3 +1,4 @@
 1. Bring traceback errors to frontend, and shows training failed
 2. URL csv input
 3. Ensure target != feature. When user selects a header as a target, that header must not be selectable as a feature.
+4. Don't display accuracy for Regression

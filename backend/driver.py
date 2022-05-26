@@ -95,7 +95,7 @@ def dl_drive(
         problem type (str): "classification" or "regression" problem
         target (str): name of target column
         features (list): list of columns in dataframe for the feature based on user selection
-        default (bool, optional): use the iris dataset for default classifiction or california housing for default regression. Defaults to False.
+        default (str, optional): the default dataset chosen by the user. Defaults to None.
         test_size (float, optional): size of test set in train/test split (percentage). Defaults to 0.2.
         epochs (int, optional): number of epochs/rounds to run model on
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
@@ -105,12 +105,10 @@ def dl_drive(
     """
     try:
         if default and problem_type.upper() == "CLASSIFICATION":
-            # If the user specifies no dataset, use iris as the default classification
-            X, y = get_default_dataset("iris".upper())
+            X, y = get_default_dataset(default.upper())
             print(y.head())
         elif default and problem_type.upper() == "REGRESSION":
-            # If the user specifies no dataset, use california housing as default regression
-            X, y = get_default_dataset("CALIFORNIAHOUSING".upper())
+            X, y = get_default_dataset(default.upper())
         else:
             if json_csv_data_str:
                 input_df = pd.read_json(json_csv_data_str, orient='records')

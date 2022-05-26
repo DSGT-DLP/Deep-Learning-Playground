@@ -103,11 +103,12 @@ const TrainButton = (props) => {
       fileURL
     );
 
-    if (response[0].success === true) {
-      set_dl_results_data(response[0].dl_results);
+    setDLPBackendResponse(response);
+
+    if (response.success === true) {
+      set_dl_results_data(response.dl_results);
       alert("Training successful! Scroll to see results!");
-    } else if (response[0].message) {
-      setDLPBackendResponse(response[0].message);
+    } else if (response.message) {
       alert("Training failed. Check output traceback message");
     } else {
       alert("Training failed. Check input");

@@ -39,6 +39,7 @@ export const train_and_output = async (
       throw new Error("Something went wrong");
     })
     .then((data) => {
+      console.log(data);
       return data;
     })
     .catch((error) => error);

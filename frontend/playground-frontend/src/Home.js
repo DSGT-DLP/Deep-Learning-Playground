@@ -132,6 +132,39 @@ const Home = () => {
     },
   ];
 
+  const showResults = () => {
+    console.log(dlpBackendResponse);
+
+    if (dlpBackendResponse.success) {
+      return (
+        <>
+          <DataTable
+            pagination
+            highlightOnHover
+            columns={csvDataToColumns(dl_results_data)}
+            data={dl_results_data}
+          />
+          <>
+            <img
+              src={ACC_VIZ}
+              alt="Test accuracy for your Deep Learning Model"
+            />
+            <img
+              src={LOSS_VIZ}
+              alt="Train vs. Test for your Deep Learning Model"
+            />
+          </>
+        </>
+      );
+    } else {
+      return (
+        dlpBackendResponse.message || (
+          <p style={{ textAlign: "left" }}>There are no records to display</p>
+        )
+      );
+    }
+  };
+
   return (
     <div style={{ padding: 20 }}>
       <h1 style={styles.h1}>
@@ -227,22 +260,7 @@ const Home = () => {
 
       <_TitleText text="Deep Learning Results" />
 
-      <DataTable
-        pagination
-        highlightOnHover
-        columns={csvDataToColumns(dl_results_data)}
-        data={dl_results_data}
-      />
-
-      {dl_results_data?.length ? (
-        <>
-          <img src={ACC_VIZ} alt="Test accuracy for your Deep Learning Model" />
-          <img
-            src={LOSS_VIZ}
-            alt="Train vs. Test for your Deep Learning Model"
-          />
-        </>
-      ) : undefined}
+      {showResults()}
     </div>
   );
 };

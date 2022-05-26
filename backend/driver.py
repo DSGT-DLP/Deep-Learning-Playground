@@ -68,9 +68,8 @@ def ml_drive(user_model, problem_type, target=None, features=None, default=False
         model = get_object(user_model)
         train_classical_ml_model(
             model, X_train, X_test, y_train, y_test, problem_type=problem_type)
-    except Exception:
-        traceback.print_exc()
-        return traceback.format_exc(limit=1)
+    except Exception as e:
+        raise e
 
 
 def dl_drive(
@@ -197,9 +196,9 @@ def train_and_output():
             return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json()}), 200
 
         except Exception:
-            return jsonify({"success": False, "message": str(traceback.format_exc())}, 400)
+            return jsonify({"success": False, "message": str(traceback.format_exc(limit=1))}, 400)
 
-    return jsonify({"success": True}), 200
+    return jsonify({"success": False}), 500
 
 
 if __name__ == "__main__":

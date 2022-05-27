@@ -1,33 +1,0 @@
-pytorch1.10:è
-"
-input.1
-136MatMul_0"MatMul
-/
-model.layer #1: Linear.bias
-67Add_1"Add
-
-78Relu_2"Relu
-
-8
-1410MatMul_3"MatMul
-1
-model.layer #3: Linear.bias
-1011Add_4"Add
-)
-1112	Softmax_5"Softmax*
-axis torch-jit-export*K
-Bmodel.layer #1: Linear.biasJ(l¬±>A²õ>(Ú=4Û¾m[K>bs$>H‰Ü>Š‰j¾D¹^¾ê¦»>*/Bmodel.layer #3: Linear.biasJÞì…= âó½;»*­
-B13J àH=É7^¾Œð~>dÅ>>GœÇ>÷+>¯¾²ì>½gì>:qj¾ø0¾ó‰¾¤aÖ¾m†ã>Ê33¾Ù>pŸ>ºã¾”’«>1F>F`ç¾ä€¨>0ì¥¾BnÉ¾üÖá¾ES¾hÒ>£)?,E³¾ÚØ>š>ZCl>0ÅÀ>Öì€>x•f¾ºcg=õžÙ¾Ë¤u=3¡Æ:d\¾*„
-B14Jxæ­Ð½Ì)<> §4=ù¾`üö½on¤¼&<#>¢Ä¡¾lJ¾%ò™=ÎNB>%:ð½ˆÔæ=Ì
-Ÿ¾©ÑK½ð!³=˜Ú½'{¼½Ò§¦>VS>‘>¾Q<¾oŽå>^ä°<Æ¾>0•­½ /¾ÿY’¾ÂŸ>è
->Z
-input.1
-
-x
-
-b
-12
-
-x
-
-B	

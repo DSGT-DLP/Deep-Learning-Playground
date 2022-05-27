@@ -23,9 +23,10 @@ import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DataTable from "react-data-table-component";
-import LOSS_VIZ from "./visualization_output/my_loss_plot.png";
-import ACC_VIZ from "./visualization_output/my_accuracy_plot.png";
-import { CSVLink, CSVDownload } from "react-csv";
+import LOSS_VIZ from "./backend_outputs/visualization_output/my_loss_plot.png";
+import ACC_VIZ from "./backend_outputs/visualization_output/my_accuracy_plot.png";
+import ONXX_OUTPUT_PATH from "./backend_outputs/my_deep_learning_model.onnx";
+import { CSVLink } from "react-csv";
 
 const _TitleText = (props) => {
   const { text } = props;
@@ -203,29 +204,28 @@ const Home = () => {
           }))}
           data={dl_results_data}
         />
-        <>
-          <div style={{ ...LAYOUT.column, maxWidth: 300 }}>
-            {problemType.value === "classification" ? (
-              <a href={ACC_VIZ} download style={styles.download_csv_res}>
-                📈 Download Test Accuracy Plot
-              </a>
-            ) : undefined}
-            <br />
-            <a href={LOSS_VIZ} download style={styles.download_csv_res}>
-              📈 Download Train vs. Test Loss Plot
-            </a>
-          </div>
+        <div style={{ ...LAYOUT.column, maxWidth: 300 }}>
           {problemType.value === "classification" ? (
-            <img
-              src={ACC_VIZ}
-              alt="Test accuracy for your Deep Learning Model"
-            />
+            <a href={ACC_VIZ} download style={styles.download_csv_res}>
+              📈 Download Test Accuracy Plot
+            </a>
           ) : undefined}
-          <img
-            src={LOSS_VIZ}
-            alt="Train vs. Test loss for your Deep Learning Model"
-          />
-        </>
+          <br />
+          <a href={LOSS_VIZ} download style={styles.download_csv_res}>
+            📈 Download Train vs. Test Loss Plot
+          </a>
+        </div>
+        {problemType.value === "classification" ? (
+          <img src={ACC_VIZ} alt="Test accuracy for your Deep Learning Model" />
+        ) : undefined}
+        <img
+          src={LOSS_VIZ}
+          alt="Train vs. Test loss for your Deep Learning Model"
+        />
+        <br />
+        <a href={ONXX_OUTPUT_PATH} download style={styles.download_csv_res}>
+          📈 Download ONXX Output File
+        </a>
       </>
     );
   };

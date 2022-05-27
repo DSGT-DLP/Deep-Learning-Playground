@@ -204,6 +204,17 @@ const Home = () => {
           data={dl_results_data}
         />
         <>
+          <div style={{ ...LAYOUT.column, maxWidth: 300 }}>
+            {problemType.value === "classification" ? (
+              <a href={ACC_VIZ} download style={styles.download_csv_res}>
+                📈 Download Test Accuracy Plot
+              </a>
+            ) : undefined}
+            <br />
+            <a href={LOSS_VIZ} download style={styles.download_csv_res}>
+              📈 Download Train vs. Test Loss Plot
+            </a>
+          </div>
           {problemType.value === "classification" ? (
             <img
               src={ACC_VIZ}
@@ -212,7 +223,7 @@ const Home = () => {
           ) : undefined}
           <img
             src={LOSS_VIZ}
-            alt="Train vs. Test for your Deep Learning Model"
+            alt="Train vs. Test loss for your Deep Learning Model"
           />
         </>
       </>
@@ -339,10 +350,11 @@ const styles = {
   },
   download_csv_res: {
     backgroundColor: COLORS.layer,
+    textDecoration: "none",
     border: "none",
     color: "white",
     ...GENERAL_STYLES.p,
-    padding: 6,
+    padding: 8,
     cursor: "pointer",
   },
 };

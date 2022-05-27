@@ -24,6 +24,7 @@ DropDown.propTypes = {
     PropTypes.object,
     PropTypes.number,
     PropTypes.string,
+    PropTypes.array,
   ]),
   isMulti: PropTypes.bool,
 };

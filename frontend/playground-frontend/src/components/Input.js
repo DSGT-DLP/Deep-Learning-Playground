@@ -56,6 +56,7 @@ Input.propTypes = {
     PropTypes.object,
     PropTypes.number,
     PropTypes.string,
+    PropTypes.array,
   ]),
   isMultiSelect: PropTypes.bool,
 };

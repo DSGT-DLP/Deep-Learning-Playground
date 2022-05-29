@@ -170,7 +170,7 @@ def train_and_output():
     fileURL = request_data['fileURL']
     if request.method == 'POST':
         if not default:
-            if fileURL != None:
+            if fileURL:
                 read_dataset(fileURL)
             elif csvDataStr:
                 pass

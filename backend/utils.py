@@ -1,7 +1,7 @@
 from constants import LOSS_VIZ, ACC_VIZ, TRAIN_TIME_CSV, DEEP_LEARNING_RESULT_CSV_PATH, EPOCH, TRAIN_TIME, TRAIN_LOSS, TEST_LOSS, TRAIN_ACC, TEST, VAL_TEST_ACC
-
 import pandas as pd
 import torch
+import matplotlib
 import matplotlib.pyplot as plt
 from enum import Enum
 from torch.utils.data import TensorDataset, DataLoader
@@ -9,6 +9,8 @@ from torch.autograd import Variable
 import csv
 import os
 import json
+
+matplotlib.use('Agg')
 
 
 class ProblemType(Enum):

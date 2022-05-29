@@ -168,8 +168,6 @@ def train_and_output():
     shuffle = request_data['shuffle']
     csvDataStr = request_data['csvData']
     fileURL = request_data['fileURL']
-    print(fileURL)
-    print(default)
     if request.method == 'POST':
         if not default:
             if fileURL != None:

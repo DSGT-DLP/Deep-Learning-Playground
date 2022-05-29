@@ -24,8 +24,8 @@ def compute_loss(loss_function_name, output, labels):
     Args:
         loss_function_name (str): Valid name from LossFunctions Enum
         output (_type_): _description_
-        labels (_type_): _description_
-    
+        labels (_type_): _descriptikon_
+
     Return: 
         loss(float): computed loss
     """

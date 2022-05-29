@@ -38,6 +38,7 @@ const CSVInput = (props) => {
       }
     }
 
+
     // prepare columns list from headers
     const columns = headers.map((c) => ({
       name: c,

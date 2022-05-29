@@ -14,8 +14,10 @@ from model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
 from default_datasets import get_default_dataset
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # def get_default_dataset(dataset):
 #     """
@@ -166,13 +168,14 @@ def train_and_output():
     shuffle = request_data['shuffle']
     csvDataStr = request_data['csvData']
     fileURL = request_data['fileURL']
-
+    print(fileURL)
+    print(default)
     if request.method == 'POST':
         if not default:
-            if csvDataStr:
-                pass
-            elif fileURL:
+            if fileURL != None:
                 read_dataset(fileURL)
+            elif csvDataStr:
+                pass
             else:
                 raise ValueError("Need a file input")
                 return

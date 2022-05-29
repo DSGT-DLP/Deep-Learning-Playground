@@ -23,8 +23,10 @@ import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DataTable from "react-data-table-component";
-import LOSS_VIZ from "./visualization_output/my_loss_plot.png";
-import ACC_VIZ from "./visualization_output/my_accuracy_plot.png";
+import LOSS_VIZ from "./backend_outputs/visualization_output/my_loss_plot.png";
+import ACC_VIZ from "./backend_outputs/visualization_output/my_accuracy_plot.png";
+import ONXX_OUTPUT_PATH from "./backend_outputs/my_deep_learning_model.onnx";
+import { CSVLink } from "react-csv";
 
 const _TitleText = (props) => {
   const { text } = props;
@@ -39,14 +41,45 @@ const Home = () => {
 
   // input responses
   const [fileURL, setFileURL] = useState("");
-  const [addedLayers, setAddedLayers] = useState([]);
+  const [addedLayers, setAddedLayers] = useState([
+    {
+      display_name: "Linear",
+      object_name: "nn.Linear",
+      parameters: {
+        inputSize: { index: 0, parameter_name: "Input size", value: 4 },
+        outputSize: { index: 1, parameter_name: "Output size", value: 10 },
+      },
+    },
+    {
+      display_name: "ReLU",
+      object_name: "nn.ReLU",
+      parameters: {},
+    },
+    {
+      display_name: "Linear",
+      object_name: "nn.Linear",
+      parameters: {
+        inputSize: { index: 0, parameter_name: "Input size", value: 10 },
+        outputSize: { index: 1, parameter_name: "Output size", value: 3 },
+      },
+    },
+    {
+      display_name: "Softmax",
+      object_name: "nn.Softmax",
+      parameters: {
+        inputSize: { index: 0, parameter_name: "dim", value: -1 },
+      },
+    },
+  ]);
   const [targetCol, setTargetCol] = useState();
   const [features, setFeatures] = useState([]);
-  const [problemType, setProblemType] = useState();
-  const [criterion, setCriterion] = useState();
-  const [optimizerName, setOptimizerName] = useState();
-  const [usingDefaultDataset, setUsingDefaultDataset] = useState();
-  const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
+  const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
+  const [criterion, setCriterion] = useState(CRITERIONS[3]);
+  const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
+  const [usingDefaultDataset, setUsingDefaultDataset] = useState(
+    DEFAULT_DATASETS[0]
+  );
+  const [shuffle, setShuffle] = useState(BOOL_OPTIONS[0]);
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
   const [inputFeatureColumnOptions, setInputFeatureColumnOptions] = useState(
@@ -73,10 +106,10 @@ const Home = () => {
     value: i,
   }));
 
-  const handleChange = (e) => {
+  const handleTargetChange = (e) => {
     setTargetCol(e);
     const csvColumnsCopy = JSON.parse(JSON.stringify(inputColumnOptions));
-    csvColumnsCopy.splice(e["value"], 1);
+    csvColumnsCopy.splice(e.value, 1);
     setInputFeatureColumnOptions(csvColumnsCopy);
   };
 
@@ -138,33 +171,39 @@ const Home = () => {
     {
       queryText: "Target Column",
       options: inputColumnOptions,
-      onChange: handleChange,
+      onChange: handleTargetChange,
+      defaultValue: targetCol,
     },
     {
       queryText: "Features",
       options: inputFeatureColumnOptions,
       onChange: setFeatures,
       isMultiSelect: true,
+      defaultValue: features,
     },
     {
       queryText: "Problem Type",
       options: PROBLEM_TYPES,
       onChange: setProblemType,
+      defaultValue: problemType,
     },
     {
       queryText: "Optimizer Name",
       options: OPTIMIZER_NAMES,
       onChange: setOptimizerName,
+      defaultValue: optimizerName,
     },
     {
       queryText: "Criterion",
       options: CRITERIONS,
       onChange: setCriterion,
+      defaultValue: criterion,
     },
     {
       queryText: "Default",
       options: DEFAULT_DATASETS,
       onChange: setUsingDefaultDataset,
+      defaultValue: usingDefaultDataset,
     },
     {
       queryText: "Epochs",
@@ -187,37 +226,70 @@ const Home = () => {
   ];
 
   const showResults = () => {
-    if (dlpBackendResponse?.success) {
-      return (
-        <>
-          <DataTable
-            pagination
-            highlightOnHover
-            columns={csvDataToColumns(dl_results_data)}
-            data={dl_results_data}
-          />
-          <>
-            {problemType.value === "classification" ? (
-              <img
-                src={ACC_VIZ}
-                alt="Test accuracy for your Deep Learning Model"
-              />
-            ) : undefined}
-            <img
-              src={LOSS_VIZ}
-              alt="Train vs. Test for your Deep Learning Model"
-            />
-          </>
-        </>
-      );
-    } else {
+    if (!dlpBackendResponse?.success) {
       return (
         dlpBackendResponse.message || (
-          <p style={{ textAlign: "left" }}>There are no records to display</p>
+          <p style={{ textAlign: "center" }}>There are no records to display</p>
         )
       );
     }
+
+    const dl_results_columns_react_csv = Object.keys(dl_results_data[0]).map(
+      (c) => ({
+        label: c,
+        key: c,
+      })
+    );
+
+    return (
+      <>
+        <CSVLink data={dl_results_data} headers={dl_results_columns_react_csv}>
+          <button style={styles.download_csv_res}>
+            📄 Download Results (CSV)
+          </button>
+        </CSVLink>
+
+        <DataTable
+          pagination
+          highlightOnHover
+          columns={Object.keys(dl_results_data[0]).map((c) => ({
+            name: c,
+            selector: (row) => row[c],
+          }))}
+          data={dl_results_data}
+        />
+        <div style={{ ...LAYOUT.column, maxWidth: 300 }}>
+          {problemType.value === "classification" ? (
+            <a href={ACC_VIZ} download style={styles.download_csv_res}>
+              📈 Download Test Accuracy Plot
+            </a>
+          ) : undefined}
+          <br />
+          <a href={LOSS_VIZ} download style={styles.download_csv_res}>
+            📈 Download Train vs. Test Loss Plot
+          </a>
+        </div>
+        {problemType.value === "classification" ? (
+          <img src={ACC_VIZ} alt="Test accuracy for your Deep Learning Model" />
+        ) : undefined}
+        <img
+          src={LOSS_VIZ}
+          alt="Train vs. Test loss for your Deep Learning Model"
+        />
+        <br />
+        <a href={ONXX_OUTPUT_PATH} download style={styles.download_csv_res}>
+          📈 Download ONXX Output File
+        </a>
+      </>
+    );
   };
+
+  const csvDataiii = [
+    ["firstname", "lastname", "email"],
+    ["Ahmed", "Tomi", "ah@smthing.co.com"],
+    ["Raed", "Labes", "rl@smthing.co.com"],
+    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
+  ];
 
   return (
     <div style={{ padding: 20 }}>
@@ -225,7 +297,6 @@ const Home = () => {
         <img src={DSGTLogo} alt="DSGT Logo" width="60" height="60" />
         Deep Learning Playground
       </h1>
-
       <DndProvider backend={HTML5Backend}>
         <_TitleText text="Implemented Layers" />
         <BackgroundLayout>
@@ -294,28 +365,21 @@ const Home = () => {
           ))}
         </BackgroundLayout>
       </DndProvider>
-
       <div style={{ marginTop: 20 }} />
-
       <_TitleText text="Deep Learning Parameters" />
-
       <BackgroundLayout>
         {input_queries.map((e) => (
           <Input {...e} key={e.queryText} />
         ))}
       </BackgroundLayout>
-
       <_TitleText text="CSV Input" />
-
       <DataTable
         pagination
         highlightOnHover
         columns={csvColumns}
         data={csvData}
       />
-
       <_TitleText text="Deep Learning Results" />
-
       {showResults()}
     </div>
   );
@@ -340,13 +404,13 @@ const styles = {
     ...LAYOUT.column,
     // justifyContent: "space-between",
   },
-};
-
-const csvDataToColumns = (data) => {
-  if (!data?.length) return;
-  const headers = Object.keys(data[0]);
-  return headers.map((c) => ({
-    name: c,
-    selector: (row) => row[c],
-  }));
+  download_csv_res: {
+    backgroundColor: COLORS.layer,
+    textDecoration: "none",
+    border: "none",
+    color: "white",
+    ...GENERAL_STYLES.p,
+    padding: 8,
+    cursor: "pointer",
+  },
 };

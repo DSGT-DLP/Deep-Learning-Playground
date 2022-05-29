@@ -66,6 +66,7 @@ const Home = () => {
     shuffle: shuffle?.value,
     epochs,
     testSize,
+    fileURL
   };
 
   const inputColumnOptions = csvColumns.map((e, i) => ({
@@ -266,7 +267,6 @@ const Home = () => {
             set_dl_results_data={set_dl_results_data}
             csvData={csvData}
             setDLPBackendResponse={setDLPBackendResponse}
-            fileURL={fileURL}
           />
         </BackgroundLayout>
 

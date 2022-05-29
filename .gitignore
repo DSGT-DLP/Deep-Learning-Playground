@@ -134,3 +134,9 @@ dmypy.json
 
 # MacOS
 **/.DS_Store
+
+#Results
+backend/dl_results.csv
+backend/my_deep_learning_model.onnx
+frontend/playground-frontend/src/visualization_output/my_accuracy_plot.png
+frontend/playground-frontend/src/visualization_output/my_loss_plot.png

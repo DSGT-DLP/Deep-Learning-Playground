@@ -1,17 +1,0 @@
-pytorch1.11.0:–
-?
-onnx::MatMul_0
-onnx::MatMul_6onnx::Add_4MatMul_0"MatMul
-9
-model.layer #1: Linear.bias
-onnx::Add_45Add_1"Addtorch-jit-export*'Bmodel.layer #1: Linear.biasJ+¿›@*Bonnx::MatMul_6J´n†¾Z%
-onnx::MatMul_0
-
-”
-
-b
-5
-
-”
-
-B	

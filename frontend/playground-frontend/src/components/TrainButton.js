@@ -88,7 +88,6 @@ const TrainButton = (props) => {
 
     const csvDataStr = JSON.stringify(csvData);
 
-
     const response = await train_and_output(
       user_arch,
       criterion,

@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+
 # C extensions
 *.so
 
@@ -127,3 +128,13 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Pycharm Idea files
+.idea/*
+
+# MacOS
+**/.DS_Store
+
+# Results
+backend/dl_results.csv
+backend/my_deep_learning_model.onnx

@@ -22,3 +22,4 @@ dependencies:
   - sendgrid
   - black
   - flask
+  - flask-cors

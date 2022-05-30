@@ -19,25 +19,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# def get_default_dataset(dataset):
-#     """
-#     If user doesn't specify dataset
-#     Args:
-#         dataset_name (str): Which default dataset are you using (built in functions like load_boston(), load_iris())
-#     Returns:
-#         X: input (default dataset)
-#         y: target (default dataset)
-#     """
-#     input_df = pd.DataFrame(dataset.data)
-#     input_df["class"] = dataset.target
-#     input_df.columns = dataset.feature_names + ["class"]
-#     input_df.dropna(how="all", inplace=True)  # remove any empty lines
-#     y = pd.Series(dataset.target)
-#     X = input_df[dataset.feature_names]
-#     print(f"iris dataset = {input_df.head()}")
-#     return X, y
-
-
 def ml_drive(user_model, problem_type, target=None, features=None, default=False, test_size=0.2, shuffle=True):
     """
     Driver function/endpoint into backend for training a classical ML model (eg: SVC, SVR, DecisionTree, Naive Bayes, etc) 

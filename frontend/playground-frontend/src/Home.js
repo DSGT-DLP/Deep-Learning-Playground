@@ -76,9 +76,7 @@ const Home = () => {
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
   const [criterion, setCriterion] = useState(CRITERIONS[3]);
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
-  const [usingDefaultDataset, setUsingDefaultDataset] = useState(
-    DEFAULT_DATASETS[0]
-  );
+  const [usingDefaultDataset, setUsingDefaultDataset] = useState();
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[0]);
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
@@ -284,13 +282,6 @@ const Home = () => {
       </>
     );
   };
-
-  const csvDataiii = [
-    ["firstname", "lastname", "email"],
-    ["Ahmed", "Tomi", "ah@smthing.co.com"],
-    ["Raed", "Labes", "rl@smthing.co.com"],
-    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
-  ];
 
   return (
     <div style={{ padding: 20 }}>

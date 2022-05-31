@@ -169,7 +169,6 @@ def train_deep_model(
         epochs (int): number of epochs
         problem type (str): "classification" or "regression"
     """
-
     if problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION):
         return train_deep_classification_model(
             model, train_loader, test_loader, optimizer, criterion, epochs

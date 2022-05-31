@@ -60,6 +60,7 @@ def read_local_csv_file(file_path):
         )
 
 
+<<<<<<< HEAD
 class errorMessage(Enum):
     TRAIN_AND_VALID_VOID = "The zip file doesn't contain train and valid folders"
     TRAIN_VOID = "The zip file doesn't contain train folder"
@@ -189,6 +190,8 @@ def loader_from_zipped(
     return train_loader, valid_loader
 
 
+=======
+>>>>>>> df715c3bb67e36a94d7c35d52f810b54343a31dd
 if __name__ == "__main__":
     read_dataset("https://raw.githubusercontent.com/karkir0003/dummy/main/job.csv")
     read_local_csv_file("test.csv")

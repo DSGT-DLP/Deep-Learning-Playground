@@ -5,6 +5,7 @@ import pytest
 import csv
 from backend.constants import *
 from backend.dataset import *
+import filecmp
 
 
 @pytest.mark.parametrize(
@@ -28,6 +29,7 @@ def test_dataset_url_reading(url, path_to_file):
             reader1 = csv.reader(f1)
             reader2 = csv.reader(f2)
             assert [line for line in reader1][:-1] == [line for line in reader2]
+
 
 
 @pytest.mark.parametrize(

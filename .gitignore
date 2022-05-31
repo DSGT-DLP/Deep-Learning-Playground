@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+
 # C extensions
 *.so
 
@@ -130,3 +131,10 @@ dmypy.json
 
 # Pycharm Idea files
 .idea/*
+
+# MacOS
+**/.DS_Store
+
+# Results
+backend/dl_results.csv
+backend/my_deep_learning_model.onnx

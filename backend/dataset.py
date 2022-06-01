@@ -139,7 +139,7 @@ def loader_from_zipped(
     train_dir, valid_dir = check_inside_file("{}\input".format(UNZIPPED_DIR_NAME))
 
     name = os.path.splitext(zipped_file)[0]
-    name = name.split("\\")[-1]
+    name = name.split("/")[-1]
 
     if not train_dir or valid_dir == None:
         train_dir, valid_dir = check_inside_file(

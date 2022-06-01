@@ -1,6 +1,6 @@
 .navList {
   float: right;
-  padding-right: 25px;
+  padding-right: 30px;
   font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -14,5 +14,5 @@
 .nav li a {
   text-decoration: none;
   color: black;
-  font-size: 25px;
+  font-size: 30px;
 }

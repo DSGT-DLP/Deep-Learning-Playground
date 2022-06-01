@@ -285,10 +285,6 @@ const Home = () => {
 
   return (
     <div style={{ padding: 20 }}>
-      {/* <h1 style={styles.h1}>
-        <img src={DSGTLogo} alt="DSGT Logo" width="60" height="60" />
-        Deep Learning Playground
-      </h1> */}
       <DndProvider backend={HTML5Backend}>
         <_TitleText text="Implemented Layers" />
         <BackgroundLayout>

@@ -97,7 +97,7 @@ const Home = () => {
     shuffle: shuffle?.value,
     epochs,
     testSize,
-    fileURL
+    fileURL,
   };
 
   const inputColumnOptions = csvColumns.map((e, i) => ({
@@ -384,7 +384,7 @@ const styles = {
   h1: {
     ...GENERAL_STYLES.p,
     padding: 0,
-    margin: "0 0 20px 0",
+    margin: "0 0 0px 0",
     display: "flex",
     alignItems: "center",
   },

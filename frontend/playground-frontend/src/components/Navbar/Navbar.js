@@ -1,31 +1,19 @@
 import React from "react";
-import "./navbar.css";
+import "./Nav.css";
 import { Link } from "react-router-dom";
 const Navbar = () => {
   return (
-    <ul>
-      <li id="Home">
-        <Link to="/">Home</Link>
-      </li>
-      <li>
-        <Link to="/About">About</Link>
-      </li>
-    </ul>
+    <div>
+      <p>Deep Learning</p>
+      <ul className="nav">
+        <li className="navList">
+          <Link to="/">Home</Link>
+        </li>
+        <li className="navList">
+          <Link to="/About">About</Link>
+        </li>
+      </ul>
+    </div>
   );
 };
 export default Navbar;
-{
-  /*
-const styles = {
-  navList: {
-    fontSize: 25,
-    paddingRight: 25,
-    display: "inline",
-    alignItems: "left",
-    textDecoration: "none",
-    fontFamily: "verdona",
-    fontWeigh: "bold",
-  },
-};
-*/
-}

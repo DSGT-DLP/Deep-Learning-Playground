@@ -1,0 +1,26 @@
+.navList {
+  display: inline;
+  font-size: 25px;
+  padding-right: 25px;
+  font-weight: bold;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  text-decoration: none;
+}
+.nav {
+  text-align: right;
+}
+.nav li {
+  list-style: none;
+  text-align: right;
+}
+.nav li a {
+  text-decoration: none;
+  color: black;
+  font-size: 25px;
+}
+#deep {
+  padding-top: 15px;
+  font-size: 30px;
+  font-weight: bold;
+}

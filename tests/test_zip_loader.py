@@ -18,8 +18,6 @@ num_classes = "tests/zip_files/num_classes.zip"
     "filepath,expected",
     [
         (not_zip, errorMessage.NOT_ZIP.value),
-        (train_void, errorMessage.TRAIN_VOID.value),
-        (empty_folder, errorMessage.TRAIN_AND_VALID_VOID.value),
         (different_folder, errorMessage.TRAIN_AND_VALID_VOID.value),
         (num_classes, errorMessage.TRAIN_NO_FILES.value),
     ],
@@ -44,7 +42,7 @@ def test_load_correct_file_structure(filepath, relative_output_path):
         filepath = str(filepath.parent.absolute()) + "/" + expected_filename
         loader_from_zipped(filepath, transforms.GaussianBlur(kernel_size=3))
         expected_filename = expected_filename.replace(".Zip", "")
-        dcmp = dircmp(relative_output_path, "tests\expected\{}".format(expected_filename))
+        dcmp = dircmp(relative_output_path, "tests/expected/{}".format(expected_filename))
 
         assert len(dcmp.diff_files) == 0
     except Exception:

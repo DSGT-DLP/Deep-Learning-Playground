@@ -28,7 +28,14 @@ jobs:
         conda activate dlplayground
     - name: Formatting Fixes
       run: |
-        conda init bash && source $(conda info --base)/etc/profile.d/conda.sh && conda activate dlplayground && black ./
+        conda init bash 
+        source $(conda info --base)/etc/profile.d/conda.sh 
+        conda activate dlplayground 
+        black ./
     - name: Test with pytest
       run: |
+        conda init bash 
+        source $(conda info --base)/etc/profile.d/conda.sh 
+        conda activate dlplayground 
+        ls
         pytest tests

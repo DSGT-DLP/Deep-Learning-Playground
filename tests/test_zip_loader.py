@@ -36,7 +36,7 @@ def test_load_correct_file_structure(filepath, relative_output_path):
     try:
         expected_filename = filepath.split("/")[-1]
 
-        filepath = "zip_files/{}".format(expected_filename)
+        filepath = "tests/zip_files/{}".format(expected_filename)
         print(filepath)
         loader_from_zipped(filepath, transforms.GaussianBlur(kernel_size=3))
         print("passed the loader from zipped function without exception")

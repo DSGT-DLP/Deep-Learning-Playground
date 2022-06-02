@@ -140,8 +140,6 @@ def train_regression_model(
             "train time": epoch_time,
             "train_loss": train_loss,
             "test_loss": test_loss,
-            "train_acc": train_acc,
-            "val/test acc": val_acc,
         }
     )
     print(result_table.head())

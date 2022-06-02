@@ -21,3 +21,4 @@ TEST = "test"
 VAL_TEST_ACC = "val/test acc"
 DEFAULT_DATASETS = {"IRIS": "load_iris()", "BREAST CANCER": "load_breast_cancer()", "CALIFORNIAHOUSING": "fetch_california_housing()",
                     "DIABETES": "load_diabetes()",  "DIGITS": "load_digits()", "WINE": "load_wine()"}
+UNZIPPED_DIR_NAME = "unzipped_data"

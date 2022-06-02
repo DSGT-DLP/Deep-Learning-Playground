@@ -7,6 +7,10 @@ jobs:
     steps:
       - checkout
       - run:
+         name: Install Anaconda on Ubuntu Docker Container
+         command: |
+            bash Anaconda-latest-Linux-x86_64.sh
+      - run:
          name: Create Conda Environment
          command: |
             ls && cd conda

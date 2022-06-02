@@ -34,4 +34,9 @@ jobs:
         black ./
     - name: Test with pytest
       run: |
+        conda init bash
+        source $(conda info --base)/etc/profile.d/conda.sh
+        conda activate dlplayground
+        ls
+        pip install torchvision
         pytest tests

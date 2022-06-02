@@ -15,6 +15,7 @@ jobs:
             rm -rf ~/miniconda3/miniconda.sh
             ~/miniconda3/bin/conda init bash
             ~/miniconda3/bin/conda init zsh
+            source ~/.bashrc
             cd conda && ls && conda env create -f environment.yml
       - run:
          name: Activate Conda Environment 

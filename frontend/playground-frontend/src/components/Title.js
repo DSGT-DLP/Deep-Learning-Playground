@@ -4,8 +4,10 @@ import { COLORS, GENERAL_STYLES, LAYOUT } from "../constants";
 const Title = () => {
   return (
     <div style={styles.h1}>
-      <img src={DSGTLogo} alt="DSGT Logo" width="60" height="60" />
-      Deep Learning Playground
+      <div style={{ ...LAYOUT.row, ...LAYOUT.centerMiddle }}>
+        <img src={DSGTLogo} alt="DSGT Logo" width="60" height="60" />
+        Deep Learning Playground
+      </div>
       <div style={styles.nav}>
         <Navbar />
       </div>
@@ -22,6 +24,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     fontSize: 30,
+    justifyContent: "space-between",
   },
   nav: {
     width: "67%",

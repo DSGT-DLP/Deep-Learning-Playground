@@ -28,7 +28,6 @@ def test_invalid_file_structure(filepath, expected):
         loader_from_zipped(filepath)
     assert str(e.value) == expected
 
-
 @pytest.mark.parametrize(
     "filepath, relative_output_path",
     [(double_zipped, f"{UNZIPPED_DIR_NAME}/input/double_zipped")],
@@ -36,11 +35,11 @@ def test_invalid_file_structure(filepath, expected):
 def test_load_correct_file_structure(filepath, relative_output_path):
     try:
         expected_filename = filepath.split("/")[-1]
-        filepath = Path(filepath)
-        filepath = str(filepath.parent.absolute()) + "/" + expected_filename
+
+        filepath = "zip_files/{}".format(expected_filename)
         loader_from_zipped(filepath, transforms.GaussianBlur(kernel_size=3))
         expected_filename = expected_filename.replace(".Zip", "")
-        dcmp = dircmp(relative_output_path, "tests/expected/{}".format(expected_filename))
+        dcmp = dircmp(relative_output_path, "expected/{}".format(expected_filename))
 
         assert len(dcmp.diff_files) == 0
     except Exception:

@@ -111,10 +111,10 @@ def loader_from_zipped(
         shutil.rmtree(UNZIPPED_DIR_NAME)
 
     mkdir(UNZIPPED_DIR_NAME)
-    mkdir("{}\input".format(UNZIPPED_DIR_NAME))
+    mkdir("{}/input".format(UNZIPPED_DIR_NAME))
 
     files = ZipFile(zipped_file, "r")
-    files.extractall("{}\input".format(UNZIPPED_DIR_NAME))
+    files.extractall("{}/input".format(UNZIPPED_DIR_NAME))
     files.close()
 
     def check_inside_file(dir_name):
@@ -126,24 +126,24 @@ def loader_from_zipped(
 
         for filename in os.listdir(dir_name):
             if filename == "train":
-                train_dir = "{}\{}".format(dir_name, filename)
+                train_dir = "{}/{}".format(dir_name, filename)
                 if valid_dir is not None:
                     return train_dir, valid_dir
             elif filename == "valid":
-                valid_dir = "{}\{}".format(dir_name, filename)
+                valid_dir = "{}/{}".format(dir_name, filename)
                 if train_dir is not None:
                     return train_dir, valid_dir
 
         return train_dir, valid_dir
 
-    train_dir, valid_dir = check_inside_file("{}\input".format(UNZIPPED_DIR_NAME))
+    train_dir, valid_dir = check_inside_file("{}/input".format(UNZIPPED_DIR_NAME))
 
     name = os.path.splitext(zipped_file)[0]
     name = name.split("/")[-1]
 
     if not train_dir or valid_dir == None:
         train_dir, valid_dir = check_inside_file(
-            "{}\input\{}".format(UNZIPPED_DIR_NAME, name)
+            "{}/input/{}".format(UNZIPPED_DIR_NAME, name)
         )
 
     if train_dir is None and valid_dir is None:

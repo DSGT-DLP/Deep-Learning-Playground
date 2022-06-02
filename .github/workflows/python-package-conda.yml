@@ -24,6 +24,7 @@ jobs:
         ls
         conda env update -f environment.yml
         conda init bash
+        source $(conda info --base)/etc/profile.d/conda.sh
         conda activate dlplayground
     - name: Formatting Fixes
       run: |

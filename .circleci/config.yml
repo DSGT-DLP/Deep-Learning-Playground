@@ -9,7 +9,8 @@ jobs:
       - run:
          name: Create Conda Environment
          command: |
-            cd conda 
+            ls
+            cd /conda 
             conda env create -f environment.yml
       - run:
          name: Activate Conda Environment 

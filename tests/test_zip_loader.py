@@ -6,9 +6,9 @@ from backend.constants import UNZIPPED_DIR_NAME
 from filecmp import dircmp
 import torch
 
-different_folder = "tests/zip_files/different_folders.zip"
+different_folder = "tests/zip_files/different_folders.Zip"
 empty_folder = "tests/zip_files/empty.zip"
-double_zipped = "tests/zip_files/double_zipped.Zip"
+double_zipped = "tests/zip_files/double_zipped.zip"
 not_zip = "tests/zip_files/not_zip"
 num_classes = "tests/zip_files/num_classes.zip"
 

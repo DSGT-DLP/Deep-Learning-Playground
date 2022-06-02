@@ -41,7 +41,7 @@ def test_load_correct_file_structure(filepath, relative_output_path):
         print(filepath)
         loader_from_zipped(filepath, transforms.GaussianBlur(kernel_size=3))
         print("passed the loader from zipped function without exception")
-        expected_filename = expected_filename.replace(".Zip", "")
+        expected_filename = expected_filename.replace(".zip", "")
         print("expected/{}".format(expected_filename))
         print(relative_output_path)
         print(os.path.exists("expected/{}".format(expected_filename)))

@@ -10,7 +10,6 @@ different_folder = "tests/zip_files/different_folders.zip"
 empty_folder = "tests/zip_files/empty.zip"
 double_zipped = "tests/zip_files/double_zipped.Zip"
 not_zip = "tests/zip_files/not_zip"
-train_void = "tests/zip_files/test_void.zip"
 num_classes = "tests/zip_files/num_classes.zip"
 
 
@@ -18,8 +17,7 @@ num_classes = "tests/zip_files/num_classes.zip"
     "filepath,expected",
     [
         (not_zip, errorMessage.NOT_ZIP.value),
-        (different_folder, errorMessage.TRAIN_AND_VALID_VOID.value),
-        (num_classes, errorMessage.TRAIN_NO_FILES.value),
+        (different_folder, errorMessage.TRAIN_AND_VALID_VOID.value)
     ],
 )
 def test_invalid_file_structure(filepath, expected):
@@ -41,10 +39,7 @@ def test_load_correct_file_structure(filepath, relative_output_path):
         filepath = Path(filepath)
         filepath = str(filepath.parent.absolute()) + "/" + expected_filename
         loader_from_zipped(filepath, transforms.GaussianBlur(kernel_size=3))
-        expected_filename = expected_filename.replace(".zip", "")
         expected_filename = expected_filename.replace(".Zip", "")
-        print("tests/expected/{}".format(expected_filename))
-        print(relative_output_path)
         dcmp = dircmp(relative_output_path, "tests/expected/{}".format(expected_filename))
 
         assert len(dcmp.diff_files) == 0

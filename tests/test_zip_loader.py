@@ -41,7 +41,7 @@ def test_load_correct_file_structure(filepath, relative_output_path):
         filepath = Path(filepath)
         filepath = str(filepath.parent.absolute()) + "/" + expected_filename
         loader_from_zipped(filepath, transforms.GaussianBlur(kernel_size=3))
-        expected_filename = expected_filename.replace(".Zip", "")
+        expected_filename = expected_filename.replace(".zip", "")
         dcmp = dircmp(relative_output_path, "tests/expected/{}".format(expected_filename))
 
         assert len(dcmp.diff_files) == 0

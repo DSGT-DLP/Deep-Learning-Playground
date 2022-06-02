@@ -23,6 +23,7 @@ jobs:
         cd conda && ls
         ls
         conda env update -f environment.yml
+        conda activate dlplayground
     - name: Lint with flake8
       run: |
         conda install flake8

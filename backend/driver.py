@@ -15,6 +15,7 @@ from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
 from default_datasets import get_default_dataset
 from flask_cors import CORS
+from email_notifier import send_email
 
 app = Flask(__name__)
 CORS(app)
@@ -149,6 +150,7 @@ def train_and_output():
     shuffle = request_data['shuffle']
     csvDataStr = request_data['csvData']
     fileURL = request_data['fileURL']
+    email = request_data['email']
     if request.method == 'POST':
         if not default:
             if fileURL:
@@ -175,6 +177,10 @@ def train_and_output():
                     json_csv_data_str=csvDataStr,
                 )
             )
+            #If the length of the email is greater than 0 then that means a valid email has been 
+            #inputted for the ONNX file to be sent to the user.
+            if(len(email) != 0):
+                send_email(email)
             return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json()}), 200
 
         except Exception:

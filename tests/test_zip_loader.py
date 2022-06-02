@@ -5,6 +5,7 @@ from backend.dataset import loader_from_zipped, errorMessage
 from backend.constants import UNZIPPED_DIR_NAME
 from filecmp import dircmp
 import torch
+import os
 
 different_folder = "tests/zip_files/different_folders.Zip"
 empty_folder = "tests/zip_files/empty.zip"
@@ -44,8 +45,9 @@ def test_load_correct_file_structure(filepath, relative_output_path):
         print("expected/{}".format(expected_filename))
         print(relative_output_path)
         print(os.path.exists("expected/{}".format(expected_filename)))
+        print(os.path.exists("tests/expected/{}".format(expected_filename)))
         print(os.path.exists(relative_output_path))
-        dcmp = dircmp(relative_output_path, "expected/{}".format(expected_filename))
+        dcmp = dircmp(relative_output_path, "tests/expected/{}".format(expected_filename))
 
         assert len(dcmp.diff_files) == 0
     except Exception:

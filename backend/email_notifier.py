@@ -18,10 +18,11 @@ def send_email(email):
     config = configparser.ConfigParser()
     config.read("config.ini")
     api_key = config["DEFAULT"]["SENDGRID_API_KEY"]
+    sendgrid_email = config["DEFAULT"]["SENDGRID_EMAIL_ADDRESS"]
     print(api_key)
 
     message = Mail(
-        from_email="dsgtplayground@gmail.com",
+        from_email=sendgrid_email,
         to_emails=email,
         subject="Your ONNX file and visualizations from Deep Learning Playground",
         html_content="Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems.",

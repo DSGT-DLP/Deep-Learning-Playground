@@ -17,6 +17,7 @@ import {
   Input,
   CSVInput,
   TrainButton,
+  EmailInput
 } from "./components";
 import DSGTLogo from "./images/logos/dsgt-logo-light.png";
 import { CRITERIONS } from "./settings";
@@ -38,9 +39,11 @@ const Home = () => {
   const [csvColumns, setCSVColumns] = useState([]);
   const [dl_results_data, set_dl_results_data] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState("");
+  
 
   // input responses
   const [fileURL, setFileURL] = useState("");
+  const [email, setEmail] = useState("");
   const [addedLayers, setAddedLayers] = useState([
     {
       display_name: "Linear",
@@ -98,6 +101,7 @@ const Home = () => {
     epochs,
     testSize,
     fileURL,
+    email
   };
 
   const inputColumnOptions = csvColumns.map((e, i) => ({
@@ -359,6 +363,7 @@ const Home = () => {
           <Input {...e} key={e.queryText} />
         ))}
       </BackgroundLayout>
+      <EmailInput email={email} setEmail={setEmail}>{console.log(email)}</EmailInput>
       <_TitleText text="CSV Input" />
       <DataTable
         pagination

@@ -10,7 +10,8 @@ export const train_and_output = async (
   epochs,
   shuffle,
   csvData = null,
-  fileURL = null
+  fileURL = null,
+  email
 ) => {
   return await fetch("/run", {
     method: "POST",
@@ -27,6 +28,7 @@ export const train_and_output = async (
       shuffle,
       csvData,
       fileURL,
+      email
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",

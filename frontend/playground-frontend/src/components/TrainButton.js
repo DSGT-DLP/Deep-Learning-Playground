@@ -20,6 +20,7 @@ const TrainButton = (props) => {
     setDLPBackendResponse,
     csvData = null,
     fileURL = null,
+    email
   } = props;
 
   const [backgroundColor, setBackgroundColor] = useState(COLORS.dark_blue);
@@ -79,6 +80,7 @@ const TrainButton = (props) => {
   };
 
   const onClick = async () => {
+    console.log(email);
     setBackgroundColor((currentColor) =>
       currentColor === COLORS.dark_blue ? COLORS.gold : COLORS.dark_blue
     );
@@ -100,7 +102,8 @@ const TrainButton = (props) => {
       epochs,
       shuffle,
       csvDataStr,
-      fileURL
+      fileURL,
+      email
     );
 
     setDLPBackendResponse(response);

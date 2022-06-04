@@ -40,7 +40,6 @@ const Home = () => {
   const [dl_results_data, set_dl_results_data] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState("");
   
-
   // input responses
   const [fileURL, setFileURL] = useState("");
   const [email, setEmail] = useState("");

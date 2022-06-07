@@ -1,23 +1,64 @@
-.navList {
+html {
+  /* box sizing border box specifies no padding, width = width etc */
+  box-sizing: border-box;
+}
+#nav-bar {
+  padding: 0%;
+  margin: 0%;
+  position: sticky;
+  background-color: #003057;
+  color: white;
+  overflow: hidden;
+  z-index: 10;
+  top: 0vmax;
+  max-width: 100%;
+  width: 100vw;
+  height: 10vh;
+}
+
+.navElement {
+  display: block;
+  margin: 20px;
+  color: inherit;
   float: right;
-  font-size: 32px;
-  padding-right: 25px;
-  font-weight: bold;
+  text-align: center;
+
   font-family: Arial, Helvetica, sans-serif;
 }
+.navElement:hover {
+  background-color: #f7f7f7;
+}
+@media screen and (max-width: 600px) {
+  #nav-bar li:not(:first-child) {
+    display: none;
+  }
+}
 .nav {
-  float: right;
+  padding: 0em;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  box-sizing: inherit;
+  width: inherit;
+  height: inherit;
+  overflow: hidden;
 }
-#title {
-  font-size: 30px;
-  font-size: bold;
+#title-name {
+  float: left;
+  padding: auto 0;
+  font-size: large;
+  text-align: left;
+  display: "flex";
+  align-items: "center";
+  justify-content: "center";
 }
+
 .nav li {
   list-style: none;
   float: right;
 }
 .nav li a {
   text-decoration: none;
-  color: black;
+  color: white;
   font-size: 25px;
 }

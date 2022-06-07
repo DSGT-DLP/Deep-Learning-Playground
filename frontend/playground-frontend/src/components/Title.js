@@ -1,13 +1,10 @@
-import DSGTLogo from "../images/logos/dsgt-logo-light.png";
+// import DSGTLogo from "../images/logos/dsgt-logo-light.png";
 import Navbar from "./Navbar/Navbar";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "../constants";
 const Title = () => {
   return (
-    <h1 style={styles.h1}>
-      <img src={DSGTLogo} alt="DSGT Logo" width="60" height="60" />
-      Deep Learning Playground
-      <Navbar />
-    </h1>
+    <Navbar />
+    // <Footer/>
   );
 };
 export default Title;

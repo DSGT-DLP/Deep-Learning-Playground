@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Title from "./components/Title";
 import Home from "./Home";
-import About from "./components/About";
+import About from "./components/About/About";
 function App() {
   return (
     <div>

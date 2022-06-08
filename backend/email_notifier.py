@@ -14,7 +14,7 @@ def send_email(email_address):
     AWS key and secret key in order for this function to run.
 
     Args:
-        email (str): email address of user
+        email_address (str): email address of user
     """
 
     client = boto3.client('ses',region_name=AWS_REGION)

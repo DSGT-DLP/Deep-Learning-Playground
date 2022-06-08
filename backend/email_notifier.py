@@ -1,10 +1,4 @@
-import configparser
-import base64
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition)
-from constants import ONNX_MODEL, LOSS_VIZ, ACC_VIZ
-import requests
-import json
+from constants import ONNX_MODEL, LOSS_VIZ, ACC_VIZ, SENDER, AWS_REGION, BODY_TEXT, BODY_HTML, CHARSET
 import boto3
 from botocore.exceptions import ClientError
 from email.mime.multipart import MIMEMultipart
@@ -14,52 +8,21 @@ import os
 
 
 def send_email(email):
-
     """
     If the user inputs a valid email in the frontend, then send_email sends the created ONNX
-    file to the user's email using AWS Simple Email Service (SES). 
+    file to the user's email using AWS Simple Email Service (SES). Use AWS CLI to configure 
+    AWS key and secret key in order for this function to run.
 
     Args:
         email (str): email address of user
     """
 
-    # This address must be verified with Amazon SES.
-    SENDER = "DSGT Playground <dsgtplayground@gmail.com>"
-
-    # If your account is still in the sandbox, this address must be verified.
-    RECIPIENT = email
-
-    AWS_REGION = "us-east-2"
-
-    # The subject line for the email.
-    SUBJECT = "Your ONNX file and visualizations from Deep Learning Playground"
-
-    # The full path to the file that will be attached to the email.
-    ONNX = ONNX_MODEL
-    LOSS = LOSS_VIZ
-    ACC = ACC_VIZ
-
-    # The email body for recipients with non-HTML email clients.
-    BODY_TEXT = "Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems."
-
-    # The HTML body of the email.
-    BODY_HTML = """\
-    <html>
-    <head></head>
-    <body>
-    <p>Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems.</p>
-    </body>
-    </html>
-    """
-
-    CHARSET = "utf-8"
-
     client = boto3.client('ses',region_name=AWS_REGION)
 
     msg = MIMEMultipart('mixed')
-    msg['Subject'] = SUBJECT 
+    msg['Subject'] = "Your ONNX file and visualizations from Deep Learning Playground"
     msg['From'] = SENDER 
-    msg['To'] = RECIPIENT
+    msg['To'] = email
 
     msg_body = MIMEMultipart('alternative')
 
@@ -69,12 +32,12 @@ def send_email(email):
     msg_body.attach(textpart)
     msg_body.attach(htmlpart)
 
-    onnx_att = MIMEApplication(open(ONNX, 'rb').read())
-    onnx_att.add_header('Content-Disposition','attachment',filename=os.path.basename(ONNX))
-    loss_att = MIMEApplication(open(LOSS, 'rb').read())
-    loss_att.add_header('Content-Disposition','attachment',filename=os.path.basename(LOSS))
-    acc_att = MIMEApplication(open(ACC, 'rb').read())
-    acc_att.add_header('Content-Disposition','attachment',filename=os.path.basename(ACC))
+    onnx_att = MIMEApplication(open(ONNX_MODEL, 'rb').read())
+    onnx_att.add_header('Content-Disposition','attachment',filename=os.path.basename(ONNX_MODEL))
+    loss_att = MIMEApplication(open(LOSS_VIZ, 'rb').read())
+    loss_att.add_header('Content-Disposition','attachment',filename=os.path.basename(LOSS_VIZ))
+    acc_att = MIMEApplication(open(ACC_VIZ, 'rb').read())
+    acc_att.add_header('Content-Disposition','attachment',filename=os.path.basename(ACC_VIZ))
 
     # Attach the multipart/alternative child container to the multipart/mixed
     # parent container.
@@ -90,7 +53,7 @@ def send_email(email):
         response = client.send_raw_email(
             Source=SENDER,
             Destinations=[
-                RECIPIENT
+                email
             ],
             RawMessage={
                 'Data':msg.as_string(),

@@ -40,7 +40,6 @@ const Home = () => {
   const [dl_results_data, set_dl_results_data] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState("");
   
-
   // input responses
   const [fileURL, setFileURL] = useState("");
   const [email, setEmail] = useState("");
@@ -289,10 +288,6 @@ const Home = () => {
 
   return (
     <div style={{ padding: 20 }}>
-      <h1 style={styles.h1}>
-        <img src={DSGTLogo} alt="DSGT Logo" width="60" height="60" />
-        Deep Learning Playground
-      </h1>
       <DndProvider backend={HTML5Backend}>
         <_TitleText text="Implemented Layers" />
         <BackgroundLayout>
@@ -389,7 +384,7 @@ const styles = {
   h1: {
     ...GENERAL_STYLES.p,
     padding: 0,
-    margin: "0 0 20px 0",
+    margin: "0 0 0px 0",
     display: "flex",
     alignItems: "center",
   },

@@ -7,7 +7,7 @@ from email.mime.application import MIMEApplication
 import os
 
 
-def send_email(email):
+def send_email(email_address):
     """
     If the user inputs a valid email in the frontend, then send_email sends the created ONNX
     file to the user's email using AWS Simple Email Service (SES). Use AWS CLI to configure 
@@ -22,7 +22,7 @@ def send_email(email):
     msg = MIMEMultipart('mixed')
     msg['Subject'] = "Your ONNX file and visualizations from Deep Learning Playground"
     msg['From'] = SENDER 
-    msg['To'] = email
+    msg['To'] = email_address
 
     msg_body = MIMEMultipart('alternative')
 
@@ -53,7 +53,7 @@ def send_email(email):
         response = client.send_raw_email(
             Source=SENDER,
             Destinations=[
-                email
+                email_address
             ],
             RawMessage={
                 'Data':msg.as_string(),

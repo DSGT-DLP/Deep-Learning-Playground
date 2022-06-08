@@ -7,6 +7,11 @@
 #For files in the /backend directory, @karkir0003 will be requested in a pull request
 /backend @karkir0003
 
+/backend/email_notifier.py @avayedawadi
+
+/backend/driver.py @farisdurrani
+
+
 #For files in the /frontend directory, @farisdurrani will be requested in such a pull rewuest
 /frontend @farisdurrani
 

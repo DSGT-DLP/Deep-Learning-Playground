@@ -1,0 +1,12 @@
+boto3==1.24.5
+botocore==1.27.5
+Flask==2.1.2
+flask_cors==3.0.10
+matplotlib==3.5.2
+numpy==1.22.4
+pandas==1.4.2
+pytest==7.1.2
+scikit_learn==1.1.1
+selenium==4.2.0
+torch==1.11.0
+torchvision==0.12.0

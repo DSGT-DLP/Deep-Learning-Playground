@@ -31,7 +31,6 @@ def test_dataset_url_reading(url, path_to_file):
             assert [line for line in reader1][:-1] == [line for line in reader2]
 
 
-
 @pytest.mark.parametrize(
     "url,path_to_file",
     [

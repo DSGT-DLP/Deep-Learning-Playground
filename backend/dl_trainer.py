@@ -2,7 +2,16 @@ from loss import compute_loss
 from dl_eval import compute_accuracy
 from utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv
 from utils import ProblemType
-from constants import DEEP_LEARNING_RESULT_CSV_PATH, EPOCH, TRAIN_TIME, TRAIN_LOSS, TEST_LOSS, TRAIN_ACC, TEST, VAL_TEST_ACC
+from constants import (
+    DEEP_LEARNING_RESULT_CSV_PATH,
+    EPOCH,
+    TRAIN_TIME,
+    TRAIN_LOSS,
+    TEST_LOSS,
+    TRAIN_ACC,
+    TEST,
+    VAL_TEST_ACC,
+)
 import torch  # pytorch
 import torch.nn as nn
 import matplotlib.pyplot as plt
@@ -53,8 +62,8 @@ def train_deep_classification_model(
                 optimizer.zero_grad()  # zero out gradient for each batch
                 output = model(input)  # make prediction on input
                 batch_train_acc.append(compute_accuracy(output, labels))
-                
-                loss = compute_loss(criterion, output, labels) #compute the loss
+
+                loss = compute_loss(criterion, output, labels)  # compute the loss
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
                 batch_loss.append(loss.detach().numpy())
@@ -124,7 +133,7 @@ def train_deep_regression_model(
                 input, labels = data
                 optimizer.zero_grad()  # zero out gradient for each batch
                 output = model(input)  # make prediction on input
-                loss = compute_loss(criterion, output, labels) #compute the loss
+                loss = compute_loss(criterion, output, labels)  # compute the loss
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
                 batch_loss.append(loss.detach().numpy())

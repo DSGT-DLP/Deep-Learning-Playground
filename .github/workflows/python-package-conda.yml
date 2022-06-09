@@ -32,6 +32,12 @@ jobs:
         source $(conda info --base)/etc/profile.d/conda.sh
         conda activate dlplayground
         black ./
+    - name: Generate requirements.txt
+      run: |
+        conda init bash
+        source $(conda info --base)/etc/profile.d/conda.sh 
+        conda activate dlplayground 
+        pipreqs
     - name: Test with pytest
       run: |
         conda init bash

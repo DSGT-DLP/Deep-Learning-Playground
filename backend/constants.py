@@ -1,5 +1,4 @@
 import os
-
 CSV_FILE_NAME = "data.csv"
 CSV_FILE_PATH = f"{os.path.join(os.getcwd(), CSV_FILE_NAME)}"
 DEEP_LEARNING_RESULT_CSV_PATH = f"dl_results.csv"
@@ -22,3 +21,15 @@ VAL_TEST_ACC = "val/test acc"
 DEFAULT_DATASETS = {"IRIS": "load_iris()", "BREAST CANCER": "load_breast_cancer()", "CALIFORNIAHOUSING": "fetch_california_housing()",
                     "DIABETES": "load_diabetes()",  "DIGITS": "load_digits()", "WINE": "load_wine()"}
 UNZIPPED_DIR_NAME = "unzipped_data"
+SENDER = "DSGT Playground <dsgtplayground@gmail.com>"
+AWS_REGION = "us-east-2"
+BODY_TEXT = "Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems."
+BODY_HTML = """\
+    <html>
+    <head></head>
+    <body>
+    <p>Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems.</p>
+    </body>
+    </html>
+    """
+CHARSET = "utf-8"

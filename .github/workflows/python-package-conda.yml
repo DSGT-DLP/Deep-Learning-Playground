@@ -1,6 +1,7 @@
 name: Python Package using Conda
 
 on: [push]
+permissions: read-all|write-all
 
 jobs:
   build-linux:
@@ -32,15 +33,8 @@ jobs:
         source $(conda info --base)/etc/profile.d/conda.sh
         conda activate dlplayground
         black ./
-    - name: Generate requirements.txt
-      run: |
-        conda init bash
-        source $(conda info --base)/etc/profile.d/conda.sh 
-        conda activate dlplayground 
-        pipreqs
     - name: Automatic requirements.txt for Python Projects
       uses: ryan-rozario/pipreqs-action@v2.0.0
-    
     - name: Test with pytest
       run: |
         conda init bash

@@ -9,7 +9,6 @@ import {
 } from "./settings";
 import {
   BackgroundLayout,
-  Container,
   AddedLayer,
   RectContainer,
   AddNewLayer,
@@ -17,9 +16,8 @@ import {
   Input,
   CSVInput,
   TrainButton,
-  EmailInput
+  EmailInput,
 } from "./components";
-import DSGTLogo from "./images/logos/dsgt-logo-light.png";
 import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -39,7 +37,7 @@ const Home = () => {
   const [csvColumns, setCSVColumns] = useState([]);
   const [dl_results_data, set_dl_results_data] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState("");
-  
+
   // input responses
   const [fileURL, setFileURL] = useState("");
   const [email, setEmail] = useState("");
@@ -100,7 +98,7 @@ const Home = () => {
     epochs,
     testSize,
     fileURL,
-    email
+    email,
   };
 
   const inputColumnOptions = csvColumns.map((e, i) => ({
@@ -121,7 +119,7 @@ const Home = () => {
       "Access-Control-Allow-Headers": "Origin",
     };
     try {
-      if (url !== "") {
+      if (url) {
         let response = await fetch(url);
         response = await response.text();
         const responseLines = response.split(/\r\n|\n/);
@@ -134,7 +132,7 @@ const Home = () => {
           const row = responseLines[i].split(
             /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
           );
-          if (headers && row.length == headers.length) {
+          if (headers && row.length === headers.length) {
             const obj = {};
             for (let j = 0; j < headers.length; j++) {
               let d = row[j];
@@ -302,9 +300,7 @@ const Home = () => {
               style={{ width: "100%" }}
               placeholder="Or type in URL..."
               value={fileURL}
-              onChange={(e) => {
-                handleURL(e.target.value);
-              }}
+              onChange={(e) => handleURL(e.target.value)}
             />
           </RectContainer>
 
@@ -362,7 +358,7 @@ const Home = () => {
           <Input {...e} key={e.queryText} />
         ))}
       </BackgroundLayout>
-      <EmailInput email={email} setEmail={setEmail}>{console.log(email)}</EmailInput>
+      <EmailInput email={email} setEmail={setEmail} />
       <_TitleText text="CSV Input" />
       <DataTable
         pagination
@@ -384,7 +380,7 @@ const styles = {
   h1: {
     ...GENERAL_STYLES.p,
     padding: 0,
-    margin: "0 0 0px 0",
+    margin: 0,
     display: "flex",
     alignItems: "center",
   },
@@ -393,7 +389,6 @@ const styles = {
     backgroundColor: COLORS.input,
     width: 200,
     ...LAYOUT.column,
-    // justifyContent: "space-between",
   },
   download_csv_res: {
     backgroundColor: COLORS.layer,

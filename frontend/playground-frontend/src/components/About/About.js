@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
-import "./About.css";
+import React from "react";
 
 const About = () => {
   return (
-    <>
+    <div className="about-page">
       <div id="header-section">
-        <h1 class="headers">Deep Learning Playground</h1>
+        <h1 className="headers">Deep Learning Playground</h1>
         <h2>Your destination for training Deep Learning models</h2>
       </div>
 
-      <div class="sections" id="motivation">
+      <div className="sections" id="motivation">
         <h3>Motivation</h3>
         <p>
           Deep Learning has made advancements recently. People are trying to
@@ -39,10 +38,9 @@ const About = () => {
         </ul>
       </div>
 
-      <div class="sections" id="tech">
+      <div className="sections" id="tech">
         <h3>Technology Used</h3>
-        DLP uses the following tools and libraries to work
-        properly:
+        DLP uses the following tools and libraries to work properly:
         <ul>
           <li>
             Python : Programming language widely used for Data Science, AI, and
@@ -67,7 +65,7 @@ const About = () => {
         </ul>
       </div>
 
-      <div class="sections" id="installation">
+      <div className="sections" id="installation">
         <h3>Installation</h3>
         <p>
           See the README.md in the{" "}
@@ -80,7 +78,7 @@ const About = () => {
         </p>
       </div>
 
-      <div class="sections" id="user">
+      <div className="sections" id="user">
         <h3>User</h3>
         <p>
           As the user, all you need to do in the Deep Learning Playground is
@@ -101,7 +99,7 @@ const About = () => {
         </p>
       </div>
 
-      <div class="sections" id="dev">
+      <div className="sections" id="dev">
         <h3>Development</h3>
         <p>
           Want to contribute? Great! Email one of the collaborators in the
@@ -116,12 +114,12 @@ const About = () => {
         </p>
       </div>
 
-      <div class="sections" id="license">
+      <div className="sections" id="license">
         <h3>License</h3>
         MIT
       </div>
       {/* <footer/> */}
-    </>
+    </div>
   );
 };
 

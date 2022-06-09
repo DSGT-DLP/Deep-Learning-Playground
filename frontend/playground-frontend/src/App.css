@@ -1,7 +1,9 @@
+/* Wiki and About CSS */
+
 body {
   margin: 0;
   padding: 0;
-  background-color: #f6f6ff;
+  /* background-color: #f6f6ff; */
   color: black;
 
   /* Secondary color is #7DA2A9 */
@@ -9,6 +11,7 @@ body {
 }
 .sections {
   margin: auto;
+  background-color: #f6f6ff;
   width: 50%;
   padding: 1rem;
   text-align: justify;

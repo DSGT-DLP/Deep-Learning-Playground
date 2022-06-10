@@ -37,7 +37,7 @@ jobs:
         conda init bash
         source $(conda info --base)/etc/profile.d/conda.sh
         conda activate dlplayground
-        python yml_to_req.py
+        $(python yml_to_req.py)
     - name: Test with pytest
       run: |
         conda init bash

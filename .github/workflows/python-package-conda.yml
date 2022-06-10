@@ -38,6 +38,8 @@ jobs:
         source $(conda info --base)/etc/profile.d/conda.sh
         conda activate dlplayground
         python ./yml_to_req.py
+        git config --global user.name ${{ secrets.DLP_HELPER_USERNAME }}
+        git config --global user.email ${{ secrets.DLP_HELPER_EMAIL}}
         git add requirements.txt
         git commit -m "generating requirements.txt"
         git push

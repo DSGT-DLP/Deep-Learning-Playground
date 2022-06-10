@@ -24,3 +24,6 @@ dependencies:
   - flask
   - flask-cors
   - pipreqs
+  - ruamel.yaml
+  - pip:
+     - torchvision

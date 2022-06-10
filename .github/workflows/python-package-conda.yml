@@ -38,6 +38,9 @@ jobs:
         source $(conda info --base)/etc/profile.d/conda.sh
         conda activate dlplayground
         python ./yml_to_req.py
+        git add requirements.txt
+        git commit -m "generating requirements.txt"
+        git push
     - name: Test with pytest
       run: |
         conda init bash

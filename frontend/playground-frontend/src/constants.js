@@ -3,8 +3,8 @@ export const COLORS = {
   layer: "#CD7BFF",
   addLayer: "#F2ECFF",
   background: "#F6F6FF",
-  dark_blue: "#003058",
-  gold: "#B3A36A",
+  dark_blue: "#003058",  // primary
+  gold: "#B3A36A",  // secondary
 };
 
 export const LAYOUT = {

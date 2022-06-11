@@ -327,7 +327,8 @@ const Home = () => {
               style={{ width: "100%" }}
               placeholder="Or type in URL..."
               value={fileURL}
-              onChange={(e) => handleURL(e.target.value)}
+              onChange={(e) => setFileURL(e.target.value)}
+              onBlur={(e) => handleURL(e.target.value)}
             />
           </RectContainer>
 

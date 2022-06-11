@@ -32,7 +32,7 @@ on:
     branches:
       - "deployment-branch"
 
-needs: ["Python Package using Conda"]  # require "Python Package using Conda" to pass before deploy runs
+
 
 env:
   AWS_REGION: "us-west-2"                    # set this to your preferred AWS region, e.g. us-west-1
@@ -49,6 +49,7 @@ permissions:
 
 jobs:
   deploy:
+    needs: [Python Package using Conda]  # require "Python Package using Conda" to pass before deploy runs
     name: Deploy
     runs-on: ubuntu-latest
     environment: production

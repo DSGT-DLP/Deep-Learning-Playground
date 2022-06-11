@@ -261,6 +261,12 @@ const Home = () => {
               layout={{
                 width: 750,
                 height: 750,
+                xaxis: {
+                  title: "Epoch Number",
+                },
+                yaxis: {
+                  title: "Accuracy",
+                },
                 title: "Train vs. Test Accuracy for your Deep Learning Model",
                 showlegend: true,
               }}
@@ -290,6 +296,12 @@ const Home = () => {
             layout={{
               width: 750,
               height: 750,
+              xaxis: {
+                title: "Epoch Number",
+              },
+              yaxis: {
+                title: "Loss",
+              },
               title: "Train vs. Test Loss for your Deep Learning Model",
               showlegend: true,
             }}

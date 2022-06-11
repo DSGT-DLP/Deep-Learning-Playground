@@ -1,5 +1,5 @@
 # This workflow will build and push a new container image to Amazon ECR,
-# and then will deploy a new task definition to Amazon ECS, when the build task is completed.
+# and then will deploy a new task definition to Amazon ECS, when there is a push to the "main" branch.
 #
 # To use this workflow, you will need to complete the following set-up steps:
 #
@@ -31,12 +31,15 @@ on:
     workflows: ["Python Package using Conda"]
     types:
       - completed
+  push:
+    branches:
+      - "deployment-branch"
 
 env:
-  AWS_REGION: "us-west-2"                   # set this to your preferred AWS region, e.g. us-west-1
+  AWS_REGION: "us-west-2"                    # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: "deep-learning-playground"           # set this to your Amazon ECR repository name
   ECS_SERVICE: "deep-learning-playground"                 # set this to your Amazon ECS service name
-  ECS_CLUSTER: "deep-learning-playground"                # set this to your Amazon ECS cluster name
+  ECS_CLUSTER: "deep-learning-playground"                 # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION: ".aws/task-definition.json" # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: "deep-learning-playground-container"           # set this to the name of the container in the
@@ -58,8 +61,8 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to Amazon ECR
@@ -78,7 +81,6 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1

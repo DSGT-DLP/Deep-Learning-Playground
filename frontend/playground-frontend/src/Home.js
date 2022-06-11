@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { COLORS, GENERAL_STYLES, LAYOUT } from "./constants";
+import {
+  COLORS,
+  DEFAULT_ADDED_LAYERS,
+  GENERAL_STYLES,
+  LAYOUT,
+} from "./constants";
 import {
   BOOL_OPTIONS,
   DEFAULT_DATASETS,
@@ -17,26 +22,20 @@ import {
   CSVInput,
   TrainButton,
   EmailInput,
+  TitleText
 } from "./components";
 import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DataTable from "react-data-table-component";
-import LOSS_VIZ from "./backend_outputs/visualization_output/my_loss_plot.png";
-import ACC_VIZ from "./backend_outputs/visualization_output/my_accuracy_plot.png";
 import ONXX_OUTPUT_PATH from "./backend_outputs/my_deep_learning_model.onnx";
 import { CSVLink } from "react-csv";
 import Plot from "react-plotly.js";
 
-const _TitleText = (props) => {
-  const { text } = props;
-  return <p style={styles.titleText}>{text}</p>;
-};
-
 const Home = () => {
   const [csvData, setCSVData] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
-  const [dlpBackendResponse, setDLPBackendResponse] = useState("");
+  const [dlpBackendResponse, setDLPBackendResponse] = useState();
 
   // input responses
   const [fileURL, setFileURL] = useState("");
@@ -93,36 +92,36 @@ const Home = () => {
       "Access-Control-Allow-Headers": "Origin",
     };
     try {
-      if (url) {
-        let response = await fetch(url);
-        response = await response.text();
-        const responseLines = response.split(/\r\n|\n/);
-        const headers = responseLines[0].split(
+      if (!url) return;
+
+      let response = await fetch(url);
+      response = await response.text();
+      const responseLines = response.split(/\r\n|\n/);
+      const headers = responseLines[0].split(
+        /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
+      );
+
+      const list = [];
+      for (let i = 1; i < responseLines.length; i++) {
+        const row = responseLines[i].split(
           /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
         );
-
-        const list = [];
-        for (let i = 1; i < responseLines.length; i++) {
-          const row = responseLines[i].split(
-            /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
-          );
-          if (headers && row.length === headers.length) {
-            const obj = {};
-            for (let j = 0; j < headers.length; j++) {
-              let d = row[j];
-              if (d.length > 0) {
-                if (d[0] == '"') d = d.substring(1, d.length - 1);
-                if (d[d.length - 1] == '"') d = d.substring(d.length - 2, 1);
-              }
-              if (headers[j]) {
-                obj[headers[j]] = d;
-              }
+        if (headers && row.length === headers.length) {
+          const obj = {};
+          for (let j = 0; j < headers.length; j++) {
+            let d = row[j];
+            if (d.length > 0) {
+              if (d[0] == '"') d = d.substring(1, d.length - 1);
+              if (d[d.length - 1] == '"') d = d.substring(d.length - 2, 1);
             }
-
-            // remove the blank rows
-            if (Object.values(obj).filter((x) => x).length > 0) {
-              list.push(obj);
+            if (headers[j]) {
+              obj[headers[j]] = d;
             }
+          }
+
+          // remove the blank rows
+          if (Object.values(obj).filter((x) => x).length > 0) {
+            list.push(obj);
           }
         }
 
@@ -202,7 +201,7 @@ const Home = () => {
   const showResults = () => {
     if (!dlpBackendResponse?.success) {
       return (
-        dlpBackendResponse.message || (
+        dlpBackendResponse?.message || (
           <p style={{ textAlign: "center" }}>There are no records to display</p>
         )
       );
@@ -261,12 +260,8 @@ const Home = () => {
               layout={{
                 width: 750,
                 height: 750,
-                xaxis: {
-                  title: "Epoch Number",
-                },
-                yaxis: {
-                  title: "Accuracy",
-                },
+                xaxis: { title: "Epoch Number" },
+                yaxis: { title: "Accuracy" },
                 title: "Train vs. Test Accuracy for your Deep Learning Model",
                 showlegend: true,
               }}
@@ -296,12 +291,8 @@ const Home = () => {
             layout={{
               width: 750,
               height: 750,
-              xaxis: {
-                title: "Epoch Number",
-              },
-              yaxis: {
-                title: "Loss",
-              },
+              xaxis: { title: "Epoch Number" },
+              yaxis: { title: "Loss" },
               title: "Train vs. Test Loss for your Deep Learning Model",
               showlegend: true,
             }}
@@ -314,7 +305,7 @@ const Home = () => {
   return (
     <div style={{ padding: 20 }}>
       <DndProvider backend={HTML5Backend}>
-        <_TitleText text="Implemented Layers" />
+        <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <RectContainer style={styles.fileInput}>
             <CSVInput
@@ -356,7 +347,7 @@ const Home = () => {
 
         <div style={{ marginTop: 20 }} />
 
-        <_TitleText text="Layers Inventory" />
+        <TitleText text="Layers Inventory" />
 
         <BackgroundLayout>
           {POSSIBLE_LAYERS.map((e) => (
@@ -379,21 +370,21 @@ const Home = () => {
         </BackgroundLayout>
       </DndProvider>
       <div style={{ marginTop: 20 }} />
-      <_TitleText text="Deep Learning Parameters" />
+      <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
         {input_queries.map((e) => (
           <Input {...e} key={e.queryText} />
         ))}
       </BackgroundLayout>
       <EmailInput email={email} setEmail={setEmail} />
-      <_TitleText text="CSV Input" />
+      <TitleText text="CSV Input" />
       <DataTable
         pagination
         highlightOnHover
         columns={csvColumns}
         data={csvData}
       />
-      <_TitleText text="Deep Learning Results" />
+      <TitleText text="Deep Learning Results" />
       {showResults()}
     </div>
   );
@@ -411,7 +402,6 @@ const styles = {
     display: "flex",
     alignItems: "center",
   },
-  titleText: { ...GENERAL_STYLES.p, color: COLORS.layer, fontSize: 20 },
   fileInput: {
     backgroundColor: COLORS.input,
     width: 200,
@@ -427,34 +417,3 @@ const styles = {
     cursor: "pointer",
   },
 };
-
-const DEFAULT_ADDED_LAYERS = [
-  {
-    display_name: "Linear",
-    object_name: "nn.Linear",
-    parameters: {
-      inputSize: { index: 0, parameter_name: "Input size", value: 4 },
-      outputSize: { index: 1, parameter_name: "Output size", value: 10 },
-    },
-  },
-  {
-    display_name: "ReLU",
-    object_name: "nn.ReLU",
-    parameters: {},
-  },
-  {
-    display_name: "Linear",
-    object_name: "nn.Linear",
-    parameters: {
-      inputSize: { index: 0, parameter_name: "Input size", value: 10 },
-      outputSize: { index: 1, parameter_name: "Output size", value: 3 },
-    },
-  },
-  {
-    display_name: "Softmax",
-    object_name: "nn.Softmax",
-    parameters: {
-      inputSize: { index: 0, parameter_name: "dim", value: -1 },
-    },
-  },
-];

@@ -19,7 +19,5 @@ const styles = {
     fontSize: 30,
     justifyContent: "space-between",
   },
-  nav: {
-    width: "67%",
-  },
+  nav: { width: "67%" },
 };

@@ -1,6 +1,7 @@
 :root {
   --primary: #003058;
   --secondary: #b3a36a;
+  --layer: #cd7bff;
 }
 body {
   margin: 0;
@@ -23,4 +24,11 @@ body {
   background-color: var(--secondary);
   text-align: center;
   color: white;
+}
+
+input {
+  border-width: 0.5px;
+  border-color: var(--layer);
+  border-radius: 10px;
+  padding: 5px;
 }

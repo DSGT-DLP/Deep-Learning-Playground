@@ -80,7 +80,6 @@ const TrainButton = (props) => {
   };
 
   const onClick = async () => {
-    console.log(email);
     setBackgroundColor((currentColor) =>
       currentColor === COLORS.dark_blue ? COLORS.gold : COLORS.dark_blue
     );
@@ -145,7 +144,7 @@ const styles = {
   container: {
     padding: 0,
     width: 130,
-    height: 70,
+    height: 80,
   },
   button: {
     backgroundColor: "transparent",

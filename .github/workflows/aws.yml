@@ -31,9 +31,8 @@ on:
     workflows: ["Python Package using Conda"]
     types:
       - completed
-  push:
-    branches:
-      - "deployment-branch"
+  branches:
+    - "deployment-branch"
 
 env:
   AWS_REGION: "us-west-2"                    # set this to your preferred AWS region, e.g. us-west-1

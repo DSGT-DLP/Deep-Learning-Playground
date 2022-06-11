@@ -26,12 +26,13 @@
 
 name: Deploy to Amazon ECS
 
+
 on:
-  workflow_run:
-    workflows: ["Python Package using Conda"]
-    branches: [deployment-branch]
-    types:
-      - completed
+  push:
+    branches:
+      - "deployment-branch"
+
+
 
 env:
   AWS_REGION: "us-west-2"                    # set this to your preferred AWS region, e.g. us-west-1
@@ -48,6 +49,7 @@ permissions:
 
 jobs:
   deploy:
+    needs: [Python Package using Conda]  # require "Python Package using Conda" to pass before deploy runs
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
@@ -79,6 +81,7 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1

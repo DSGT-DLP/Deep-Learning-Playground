@@ -26,6 +26,7 @@ import LOSS_VIZ from "./backend_outputs/visualization_output/my_loss_plot.png";
 import ACC_VIZ from "./backend_outputs/visualization_output/my_accuracy_plot.png";
 import ONXX_OUTPUT_PATH from "./backend_outputs/my_deep_learning_model.onnx";
 import { CSVLink } from "react-csv";
+import Plot from "react-plotly.js";
 
 const _TitleText = (props) => {
   const { text } = props;
@@ -35,42 +36,12 @@ const _TitleText = (props) => {
 const Home = () => {
   const [csvData, setCSVData] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
-  const [dl_results_data, set_dl_results_data] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState("");
 
   // input responses
   const [fileURL, setFileURL] = useState("");
   const [email, setEmail] = useState("");
-  const [addedLayers, setAddedLayers] = useState([
-    {
-      display_name: "Linear",
-      object_name: "nn.Linear",
-      parameters: {
-        inputSize: { index: 0, parameter_name: "Input size", value: 4 },
-        outputSize: { index: 1, parameter_name: "Output size", value: 10 },
-      },
-    },
-    {
-      display_name: "ReLU",
-      object_name: "nn.ReLU",
-      parameters: {},
-    },
-    {
-      display_name: "Linear",
-      object_name: "nn.Linear",
-      parameters: {
-        inputSize: { index: 0, parameter_name: "Input size", value: 10 },
-        outputSize: { index: 1, parameter_name: "Output size", value: 3 },
-      },
-    },
-    {
-      display_name: "Softmax",
-      object_name: "nn.Softmax",
-      parameters: {
-        inputSize: { index: 0, parameter_name: "dim", value: -1 },
-      },
-    },
-  ]);
+  const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
   const [targetCol, setTargetCol] = useState();
   const [features, setFeatures] = useState([]);
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
@@ -105,6 +76,9 @@ const Home = () => {
     label: e.name,
     value: i,
   }));
+
+  const dl_results_data = dlpBackendResponse?.dl_results || [];
+  const train_loss_data = dlpBackendResponse?.train_loss_results;
 
   const handleTargetChange = (e) => {
     setTargetCol(e);
@@ -258,28 +232,69 @@ const Home = () => {
           }))}
           data={dl_results_data}
         />
-        <div style={{ ...LAYOUT.column, maxWidth: 300 }}>
-          {problemType.value === "classification" ? (
-            <a href={ACC_VIZ} download style={styles.download_csv_res}>
-              📈 Download Test Accuracy Plot
-            </a>
-          ) : undefined}
-          <br />
-          <a href={LOSS_VIZ} download style={styles.download_csv_res}>
-            📈 Download Train vs. Test Loss Plot
-          </a>
-        </div>
-        {problemType.value === "classification" ? (
-          <img src={ACC_VIZ} alt="Test accuracy for your Deep Learning Model" />
-        ) : undefined}
-        <img
-          src={LOSS_VIZ}
-          alt="Train vs. Test loss for your Deep Learning Model"
-        />
-        <br />
         <a href={ONXX_OUTPUT_PATH} download style={styles.download_csv_res}>
           📈 Download ONXX Output File
         </a>
+        <div>
+          {problemType.value === "classification" ? (
+            <Plot
+              data={[
+                {
+                  name: "Train accuracy",
+                  x: train_loss_data?.epochs || [],
+                  y: train_loss_data?.train_acc || [],
+                  type: "scatter",
+                  mode: "markers",
+                  marker: { color: "red" },
+                  config: { responsive: true },
+                },
+                {
+                  name: "Test accuracy",
+                  x: train_loss_data?.epochs || [],
+                  y: train_loss_data?.test_acc || [],
+                  type: "scatter",
+                  mode: "markers",
+                  marker: { color: "blue" },
+                  config: { responsive: true },
+                },
+              ]}
+              layout={{
+                width: 750,
+                height: 750,
+                title: "Train vs. Test Accuracy for your Deep Learning Model",
+                showlegend: true,
+              }}
+            />
+          ) : undefined}
+          <Plot
+            data={[
+              {
+                name: "Train loss",
+                x: train_loss_data?.epochs || [],
+                y: train_loss_data?.train_loss || [],
+                type: "scatter",
+                mode: "markers",
+                marker: { color: "red" },
+                config: { responsive: true },
+              },
+              {
+                name: "Test loss",
+                x: train_loss_data?.epochs || [],
+                y: train_loss_data?.test_loss || [],
+                type: "scatter",
+                mode: "markers",
+                marker: { color: "blue" },
+                config: { responsive: true },
+              },
+            ]}
+            layout={{
+              width: 750,
+              height: 750,
+              title: "Train vs. Test Loss for your Deep Learning Model",
+              showlegend: true,
+            }}
+          />
+        </div>
       </>
     );
   };
@@ -321,7 +336,6 @@ const Home = () => {
 
           <TrainButton
             {...input_responses}
-            set_dl_results_data={set_dl_results_data}
             csvData={csvData}
             setDLPBackendResponse={setDLPBackendResponse}
           />
@@ -400,3 +414,34 @@ const styles = {
     cursor: "pointer",
   },
 };
+
+const DEFAULT_ADDED_LAYERS = [
+  {
+    display_name: "Linear",
+    object_name: "nn.Linear",
+    parameters: {
+      inputSize: { index: 0, parameter_name: "Input size", value: 4 },
+      outputSize: { index: 1, parameter_name: "Output size", value: 10 },
+    },
+  },
+  {
+    display_name: "ReLU",
+    object_name: "nn.ReLU",
+    parameters: {},
+  },
+  {
+    display_name: "Linear",
+    object_name: "nn.Linear",
+    parameters: {
+      inputSize: { index: 0, parameter_name: "Input size", value: 10 },
+      outputSize: { index: 1, parameter_name: "Output size", value: 3 },
+    },
+  },
+  {
+    display_name: "Softmax",
+    object_name: "nn.Softmax",
+    parameters: {
+      inputSize: { index: 0, parameter_name: "dim", value: -1 },
+    },
+  },
+];

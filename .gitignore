@@ -139,3 +139,4 @@ dmypy.json
 backend/dl_results.csv
 backend/my_deep_learning_model.onnx
 unzipped_data/
+# Do not ignore the output PNG visualization files. The code will break without them

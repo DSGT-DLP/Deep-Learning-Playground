@@ -33,9 +33,9 @@ def train_deep_classification_model(
         optimizer (torch.optim.Optimizer): Optimizer to use when training model
         criterion(str): Loss function
         epochs (int): number of epochs
+    :return: a dictionary containing the epochs, train and test accuracy and loss results, each in a list
     """
     try:
-
         train_loss = []  # accumulate training loss over each epoch
         test_loss = []  # accumulate testing loss over each epoch
         epoch_time = []  # how much time it takes for each epoch
@@ -91,8 +91,13 @@ def train_deep_classification_model(
         )
         print(result_table.head())
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
-        generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
-        generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+
+        # Collecting train accuracy and loss into one dictionary
+        accuracy_loss_res = {}
+        accuracy_loss_res |= generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        accuracy_loss_res |= generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+
+        return accuracy_loss_res
     except Exception:
         raise Exception("Deep Learning classification didn't train properly")
 
@@ -109,6 +114,7 @@ def train_deep_regression_model(
         optimizer (torch.optim.Optimizer): Optimizer to use when training model
         criterion: Loss function
         epochs (int): number of epochs
+    :return: a dictionary containing the epochs, train and test accuracy results, each in a list
     """
     try:
 
@@ -151,7 +157,8 @@ def train_deep_regression_model(
         )
         print(result_table.head())
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
-        generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        
+        return generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
     except Exception:
         raise Exception("Deep learning regression model didn't run properly")
 
@@ -168,6 +175,7 @@ def train_deep_model(
         criterion: Loss function
         epochs (int): number of epochs
         problem type (str): "classification" or "regression"
+    :return: a dictionary containing the epochs, train and test accuracy and loss results, each in a list
     """
     if problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION):
         return train_deep_classification_model(

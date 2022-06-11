@@ -26,12 +26,13 @@
 
 name: Deploy to Amazon ECS
 
+
 on:
-  workflow_run:
-    workflows: ["Python Package using Conda"]
-    branches: [deployment-branch]
-    types:
-      - completed
+  push:
+    branches:
+      - "deployment-branch"
+
+needs: ["Python Package using Conda"]  # require "Python Package using Conda" to pass before deploy runs
 
 env:
   AWS_REGION: "us-west-2"                    # set this to your preferred AWS region, e.g. us-west-1

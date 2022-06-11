@@ -49,7 +49,6 @@ permissions:
 
 jobs:
   deploy:
-    needs: [Python Package using Conda]  # require "Python Package using Conda" to pass before deploy runs
     name: Deploy
     runs-on: ubuntu-latest
     environment: production

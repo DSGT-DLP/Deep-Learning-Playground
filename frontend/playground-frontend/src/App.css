@@ -32,3 +32,10 @@ input {
   border-radius: 10px;
   padding: 5px;
 }
+
+textarea{
+  border-width: 0.5px;
+  border-color: var(--layer);
+  border-radius: 10px;
+  padding: 5px;
+}

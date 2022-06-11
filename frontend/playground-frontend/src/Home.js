@@ -235,7 +235,7 @@ const Home = () => {
         <a href={ONXX_OUTPUT_PATH} download style={styles.download_csv_res}>
           📈 Download ONXX Output File
         </a>
-        <div>
+        <div style={{ marginTop: 8 }}>
           {problemType.value === "classification" ? (
             <Plot
               data={[
@@ -245,7 +245,7 @@ const Home = () => {
                   y: train_loss_data?.train_acc || [],
                   type: "scatter",
                   mode: "markers",
-                  marker: { color: "red" },
+                  marker: { color: "red", size: 10 },
                   config: { responsive: true },
                 },
                 {
@@ -254,7 +254,7 @@ const Home = () => {
                   y: train_loss_data?.test_acc || [],
                   type: "scatter",
                   mode: "markers",
-                  marker: { color: "blue" },
+                  marker: { color: "blue", size: 10 },
                   config: { responsive: true },
                 },
               ]}
@@ -274,7 +274,7 @@ const Home = () => {
                 y: train_loss_data?.train_loss || [],
                 type: "scatter",
                 mode: "markers",
-                marker: { color: "red" },
+                marker: { color: "red", size: 10 },
                 config: { responsive: true },
               },
               {
@@ -283,7 +283,7 @@ const Home = () => {
                 y: train_loss_data?.test_loss || [],
                 type: "scatter",
                 mode: "markers",
-                marker: { color: "blue" },
+                marker: { color: "blue", size: 10 },
                 config: { responsive: true },
               },
             ]}

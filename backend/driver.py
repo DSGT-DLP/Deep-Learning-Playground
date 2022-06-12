@@ -20,6 +20,7 @@ from email_notifier import send_email
 app = Flask(__name__)
 CORS(app)
 
+
 def ml_drive(user_model, problem_type, target=None, features=None, default=False, test_size=0.2, shuffle=True):
     """
     Driver function/endpoint into backend for training a classical ML model (eg: SVC, SVR, DecisionTree, Naive Bayes, etc) 
@@ -82,6 +83,7 @@ def dl_drive(
         test_size (float, optional): size of test set in train/test split (percentage). Defaults to 0.2.
         epochs (int, optional): number of epochs/rounds to run model on
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
+    :return: a dictionary containing the epochs, train and test accuracy and loss results, each in a list
 
     NOTE:
          CSV_FILE_NAME is the data csv file for the torch model. Assumed that you have one dataset file
@@ -110,8 +112,7 @@ def dl_drive(
             X, y, test_size=test_size, random_state=0, shuffle=shuffle
         )
         X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor = get_tensors(
-            X_train, X_test, y_train, y_test
-        )
+            X_train, X_test, y_train, y_test)
 
         # Build the Deep Learning model that the user wants
         model = DLModel(parse_deep_user_architecture(user_arch))
@@ -124,11 +125,14 @@ def dl_drive(
         train_loader, test_loader = get_dataloaders(
             X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=20
         )
-        train_deep_model(
+
+        train_loss_results = train_deep_model(
             model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
         )
         pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
+        
+        return train_loss_results
 
     except Exception as e:
         raise e
@@ -162,26 +166,24 @@ def train_and_output():
                 return
 
         try:
-            print(
-                dl_drive(
-                    user_arch=user_arch,
-                    criterion=criterion,
-                    optimizer_name=optimizer_name,
-                    problem_type=problem_type,
-                    target=target,
-                    features=features,
-                    default=default,
-                    test_size=test_size,
-                    epochs=epochs,
-                    shuffle=shuffle,
-                    json_csv_data_str=csvDataStr,
-                )
+            train_loss_results = dl_drive(
+                user_arch=user_arch,
+                criterion=criterion,
+                optimizer_name=optimizer_name,
+                problem_type=problem_type,
+                target=target,
+                features=features,
+                default=default,
+                test_size=test_size,
+                epochs=epochs,
+                shuffle=shuffle,
+                json_csv_data_str=csvDataStr,
             )
-            #If the length of the email is greater than 0 then that means a valid email has been 
-            #inputted for the ONNX file to be sent to the user.
+            # If the length of the email is greater than 0 then that means a valid email has been
+            # inputted for the ONNX file to be sent to the user.
             if(len(email) != 0):
                 send_email(email)
-            return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json()}), 200
+            return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json(), "train_loss_results": train_loss_results}), 200
 
         except Exception:
             print(traceback.format_exc())

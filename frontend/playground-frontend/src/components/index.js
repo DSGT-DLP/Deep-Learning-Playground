@@ -7,4 +7,5 @@ export { default as Input } from "./Input";
 export { default as DropDown } from "./DropDown";
 export { default as CSVInput } from "./CSVInput";
 export { default as TrainButton } from "./TrainButton";
-export { default as EmailInput} from "./EmailInput";
+export { default as EmailInput } from "./EmailInput";
+export { default as TitleText } from "./mini_components/TitleText";

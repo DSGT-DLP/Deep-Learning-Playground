@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { COLORS, GENERAL_STYLES, LAYOUT } from "./constants";
+import {
+  COLORS,
+  DEFAULT_ADDED_LAYERS,
+  GENERAL_STYLES,
+  LAYOUT,
+} from "./constants";
 import {
   BOOL_OPTIONS,
   DEFAULT_DATASETS,
@@ -17,62 +22,27 @@ import {
   CSVInput,
   TrainButton,
   EmailInput,
+  TitleText
 } from "./components";
 import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DataTable from "react-data-table-component";
-import LOSS_VIZ from "./backend_outputs/visualization_output/my_loss_plot.png";
-import ACC_VIZ from "./backend_outputs/visualization_output/my_accuracy_plot.png";
 import CONFUSION_VIZ from "./backend_outputs/visualization_output/my_confusion_matrix.png";
 
 import ONXX_OUTPUT_PATH from "./backend_outputs/my_deep_learning_model.onnx";
 import { CSVLink } from "react-csv";
-
-const _TitleText = (props) => {
-  const { text } = props;
-  return <p style={styles.titleText}>{text}</p>;
-};
+import Plot from "react-plotly.js";
 
 const Home = () => {
   const [csvData, setCSVData] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
-  const [dl_results_data, set_dl_results_data] = useState([]);
-  const [dlpBackendResponse, setDLPBackendResponse] = useState("");
+  const [dlpBackendResponse, setDLPBackendResponse] = useState();
 
   // input responses
   const [fileURL, setFileURL] = useState("");
   const [email, setEmail] = useState("");
-  const [addedLayers, setAddedLayers] = useState([
-    {
-      display_name: "Linear",
-      object_name: "nn.Linear",
-      parameters: {
-        inputSize: { index: 0, parameter_name: "Input size", value: 4 },
-        outputSize: { index: 1, parameter_name: "Output size", value: 10 },
-      },
-    },
-    {
-      display_name: "ReLU",
-      object_name: "nn.ReLU",
-      parameters: {},
-    },
-    {
-      display_name: "Linear",
-      object_name: "nn.Linear",
-      parameters: {
-        inputSize: { index: 0, parameter_name: "Input size", value: 10 },
-        outputSize: { index: 1, parameter_name: "Output size", value: 3 },
-      },
-    },
-    {
-      display_name: "Softmax",
-      object_name: "nn.Softmax",
-      parameters: {
-        inputSize: { index: 0, parameter_name: "dim", value: -1 },
-      },
-    },
-  ]);
+  const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
   const [targetCol, setTargetCol] = useState();
   const [features, setFeatures] = useState([]);
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
@@ -108,6 +78,9 @@ const Home = () => {
     value: i,
   }));
 
+  const dl_results_data = dlpBackendResponse?.dl_results || [];
+  const train_loss_data = dlpBackendResponse?.train_loss_results;
+
   const handleTargetChange = (e) => {
     setTargetCol(e);
     const csvColumnsCopy = JSON.parse(JSON.stringify(inputColumnOptions));
@@ -121,36 +94,36 @@ const Home = () => {
       "Access-Control-Allow-Headers": "Origin",
     };
     try {
-      if (url) {
-        let response = await fetch(url);
-        response = await response.text();
-        const responseLines = response.split(/\r\n|\n/);
-        const headers = responseLines[0].split(
+      if (!url) return;
+
+      let response = await fetch(url);
+      response = await response.text();
+      const responseLines = response.split(/\r\n|\n/);
+      const headers = responseLines[0].split(
+        /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
+      );
+
+      const list = [];
+      for (let i = 1; i < responseLines.length; i++) {
+        const row = responseLines[i].split(
           /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
         );
-
-        const list = [];
-        for (let i = 1; i < responseLines.length; i++) {
-          const row = responseLines[i].split(
-            /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
-          );
-          if (headers && row.length === headers.length) {
-            const obj = {};
-            for (let j = 0; j < headers.length; j++) {
-              let d = row[j];
-              if (d.length > 0) {
-                if (d[0] == '"') d = d.substring(1, d.length - 1);
-                if (d[d.length - 1] == '"') d = d.substring(d.length - 2, 1);
-              }
-              if (headers[j]) {
-                obj[headers[j]] = d;
-              }
+        if (headers && row.length === headers.length) {
+          const obj = {};
+          for (let j = 0; j < headers.length; j++) {
+            let d = row[j];
+            if (d.length > 0) {
+              if (d[0] == '"') d = d.substring(1, d.length - 1);
+              if (d[d.length - 1] == '"') d = d.substring(d.length - 2, 1);
             }
-
-            // remove the blank rows
-            if (Object.values(obj).filter((x) => x).length > 0) {
-              list.push(obj);
+            if (headers[j]) {
+              obj[headers[j]] = d;
             }
+          }
+
+          // remove the blank rows
+          if (Object.values(obj).filter((x) => x).length > 0) {
+            list.push(obj);
           }
         }
 
@@ -230,7 +203,7 @@ const Home = () => {
   const showResults = () => {
     if (!dlpBackendResponse?.success) {
       return (
-        dlpBackendResponse.message || (
+        dlpBackendResponse?.message || (
           <p style={{ textAlign: "center" }}>There are no records to display</p>
         )
       );
@@ -260,31 +233,74 @@ const Home = () => {
           }))}
           data={dl_results_data}
         />
-        <div style={{ ...LAYOUT.column, maxWidth: 300 }}>
-          {problemType.value === "classification" ? (
-            <a href={ACC_VIZ} download style={styles.download_csv_res}>
-              📈 Download Test Accuracy Plot
-            </a>
-          ) : undefined}
-          <br />
-          <a href={LOSS_VIZ} download style={styles.download_csv_res}>
-            📈 Download Train vs. Test Loss Plot
-          </a>
-        </div>
-        {problemType.value === "classification" ? (
-          <img src={ACC_VIZ} alt="Test accuracy for your Deep Learning Model" />
-        ) : undefined}
-        <img
-          src={LOSS_VIZ}
-          alt="Train vs. Test loss for your Deep Learning Model"
-        />
-        {problemType.value === "classification" ? (
-          <img src={CONFUSION_VIZ} alt="Confusion matrix for the last epoch of your Deep Learning Model" />
-        ) : undefined}
-        <br />
         <a href={ONXX_OUTPUT_PATH} download style={styles.download_csv_res}>
           📈 Download ONXX Output File
         </a>
+        <div style={{ marginTop: 8 }}>
+          {problemType.value === "classification" ? (
+            <Plot
+              data={[
+                {
+                  name: "Train accuracy",
+                  x: train_loss_data?.epochs || [],
+                  y: train_loss_data?.train_acc || [],
+                  type: "scatter",
+                  mode: "markers",
+                  marker: { color: "red", size: 10 },
+                  config: { responsive: true },
+                },
+                {
+                  name: "Test accuracy",
+                  x: train_loss_data?.epochs || [],
+                  y: train_loss_data?.test_acc || [],
+                  type: "scatter",
+                  mode: "markers",
+                  marker: { color: "blue", size: 10 },
+                  config: { responsive: true },
+                },
+              ]}
+              layout={{
+                width: 750,
+                height: 750,
+                xaxis: { title: "Epoch Number" },
+                yaxis: { title: "Accuracy" },
+                title: "Train vs. Test Accuracy for your Deep Learning Model",
+                showlegend: true,
+              }}
+            />
+          ) : undefined}
+          <Plot
+            data={[
+              {
+                name: "Train loss",
+                x: train_loss_data?.epochs || [],
+                y: train_loss_data?.train_loss || [],
+                type: "scatter",
+                mode: "markers",
+                marker: { color: "red", size: 10 },
+                config: { responsive: true },
+              },
+              {
+                name: "Test loss",
+                x: train_loss_data?.epochs || [],
+                y: train_loss_data?.test_loss || [],
+                type: "scatter",
+                mode: "markers",
+                marker: { color: "blue", size: 10 },
+                config: { responsive: true },
+              },
+            ]}
+            layout={{
+              width: 750,
+              height: 750,
+              xaxis: { title: "Epoch Number" },
+              yaxis: { title: "Loss" },
+              title: "Train vs. Test Loss for your Deep Learning Model",
+              showlegend: true,
+            }}
+          />
+          <img src={CONFUSION_VIZ} alt="Confusion matrix for the last epoch of your Deep Learning Model" />
+        </div>
       </>
     );
   };
@@ -292,7 +308,7 @@ const Home = () => {
   return (
     <div style={{ padding: 20 }}>
       <DndProvider backend={HTML5Backend}>
-        <_TitleText text="Implemented Layers" />
+        <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <RectContainer style={styles.fileInput}>
             <CSVInput
@@ -305,7 +321,8 @@ const Home = () => {
               style={{ width: "100%" }}
               placeholder="Or type in URL..."
               value={fileURL}
-              onChange={(e) => handleURL(e.target.value)}
+              onChange={(e) => setFileURL(e.target.value)}
+              onBlur={(e) => handleURL(e.target.value)}
             />
           </RectContainer>
 
@@ -326,7 +343,6 @@ const Home = () => {
 
           <TrainButton
             {...input_responses}
-            set_dl_results_data={set_dl_results_data}
             csvData={csvData}
             setDLPBackendResponse={setDLPBackendResponse}
           />
@@ -334,7 +350,7 @@ const Home = () => {
 
         <div style={{ marginTop: 20 }} />
 
-        <_TitleText text="Layers Inventory" />
+        <TitleText text="Layers Inventory" />
 
         <BackgroundLayout>
           {POSSIBLE_LAYERS.map((e) => (
@@ -357,21 +373,21 @@ const Home = () => {
         </BackgroundLayout>
       </DndProvider>
       <div style={{ marginTop: 20 }} />
-      <_TitleText text="Deep Learning Parameters" />
+      <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
         {input_queries.map((e) => (
           <Input {...e} key={e.queryText} />
         ))}
       </BackgroundLayout>
       <EmailInput email={email} setEmail={setEmail} />
-      <_TitleText text="CSV Input" />
+      <TitleText text="CSV Input" />
       <DataTable
         pagination
         highlightOnHover
         columns={csvColumns}
         data={csvData}
       />
-      <_TitleText text="Deep Learning Results" />
+      <TitleText text="Deep Learning Results" />
       {showResults()}
     </div>
   );
@@ -389,7 +405,6 @@ const styles = {
     display: "flex",
     alignItems: "center",
   },
-  titleText: { ...GENERAL_STYLES.p, color: COLORS.layer, fontSize: 20 },
   fileInput: {
     backgroundColor: COLORS.input,
     width: 200,

@@ -23,7 +23,7 @@ def get_default_dataset(dataset):
             default_dataset.dropna(how="all", inplace=True)  # remove any empty lines
             y = default_dataset['target']
             X = default_dataset.drop('target', axis=1)
-            print(default_dataset.head())
+            print("****default_dataset.head()**** \n ", default_dataset.head())
             return X, y
     
     except Exception:

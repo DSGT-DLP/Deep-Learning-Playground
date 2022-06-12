@@ -1,8 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";  
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Title from "./components/Title";
 import Home from "./Home";
 import About from "./components/About/About";
 import Wiki from "./components/Wiki/Wiki";
+import "./App.css";
+
 function App() {
   return (
     <div>

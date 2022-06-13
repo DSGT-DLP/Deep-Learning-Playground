@@ -33,10 +33,6 @@ on:
     workflows: ["Python Package using Conda"]
     types:
       - completed
-on:
-  push:
-    branches:
-      - "deployment-branch"
 
 
 

@@ -29,6 +29,9 @@ name: Deploy to Amazon ECS
 
 # Only trigger, when the build workflow succeeded
 on:
+  push:
+    branches:
+      - deployment-branch
   workflow_run:
     workflows: ["Python Package using Conda"]
     types: [completed] #requested

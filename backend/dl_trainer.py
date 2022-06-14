@@ -1,6 +1,6 @@
 from loss import compute_loss
 from dl_eval import compute_accuracy
-from utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv
+from utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix
 from utils import ProblemType
 from constants import DEEP_LEARNING_RESULT_CSV_PATH, EPOCH, TRAIN_TIME, TRAIN_LOSS, TEST_LOSS, TRAIN_ACC, TEST, VAL_TEST_ACC
 import torch  # pytorch
@@ -41,6 +41,9 @@ def train_deep_classification_model(
         epoch_time = []  # how much time it takes for each epoch
         train_acc = []  # accuracy of training set
         val_acc = []  # accuracy of test/validation set
+        all_predictions = [] # accumulate list of predictions over the last epoch
+        all_labels = [] # accumulate list of ground truth values of the last epoch
+        categories = []
         for epoch in range(epochs):
             batch_train_acc = []  # find train accuracy for each batch
             batch_test_acc = []  # find test accuracy for each batch
@@ -69,6 +72,23 @@ def train_deep_classification_model(
             for i, data in enumerate(test_loader):
                 input, labels = data
                 test_pred = model(input)
+
+                # generating a category list for confusion matrix axis labels
+                if (len(categories) == 0) and (len(test_pred) > 0):
+                    for i, x in enumerate(test_pred[0][0]):
+                        categories.append(i)
+
+                # currently only preserving the prediction array and label array for the last epoch for 
+                # confusion matrix calculation
+                if(epoch == epochs - 1):
+                    predictions = torch.argmax(
+                        test_pred, dim=-1
+                    )
+                    for prediction in predictions.tolist():
+                        all_predictions.append(prediction[0])
+                    for label in labels.tolist():
+                        all_labels.append(label[0])
+                    
                 batch_test_acc.append(compute_accuracy(test_pred, labels))
                 batch_loss.append(test_pred.detach().numpy())
             mean_test_loss = np.mean(batch_loss)
@@ -90,6 +110,7 @@ def train_deep_classification_model(
             }
         )
         print(result_table.head())
+        generate_confusion_matrix(all_labels, all_predictions, categories)
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
 
         # Collecting train accuracy and loss into one dictionary

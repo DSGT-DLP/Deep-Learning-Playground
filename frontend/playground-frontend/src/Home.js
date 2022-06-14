@@ -29,6 +29,8 @@ import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DataTable from "react-data-table-component";
+import CONFUSION_VIZ from "./backend_outputs/visualization_output/my_confusion_matrix.png";
+
 import ONXX_OUTPUT_PATH from "./backend_outputs/my_deep_learning_model.onnx";
 import { CSVLink } from "react-csv";
 import Plot from "react-plotly.js";
@@ -298,6 +300,7 @@ const Home = () => {
               showlegend: true,
             }}
           />
+          <img src={CONFUSION_VIZ} alt="Confusion matrix for the last epoch of your Deep Learning Model" />
         </div>
       </>
     );

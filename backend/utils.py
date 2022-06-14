@@ -1,11 +1,14 @@
-from constants import LOSS_VIZ, ACC_VIZ, TRAIN_TIME_CSV, DEEP_LEARNING_RESULT_CSV_PATH, EPOCH, TRAIN_TIME, TRAIN_LOSS, TEST_LOSS, TRAIN_ACC, TEST, VAL_TEST_ACC
+from constants import LOSS_VIZ, ACC_VIZ, CONFUSION_VIZ, TRAIN_TIME_CSV, DEEP_LEARNING_RESULT_CSV_PATH, EPOCH, TRAIN_TIME, TRAIN_LOSS, TEST_LOSS, TRAIN_ACC, TEST, VAL_TEST_ACC
 import pandas as pd
+import numpy as np
 import torch
 import matplotlib
 import matplotlib.pyplot as plt
+import seaborn as sns
 from enum import Enum
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
+from sklearn.metrics import confusion_matrix
 import csv
 import os
 import json
@@ -151,6 +154,26 @@ def generate_train_time_csv(epoch_time):
     df = pd.DataFrame({"Train Time": epoch_time},
                       index=epoch, columns=["Train Time"])
     df.to_csv(TRAIN_TIME_CSV)
+
+
+def generate_confusion_matrix(label, y_pred, categoryList):
+    """
+    Given the prediction results and label, generate confusion matrix (only applicable to classification tasks)
+    Args:
+        label: array consisting of ground truth values
+        y_pred: array consisting of predicted results
+        categoryList: list of strings that represent the categories to classify into (this will be used to label the axis)
+    """
+    plt.clf()
+    label_np = np.array(label)
+    pred_np = np.array(y_pred)
+    cm = confusion_matrix(label_np, pred_np, labels=categoryList)
+    ax= plt.subplot()
+    sns.heatmap(cm, annot=True, fmt='g', ax=ax, cmap='Purples');  #annot=True to annotate cells, ftm='g' to disable scientific notation
+    ax.set_xlabel('Predicted');ax.set_ylabel('Actual'); 
+    ax.set_title('Confusion Matrix (last Epoch)'); 
+    ax.xaxis.set_ticklabels(categoryList); ax.yaxis.set_ticklabels(categoryList);
+    plt.savefig(CONFUSION_VIZ) 
 
 
 def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: str = None) -> str:

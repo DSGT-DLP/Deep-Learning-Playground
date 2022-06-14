@@ -53,8 +53,7 @@ permissions:
 
 jobs:
   deploy:
-    if: |
-      ${{github.ref == "ref/heads/deployment-branch && github.event_name == 'push' && github.event.workflow_run.conclusion == 'success'}}
+
     name: Deploy
     runs-on: ubuntu-latest
     environment: production

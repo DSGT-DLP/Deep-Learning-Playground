@@ -1,6 +1,4 @@
-import { func } from "prop-types";
 import React, { useState } from "react";
-import TitleText from "./mini_components/TitleText";
 
 const CodeSnippet = (props) => {
 
@@ -14,8 +12,6 @@ const CodeSnippet = (props) => {
         );
       }
     return (
-        //Just an example output since I can't print objects out
-        //TODO: Make this print out the entire actual code by looking at the layers
         <textarea
             readOnly
             rows = "10"

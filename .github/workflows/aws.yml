@@ -29,10 +29,10 @@ name: Deploy to Amazon ECS
 
 # Only trigger, when the build workflow succeeded
 on:
-  workflow_dispatch:
-#   workflow_run:
-#     workflows: ["Python Package using Conda"]
-#     types: [completed] #requested
+#   workflow_dispatch:
+  workflow_run:
+    workflows: ["Python Package using Conda"]
+    types: [completed] #requested
 
 
 
@@ -51,11 +51,10 @@ permissions:
 
 jobs:
   deploy:
-
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
-    
+    if: github.ref == 'refs/heads/deployment-branch'
     steps:
     - name: Checkout
       uses: actions/checkout@v3

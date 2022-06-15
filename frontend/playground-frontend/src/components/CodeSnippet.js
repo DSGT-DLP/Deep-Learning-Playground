@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const CodeSnippet = (props) => {
 
@@ -62,21 +62,14 @@ function layersToString(layers) {
  * @returns string in form of <layer name>(<parameters>)
  */
 function layerToString(layer) {
-  var layerToString = "" + layer.object_name
-  switch (layerToString) {
-    case 'nn.Linear':
-      layerToString += "(" + layer.parameters.inputSize.value + "," + layer.parameters.outputSize.value + ")";
-      break;
-    case 'nn.ReLU':
-      layerToString += "()"
-      break;
-    case 'nn.Softmax':
-      layerToString += "(" + layer.parameters.inputSize.value + ")"
-      break;
-    default:
-      console.log("Please pick a layer that's been implemented /n")
-      break;
+  var layerToString = layer.object_name +"(";
+  if(typeof layer.parameters.inputSize !== "undefined"){
+    layerToString += layer.parameters.inputSize.value;
+    if(typeof layer.parameters.outputSize !== "undefined"){
+      layerToString += "," + layer.parameters.outputSize.value;
+    }
   }
+  layerToString += ")";
   return layerToString;
 }
 

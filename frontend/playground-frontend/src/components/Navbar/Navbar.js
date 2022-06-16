@@ -2,6 +2,8 @@ import React from "react";
 import "./Nav.css";
 import { Link } from "react-router-dom";
 import DSGTLogo from "../../images/logos/dsgt-logo-light.png";
+import {FaGithub} from "react-icons/fa";
+import {FaYoutube} from "react-icons/fa";
 import { LAYOUT } from "../../constants";
 
 const Navbar = () => {
@@ -22,7 +24,11 @@ const Navbar = () => {
         <li className="navElement">
           <Link to="/Wiki">Wiki</Link>
         </li>
+        <li id="navElement">
+          <a href="https://github.com/karkir0003/Deep-Learning-Playground"><FaGithub size = "60"/></a>
+        </li>
       </ul>
+  
     </div>
   );
 };

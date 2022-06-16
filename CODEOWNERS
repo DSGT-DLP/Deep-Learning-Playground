@@ -1,16 +1,23 @@
 # These owners will be the default owners for everything in
+
 # the repo. Unless a later match takes precedence,
+
 # the contributors all will be requested for
+
 # review when someone opens a pull request.
-*       @karkir0003 @farisdurrani @LucasZhang58
+
+-       @karkir0003 @farisdurrani @LucasZhang58
 
 #For files in the /backend directory, @karkir0003 will be requested in a pull request
 /backend @karkir0003
 
-#For files in the /frontend directory, @farisdurrani will be requested in such a pull rewuest
+#For files in the /frontend directory, @farisdurrani will be requested in such a pull request
 /frontend @farisdurrani
 
 #For unit tests, @LucasZhang58 and @karkir0003 will be requested in such a pull request
 /tests/test_data_processing.py @LucasZhang58 @karkir0003
 /tests/test_zip_loader.py @vidushiMaheshwari
 /tests/expected/unzipped/double_zipped @vidushiMaheshwari
+
+#@anikethswain built the About page, implemented the external CSS for the About page, fixed rendering 
+issues with the navbar, and helped in building the navbar component.

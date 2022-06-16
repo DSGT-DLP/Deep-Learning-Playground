@@ -3,11 +3,13 @@
   --secondary: #b3a36a;
   --layer: #cd7bff;
 }
+
 body {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
   color: black;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif, Helvetica;
 }
 .sections {
   margin: auto;
@@ -16,6 +18,10 @@ body {
   padding: 1rem;
   text-align: justify;
   text-justify: inter-word;
+}
+img {
+  display: block;
+  height: auto;
 }
 #header-section {
   box-sizing: content-box;
@@ -31,4 +37,23 @@ input {
   border-color: var(--layer);
   border-radius: 10px;
   padding: 5px;
+}
+
+/* About styles */
+.sections {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  
+}
+.tech-row-content {
+  width: auto;
+  min-height: 3em;
+  padding: 0.5em;
+  margin: 1em;
+  display: inline-block;
+}
+img.tech-img-content{
+  float: left;
+  max-width: 10%;
+  max-height: 100%;
 }

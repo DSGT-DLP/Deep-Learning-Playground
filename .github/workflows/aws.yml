@@ -69,7 +69,7 @@ jobs:
       with:
         ref: ${{ github.ref }}
         check-name: 'Test with pytest'
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token: ${{ secrets.PAT }}
         wait-interval: 10
     
     

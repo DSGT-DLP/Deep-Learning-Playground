@@ -29,10 +29,14 @@ name: Deploy to Amazon ECS
 
 # Only trigger, when the build workflow succeeded
 on:
-#   workflow_dispatch:
-  workflow_run:
-    workflows: ["Python Package using Conda"]
-    types: [completed] #requested
+  push:
+    branches:
+       - "deployment-branch"
+# on:
+# #   workflow_dispatch:
+#   workflow_run:
+#     workflows: ["Python Package using Conda"]
+#     types: [completed] #requested
 
 
 
@@ -54,12 +58,25 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
-    if: github.ref == 'refs/heads/deployment-branch'
     steps:
+    - name: Wait for build to succeed
+      uses: fountainhead/action-wait-for-check@v1.0.0
+      id: wait-for-build
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        checkName: build-linux
+    - name: Early Termination
+      if: steps.wait-for-build.outputs.conclusion == 'failure'
+      uses: styfle/cancel-workflow-action@0.9.1
+      with:
+        access_token: ${{ secrets.GITHUB_TOKEN }}
+      
     - name: Checkout
+      if: steps.wait-for-build.outputs.conclusion == 'success'
       uses: actions/checkout@v3
 
     - name: Configure AWS credentials
+      if: steps.wait-for-build.outputs.conclusion == 'success'
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }}
@@ -67,10 +84,12 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to Amazon ECR
+      if: steps.wait-for-build.outputs.conclusion == 'success'
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
     - name: Build, tag, and push image to Amazon ECR
+      if: steps.wait-for-build.outputs.conclusion == 'success'
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -84,6 +103,7 @@ jobs:
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
     - name: Fill in the new image ID in the Amazon ECS task definition
+      if: steps.wait-for-build.outputs.conclusion == 'success'
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
@@ -92,9 +112,11 @@ jobs:
         image: ${{ steps.build-image.outputs.image }}
 
     - name: Describe ECR repos
+      if: steps.wait-for-build.outputs.conclusion == 'success'
       run: |
         aws ecr describe-repositories
     - name: Deploy Amazon ECS task definition
+      if: steps.wait-for-build.outputs.conclusion == 'success'
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}

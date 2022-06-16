@@ -50,7 +50,9 @@ env:
   CONTAINER_NAME: "deep-learning-playground-container"           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
 
-permissions: write-all, read-all
+permissions:
+   contents: read
+   actions: write
 
 jobs:
   deploy:

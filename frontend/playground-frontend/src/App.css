@@ -57,3 +57,9 @@ img.tech-img-content{
   max-width: 10%;
   max-height: 100%;
 }
+textarea{
+  border-width: 0.5px;
+  border-color: var(--layer);
+  border-radius: 10px;
+  padding: 5px;
+}

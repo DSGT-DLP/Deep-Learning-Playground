@@ -22,7 +22,8 @@ import {
   CSVInput,
   TrainButton,
   EmailInput,
-  TitleText
+  TitleText,
+  CodeSnippet
 } from "./components";
 import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
@@ -377,7 +378,7 @@ const Home = () => {
       <BackgroundLayout>
         {input_queries.map((e) => (
           <Input {...e} key={e.queryText} />
-        ))}
+        ))}LAYERS
       </BackgroundLayout>
       <EmailInput email={email} setEmail={setEmail} />
       <TitleText text="CSV Input" />
@@ -389,6 +390,9 @@ const Home = () => {
       />
       <TitleText text="Deep Learning Results" />
       {showResults()}
+      <TitleText text = "Code Snippet"/>
+      <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers}></CodeSnippet>
+      
     </div>
   );
 };

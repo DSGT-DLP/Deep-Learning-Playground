@@ -67,7 +67,7 @@ jobs:
       if: ${{ github.ref }} = "refs/heads/deployment-branch"
       uses: lewagon/wait-on-check-action@master
       with:
-        ref: ${{ github.ref }}
+        ref: ${{ github.sha }}
         check-name: 'Test with pytest'
         repo-token: ${{ secrets.PAT }}
         wait-interval: 10

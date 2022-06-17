@@ -8,6 +8,7 @@ ONNX_MODEL = "../frontend/playground-frontend/src/backend_outputs/my_deep_learni
 LOSS_VIZ = "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_loss_plot.png"
 ACC_VIZ = "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_accuracy_plot.png"
 CONFUSION_VIZ = "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_confusion_matrix.png"
+SAVED_MODEL = "../frontend/playground-frontend/src/backend_outputs/model.pt"
 TRAIN_TIME_CSV = "epoch_times.csv"
 NETRON_URL = "https://netron.app/"
 OPEN_FILE_BUTTON = "open-file-button"

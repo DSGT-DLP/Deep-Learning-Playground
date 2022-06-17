@@ -72,7 +72,7 @@ jobs:
         repo-token: ${{ secrets.PAT }}
         allowed-conclusions: success
         verbose: true
-        wait-interval: 60
+        wait-interval: 10
     
     
     - name: Checkout

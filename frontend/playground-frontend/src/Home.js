@@ -301,6 +301,9 @@ const Home = () => {
             }}
           />
           <img src={CONFUSION_VIZ} alt="Confusion matrix for the last epoch of your Deep Learning Model" />
+          <a href={CONFUSION_VIZ} download style={styles.download_csv_res}>
+          📈 Download Confusion matrix
+        </a>
         </div>
       </>
     );

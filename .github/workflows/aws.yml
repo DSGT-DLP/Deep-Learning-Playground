@@ -31,12 +31,8 @@ name: Deploy to Amazon ECS
 on:
   push:
     branches:
-       - "deployment-branch"
-# on:
-# #   workflow_dispatch:
-#   workflow_run:
-#     workflows: ["Python Package using Conda"]
-#     types: [completed] #requested
+       - "prod-deploy"
+
 
 
 
@@ -64,7 +60,7 @@ jobs:
       run: echo running on branch ${GITHUB_REF##*/}
       
     - name: Wait for tests to succeed
-      if: ${{ github.ref }} = "refs/heads/deployment-branch"
+      if: ${{ github.ref }} = "refs/heads/prod-deploy"
       uses: lewagon/wait-on-check-action@v1.1.1
       with:
         ref: ${{ github.sha }}

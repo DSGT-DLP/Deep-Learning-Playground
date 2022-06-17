@@ -70,7 +70,9 @@ jobs:
         ref: ${{ github.sha }}
         check-name: 'Test with pytest'
         repo-token: ${{ secrets.PAT }}
-        wait-interval: 10
+        allowed-conclusions: success
+        verbose: true
+        wait-interval: 60
     
     
     - name: Checkout

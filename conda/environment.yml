@@ -23,3 +23,6 @@ dependencies:
   - black
   - flask
   - flask-cors
+  - ruamel.yaml
+  - pip:
+     - torchvision

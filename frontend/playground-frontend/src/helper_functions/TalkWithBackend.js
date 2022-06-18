@@ -28,17 +28,13 @@ export const train_and_output = async (
       shuffle,
       csvData,
       fileURL,
-      email
+      email,
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
     },
   })
-    .then((res) => {
-      return res.json();
-    })
-    .then((data) => {
-      return data;
-    })
+    .then((res) => res.json())
+    .then((data) => data)
     .catch((error) => error);
 };

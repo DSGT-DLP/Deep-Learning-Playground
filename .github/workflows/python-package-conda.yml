@@ -32,7 +32,14 @@ jobs:
         source $(conda info --base)/etc/profile.d/conda.sh
         conda activate dlplayground
         black ./
+    - name: Check that requirements.txt exists
+      id: check_files
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "requirements.txt"
+        
     - name: Automatic requirements.txt for Python Projects
+      if: steps.check_files.outputs.files_exists == 'false'
       run: |
         conda init bash
         source $(conda info --base)/etc/profile.d/conda.sh

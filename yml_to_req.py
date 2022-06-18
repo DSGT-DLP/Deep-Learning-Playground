@@ -1,6 +1,8 @@
 """ 
 Utility file to convert our environment.yml file to a requirements.txt for deployment purpose. 
+
 Credit to: https://gist.github.com/pemagrg1/f959c19ec18fee3ce2ff9b3b86b67c16
+
 """
 
 import ruamel.yaml

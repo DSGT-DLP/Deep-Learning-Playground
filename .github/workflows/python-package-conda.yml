@@ -8,7 +8,7 @@ on:
   pull_request:
     types:
       - "opened"
-      - "edited"
+      - "synchronize"
 
 jobs:
   build-linux:

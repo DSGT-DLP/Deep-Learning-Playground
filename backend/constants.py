@@ -1,4 +1,5 @@
 import os
+from torchvision.transforms import transforms
 
 CSV_FILE_NAME = "data.csv"
 CSV_FILE_PATH = f"{os.path.join(os.getcwd(), CSV_FILE_NAME)}"
@@ -23,3 +24,8 @@ VAL_TEST_ACC = "val/test acc"
 DEFAULT_DATASETS = {"IRIS": "load_iris()", "BREAST CANCER": "load_breast_cancer()", "CALIFORNIAHOUSING": "fetch_california_housing()",
                     "DIABETES": "load_diabetes()",  "DIGITS": "load_digits()", "WINE": "load_wine()"}
 UNZIPPED_DIR_NAME = "unzipped_data"
+TENSOR_ONLY_TRANSFORMS = [transforms.LinearTransformation, transforms.Normalize, transforms.ConvertImageDtype, transforms.RandomErasing]
+
+DEFAULT_TRANSFORM = [transforms.Resize((256, 256)), transforms.ToTensor()]
+
+PIL_ONLY_TRANSFORMS = [transforms.RandomChoice, transforms.RandomOrder]

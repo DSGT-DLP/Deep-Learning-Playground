@@ -13,8 +13,6 @@ pyyaml
 pip
 statsmodels
 torch
-selenium
-sendgrid
 black
 flask
 flask-cors

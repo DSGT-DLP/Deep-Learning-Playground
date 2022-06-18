@@ -31,6 +31,12 @@ img {
   text-align: center;
   color: white;
 }
+#nav-bar .nav #title-name > a {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 
 input {
   border-width: 0.5px;

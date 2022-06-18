@@ -16,8 +16,9 @@ from sklearn.model_selection import train_test_split
 from default_datasets import get_default_dataset
 from flask_cors import CORS
 from email_notifier import send_email
+from flask import send_from_directory
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=os.path.join(os.path.dirname(os.getcwd()), 'frontend', 'playground-frontend', 'build'))
 CORS(app)
 
 
@@ -144,9 +145,17 @@ def dl_drive(
     except Exception as e:
         raise e
 
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def root(path):
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 @app.route("/run", methods=["GET", "POST"])
 def train_and_output():
+    print ("Hi")
     request_data = json.loads(request.data)
 
     user_arch = request_data["user_arch"]
@@ -214,4 +223,4 @@ def train_and_output():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

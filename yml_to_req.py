@@ -15,6 +15,8 @@ for dep in data['dependencies']:
     if isinstance(dep, str):
         if (dep == "pytorch"):
             requirements.append("torch")
+        elif (dep.startswith("python")):
+            continue 
         else:
             requirements.append(dep)
     elif isinstance(dep, dict):

@@ -27,17 +27,19 @@
 name: Deploy to Amazon ECS
 
 
+# Only trigger, when we push to prod-deploy
 on:
   push:
     branches:
-      - "deployment-branch"
+       - "prod-deploy"
+
 
 
 
 env:
   AWS_REGION: "us-west-2"                    # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: "deep-learning-playground"           # set this to your Amazon ECR repository name
-  ECS_SERVICE: "deep-learning-playground"                 # set this to your Amazon ECS service name
+  ECS_SERVICE: "deep-learning-playground-service"                 # set this to your Amazon ECS service name
   ECS_CLUSTER: "deep-learning-playground"                 # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION: ".aws/task-definition.json" # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/task-definition.json
@@ -45,16 +47,29 @@ env:
                                                # containerDefinitions section of your task definition
 
 permissions:
-  contents: read
+   contents: read
+   actions: write
 
 jobs:
   deploy:
-    needs: [Python Package using Conda]  # require "Python Package using Conda" to pass before deploy runs
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
-
     steps:
+    - name: Get current branch
+      run: echo running on branch ${GITHUB_REF##*/}
+      
+    - name: Wait for tests to succeed
+      if: ${{ github.ref }} = "refs/heads/prod-deploy"
+      uses: lewagon/wait-on-check-action@v1.1.1
+      with:
+        ref: ${{ github.sha }}
+        check-name: 'build-linux'
+        repo-token: ${{ secrets.PAT }}
+        allowed-conclusions: success
+        verbose: true
+        wait-interval: 10
+    
     - name: Checkout
       uses: actions/checkout@v3
 
@@ -89,7 +104,7 @@ jobs:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
         container-name: ${{ env.CONTAINER_NAME }}
         image: ${{ steps.build-image.outputs.image }}
-
+        
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
@@ -97,3 +112,4 @@ jobs:
         service: ${{ env.ECS_SERVICE }}
         cluster: ${{ env.ECS_CLUSTER }}
         wait-for-service-stability: true
+

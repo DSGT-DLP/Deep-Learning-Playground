@@ -6,9 +6,6 @@ on:
       - "main"
       - "prod-deploy"
   pull_request:
-    types:
-      - "opened"
-      - "synchronize"
 
 jobs:
   build-linux:

@@ -191,7 +191,7 @@ def train_and_output():
             # If the length of the email is greater than 0 then that means a valid email has been
             # inputted for the ONNX file to be sent to the user.
             if len(email) != 0:
-                send_email(email)
+                send_email(email,"Your ONNX file and visualizations from Deep Learning Playground","Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems.",[ONNX_MODEL, LOSS_VIZ, ACC_VIZ])
             return (
                 jsonify(
                     {

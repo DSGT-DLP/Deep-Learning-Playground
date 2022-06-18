@@ -1,11 +1,6 @@
 from constants import (
-    ONNX_MODEL,
-    LOSS_VIZ,
-    ACC_VIZ,
     SENDER,
     AWS_REGION,
-    BODY_TEXT,
-    BODY_HTML,
     CHARSET,
 )
 import boto3
@@ -16,7 +11,7 @@ from email.mime.application import MIMEApplication
 import os
 
 
-def send_email(email_address):
+def send_email(email_address,subject,body_text,attachment_array):
     """
     If the user inputs a valid email in the frontend, then send_email sends the created ONNX
     file to the user's email using AWS Simple Email Service (SES). Use AWS CLI to configure
@@ -24,45 +19,36 @@ def send_email(email_address):
 
     Args:
         email_address (str): email address of user
+        subject (str): subject of the email that needs to be sent
+        body_text(str): body of the email that needs to be sent
+        attachement_array(array of strings): filepaths of the attachements that need to be sent
     """
 
     client = boto3.client("ses", region_name=AWS_REGION)
 
     msg = MIMEMultipart("mixed")
-    msg["Subject"] = "Your ONNX file and visualizations from Deep Learning Playground"
+    msg["Subject"] = subject
     msg["From"] = SENDER
     msg["To"] = email_address
 
     msg_body = MIMEMultipart("alternative")
 
-    textpart = MIMEText(BODY_TEXT.encode(CHARSET), "plain", CHARSET)
-    htmlpart = MIMEText(BODY_HTML.encode(CHARSET), "html", CHARSET)
+    textpart = MIMEText(body_text.encode(CHARSET), "plain", CHARSET)
 
     msg_body.attach(textpart)
-    msg_body.attach(htmlpart)
 
-    onnx_att = MIMEApplication(open(ONNX_MODEL, "rb").read())
-    onnx_att.add_header(
-        "Content-Disposition", "attachment", filename=os.path.basename(ONNX_MODEL)
-    )
-    loss_att = MIMEApplication(open(LOSS_VIZ, "rb").read())
-    loss_att.add_header(
-        "Content-Disposition", "attachment", filename=os.path.basename(LOSS_VIZ)
-    )
-    acc_att = MIMEApplication(open(ACC_VIZ, "rb").read())
-    acc_att.add_header(
-        "Content-Disposition", "attachment", filename=os.path.basename(ACC_VIZ)
-    )
+    for attachment in attachment_array:
+        att = MIMEApplication(open(attachment, "rb").read())
+        att.add_header(
+            "Content-Disposition", "attachment", filename=os.path.basename(attachment)
+        )
+        msg.attach(att)
+
 
     # Attach the multipart/alternative child container to the multipart/mixed
     # parent container.
     msg.attach(msg_body)
 
-    # Add the attachment to the parent container.
-    msg.attach(onnx_att)
-    msg.attach(loss_att)
-    msg.attach(acc_att)
-    # print(msg)
     try:
         # Provide the contents of the email.
         response = client.send_raw_email(

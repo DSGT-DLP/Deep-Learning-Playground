@@ -34,13 +34,4 @@ DEFAULT_DATASETS = {
 UNZIPPED_DIR_NAME = "unzipped_data"
 SENDER = "DSGT Playground <dsgtplayground@gmail.com>"
 AWS_REGION = "us-east-2"
-BODY_TEXT = "Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems."
-BODY_HTML = """\
-    <html>
-    <head></head>
-    <body>
-    <p>Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems.</p>
-    </body>
-    </html>
-    """
 CHARSET = "utf-8"

@@ -12,12 +12,15 @@ from constants import (
     VAL_TEST_ACC,
 )
 import pandas as pd
+import numpy as np
 import torch
 import matplotlib
 import matplotlib.pyplot as plt
+import seaborn as sns
 from enum import Enum
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
+from sklearn.metrics import confusion_matrix
 import csv
 import os
 import json
@@ -87,11 +90,12 @@ def get_dataloaders(
     return train_loader, test_loader
 
 
-def generate_loss_plot(results_path):
+def generate_loss_plot(results_path) -> dict[str: list[float]]:
     """
     Given a training result file, plot the loss in a matplotlib plot
     Args:
         results_path(str): path to csv file containing training result
+    :return: a dictionary containing the epoch, train, and test loss values
     """
     results = pd.read_csv(results_path)
     train_loss = results[TRAIN_LOSS]
@@ -116,12 +120,15 @@ def generate_loss_plot(results_path):
     plt.ylabel("Loss")
     plt.savefig(LOSS_VIZ)
 
+    return {"epochs": x_axis, "train_loss": train_loss.values.tolist(), "test_loss": test_loss.values.tolist()}
 
-def generate_acc_plot(results_path):
+
+def generate_acc_plot(results_path) -> dict[str: list[float]]:
     """
     Given training result file, plot the accuracy in a matplotlib plot
     Args:
         results_path(str): path to csv file containing training result
+    :return: a dictionary containing the epoch, train, and test accuracy values
     """
     results = pd.read_csv(results_path)
     train_acc = results[TRAIN_ACC]
@@ -144,6 +151,8 @@ def generate_acc_plot(results_path):
     plt.ylabel("Accuracy")
     plt.savefig(ACC_VIZ)
 
+    return {"epochs": x_axis, "train_acc": train_acc.values.tolist(), "test_acc": val_acc.values.tolist()}
+
 
 def generate_train_time_csv(epoch_time):
     """
@@ -156,9 +165,27 @@ def generate_train_time_csv(epoch_time):
     df.to_csv(TRAIN_TIME_CSV)
 
 
-def csv_to_json(
-    csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: str = None
-) -> str:
+def generate_confusion_matrix(label, y_pred, categoryList):
+    """
+    Given the prediction results and label, generate confusion matrix (only applicable to classification tasks)
+    Args:
+        label: array consisting of ground truth values
+        y_pred: array consisting of predicted results
+        categoryList: list of strings that represent the categories to classify into (this will be used to label the axis)
+    """
+    plt.clf()
+    label_np = np.array(label)
+    pred_np = np.array(y_pred)
+    cm = confusion_matrix(label_np, pred_np, labels=categoryList)
+    ax= plt.subplot()
+    sns.heatmap(cm, annot=True, fmt='g', ax=ax, cmap='Purples');  #annot=True to annotate cells, ftm='g' to disable scientific notation
+    ax.set_xlabel('Predicted');ax.set_ylabel('Actual'); 
+    ax.set_title('Confusion Matrix (last Epoch)'); 
+    ax.xaxis.set_ticklabels(categoryList); ax.yaxis.set_ticklabels(categoryList);
+    plt.savefig(CONFUSION_VIZ) 
+
+
+def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: str = None) -> str:
     """
     Creates a JSON data derived from the input CSV. Will return
     the JSON data and create a JSON file with the data, if a jsonFilePath is

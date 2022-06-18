@@ -1,4 +1,5 @@
 import os
+from torchvision.transforms import transforms
 
 CSV_FILE_NAME = "data.csv"
 CSV_FILE_PATH = f"{os.path.join(os.getcwd(), CSV_FILE_NAME)}"
@@ -9,6 +10,7 @@ ONNX_MODEL = (
 )
 LOSS_VIZ = "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_loss_plot.png"
 ACC_VIZ = "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_accuracy_plot.png"
+CONFUSION_VIZ = "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_confusion_matrix.png"
 TRAIN_TIME_CSV = "epoch_times.csv"
 NETRON_URL = "https://netron.app/"
 OPEN_FILE_BUTTON = "open-file-button"
@@ -35,3 +37,8 @@ UNZIPPED_DIR_NAME = "unzipped_data"
 SENDER = "DSGT Playground <dsgtplayground@gmail.com>"
 AWS_REGION = "us-east-2"
 CHARSET = "utf-8"
+TENSOR_ONLY_TRANSFORMS = [transforms.LinearTransformation, transforms.Normalize, transforms.ConvertImageDtype, transforms.RandomErasing]
+
+DEFAULT_TRANSFORM = [transforms.Resize((256, 256)), transforms.ToTensor()]
+
+PIL_ONLY_TRANSFORMS = [transforms.RandomChoice, transforms.RandomOrder]

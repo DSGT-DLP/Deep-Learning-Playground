@@ -16,7 +16,6 @@ const TrainButton = (props) => {
     shuffle,
     epochs,
     testSize,
-    set_dl_results_data,
     setDLPBackendResponse,
     csvData = null,
     fileURL = null,
@@ -59,17 +58,18 @@ const TrainButton = (props) => {
     if (!usingDefaultDataset) {
       if (!targetCol || !features?.length) {
         alertMessage +=
-          "Must specify an input file, target, and features if not selecting default dataset.";
+          "Must specify an input file, target, and features if not selecting default dataset. ";
       }
       for (let i = 0; i < features.length; i++) {
         if (targetCol === features[i]) {
           alertMessage +=
-            "A column that is selected as the target column cannot also be a feature column.";
+            "A column that is selected as the target column cannot also be a feature column. ";
+          break;
         }
       }
       if (!csvData && !fileURL) {
         alertMessage +=
-          "Must specify an input file either from local storage or from an internet URL.";
+          "Must specify an input file either from local storage or from an internet URL. ";
       }
     }
 
@@ -80,7 +80,6 @@ const TrainButton = (props) => {
   };
 
   const onClick = async () => {
-    console.log(email);
     setBackgroundColor((currentColor) =>
       currentColor === COLORS.dark_blue ? COLORS.gold : COLORS.dark_blue
     );
@@ -109,7 +108,6 @@ const TrainButton = (props) => {
     setDLPBackendResponse(response);
 
     if (response.success === true) {
-      set_dl_results_data(response.dl_results);
       alert("SUCCESS: Training successful! Scroll to see results!");
     } else if (response.message) {
       alert("FAILED: Training failed. Check output traceback message");
@@ -138,7 +136,6 @@ TrainButton.propTypes = {
   shuffle: PropTypes.bool,
   epochs: PropTypes.number,
   testSize: PropTypes.number,
-  set_dl_results_data: PropTypes.func.isRequired,
 };
 
 export default TrainButton;
@@ -147,7 +144,7 @@ const styles = {
   container: {
     padding: 0,
     width: 130,
-    height: 70,
+    height: 80,
   },
   button: {
     backgroundColor: "transparent",

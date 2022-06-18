@@ -27,18 +27,11 @@
 name: Deploy to Amazon ECS
 
 
-# Only trigger, when the build workflow succeeded
+# Only trigger, when we push to prod-deploy
 on:
   push:
     branches:
        - "prod-deploy"
-# on:
-# #   workflow_dispatch:
-#   workflow_run:
-#     workflows: ["Python Package using Conda"]
-#     types: [completed] #requested
-
-
 
 env:
   AWS_REGION: "us-west-2"                    # set this to your preferred AWS region, e.g. us-west-1
@@ -64,7 +57,7 @@ jobs:
       run: echo running on branch ${GITHUB_REF##*/}
       
     - name: Wait for tests to succeed
-      if: ${{ github.ref }} = "refs/heads/deployment-branch"
+      if: ${{ github.ref }} = "refs/heads/prod-deploy"
       uses: lewagon/wait-on-check-action@v1.1.1
       with:
         ref: ${{ github.sha }}
@@ -73,7 +66,6 @@ jobs:
         allowed-conclusions: success
         verbose: true
         wait-interval: 10
-    
     
     - name: Checkout
       uses: actions/checkout@v3
@@ -109,10 +101,6 @@ jobs:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
         container-name: ${{ env.CONTAINER_NAME }}
         image: ${{ steps.build-image.outputs.image }}
-
-    - name: Describe ECR repos
-      run: |
-        aws ecr describe-repositories
         
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1

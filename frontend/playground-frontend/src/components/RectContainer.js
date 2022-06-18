@@ -29,7 +29,7 @@ export default RectContainer;
 const styles = {
   container: {
     width: 110,
-    height: 50,
+    height: 60,
     padding: 10,
     margin: 7.5,
     border: `5px solid transparent`,

@@ -10,7 +10,7 @@ from constants import (
     TEST_LOSS,
     TRAIN_ACC,
     TEST,
-    VAL_TEST_ACC,
+    VAL_TEST_ACC
 )
 import torch  # pytorch
 import torch.nn as nn

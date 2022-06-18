@@ -10,6 +10,7 @@ from constants import (
     TRAIN_ACC,
     TEST,
     VAL_TEST_ACC,
+    CONFUSION_VIZ
 )
 import pandas as pd
 import numpy as np

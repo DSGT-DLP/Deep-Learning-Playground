@@ -1,8 +1,28 @@
+@charset "UTF-8";
+/* 
+Theme Name:   DSGT Deep Learning Playground
+Text Domain:  datasciencegt-dlp
+Version:      1.0
+License:      GNU General Public License v3 or later
+License URI:  https://www.gnu.org/licenses/gpl-3.0.en.html
+Description:  A deep learning playground to provoke appease and calamity
+Author:       See CODEOWNDERS
+Author URI:   https://datasciencegt.org/
+*/
+
+/* -------------------------------------------------------------------------- */
+/*	1. Root
+/* -------------------------------------------------------------------------- */
+
 :root {
   --primary: #003058;
   --secondary: #b3a36a;
   --layer: #cd7bff;
 }
+
+/* -------------------------------------------------------------------------- */
+/*	1. General HTML
+/* -------------------------------------------------------------------------- */
 
 body {
   box-sizing: border-box;
@@ -11,6 +31,21 @@ body {
   color: black;
   font-family: Arial, sans-serif, Helvetica;
 }
+img {
+  display: block;
+  height: auto;
+}
+input {
+  border-width: 0.5px;
+  border-color: var(--layer);
+  border-radius: 10px;
+  padding: 5px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. General DLP Styles
+/* -------------------------------------------------------------------------- */
+
 .sections {
   margin: auto;
   background-color: #f6f6ff;
@@ -19,10 +54,11 @@ body {
   text-align: justify;
   text-justify: inter-word;
 }
-img {
-  display: block;
-  height: auto;
-}
+
+/* -------------------------------------------------------------------------- */
+/*	1. Header
+/* -------------------------------------------------------------------------- */
+
 #header-section {
   box-sizing: content-box;
   position: static;
@@ -38,18 +74,13 @@ img {
   justify-content: center;
 }
 
-input {
-  border-width: 0.5px;
-  border-color: var(--layer);
-  border-radius: 10px;
-  padding: 5px;
-}
+/* -------------------------------------------------------------------------- */
+/*	1. About and Wiki
+/* -------------------------------------------------------------------------- */
 
-/* About styles */
 .sections {
   margin-bottom: 1rem;
   margin-top: 1rem;
-  
 }
 .tech-row-content {
   width: auto;
@@ -58,14 +89,48 @@ input {
   margin: 1em;
   display: inline-block;
 }
-img.tech-img-content{
+img.tech-img-content {
   float: left;
   max-width: 10%;
   max-height: 100%;
 }
-textarea{
+textarea {
   border-width: 0.5px;
   border-color: var(--layer);
   border-radius: 10px;
   padding: 5px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. Loader (Animated)
+/*  Reference: https://www.w3schools.com/howto/howto_css_loader.asp
+/* -------------------------------------------------------------------------- */
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid var(--primary);
+  width: 50px;
+  height: 50px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

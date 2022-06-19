@@ -69,28 +69,17 @@ class errorMessage(Enum):
     TRAIN_NO_FILES = "Train folder has no files"
     VALID_NO_FILES = "Valid folder has no files"
     FILE_NOT_EXIST = "The file doesn't exist"
+    INVALID_TRANSFORM = "The sequence of transformations is invalid"
 
 
 def loader_from_zipped(
     zipped_file,
-    train_transform=None,
-    valid_transform=None,
-    image_height=256,
-    image_width=256,
+    train_transform= DEFAULT_TRANSFORM,
+    valid_transform= DEFAULT_TRANSFORM,
 ):
 
     """
-    Creates a directory from zipped file in the following structure:
-        UNZIPPED_DIR_NAME
-            -input
-                -train
-                    -class 1
-                    -class 2
-                    ..
-                -valid
-                    -class 1
-                    -class 2
-                -other contents of zipped folder
+    Creates a dataloader from a zipped file
 
     Args:
         zipped_file: the file to be unzipped
@@ -135,6 +124,32 @@ def loader_from_zipped(
                     return train_dir, valid_dir
 
         return train_dir, valid_dir
+    
+    def check_valid_transform(transform):
+        if transform == DEFAULT_TRANSFORM:
+            print("WHATTT")
+            return True
+        to_tensor_idx = -1
+        idx = 0
+        print("not default transform")
+        for x in transform:
+            if isinstance(x, transforms.ToTensor):
+                to_tensor_idx = idx
+            else:
+                if to_tensor_idx == -1:
+                    for y in TENSOR_ONLY_TRANSFORMS:
+                        if isinstance(x, y):
+                            raise ValueError(errorMessage.INVALID_TRANSFORM.value)
+                else:
+                    for y in PIL_ONLY_TRANSFORMS:
+                        if isinstance(x, y) and to_tensor_idx != -1:
+                            raise ValueError(errorMessage.INVALID_TRANSFORM.value)
+            idx+=1
+        print("totensorindex:", to_tensor_idx)
+        if to_tensor_idx == -1:
+            raise ValueError(errorMessage.INVALID_TRANSFORM.value)
+        else:
+            return True
 
     train_dir, valid_dir = check_inside_file("{}/input".format(UNZIPPED_DIR_NAME))
 
@@ -169,22 +184,39 @@ def loader_from_zipped(
         raise ValueError(errorMessage.UNEQUAL_CLASSES.value)
 
     def create_transform(transform):
-        arr = [
-            transforms.Resize((image_height, image_width)),
-            transform,
-            transforms.ToTensor(),
-        ]
-        transform = transforms.Compose([x for x in arr if x is not None])
+        print("IAM HERE")
+        if len(transform) == len(DEFAULT_TRANSFORM):
+            ## possibility of same array
+            i = 0
+            while i < len(transform):
+                if transform[i] != DEFAULT_TRANSFORM[i]:
+                    break
+                else:
+                    i += 1
+
+            if i != len(transform):
+                ## different transformation
+                if check_valid_transform(transform):
+                        transform = transforms.Compose([x for x in transform if x is not None])
+        else:
+            if check_valid_transform(transform):
+                transform = transforms.Compose([x for x in transform if x is not None])
         return transform
 
     train_transform = create_transform(train_transform)
     valid_transform = create_transform(valid_transform)
 
+    print(train_transform)
+
     train_dataset = datasets.ImageFolder(root=train_dir, transform=train_transform)
     valid_dataset = datasets.ImageFolder(root=valid_dir, transform=valid_transform)
 
+    print(train_dataset)
+
     train_loader = DataLoader(train_dataset)
     valid_loader = DataLoader(valid_dataset)
+
+    print(train_loader)
 
     return train_loader, valid_loader
 
@@ -192,3 +224,6 @@ def loader_from_zipped(
 if __name__ == "__main__":
     read_dataset("https://raw.githubusercontent.com/karkir0003/dummy/main/job.csv")
     read_local_csv_file("test.csv")
+
+    ## local testing
+    train_loader, valid_loader = loader_from_zipped("../tests/zip_files/double_zipped.Zip", train_transform=[transforms.ToTensor(),transforms.transforms.RandomChoice(transforms=[transforms.ToTensor()])])

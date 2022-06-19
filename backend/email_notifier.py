@@ -1,84 +1,66 @@
-import configparser
-import base64
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition)
-from constants import ONNX_MODEL, LOSS_VIZ, ACC_VIZ
+from constants import (
+    SENDER,
+    AWS_REGION,
+    CHARSET,
+)
+import boto3
+from botocore.exceptions import ClientError
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
+import os
 
-def send_email(email):
 
+def send_email(email_address,subject,body_text,attachment_array):
     """
     If the user inputs a valid email in the frontend, then send_email sends the created ONNX
-    file to the user's email using the Sendgrid API. Email may appear in spam folder when 
-    sent with Sendgrid.
+    file to the user's email using AWS Simple Email Service (SES). Use AWS CLI to configure
+    AWS key and secret key in order for this function to run.
 
     Args:
-        email (str): email address of user
+        email_address (str): email address of user
+        subject (str): subject of the email that needs to be sent
+        body_text(str): body of the email that needs to be sent
+        attachement_array(array of strings): filepaths of the attachements that need to be sent
     """
-    attachmentsArr = []
-    config = configparser.ConfigParser()
-    config.read("config.ini")
-    api_key = config["DEFAULT"]["SENDGRID_API_KEY"]
-    sendgrid_email = config["DEFAULT"]["SENDGRID_EMAIL_ADDRESS"]
-    print(api_key)
 
-    message = Mail(
-        from_email=sendgrid_email,
-        to_emails=email,
-        subject="Your ONNX file and visualizations from Deep Learning Playground",
-        html_content="Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems.",
-    )
+    client = boto3.client("ses", region_name=AWS_REGION)
 
-    with open(ONNX_MODEL, 'rb') as f:
-        data = f.read()
-        f.close()
+    msg = MIMEMultipart("mixed")
+    msg["Subject"] = subject
+    msg["From"] = SENDER
+    msg["To"] = email_address
 
-    #ONNX file must be encoded to base64 in order to be sent through email.
-    encoded_file = base64.b64encode(data).decode()
+    msg_body = MIMEMultipart("alternative")
 
-    attachedFile = Attachment(
-    FileContent(encoded_file),
-    FileName('my_deep_learning_model.onnx'),
-    FileType('application/onnx'),
-    Disposition('attachment')
-    )
-    attachmentsArr.append(attachedFile)
+    textpart = MIMEText(body_text.encode(CHARSET), "plain", CHARSET)
 
-    with open(LOSS_VIZ, 'rb') as f:
-        data = f.read()
-        f.close()
+    msg_body.attach(textpart)
 
-    #ONNX file must be encoded to base64 in order to be sent through email.
-    encoded_file = base64.b64encode(data).decode()
+    for attachment in attachment_array:
+        att = MIMEApplication(open(attachment, "rb").read())
+        att.add_header(
+            "Content-Disposition", "attachment", filename=os.path.basename(attachment)
+        )
+        msg.attach(att)
 
-    attachedFile = Attachment(
-    FileContent(encoded_file),
-    FileName('loss_visualization.png'),
-    FileType('application/png'),
-    Disposition('attachment')
-    )
-    attachmentsArr.append(attachedFile)
 
-    with open(ACC_VIZ, 'rb') as f:
-        data = f.read()
-        f.close()
-
-    #ONNX file must be encoded to base64 in order to be sent through email.
-    encoded_file = base64.b64encode(data).decode()
-
-    attachedFile = Attachment(
-    FileContent(encoded_file),
-    FileName('accuracy_visualization.png'),
-    FileType('application/png'),
-    Disposition('attachment')
-    )
-    attachmentsArr.append(attachedFile)
-    message.attachment = attachmentsArr
+    # Attach the multipart/alternative child container to the multipart/mixed
+    # parent container.
+    msg.attach(msg_body)
 
     try:
-        sg = SendGridAPIClient(api_key=api_key)
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-    except Exception as e:
-        print(e)
+        # Provide the contents of the email.
+        response = client.send_raw_email(
+            Source=SENDER,
+            Destinations=[email_address],
+            RawMessage={
+                "Data": msg.as_string(),
+            },
+        )
+    # Display an error if something goes wrong.
+    except ClientError as e:
+        print(e.response["Error"]["Message"])
+    else:
+        print("Email sent! Message ID:"),
+        print(response["MessageId"])

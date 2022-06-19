@@ -29,5 +29,3 @@ def open_onnx_file():
     element.send_keys(full_path)
     print("upload success")
     # element.click()
-
-

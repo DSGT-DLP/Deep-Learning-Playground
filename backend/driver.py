@@ -16,14 +16,24 @@ from sklearn.model_selection import train_test_split
 from default_datasets import get_default_dataset
 from flask_cors import CORS
 from email_notifier import send_email
+from flask import send_from_directory
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=os.path.join(os.path.dirname(
+    os.getcwd()), 'frontend', 'playground-frontend', 'build'))
 CORS(app)
 
 
-def ml_drive(user_model, problem_type, target=None, features=None, default=False, test_size=0.2, shuffle=True):
+def ml_drive(
+    user_model,
+    problem_type,
+    target=None,
+    features=None,
+    default=False,
+    test_size=0.2,
+    shuffle=True,
+):
     """
-    Driver function/endpoint into backend for training a classical ML model (eg: SVC, SVR, DecisionTree, Naive Bayes, etc) 
+    Driver function/endpoint into backend for training a classical ML model (eg: SVC, SVR, DecisionTree, Naive Bayes, etc)
 
     Args:
         user_model (str): What ML model and parameters does the user want
@@ -35,7 +45,7 @@ def ml_drive(user_model, problem_type, target=None, features=None, default=False
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
     """
     try:
-        if (default and problem_type.upper() == "CLASSIFICATION"):
+        if default and problem_type.upper() == "CLASSIFICATION":
             dataset = load_iris()
             X, y = get_default_dataset(dataset)
             print(y.head())
@@ -49,10 +59,12 @@ def ml_drive(user_model, problem_type, target=None, features=None, default=False
             X = input_df[features]
 
         X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, random_state=0, shuffle=shuffle)
+            X, y, test_size=test_size, random_state=0, shuffle=shuffle
+        )
         model = get_object(user_model)
         train_classical_ml_model(
-            model, X_train, X_test, y_train, y_test, problem_type=problem_type)
+            model, X_train, X_test, y_train, y_test, problem_type=problem_type
+        )
     except Exception as e:
         raise e
 
@@ -68,7 +80,7 @@ def dl_drive(
     test_size=0.2,
     epochs=5,
     shuffle=True,
-    json_csv_data_str=""
+    json_csv_data_str="",
 ):
     """
     Driver function/entrypoint into backend for deep learning model. Onnx file is generated containing model architecture for user to visualize in netron.app
@@ -96,7 +108,7 @@ def dl_drive(
             X, y = get_default_dataset(default.upper())
         else:
             if json_csv_data_str:
-                input_df = pd.read_json(json_csv_data_str, orient='records')
+                input_df = pd.read_json(json_csv_data_str, orient="records")
 
             y = input_df[target]
             X = input_df[features]
@@ -112,7 +124,8 @@ def dl_drive(
             X, y, test_size=test_size, random_state=0, shuffle=shuffle
         )
         X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor = get_tensors(
-            X_train, X_test, y_train, y_test)
+            X_train, X_test, y_train, y_test
+        )
 
         # Build the Deep Learning model that the user wants
         model = DLModel(parse_deep_user_architecture(user_arch))
@@ -120,42 +133,51 @@ def dl_drive(
         optimizer = get_optimizer(
             model, optimizer_name=optimizer_name, learning_rate=0.05
         )
-        #criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
+        # criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
         print(f"loss criterion: {criterion}")
         train_loader, test_loader = get_dataloaders(
             X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=20
         )
-
         train_loss_results = train_deep_model(
             model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
         )
         pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
-        
+
         return train_loss_results
 
     except Exception as e:
         raise e
 
 
-@app.route('/run', methods=['GET', 'POST'])
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def root(path):
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
+
+
+@app.route("/run", methods=["GET", "POST"])
 def train_and_output():
+    print("Hi")
     request_data = json.loads(request.data)
 
-    user_arch = request_data['user_arch']
-    criterion = request_data['criterion']
-    optimizer_name = request_data['optimizer_name']
-    problem_type = request_data['problem_type']
-    target = request_data['target']
-    features = request_data['features']
-    default = request_data['default']
-    test_size = request_data['test_size']
-    epochs = request_data['epochs']
-    shuffle = request_data['shuffle']
-    csvDataStr = request_data['csvData']
-    fileURL = request_data['fileURL']
-    email = request_data['email']
-    if request.method == 'POST':
+    user_arch = request_data["user_arch"]
+    criterion = request_data["criterion"]
+    optimizer_name = request_data["optimizer_name"]
+    problem_type = request_data["problem_type"]
+    target = request_data["target"]
+    features = request_data["features"]
+    default = request_data["default"]
+    test_size = request_data["test_size"]
+    epochs = request_data["epochs"]
+    shuffle = request_data["shuffle"]
+    csvDataStr = request_data["csvData"]
+    fileURL = request_data["fileURL"]
+    email = request_data["email"]
+    if request.method == "POST":
         if not default:
             if fileURL:
                 read_dataset(fileURL)
@@ -177,20 +199,25 @@ def train_and_output():
                 test_size=test_size,
                 epochs=epochs,
                 shuffle=shuffle,
-                json_csv_data_str=csvDataStr,
+                json_csv_data_str=csvDataStr
             )
             # If the length of the email is greater than 0 then that means a valid email has been
             # inputted for the ONNX file to be sent to the user.
-            if(len(email) != 0):
-                send_email(email)
+            if len(email) != 0:
+                send_email(email, "Your ONNX file and visualizations from Deep Learning Playground",
+                           "Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems.", [ONNX_MODEL, LOSS_VIZ, ACC_VIZ])
             return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json(), "train_loss_results": train_loss_results}), 200
 
         except Exception:
             print(traceback.format_exc())
-            return jsonify({"success": False, "message": traceback.format_exc(limit=1)}), 400
+            return (
+                jsonify(
+                    {"success": False, "message": traceback.format_exc(limit=1)}),
+                400,
+            )
 
     return jsonify({"success": False}), 500
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

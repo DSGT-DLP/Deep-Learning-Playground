@@ -33,7 +33,7 @@ const Navbar = () => {
         <li className="navElement">
           <Link to="/Feedback">Feedback </Link>
         </li>
-        <li className="navElement">
+        <li className="navElement" style={{ height: 32, paddingTop: 17 }}>
           <form
             action="https://www.paypal.com/donate"
             method="post"
@@ -50,6 +50,7 @@ const Navbar = () => {
               border="0"
               name="submit"
               title="PayPal - The safer, easier way to pay online!"
+              style={{ border: "none" }}
               alt="Donate with PayPal button"
             />
             <img

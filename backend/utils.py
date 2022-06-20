@@ -166,7 +166,7 @@ def generate_train_time_csv(epoch_time):
     df.to_csv(TRAIN_TIME_CSV)
 
 
-def generate_confusion_matrix(label, y_pred, categoryList):
+def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     """
     Given the prediction results and label, generate confusion matrix (only applicable to classification tasks)
     Args:
@@ -174,6 +174,27 @@ def generate_confusion_matrix(label, y_pred, categoryList):
         y_pred: array consisting of predicted results
         categoryList: list of strings that represent the categories to classify into (this will be used to label the axis)
     """
+    label = []
+    y_pred = []
+    categoryList = []    
+
+    for labels in labels_last_epoch:
+        for l in labels.tolist():
+            label.append(l[0])
+
+    for pred in y_pred_last_epoch:
+        predictions = torch.argmax(
+            pred, dim=-1
+        )
+        for prediction in predictions.tolist():
+            y_pred.append(prediction[0])
+
+    # generating a category list for confusion matrix axis labels
+    if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):
+        for i, x in enumerate(y_pred_last_epoch[0][0][0]):
+            categoryList.append(i)
+
+
     plt.clf()
     label_np = np.array(label)
     pred_np = np.array(y_pred)

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
-import { COLORS, GENERAL_STYLES } from "../constants";
+import { COLORS, GENERAL_STYLES, LAYOUT } from "../constants";
 import { train_and_output } from "../helper_functions/TalkWithBackend";
 
 const TrainButton = (props) => {
@@ -17,12 +17,12 @@ const TrainButton = (props) => {
     epochs,
     testSize,
     setDLPBackendResponse,
-    csvData = null,
+    csvDataInput = null,
     fileURL = null,
-    email
+    email,
   } = props;
 
-  const [backgroundColor, setBackgroundColor] = useState(COLORS.dark_blue);
+  const [pendingResponse, setPendingResponse] = useState(false);
 
   const make_user_arch = () => {
     // making a user_arch array by including all added layers and their parameters to make something like:
@@ -67,7 +67,7 @@ const TrainButton = (props) => {
           break;
         }
       }
-      if (!csvData && !fileURL) {
+      if (!csvDataInput && !fileURL) {
         alertMessage +=
           "Must specify an input file either from local storage or from an internet URL. ";
       }
@@ -80,14 +80,16 @@ const TrainButton = (props) => {
   };
 
   const onClick = async () => {
-    setBackgroundColor((currentColor) =>
-      currentColor === COLORS.dark_blue ? COLORS.gold : COLORS.dark_blue
-    );
+    setPendingResponse(true);
+    setDLPBackendResponse(undefined);
 
     const user_arch = make_user_arch();
-    if (!validateInputs(user_arch)) return;
+    if (!validateInputs(user_arch)) {
+      setPendingResponse(false);
+      return;
+    }
 
-    const csvDataStr = JSON.stringify(csvData);
+    const csvDataStr = JSON.stringify(csvDataInput);
 
     const response = await train_and_output(
       user_arch,
@@ -106,6 +108,7 @@ const TrainButton = (props) => {
     );
 
     setDLPBackendResponse(response);
+    setPendingResponse(false);
 
     if (response.success === true) {
       alert("SUCCESS: Training successful! Scroll to see results!");
@@ -117,25 +120,44 @@ const TrainButton = (props) => {
   };
 
   return (
-    <RectContainer style={{ ...styles.container, backgroundColor }}>
-      <button style={styles.button} onClick={onClick}>
-        Train!
-      </button>
-    </RectContainer>
+    <>
+      <RectContainer
+        style={{
+          ...styles.container,
+          backgroundColor: pendingResponse ? COLORS.disabled : COLORS.dark_blue,
+        }}
+      >
+        <button
+          style={{
+            ...styles.button,
+            cursor: pendingResponse ? "wait" : "pointer",
+          }}
+          onClick={onClick}
+          disabled={pendingResponse}
+        >
+          Train!
+        </button>
+      </RectContainer>
+      {pendingResponse ? (
+        <div style={{ marginTop: 10 }}>
+          <div className="loader" />
+        </div>
+      ) : null}
+    </>
   );
 };
 
 TrainButton.propTypes = {
-  addedLayers: PropTypes.arrayOf(PropTypes.object),
+  addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
   targetCol: PropTypes.string,
   features: PropTypes.arrayOf(PropTypes.string),
-  problemType: PropTypes.string,
-  criterion: PropTypes.string,
-  optimizerName: PropTypes.string,
+  problemType: PropTypes.string.isRequired,
+  criterion: PropTypes.string.isRequired,
+  optimizerName: PropTypes.string.isRequired,
   usingDefaultDataset: PropTypes.string,
-  shuffle: PropTypes.bool,
-  epochs: PropTypes.number,
-  testSize: PropTypes.number,
+  shuffle: PropTypes.bool.isRequired,
+  epochs: PropTypes.number.isRequired,
+  testSize: PropTypes.number.isRequired,
 };
 
 export default TrainButton;

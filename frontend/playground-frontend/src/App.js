@@ -4,6 +4,7 @@ import Home from "./Home";
 import About from "./components/About/About";
 import Wiki from "./components/Wiki/Wiki";
 import Feedback from "./components/FeedBackForm";
+import Footer from "./components/Footer/Footer";
 import "./App.css";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
                     <Route path="/Wiki" element={<Wiki />} />
                     <Route path="/feedback" element={<Feedback />} />
                 </Routes>
+                <Footer/>
             </Router>
         </div>
     );

@@ -1,10 +1,14 @@
 // import DSGTLogo from "../images/logos/dsgt-logo-light.png";
 import Navbar from "./Navbar/Navbar";
+// import Footer from "./Footer/Footer";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "../constants";
 const Title = () => {
   return (
+    <div>
     <Navbar />
-    // <Footer/>
+    {/* <Footer/> */}
+    </div>
+
   );
 };
 export default Title;

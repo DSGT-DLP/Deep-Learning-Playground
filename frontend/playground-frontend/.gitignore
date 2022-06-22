@@ -25,3 +25,4 @@ yarn-error.log*
 # output files
 src/backend_outputs/visualization_output/my_accuracy_plot.png
 src/backend_outputs/visualization_output/my_loss_plot.png
+# do not ignore my_deep_learning_model.onnx, model.pt, or my_confusion_matrix.png

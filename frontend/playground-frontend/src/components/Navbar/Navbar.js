@@ -1,5 +1,4 @@
 import React from "react";
-import "./Nav.css";
 import { Link } from "react-router-dom";
 import DSGTLogo from "../../images/logos/dsgt-logo-light.png";
 import { FaGithub } from "react-icons/fa";
@@ -9,11 +8,11 @@ import { LAYOUT } from "../../constants";
 const Navbar = () => {
   return (
     <div id="nav-bar">
-      <div className="image-title" style={{ fontSize: "25px" }}>
-        <img src={DSGTLogo} alt="DSGT Logo" width="61" height="60" />
+      <a href="/" className="image-title">
+        <img src={DSGTLogo} alt="DSGT Logo" width="60" height="60" />
         <div style={{ marginRight: 10 }} />
         Deep Learning Playground
-      </div>
+      </a>
       <ul className="nav">
         <li id="navElement">
           <a href="https://github.com/karkir0003/Deep-Learning-Playground">

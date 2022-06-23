@@ -14,11 +14,11 @@ const Navbar = () => {
         Deep Learning Playground
       </a>
       <ul className="nav">
-        <li id="navElement">
+        {/* <li id="navElement">
           <a href="https://github.com/karkir0003/Deep-Learning-Playground">
             <FaGithub size="60" />
           </a>
-        </li>
+        </li> */}
         <li id="title-name"></li>
         <li className="navElement">
           <Link to="/">Home</Link>

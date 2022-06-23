@@ -1,4 +1,5 @@
 import React from "react";
+import DEMO_VIDEO from "../../images/demo_video.gif";
 
 const Wiki = () => {
   return (
@@ -8,7 +9,15 @@ const Wiki = () => {
       </div>
 
       <div className="sections" id="basics">
-        <h2>Deep Learning Basics</h2>
+        <h2>Live Demo</h2>
+        <img
+          src={DEMO_VIDEO}
+          alt="GIF showing a demo of the playground"
+          style={{ width: "100%" }}
+        />
+      </div>
+
+      <div className="sections" id="basics">
         <p>
           Deep learning is a field of machine learning that uses a{" "}
           <b>neural network</b> to mimic how human brains (which many consider

@@ -204,9 +204,22 @@ def train_and_output():
             # If the length of the email is greater than 0 then that means a valid email has been
             # inputted for the ONNX file to be sent to the user.
             if len(email) != 0:
-                send_email(email, "Your ONNX file and visualizations from Deep Learning Playground",
-                           "Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems.", [ONNX_MODEL, LOSS_VIZ, ACC_VIZ])
-            return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json(), "train_loss_results": train_loss_results}), 200
+                send_email(
+                    email,
+                    "Your ONNX file and visualizations from Deep Learning Playground",
+                    "Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems.",
+                    [ONNX_MODEL, LOSS_VIZ, ACC_VIZ],
+                )
+            return (
+                jsonify(
+                    {
+                        "success": True,
+                        "message": "Dataset trained and results outputted successfully",
+                        "dl_results": csv_to_json(),
+                    }
+                ),
+                200,
+            )
 
         except Exception:
             print(traceback.format_exc())
@@ -218,6 +231,34 @@ def train_and_output():
 
     return jsonify({"success": False}), 500
 
+
+@app.route("/sendemail", methods=["POST"])
+def send_email_route():
+    request_data = json.loads(request.data)
+
+    # extract data
+    required_params = ["email_address", "subject", "body_text"]
+    for required_param in required_params:
+        if required_param not in request_data:
+            return jsonify({"success": False, "message": "Missing parameter " + required_param})
+
+    email_address = request_data["email_address"]
+    subject = request_data["subject"]
+    body_text = request_data["body_text"]
+    if "attachment_array" in request_data:
+        attachment_array = request_data["attachment_array"]
+        if not isinstance(attachment_array, list):
+            return jsonify({"success": False, "message": "Attachment array must be a list of filepaths"})
+    else:
+        attachment_array = None
+    
+    # try to send email
+    try:
+        send_email(email_address, subject, body_text, attachment_array)
+        return jsonify({"success": True, "message": "Sent email to " + email_address})
+    except Exception:
+        print(traceback.format_exc())
+        return jsonify({"success": False}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')

@@ -18,6 +18,7 @@ function App() {
           <Route path="/Wiki" element={<Wiki />} />
           <Route path="/feedback" element={<Feedback />} />
         </Routes>
+        <Footer/>
       </Router>
     </div>
   );

@@ -7,7 +7,7 @@ import { LAYOUT } from "../../constants";
 
 const Navbar = () => {
   return (
-    <div id="nav-bar">
+    <div className="header-footer" id="nav-bar">
       <a href="/" className="image-title">
         <img src={DSGTLogo} alt="DSGT Logo" width="60" height="60" />
         <div style={{ marginRight: 10 }} />

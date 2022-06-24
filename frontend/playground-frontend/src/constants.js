@@ -8,6 +8,12 @@ export const COLORS = {
   gold: "#B3A36A",  // secondary
 };
 
+export const URLs = {
+  linkedin: "https://www.linkedin.com/company/dsgt/",
+  youtube: "https://www.youtube.com",
+  instagram: "https://www.instagram.com/datasciencegt/",
+  github: "https://github.com/karkir0003/Deep-Learning-Playground",
+}
 export const LAYOUT = {
   row: {
     display: "flex",

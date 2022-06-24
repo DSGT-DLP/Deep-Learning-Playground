@@ -240,7 +240,9 @@ def send_email_route():
     required_params = ["email_address", "subject", "body_text"]
     for required_param in required_params:
         if required_param not in request_data:
-            return jsonify({"success": False, "message": "Missing parameter " + required_param})
+            return jsonify(
+                {"success": False, "message": "Missing parameter " + required_param}
+            )
 
     email_address = request_data["email_address"]
     subject = request_data["subject"]
@@ -248,10 +250,15 @@ def send_email_route():
     if "attachment_array" in request_data:
         attachment_array = request_data["attachment_array"]
         if not isinstance(attachment_array, list):
-            return jsonify({"success": False, "message": "Attachment array must be a list of filepaths"})
+            return jsonify(
+                {
+                    "success": False,
+                    "message": "Attachment array must be a list of filepaths",
+                }
+            )
     else:
         attachment_array = None
-    
+
     # try to send email
     try:
         send_email(email_address, subject, body_text, attachment_array)

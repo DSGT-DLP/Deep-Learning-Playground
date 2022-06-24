@@ -13,6 +13,7 @@ const Wiki = () => {
         <img
           src={DEMO_VIDEO}
           alt="GIF showing a demo of the playground"
+          loading="lazy"
           style={{ width: "100%" }}
         />
       </div>

@@ -2,7 +2,6 @@ import React from "react";
 import "../../App.css";
 import {
   FaGithub,
-  FaCopyright,
   FaInstagram,
   FaLinkedin,
   FaYoutube,
@@ -35,7 +34,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="header-footer" id="footer-name">
-        Deep Learning Playground © 2022
+        Deep Learning Playground © {new Date().getFullYear()}
       </div>
     </>
   );

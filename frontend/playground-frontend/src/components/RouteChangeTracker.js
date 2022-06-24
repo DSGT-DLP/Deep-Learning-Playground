@@ -1,6 +1,6 @@
 /*Google Analytics stuff. Don't worry about this file for adding stuff to the site!*/
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ReactGA from "react-ga";
 const RouteChangeTracker = ({ history }) => {
   history.listen((location, action) => {
@@ -11,4 +11,4 @@ const RouteChangeTracker = ({ history }) => {
   return <div></div>;
 };
 
-export default withRouter(RouteChangeTracker);
+export default useNavigate(RouteChangeTracker);

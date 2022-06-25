@@ -30,13 +30,13 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DataTable from "react-data-table-component";
 import CONFUSION_VIZ from "./backend_outputs/visualization_output/my_confusion_matrix.png";
-import ONXX_OUTPUT_PATH from "./backend_outputs/my_deep_learning_model.onnx";
+import ONNX_OUTPUT_PATH from "./backend_outputs/my_deep_learning_model.onnx";
 import PT_PATH from "./backend_outputs/model.pt";
 import { CSVLink } from "react-csv";
 import Plot from "react-plotly.js";
 
 const Home = () => {
-  const [csvData, setCSVData] = useState([]);
+  const [csvDataInput, setCSVDataInput] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
 
@@ -134,7 +134,7 @@ const Home = () => {
           selector: (row) => row[c],
         }));
 
-        setCSVData(list);
+        setCSVDataInput(list);
         setCSVColumns(columns);
         setFileURL(url);
       }
@@ -235,8 +235,8 @@ const Home = () => {
           data={dl_results_data}
         />
         <span>
-          <a href={ONXX_OUTPUT_PATH} download style={styles.download_csv_res}>
-            📈 Download ONXX Output File
+          <a href={ONNX_OUTPUT_PATH} download style={styles.download_csv_res}>
+            📈 Download ONNX Output File
           </a>
         </span>
         <span style={{ marginLeft: 8 }}>
@@ -323,9 +323,9 @@ const Home = () => {
         <BackgroundLayout>
           <RectContainer style={styles.fileInput}>
             <CSVInput
-              data={csvData}
+              data={csvDataInput}
               columns={csvColumns}
-              setData={setCSVData}
+              setData={setCSVDataInput}
               setColumns={setCSVColumns}
             />
             <input
@@ -354,7 +354,7 @@ const Home = () => {
 
           <TrainButton
             {...input_responses}
-            csvData={csvData}
+            csvDataInput={csvDataInput}
             setDLPBackendResponse={setDLPBackendResponse}
           />
         </BackgroundLayout>
@@ -388,7 +388,7 @@ const Home = () => {
       <BackgroundLayout>
         {input_queries.map((e) => (
           <Input {...e} key={e.queryText} />
-        ))}LAYERS
+        ))}
       </BackgroundLayout>
       <EmailInput email={email} setEmail={setEmail} />
       <TitleText text="CSV Input" />
@@ -396,7 +396,7 @@ const Home = () => {
         pagination
         highlightOnHover
         columns={csvColumns}
-        data={csvData}
+        data={csvDataInput}
       />
       <TitleText text="Deep Learning Results" />
       {showResults()}

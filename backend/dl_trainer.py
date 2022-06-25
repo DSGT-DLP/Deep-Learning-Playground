@@ -56,8 +56,8 @@ def train_deep_classification_model(
                 optimizer.zero_grad()  # zero out gradient for each batch
                 output = model(input)  # make prediction on input
                 batch_train_acc.append(compute_accuracy(output, labels))
-                
-                loss = compute_loss(criterion, output, labels) #compute the loss
+
+                loss = compute_loss(criterion, output, labels)  # compute the loss
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
                 batch_loss.append(loss.detach().numpy())
@@ -141,7 +141,7 @@ def train_deep_regression_model(
                 input, labels = data
                 optimizer.zero_grad()  # zero out gradient for each batch
                 output = model(input)  # make prediction on input
-                loss = compute_loss(criterion, output, labels) #compute the loss
+                loss = compute_loss(criterion, output, labels)  # compute the loss
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
                 batch_loss.append(loss.detach().numpy())

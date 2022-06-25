@@ -1,23 +1,32 @@
 # These owners will be the default owners for everything in
-
 # the repo. Unless a later match takes precedence,
-
 # the contributors all will be requested for
-
 # review when someone opens a pull request.
 
 -       @karkir0003 @farisdurrani @LucasZhang58
 
-#For files in the /backend directory, @karkir0003 will be requested in a pull request
+# 
+# Backend
+# 
+
+# For files in the /backend directory, @karkir0003 will be requested in a pull request
 /backend @karkir0003
+/backend/email_notifier.py @avayedawadi
+/backend/driver.py @farisdurrani
 
-#For files in the /frontend directory, @farisdurrani will be requested in such a pull request
-/frontend @farisdurrani
-
-#For unit tests, @LucasZhang58 and @karkir0003 will be requested in such a pull request
+# For unit tests, @LucasZhang58 and @karkir0003 will be requested in such a pull request
 /tests/test_data_processing.py @LucasZhang58 @karkir0003
 /tests/test_zip_loader.py @vidushiMaheshwari
 /tests/expected/unzipped/double_zipped @vidushiMaheshwari
 
-#@anikethswain built the About page, implemented the external CSS for the About page, fixed rendering 
-issues with the navbar, and helped in building the navbar component.
+
+#
+# Frontend
+#
+
+# For files in the /frontend directory, @farisdurrani will be requested in such a pull rewuest
+/frontend @farisdurrani
+
+# For the About page and Navbar, contact @anikethswain
+/frontend/playground-frontend/components/About @anikethswain
+/frontend/playground-frontend/components/NavBar @anikethswain

@@ -15,10 +15,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.1.0",
-<<<<<<< HEAD
     "react-dropzone": "^14.2.1",
-=======
->>>>>>> 2cf2fabe1b9705e3d2c459b3a74b1621534ac45c
     "react-google-recaptcha": "^2.1.0",
     "react-icons": "^4.4.0",
     "react-plotly.js": "^2.5.1",

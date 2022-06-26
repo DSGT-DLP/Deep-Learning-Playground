@@ -1,6 +1,6 @@
 import base64
 import requests
-
+import re
 
 def send_email(email_address,subject="",body_text="",attachment_array=[]):
     """
@@ -14,6 +14,9 @@ def send_email(email_address,subject="",body_text="",attachment_array=[]):
         body_text(str,optional): body of the email that needs to be sent
         attachment_array(array of strings,optional): file paths as strings
     """
+    regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+    if not re.fullmatch(regex, email_address):
+        raise ValueError("Please enter a valid email to the send_email function")
     fileNames = [fileName.split('/')[-1] for fileName in attachment_array]
     base64Array = []
     for attachment in attachment_array:
@@ -23,8 +26,8 @@ def send_email(email_address,subject="",body_text="",attachment_array=[]):
         base64Array.append(my_string)
 
     url = 'https://kwado68i00.execute-api.us-west-2.amazonaws.com/send_email'
-    params = {'recipient':email_address,'subject':subject,'body_text':body_text,'file_names':fileNames}
-    body = {'attachment_array':base64Array}
+    params = {'recipient':email_address,'subject':subject,'body_text':body_text}
+    body = {'attachment_array':base64Array, 'file_names':fileNames}
 
     post = requests.post(url, params = params, json=body)
-    print(post)
+    return post

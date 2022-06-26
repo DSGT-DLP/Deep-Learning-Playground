@@ -207,6 +207,7 @@ def train_and_output():
                         "success": True,
                         "message": "Dataset trained and results outputted successfully",
                         "dl_results": csv_to_json(),
+                        "train_loss_results": train_loss_results
                     }
                 ),
                 200,

@@ -106,6 +106,7 @@ const TrainButton = (props) => {
       fileURL,
       email
     );
+    console.log(response);
 
     setDLPBackendResponse(response);
     setPendingResponse(false);

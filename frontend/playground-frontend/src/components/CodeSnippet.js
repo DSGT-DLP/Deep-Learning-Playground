@@ -32,7 +32,10 @@ function codeSnippetFormat(layers) {
   + "from torch.autograd import Variable\n" 
   + "class DLModel(nn.Module):\n"
   + "\tdef __init__(self):\n"
-  + "\t\t" + layersToString(layers) + "\n \n"
+  + "\t\t" + layersToString(layers) + "\n"
+  + "\t\t## un-comment below code if loading model from a .pt file, replace PATH with the location path of the .pt file \n" 
+  + "\t\t# self.model = torch.load('PATH') \n" 
+  + "\t\t# self.model.eval()" + "\n \n"
   + "\tdef forward(self, x): \n"
   + "\t\t" + "self.model(x)";
   return codeSnippet;

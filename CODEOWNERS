@@ -12,7 +12,8 @@
 # For files in the /backend directory, @karkir0003 will be requested in a pull request
 /backend @karkir0003
 /backend/email_notifier.py @avayedawadi
-/backend/driver.py @farisdurrani
+/backend/driver.py @farisdurrani @andrewpeng02 @avayedawadi
+
 
 # For unit tests, @LucasZhang58 and @karkir0003 will be requested in such a pull request
 /tests/test_data_processing.py @LucasZhang58 @karkir0003

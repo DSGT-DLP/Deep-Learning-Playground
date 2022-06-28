@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import DSGTLogo from "../../images/logos/dsgt-logo-light.png";
+import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";
 import { FaGithub } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { LAYOUT } from "../../constants";

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { COLORS, GENERAL_STYLES } from "../constants";
 import TitleText from "./mini_components/TitleText";
 import ReCAPTCHA from "react-google-recaptcha";
+
 export default function Feedback() {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");

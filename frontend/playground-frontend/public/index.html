@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
@@ -8,6 +8,10 @@
     <meta
       name="Deep Learning Playground"
       content="Play and experiment with machine/deep learning tools, provided by Data Science at Georgia Tech"
+    />
+    <meta
+      name="author"
+      content="See CODEOWNERS in https://github.com/karkir0003/Deep-Learning-Playground"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
@@ -24,6 +28,22 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-K7FDRTC2PV"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-K7FDRTC2PV");
+    </script>
+
     <title>Deep Learning Playground</title>
   </head>
   <body>

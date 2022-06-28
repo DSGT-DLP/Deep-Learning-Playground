@@ -1,6 +1,6 @@
 # Architecture
 
-# Backend Architecture
+## Backend Architecture
 
 ```
 📦backend

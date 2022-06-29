@@ -48,6 +48,46 @@ npm start
 ```
 3. Then, go to http://localhost:3000/
 
+## Frontend Architecture
+```
+📦src
+ ┣ 📂components
+ ┃ ┣ 📂About
+ ┃ ┃ ┗ 📜About.js - about page giving information about Deep Learning Playgroudn
+ ┃ ┣ 📂Footer
+ ┃ ┃ ┣ 📜Footer.css - css to style the footer of the website
+ ┃ ┃ ┗ 📜Footer.js - website footer
+ ┃ ┣ 📂Navbar
+ ┃ ┃ ┗ 📜Navbar.js - navbar with links to all pages
+ ┃ ┣ 📂Wiki
+ ┃ ┃ ┣ 📜Wiki.js - wiki page to give information into how deep learning works
+ ┃ ┃ ┗ 📜Wiki.md - markdown with information about deep learning
+ ┃ ┣ 📂mini_components
+ ┃ ┃ ┗ 📜TitleText.js - small component to easily insert titles to sections of the website
+ ┃ ┣ 📜AddNewLayer.js - adds a new layer using drag and drop with the react-dnd library
+ ┃ ┣ 📜AddedLayer.js - shows added layers and gives dragging and deleting options
+ ┃ ┣ 📜BackgroundLayout.js - component to give a div with styled background for sections
+ ┃ ┣ 📜CSVInput.js - handles CSV input and data processing
+ ┃ ┣ 📜CodeSnippet.js - parses model data and outputs sample python for running a creating model
+ ┃ ┣ 📜DropDown.js  - dropdown component
+ ┃ ┣ 📜EmailInput.js - email input for sending model data to the user after a model is created
+ ┃ ┣ 📜FeedBackForm.js - component for inputting feedback and sending email to DLP email
+ ┃ ┣ 📜Input.js - styled input with basic functionality
+ ┃ ┣ 📜LayerChoice.js - gives possible layers for the user to drag and drop with
+ ┃ ┣ 📜RectContainer.js - styled div to for other info and components
+ ┃ ┣ 📜Title.js - title component that actually shows the navbar
+ ┃ ┣ 📜TrainButton.js - button component that actually posts model data to the backend
+ ┃ ┗ 📜index.js
+ ┣ 📂helper_functions
+ ┃ ┗ 📜TalkWithBackend.js - functions that actually post data to the Flask server backend
+ ┣ 📜App.css
+ ┣ 📜App.js
+ ┣ 📜Home.js
+ ┣ 📜constants.js - various styling consstants
+ ┣ 📜index.js
+ ┗ 📜settings.js - exports information about the various layers
+ ```
+
 ## How to Add New Layer Options
 Currently, there are three layers implemented in this playgroud—Linear, ReLU, and Softmax. A developer can easily add in a new layer to be used by the user through:
 1. Go to [settings.js](./frontend/playground-frontend/src/settings.js)

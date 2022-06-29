@@ -23,7 +23,7 @@ import {
   TrainButton,
   EmailInput,
   TitleText,
-  CodeSnippet
+  CodeSnippet,
 } from "./components";
 import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
@@ -307,10 +307,13 @@ const Home = () => {
               showlegend: true,
             }}
           />
-          <img src={CONFUSION_VIZ} alt="Confusion matrix for the last epoch of your Deep Learning Model" />
+          <img
+            src={CONFUSION_VIZ}
+            alt="Confusion matrix for the last epoch of your Deep Learning Model"
+          />
           <a href={CONFUSION_VIZ} download style={styles.download_csv_res}>
-          📈 Download Confusion matrix
-        </a>
+            📈 Download Confusion matrix
+          </a>
         </div>
       </>
     );
@@ -400,9 +403,8 @@ const Home = () => {
       />
       <TitleText text="Deep Learning Results" />
       {showResults()}
-      <TitleText text = "Code Snippet"/>
-      <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers}></CodeSnippet>
-      
+      <TitleText text="Code Snippet" />
+      <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
     </div>
   );
 };

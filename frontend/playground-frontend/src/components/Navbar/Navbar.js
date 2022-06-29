@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import DSGTLogo from "../../images/logos/dsgt-logo-light.png";
+import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";
 import { FaGithub } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { LAYOUT } from "../../constants";
@@ -14,11 +14,11 @@ const Navbar = () => {
         Deep Learning Playground
       </a>
       <ul className="nav">
-        <li id="navElement">
+        {/* <li id="navElement">
           <a href="https://github.com/karkir0003/Deep-Learning-Playground">
             <FaGithub size="60" />
           </a>
-        </li>
+        </li> */}
         <li id="title-name"></li>
         <li className="navElement">
           <Link to="/">Home</Link>

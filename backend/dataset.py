@@ -127,11 +127,9 @@ def loader_from_zipped(
     
     def check_valid_transform(transform):
         if transform == DEFAULT_TRANSFORM:
-            print("WHATTT")
             return True
         to_tensor_idx = -1
         idx = 0
-        print("not default transform")
         for x in transform:
             if isinstance(x, transforms.ToTensor):
                 to_tensor_idx = idx
@@ -145,7 +143,6 @@ def loader_from_zipped(
                         if isinstance(x, y) and to_tensor_idx != -1:
                             raise ValueError(errorMessage.INVALID_TRANSFORM.value)
             idx+=1
-        print("totensorindex:", to_tensor_idx)
         if to_tensor_idx == -1:
             raise ValueError(errorMessage.INVALID_TRANSFORM.value)
         else:
@@ -184,7 +181,6 @@ def loader_from_zipped(
         raise ValueError(errorMessage.UNEQUAL_CLASSES.value)
 
     def create_transform(transform):
-        print("IAM HERE")
         if len(transform) == len(DEFAULT_TRANSFORM):
             ## possibility of same array
             i = 0
@@ -197,7 +193,9 @@ def loader_from_zipped(
             if i != len(transform):
                 ## different transformation
                 if check_valid_transform(transform):
-                        transform = transforms.Compose([x for x in transform if x is not None])
+                    transform = transforms.Compose(
+                        [x for x in transform if x is not None]
+                    )
         else:
             if check_valid_transform(transform):
                 transform = transforms.Compose([x for x in transform if x is not None])
@@ -213,10 +211,8 @@ def loader_from_zipped(
 
     print(train_dataset)
 
-    train_loader = DataLoader(train_dataset)
-    valid_loader = DataLoader(valid_dataset)
-
-    print(train_loader)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle)
+    valid_loader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=shuffle)
 
     return train_loader, valid_loader
 
@@ -226,4 +222,10 @@ if __name__ == "__main__":
     read_local_csv_file("test.csv")
 
     ## local testing
-    train_loader, valid_loader = loader_from_zipped("../tests/zip_files/double_zipped.Zip", train_transform=[transforms.ToTensor(),transforms.transforms.RandomChoice(transforms=[transforms.ToTensor()])])
+    train_loader, valid_loader = loader_from_zipped(
+        "../tests/zip_files/double_zipped.Zip",
+        train_transform=[
+            transforms.ToTensor(),
+            transforms.transforms.RandomChoice(transforms=[transforms.ToTensor()]),
+        ],
+    )

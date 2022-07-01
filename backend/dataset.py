@@ -74,6 +74,8 @@ class errorMessage(Enum):
 
 def loader_from_zipped(
     zipped_file,
+    batch_size,
+    shuffle = False,
     train_transform= DEFAULT_TRANSFORM,
     valid_transform= DEFAULT_TRANSFORM,
 ):

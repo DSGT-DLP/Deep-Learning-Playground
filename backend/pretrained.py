@@ -7,6 +7,8 @@ import timm
 import torch.nn as nn
 import time
 
+from dataset import get_unzipped, dataset_from_zipped
+from constants import DEFAULT_TRANSFORM
 from fastai.data.core import DataLoaders
 from fastai.vision.learner import has_pool_type
 from fastai.vision.learner import _update_first_layer
@@ -20,8 +22,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 def train(
-    train_dataset,
-    valid_dataset,
+    zipped_file,
     model_name,
     loss_func,
     n_epochs,
@@ -30,14 +31,20 @@ def train(
     lr=1e-3,
     cut=None,
     n_out=10,
+    train_transform=DEFAULT_TRANSFORM,
+    valid_transform=DEFAULT_TRANSFORM,
 ):
     """
     Args:
-        dls (fastai.core.DataLoaders) : dataloader to train
+        train_dataset : path to train dataset folder (unzipped)
+        valid_dataset : path to valid dataset folder (unzipped)
         model_name (str) : name of the model
         n_epochs (int) : number of epochs to train for
-        
     """
+
+    train_dataset, valid_dataset = dataset_from_zipped(
+        zipped_file, valid_transform=valid_transform, train_transform=train_transform
+    )
 
     dls = DataLoaders.from_dsets(
         train_dataset, valid_dataset, device=device

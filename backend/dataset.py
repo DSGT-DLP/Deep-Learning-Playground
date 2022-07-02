@@ -74,9 +74,9 @@ class errorMessage(Enum):
 
 
 def get_unzipped(zipped_file):
-    '''
+    """
     Creates and returns a train and valid directory path from a zipped file
-    '''
+    """
 
     if not path.exists(zipped_file):
         raise ValueError(errorMessage.FILE_NOT_EXIST.value)
@@ -116,7 +116,7 @@ def get_unzipped(zipped_file):
                     return train_dir, valid_dir
 
         return train_dir, valid_dir
-    
+
     train_dir, valid_dir = check_inside_file(os.path.join(UNZIPPED_DIR_NAME, "input"))
 
     if not train_dir or valid_dir == None:
@@ -149,15 +149,15 @@ def get_unzipped(zipped_file):
 
     return train_dir, valid_dir
 
-def dataset_from_zipped(
-    zipped_folder,
-    train_transform= DEFAULT_TRANSFORM,
-    valid_transform= DEFAULT_TRANSFORM):
 
-    '''
+def dataset_from_zipped(
+    zipped_folder, train_transform=DEFAULT_TRANSFORM, valid_transform=DEFAULT_TRANSFORM
+):
+
+    """
     Returns a dataset from a zipped folder applying train and valid transformation (if they are legal).
     Calls get_unzipped to create unzipped folder and obtain train and valid directories
-    '''
+    """
 
     train_dir, valid_dir = get_unzipped(zipped_folder)
 
@@ -179,7 +179,7 @@ def dataset_from_zipped(
                     for y in PIL_ONLY_TRANSFORMS:
                         if isinstance(x, y) and to_tensor_idx != -1:
                             raise ValueError(errorMessage.INVALID_TRANSFORM.value)
-            idx+=1
+            idx += 1
         if to_tensor_idx == -1:
             raise ValueError(errorMessage.INVALID_TRANSFORM.value)
         else:
@@ -217,10 +217,10 @@ def dataset_from_zipped(
 
 def loader_from_zipped(
     zipped_file,
-    batch_size = 32,
-    shuffle = False,
-    train_transform= DEFAULT_TRANSFORM,
-    valid_transform= DEFAULT_TRANSFORM
+    batch_size=32,
+    shuffle=False,
+    train_transform=DEFAULT_TRANSFORM,
+    valid_transform=DEFAULT_TRANSFORM,
 ):
     """
     Creates a dataloader from a zipped file
@@ -234,9 +234,9 @@ def loader_from_zipped(
         train_dataloader, valid_dataloader
     """
 
-    train_dataset, valid_dataset = dataset_from_zipped(zipped_file, 
-                                train_transform=train_transform, 
-                                valid_transform=valid_transform)
+    train_dataset, valid_dataset = dataset_from_zipped(
+        zipped_file, train_transform=train_transform, valid_transform=valid_transform
+    )
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle)
     valid_loader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=shuffle)

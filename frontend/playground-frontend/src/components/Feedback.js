@@ -126,11 +126,8 @@ async function send_feedback_mail(firstName, lastName, email, feedback) {
     body: JSON.stringify({
       email_address: "dsgtplayground@gmail.com",
       subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
-      body_text: feedback
-    }),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
+      body_text: feedback,
+    })
   })
   const resultJson = await runResult.json()
   return resultJson.success

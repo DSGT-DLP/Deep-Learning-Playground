@@ -26,4 +26,4 @@ dependencies:
      - torchvision
      - timm
      - wwf
-     - fastai
+     - fastai==2.7.4

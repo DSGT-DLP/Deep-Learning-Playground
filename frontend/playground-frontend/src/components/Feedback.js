@@ -11,6 +11,7 @@ export default function Feedback() {
   const [feedback, setFeedback] = useState("");
   const [recaptcha, setRecaptcha] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [successful, setSuccessful] = useState(true);
   return (
     <div>
       <div id="header-section">
@@ -83,6 +84,9 @@ export default function Feedback() {
         {submitted == true && recaptcha == "" && (
           <p>Please Complete ReCAPTCHA</p>
         )}
+        {successful == false  && (
+          <p>Error sending feedback!</p>
+        )}
         <button
           style={{
             backgroundColor: COLORS.dark_blue,
@@ -102,7 +106,8 @@ export default function Feedback() {
               email.trim() !== "" &&
               feedback.trim() !== ""
             ) {
-              // TODO: Send Mail
+              setSuccessful(send_feedback_mail(firstName, lastName, email, feedback))
+              console.log(successful)
             }
             console.log(recaptcha);
             console.log(firstName + lastName + email + feedback);
@@ -113,4 +118,20 @@ export default function Feedback() {
       </div>
     </div>
   );
+}
+
+async function send_feedback_mail(firstName, lastName, email, feedback) {
+  const runResult = await fetch("/sendemail", {
+    method: "POST",
+    body: JSON.stringify({
+      email_address: "dsgtplayground@gmail.com",
+      subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
+      body_text: feedback
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  })
+  const resultJson = await runResult.json()
+  return resultJson.success
 }

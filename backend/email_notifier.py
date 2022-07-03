@@ -29,7 +29,7 @@ def send_email(email_address,subject="",body_text="",attachment_array=[]):
     url = 'https://kwado68i00.execute-api.us-west-2.amazonaws.com/send_email'
     params = {'recipient':email_address,'subject':subject,'body_text':body_text}
     if attachment_array != None:
-        body = {'attachment_array':base64Array, 'file_names':fileNames}
+        body = {'attachment_array':[], 'file_names':[]}
         post = requests.post(url, params = params, json=body)
     else:
         body = {'attachment_array':None, 'file_names':None}

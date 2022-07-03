@@ -74,6 +74,93 @@ input {
   justify-content: center;
 }
 
+#nav-bar html {
+  /* box sizing border box specifies no padding, width = width etc */
+  box-sizing: border-box;
+}
+
+#nav-bar {
+  margin: 0;
+  position: sticky;
+  background-color: var(--primary);
+  color: white;
+  overflow: hidden;
+  z-index: 10;
+  top: 0vmax;
+  max-width: 100%;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#nav-bar .navElement {
+  display: block;
+  padding: 20px;
+  color: inherit;
+  float: right;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#nav-bar .navElement:hover {
+  background-color: #f7f7f7;
+}
+
+#nav-bar .navElement:hover > a {
+  color: var(--primary);
+}
+
+@media screen and (max-width: 600px) {
+  #nav-bar li:not(:first-child) {
+    display: none;
+  }
+}
+
+#nav-bar .nav {
+  padding-inline: 10px;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  box-sizing: inherit;
+  width: fit-content;
+  height: inherit;
+  overflow: hidden;
+}
+
+#nav-bar #title-name {
+  float: left;
+  font-size: large;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#nav-bar .nav li {
+  list-style: none;
+  float: left;
+}
+#nav-bar .nav li a {
+  text-decoration: none;
+  color: white;
+  font-size: 25px;
+}
+
+#nav-bar a.image-title {
+  margin-left: 10px;
+  color: white;
+  text-decoration: none;
+  font-size: 25px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#nav-bar a.image-title:hover,
+#nav-bar a.image-title:focus {
+  color: var(--secondary);
+}
+
 /* -------------------------------------------------------------------------- */
 /*	1. About and Wiki
 /* -------------------------------------------------------------------------- */

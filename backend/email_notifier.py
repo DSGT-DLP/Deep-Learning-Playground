@@ -32,6 +32,6 @@ def send_email(email_address,subject="",body_text="",attachment_array=[]):
         body = {'attachment_array':base64Array, 'file_names':fileNames}
         post = requests.post(url, params = params, json=body)
     else:
-        body = dict()
+        body = {'attachment_array':None, 'file_names':None}
         post = requests.post(url, params = params, json=body)
     return post

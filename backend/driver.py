@@ -18,7 +18,8 @@ from flask_cors import CORS
 from email_notifier import send_email
 from flask import send_from_directory
 
-app = Flask(__name__, static_folder=os.path.join(os.path.dirname(os.getcwd()), 'frontend', 'playground-frontend', 'build'))
+app = Flask(__name__, static_folder=os.path.join(os.path.dirname(
+    os.getcwd()), 'frontend', 'playground-frontend', 'build'))
 CORS(app)
 
 
@@ -94,6 +95,7 @@ def dl_drive(
         test_size (float, optional): size of test set in train/test split (percentage). Defaults to 0.2.
         epochs (int, optional): number of epochs/rounds to run model on
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
+    :return: a dictionary containing the epochs, train and test accuracy and loss results, each in a list
 
     NOTE:
          CSV_FILE_NAME is the data csv file for the torch model. Assumed that you have one dataset file
@@ -136,14 +138,17 @@ def dl_drive(
         train_loader, test_loader = get_dataloaders(
             X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=20
         )
-        train_deep_model(
+        train_loss_results = train_deep_model(
             model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
         )
         pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
 
+        return train_loss_results
+
     except Exception as e:
         raise e
+
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -153,9 +158,10 @@ def root(path):
     else:
         return send_from_directory(app.static_folder, 'index.html')
 
+
 @app.route("/run", methods=["GET", "POST"])
 def train_and_output():
-    print ("Hi")
+    print("Hi")
     request_data = json.loads(request.data)
 
     user_arch = request_data["user_arch"]
@@ -182,40 +188,31 @@ def train_and_output():
                 return
 
         try:
-            print(
-                dl_drive(
-                    user_arch=user_arch,
-                    criterion=criterion,
-                    optimizer_name=optimizer_name,
-                    problem_type=problem_type,
-                    target=target,
-                    features=features,
-                    default=default,
-                    test_size=test_size,
-                    epochs=epochs,
-                    shuffle=shuffle,
-                    json_csv_data_str=csvDataStr,
-                )
+            train_loss_results = dl_drive(
+                user_arch=user_arch,
+                criterion=criterion,
+                optimizer_name=optimizer_name,
+                problem_type=problem_type,
+                target=target,
+                features=features,
+                default=default,
+                test_size=test_size,
+                epochs=epochs,
+                shuffle=shuffle,
+                json_csv_data_str=csvDataStr
             )
             # If the length of the email is greater than 0 then that means a valid email has been
             # inputted for the ONNX file to be sent to the user.
             if len(email) != 0:
-                send_email(email,"Your ONNX file and visualizations from Deep Learning Playground","Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems.",[ONNX_MODEL, LOSS_VIZ, ACC_VIZ])
-            return (
-                jsonify(
-                    {
-                        "success": True,
-                        "message": "Dataset trained and results outputted successfully",
-                        "dl_results": csv_to_json(),
-                    }
-                ),
-                200,
-            )
+                send_email(email, "Your ONNX file and visualizations from Deep Learning Playground",
+                           "Attached is the ONNX file and visualizations that you just created in Deep Learning Playground. Please notify us if there are any problems.", [ONNX_MODEL, LOSS_VIZ, ACC_VIZ])
+            return jsonify({"success": True, "message": "Dataset trained and results outputted successfully", "dl_results": csv_to_json(), "train_loss_results": train_loss_results}), 200
 
         except Exception:
             print(traceback.format_exc())
             return (
-                jsonify({"success": False, "message": traceback.format_exc(limit=1)}),
+                jsonify(
+                    {"success": False, "message": traceback.format_exc(limit=1)}),
                 400,
             )
 

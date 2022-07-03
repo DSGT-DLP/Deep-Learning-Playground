@@ -12,9 +12,6 @@ html {
   top: 0vmax;
   max-width: 100%;
   width: 100vw;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 }
 
 .navElement {
@@ -26,33 +23,27 @@ html {
 
   font-family: Arial, Helvetica, sans-serif;
 }
-
 .navElement:hover {
   background-color: #f7f7f7;
 }
-
 .navElement:hover > a {
   color: #003058;
 }
-
 @media screen and (max-width: 600px) {
   #nav-bar li:not(:first-child) {
     display: none;
   }
 }
-
 .nav {
   padding-inline: 10px;
   max-width: 100%;
   max-height: 100%;
   margin: 0;
   box-sizing: inherit;
-  width: fit-content;
+  width: inherit;
   height: inherit;
   overflow: hidden;
 }
-
-
 #title-name {
   float: left;
   font-size: large;
@@ -64,16 +55,10 @@ html {
 
 .nav li {
   list-style: none;
-  float: left;
+  float: right;
 }
 .nav li a {
   text-decoration: none;
   color: white;
   font-size: 25px;
-}
-
-.image-title {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
 }

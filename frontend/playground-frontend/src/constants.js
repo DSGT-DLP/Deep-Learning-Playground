@@ -2,6 +2,7 @@ export const COLORS = {
   input: "#E2E2E2",
   layer: "#CD7BFF",
   addLayer: "#F2ECFF",
+  disabled: "#6c757d",
   background: "#F6F6FF",
   dark_blue: "#003058",  // primary
   gold: "#B3A36A",  // secondary

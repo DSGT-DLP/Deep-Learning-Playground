@@ -124,7 +124,7 @@ async function send_feedback_mail(firstName, lastName, email, feedback) {
   const runResult = await fetch("/sendemail", {
     method: "POST",
     body: JSON.stringify({
-      email_address: "dsgtplayground@gmail.com",
+      email_address: process.env.REACT_APP_EMAIL,
       subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
       body_text: feedback,
     })

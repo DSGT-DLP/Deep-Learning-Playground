@@ -24,3 +24,6 @@ dependencies:
   - ruamel.yaml
   - pip:
      - torchvision
+     - timm
+     - wwf
+     - fastai

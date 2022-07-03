@@ -107,10 +107,7 @@ export default function Feedback() {
               feedback.trim() !== ""
             ) {
               setSuccessful(send_feedback_mail(firstName, lastName, email, feedback))
-              console.log(successful)
             }
-            console.log(recaptcha);
-            console.log(firstName + lastName + email + feedback);
           }}
         >
           Submit
@@ -120,7 +117,7 @@ export default function Feedback() {
   );
 }
 
-async function send_feedback_mail(firstName, lastName, email, feedback) {
+const send_feedback_mail = async (firstName, lastName, email, feedback) => {
   const runResult = await fetch("/sendemail", {
     method: "POST",
     body: JSON.stringify({
@@ -132,3 +129,4 @@ async function send_feedback_mail(firstName, lastName, email, feedback) {
   const resultJson = await runResult.json()
   return resultJson.success
 }
+

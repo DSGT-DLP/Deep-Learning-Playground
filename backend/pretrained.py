@@ -1,22 +1,22 @@
-## Things to add in environment.yml
-# -fastai
-# timm
-# wwf
+# TODO: environment.yml needs fastai=2.7.4
 
 import timm
 import torch.nn as nn
 import time
+import torch.hub
+import torchvision
 
-from dataset import get_unzipped, dataset_from_zipped
+from dataset import loader_from_zipped
 from constants import DEFAULT_TRANSFORM
 from fastai.data.core import DataLoaders
+
 from fastai.vision.learner import has_pool_type
 from fastai.vision.learner import _update_first_layer
 from fastai.vision.all import *
 from fastai.vision import *
 from wwf.vision.timm import *
 from torchvision.models import *
-
+from torchvision import models
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -24,8 +24,10 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 def train(
     zipped_file,
     model_name,
+    batch_size,
     loss_func,
     n_epochs,
+    shuffle=False,
     optimizer=Adam,
     criterion=None,
     lr=1e-3,
@@ -42,13 +44,15 @@ def train(
         n_epochs (int) : number of epochs to train for
     """
 
-    train_dataset, valid_dataset = dataset_from_zipped(
-        zipped_file, valid_transform=valid_transform, train_transform=train_transform
+    train_loader, valid_loader = loader_from_zipped(
+        zipped_file,
+        batch_size=batch_size,
+        shuffle=shuffle,
+        train_transform=train_transform,
+        valid_transform=valid_transform,
     )
 
-    dls = DataLoaders.from_dsets(
-        train_dataset, valid_dataset, device=device
-    )  ## Creates dataloaders compatible with fastai using DATASETS /TODO: Consider if using datasets is the best way??
+    dls = DataLoaders(train_loader, valid_loader)
 
     if is_timm(model_name):
         learner = local_timm_learner(
@@ -57,9 +61,9 @@ def train(
             loss_func=loss_func,
             lr=lr,
             opt_func=optimizer,
-            criterion=criterion,
             n_out=n_out,
             cut=cut,
+            normalize=False,
         )
     elif is_pytorch(model_name):
         model = eval("torchvision.models.{}".format(model_name))
@@ -72,10 +76,12 @@ def train(
             n_out=n_out,
             pretrained=True,
             cut=cut,
+            normalize=False,
         )
     start = time.time()
     learner.fit(n_epochs)
     end = time.time()
+    print(end - start)
 
 
 def get_num_features(body):
@@ -198,7 +204,7 @@ def is_pytorch(model_name):
     return False
 
 
-# TODO: Can possibly add this feature?? (Talk to Karthik about this)
+# TODO: Can possibly add this feature??
 ## The feature below allows you to use a pretrained model from any source repository
 
 # def is_pytorch(model_name, github_repo="pytorch/vision"):
@@ -206,3 +212,16 @@ def is_pytorch(model_name):
 #         if model_name == i:
 #             return True
 #     return False
+
+
+# local testing
+if __name__ == "__main__":
+
+    train(
+        "../tests/zip_files/double_zipped.zip",
+        "resnet34",
+        batch_size=2,
+        loss_func=nn.CrossEntropyLoss(),
+        n_epochs=40,
+    )
+    ## resent34 --> timm, alexnet --> pytorch

@@ -1,66 +1,33 @@
-from constants import (
-    SENDER,
-    AWS_REGION,
-    CHARSET,
-)
-import boto3
-from botocore.exceptions import ClientError
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.application import MIMEApplication
-import os
+import base64
+import requests
+import re
 
-
-def send_email(email_address,subject,body_text,attachment_array):
+def send_email(email_address,subject="",body_text="",attachment_array=[]):
     """
-    If the user inputs a valid email in the frontend, then send_email sends the created ONNX
-    file to the user's email using AWS Simple Email Service (SES). Use AWS CLI to configure
-    AWS key and secret key in order for this function to run.
+    send_email function takes data about  email and sends a post request
+    to API gateway which calls AWS Lambda which calls AWS SES to then 
+    send an email to email_address.
 
     Args:
         email_address (str): email address of user
-        subject (str): subject of the email that needs to be sent
-        body_text(str): body of the email that needs to be sent
-        attachement_array(array of strings): filepaths of the attachements that need to be sent
+        subject (str,optional): subject of the email that needs to be sent
+        body_text(str,optional): body of the email that needs to be sent
+        attachment_array(array of strings,optional): file paths as strings
     """
-
-    client = boto3.client("ses", region_name=AWS_REGION)
-
-    msg = MIMEMultipart("mixed")
-    msg["Subject"] = subject
-    msg["From"] = SENDER
-    msg["To"] = email_address
-
-    msg_body = MIMEMultipart("alternative")
-
-    textpart = MIMEText(body_text.encode(CHARSET), "plain", CHARSET)
-
-    msg_body.attach(textpart)
-
+    regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+    if not re.fullmatch(regex, email_address):
+        raise ValueError("Please enter a valid email to the send_email function")
+    fileNames = [fileName.split('/')[-1] for fileName in attachment_array]
+    base64Array = []
     for attachment in attachment_array:
-        att = MIMEApplication(open(attachment, "rb").read())
-        att.add_header(
-            "Content-Disposition", "attachment", filename=os.path.basename(attachment)
-        )
-        msg.attach(att)
+        with open(attachment, "rb") as file:
+            my_string = base64.b64encode(file.read())
+            my_string = my_string.decode('utf-8')
+        base64Array.append(my_string)
 
+    url = 'https://kwado68i00.execute-api.us-west-2.amazonaws.com/send_email'
+    params = {'recipient':email_address,'subject':subject,'body_text':body_text}
+    body = {'attachment_array':base64Array, 'file_names':fileNames}
 
-    # Attach the multipart/alternative child container to the multipart/mixed
-    # parent container.
-    msg.attach(msg_body)
-
-    try:
-        # Provide the contents of the email.
-        response = client.send_raw_email(
-            Source=SENDER,
-            Destinations=[email_address],
-            RawMessage={
-                "Data": msg.as_string(),
-            },
-        )
-    # Display an error if something goes wrong.
-    except ClientError as e:
-        print(e.response["Error"]["Message"])
-    else:
-        print("Email sent! Message ID:"),
-        print(response["MessageId"])
+    post = requests.post(url, params = params, json=body)
+    return post

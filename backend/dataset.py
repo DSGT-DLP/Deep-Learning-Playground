@@ -1,4 +1,3 @@
-from tabnanny import check
 import pandas as pd
 import urllib.request as request
 import csv
@@ -161,38 +160,38 @@ def dataset_from_zipped(
 
     train_dir, valid_dir = get_unzipped(zipped_folder)
 
-    ## Checks for valid transformation sequence
-    # TODO: Add a try and except blockfor valid transform since there are many cases and pytorch gives them
-
-    # def check_valid_transform(transform):
-    #     if transform == DEFAULT_TRANSFORM:
-    #         return True
-    #     to_tensor_idx = -1
-    #     idx = 0
-    #     for x in transform:
-    #         if isinstance(x, transforms.ToTensor):
-    #             to_tensor_idx = idx
-    #         else:
-    #             if to_tensor_idx == -1:
-    #                 for y in TENSOR_ONLY_TRANSFORMS:
-    #                     if isinstance(x, y):
-    #                         raise ValueError(errorMessage.INVALID_TRANSFORM.value)
-    #             else:
-    #                 for y in PIL_ONLY_TRANSFORMS:
-    #                     if isinstance(x, y) and to_tensor_idx != -1:
-    #                         raise ValueError(errorMessage.INVALID_TRANSFORM.value)
-    #         idx += 1
-    #     if to_tensor_idx == -1:
-    #         raise ValueError(errorMessage.INVALID_TRANSFORM.value)
-    #     else:
-    #         return True
+    def check_valid_transform(transform):
+        if not transform:
+            raise ValueError(errorMessage.INVALID_TRANSFORM.value)
+        if transform == DEFAULT_TRANSFORM:
+            return True
+        to_tensor_idx = -1
+        idx = 0
+        for x in transform:
+            if isinstance(x, transforms.ToTensor):
+                to_tensor_idx = idx
+            else:
+                if to_tensor_idx == -1:
+                    for y in TENSOR_ONLY_TRANSFORMS:
+                        if isinstance(x, y):
+                            raise ValueError(errorMessage.INVALID_TRANSFORM.value)
+                else:
+                    for y in PIL_ONLY_TRANSFORMS:
+                        if isinstance(x, y) and to_tensor_idx != -1:
+                            raise ValueError(errorMessage.INVALID_TRANSFORM.value)
+            idx += 1
+        if to_tensor_idx == -1:
+            raise ValueError(errorMessage.INVALID_TRANSFORM.value)
+        else:
+            return True
 
     def create_transform(transform):
-        '''
+        """
         Converts a list of transform to a valid transform
         Assumes the list to be valid
-        '''
-        return transforms.Compose([x for x in transform])
+        """
+        if check_valid_transform(transform):
+            return transforms.Compose([x for x in transform])
 
     train_transform = create_transform(train_transform)
     valid_transform = create_transform(valid_transform)
@@ -226,23 +225,25 @@ def loader_from_zipped(
         zipped_file, train_transform=train_transform, valid_transform=valid_transform
     )
 
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True)
-    valid_loader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True)
+    train_loader = DataLoader(
+        train_dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True
+    )
+    valid_loader = DataLoader(
+        valid_dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True
+    )
 
     return train_loader, valid_loader
 
 
 if __name__ == "__main__":
-    # read_dataset("https://raw.githubusercontent.com/karkir0003/dummy/main/job.csv")
-    # read_local_csv_file("test.csv")
+    read_dataset("https://raw.githubusercontent.com/karkir0003/dummy/main/job.csv")
+    read_local_csv_file("test.csv")
 
-    ## local testing
-    # train_loader, valid_loader = loader_from_zipped(
-    #     "../tests/zip_files/double_zipped.Zip",
-    #     train_transform=[
-    #         transforms.ToTensor(),
-    #         transforms.transforms.RandomChoice(transforms=[transforms.ToTensor()]),
-    #     ],
-    # )
-
-    dataset_from_zipped('../tests/zip_files/double_zipped.zip')
+    # local testing
+    train_loader, valid_loader = loader_from_zipped(
+        "../tests/zip_files/double_zipped.Zip",
+        train_transform=[
+            transforms.ToTensor(),
+            transforms.transforms.RandomChoice(transforms=[transforms.ToTensor()]),
+        ],
+    )

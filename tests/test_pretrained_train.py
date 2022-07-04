@@ -2,7 +2,26 @@ import pytest
 import torch.nn
 from backend.pretrained import get_num_features, train
 from fastai.vision.all import Adam, SGD
+import os
 import timm
+
+folder = '' if (os.getcwd()).split('\\')[-1].split('/')[-1] == 'tests' else 'tests'
+folder = os.path.join(folder, "zip_files/double_zipped.zip")
+
+@pytest.mark.parametrize(
+    "file_path",
+    [
+        (folder)
+    ],
+)
+def test_path_structure(file_path):
+    try:
+        train(
+            folder, "alexnet", 2, torch.nn.CrossEntropyLoss(), 3, n_out=2
+        )
+        assert True
+    except:
+        assert False
 
 # timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075
 # torch: others

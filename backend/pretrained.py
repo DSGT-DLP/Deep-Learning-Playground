@@ -8,10 +8,7 @@ import time
 import torch.hub
 import torchvision
 
-from dataset import loader_from_zipped
-from constants import DEFAULT_TRANSFORM
 from fastai.data.core import DataLoaders
-
 from fastai.vision.learner import has_pool_type
 from fastai.vision.learner import _update_first_layer
 from fastai.vision.all import *
@@ -19,6 +16,13 @@ from fastai.vision import *
 from wwf.vision.timm import *
 from torchvision.models import *
 from torchvision import models
+
+try:
+    from dataset import loader_from_zipped
+    from constants import DEFAULT_TRANSFORM
+except:
+    from backend.dataset import loader_from_zipped
+    from backend.constants import DEFAULT_TRANSFORM
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 

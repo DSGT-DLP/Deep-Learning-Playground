@@ -13,12 +13,12 @@ main_dir = '' if (os.getcwd()).split('\\')[-1].split('/')[-1] == 'tests' else 't
     "path_to_file,model_name",
     [
         (os.path.join(main_dir, "zip_files/double_zipped.zip"), "adv_inception_v3"),
-        (os.path.join(main_dir, "zip_files/double_zipped.zip", "resnet50")),
+        (os.path.join(main_dir, "zip_files/double_zipped.zip"), "resnet50"),
         (os.path.join(main_dir, "zip_files/double_zipped.zip"), "vit_small_r26_s32_224"),
         (os.path.join(main_dir, "zip_files/double_zipped.zip"), "tf_mobilenetv3_small_075"),
         (os.path.join(main_dir, "zip_files/double_zipped.zip"), "EfficientNet"),
-        (os.path.join(main_dir, "zip_files/double_zipped.zip", "googlenet")),
-        (os.path.join(main_dir, "zip_files/double_zipped.zip", "vgg19")),
+        (os.path.join(main_dir, "zip_files/double_zipped.zip"), "googlenet"),
+        (os.path.join(main_dir, "zip_files/double_zipped.zip"), "vgg19"),
         (os.path.join(main_dir, "zip_files/double_zipped.zip"), "wide_resnet50_2"),
     ],
 )

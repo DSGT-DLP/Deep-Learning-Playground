@@ -5,37 +5,21 @@ from fastai.vision.all import Adam, SGD
 import os
 import timm
 
-folder = '' if (os.getcwd()).split('\\')[-1].split('/')[-1] == 'tests' else 'tests'
-folder = os.path.join(folder, "zip_files/double_zipped.zip")
-
-@pytest.mark.parametrize(
-    "file_path",
-    [
-        (folder)
-    ],
-)
-def test_path_structure(file_path):
-    try:
-        train(
-            folder, "alexnet", 2, torch.nn.CrossEntropyLoss(), 3, n_out=2
-        )
-        assert True
-    except:
-        assert False
+main_dir = '' if (os.getcwd()).split('\\')[-1].split('/')[-1] == 'tests' else 'tests'
 
 # timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075
 # torch: others
 @pytest.mark.parametrize(
     "path_to_file,model_name",
     [
-        ("zip_files/double_zipped.zip", "adv_inception_v3"),
-        ("zip_files/double_zipped.zip", "resnet50"),
-        ("zip_files/double_zipped.zip", "vit_small_r26_s32_224"),
-        ("zip_files/double_zipped.zip", "tf_mobilenetv3_small_075"),
-        ("zip_files/double_zipped.zip", "EfficientNet"),
-        ("zip_files/double_zipped.zip", "googlenet"),
-        ("zip_files/double_zipped.zip", "vgg19"),
-        ("zip_files/double_zipped.zip", "wide_resnet50_2"),
+        (os.path.join(main_dir, "zip_files/double_zipped.zip"), "adv_inception_v3"),
+        (os.path.join("zip_files/dmain_dir, ouble_zipped.zip", "resnet50")),
+        (os.path.join(main_dir, "zip_files/double_zipped.zip"), "vit_small_r26_s32_224"),
+        (os.path.join(main_dir, "zip_files/double_zipped.zip"), "tf_mobilenetv3_small_075"),
+        (os.path.join(main_dir, "zip_files/double_zipped.zip"), "EfficientNet"),
+        (os.path.join("zip_files/domain_dir, uble_zipped.zip", "googlenet")),
+        (os.path.join("zip_filemain_dir, s/double_zipped.zip", "vgg19")),
+        (os.path.join(main_dir, "zip_files/double_zipped.zip"), "wide_resnet50_2"),
     ],
 )
 def test_train_valid_input_diff_models(path_to_file, model_name):
@@ -53,9 +37,9 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
 @pytest.mark.parametrize(
     "path_to_file,model_name",
     [
-        ("zip_files/double_zipped.zip", "resnet50"),
-        ("zip_files/valid_2.zip", "resnet50"),
-        ("zip_files/valid_3.zip", "resnet50"),
+        (os.path.join("zip_files/dmain_dir, ouble_zipped.zip", "resnet50")),
+        (os.path.join(main_dir, "zip_files/valid_2.zip"), "resnet50"),
+        (os.path.join(main_dir, "zip_files/valid_3.zip"), "resnet50"),
     ],
 )
 def test_train_diff_valid_input_files(path_to_file, model_name):
@@ -92,7 +76,7 @@ def test_train_valid_input_with_params(
     model_name, batch_size, loss_func, n_epochs, shuffle, optimizer, lr, n_out
 ):
     train_loader, learner = train(
-        "zip_files/double_zipped.zip",
+        os.path.join(main_dir,"zip_files/double_zipped.zip"),
         model_name,
         batch_size,
         loss_func,

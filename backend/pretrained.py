@@ -82,6 +82,8 @@ def train(
     learner.fit(n_epochs)
     end = time.time()
     print(end - start)
+    print(learner.loss_func)
+    return train_loader, learner
 
 
 def get_num_features(body):

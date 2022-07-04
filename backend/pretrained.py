@@ -1,3 +1,7 @@
+# TODO: 
+# Estabilish a .to(device) in dataloaders and models
+# (Enhancement) Allow other git repo feature
+
 import timm
 import torch.nn as nn
 import time
@@ -234,5 +238,9 @@ if __name__ == "__main__":
         batch_size=2,
         loss_func=nn.CrossEntropyLoss(),
         n_epochs=40,
+        valid_transform=[
+            torchvision.transforms.Resize((256, 256)),
+            torchvision.transforms.ToTensor(),
+        ],
     )
     # ## resent34, vit_small_r26_s32_224 --> timm, alexnet --> pytorch

@@ -1,5 +1,3 @@
-# TODO: environment.yml needs fastai=2.7.4
-
 import timm
 import torch.nn as nn
 import time
@@ -29,18 +27,18 @@ def train(
     n_epochs,
     shuffle=False,
     optimizer=Adam,
-    criterion=None,
     lr=1e-3,
     cut=None,
     n_out=10,
     train_transform=DEFAULT_TRANSFORM,
     valid_transform=DEFAULT_TRANSFORM,
+    n_in=3,
 ):
     """
     Args:
-        train_dataset : path to train dataset folder (unzipped)
-        valid_dataset : path to valid dataset folder (unzipped)
+        zipped_file(str Path) : Path to the zipped file which contains data in the correct format
         model_name (str) : name of the model
+        batch_size (int) : batch_size for the dataloaders
         n_epochs (int) : number of epochs to train for
     """
 
@@ -64,6 +62,7 @@ def train(
             n_out=n_out,
             cut=cut,
             normalize=False,
+            n_in=n_in,
         )
     elif is_pytorch(model_name):
         model = eval("torchvision.models.{}".format(model_name))
@@ -110,7 +109,10 @@ def get_num_features(body):
 
 
 def create_timm_body(arch: str, pretrained=True, cut=None, n_in=3):
-    "Creates a body from any model in the `timm` library."
+    """
+    Creates a body from any model in the `timm` library.
+    Code adapted from https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py
+    """
     model = timm.create_model(arch, pretrained=pretrained, num_classes=10)
     _update_first_layer(model, n_in, pretrained)
     if cut is None:
@@ -123,6 +125,8 @@ def create_timm_body(arch: str, pretrained=True, cut=None, n_in=3):
             cut = -1
             pass
     if isinstance(cut, int):
+        if cut == 0:
+            cut = -1
         return nn.Sequential(*list(model.children())[:cut])
     elif callable(cut):
         return cut(model)
@@ -141,7 +145,10 @@ def create_timm_model(
     concat_pool=True,
     **kwargs
 ):
-    "Create custom architecture using `arch`, `n_in` and `n_out` from the `timm` library"
+    """
+    Create custom architecture using `arch`, `n_in` and `n_out` from the `timm` library
+    Code adapted from https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py
+    """
     body = create_timm_body(arch, pretrained, None, n_in)
     if custom_head is None:
         nf = get_num_features(body)
@@ -164,9 +171,13 @@ def local_timm_learner(
     y_range=None,
     config=None,
     n_out=None,
-    normalize=True,
+    n_in=3,
+    normalize=False,
     **kwargs
 ):
+    """
+    Code adapted from https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py
+    """
     "Build a convnet style learner from `dls` and `arch` using the `timm` library"
     if config is None:
         config = {}
@@ -178,7 +189,7 @@ def local_timm_learner(
     if y_range is None and "y_range" in config:
         y_range = config.pop("y_range")
     model = create_timm_model(
-        arch, n_out, default_split, pretrained, y_range=y_range, **config
+        arch, n_out, default_split, pretrained, y_range=y_range, n_in=n_in, **config
     )
     learn = Learner(dls, model, loss_func=loss_func, splitter=default_split, **kwargs)
     if pretrained:
@@ -188,7 +199,7 @@ def local_timm_learner(
 
 def is_timm(model_name):
     """
-        Checks if the model_name is present in the timm models catalogue
+    Checks if the model_name is present in the timm models catalogue
     """
     for i in range(len(timm.list_models(pretrained=True))):
         if model_name == timm.list_models(pretrained=True)[i]:
@@ -198,7 +209,7 @@ def is_timm(model_name):
 
 def is_pytorch(model_name):
     """
-        Checks if the model_name is in torchvision.models catalogue
+    Checks if the model_name is in torchvision.models catalogue
     """
     for i in dir(models):
         if i == model_name:
@@ -221,9 +232,9 @@ if __name__ == "__main__":
 
     train(
         "../tests/zip_files/double_zipped.zip",
-        "resnet34",
+        "alexnet",
         batch_size=2,
         loss_func=nn.CrossEntropyLoss(),
         n_epochs=40,
     )
-    ## resent34 --> timm, alexnet --> pytorch
+    # ## resent34, vit_small_r26_s32_224 --> timm, alexnet --> pytorch

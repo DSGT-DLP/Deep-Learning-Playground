@@ -5,6 +5,7 @@ from fastai.vision.all import Adam, SGD
 import timm
 
 # timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075
+# torch: others
 @pytest.mark.parametrize(
     "path_to_file,model_name",
     [
@@ -12,6 +13,10 @@ import timm
         ("zip_files/double_zipped.zip", "resnet50"),
         ("zip_files/double_zipped.zip", "vit_small_r26_s32_224"),
         ("zip_files/double_zipped.zip", "tf_mobilenetv3_small_075"),
+        ("zip_files/double_zipped.zip", "EfficientNet"),
+        ("zip_files/double_zipped.zip", "googlenet"),
+        ("zip_files/double_zipped.zip", "vgg19"),
+        ("zip_files/double_zipped.zip", "wide_resnet50_2"),
     ],
 )
 def test_train_valid_input_diff_models(path_to_file, model_name):
@@ -26,8 +31,24 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
     assert train_loader.batch_size == 8
 
 
-# def test_train_diff_valid_input_files(path_to_file, model_name):
-#     pass
+@pytest.mark.parametrize(
+    "path_to_file,model_name",
+    [
+        ("zip_files/double_zipped.zip", "resnet50"),
+        ("zip_files/valid_2.zip", "resnet50"),
+        ("zip_files/valid_3.zip", "resnet50"),
+    ],
+)
+def test_train_diff_valid_input_files(path_to_file, model_name):
+    train_loader, learner = train(
+        path_to_file, model_name, 8, torch.nn.CrossEntropyLoss(), 3, n_out=2
+    )
+
+    assert learner.epoch == 2
+    assert type(learner.loss_func) is torch.nn.CrossEntropyLoss
+    assert get_num_features(learner) == 2
+
+    assert train_loader.batch_size == 8
 
 
 @pytest.mark.parametrize(

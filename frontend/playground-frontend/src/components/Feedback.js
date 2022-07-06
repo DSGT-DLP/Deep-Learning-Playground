@@ -1,8 +1,8 @@
 import EmailInput from "./EmailInput";
-import React, { useState } from "react";
-import { COLORS, GENERAL_STYLES } from "../constants";
-import TitleText from "./mini_components/TitleText";
 import ReCAPTCHA from "react-google-recaptcha";
+import React, { useState } from "react";
+import TitleText from "./mini_components/TitleText";
+import { COLORS, GENERAL_STYLES } from "../constants";
 
 export default function Feedback() {
   const [email, setEmail] = useState("");
@@ -11,30 +11,47 @@ export default function Feedback() {
   const [feedback, setFeedback] = useState("");
   const [recaptcha, setRecaptcha] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [successful, setSuccessful] = useState(true);
+  const [successful, setSuccessful] = useState(false);
+
+  const onClickSubmit = () => {
+    setSubmitted(true);
+    if (
+      firstName.trim() &&
+      lastName.trim() &&
+      email.trim() &&
+      feedback.trim()
+    ) {
+      setSuccessful(send_feedback_mail(firstName, lastName, email, feedback));
+    }
+  };
+
+  if (successful) {
+    return (
+      <>
+        <div id="header-section">
+          <h1 className="header">Deep Learning Playground Feedback</h1>
+        </div>
+
+        <div className="sections" style={styles.content_section}>
+          <p>Feedback submitted!</p>
+        </div>
+      </>
+    );
+  }
+
   return (
-    <div>
+    <>
       <div id="header-section">
         <h1 className="header">Deep Learning Playground Feedback</h1>
       </div>
 
-      <div
-        className="sections"
-        style={{
-          // marginLeft: "3%",
-          paddingTop: "1%",
-          // paddingLeft: "2%",
-          paddingBottom: "1%",
-          backgroundColor: "#f6f6ff",
-          // marginRight: "5%",
-        }}
-      >
+      <div className="sections" style={styles.content_section}>
         <h2>Feedback Form</h2>
         <p>
-          {" "}
           Fill this feedback form for any bugs, feature requests or complains!
           We'll get back to as soon as we can.
         </p>
+
         <form>
           <TitleText text="First Name" />
           <input
@@ -42,78 +59,54 @@ export default function Feedback() {
             placeholder="John"
             onChange={(e) => setFirstName(e.target.value)}
           />
-          {submitted == true && firstName.trim() == "" && recaptcha !== "" && (
-            <p>First Name cannot be blank</p>
+          {submitted && firstName.trim() === "" && recaptcha !== "" && (
+            <p style={GENERAL_STYLES.error_text}>First Name cannot be blank</p>
           )}
-          <TitleText text="Last name " />
+
+          <TitleText text="Last name" />
           <input
             type="text"
             placeholder="Doe"
             onChange={(e) => setLastName(e.target.value)}
           />
-          {submitted == true && lastName.trim() == "" && recaptcha != "" && (
-            <p>Last Name cannot be blank</p>
+          {submitted && lastName.trim() === "" && recaptcha !== "" && (
+            <p style={GENERAL_STYLES.error_text}>Last Name cannot be blank</p>
           )}
+
+          <TitleText text="Email" />
           <EmailInput setEmail={setEmail} />
-          {submitted == true && email.trim() == "" && recaptcha !== "" && (
-            <p>Email Cannot be blank</p>
+          {submitted && email.trim() === "" && recaptcha !== "" && (
+            <p style={GENERAL_STYLES.error_text}>Email Cannot be blank</p>
           )}
+
           <TitleText text="Feedback" />
           <textarea
             placeholder="Type your feedback here"
             rows="15"
             cols="60"
-            style={{
-              borderRadius: "10px",
-              borderWidth: "0.5px",
-              padding: "5px",
-            }}
+            style={styles.feedback_area}
             onChange={(e) => setFeedback(e.target.value)}
           />
-          {submitted == true && feedback == "" && recaptcha != "" && (
-            <p>Please enter some feedback</p>
+          {submitted && feedback === "" && recaptcha !== "" && (
+            <p style={GENERAL_STYLES.error_text}>Please enter some feedback</p>
           )}
         </form>
+
         <div style={{ marginTop: "2%" }} />
+
         <ReCAPTCHA
           sitekey={process.env.REACT_APP_SITE_KEY}
-          onChange={(e) => {
-            setRecaptcha(e);
-          }}
+          onChange={(e) => setRecaptcha(e)}
         />
-        {submitted == true && recaptcha == "" && (
-          <p>Please Complete ReCAPTCHA</p>
+        {submitted && recaptcha === "" && (
+          <p style={GENERAL_STYLES.error_text}>Please Complete ReCAPTCHA</p>
         )}
-        {successful == false  && (
-          <p>Error sending feedback!</p>
-        )}
-        <button
-          style={{
-            backgroundColor: COLORS.dark_blue,
-            border: "none",
-            height: "100%",
-            width: "10%",
-            ...GENERAL_STYLES.p,
-            fontSize: 25,
-            color: "white",
-            marginTop: "2%",
-          }}
-          onClick={() => {
-            setSubmitted(true);
-            if (
-              firstName.trim() !== "" &&
-              lastName.trim() !== "" &&
-              email.trim() !== "" &&
-              feedback.trim() !== ""
-            ) {
-              setSuccessful(send_feedback_mail(firstName, lastName, email, feedback))
-            }
-          }}
-        >
+
+        <button style={styles.submit_button} onClick={onClickSubmit}>
           Submit
         </button>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -124,9 +117,31 @@ const send_feedback_mail = async (firstName, lastName, email, feedback) => {
       email_address: process.env.REACT_APP_EMAIL,
       subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
       body_text: feedback,
-    })
-  })
-  const resultJson = await runResult.json()
-  return resultJson.success
-}
+    }),
+  });
+  const resultJson = await runResult.json();
+  return resultJson.success;
+};
 
+const styles = {
+  submit_button: {
+    ...GENERAL_STYLES.p,
+    backgroundColor: COLORS.dark_blue,
+    border: "none",
+    color: "white",
+    cursor: "pointer",
+    fontSize: 25,
+    marginTop: "2%",
+    padding: 8,
+  },
+  feedback_area: {
+    borderRadius: "10px",
+    borderWidth: "0.5px",
+    padding: "5px",
+  },
+  content_section: {
+    backgroundColor: COLORS.background,
+    paddingBottom: "1%",
+    paddingTop: "1%",
+  },
+};

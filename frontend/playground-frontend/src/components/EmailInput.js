@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TitleText from "./mini_components/TitleText";
+import { GENERAL_STYLES } from "../constants";
 
 const EmailInput = (props) => {
   const { setEmail } = props;
@@ -9,11 +9,9 @@ const EmailInput = (props) => {
 
   function updateEmailInput(emailInput) {
     setEmail(emailInput);
-    console.log(emailInput);
   }
 
   function validateEmail(email) {
-    console.log("Validating email!");
     if (!email?.length || !email.match(validRegex)) {
       setValue(true);
       return;
@@ -23,18 +21,15 @@ const EmailInput = (props) => {
 
   return (
     <>
-      <TitleText text="Email" />
       <input
         style={{ width: "25%" }}
-        placeholder="Optional email input"
-        onChange={(e) => {
-          updateEmailInput(e.target.value);
-        }}
-        onBlur={(e) => {
-          validateEmail(e.target.value);
-        }}
+        placeholder="someone@example.com"
+        onChange={(e) => updateEmailInput(e.target.value)}
+        onBlur={(e) => validateEmail(e.target.value)}
       />
-      {emailNotValid && <p>Please enter a valid email</p>}
+      {emailNotValid && (
+        <p style={GENERAL_STYLES.error_text}>Please enter a valid email</p>
+      )}
     </>
   );
 };

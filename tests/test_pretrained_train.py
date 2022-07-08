@@ -5,7 +5,7 @@ from fastai.vision.all import Adam, SGD
 import os
 import timm
 
-main_dir = '' if (os.getcwd()).split('\\')[-1].split('/')[-1] == 'tests' else 'tests'
+main_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "tests"
 
 # timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075
 # torch: others
@@ -14,8 +14,14 @@ main_dir = '' if (os.getcwd()).split('\\')[-1].split('/')[-1] == 'tests' else 't
     [
         (os.path.join(main_dir, "zip_files/double_zipped.zip"), "adv_inception_v3"),
         (os.path.join(main_dir, "zip_files/double_zipped.zip"), "resnet50"),
-        (os.path.join(main_dir, "zip_files/double_zipped.zip"), "vit_small_r26_s32_224"),
-        (os.path.join(main_dir, "zip_files/double_zipped.zip"), "tf_mobilenetv3_small_075"),
+        (
+            os.path.join(main_dir, "zip_files/double_zipped.zip"),
+            "vit_small_r26_s32_224",
+        ),
+        (
+            os.path.join(main_dir, "zip_files/double_zipped.zip"),
+            "tf_mobilenetv3_small_075",
+        ),
         (os.path.join(main_dir, "zip_files/double_zipped.zip"), "EfficientNet"),
         (os.path.join(main_dir, "zip_files/double_zipped.zip"), "googlenet"),
         (os.path.join(main_dir, "zip_files/double_zipped.zip"), "vgg19"),
@@ -24,7 +30,7 @@ main_dir = '' if (os.getcwd()).split('\\')[-1].split('/')[-1] == 'tests' else 't
 )
 def test_train_valid_input_diff_models(path_to_file, model_name):
     train_loader, learner = train(
-        path_to_file, model_name, 8, torch.nn.CrossEntropyLoss(), 3, n_out=2
+        path_to_file, model_name, 8, torch.nn.CrossEntropyLoss(), 3, n_classes=2
     )
 
     assert learner.epoch == 2
@@ -44,7 +50,7 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
 )
 def test_train_diff_valid_input_files(path_to_file, model_name):
     train_loader, learner = train(
-        path_to_file, model_name, 8, torch.nn.CrossEntropyLoss(), 3, n_out=2
+        path_to_file, model_name, 8, torch.nn.CrossEntropyLoss(), 3, n_classes=2
     )
 
     assert learner.epoch == 2
@@ -55,7 +61,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name):
 
 
 @pytest.mark.parametrize(
-    "model_name,batch_size,loss_func,n_epochs,shuffle,optimizer,lr,n_out",
+    "model_name,batch_size,loss_func,n_epochs,shuffle,optimizer,lr,n_classes",
     [
         ("tf_mobilenetv3_small_075", 24, torch.nn.MSELoss(), 3, True, Adam, 1e-4, 3),
         ("tv_resnet152", 4, torch.nn.MSELoss(), 3, False, Adam, 3e-4, 2),
@@ -73,10 +79,10 @@ def test_train_diff_valid_input_files(path_to_file, model_name):
     ],
 )
 def test_train_valid_input_with_params(
-    model_name, batch_size, loss_func, n_epochs, shuffle, optimizer, lr, n_out
+    model_name, batch_size, loss_func, n_epochs, shuffle, optimizer, lr, n_classes
 ):
     train_loader, learner = train(
-        os.path.join(main_dir,"zip_files/double_zipped.zip"),
+        os.path.join(main_dir, "zip_files/double_zipped.zip"),
         model_name,
         batch_size,
         loss_func,
@@ -85,13 +91,13 @@ def test_train_valid_input_with_params(
         optimizer,
         None,
         lr,
-        n_out=n_out,
+        n_classes=n_classes,
     )
 
     assert learner.opt_func.__name__ == optimizer.__name__
     assert learner.epoch == n_epochs - 1
     assert type(learner.loss_func) is type(loss_func)
-    assert get_num_features(learner) == n_out
+    assert get_num_features(learner) == n_classes
     assert learner.lr == lr
 
     assert train_loader.batch_size == batch_size

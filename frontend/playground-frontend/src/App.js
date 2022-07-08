@@ -1,17 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Title from "./components/Title";
+import { About, Wiki, Feedback, Navbar } from "./components";
 import Home from "./Home";
-import About from "./components/About/About";
-import Wiki from "./components/Wiki/Wiki";
-import Feedback from "./components/FeedBackForm";
-import Footer from "./components/Footer/Footer";
 import "./App.css";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   return (
     <div>
       <Router>
-        <Title />
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/About" element={<About />} />

@@ -47,12 +47,6 @@ class StatusDDBUtil:
         self.table_name = table_name
         self.dynamodb = boto3.resource('dynamodb', region)
         self.table = table if table else boto3.resource('dynamodb', region).Table(self.table_name)
-        # self.table = boto3.resource('dynamodb', region).Table(self.table_name) else self.create_table()
-        # self.table = None 
-        # if (table is None):
-        #     self.create_table()
-        # else:
-        #     self.table = boto3.resource('dynamodb', region).Table(self.table_name)
     
     def create_table(self):
         """
@@ -123,16 +117,36 @@ class StatusDDBUtil:
                     "#s": "status"
                 }
             )
+            return "Success"
         except Exception as e:
             print(e)
             print(f"Oops. Could not update status for request id {request_id}")
             raise ValueError(f"Oops. Could not update status to {new_status} for request id {request_id}")
+    
+    def delete_status(self, request_id: str, new_status: StatusEnum):
+        """
+        Delte status for a given request id
+        """
+        try:
+            self.table.delete_item(
+                Key={
+                    'request_id': request_id
+                },
+            )
+
+            return "Success"
+        except Exception as e:
+            print(e)
+            print(f"Oops. Could not delete status for request id {request_id}")
+            raise ValueError(f"Oops. Could not delete status for request id {request_id}")
+    
         
         
     
     def create_status_entry(self, data: StatusData):
         item = {k: v for k, v in asdict(data).items() if v is not None}
         self.table.put_item(Item=item)
+        return "Success"
 
 def set_status_data(item: Dict[str, Any], attribute: StatusAttribute):
     """
@@ -143,3 +157,6 @@ def set_status_data(item: Dict[str, Any], attribute: StatusAttribute):
 def get_status_table(region: str) -> StatusDDBUtil:
     table_name = "status-table"
     return StatusDDBUtil(table_name, region)
+
+#Make a removal function
+

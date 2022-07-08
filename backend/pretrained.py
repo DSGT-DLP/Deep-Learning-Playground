@@ -1,27 +1,30 @@
 # TODO: 
-# Estabilish a .to(device) in dataloaders and models
+# Remove unnecessary imports
 # (Enhancement) Allow other git repo feature
 
+from sklearn import metrics
 import timm
 import torch.nn as nn
 import time
 import torch.hub
 import torchvision
+import os
 
 from fastai.data.core import DataLoaders
 from fastai.vision.learner import has_pool_type
 from fastai.vision.learner import _update_first_layer
 from fastai.vision.all import *
-from fastai.vision import *
+from fastai.callback.progress import CSVLogger
+from fastai import *
 from wwf.vision.timm import *
 from torchvision.models import *
 from torchvision import models
 
 try:
-    from dataset import loader_from_zipped
+    from dataset import dataset_from_zipped
     from constants import DEFAULT_TRANSFORM
 except:
-    from backend.dataset import loader_from_zipped
+    from backend.dataset import dataset_from_zipped
     from backend.constants import DEFAULT_TRANSFORM
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -37,10 +40,10 @@ def train(
     optimizer=Adam,
     lr=1e-3,
     cut=None,
-    n_out=10,
+    n_classes=10,
     train_transform=DEFAULT_TRANSFORM,
     valid_transform=DEFAULT_TRANSFORM,
-    n_in=3,
+    chan_in=3,
 ):
     """
     Args:
@@ -48,61 +51,66 @@ def train(
         model_name (str) : name of the model
         batch_size (int) : batch_size for the dataloaders
         n_epochs (int) : number of epochs to train for
+        n_classes (int) : number of classes
+        chan_in (int) : number of input channels
     """
 
-    train_loader, valid_loader = loader_from_zipped(
-        zipped_file,
-        batch_size=batch_size,
-        shuffle=shuffle,
-        train_transform=train_transform,
-        valid_transform=valid_transform,
-    )
+    train_dataset, valid_dataset = dataset_from_zipped(
+        zipped_file, valid_transform=valid_transform, train_transform=train_transform
+    )    
 
-    dls = DataLoaders(train_loader, valid_loader)
+    dls = DataLoaders.from_dsets(
+        train_dataset, valid_dataset, device=device, shuffle=shuffle, bs=batch_size
+    )
 
     if is_timm(model_name):
         learner = local_timm_learner(
             dls,
-            model_name,
-            loss_func=loss_func,
+            model_name,            
             lr=lr,
             opt_func=optimizer,
-            n_out=n_out,
+            n_out=n_classes,
             cut=cut,
             normalize=False,
-            n_in=n_in,
+            n_in=chan_in,
+            loss_func=loss_func
         )
+
     elif is_pytorch(model_name):
         model = eval("torchvision.models.{}".format(model_name))
         learner = vision_learner(
             dls,
             model,
-            loss_func=loss_func,
             lr=lr,
             opt_func=optimizer,
-            n_out=n_out,
             pretrained=True,
             cut=cut,
             normalize=False,
+            loss_func=loss_func,
+            n_out = n_classes,
         )
+
     start = time.time()
-    learner.fit(n_epochs)
+    learner.fit(n_epochs, cbs=[CSVLogger(fname='dl_results.csv')])
+    # learner.save('../saved_model') <--- save model weigths in the file
+    # learner.export('../saved_model') <-- https://docs.fast.ai/learner.html#Learner.export 
     end = time.time()
     print(end - start)
     print(learner.loss_func)
-    return train_loader, learner
+    return learner
 
-
+## TODO: This function should be updated into a more recursive form
 def get_num_features(body):
     """
     Helper method which returns the number of out_features in a model
     """
-
     try:
         return num_features_model(nn.Sequential(*body.children()))
     except:
         for i in range(len(body)):
             layer = body[-i + 1]
+            if isinstance(layer, torch.nn.modules.linear.Linear):
+                return layer.out_features
             if isinstance(layer, torch.nn.Sequential):
                 for block in layer:
                     for sublayer in block.children():
@@ -112,8 +120,6 @@ def get_num_features(body):
                             for ll in sublayer.children():
                                 if isinstance(ll, torch.nn.modules.linear.Linear):
                                     return ll.out_features
-                    break
-                break
 
 
 def create_timm_body(arch: str, pretrained=True, cut=None, n_in=3):
@@ -194,6 +200,7 @@ def local_timm_learner(
     assert (
         n_out
     ), "`n_out` is not defined, and could not be inferred from data, set `dls.c` or pass `n_out`"
+
     if y_range is None and "y_range" in config:
         y_range = config.pop("y_range")
     model = create_timm_model(
@@ -240,13 +247,11 @@ if __name__ == "__main__":
 
     train(
         "../tests/zip_files/double_zipped.zip",
-        "alexnet",
-        batch_size=2,
-        loss_func=nn.CrossEntropyLoss(),
-        n_epochs=40,
-        valid_transform=[
-            torchvision.transforms.Resize((256, 256)),
-            torchvision.transforms.ToTensor(),
-        ],
-    )
-    # ## resent34, vit_small_r26_s32_224 --> timm, alexnet --> pytorch
+        "resnet34", 
+        2, 
+        torch.nn.CrossEntropyLoss(),
+        3, 
+        shuffle = False, 
+        optimizer = SGD, 
+        lr = 3e-4, 
+        n_classes = 2)

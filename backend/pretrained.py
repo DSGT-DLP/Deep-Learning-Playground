@@ -1,4 +1,4 @@
-# TODO: 
+# TODO:
 # Remove unnecessary imports
 # (Enhancement) Allow other git repo feature
 
@@ -57,7 +57,7 @@ def train(
 
     train_dataset, valid_dataset = dataset_from_zipped(
         zipped_file, valid_transform=valid_transform, train_transform=train_transform
-    )    
+    )
 
     dls = DataLoaders.from_dsets(
         train_dataset, valid_dataset, device=device, shuffle=shuffle, bs=batch_size
@@ -66,14 +66,14 @@ def train(
     if is_timm(model_name):
         learner = local_timm_learner(
             dls,
-            model_name,            
+            model_name,
             lr=lr,
             opt_func=optimizer,
             n_out=n_classes,
             cut=cut,
             normalize=False,
             n_in=chan_in,
-            loss_func=loss_func
+            loss_func=loss_func,
         )
 
     elif is_pytorch(model_name):
@@ -87,17 +87,18 @@ def train(
             cut=cut,
             normalize=False,
             loss_func=loss_func,
-            n_out = n_classes,
+            n_out=n_classes,
         )
 
     start = time.time()
-    learner.fit(n_epochs, cbs=[CSVLogger(fname='dl_results.csv')])
+    learner.fit(n_epochs, cbs=[CSVLogger(fname="dl_results.csv")])
     # learner.save('../saved_model') <--- save model weigths in the file
-    # learner.export('../saved_model') <-- https://docs.fast.ai/learner.html#Learner.export 
+    # learner.export('../saved_model') <-- https://docs.fast.ai/learner.html#Learner.export
     end = time.time()
     print(end - start)
     print(learner.loss_func)
     return learner
+
 
 ## TODO: This function should be updated into a more recursive form
 def get_num_features(body):
@@ -247,11 +248,12 @@ if __name__ == "__main__":
 
     train(
         "../tests/zip_files/double_zipped.zip",
-        "resnet34", 
-        2, 
+        "resnet34",
+        2,
         torch.nn.CrossEntropyLoss(),
-        3, 
-        shuffle = False, 
-        optimizer = SGD, 
-        lr = 3e-4, 
-        n_classes = 2)
+        3,
+        shuffle=False,
+        optimizer=SGD,
+        lr=3e-4,
+        n_classes=2,
+    )

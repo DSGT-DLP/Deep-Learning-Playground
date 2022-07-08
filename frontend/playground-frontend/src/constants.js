@@ -35,6 +35,12 @@ export const GENERAL_STYLES = {
     fontFamily: "Arial, Helvetica, sans-serif",
     fontWeight: "bold",
   },
+  error_text: {
+    color: "red",
+    fontSize: "0.8rem",
+    marginLeft: 3,
+    marginTop: 5,
+  },
 };
 
 export const ITEM_TYPES = {

@@ -50,7 +50,7 @@ const About = () => {
         <div className="tech-rows">
           <div className="tech-row-content">
             <img src={pythonLogo} className="tech-img-content"></img>
-            <span class="tech-text-content">
+            <span className="tech-text-content">
               Python : Programming language widely used for Data Science, AI,
               and ML. Easily understandable by a human and has a lot of
               developer support

@@ -32,7 +32,13 @@ double_zipped = os.path.join(main_dir, "zip_files/double_zipped.zip")
 )
 def test_train_valid_input_diff_models(path_to_file, model_name):
     learner = train(
-        path_to_file, model_name, 8, torch.nn.CrossEntropyLoss(), 3, n_classes=2
+        zipped_file= path_to_file,
+        model_name= model_name,
+        batch_size= 2,
+        loss_func= torch.nn.CrossEntropyLoss(),
+        n_epochs= 3,
+        n_classes=2,
+        lr=1e-2
     )
 
     assert learner.epoch == 2
@@ -57,7 +63,13 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
 )
 def test_train_diff_valid_input_files(path_to_file, model_name):
     learner = train(
-        path_to_file, model_name, 2, torch.nn.CrossEntropyLoss(), 3, n_classes=2
+        zipped_file= path_to_file, 
+        model_name= model_name, 
+        batch_size= 2, 
+        loss_func= torch.nn.CrossEntropyLoss(), 
+        n_epochs= 3, 
+        n_classes=2,
+        lr=1e-3
     )
 
     assert learner.epoch == 2
@@ -93,7 +105,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name):
 def test_train_valid_input_with_params(
     model_name, batch_size, loss_func, n_epochs, shuffle, optimizer, lr, n_classes
 ):
-    train_loader, learner = train(
+    learner = train(
         double_zipped,
         model_name,
         batch_size,

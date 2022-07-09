@@ -81,31 +81,28 @@ const Home = () => {
 
   const dl_results_data = dlpBackendResponse?.dl_results || [];
   const train_loss_data = dlpBackendResponse?.train_loss_results;
-  const auc_roc_data_res = dlpBackendResponse?.train_loss_results?.AUC_ROC_curve_data || [];
+  const auc_roc_data_res =
+    dlpBackendResponse?.train_loss_results?.AUC_ROC_curve_data || [];
   const auc_roc_data = [];
-  auc_roc_data.push(
-    {
-      name: "baseline",
-      x: [0,1],
-      y: [0,1],
-      type: "line",
-      marker: { color: "grey"},
-      line: {
-        dash: 'dash',
-      },
-      config: { responsive: true },
-    }
-  )
+  auc_roc_data.push({
+    name: "baseline",
+    x: [0, 1],
+    y: [0, 1],
+    type: "line",
+    marker: { color: "grey" },
+    line: {
+      dash: "dash",
+    },
+    config: { responsive: true },
+  });
   for (var i = 0; i < auc_roc_data_res.length; i++) {
-    auc_roc_data.push(
-      {
-        name: i + " (AUC: " + auc_roc_data_res[i][2] + ")",
-        x: auc_roc_data_res[i][0] || [],
-        y: auc_roc_data_res[i][1] || [],
-        type: "line",
-        config: { responsive: true },
-      }
-    )
+    auc_roc_data.push({
+      name: i + " (AUC: " + auc_roc_data_res[i][2] + ")",
+      x: auc_roc_data_res[i][0] || [],
+      y: auc_roc_data_res[i][1] || [],
+      type: "line",
+      config: { responsive: true },
+    });
   }
 
   const handleTargetChange = (e) => {
@@ -300,7 +297,8 @@ const Home = () => {
                 yaxis: { title: "Accuracy" },
                 title: "Train vs. Test Accuracy for your Deep Learning Model",
                 showlegend: true,
-              }} />
+              }}
+            />
           ) : undefined}
           <Plot
             data={[
@@ -332,20 +330,27 @@ const Home = () => {
               showlegend: true,
             }}
           />
-          {(problemType.value === "classification" && auc_roc_data_res.length != 0)? (
-              <Plot
-                data={auc_roc_data}
-                layout={{
-                  width: 750,
-                  height: 750,
-                  xaxis: { title: "False Positive Rate" },
-                  yaxis: { title: "True Positive Rate" },
-                  title: "AUC/ROC Curves for your Deep Learning Model",
-                  showlegend: true,
-                }} />
+          {problemType.value === "classification" &&
+          auc_roc_data_res.length != 0 ? (
+            <Plot
+              data={auc_roc_data}
+              layout={{
+                width: 750,
+                height: 750,
+                xaxis: { title: "False Positive Rate" },
+                yaxis: { title: "True Positive Rate" },
+                title: "AUC/ROC Curves for your Deep Learning Model",
+                showlegend: true,
+              }}
+            />
           ) : undefined}
-          {(problemType.value === "classification" && auc_roc_data_res.length == 0)? (
-              <p style={{ textAlign: "center" }}>No AUC/ROC curve could be generated. If this is not intended, check that shuffle is set to true to produce a more balanced train/test split which would enable correct AUC score calculation</p>
+          {problemType.value === "classification" &&
+          auc_roc_data_res.length == 0 ? (
+            <p style={{ textAlign: "center" }}>
+              No AUC/ROC curve could be generated. If this is not intended,
+              check that shuffle is set to true to produce a more balanced
+              train/test split which would enable correct AUC score calculation
+            </p>
           ) : undefined}
           <img
             src={CONFUSION_VIZ}

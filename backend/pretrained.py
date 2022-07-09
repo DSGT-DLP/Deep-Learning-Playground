@@ -1,5 +1,4 @@
 # TODO:
-# Remove unnecessary imports
 # (Enhancement) Allow other git repo feature
 
 import timm
@@ -85,6 +84,7 @@ def train(
             normalize=False,
             loss_func=loss_func,
             n_out=n_classes,
+            device= device
         )
 
     learner.fit(n_epochs, cbs=[CSVLogger(fname="dl_results.csv")])
@@ -92,10 +92,9 @@ def train(
     return learner
 
 
-## TODO: This function should be updated into a more recursive form
 def get_num_features(body):
     """
-    Helper method which returns the number of out_features in a model
+    Helper method which returns the number of out_features in a model by identifying the last linear layer and returning its out_features
     """
     try:
         return num_features_model(nn.Sequential(*body.children()))
@@ -107,6 +106,8 @@ def get_num_features(body):
             if isinstance(layer, torch.nn.Sequential):
                 for block in layer:
                     for sublayer in block.children():
+                        if isinstance(sublayer, torch.nn.modules.linear.Linear):
+                            return sublayer.out_features
                         if isinstance(
                             sublayer, timm.models.vision_transformer.Attention
                         ):

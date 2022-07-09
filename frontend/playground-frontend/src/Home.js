@@ -99,7 +99,7 @@ const Home = () => {
   for (var i = 0; i < auc_roc_data_res.length; i++) {
     auc_roc_data.push(
       {
-        name: i,
+        name: i + " (AUC: " + auc_roc_data_res[i][2] + ")",
         x: auc_roc_data_res[i][0] || [],
         y: auc_roc_data_res[i][1] || [],
         type: "line",
@@ -272,7 +272,7 @@ const Home = () => {
         </span>
         <div style={{ marginTop: 8 }}>
           {problemType.value === "classification" ? (
-            <><Plot
+            <Plot
               data={[
                 {
                   name: "Train accuracy",
@@ -301,16 +301,6 @@ const Home = () => {
                 title: "Train vs. Test Accuracy for your Deep Learning Model",
                 showlegend: true,
               }} />
-              <Plot
-                data={auc_roc_data}
-                layout={{
-                  width: 750,
-                  height: 750,
-                  xaxis: { title: "False Positive Rate" },
-                  yaxis: { title: "True Positive Rate" },
-                  title: "AUC/ROC Curves for your Deep Learning Model",
-                  showlegend: true,
-                }} /></>
           ) : undefined}
           <Plot
             data={[
@@ -342,6 +332,21 @@ const Home = () => {
               showlegend: true,
             }}
           />
+          {(problemType.value === "classification" && auc_roc_data_res.length != 0)? (
+              <Plot
+                data={auc_roc_data}
+                layout={{
+                  width: 750,
+                  height: 750,
+                  xaxis: { title: "False Positive Rate" },
+                  yaxis: { title: "True Positive Rate" },
+                  title: "AUC/ROC Curves for your Deep Learning Model",
+                  showlegend: true,
+                }} />
+          ) : undefined}
+          {(problemType.value === "classification" && auc_roc_data_res.length == 0)? (
+              <p style={{ textAlign: "center" }}>No AUC/ROC curve could be generated. If this is not intended, check that shuffle is set to true to produce a more balanced train/test split which would enable correct AUC score calculation</p>
+          ) : undefined}
           <img
             src={CONFUSION_VIZ}
             alt="Confusion matrix for the last epoch of your Deep Learning Model"

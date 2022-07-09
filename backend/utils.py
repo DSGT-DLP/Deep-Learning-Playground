@@ -241,33 +241,16 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
                     y_preds_list[i].append(x.item())
     
     # making a AUC/ROC graph for each category's probability predicitons
-    for i in range(len(categoryList)):
-        pred_prob = np. array(y_preds_list[i])
-        y_test = np. array(label_list[i])
-        print("=" * 30)
-        print("y_test: ", y_test)
-        print("type(y_test): ", type(y_test))
-        print("pred_prob: ", pred_prob)
-        print("type(pred_prob): ", type(pred_prob))
+    try:
+        for i in range(len(categoryList)):
+            pred_prob = np. array(y_preds_list[i])
+            y_test = np. array(label_list[i])
+            fpr, tpr, _ = roc_curve(y_test, pred_prob)
+            auc = roc_auc_score(y_test, pred_prob)
 
-
-        print("=" * 30)
-        fpr, tpr, _ = roc_curve(y_test, pred_prob)
-        auc = roc_auc_score(y_test, pred_prob)
-
-        plot_data.append([fpr.tolist(), tpr.tolist()])
-    #     plt.clf()
-    #     plt.plot(fpr, tpr, linestyle='--', label='prediction (AUROC = %0.3f)' % auc)
-    #     # Title
-    #     plt.title('ROC Plot')
-    #     # Axis labels
-    #     plt.xlabel('False Positive Rate')
-    #     plt.ylabel('True Positive Rate')
-    #     # Show legend
-    #     plt.legend() # 
-    #     # Show plot
-    #     plt.show()
-    # plt.savefig(AUC_ROC_VIZ)
+            plot_data.append([fpr.tolist(), tpr.tolist(), auc])
+    except:
+        return []
 
     print("=" * 30)
     print("y_preds_list: ", y_preds_list)

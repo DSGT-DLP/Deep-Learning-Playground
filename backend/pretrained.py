@@ -2,10 +2,8 @@
 # Remove unnecessary imports
 # (Enhancement) Allow other git repo feature
 
-from sklearn import metrics
 import timm
 import torch.nn as nn
-import time
 import torch.hub
 import torchvision
 import os
@@ -15,17 +13,16 @@ from fastai.vision.learner import has_pool_type
 from fastai.vision.learner import _update_first_layer
 from fastai.vision.all import *
 from fastai.callback.progress import CSVLogger
-from fastai import *
 from wwf.vision.timm import *
 from torchvision.models import *
 from torchvision import models
 
 try:
     from dataset import dataset_from_zipped
-    from constants import DEFAULT_TRANSFORM
+    from constants import DEFAULT_TRANSFORM, ONNX_MODEL
 except:
     from backend.dataset import dataset_from_zipped
-    from backend.constants import DEFAULT_TRANSFORM
+    from backend.constants import DEFAULT_TRANSFORM, ONNX_MODEL
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -90,13 +87,8 @@ def train(
             n_out=n_classes,
         )
 
-    start = time.time()
     learner.fit(n_epochs, cbs=[CSVLogger(fname="dl_results.csv")])
-    # learner.save('../saved_model') <--- save model weigths in the file
-    # learner.export('../saved_model') <-- https://docs.fast.ai/learner.html#Learner.export
-    end = time.time()
-    print(end - start)
-    print(learner.loss_func)
+    learner.export(ONNX_MODEL)
     return learner
 
 

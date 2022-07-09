@@ -211,7 +211,8 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
 def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
     label_list = []
     y_preds_list = []
-    categoryList = []  
+    categoryList = []
+    plot_data = []  
 
     print("labels_last_epoch: ", labels_last_epoch)  
 
@@ -253,23 +254,26 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
         print("=" * 30)
         fpr, tpr, _ = roc_curve(y_test, pred_prob)
         auc = roc_auc_score(y_test, pred_prob)
-        plt.clf()
-        plt.plot(fpr, tpr, linestyle='--', label='prediction (AUROC = %0.3f)' % auc)
-        # Title
-        plt.title('ROC Plot')
-        # Axis labels
-        plt.xlabel('False Positive Rate')
-        plt.ylabel('True Positive Rate')
-        # Show legend
-        plt.legend() # 
-        # Show plot
-        plt.show()
-    plt.savefig(AUC_ROC_VIZ)
+
+        plot_data.append([fpr.tolist(), tpr.tolist()])
+    #     plt.clf()
+    #     plt.plot(fpr, tpr, linestyle='--', label='prediction (AUROC = %0.3f)' % auc)
+    #     # Title
+    #     plt.title('ROC Plot')
+    #     # Axis labels
+    #     plt.xlabel('False Positive Rate')
+    #     plt.ylabel('True Positive Rate')
+    #     # Show legend
+    #     plt.legend() # 
+    #     # Show plot
+    #     plt.show()
+    # plt.savefig(AUC_ROC_VIZ)
 
     print("=" * 30)
     print("y_preds_list: ", y_preds_list)
     print("label_list: ", label_list)
     print("=" * 30)
+    return plot_data
 
 
 

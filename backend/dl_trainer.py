@@ -107,13 +107,15 @@ def train_deep_classification_model(
         print("y_pred_last_epoch: ", y_pred_last_epoch)
         print("*"*30)
         generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch)
-        generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch)
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
 
         # Collecting train accuracy and loss into one dictionary
         accuracy_loss_res = {}
         accuracy_loss_res |= generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
         accuracy_loss_res |= generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        # Generating AUC_ROC curve data to send to frontend to make interactive plot
+        AUC_ROC_curve_data = generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch)
+        accuracy_loss_res["AUC_ROC_curve_data"] = AUC_ROC_curve_data
         torch.save(model, SAVED_MODEL) # saving model into a pt file
         return accuracy_loss_res
     except Exception:

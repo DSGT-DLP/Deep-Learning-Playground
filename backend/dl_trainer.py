@@ -1,6 +1,6 @@
 from loss import compute_loss
 from dl_eval import compute_accuracy
-from utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix
+from utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
 from utils import ProblemType
 from constants import DEEP_LEARNING_RESULT_CSV_PATH, EPOCH, TRAIN_TIME, TRAIN_LOSS, TEST_LOSS, TRAIN_ACC, TEST, VAL_TEST_ACC, SAVED_MODEL
 import torch  # pytorch
@@ -72,13 +72,16 @@ def train_deep_classification_model(
             for i, data in enumerate(test_loader):
                 input, labels = data
                 test_pred = model(input)
+                print("!"*30)
+                print("test_pred: ", test_pred)
+                print("labels: ", labels)
 
+                print("!"*30)
                 # currently only preserving the prediction array and label array for the last epoch for 
                 # confusion matrix calculation
                 if(epoch == epochs - 1):
                     y_pred_last_epoch.append(test_pred)
                     labels_last_epoch.append(labels)
-
                 batch_test_acc.append(compute_accuracy(test_pred, labels))
                 batch_loss.append(test_pred.detach().numpy())
             mean_test_loss = np.mean(batch_loss)
@@ -100,7 +103,11 @@ def train_deep_classification_model(
             }
         )
         print(result_table.head())
+        print("*"*30)
+        print("y_pred_last_epoch: ", y_pred_last_epoch)
+        print("*"*30)
         generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch)
+        generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch)
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
 
         # Collecting train accuracy and loss into one dictionary

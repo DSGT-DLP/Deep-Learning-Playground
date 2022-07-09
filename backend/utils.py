@@ -10,7 +10,8 @@ from constants import (
     TRAIN_ACC,
     TEST,
     VAL_TEST_ACC,
-    CONFUSION_VIZ
+    CONFUSION_VIZ,
+    AUC_ROC_VIZ
 )
 import pandas as pd
 import numpy as np
@@ -21,7 +22,7 @@ import seaborn as sns
 from enum import Enum
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, roc_curve, roc_auc_score
 import csv
 import os
 import json
@@ -204,7 +205,74 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     ax.set_xlabel('Predicted');ax.set_ylabel('Actual'); 
     ax.set_title('Confusion Matrix (last Epoch)'); 
     ax.xaxis.set_ticklabels(categoryList); ax.yaxis.set_ticklabels(categoryList);
-    plt.savefig(CONFUSION_VIZ) 
+    plt.savefig(CONFUSION_VIZ)
+
+
+def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
+    label_list = []
+    y_preds_list = []
+    categoryList = []  
+
+    print("labels_last_epoch: ", labels_last_epoch)  
+
+    # generating a category list for confusion matrix axis labels, and setting up the y_preds_list and label_list for each category
+    if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):
+        for i, x in enumerate(y_pred_last_epoch[0][0][0]):
+            categoryList.append(i)
+            y_preds_list.append([])
+            label_list.append([])
+    
+    for labels in labels_last_epoch:
+        for i, l in enumerate(labels.tolist()):
+            ground_truth = l[0]
+            for x in range(len(label_list)):
+                # toggle on a 1 for the category that corresponds to the ground truth, this is to produce the 1-vs-all system for multiclass classification
+                if x == ground_truth:
+                    label_list[x].append(1)
+                else:
+                    label_list[x].append(0)
+
+    for preds in y_pred_last_epoch:
+        for pred in preds:
+            for row in pred:
+                for i, x in enumerate(row):
+                    # appending tensor values to each category's probability predicitons in y_preds_list
+                    y_preds_list[i].append(x.item())
+    
+    # making a AUC/ROC graph for each category's probability predicitons
+    for i in range(len(categoryList)):
+        pred_prob = np. array(y_preds_list[i])
+        y_test = np. array(label_list[i])
+        print("=" * 30)
+        print("y_test: ", y_test)
+        print("type(y_test): ", type(y_test))
+        print("pred_prob: ", pred_prob)
+        print("type(pred_prob): ", type(pred_prob))
+
+
+        print("=" * 30)
+        fpr, tpr, _ = roc_curve(y_test, pred_prob)
+        auc = roc_auc_score(y_test, pred_prob)
+        plt.clf()
+        plt.plot(fpr, tpr, linestyle='--', label='prediction (AUROC = %0.3f)' % auc)
+        # Title
+        plt.title('ROC Plot')
+        # Axis labels
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        # Show legend
+        plt.legend() # 
+        # Show plot
+        plt.show()
+    plt.savefig(AUC_ROC_VIZ)
+
+    print("=" * 30)
+    print("y_preds_list: ", y_preds_list)
+    print("label_list: ", label_list)
+    print("=" * 30)
+
+
+
 
 
 def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: str = None) -> str:

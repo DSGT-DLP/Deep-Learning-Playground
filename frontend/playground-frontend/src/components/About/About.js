@@ -7,6 +7,8 @@ import reactLogo from "../../images/logos/react-logo.png";
 import awsLogo from "../../images/logos/aws-logo.png";
 
 const About = () => {
+  const urlOpener = (url) => () => window.open(url)
+
   return (
     <div className="about-page">
       <div id="header-section">
@@ -49,7 +51,7 @@ const About = () => {
 
         <div className="tech-rows">
           <div className="tech-row-content">
-            <img src={pythonLogo} className="tech-img-content"></img>
+            <img src={pythonLogo} className="tech-img-content" onClick={urlOpener('https://docs.python.org/3/')}></img>
             <span className="tech-text-content">
               Python : Programming language widely used for Data Science, AI,
               and ML. Easily understandable by a human and has a lot of
@@ -57,26 +59,26 @@ const About = () => {
             </span>
           </div>
           <div className="tech-row-content">
-            <img src={pyTorchLogo} className="tech-img-content"></img>
+            <img src={pyTorchLogo} className="tech-img-content" onClick={urlOpener('https://pytorch.org/docs/stable/index.html')}></img>
             Pytorch : Libary that helps build, train, test deep learning models.
             We use this library to build the user-defined deep learning model
           </div>
           <div className="tech-row-content">
-            <img src={pandasLogo} className="tech-img-content"></img>
+            <img src={pandasLogo} className="tech-img-content" onClick={urlOpener('https://pandas.pydata.org/docs/')}></img>
             pandas : Python library that allows one to parse CSV files and
             extract relevant information. It's very user friendly and has
             helpful documentation
           </div>
           <div className="tech-row-content">
-            <img src={flaskLogo} className="tech-img-content"></img>
+            <img src={flaskLogo} className="tech-img-content" onClick={urlOpener('https://flask.palletsprojects.com/en/2.1.x/')}></img>
             Flask : Backend service that allows for the modeling magic to happen
           </div>
           <div className="tech-row-content">
-            <img src={reactLogo} className="tech-img-content"></img>
+            <img src={reactLogo} className="tech-img-content" onClick={urlOpener('https://reactjs.org/docs/getting-started.html')}></img>
             React : JavaScript library used to display the website to the user
           </div>
           <div className="tech-row-content">
-            <img src={awsLogo} className="tech-img-content"></img>
+            <img src={awsLogo} className="tech-img-content" onClick={urlOpener('https://docs.aws.amazon.com/')}></img>
             AWS :
           </div>
         </div>

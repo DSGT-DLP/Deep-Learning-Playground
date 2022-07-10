@@ -6,8 +6,9 @@ import os
 import pandas as pd
 import timm
 
-main_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "tests"
-double_zipped = os.path.join(main_dir, "zip_files/double_zipped.zip")
+train_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "tests"
+backend_dir = "backend" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "../backend"
+double_zipped = os.path.join(train_dir, "zip_files/double_zipped.zip")
 
 # timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075
 # torch: others
@@ -44,7 +45,7 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
     assert type(learner.loss_func) is torch.nn.CrossEntropyLoss
     assert get_num_features(learner) == 2
 
-    val = pd.read_csv("./backend/dl_results.csv")
+    val = pd.read_csv(os.path.join(backend_dir, "dl_results.csv"))
     if val["train_loss"].isnull().any():
         assert False
     elif val["valid_loss"].isnull().any():
@@ -57,8 +58,8 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
     "path_to_file,model_name, n_classes",
     [
         (double_zipped, "resnet50", 2),
-        (os.path.join(main_dir, "zip_files/valid_2.zip"), "resnet50", 2),
-        (os.path.join(main_dir, "zip_files/valid_3.zip"), "resnet50", 3),
+        (os.path.join(train_dir, "zip_files/valid_2.zip"), "resnet50", 2),
+        (os.path.join(train_dir, "zip_files/valid_3.zip"), "resnet50", 3),
     ],
 )
 def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
@@ -75,7 +76,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
     assert type(learner.loss_func) is torch.nn.CrossEntropyLoss
     assert get_num_features(learner) == n_classes
 
-    val = pd.read_csv("../backend/dl_results.csv")
+    val = pd.read_csv(os.path.join(backend_dir, "dl_results.csv"))
     if val["train_loss"].isnull().any():
         assert False
     elif val["valid_loss"].isnull().any():
@@ -142,7 +143,7 @@ def test_train_valid_input_with_params(
     assert get_num_features(learner) == n_classes
     assert learner.lr == lr
 
-    val = pd.read_csv("./backend/dl_results.csv")
+    val = pd.read_csv(os.path.join(backend_dir, "dl_results.csv"))
     if val["train_loss"].isnull().any():
         assert False
     elif val["valid_loss"].isnull().any():

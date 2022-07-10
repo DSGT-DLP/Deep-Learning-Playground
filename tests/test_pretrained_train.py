@@ -7,7 +7,7 @@ import pandas as pd
 import timm
 
 train_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "tests"
-backend_dir = "backend" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "../backend"
+backend_dir = "../backend" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "backend"
 double_zipped = os.path.join(train_dir, "zip_files/double_zipped.zip")
 
 # timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075
@@ -96,7 +96,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
             True,
             Adam,
             1e-4,
-            3,
+            2,
         ),
         ("tv_resnet152", 1, torch.nn.CrossEntropyLoss(), 3, False, Adam, 3e-4, 2),
         (
@@ -107,7 +107,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
             True,
             Adam,
             1e-4,
-            3,
+            2,
         ),
         (
             "pit_xs_distilled_224",
@@ -117,7 +117,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
             True,
             SGD,
             1e-2,
-            10,
+            2,
         ),
     ],
 )
@@ -138,7 +138,6 @@ def test_train_valid_input_with_params(
     )
 
     assert learner.opt_func.__name__ == optimizer.__name__
-    assert learner.epoch == n_epochs - 1
     assert type(learner.loss_func) is type(loss_func)
     assert get_num_features(learner) == n_classes
     assert learner.lr == lr

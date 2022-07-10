@@ -91,7 +91,9 @@ def train(
             model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
         )
 
-    learner.fit(n_epochs, cbs=[CSVLogger(fname="dl_results.csv")])
+    main_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "backend" else "../backend"
+
+    learner.fit(n_epochs, cbs=[CSVLogger(fname=os.path.join(main_dir, "dl_results.csv"))])
     learner.save(file=ONNX_MODEL.split("/")[-1].split(".onnx")[0])
     return learner
 
@@ -255,11 +257,23 @@ def is_pytorch(model_name):
 #     return False
 
 if __name__ == "__main__":
-    train(
-        zipped_file="../tests/zip_files/double_zipped.zip",
-        model_name="alexnet",
-        batch_size=2,
-        loss_func=torch.nn.CrossEntropyLoss(),
-        n_epochs=2,
-        lr=1e-3,
+    learner = train(
+        zipped_file= "../tests/zip_files/double_zipped.zip", 
+        model_name= "resnet50", 
+        batch_size= 2, 
+        loss_func= torch.nn.CrossEntropyLoss(), 
+        n_epochs= 2, 
+        n_classes=2,
+        lr=1e-3
     )
+
+    assert learner.epoch == 2
+    assert type(learner.loss_func) is torch.nn.CrossEntropyLoss
+    assert get_num_features(learner) == 2
+
+    val = pd.read_csv('./backend/dl_results.csv')
+    if val['train_loss'].isnull().any():
+        assert False
+    elif val['valid_loss'].isnull().any():
+        assert False
+    assert True

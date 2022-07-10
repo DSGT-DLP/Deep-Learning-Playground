@@ -1,6 +1,7 @@
 # TODO:
 # (Enhancement) Allow other git repo feature
 
+from operator import contains
 import timm
 import torch.nn as nn
 import torch.hub
@@ -91,9 +92,9 @@ def train(
             model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
         )
 
-    main_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "backend" else "../backend"
+    backend_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "backend" else "backend" if ("backend" in os.listdir(os.getcwd())) else "../backend"
 
-    learner.fit(n_epochs, cbs=[CSVLogger(fname=os.path.join(main_dir, "dl_results.csv"))])
+    learner.fit(n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv"))])
     learner.save(file=ONNX_MODEL.split("/")[-1].split(".onnx")[0])
     return learner
 

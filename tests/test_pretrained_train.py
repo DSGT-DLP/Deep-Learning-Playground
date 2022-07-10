@@ -10,8 +10,8 @@ train_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "
 backend_dir = "../backend" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "backend"
 double_zipped = os.path.join(train_dir, "zip_files/double_zipped.zip")
 
-timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075
-torch: others
+# timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075
+# torch: others
 @pytest.mark.parametrize(
     "path_to_file,model_name",
     [

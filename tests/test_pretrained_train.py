@@ -10,8 +10,8 @@ train_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "
 backend_dir = "../backend" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "backend"
 double_zipped = os.path.join(train_dir, "zip_files/double_zipped.zip")
 
-# timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075
-# torch: others
+timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075
+torch: others
 @pytest.mark.parametrize(
     "path_to_file,model_name",
     [
@@ -25,7 +25,7 @@ double_zipped = os.path.join(train_dir, "zip_files/double_zipped.zip")
             double_zipped,
             "tf_mobilenetv3_small_075",
         ),
-        (double_zipped, "EfficientNet"),
+        (double_zipped, "efficientnet_b2"),
         (double_zipped, "googlenet"),
         (double_zipped, "vgg19"),
         (double_zipped, "wide_resnet50_2"),
@@ -101,7 +101,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
         ("tv_resnet152", 1, torch.nn.CrossEntropyLoss(), 3, False, Adam, 3e-4, 2),
         (
             "xcit_small_12_p8_224_dist",
-            1,
+            2,
             torch.nn.CrossEntropyLoss(),
             4,
             True,
@@ -125,15 +125,14 @@ def test_train_valid_input_with_params(
     model_name, batch_size, loss_func, n_epochs, shuffle, optimizer, lr, n_classes
 ):
     learner = train(
-        double_zipped,
-        model_name,
-        batch_size,
-        loss_func,
-        n_epochs,
-        shuffle,
-        optimizer,
-        None,
-        lr,
+        zipped_file= double_zipped,
+        model_name= model_name,
+        batch_size= batch_size,
+        loss_func= loss_func,
+        n_epochs= n_epochs,
+        shuffle= shuffle,
+        optimizer= optimizer,
+        lr= lr,
         n_classes=n_classes,
     )
 

@@ -1,6 +1,6 @@
 import pytest
 import torch.nn
-from backend.pretrained import get_num_features, train
+from backend.pretrained import get_num_features, train, get_all
 from fastai.vision.all import Adam, SGD
 import os
 import pandas as pd
@@ -45,7 +45,7 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
     assert type(learner.loss_func) is torch.nn.CrossEntropyLoss
     assert get_num_features(learner) == 2
 
-    val = pd.read_csv('../backend/dl_results.csv')
+    val = pd.read_csv('./backend/dl_results.csv')
     if val['train_loss'].isnull().any():
         assert False
     elif val['valid_loss'].isnull().any():
@@ -76,7 +76,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name):
     assert type(learner.loss_func) is torch.nn.CrossEntropyLoss
     assert get_num_features(learner) == 2
 
-    val = pd.read_csv('../backend/dl_results.csv')
+    val = pd.read_csv('./backend/dl_results.csv')
     if val['train_loss'].isnull().any():
         assert False
     elif val['valid_loss'].isnull().any():
@@ -124,7 +124,7 @@ def test_train_valid_input_with_params(
     assert get_num_features(learner) == n_classes
     assert learner.lr == lr
 
-    val = pd.read_csv('../backend/dl_results.csv')
+    val = pd.read_csv('./backend/dl_results.csv')
     if val['train_loss'].isnull().any():
         assert False
     elif val['valid_loss'].isnull().any():
@@ -143,3 +143,21 @@ def test_train_valid_input_with_params(
 def test_train_invalid_path(path_to_file, model_name):
     with pytest.raises(ValueError):
         train(path_to_file, model_name, 8, None, 1)
+
+# def test_all_models():
+#     failed = []
+#     for x in get_all():
+#         try:
+#             print("checking for " + x)
+#             train(
+#                 zipped_file=double_zipped,
+#                 model_name=x,
+#                 batch_size=1,
+#                 n_epochs=1,
+#                 loss_func=torch.nn.CrossEntropyLoss(),
+#                 lr=1e-2,
+#                 n_classes=2)
+#         except Exception:
+#             failed.append(x)
+#     print(failed)
+#     print("length:", len(failed))

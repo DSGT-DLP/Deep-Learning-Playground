@@ -23,8 +23,6 @@ except:
     from backend.dataset import dataset_from_zipped
     from backend.constants import DEFAULT_TRANSFORM, ONNX_MODEL
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
 
 def train(
     zipped_file,
@@ -51,6 +49,8 @@ def train(
         chan_in (int) : number of input channels
     """
 
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+
     train_dataset, valid_dataset = dataset_from_zipped(
         zipped_file, valid_transform=valid_transform, train_transform=train_transform
     )
@@ -58,6 +58,8 @@ def train(
     dls = DataLoaders.from_dsets(
         train_dataset, valid_dataset, device=device, shuffle=shuffle, bs=batch_size
     )
+
+    setattr(dls, "device", device)
 
     if is_timm(model_name):
         learner = local_timm_learner(
@@ -70,6 +72,7 @@ def train(
             normalize=False,
             n_in=chan_in,
             loss_func=loss_func,
+            model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
         )
 
     elif is_pytorch(model_name):
@@ -84,12 +87,22 @@ def train(
             normalize=False,
             loss_func=loss_func,
             n_out=n_classes,
-            device= device
+            n_in=chan_in,
+            model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
         )
 
     learner.fit(n_epochs, cbs=[CSVLogger(fname="dl_results.csv")])
-    learner.export(ONNX_MODEL)
+    learner.save(file=ONNX_MODEL.split("/")[-1].split(".onnx")[0])
     return learner
+
+
+def get_all():
+    """
+    Returns the names of all possible models to be used
+    """
+    list = dir(models)[29:-1] + (timm.list_models(pretrained=True))
+    list.sort()
+    return list
 
 
 def get_num_features(body):
@@ -101,11 +114,13 @@ def get_num_features(body):
     except:
         for i in range(len(body)):
             layer = body[-i + 1]
+            print("am i stuck")
             if isinstance(layer, torch.nn.modules.linear.Linear):
                 return layer.out_features
             if isinstance(layer, torch.nn.Sequential):
                 for block in layer:
                     for sublayer in block.children():
+                        print("what do you think")
                         if isinstance(sublayer, torch.nn.modules.linear.Linear):
                             return sublayer.out_features
                         if isinstance(
@@ -113,15 +128,17 @@ def get_num_features(body):
                         ):
                             for ll in sublayer.children():
                                 if isinstance(ll, torch.nn.modules.linear.Linear):
+                                    print("possible")
                                     return ll.out_features
 
 
-def create_timm_body(arch: str, pretrained=True, cut=None, n_in=3):
+def create_timm_body(arch: str, pretrained=True, cut=None, n_in=3, n_classes=10):
     """
     Creates a body from any model in the `timm` library.
     Code adapted from https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py
     """
-    model = timm.create_model(arch, pretrained=pretrained, num_classes=10)
+    print("here as well")
+    model = timm.create_model(arch, pretrained=pretrained, num_classes=n_classes)
     _update_first_layer(model, n_in, pretrained)
     if cut is None:
         try:
@@ -129,6 +146,7 @@ def create_timm_body(arch: str, pretrained=True, cut=None, n_in=3):
             cut = next(
                 i for i, o in reversed(ll) if has_pool_type(o)
             )  ## i is the layer number and o is the type
+
         except StopIteration:
             cut = -1
             pass
@@ -157,7 +175,8 @@ def create_timm_model(
     Create custom architecture using `arch`, `n_in` and `n_out` from the `timm` library
     Code adapted from https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py
     """
-    body = create_timm_body(arch, pretrained, None, n_in)
+    print("got here though")
+    body = create_timm_body(arch, pretrained, None, n_in, n_classes=n_out)
     if custom_head is None:
         nf = get_num_features(body)
         head = create_head(nf, n_out, concat_pool=concat_pool, **kwargs)
@@ -235,18 +254,12 @@ def is_pytorch(model_name):
 #             return True
 #     return False
 
-
-# local testing
 if __name__ == "__main__":
-
     train(
-        "../tests/zip_files/double_zipped.zip",
-        "resnet34",
-        2,
-        torch.nn.CrossEntropyLoss(),
-        3,
-        shuffle=False,
-        optimizer=SGD,
-        lr=3e-4,
-        n_classes=2,
+        zipped_file="../tests/zip_files/double_zipped.zip",
+        model_name="alexnet",
+        batch_size=2,
+        loss_func=torch.nn.CrossEntropyLoss(),
+        n_epochs=2,
+        lr=1e-3,
     )

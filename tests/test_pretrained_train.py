@@ -9,6 +9,7 @@ import timm
 train_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "tests"
 backend_dir = "../backend" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "backend"
 double_zipped = os.path.join(train_dir, "zip_files/double_zipped.zip")
+valid_2 = os.path.join(train_dir, "zip_files/valid_2.zip")
 
 # timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075
 # torch: others
@@ -55,10 +56,34 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
 
 
 @pytest.mark.parametrize(
+    "model_name",
+    [
+        ("resnet50"),
+        ("vit_small_r26_s32_224"),
+        ("efficientnet_b2"),
+        ("vgg19"),
+    ],
+)
+def test_train_effectiveness(model_name, expected_loss):
+    learner = train(
+        zipped_file=valid_2,
+        model_name=model_name,
+        batch_size=1,
+        loss_func=torch.nn.CrossEntropyLoss(),
+        n_epochs=3,
+        n_classes=2,
+        lr=1e-3,
+    )
+
+    val = pd.read_csv(os.path.join(backend_dir, "dl_results.csv"))
+    assert val < 0.5 # to set
+
+
+@pytest.mark.parametrize(
     "path_to_file,model_name, n_classes",
     [
         (double_zipped, "resnet50", 2),
-        (os.path.join(train_dir, "zip_files/valid_2.zip"), "resnet50", 2),
+        (valid_2, "resnet50", 2),
         (os.path.join(train_dir, "zip_files/valid_3.zip"), "resnet50", 3),
     ],
 )

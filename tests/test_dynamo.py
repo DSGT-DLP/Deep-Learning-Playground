@@ -16,6 +16,10 @@ status_ddb.delete_status("dummy",StatusEnum.SUCCESS.name)
 
 """
 
+# To run a particular test case and monitor its effect in the aws console, comment out any "teardown.append(id)"
+# and run the test case through the following command: pytesty tests/test_dynamo.py -k "<test_case>"
+
+
 def create_status_data(id: str, status: str, timestamp: str, teardown: list[str]) -> StatusData:
     '''
     Helper method to create a StatuData object from input params
@@ -24,7 +28,7 @@ def create_status_data(id: str, status: str, timestamp: str, teardown: list[str]
     status_data = StatusData(set_status_data(dummy_status, StatusAttribute.REQUEST_ID),
                                 set_status_data(dummy_status, StatusAttribute.STATUS),
                                 set_status_data(dummy_status, StatusAttribute.TIMESTAMP))
-    #teardown.append(id)
+    teardown.append(id)
     return status_data
 
 def valid_status_entry_helper(teardown: list[str], status_ddb: StatusDDBUtil) -> None:
@@ -176,11 +180,13 @@ def test_get_status(id, teardown):
     output = status_ddb.get_record(id)
     assert output == all_status_data[int(id)]
     
+    
 @pytest.mark.parametrize(
     "id",
     [
         "4",
-        "hello"
+        "hello",
+        None
     ]
 )
 def test_get_status_invalid_id(id, teardown):
@@ -206,6 +212,7 @@ def test_get_status_extra_attributes(id, teardown):
     with pytest.raises(ValueError):
         status_ddb.get_record(id)
         
+        
 @pytest.mark.parametrize(
     "id",
     [
@@ -219,6 +226,7 @@ def test_delete_status(id, teardown):
     
     output = status_ddb.delete_status(id)
     assert output == "Success"
+        
         
 #Not sure if it is supposed to accept incorrect ids
 @pytest.mark.parametrize(
@@ -234,3 +242,70 @@ def test_delete_status_invalid_id(id, teardown):
     
     with pytest.raises(ValueError):
         print(status_ddb.delete_status(id))
+        
+
+@pytest.mark.parametrize(
+    "id,new_status",
+    [
+        (
+            "0",
+            StatusEnum.IN_PROGRESS.name
+        ),
+        (
+            "1",
+            StatusEnum.FAILED.name
+        )
+    ]
+)
+def test_update_status(id, new_status, teardown):
+    status_ddb = get_status_table("us-west-2")
+    all_status_data = valid_status_entry_helper(teardown, status_ddb)
+    
+    output = status_ddb.update_status(id, new_status)
+    assert output == "Success"
+    
+    updated_record_from_db = status_ddb.get_record(id)
+    original_record = all_status_data[int(id)]
+    original_record.status = new_status
+    assert updated_record_from_db == original_record
+    
+    
+@pytest.mark.parametrize(
+    "id,new_status",
+    [
+        (
+            "dummy",
+            StatusEnum.IN_PROGRESS.name
+        ),
+        (
+            None,
+            StatusEnum.FAILED.name
+        )
+    ]
+)
+def test_update_status_invalid_id(id, new_status, teardown):
+    status_ddb = get_status_table("us-west-2")
+    valid_status_entry_helper(teardown, status_ddb)
+    teardown.append(id)
+    with pytest.raises(ValueError):
+        status_ddb.update_status(id, new_status)
+        
+
+@pytest.mark.parametrize(
+    "id,new_status",
+    [
+        (
+            "1",
+            "dummy"
+        ),
+        (
+            "2",
+            None
+        )
+    ]
+)
+def test_update_status_invalid_status(id, new_status, teardown):
+    status_ddb = get_status_table("us-west-2")
+    valid_status_entry_helper(teardown, status_ddb)
+    with pytest.raises(ValueError):
+        status_ddb.update_status(id, new_status)

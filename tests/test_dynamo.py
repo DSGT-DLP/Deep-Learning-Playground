@@ -24,18 +24,38 @@ def create_status_data(id: str, status: str, timestamp: str, teardown: list[str]
     status_data = StatusData(set_status_data(dummy_status, StatusAttribute.REQUEST_ID),
                                 set_status_data(dummy_status, StatusAttribute.STATUS),
                                 set_status_data(dummy_status, StatusAttribute.TIMESTAMP))
-    teardown.append(id)
+    #teardown.append(id)
     return status_data
+
+def valid_status_entry_helper(teardown: list[str], status_ddb: StatusDDBUtil) -> None:
+    """
+    Helper method to temporarily add records in DynamoDB table to test get_record, update_status, and delete_status functions
+    """
+    records = [
+        ("0", StatusEnum.STARTED.name, datetime.datetime.now().isoformat()),
+        ("1", StatusEnum.IN_PROGRESS.name, datetime.datetime.now().isoformat()),
+        ("2", StatusEnum.FAILED.name, datetime.datetime.now().isoformat())
+    ]
+    
+    all_status_data = []
+    for record in records:
+        status_data = create_status_data(record[0], record[1], record[2], teardown)
+        all_status_data.append(status_data)
+        status_ddb.create_status_entry(status_data)
+    return all_status_data
 
 @pytest.fixture
 def teardown() -> None:
     '''
     Deletes any records added by the test cases.
     '''
+    #initializing test
     test_records = []             # list containing ids of records added in tests
     
-    yield test_records
+    #performing test
+    yield test_records 
     
+    #tearing down tests
     if (len(test_records) != 0):
         status_ddb = get_status_table("us-west-2")
         for id in test_records:
@@ -127,7 +147,7 @@ def test_status_entry_invalid_param(id, status, timestamp, teardown):
             StatusEnum.STARTED.name,
             datetime.datetime.now().isoformat()
         ),
-    ],
+    ]
 )    
 def test_status_entry_duplicates(id, status, timestamp, teardown):
     status_ddb = get_status_table("us-west-2")
@@ -140,12 +160,18 @@ def test_status_entry_duplicates(id, status, timestamp, teardown):
     with pytest.raises(ValueError) as err:
         status_ddb.create_status_entry(status_data2)
     status_ddb.delete_status(id, StatusEnum.SUCCESS.name)
+       
     
-
-
-def valid_status_entry_helper(id: str, status: str, timestamp: str, teardown: list[str], status_ddb: StatusDDBUtil) -> None:
-    """
-    Helper method to temporarily add records in DynamoDB table to test get_record, update_status, and delete_status functions
-    """
-    status_data = create_status_data(id, status, timestamp, teardown)
-    status_ddb.create_status_entry(status_data)
+@pytest.mark.parametrize(
+    "id",
+    [
+        "0",
+        "1"
+    ]
+)
+def test_get_status(id, teardown):
+    status_ddb = get_status_table("us-west-2")
+    all_status_data = valid_status_entry_helper(teardown, status_ddb)
+    
+    output = status_ddb.get_record(id)
+    assert output == all_status_data[int(id)]

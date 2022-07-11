@@ -91,7 +91,7 @@ class StatusDDBUtil:
         for attribute in item:
             if attribute not in StatusAttribute:
                 raise ValueError(
-                    f"Found invalid attribute {attribute} for id {id} in table {self.table_name}"
+                    f"Found invalid attribute {attribute} for id {request_id} in table {self.table_name}"
                 )
         
         return StatusData(
@@ -123,7 +123,7 @@ class StatusDDBUtil:
             print(f"Oops. Could not update status for request id {request_id}")
             raise ValueError(f"Oops. Could not update status to {new_status} for request id {request_id}")
     
-    def delete_status(self, request_id: str, new_status: StatusEnum):
+    def delete_status(self, request_id: str):
         """
         Delte status for a given request id
         """

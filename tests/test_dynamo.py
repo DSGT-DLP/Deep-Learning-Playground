@@ -60,7 +60,7 @@ def teardown() -> None:
         status_ddb = get_status_table("us-west-2")
         for id in test_records:
             try:
-                status_ddb.delete_status(id, StatusEnum.SUCCESS.name)
+                status_ddb.delete_status(id)
             except:
                 pass
 
@@ -160,8 +160,8 @@ def test_status_entry_duplicates(id, status, timestamp, teardown):
     with pytest.raises(ValueError) as err:
         status_ddb.create_status_entry(status_data2)
     status_ddb.delete_status(id, StatusEnum.SUCCESS.name)
-       
-    
+
+
 @pytest.mark.parametrize(
     "id",
     [
@@ -175,3 +175,62 @@ def test_get_status(id, teardown):
     
     output = status_ddb.get_record(id)
     assert output == all_status_data[int(id)]
+    
+@pytest.mark.parametrize(
+    "id",
+    [
+        "4",
+        "hello"
+    ]
+)
+def test_get_status_invalid_id(id, teardown):
+    status_ddb = get_status_table("us-west-2")
+    valid_status_entry_helper(teardown, status_ddb)
+    
+    with pytest.raises(ValueError) as err:
+        status_ddb.get_record(id)
+        
+
+@pytest.mark.parametrize(
+    "id",
+    [
+        "4"
+    ]
+)
+def test_get_status_extra_attributes(id, teardown):
+    status_ddb = get_status_table("us-west-2")
+    data = {"request_id": id, "status": StatusEnum.IN_PROGRESS.name, "timestamp": datetime.datetime.now().isoformat(), "extra": 123}
+    teardown.append(id)
+    status_ddb.table.put_item(Item=data)
+    
+    with pytest.raises(ValueError):
+        status_ddb.get_record(id)
+        
+@pytest.mark.parametrize(
+    "id",
+    [
+        "1",
+        "2"
+    ]
+)
+def test_delete_status(id, teardown):
+    status_ddb = get_status_table("us-west-2")
+    valid_status_entry_helper(teardown, status_ddb)
+    
+    output = status_ddb.delete_status(id)
+    assert output == "Success"
+        
+#Not sure if it is supposed to accept incorrect ids
+@pytest.mark.parametrize(
+    "id",
+    [
+        "4",
+        "hello"
+    ]
+)
+def test_delete_status_invalid_id(id, teardown):
+    status_ddb = get_status_table("us-west-2")
+    valid_status_entry_helper(teardown, status_ddb)
+    
+    with pytest.raises(ValueError):
+        print(status_ddb.delete_status(id))

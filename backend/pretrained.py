@@ -1,7 +1,6 @@
 # TODO:
 # (Enhancement) Allow other git repo feature
 
-from operator import contains
 import timm
 import torch.nn as nn
 import torch.hub
@@ -92,9 +91,17 @@ def train(
             model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
         )
 
-    backend_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "backend" else "backend" if ("backend" in os.listdir(os.getcwd())) else "../backend"
+    backend_dir = (
+        ""
+        if (os.getcwd()).split("\\")[-1].split("/")[-1] == "backend"
+        else "backend"
+        if ("backend" in os.listdir(os.getcwd()))
+        else "../backend"
+    )
 
-    learner.fit(n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv"))])
+    learner.fit(
+        n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv"))]
+    )
     learner.save(file=ONNX_MODEL.split("/")[-1].split(".onnx")[0])
     return learner
 
@@ -116,19 +123,20 @@ def get_num_features(body):
         return num_features_model(nn.Sequential(*body.children()))
     except:
         for i in range(len(body)):
-            layer = body[-i + 1]
+            layer = body[-(i + 1)]
             print("am i stuck")
             if isinstance(layer, torch.nn.modules.linear.Linear):
                 return layer.out_features
-            if isinstance(layer, torch.nn.Sequential):
+            if isinstance(layer, torch.nn.Sequential) or isinstance(
+                layer, torch.nn.modules.container.ModuleList
+            ):
                 for block in layer:
                     for sublayer in block.children():
-                        print("what do you think")
                         if isinstance(sublayer, torch.nn.modules.linear.Linear):
                             return sublayer.out_features
                         if isinstance(
                             sublayer, timm.models.vision_transformer.Attention
-                        ):
+                        ) or isinstance(sublayer, timm.models.layers.mlp.Mlp):
                             for ll in sublayer.children():
                                 if isinstance(ll, torch.nn.modules.linear.Linear):
                                     print("possible")
@@ -178,7 +186,7 @@ def create_timm_model(
     Create custom architecture using `arch`, `n_in` and `n_out` from the `timm` library
     Code adapted from https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py
     """
-    print("got here though")
+
     body = create_timm_body(arch, pretrained, None, n_in, n_classes=n_out)
     if custom_head is None:
         nf = get_num_features(body)
@@ -259,22 +267,23 @@ def is_pytorch(model_name):
 
 if __name__ == "__main__":
     learner = train(
-        zipped_file= "../tests/zip_files/double_zipped.zip", 
-        model_name= "resnet50", 
-        batch_size= 2, 
-        loss_func= torch.nn.CrossEntropyLoss(), 
-        n_epochs= 2, 
+        model_name="xcit_small_12_p8_224_dist",
+        batch_size=2,
+        loss_func=torch.nn.CrossEntropyLoss(),
+        n_epochs=3,
+        shuffle=False,
+        optimizer=Adam,
+        lr=3e-4,
         n_classes=2,
-        lr=1e-3
+        zipped_file="../tests/zip_files/double_zipped.zip",
     )
 
-    assert learner.epoch == 2
-    assert type(learner.loss_func) is torch.nn.CrossEntropyLoss
-    assert get_num_features(learner) == 2
-
-    val = pd.read_csv('./backend/dl_results.csv')
-    if val['train_loss'].isnull().any():
-        assert False
-    elif val['valid_loss'].isnull().any():
-        assert False
-    assert True
+    # learner = train(
+    #     zipped_file= "../tests/zip_files/double_zipped.zip",
+    #     model_name= "resnet50",
+    #     batch_size= 2,
+    #     loss_func= torch.nn.CrossEntropyLoss(),
+    #     n_epochs= 2,
+    #     n_classes=2,
+    #     lr=1e-3
+    # )

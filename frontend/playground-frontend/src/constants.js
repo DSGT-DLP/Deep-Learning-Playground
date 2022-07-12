@@ -6,6 +6,7 @@ export const COLORS = {
   background: "#F6F6FF",
   dark_blue: "#003058",  // primary
   gold: "#B3A36A",  // secondary
+  visited: "#808080"
 };
 
 export const URLs = {

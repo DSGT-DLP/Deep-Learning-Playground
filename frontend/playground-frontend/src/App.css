@@ -175,6 +175,7 @@ input {
   display: flex;
   justify-content: center;
 }
+
 #nav-bar {
   position: sticky;
   z-index: 10;
@@ -291,7 +292,10 @@ textarea {
 
 .foot-element {
   display: inline-block;
+  object-fit: contain;
 }
+
+
 
 
 /* -------------------------------------------------------------------------- */

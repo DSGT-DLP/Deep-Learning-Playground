@@ -123,7 +123,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
             1e-4,
             2,
         ),
-        ("tv_resnet152", 1, torch.nn.CrossEntropyLoss(), 3, False, Adam, 3e-4, 2),
+        ("tv_resnet152", 2, torch.nn.CrossEntropyLoss(), 3, False, Adam, 3e-4, 2),
         (
             "xcit_small_12_p8_224_dist",
             2,

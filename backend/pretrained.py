@@ -61,21 +61,7 @@ def train(
 
     setattr(dls, "device", device)
 
-    if is_timm(model_name):
-        learner = local_timm_learner(
-            dls,
-            model_name,
-            lr=lr,
-            opt_func=optimizer,
-            n_out=n_classes,
-            cut=cut,
-            normalize=False,
-            n_in=chan_in,
-            loss_func=loss_func,
-            model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
-        )
-
-    elif is_pytorch(model_name):
+    if is_pytorch(model_name):
         model = eval("torchvision.models.{}".format(model_name))
         learner = vision_learner(
             dls,
@@ -88,6 +74,20 @@ def train(
             loss_func=loss_func,
             n_out=n_classes,
             n_in=chan_in,
+            model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
+        )
+    elif is_timm(model_name):
+        print("made the zipped file")
+        learner = local_timm_learner(
+            dls,
+            model_name,
+            lr=lr,
+            opt_func=optimizer,
+            n_out=n_classes,
+            cut=cut,
+            normalize=False,
+            n_in=chan_in,
+            loss_func=loss_func,
             model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
         )
 
@@ -143,7 +143,7 @@ def get_num_features(body):
                                     return ll.out_features
 
 
-def create_timm_body(arch: str, pretrained=True, cut=None, n_in=3, n_classes=10):
+def local_create_timm_body(arch: str, pretrained=True, cut=None, n_in=3, n_classes=10):
     """
     Creates a body from any model in the `timm` library.
     Code adapted from https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py
@@ -174,7 +174,7 @@ def create_timm_body(arch: str, pretrained=True, cut=None, n_in=3, n_classes=10)
         raise NameError("cut must be either integer or function")
 
 
-def create_timm_model(
+def local_create_timm_model(
     arch: str,
     n_out,
     cut=None,
@@ -190,7 +190,7 @@ def create_timm_model(
     Code adapted from https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py
     """
 
-    body = create_timm_body(arch, pretrained, None, n_in, n_classes=n_out)
+    body = local_create_timm_body(arch, pretrained, None, n_in, n_classes=n_out)
     if custom_head is None:
         nf = get_num_features(body)
         head = create_head(nf, n_out, concat_pool=concat_pool, **kwargs)
@@ -230,7 +230,7 @@ def local_timm_learner(
 
     if y_range is None and "y_range" in config:
         y_range = config.pop("y_range")
-    model = create_timm_model(
+    model = local_create_timm_model(
         arch, n_out, default_split, pretrained, y_range=y_range, n_in=n_in, **config
     )
     learn = Learner(dls, model, loss_func=loss_func, splitter=default_split, **kwargs)
@@ -242,6 +242,8 @@ def is_timm(model_name):
     """
     Checks if the model_name is present in the timm models catalogue
     """
+    if "pit" in model_name:
+        return False
     for i in range(len(timm.list_models(pretrained=True))):
         if model_name == timm.list_models(pretrained=True)[i]:
             return True

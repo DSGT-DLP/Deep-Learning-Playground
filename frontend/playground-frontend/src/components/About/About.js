@@ -1,4 +1,10 @@
 import React from "react";
+import pythonLogo from "../../images/logos/python-logo.png";
+import pandasLogo from "../../images/logos/pandas-logo.svg";
+import pyTorchLogo from "../../images/logos/pytorch-logo.png";
+import flaskLogo from "../../images/logos/flask-logo.png";
+import reactLogo from "../../images/logos/react-logo.png";
+import awsLogo from "../../images/logos/aws-logo.png";
 
 const About = () => {
   return (
@@ -39,30 +45,41 @@ const About = () => {
       </div>
 
       <div className="sections" id="tech">
-        <h3>Technology Used</h3>
-        DLP uses the following tools and libraries to work properly:
-        <ul>
-          <li>
-            Python : Programming language widely used for Data Science, AI, and
-            ML. Easily understandable by a human and has a lot of developer
-            support
-          </li>
-          <li>
+        <h3>Technologies Used</h3>
+
+        <div className="tech-rows">
+          <div className="tech-row-content">
+            <img src={pythonLogo} className="tech-img-content"></img>
+            <span className="tech-text-content">
+              Python : Programming language widely used for Data Science, AI,
+              and ML. Easily understandable by a human and has a lot of
+              developer support
+            </span>
+          </div>
+          <div className="tech-row-content">
+            <img src={pyTorchLogo} className="tech-img-content"></img>
             Pytorch : Libary that helps build, train, test deep learning models.
             We use this library to build the user-defined deep learning model
-          </li>
-          <li>
+          </div>
+          <div className="tech-row-content">
+            <img src={pandasLogo} className="tech-img-content"></img>
             pandas : Python library that allows one to parse CSV files and
             extract relevant information. It's very user friendly and has
             helpful documentation
-          </li>
-          <li>
+          </div>
+          <div className="tech-row-content">
+            <img src={flaskLogo} className="tech-img-content"></img>
             Flask : Backend service that allows for the modeling magic to happen
-          </li>
-          <li>
+          </div>
+          <div className="tech-row-content">
+            <img src={reactLogo} className="tech-img-content"></img>
             React : JavaScript library used to display the website to the user
-          </li>
-        </ul>
+          </div>
+          <div className="tech-row-content">
+            <img src={awsLogo} className="tech-img-content"></img>
+            AWS :
+          </div>
+        </div>
       </div>
 
       <div className="sections" id="installation">

@@ -1,0 +1,64 @@
+html {
+  /* box sizing border box specifies no padding, width = width etc */
+  box-sizing: border-box;
+}
+#nav-bar {
+  margin: 0;
+  position: sticky;
+  background-color: #003057;
+  color: white;
+  overflow: hidden;
+  z-index: 10;
+  top: 0vmax;
+  max-width: 100%;
+  width: 100vw;
+}
+
+.navElement {
+  display: block;
+  padding: 20px;
+  color: inherit;
+  float: right;
+  text-align: center;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+.navElement:hover {
+  background-color: #f7f7f7;
+}
+.navElement:hover > a {
+  color: #003058;
+}
+@media screen and (max-width: 600px) {
+  #nav-bar li:not(:first-child) {
+    display: none;
+  }
+}
+.nav {
+  padding-inline: 10px;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  box-sizing: inherit;
+  width: inherit;
+  height: inherit;
+  overflow: hidden;
+}
+#title-name {
+  float: left;
+  font-size: large;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav li {
+  list-style: none;
+  float: right;
+}
+.nav li a {
+  text-decoration: none;
+  color: white;
+  font-size: 25px;
+}

@@ -18,6 +18,8 @@ dependencies:
   - pip
   - statsmodels
   - pytorch
+  - selenium
+  - sendgrid
   - black
   - flask
   - flask-cors

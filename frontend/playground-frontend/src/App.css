@@ -1,14 +1,51 @@
+@charset "UTF-8";
+/* 
+Theme Name:   DSGT Deep Learning Playground
+Text Domain:  datasciencegt-dlp
+Version:      1.0
+License:      GNU General Public License v3 or later
+License URI:  https://www.gnu.org/licenses/gpl-3.0.en.html
+Description:  A deep learning playground to provoke appease and calamity
+Author:       See CODEOWNDERS
+Author URI:   https://datasciencegt.org/
+*/
+
+/* -------------------------------------------------------------------------- */
+/*	1. Root
+/* -------------------------------------------------------------------------- */
+
 :root {
   --primary: #003058;
   --secondary: #b3a36a;
   --layer: #cd7bff;
 }
+
+/* -------------------------------------------------------------------------- */
+/*	1. General HTML
+/* -------------------------------------------------------------------------- */
+
 body {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
   color: black;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif, Helvetica;
 }
+img {
+  display: block;
+  height: auto;
+}
+input {
+  border-width: 0.5px;
+  border-color: var(--layer);
+  border-radius: 10px;
+  padding: 5px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. General DLP Styles
+/* -------------------------------------------------------------------------- */
+
 .sections {
   margin: auto;
   background-color: #f6f6ff;
@@ -17,6 +54,11 @@ body {
   text-align: justify;
   text-justify: inter-word;
 }
+
+/* -------------------------------------------------------------------------- */
+/*	1. Header
+/* -------------------------------------------------------------------------- */
+
 #header-section {
   box-sizing: content-box;
   position: static;
@@ -25,10 +67,157 @@ body {
   text-align: center;
   color: white;
 }
+#nav-bar .nav #title-name > a {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 
-input {
+#nav-bar html {
+  /* box sizing border box specifies no padding, width = width etc */
+  box-sizing: border-box;
+}
+
+#nav-bar {
+  margin: 0;
+  position: sticky;
+  background-color: var(--primary);
+  color: white;
+  overflow: hidden;
+  z-index: 10;
+  top: 0vmax;
+  max-width: 100%;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#nav-bar .navElement {
+  display: block;
+  padding: 20px;
+  color: inherit;
+  float: right;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#nav-bar .navElement:hover {
+  background-color: #f7f7f7;
+}
+
+#nav-bar .navElement:hover > a {
+  color: var(--primary);
+}
+
+@media screen and (max-width: 600px) {
+  #nav-bar li:not(:first-child) {
+    display: none;
+  }
+}
+
+#nav-bar .nav {
+  padding-inline: 10px;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  box-sizing: inherit;
+  width: fit-content;
+  height: inherit;
+  overflow: hidden;
+}
+
+#nav-bar #title-name {
+  float: left;
+  font-size: large;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#nav-bar .nav li {
+  list-style: none;
+  float: left;
+}
+#nav-bar .nav li a {
+  text-decoration: none;
+  color: white;
+  font-size: 25px;
+}
+
+#nav-bar a.image-title {
+  margin-left: 10px;
+  color: white;
+  text-decoration: none;
+  font-size: 25px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#nav-bar a.image-title:hover,
+#nav-bar a.image-title:focus {
+  color: var(--secondary);
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. About and Wiki
+/* -------------------------------------------------------------------------- */
+
+.sections {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+.tech-row-content {
+  width: auto;
+  min-height: 3em;
+  padding: 0.5em;
+  margin: 1em;
+  display: inline-block;
+}
+img.tech-img-content {
+  float: left;
+  max-width: 10%;
+  max-height: 100%;
+}
+textarea {
   border-width: 0.5px;
   border-color: var(--layer);
   border-radius: 10px;
   padding: 5px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. Loader (Animated)
+/*  Reference: https://www.w3schools.com/howto/howto_css_loader.asp
+/* -------------------------------------------------------------------------- */
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid var(--primary);
+  width: 50px;
+  height: 50px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

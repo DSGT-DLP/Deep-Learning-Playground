@@ -164,7 +164,10 @@ def create_timm_body(arch: str, pretrained=True, cut=None, n_in=3, n_classes=10)
     if isinstance(cut, int):
         if cut == 0:
             cut = -1
-        return nn.Sequential(*list(model.children())[:cut])
+        l = []
+        for x in model.children():
+            l.append(x)
+        return nn.Sequential(*l[:cut])
     elif callable(cut):
         return cut(model)
     else:
@@ -234,7 +237,6 @@ def local_timm_learner(
     if pretrained:
         learn.freeze()
     return learn
-
 
 def is_timm(model_name):
     """

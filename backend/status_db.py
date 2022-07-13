@@ -85,9 +85,9 @@ class StatusDDBUtil:
         """
         Retrieve info regarding specific request id from status table
         """
-        if (request_id is None):
+        if request_id is None:
             raise ValueError(f"Invalid request_id None not allowed")
-        elif (type(request_id) is not str):
+        elif type(request_id) is not str:
             raise ValueError(f"Could not add record with request_id not of type 'str'")
             
         response = self.table.get_item(Key={StatusAttribute.REQUEST_ID.value: request_id})
@@ -116,9 +116,9 @@ class StatusDDBUtil:
         """
         if request_id is None:
             raise ValueError(f"Could not add record with request_id: None")
-        elif (type(request_id) is not str):
+        elif type(request_id) is not str:
             raise ValueError(f"Could not add record with request_id not of type 'str'")
-        elif (new_status not in set(member.value for member in StatusEnum)):
+        elif new_status not in set(member.value for member in StatusEnum):
             raise ValueError(f"Could not add record with invalid status: {new_status}")
         
         try:
@@ -145,9 +145,9 @@ class StatusDDBUtil:
         """
         Delte status for a given request id
         """
-        if (request_id is None):
+        if request_id is None:
             raise ValueError(f"Could not add record with request_id: None")
-        elif (type(request_id) is not str):
+        elif type(request_id) is not str:
             raise ValueError(f"Could not add record with request_id not of type 'str'")
         
         try:
@@ -168,13 +168,13 @@ class StatusDDBUtil:
         item = {k: v for k, v in asdict(data).items() if v is not None}
         
         request_id = item.get('request_id')
-        if (request_id is None):
+        if request_id is None:
             raise ValueError(f"Could not add record with request_id: None")
-        elif (type(request_id) is not str):
+        elif type(request_id) is not str:
             raise ValueError(f"Could not add record with request_id not of type 'str'")
-        elif (item.get('status') not in set(member.value for member in StatusEnum)):
+        elif item.get('status') not in set(member.value for member in StatusEnum):
             raise ValueError(f"Could not add record with invalid status: {item.get('status')}")
-        elif (item.get('timestamp') is None):
+        elif item.get('timestamp') is None:
             raise ValueError(f"Could not add record with missing timestamp")
 
         try:

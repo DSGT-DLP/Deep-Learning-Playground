@@ -60,7 +60,7 @@ def teardown() -> None:
     yield test_records 
     
     #tearing down tests
-    if (len(test_records) != 0):
+    if len(test_records) != 0:
         status_ddb = get_status_table("us-west-2")
         for request_id in test_records:
             try:

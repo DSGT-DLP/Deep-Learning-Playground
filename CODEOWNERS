@@ -18,6 +18,7 @@
 # For unit tests, @LucasZhang58 and @karkir0003 will be requested in such a pull request
 /tests/test_data_processing.py @LucasZhang58 @karkir0003
 /tests/test_zip_loader.py @vidushiMaheshwari
+/tests/test_pretrained_train.py @andrewpeng02
 /tests/expected/unzipped/double_zipped @vidushiMaheshwari
 
 

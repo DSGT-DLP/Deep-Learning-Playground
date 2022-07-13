@@ -2,9 +2,8 @@ from typing import Dict, Any
 from enum import Enum, EnumMeta
 from dataclasses import dataclass, asdict 
 from datetime import datetime
-from attr import attr
+#from attr import attr
 import boto3
-
 
 class StatusEnumMeta(EnumMeta):
     def __contains__(cls, item):
@@ -80,6 +79,11 @@ class StatusDDBUtil:
         """
         Retrieve info regarding specific request id from status table
         """
+        if (request_id is None):
+            raise ValueError(f"Invalid request_id None not allowed")
+        elif (type(request_id) is not str):
+            raise ValueError(f"Could not add record with request_id not of type 'str'")
+            
         response = self.table.get_item(Key={StatusAttribute.REQUEST_ID.value: request_id})
         
         if 'Item' not in response:
@@ -104,6 +108,13 @@ class StatusDDBUtil:
         """
         Update status for a given request id
         """
+        if request_id is None:
+            raise ValueError(f"Could not add record with request_id: None")
+        elif (type(request_id) is not str):
+            raise ValueError(f"Could not add record with request_id not of type 'str'")
+        elif (new_status not in set(member.value for member in StatusEnum)):
+            raise ValueError(f"Could not add record with invalid status: {new_status}")
+        
         try:
             self.table.update_item(
                 Key={
@@ -115,7 +126,8 @@ class StatusDDBUtil:
                 },
                 ExpressionAttributeNames = {
                     "#s": "status"
-                }
+                },
+                ConditionExpression="attribute_exists(request_id)"
             )
             return "Success"
         except Exception as e:
@@ -127,26 +139,46 @@ class StatusDDBUtil:
         """
         Delte status for a given request id
         """
+        if (request_id is None):
+            raise ValueError(f"Could not add record with request_id: None")
+        elif (type(request_id) is not str):
+            raise ValueError(f"Could not add record with request_id not of type 'str'")
+        
         try:
             self.table.delete_item(
                 Key={
                     'request_id': request_id
                 },
+                ConditionExpression="attribute_exists(request_id)"
             )
-
+            
             return "Success"
         except Exception as e:
             print(e)
             print(f"Oops. Could not delete status for request id {request_id}")
             raise ValueError(f"Oops. Could not delete status for request id {request_id}")
     
-        
-        
-    
     def create_status_entry(self, data: StatusData):
         item = {k: v for k, v in asdict(data).items() if v is not None}
-        self.table.put_item(Item=item)
-        return "Success"
+        
+        request_id = item.get('request_id')
+        if (request_id is None):
+            raise ValueError(f"Could not add record with request_id: None")
+        elif (type(request_id) is not str):
+            raise ValueError(f"Could not add record with request_id not of type 'str'")
+        elif (item.get('status') not in set(member.value for member in StatusEnum)):
+            raise ValueError(f"Could not add record with invalid status: {item.get('status')}")
+        elif (item.get('timestamp') is None):
+            raise ValueError(f"Could not add record with missing timestamp")
+
+        try:
+            self.table.put_item(
+                Item=item,
+                ConditionExpression="attribute_not_exists(request_id)"
+            )
+            return "Success"
+        except Exception as e:
+            raise ValueError(f"Could not add record. request_id {request_id} already exists in the table")
 
 def set_status_data(item: Dict[str, Any], attribute: StatusAttribute):
     """
@@ -160,3 +192,10 @@ def get_status_table(region: str) -> StatusDDBUtil:
 
 #Make a removal function
 
+#table = get_status_table('us-west-2')
+#dummy_status = {"request_id": "3", "status": StatusEnum.FAILED.name, "timestamp": datetime.now().isoformat()}
+#status_data = StatusData(set_status_data(dummy_status, StatusAttribute.REQUEST_ID),
+#                            set_status_data(dummy_status, StatusAttribute.STATUS),
+#                            set_status_data(dummy_status, StatusAttribute.TIMESTAMP))
+#print(status_data)
+#table.create_status_entry(status_data)

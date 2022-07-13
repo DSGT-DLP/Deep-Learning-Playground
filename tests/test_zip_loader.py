@@ -13,7 +13,7 @@ double_zipped = "zip_files/double_zipped.zip"
 not_zip = "zip_files/not_zip"
 num_classes = "zip_files/num_classes.zip"
 
-dir_in = '' if (os.getcwd()).split('\\')[-1].split('/')[-1] == 'tests' else 'tests'
+dir_in = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "tests"
 
 
 @pytest.mark.parametrize(
@@ -28,9 +28,9 @@ def test_invalid_file_structure(filepath, expected):
 
     filepath = os.path.join(dir_in, filepath)
 
-    print('os.cwd(): ', os.getcwd())
-    print('dir_in: ', dir_in)
-    print('filepath: ', filepath)
+    print("os.cwd(): ", os.getcwd())
+    print("dir_in: ", dir_in)
+    print("filepath: ", filepath)
     with pytest.raises(ValueError) as e:
         loader_from_zipped(filepath)
     assert str(e.value) == expected
@@ -44,18 +44,24 @@ def test_load_correct_file_structure(filepath, relative_output_path):
     try:
         expected_filename = filepath.split("/")[-1]
 
-        filepath = os.path.join(dir_in, 'zip_files')
-        filepath = filepath + '/' + expected_filename
+        filepath = os.path.join(dir_in, "zip_files")
+        filepath = filepath + "/" + expected_filename
         # print(filepath)
-        loader_from_zipped(filepath, train_transform=[transforms.GaussianBlur(kernel_size=3), transforms.ToTensor()])
+        loader_from_zipped(
+            filepath,
+            train_transform=[
+                transforms.GaussianBlur(kernel_size=3),
+                transforms.ToTensor(),
+            ],
+        )
         # print("passed the loader from zipped function without exception")
         expected_filename = expected_filename.replace(".zip", "")
         print("expected/{}".format(expected_filename))
         print(relative_output_path)
         print(os.path.exists("expected/{}".format(expected_filename)))
         print(os.path.exists(relative_output_path))
-        dcmf2 = os.path.join(dir_in, 'expected')
-        dcmp = dircmp(relative_output_path, dcmf2+ '/'+ expected_filename)
+        dcmf2 = os.path.join(dir_in, "expected")
+        dcmp = dircmp(relative_output_path, dcmf2 + "/" + expected_filename)
 
         assert len(dcmp.diff_files) == 0
     except Exception:
@@ -67,25 +73,23 @@ def test_load_correct_file_structure(filepath, relative_output_path):
     [
         (None, [transforms.GaussianBlur(kernel_size=3)], "double_zipped.zip"),
         (
-            
-                [
-                    transforms.GaussianBlur(kernel_size=3),
-                    transforms.RandomHorizontalFlip(p=0.4),
-                    transforms.ToTensor()
-                ],
+            [
+                transforms.GaussianBlur(kernel_size=3),
+                transforms.RandomHorizontalFlip(p=0.4),
+                transforms.ToTensor(),
+            ],
             None,
             double_zipped,
         ),
         (
             [transforms.RandomHorizontalFlip(p=0.9), transforms.ToTensor()],
-                [
-                    transforms.RandomVerticalFlip(p=0.3),
-                    transforms.GaussianBlur(kernel_size=3),
-                    transforms.ToTensor()
-                ],
+            [
+                transforms.RandomVerticalFlip(p=0.3),
+                transforms.GaussianBlur(kernel_size=3),
+                transforms.ToTensor(),
+            ],
             double_zipped,
         )
-
         # ([transforms.Normalize(0, 1), transforms.ToTensor()], None, double_zipped)
     ],
 )
@@ -108,14 +112,24 @@ def check_diff_transforms(train_transform, valid_transform, filepath):
 
     assert not torch.equal(train_data_val, valid_data_val)
 
+
 @pytest.mark.parametrize(
     "filepath, tensor_array",
-    [(double_zipped, [transforms.Normalize(0, 1)]), ## Applying Tensor only
-    (double_zipped, [transforms.RandomVerticalFlip(p=0.3)]), ## Legal without toTensor
-    (double_zipped, [transforms.ToTensor(), transforms.RandomChoice(transforms=[transforms.Resize((256, 256))])])
-    ]
+    [
+        (double_zipped, [transforms.Normalize(0, 1)]),  ## Applying Tensor only
+        (
+            double_zipped,
+            [transforms.RandomVerticalFlip(p=0.3)],
+        ),  ## Legal without toTensor
+        (
+            double_zipped,
+            [
+                transforms.ToTensor(),
+                transforms.RandomChoice(transforms=[transforms.Resize((256, 256))]),
+            ],
+        ),
+    ],
 )
-
 def check_ordered_transforms(filepath, tensor_array):
     with pytest.raises(ValueError) as e:
         train_loader, valid_loader = loader_from_zipped(

@@ -7,7 +7,11 @@ import pandas as pd
 import timm
 
 train_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "tests"
-backend_dir = "../backend" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "backend"
+backend_dir = (
+    "../backend"
+    if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests"
+    else "backend"
+)
 double_zipped = os.path.join(train_dir, "zip_files/double_zipped.zip")
 valid_2 = os.path.join(train_dir, "zip_files/valid_2.zip")
 
@@ -95,7 +99,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
         loss_func=torch.nn.CrossEntropyLoss(),
         n_epochs=2,
         lr=1e-3,
-        n_classes=n_classes
+        n_classes=n_classes,
     )
 
     assert type(learner.loss_func) is torch.nn.CrossEntropyLoss
@@ -106,8 +110,9 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
         assert False
     elif val["valid_loss"].isnull().any():
         assert False
-    assert val.shape[0] == 2 #n_epochs
+    assert val.shape[0] == 2  # n_epochs
     assert True
+
 
 ## PYTEST for ViT
 # @pytest.mark.parametrize( ## failing ALL
@@ -186,6 +191,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
 def test_train_invalid_path(path_to_file, model_name):
     with pytest.raises(ValueError):
         train(path_to_file, model_name, 8, None, 1)
+
 
 # def test_all_models():
 #     failed = []

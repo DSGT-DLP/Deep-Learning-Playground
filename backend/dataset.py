@@ -239,11 +239,14 @@ if __name__ == "__main__":
     read_dataset("https://raw.githubusercontent.com/karkir0003/dummy/main/job.csv")
     read_local_csv_file("test.csv")
 
-    # local testing
     train_loader, valid_loader = loader_from_zipped(
         "../tests/zip_files/double_zipped.Zip",
         train_transform=[
             transforms.ToTensor(),
             transforms.transforms.RandomChoice(transforms=[transforms.ToTensor()]),
         ],
+    )
+
+    train_dataset, valid_dataset = dataset_from_zipped(
+        zipped_folder="../tests/zip_files/double_zipped.Zip"
     )

@@ -1,6 +1,14 @@
 import React from "react";
+import pythonLogo from "../../images/logos/python-logo.png";
+import pandasLogo from "../../images/logos/pandas-logo.svg";
+import pyTorchLogo from "../../images/logos/pytorch-logo.png";
+import flaskLogo from "../../images/logos/flask-logo.png";
+import reactLogo from "../../images/logos/react-logo.png";
+import awsLogo from "../../images/logos/aws-logo.png";
 
 const About = () => {
+  const urlOpener = (url) => () => window.open(url);
+
   return (
     <div className="about-page">
       <div id="header-section">
@@ -39,30 +47,67 @@ const About = () => {
       </div>
 
       <div className="sections" id="tech">
-        <h3>Technology Used</h3>
-        DLP uses the following tools and libraries to work properly:
-        <ul>
-          <li>
-            Python : Programming language widely used for Data Science, AI, and
-            ML. Easily understandable by a human and has a lot of developer
-            support
-          </li>
-          <li>
-            Pytorch : Libary that helps build, train, test deep learning models.
+        <h3>Technologies Used</h3>
+
+        <div className="tech-rows">
+          <div className="tech-row-content">
+            <img
+              src={pythonLogo}
+              className="tech-img-content"
+              onClick={urlOpener("https://docs.python.org/3/")}
+            ></img>
+            <span className="tech-text-content">
+              <b>Python:</b> Programming language widely used for Data Science, AI, and ML. Easily understandable by a human and has a lot of
+              developer support
+            </span>
+          </div>
+          <div className="tech-row-content">
+            <img
+              src={pyTorchLogo}
+              className="tech-img-content"
+              onClick={urlOpener("https://pytorch.org/docs/stable/index.html")}
+            ></img>
+            <b>Pytorch:</b> Libary that helps build, train, test deep learning models.
             We use this library to build the user-defined deep learning model
-          </li>
-          <li>
-            pandas : Python library that allows one to parse CSV files and
+          </div>
+          <div className="tech-row-content">
+            <img
+              src={pandasLogo}
+              className="tech-img-content"
+              onClick={urlOpener("https://pandas.pydata.org/docs/")}
+            ></img>
+            <b>pandas:</b> Python library that allows one to parse CSV files and
             extract relevant information. It's very user friendly and has
             helpful documentation
-          </li>
-          <li>
-            Flask : Backend service that allows for the modeling magic to happen
-          </li>
-          <li>
-            React : JavaScript library used to display the website to the user
-          </li>
-        </ul>
+          </div>
+          <div className="tech-row-content">
+            <img
+              src={flaskLogo}
+              className="tech-img-content"
+              onClick={urlOpener("https://flask.palletsprojects.com/en/2.1.x/")}
+            ></img>
+            <b>Flask:</b> Backend service that allows for the modeling magic to happen
+          </div>
+          <div className="tech-row-content">
+            <img
+              src={reactLogo}
+              className="tech-img-content"
+              onClick={urlOpener(
+                "https://reactjs.org/docs/getting-started.html"
+              )}
+            ></img>
+            <b>React:</b> JavaScript library used to display the website to the user
+          </div>
+          <div className="tech-row-content">
+            <img
+              src={awsLogo}
+              className="tech-img-content"
+              onClick={urlOpener("https://docs.aws.amazon.com/")}
+            ></img>
+            <b>AWS:</b> Amazon Web Services provides on-demand cloud computing
+            platforms and APIs to this project on a metered pay-as-you-go basis
+          </div>
+        </div>
       </div>
 
       <div className="sections" id="installation">
@@ -87,8 +132,6 @@ const About = () => {
           to the purple "+" icon, select values in the dropdowns, and click
           train! Sit back and relax and let us take care of building the model!
         </p>
-
-        <div id="gif"></div>
 
         <p>
           Once the model building has finished, you will get a downloadable

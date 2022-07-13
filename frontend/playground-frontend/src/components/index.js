@@ -9,3 +9,8 @@ export { default as CSVInput } from "./CSVInput";
 export { default as TrainButton } from "./TrainButton";
 export { default as EmailInput } from "./EmailInput";
 export { default as TitleText } from "./mini_components/TitleText";
+export { default as CodeSnippet} from './CodeSnippet';
+export { default as Navbar} from './Navbar/Navbar';
+export { default as About} from './About/About';
+export { default as Wiki} from './Wiki/Wiki';
+export { default as Feedback} from './Feedback';

@@ -46,6 +46,12 @@ class StatusDDBUtil:
         self.table_name = table_name
         self.dynamodb = boto3.resource('dynamodb', region)
         self.table = table if table else boto3.resource('dynamodb', region).Table(self.table_name)
+        # self.table = boto3.resource('dynamodb', region).Table(self.table_name) else self.create_table()
+        # self.table = None 
+        # if (table is None):
+        #     self.create_table()
+        # else:
+        #     self.table = boto3.resource('dynamodb', region).Table(self.table_name)
     
     def create_table(self):
         """
@@ -191,11 +197,3 @@ def get_status_table(region: str) -> StatusDDBUtil:
     return StatusDDBUtil(table_name, region)
 
 #Make a removal function
-
-#table = get_status_table('us-west-2')
-#dummy_status = {"request_id": "3", "status": StatusEnum.FAILED.name, "timestamp": datetime.now().isoformat()}
-#status_data = StatusData(set_status_data(dummy_status, StatusAttribute.REQUEST_ID),
-#                            set_status_data(dummy_status, StatusAttribute.STATUS),
-#                            set_status_data(dummy_status, StatusAttribute.TIMESTAMP))
-#print(status_data)
-#table.create_status_entry(status_data)

@@ -74,7 +74,29 @@ class StatusDDBUtil:
         )
         self.table = table 
         
-    def get_record(self, request_id: str) -> StatusData:
+    def create_status_entry(self, data: StatusData):
+        item = {k: v for k, v in asdict(data).items() if v is not None}
+        
+        request_id = item.get('request_id')
+        if request_id is None:
+            raise ValueError(f"Could not add record with request_id: None")
+        elif type(request_id) is not str:
+            raise ValueError(f"Could not add record with request_id not of type 'str'")
+        elif item.get('status') not in set(member.value for member in StatusEnum):
+            raise ValueError(f"Could not add record with invalid status: {item.get('status')}")
+        elif item.get('timestamp') is None:
+            raise ValueError(f"Could not add record with missing timestamp")
+
+        try:
+            self.table.put_item(
+                Item=item,
+                ConditionExpression="attribute_not_exists(request_id)"
+            )
+            return "Success"
+        except Exception as e:
+            raise ValueError(f"Could not add record. request_id {request_id} already exists in the table")    
+        
+    def get_status_entry(self, request_id: str) -> StatusData:
         """
         Retrieve info regarding specific request id from status table
         """
@@ -103,7 +125,7 @@ class StatusDDBUtil:
             timestamp=set_status_data(item, StatusAttribute.TIMESTAMP)
         )
         
-    def update_status(self, request_id: str, new_status: StatusEnum):
+    def update_status_entry(self, request_id: str, new_status: StatusEnum):
         """
         Update status for a given request id
         """
@@ -134,7 +156,7 @@ class StatusDDBUtil:
             print(f"Oops. Could not update status for request id {request_id}")
             raise ValueError(f"Oops. Could not update status to {new_status} for request id {request_id}")
     
-    def delete_status(self, request_id: str):
+    def delete_status_entry(self, request_id: str):
         """
         Delte status for a given request id
         """
@@ -156,28 +178,6 @@ class StatusDDBUtil:
             print(e)
             print(f"Oops. Could not delete status for request id {request_id}")
             raise ValueError(f"Oops. Could not delete status for request id {request_id}")
-    
-    def create_status_entry(self, data: StatusData):
-        item = {k: v for k, v in asdict(data).items() if v is not None}
-        
-        request_id = item.get('request_id')
-        if request_id is None:
-            raise ValueError(f"Could not add record with request_id: None")
-        elif type(request_id) is not str:
-            raise ValueError(f"Could not add record with request_id not of type 'str'")
-        elif item.get('status') not in set(member.value for member in StatusEnum):
-            raise ValueError(f"Could not add record with invalid status: {item.get('status')}")
-        elif item.get('timestamp') is None:
-            raise ValueError(f"Could not add record with missing timestamp")
-
-        try:
-            self.table.put_item(
-                Item=item,
-                ConditionExpression="attribute_not_exists(request_id)"
-            )
-            return "Success"
-        except Exception as e:
-            raise ValueError(f"Could not add record. request_id {request_id} already exists in the table")
 
 def set_status_data(item: Dict[str, Any], attribute: StatusAttribute):
     """

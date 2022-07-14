@@ -1,6 +1,8 @@
 # TODO:
 # (Enhancement) Allow other git repo feature
 
+"""The weights, biases and architectures are obtained through [timm](https://github.com/rwightman/pytorch-image-models/tree/master/timm/models) and [pytorch](https://pytorch.org/vision/stable/models.html) libraries. The models are trained through fastai (another library). Fastai has a direct compatibility with pytorch models, however wwf is used to connect timm models with fastai library."""
+
 import timm
 import torch.nn as nn
 import torch.hub
@@ -15,6 +17,7 @@ from fastai.callback.progress import CSVLogger
 from wwf.vision.timm import *
 from torchvision.models import *
 from torchvision import models
+from fastai.callback.hook import num_features_model
 
 try:
     from dataset import dataset_from_zipped
@@ -115,34 +118,6 @@ def get_all():
     return list
 
 
-def get_num_features(body):
-    """
-    Helper method which returns the number of out_features in a model by identifying the last linear layer and returning its out_features
-    """
-    try:
-        return num_features_model(nn.Sequential(*body.children()))
-    except:
-        for i in range(len(body)):
-            layer = body[-(i + 1)]
-            print("am i stuck")
-            if isinstance(layer, torch.nn.modules.linear.Linear):
-                return layer.out_features
-            if isinstance(layer, torch.nn.Sequential) or isinstance(
-                layer, torch.nn.modules.container.ModuleList
-            ):
-                for block in layer:
-                    for sublayer in block.children():
-                        if isinstance(sublayer, torch.nn.modules.linear.Linear):
-                            return sublayer.out_features
-                        if isinstance(
-                            sublayer, timm.models.vision_transformer.Attention
-                        ) or isinstance(sublayer, timm.models.layers.mlp.Mlp):
-                            for ll in sublayer.children():
-                                if isinstance(ll, torch.nn.modules.linear.Linear):
-                                    print("possible")
-                                    return ll.out_features
-
-
 def local_create_timm_body(arch: str, pretrained=True, cut=None, n_in=3, n_classes=10):
     """
     Creates a body from any model in the `timm` library.
@@ -192,7 +167,7 @@ def local_create_timm_model(
 
     body = local_create_timm_body(arch, pretrained, None, n_in, n_classes=n_out)
     if custom_head is None:
-        nf = get_num_features(body)
+        nf = num_features_model(body)
         head = create_head(nf, n_out, concat_pool=concat_pool, **kwargs)
     else:
         head = custom_head
@@ -238,6 +213,7 @@ def local_timm_learner(
         learn.freeze()
     return learn
 
+
 def is_timm(model_name):
     """
     Checks if the model_name is present in the timm models catalogue
@@ -271,7 +247,7 @@ def is_pytorch(model_name):
 
 if __name__ == "__main__":
     learner = train(
-        model_name="xcit_small_12_p8_224_dist",
+        model_name="resnet18",
         batch_size=2,
         loss_func=torch.nn.CrossEntropyLoss(),
         n_epochs=3,

@@ -1,9 +1,8 @@
 from typing import Dict, Any
 from enum import Enum, EnumMeta
 from dataclasses import dataclass, asdict 
-from datetime import datetime
-#from attr import attr
 import boto3
+from backend.constants import STATUS_TABLE_NAME, AWS_REGION
 
 class StatusEnumMeta(EnumMeta):
     def __contains__(cls, item):
@@ -46,12 +45,6 @@ class StatusDDBUtil:
         self.table_name = table_name
         self.dynamodb = boto3.resource('dynamodb', region)
         self.table = table if table else boto3.resource('dynamodb', region).Table(self.table_name)
-        # self.table = boto3.resource('dynamodb', region).Table(self.table_name) else self.create_table()
-        # self.table = None 
-        # if (table is None):
-        #     self.create_table()
-        # else:
-        #     self.table = boto3.resource('dynamodb', region).Table(self.table_name)
     
     def create_table(self):
         """
@@ -192,6 +185,8 @@ def set_status_data(item: Dict[str, Any], attribute: StatusAttribute):
     """
     return item[attribute.value] if attribute.value in item else None
 
-def get_status_table(region: str) -> StatusDDBUtil:
-    table_name = "status-table"
+def get_status_table(table_name:str = STATUS_TABLE_NAME, region:str = AWS_REGION) -> StatusDDBUtil:
+    """
+    Retrieves a status table as an instance of StatusDDBUtil
+    """
     return StatusDDBUtil(table_name, region)

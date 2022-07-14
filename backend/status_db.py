@@ -195,5 +195,3 @@ def set_status_data(item: Dict[str, Any], attribute: StatusAttribute):
 def get_status_table(region: str) -> StatusDDBUtil:
     table_name = "status-table"
     return StatusDDBUtil(table_name, region)
-
-#Make a removal function

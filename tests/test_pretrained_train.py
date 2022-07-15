@@ -58,31 +58,6 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
     assert val.shape[0] == 3
     assert True
 
-# Expected loss can be added, issue with overfitting
-# @pytest.mark.parametrize(
-#     "model_name",
-#     [
-#         ("resnet50"),
-#         ("vit_small_r26_s32_224"),
-#         ("efficientnet_b2"),
-#         ("vgg19"),
-#     ],
-# )
-# def test_train_effectiveness(model_name, expected_loss):
-#     learner = train(
-#         zipped_file=valid_2,
-#         model_name=model_name,
-#         batch_size=1,
-#         loss_func=torch.nn.CrossEntropyLoss(),
-#         n_epochs=3,
-#         n_classes=2,
-#         lr=1e-3,
-#     )
-
-#     val = pd.read_csv(os.path.join(backend_dir, "dl_results.csv"))
-#     assert val < 0.5 # to set
-
-
 @pytest.mark.parametrize(
     "path_to_file,model_name, n_classes",
     [
@@ -113,73 +88,6 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
     assert val.shape[0] == 2  # n_epochs
     assert True
 
-
-## PYTEST for ViT
-# @pytest.mark.parametrize( ## failing ALL
-#     "model_name,batch_size,loss_func,n_epochs,shuffle,optimizer,lr,n_classes",
-#     [
-#         (
-#             "tf_mobilenetv3_small_075",
-#             2,
-#             torch.nn.CrossEntropyLoss(),
-#             3,
-#             True,
-#             Adam,
-#             1e-4,
-#             2,
-#         ),
-#         ("tv_resnet152", 2, torch.nn.CrossEntropyLoss(), 3, False, Adam, 3e-4, 2),
-#         (
-#             "xcit_small_12_p8_224_dist",
-#             2,
-#             torch.nn.CrossEntropyLoss(),
-#             4,
-#             True,
-#             Adam,
-#             1e-4,
-#             2,
-#         ),
-#         # (
-#         #     "pit_xs_distilled_224",
-#         #     2,
-#         #     torch.nn.CrossEntropyLoss(),
-#         #     2,
-#         #     True,
-#         #     SGD,
-#         #     1e-2,
-#         #     2,
-#         # ), NOT TRAINING PiT models since they require an image-image dataset
-#     ],
-# )
-# def test_train_valid_input_with_params(
-#     model_name, batch_size, loss_func, n_epochs, shuffle, optimizer, lr, n_classes
-# ):
-#     learner = train(
-#         zipped_file= double_zipped,
-#         model_name= model_name,
-#         batch_size= batch_size,
-#         loss_func= loss_func,
-#         n_epochs= n_epochs,
-#         shuffle= shuffle,
-#         optimizer= optimizer,
-#         lr= lr,
-#         n_classes=n_classes,
-#     )
-
-#     assert learner.opt_func.__name__ == optimizer.__name__
-#     assert type(learner.loss_func) is type(loss_func)
-#     # assert get_num_features(learner) == n_classes
-#     assert learner.lr == lr
-
-#     val = pd.read_csv(os.path.join(backend_dir, "dl_results.csv"))
-#     if val["train_loss"].isnull().any():
-#         assert False
-#     elif val["valid_loss"].isnull().any():
-#         assert False
-#     assert val.shape[0] == n_epochs #n_epochs
-#     assert True
-
-
 @pytest.mark.parametrize(
     "path_to_file,model_name",
     [
@@ -191,22 +99,3 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
 def test_train_invalid_path(path_to_file, model_name):
     with pytest.raises(ValueError):
         train(path_to_file, model_name, 8, None, 1)
-
-
-# def test_all_models():
-#     failed = []
-#     for x in get_all():
-#         try:
-#             print("checking for " + x)
-#             train(
-#                 zipped_file=double_zipped,
-#                 model_name=x,
-#                 batch_size=1,
-#                 n_epochs=1,
-#                 loss_func=torch.nn.CrossEntropyLoss(),
-#                 lr=1e-2,
-#                 n_classes=2)
-#         except Exception:
-#             failed.append(x)
-#     print(failed)
-#     print("length:", len(failed))

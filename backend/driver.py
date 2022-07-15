@@ -139,8 +139,6 @@ def dl_drive(
         X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor = get_tensors(
             X_train, X_test, y_train, y_test
         )
-        print("&"*30)
-        print("y_test: ", y_test)
         # Build the Deep Learning model that the user wants
         model = DLModel(parse_deep_user_architecture(user_arch))
         print(f"model: {model}")

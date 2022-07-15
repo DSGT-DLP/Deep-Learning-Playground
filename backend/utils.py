@@ -256,10 +256,6 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
     except:
         return []
 
-    print("=" * 30)
-    print("y_preds_list: ", y_preds_list)
-    print("label_list: ", label_list)
-    print("=" * 30)
     return plot_data
 
 

@@ -7,6 +7,7 @@ import torchvision
 import os
 
 from fastai.data.core import DataLoaders
+from fastai.learner import save_model
 from fastai.vision.learner import has_pool_type
 from fastai.vision.learner import _update_first_layer
 from fastai.vision.all import *
@@ -18,10 +19,10 @@ from fastai.callback.hook import num_features_model
 
 try:
     from dataset import dataset_from_zipped
-    from constants import DEFAULT_TRANSFORM, ONNX_MODEL
+    from constants import DEFAULT_TRANSFORM, SAVED_MODEL
 except:
     from backend.dataset import dataset_from_zipped
-    from backend.constants import DEFAULT_TRANSFORM, ONNX_MODEL
+    from backend.constants import DEFAULT_TRANSFORM, SAVED_MODEL
 
 
 def train(
@@ -75,7 +76,7 @@ def train(
             loss_func=loss_func,
             n_out=n_classes,
             n_in=chan_in,
-            model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
+            # model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
         )
     elif is_timm(model_name):
         print("made the zipped file")
@@ -89,7 +90,7 @@ def train(
             normalize=False,
             n_in=chan_in,
             loss_func=loss_func,
-            model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
+            # model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
         )
 
     backend_dir = (
@@ -103,7 +104,7 @@ def train(
     learner.fit(
         n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv"))]
     )
-    learner.save(file=ONNX_MODEL.split("/")[-1].split(".onnx")[0])
+    save_model(SAVED_MODEL, learner.model, getattr(learner, 'opt', None))
     return learner
 
 

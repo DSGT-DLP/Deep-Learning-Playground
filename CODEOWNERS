@@ -12,6 +12,7 @@
 # For files in the /backend directory, @karkir0003 will be requested in a pull request
 /backend @karkir0003
 /backend/email_notifier.py @avayedawadi
+/backend/dataset.py @vidushiMaheshwari
 /backend/driver.py @farisdurrani @andrewpeng02 @avayedawadi
 /backend/pretrained.py @vidushiMaheshwari
 

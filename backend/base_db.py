@@ -1,6 +1,6 @@
 from enum import Enum, EnumMeta
 from dataclasses import dataclass
-from typing import List
+from typing import Any, List
 import boto3
 
 class _BaseEnumMeta(EnumMeta):
@@ -13,24 +13,33 @@ class _BaseEnumMeta(EnumMeta):
     
 class _BaseEnum(Enum, metaclass=_BaseEnumMeta):
     @classmethod
-    def find(cls, value):
+    def find_attribute(cls, value):
         return cls[value].name
 
-def enumclass(cls=None, /, *, dataclass_class=None, **kwargs):  
+class BaseData:
+    '''Class to provide common parent type to dataclasses and for future uses'''
+    pass
+
+def enumclass(cls=None, /, *, DataClass: BaseData = None, partition_key: str = None, **kwargs):  
     def process(cls):
-        dataclass_fields = list(dataclass_class.__dataclass_fields__.keys())
-        setattr(cls, 'Attribute', _BaseEnum('Attribute', [(field.upper(), field) for field in dataclass_fields]))
+        data_fields = list(DataClass.__dataclass_fields__.keys())
+        setattr(cls, 'Attribute', _BaseEnum('Attribute', [(field.upper(), field) for field in data_fields]))
+        
+        if partition_key[0] in cls.Attribute:
+            cls.partition_key = partition_key
+        else:
+            raise ValueError(f"{partition_key[0]} is not an attribute of the table")
         
         for attribute in kwargs:
-            if attribute in dataclass_fields:
+            if attribute in data_fields:
                 setattr(cls, attribute.capitalize(), _BaseEnum(attribute.capitalize(), [(element.upper(), element.upper()) for element in kwargs[attribute]]))
             else:
                 del cls
-                raise ValueError(f'{attribute} is not an attribute of the table')
+                raise ValueError(f"{attribute} is not an attribute of the table")
         return cls
     
-    if cls is not None or dataclass_class is None:
-        raise Exception('Please provide a corresponding dataclass')
+    if cls is not None or DataClass is None:
+        raise Exception("Please provide a corresponding dataclass")
     return process
 
 def changevar(cls=None, /, *, DataClass=None, EnumClass=None):
@@ -40,7 +49,7 @@ def changevar(cls=None, /, *, DataClass=None, EnumClass=None):
         return cls
     
     if cls is not None:
-        raise Exception('Please provide the corresponding data and enum classes')
+        raise Exception("Please provide the corresponding data and enum classes")
     return process
 
 
@@ -51,13 +60,12 @@ class BaseDDBUtil:
     """
     Data access object for DynamoDB tables
     """    
-    def __init__(self, table_name: str, region: str, partition_key: List[str], table=None):
+    def __init__(self, table_name: str, region: str, table=None):
         self.table_name = table_name
         #self.dynamodb = boto3.resource('dynamodb', region)
-        self.partition_key = partition_key
         #self.table = table if table else boto3.resource('dynamodb', region).Table(self.table_name)
         
-    def create_table(self, read_capacity_units: int = 10, write_capacity_units: int = 10):
+    def create_table(self, read_capacity_units: int = 10, write_capacity_units: int = 10) -> None:
         """
         Helper function to create Dynamo DB table if it doesn't exist in AWS
         """
@@ -83,16 +91,43 @@ class BaseDDBUtil:
             }
         )
         self.table = table
+        
+    def param_checker(self, operation: str, **kwargs):
+        kwargs = kwargs.items()
+        
+        for attribute, value in kwargs:
+            if attribute == 'record_data':
+                if attribute is not None:
+                    if type(value) is not self.DataClass:
+                        raise ValueError(f"Could not {operation} record with {attribute} not of correct type")
+                    if len(kwargs) > 1:
+                        raise ValueError(f"Cannot provide other attributes if {attribute} is provided")
+                elif len(kwargs) == 1:
+                    raise ValueError(f"Could not {operation} record with missing attributes")
+                pass
+            elif attribute == 'partition_id':
+                attribute = self.EnumClass.partition_key[0]
+                
+            if attribute not in self.EnumClass.Attribute:
+                raise ValueError(f"Attribute not found in table {self.table_name}")
+            elif value is None:
+                raise ValueError(f"Could not {operation} record with {attribute}: None")
+            elif type(value) is not self.DataClass.__dataclass_fields__[attribute].type:
+                raise ValueError(f"Could not {operation} record with {attribute} not of correct type")
+            elif getattr(self.EnumClass, attribute, None) is not None and value not in getattr(self.EnumClass, attribute):
+                raise ValueError(f"Could not {operation} record with invalid {attribute}: {value}")
+            
+                
 
 # Usage
 if __name__ == '__main__':
     @dataclass
-    class StatusData:
+    class StatusData(BaseData):
         request_id: str
         status: str 
         timestamp: str
 
-    @enumclass(dataclass_class=StatusData, status=['started', 'in_progress', 'success', 'failed'])
+    @enumclass(DataClass=StatusData, partition_key=['request_id', 'S'], status=['started', 'in_progress', 'success', 'failed'])
     class StatusEnums:
         pass
     
@@ -106,9 +141,7 @@ if __name__ == '__main__':
     class StatusDDBUtil(BaseDDBUtil):
         pass
     
-    BaseDDBUtil.test()
-    StatusDDBUtil.test()
-    a = BaseDDBUtil()
-    b = StatusDDBUtil()
-    a.test()
-    b.test()
+    a = StatusData(1, 2, 3)
+    print(dir(a))
+    print(type(a).__name__)
+    print(type(a) is StatusData)

@@ -72,16 +72,11 @@ def train_deep_classification_model(
             for i, data in enumerate(test_loader):
                 input, labels = data
                 test_pred = model(input)
-                print("!"*30)
-                print("test_pred: ", test_pred)
-                print("labels: ", labels)
-
-                print("!"*30)
                 # currently only preserving the prediction array and label array for the last epoch for 
                 # confusion matrix calculation
                 if(epoch == epochs - 1):
-                    y_pred_last_epoch.append(test_pred)
-                    labels_last_epoch.append(labels)
+                    y_pred_last_epoch = test_pred
+                    labels_last_epoch = labels
                 batch_test_acc.append(compute_accuracy(test_pred, labels))
                 batch_loss.append(test_pred.detach().numpy())
             mean_test_loss = np.mean(batch_loss)
@@ -103,9 +98,6 @@ def train_deep_classification_model(
             }
         )
         print(result_table.head())
-        print("*"*30)
-        print("y_pred_last_epoch: ", y_pred_last_epoch)
-        print("*"*30)
         generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch)
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
 

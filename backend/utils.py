@@ -179,20 +179,18 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     y_pred = []
     categoryList = []    
 
-    for labels in labels_last_epoch:
-        for l in labels.tolist():
-            label.append(l[0])
+    for l in labels_last_epoch.tolist():
+        label.append(l[0])
 
-    for pred in y_pred_last_epoch:
-        predictions = torch.argmax(
-            pred, dim=-1
-        )
-        for prediction in predictions.tolist():
-            y_pred.append(prediction[0])
+    predictions = torch.argmax(
+        y_pred_last_epoch, dim=-1
+    )
+    for prediction in predictions.tolist():
+        y_pred.append(prediction[0])
 
     # generating a category list for confusion matrix axis labels
     if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):
-        for i, x in enumerate(y_pred_last_epoch[0][0][0]):
+        for i, x in enumerate(y_pred_last_epoch[0][0]):
             categoryList.append(i)
 
 
@@ -214,31 +212,26 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
     categoryList = []
     plot_data = []  
 
-    print("labels_last_epoch: ", labels_last_epoch)  
-
     # generating a category list for confusion matrix axis labels, and setting up the y_preds_list and label_list for each category
     if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):
-        for i, x in enumerate(y_pred_last_epoch[0][0][0]):
+        for i, x in enumerate(y_pred_last_epoch[0][0]):
             categoryList.append(i)
             y_preds_list.append([])
             label_list.append([])
-    
-    for labels in labels_last_epoch:
-        for i, l in enumerate(labels.tolist()):
-            ground_truth = l[0]
-            for x in range(len(label_list)):
-                # toggle on a 1 for the category that corresponds to the ground truth, this is to produce the 1-vs-all system for multiclass classification
-                if x == ground_truth:
-                    label_list[x].append(1)
-                else:
-                    label_list[x].append(0)
 
-    for preds in y_pred_last_epoch:
-        for pred in preds:
-            for row in pred:
-                for i, x in enumerate(row):
-                    # appending tensor values to each category's probability predicitons in y_preds_list
-                    y_preds_list[i].append(x.item())
+    for label in labels_last_epoch:
+        ground_truth = label.item();
+        for x in range(len(label_list)):
+            # toggle on a 1 for the category that corresponds to the ground truth, this is to produce the 1-vs-all system for multiclass classification
+            if x == ground_truth:
+                label_list[x].append(1)
+            else:
+                label_list[x].append(0)
+
+    for row in y_pred_last_epoch:
+        for i, tensor in enumerate(row[0]):
+            # appending tensor values to each category's probability predicitons in y_preds_list
+            y_preds_list[i].append(tensor.item())
     
     # making a AUC/ROC graph for each category's probability predicitons
     try:

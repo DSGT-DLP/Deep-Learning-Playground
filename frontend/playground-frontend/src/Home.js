@@ -97,7 +97,7 @@ const Home = () => {
   });
   for (var i = 0; i < auc_roc_data_res.length; i++) {
     auc_roc_data.push({
-      name: i + " (AUC: " + auc_roc_data_res[i][2] + ")",
+      name: `${i} (AUC: ${auc_roc_data_res[i][2]})`,
       x: auc_roc_data_res[i][0] || [],
       y: auc_roc_data_res[i][1] || [],
       type: "line",
@@ -331,7 +331,7 @@ const Home = () => {
             }}
           />
           {problemType.value === "classification" &&
-          auc_roc_data_res.length != 0 ? (
+          auc_roc_data_res.length !== 0 ? (
             <Plot
               data={auc_roc_data}
               layout={{

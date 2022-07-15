@@ -75,6 +75,9 @@ class StatusDDBUtil:
         self.table = table 
         
     def create_status_entry(self, data: StatusData):
+        """
+        Add a status record with the given information
+        """
         item = {k: v for k, v in asdict(data).items() if v is not None}
         
         request_id = item.get('request_id')
@@ -158,7 +161,7 @@ class StatusDDBUtil:
     
     def delete_status_entry(self, request_id: str):
         """
-        Delte status for a given request id
+        Delete status for a given request id
         """
         if request_id is None:
             raise ValueError(f"Could not add record with request_id: None")

@@ -410,7 +410,6 @@ const Home = () => {
         <div style={{ marginTop: 20 }} />
 
         <TitleText text="Layers Inventory" />
-
         <BackgroundLayout>
           {POSSIBLE_LAYERS.map((e) => (
             <LayerChoice
@@ -432,13 +431,17 @@ const Home = () => {
         </BackgroundLayout>
       </DndProvider>
       <div style={{ marginTop: 20 }} />
+
       <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
         {input_queries.map((e) => (
           <Input {...e} key={e.queryText} />
         ))}
       </BackgroundLayout>
+
+      <TitleText text="Email (optional)" />
       <EmailInput email={email} setEmail={setEmail} />
+
       <TitleText text="CSV Input" />
       <DataTable
         pagination
@@ -446,6 +449,7 @@ const Home = () => {
         columns={csvColumns}
         data={csvDataInput}
       />
+
       <TitleText text="Deep Learning Results" />
       {showResults()}
       <TitleText text="Code Snippet" />
@@ -467,17 +471,17 @@ const styles = {
     alignItems: "center",
   },
   fileInput: {
+    ...LAYOUT.column,
     backgroundColor: COLORS.input,
     width: 200,
-    ...LAYOUT.column,
   },
   download_csv_res: {
+    ...GENERAL_STYLES.p,
     backgroundColor: COLORS.layer,
-    textDecoration: "none",
     border: "none",
     color: "white",
-    ...GENERAL_STYLES.p,
-    padding: 8,
     cursor: "pointer",
+    padding: 8,
+    textDecoration: "none",
   },
 };

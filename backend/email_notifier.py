@@ -7,7 +7,6 @@ def send_email(email_address,subject="",body_text="",attachment_array=[]):
     send_email function takes data about  email and sends a post request
     to API gateway which calls AWS Lambda which calls AWS SES to then 
     send an email to email_address.
-
     Args:
         email_address (str): email address of user
         subject (str,optional): subject of the email that needs to be sent

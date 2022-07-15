@@ -263,7 +263,7 @@ def send_email_route():
                 }
             )
     else:
-        attachment_array = None
+        attachment_array = []
 
     # try to send email
     try:

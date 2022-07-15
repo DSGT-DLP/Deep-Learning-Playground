@@ -1,6 +1,3 @@
-# TODO:
-# (Enhancement) Allow other git repo feature
-
 """The weights, biases and architectures are obtained through [timm](https://github.com/rwightman/pytorch-image-models/tree/master/timm/models) and [pytorch](https://pytorch.org/vision/stable/models.html) libraries. The models are trained through fastai (another library). Fastai has a direct compatibility with pytorch models, however wwf is used to connect timm models with fastai library."""
 
 import timm
@@ -50,6 +47,7 @@ def train(
         n_epochs (int) : number of epochs to train for
         n_classes (int) : number of classes
         chan_in (int) : number of input channels
+        cut (int or Callable) : indices where you want to cut the model and create head and body
     """
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -235,35 +233,3 @@ def is_pytorch(model_name):
             return True
     return False
 
-
-# TODO: Can possibly add this feature??
-## The feature below allows you to use a pretrained model from any source repository
-
-# def is_pytorch(model_name, github_repo="pytorch/vision"):
-#     for i in torch.hub.list(github=github_repo):
-#         if model_name == i:
-#             return True
-#     return False
-
-if __name__ == "__main__":
-    learner = train(
-        model_name="resnet18",
-        batch_size=2,
-        loss_func=torch.nn.CrossEntropyLoss(),
-        n_epochs=3,
-        shuffle=False,
-        optimizer=Adam,
-        lr=3e-4,
-        n_classes=2,
-        zipped_file="../tests/zip_files/double_zipped.zip",
-    )
-
-    # learner = train(
-    #     zipped_file= "../tests/zip_files/double_zipped.zip",
-    #     model_name= "resnet50",
-    #     batch_size= 2,
-    #     loss_func= torch.nn.CrossEntropyLoss(),
-    #     n_epochs= 2,
-    #     n_classes=2,
-    #     lr=1e-3
-    # )

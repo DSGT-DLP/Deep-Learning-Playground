@@ -242,13 +242,24 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
     
     # making a AUC/ROC graph for each category's probability predicitons
     try:
+        # using matplotlib in addition to plotly so that we can generate graph image in backend and email this to user
+        plt.clf()
+        plt.title('AUC/ROC Curves for your Deep Learning Model')
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.plot([0, 1], [0, 1], linestyle='--', label=f'baseline')
         for i in range(len(categoryList)):
             pred_prob = np. array(y_preds_list[i])
             y_test = np. array(label_list[i])
             fpr, tpr, _ = roc_curve(y_test, pred_prob)
             auc = roc_auc_score(y_test, pred_prob)
-
+            # this data will be sent to frontend to make interactive plotly graph
             plot_data.append([fpr.tolist(), tpr.tolist(), auc])
+            plt.plot(fpr, tpr, linestyle='-', label=f'{i} (AUC: {round(auc,4)})')
+        plt.legend()
+        plt.savefig(AUC_ROC_VIZ)
+
+
     except:
         return []
 

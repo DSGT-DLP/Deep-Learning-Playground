@@ -56,6 +56,7 @@ export const train_and_output = async (
             "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_loss_plot.png",
             "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_accuracy_plot.png",
             "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_confusion_matrix.png",
+            "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_AUC_ROC_Curve.png",
           ],
         }),
       });

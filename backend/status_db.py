@@ -10,37 +10,43 @@ class StatusEnumMeta(EnumMeta):
             cls(item)
         except ValueError:
             return False
-        return True 
-    
+        return True
+
 
 class StatusAttribute(Enum, metaclass=StatusEnumMeta):
     """
     Enum class to represent all valid attributes for a Dynamo DB
     item from the Status table
     """
-    REQUEST_ID = "request_id" #UUID/GUID for this request
-    STATUS = "status" #status of request (started, in progress, success, fail)
+
+    REQUEST_ID = "request_id"  # UUID/GUID for this request
+    STATUS = "status"  # status of request (started, in progress, success, fail)
     TIMESTAMP = "timestamp"
 
+
 class StatusEnum(Enum):
-    STARTED = 'STARTED'
-    IN_PROGRESS = 'IN_PROGRESS'
-    SUCCESS = 'SUCCESS'
-    FAILED = 'FAILED'
+    STARTED = "STARTED"
+    IN_PROGRESS = "IN_PROGRESS"
+    SUCCESS = "SUCCESS"
+    FAILED = "FAILED"
+
 
 @dataclass
 class StatusData:
     """
     Data class to represent a Dynamo DB item from the status table
     """
+
     request_id: str
-    status: str 
+    status: str
     timestamp: str
+
 
 class StatusDDBUtil:
     """
     Data access object for Status table
-    """    
+    """
+
     def __init__(self, table_name: str, region: str, table=None):
         self.table_name = table_name
         self.dynamodb = boto3.resource('dynamodb', region)
@@ -53,24 +59,20 @@ class StatusDDBUtil:
         table = self.dynamodb.create_table(
             TableName=self.table_name,
             KeySchema=[
-                {
-                    'AttributeName': 'request_id',
-                    'KeyType': 'HASH'  # Partition key
-                },
+                {"AttributeName": "request_id", "KeyType": "HASH"},  # Partition key
             ],
             AttributeDefinitions=[
                 {
-                    'AttributeName': 'request_id',
+                    "AttributeName": "request_id",
                     # AttributeType defines the data type. 'S' is string type and 'N' is number type
-                    'AttributeType': 'S'
+                    "AttributeType": "S",
                 }
             ],
             ProvisionedThroughput={
                 # ReadCapacityUnits set to 10 strongly consistent reads per second
-                'ReadCapacityUnits': 10,
-                'WriteCapacityUnits': 10  # WriteCapacityUnits set to 10 writes per second
-            }
-            
+                "ReadCapacityUnits": 10,
+                "WriteCapacityUnits": 10,  # WriteCapacityUnits set to 10 writes per second
+            },
         )
         self.table = table 
         
@@ -114,18 +116,18 @@ class StatusDDBUtil:
             raise ValueError(
                 f"Could not find a Dynamo DB item for id {id} in table {self.table_name}"
             )
-        
-        item: Dict[int, Any] = response['Item']
+
+        item: Dict[int, Any] = response["Item"]
         for attribute in item:
             if attribute not in StatusAttribute:
                 raise ValueError(
                     f"Found invalid attribute {attribute} for id {request_id} in table {self.table_name}"
                 )
-        
+
         return StatusData(
             request_id=set_status_data(item, StatusAttribute.REQUEST_ID),
             status=set_status_data(item, StatusAttribute.STATUS),
-            timestamp=set_status_data(item, StatusAttribute.TIMESTAMP)
+            timestamp=set_status_data(item, StatusAttribute.TIMESTAMP),
         )
         
     def update_status_entry(self, request_id: str, new_status: StatusEnum):
@@ -141,9 +143,7 @@ class StatusDDBUtil:
         
         try:
             self.table.update_item(
-                Key={
-                    'request_id': request_id
-                },
+                Key={"request_id": request_id},
                 UpdateExpression="set #s=:status",
                 ExpressionAttributeValues={
                     ":status": new_status
@@ -181,6 +181,7 @@ class StatusDDBUtil:
             print(e)
             print(f"Oops. Could not delete status for request id {request_id}")
             raise ValueError(f"Oops. Could not delete status for request id {request_id}")
+
 
 def set_status_data(item: Dict[str, Any], attribute: StatusAttribute):
     """

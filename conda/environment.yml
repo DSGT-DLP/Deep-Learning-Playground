@@ -23,7 +23,9 @@ dependencies:
   - black
   - flask
   - flask-cors
-  - pipreqs
   - ruamel.yaml
   - pip:
      - torchvision
+     - timm
+     - wwf
+     - fastai==2.7.4

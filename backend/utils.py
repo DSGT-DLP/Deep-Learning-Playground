@@ -10,7 +10,7 @@ from constants import (
     TRAIN_ACC,
     TEST,
     VAL_TEST_ACC,
-    CONFUSION_VIZ
+    CONFUSION_VIZ,
 )
 import pandas as pd
 import numpy as np
@@ -91,7 +91,7 @@ def get_dataloaders(
     return train_loader, test_loader
 
 
-def generate_loss_plot(results_path) -> dict[str: list[float]]:
+def generate_loss_plot(results_path) -> dict[str : list[float]]:
     """
     Given a training result file, plot the loss in a matplotlib plot
     Args:
@@ -121,10 +121,14 @@ def generate_loss_plot(results_path) -> dict[str: list[float]]:
     plt.ylabel("Loss")
     plt.savefig(LOSS_VIZ)
 
-    return {"epochs": x_axis, "train_loss": train_loss.values.tolist(), "test_loss": test_loss.values.tolist()}
+    return {
+        "epochs": x_axis,
+        "train_loss": train_loss.values.tolist(),
+        "test_loss": test_loss.values.tolist(),
+    }
 
 
-def generate_acc_plot(results_path) -> dict[str: list[float]]:
+def generate_acc_plot(results_path) -> dict[str : list[float]]:
     """
     Given training result file, plot the accuracy in a matplotlib plot
     Args:
@@ -152,7 +156,11 @@ def generate_acc_plot(results_path) -> dict[str: list[float]]:
     plt.ylabel("Accuracy")
     plt.savefig(ACC_VIZ)
 
-    return {"epochs": x_axis, "train_acc": train_acc.values.tolist(), "test_acc": val_acc.values.tolist()}
+    return {
+        "epochs": x_axis,
+        "train_acc": train_acc.values.tolist(),
+        "test_acc": val_acc.values.tolist(),
+    }
 
 
 def generate_train_time_csv(epoch_time):
@@ -176,38 +184,40 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     """
     label = []
     y_pred = []
-    categoryList = []    
+    categoryList = []
 
     for labels in labels_last_epoch:
         for l in labels.tolist():
             label.append(l[0])
 
     for pred in y_pred_last_epoch:
-        predictions = torch.argmax(
-            pred, dim=-1
-        )
+        predictions = torch.argmax(pred, dim=-1)
         for prediction in predictions.tolist():
             y_pred.append(prediction[0])
 
     # generating a category list for confusion matrix axis labels
-    if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):
+    if len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0:
         for i, x in enumerate(y_pred_last_epoch[0][0][0]):
             categoryList.append(i)
-
 
     plt.clf()
     label_np = np.array(label)
     pred_np = np.array(y_pred)
     cm = confusion_matrix(label_np, pred_np, labels=categoryList)
-    ax= plt.subplot()
-    sns.heatmap(cm, annot=True, fmt='g', ax=ax, cmap='Purples');  #annot=True to annotate cells, ftm='g' to disable scientific notation
-    ax.set_xlabel('Predicted');ax.set_ylabel('Actual'); 
-    ax.set_title('Confusion Matrix (last Epoch)'); 
-    ax.xaxis.set_ticklabels(categoryList); ax.yaxis.set_ticklabels(categoryList);
-    plt.savefig(CONFUSION_VIZ) 
+    ax = plt.subplot()
+    sns.heatmap(cm, annot=True, fmt="g", ax=ax, cmap="Purples")
+    # annot=True to annotate cells, ftm='g' to disable scientific notation
+    ax.set_xlabel("Predicted")
+    ax.set_ylabel("Actual")
+    ax.set_title("Confusion Matrix (last Epoch)")
+    ax.xaxis.set_ticklabels(categoryList)
+    ax.yaxis.set_ticklabels(categoryList)
+    plt.savefig(CONFUSION_VIZ)
 
 
-def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: str = None) -> str:
+def csv_to_json(
+    csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: str = None
+) -> str:
     """
     Creates a JSON data derived from the input CSV. Will return
     the JSON data and create a JSON file with the data, if a jsonFilePath is

@@ -1,7 +1,8 @@
 from enum import Enum, EnumMeta
 from dataclasses import dataclass, asdict
-from typing import Any, Dict, Literal
+from typing import Any, List, Dict, Literal
 import boto3
+from numpy import partition
 
 class _BaseEnumMeta(EnumMeta):
     def __contains__(cls, item):
@@ -20,21 +21,18 @@ class BaseData:
     '''Class to provide common parent type to dataclasses and for future uses'''
     pass
 
-def enumclass(cls=None, /, *, DataClass: BaseData = None, partition_key: str = None, **kwargs):  
+def enumclass(cls=None, /, *, DataClass: BaseData = None, **kwargs):  
     def process(cls):
+        if not issubclass(cls, BaseData):
+            raise ValueError("DataClass provided is not a dataclass")
+        
         data_fields = list(DataClass.__dataclass_fields__.keys())
         setattr(cls, 'Attribute', _BaseEnum('Attribute', [(field.upper(), field) for field in data_fields]))
-        
-        if partition_key[0] in cls.Attribute:
-            cls.partition_key = partition_key
-        else:
-            raise ValueError(f"{partition_key[0]} is not an attribute of the table")
         
         for attribute in kwargs:
             if attribute in data_fields:
                 setattr(cls, attribute.capitalize(), _BaseEnum(attribute.capitalize(), [(element.upper(), element.upper()) for element in kwargs[attribute]]))
             else:
-                del cls
                 raise ValueError(f"{attribute} is not an attribute of the table")
         return cls
     
@@ -42,20 +40,31 @@ def enumclass(cls=None, /, *, DataClass: BaseData = None, partition_key: str = N
         raise Exception("Please provide a corresponding dataclass")
     return process
 
-def changevar(cls=None, /, *, DataClass=None, EnumClass=None):
+def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass: _BaseEnum = None, partition_key: List[str] = None):
     def process(cls):
+        if partition_key[0] in EnumClass.Attribute:
+            cls.partition_key = partition_key
+        else:
+            raise ValueError(f"{partition_key[0]} is not an attribute of the table")
+        
+        if not issubclass(DataClass, BaseData):
+            raise ValueError("DataClass provided is not a subclass of type: BaseData")
+        if not issubclass(EnumClass, _BaseEnum):
+            raise ValueError("EnumClass provided is not a subclass of type: _BaseEnum")
+        
         cls.DataClass = DataClass
         cls.EnumClass = EnumClass
         return cls
     
-    if cls is not None:
-        raise Exception("Please provide the corresponding data and enum classes")
+    if cls is not None or DataClass is None or EnumClass is None or partition_key is None:
+        raise Exception("Please provide the corresponding arguments")
     return process
 
 
 class BaseDDBUtil:
-    DataClass = None
-    EnumClass = None
+    DataClass: BaseData = None
+    EnumClass: _BaseEnum = None
+    partition_key: List[str] = None           # Stores info of the form [<attibute_name>, <attribute_type>]
     
     """
     Data access object for DynamoDB tables
@@ -97,7 +106,7 @@ class BaseDDBUtil:
         Create a record in DynamoDB table with the data corresponding to the input parameters
         """
         self.param_checker("create", record_data=record_data, **kwargs)
-        partition_key_name = self.EnumClass.partition_key[0]
+        partition_key_name = self.partition_key[0]
         
         if record_data is not None:
             item = asdict(record_data)
@@ -115,13 +124,13 @@ class BaseDDBUtil:
         except Exception as e:
             raise ValueError(f"Could not add record. {partition_key_name} {item[partition_key_name]} already exists in the table")
         
-    def get_record(self, partition_id: Any) -> BaseData:
+    def get_record(self, partition_id: str) -> BaseData:
         """
         Retrieve a record with the partition_key 'partition_id' from DynamoDB table
         """
         self.param_checker("get", partition_id=partition_id)
         
-        response = self.table.get_item(Key={self.EnumClass.partition_key[0]: partition_id})
+        response = self.table.get_item(Key={self.partition_key[0]: partition_id})
         if 'Item' not in response:
             raise ValueError(f"Could not find a Dynamo DB item for id {id} in table {self.table_name}")
         item: Dict[int, Any] = response['Item']
@@ -132,16 +141,16 @@ class BaseDDBUtil:
         self.param_checker("approve", **item)
         return self.DataClass(**item)
     
-    def update_record(self, partition_id: Any, **kwargs) -> Literal['Success']:
+    def update_record(self, partition_id: str, **kwargs) -> Literal['Success']:
         """
         Update status for a given request id
         """
+        if len(kwargs) == 0:
+            raise ValueError("Cannot update record without any changes")
+        
         self.param_checker("update", partition_id=partition_id, **kwargs)
         partition_key_name = self.EnumClass.partition_key[0]
         expression = "SET "
-        
-        if len(kwargs) == 0:
-            raise ValueError("Cannot update record without any changes")
         
         attribute_names = {}
         for attr in kwargs.keys():
@@ -163,12 +172,12 @@ class BaseDDBUtil:
             print(f"Could not update attributes for {partition_key_name} {partition_id}")
             raise ValueError(f"Could not update attributes for {partition_key_name} {partition_id}")
     
-    def delete_record(self, partition_id: Any) -> Literal['Success']:
+    def delete_record(self, partition_id: str) -> Literal['Success']:
         """
         Delete a record with the partition_key value 'partition_id' from DynamoDB table
         """
         self.param_checker("delete", partition_id=partition_id)
-        partition_key_name = self.EnumClass.partition_key[0]
+        partition_key_name = self.partition_key[0]
         
         try:
             self.table.delete_item(
@@ -198,7 +207,7 @@ class BaseDDBUtil:
                     raise ValueError(f"Could not {operation} record with missing attributes")
                 pass
             elif attribute == 'partition_id':
-                partition_key_name = self.EnumClass.partition_key[0]
+                partition_key_name = self.partition_key[0]
                 if partition_key_name in kwargs:
                     raise ValueError(f"Could provide multiple values for {partition_key_name}")
                 attribute = partition_key_name

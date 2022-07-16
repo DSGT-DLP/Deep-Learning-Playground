@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
-import { COLORS, ITEM_TYPES } from "../constants";
+import { COLORS, ITEM_TYPES } from "../../constants";
 import { useDrop } from "react-dnd";
 
 const AddNewLayer = (props) => {

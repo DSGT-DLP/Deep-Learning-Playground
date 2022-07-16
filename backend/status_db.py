@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from base_db import BaseData, BaseDDBUtil, enumclass, changevar
 from constants import STATUS_TABLE_NAME, AWS_REGION
+import datetime
 
 @dataclass
 class StatusData(BaseData):
@@ -21,6 +22,6 @@ class StatusDDBUtil(BaseDDBUtil):
     """Class that interacts with AWS DynamoDB to manipulate information stored in the status-table DynamoDB table"""
     pass
 
-def get_user_table(region:str = AWS_REGION) -> BaseDDBUtil:
+def get_status_table(region:str = AWS_REGION) -> BaseDDBUtil:
     """Retrieves the status-table of an input region as an instance of StatusDDBUtil"""
     return StatusDDBUtil(STATUS_TABLE_NAME, region)

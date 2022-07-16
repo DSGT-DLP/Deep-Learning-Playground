@@ -1,6 +1,6 @@
 from enum import Enum, EnumMeta
-from dataclasses import dataclass
-from typing import Any, List, Dict, Literal
+from dataclasses import dataclass, asdict
+from typing import Any, Dict, Literal
 import boto3
 
 class _BaseEnumMeta(EnumMeta):
@@ -92,9 +92,30 @@ class BaseDDBUtil:
         )
         self.table = table
         
+    def create_record(self, record_data: BaseData = None, **kwargs):
+        """
+        Create a record in DynamoDB table with the data corresponding to the input parameters
+        """
+        self.param_checker(record_data=record_data, **kwargs)
+        partition_key_name = self.EnumClass.partition_key[0]
+        
+        if record_data is not None:
+            item = asdict(record_data)
+        else:
+            item = kwargs
+            
+        try:
+            self.table.put_item(
+                Item=item,
+                ConditionExpression="attribute_not_exists({partition_key_name})"
+            )
+            return "Success"
+        except Exception as e:
+            raise ValueError(f"Could not add record. {partition_key_name} {item[partition_key_name]} already exists in the table")
+        
     def get_record(self, partition_id: Any) -> BaseData:
         """
-        Retrieve record with the partition_key 'partition_id' from DynamoDB table
+        Retrieve a record with the partition_key 'partition_id' from DynamoDB table
         """
         self.param_checker("get", partition_id=partition_id)
         
@@ -108,7 +129,7 @@ class BaseDDBUtil:
     
     def delete_record(self, partition_id: Any) -> Literal['Success']:
         """
-        Delete record with the partition_key value 'partition_id' from DynamoDB table
+        Delete a record with the partition_key value 'partition_id' from DynamoDB table
         """
         self.param_checker("delete", partition_id=partition_id)
         partition_key_name = self.EnumClass.partition_key[0]

@@ -1,9 +1,12 @@
+from decimal import Decimal
 from enum import Enum, EnumMeta
 from dataclasses import asdict
 from typing import Any, List, Dict, Literal
 import boto3
+from botocore.exceptions import ClientError
 
 class _BaseEnumMeta(EnumMeta):
+    """Defines a custom EnumMeta for _BaseEnum that supports the expression: '<attribute>' in _BaseEnum"""
     def __contains__(cls, item):
         try:
             cls(item)
@@ -12,15 +15,21 @@ class _BaseEnumMeta(EnumMeta):
         return True
     
 class _BaseEnum(Enum, metaclass=_BaseEnumMeta):
-    @classmethod
-    def find_attribute(cls, value):
-        return cls[value].name
+    """Defines a custom Enum to provide subclasses the functionality of _BaseEnumMeta"""
 
 class BaseData:
-    '''Class to provide common parent type to dataclasses and for future uses'''
+    """Class to provide common parent type to dataclasses, and for future uses"""
     pass
 
-def enumclass(cls=None, /, *, DataClass: BaseData = None, **kwargs):  
+def enumclass(cls=None, /, *, DataClass: BaseData = None, **kwargs):
+    """Decorator function that produces various enums based on an input table schema in the form of a BaseData.
+    Enums produced include Attribute, which stores the attributes of a particular DynamoDB table, and enums associated 
+    with attributes that store categorical data.
+
+    Args:
+        DataClass: dataclass of the form of a BaseData (eg: UserData)
+        kwargs: attributes that store categorical data, along with the categories in list form (eg: role=["ADMIN", "USER"])
+    """
     def process(cls):
         if not issubclass(DataClass, BaseData):
             raise ValueError("DataClass provided is not a dataclass")
@@ -30,7 +39,8 @@ def enumclass(cls=None, /, *, DataClass: BaseData = None, **kwargs):
         
         for attribute in kwargs:
             if attribute in data_fields:
-                setattr(cls, attribute.capitalize(), _BaseEnum(attribute.capitalize(), [(element.upper(), element.upper()) for element in kwargs[attribute]]))
+                enum_name = ''.join(map(lambda string: string.capitalize(), attribute.split("_")))
+                setattr(cls, enum_name, _BaseEnum(enum_name, [(element.upper(), element.upper()) for element in kwargs[attribute]]))
             else:
                 raise ValueError(f"{attribute} is not an attribute of the table")
         return cls
@@ -39,12 +49,29 @@ def enumclass(cls=None, /, *, DataClass: BaseData = None, **kwargs):
         raise Exception("Please provide a corresponding dataclass")
     return process
 
-def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass: _BaseEnum = None, partition_key: List[str] = None):
+def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass = None, partition_key: List[str] = None, 
+                gsi: List[str] = None):
+    """Decorator function used to assign static variables to subclasses of BaseDDBUtil that are also utilized
+    in BaseDDBUtil function implementations. It is sort of analogous to how instance variables of a class are used in instance methods, 
+    but the instances of the class can assign various different values to the instance variables.
+
+    Args:
+        DataClass: dataclass of the form of a BaseData (eg: UserData)
+        EnumClass: class that stored enums (eg: UserEnums)
+        partition_key: the partition_key of DynamoDB table of the form [<attibute_name>, <attribute_type>]
+        gsi: the global secondary indices of the DynamoDB table
+    """
     def process(cls):
         if partition_key[0] in EnumClass.Attribute:
             cls.partition_key = partition_key
         else:
             raise ValueError(f"{partition_key[0]} is not an attribute of the table")
+        
+        if gsi is not None:
+            for attribute in gsi:
+                if attribute not in EnumClass.Attribute:
+                    raise ValueError(f"{attribute} is not an attribute of the table")
+            cls.gsi = gsi
         
         if not issubclass(DataClass, BaseData):
             raise ValueError("DataClass provided is not a subclass of type: BaseData")
@@ -59,26 +86,25 @@ def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass: _BaseEnum =
 
 
 class BaseDDBUtil:
+    """Base class that interacts with AWS DynamoDB to manipulate information stored in the DynamoDB tables.
+    Acts as a template, whose subclasses (eg: StatusDDBUtil) manipulates corresponding tables (eg: status-table)"""
     DataClass: BaseData = None
-    EnumClass: _BaseEnum = None
-    partition_key: List[str] = None           # Stores info of the form [<attibute_name>, <attribute_type>]
+    EnumClass = None
+    partition_key: List[str] = None           # Stores partition_key of table of the form [<attibute_name>, <attribute_type>]    
+    gsi: List[str] = None                     # Stores all the global secondary indices of the table
     
-    """
-    Data access object for DynamoDB tables
-    """    
-    def __init__(self, table_name: str, region: str, table=None):
+    def __init__(self, table_name: str, region: str):
         self.table_name = table_name
         self.dynamodb = boto3.resource('dynamodb', region)
-        
         try:
-            self.table = table if table else boto3.resource('dynamodb', region).Table(self.table_name)
-        except:
-            self.create_table()
+            self.table = self.dynamodb.Table(self.table_name)
+            self.table.table_id
+        except Exception:
+            self.create_table()          
         
     def create_table(self, read_capacity_units: int = 10, write_capacity_units: int = 10) -> None:
-        """
-        Helper function to create Dynamo DB table if it doesn't exist in AWS
-        """
+        """Function to create a DynamoDB table based on instance fields if it does not exist in AWS"""
+        
         table = self.dynamodb.create_table(
             TableName=self.table_name,
             KeySchema=[
@@ -103,9 +129,9 @@ class BaseDDBUtil:
         self.table = table
         
     def create_record(self, record_data: BaseData = None, **kwargs) -> Literal['Success']:
-        """
-        Create a record in DynamoDB table with the data corresponding to the input parameters
-        """
+        """Function to create a record in the associated DynamoDB table with the data corresponding to the input parameters.
+        Either takes a BaseData input, or the attribute values as keyword arguments"""
+        
         self.__param_checker("create", record_data=record_data, **kwargs)
         partition_key_name = self.partition_key[0]
         
@@ -119,44 +145,50 @@ class BaseDDBUtil:
         try:
             self.table.put_item(
                 Item=item,
-                ConditionExpression="attribute_not_exists({partition_key_name})"
+                ConditionExpression=f"attribute_not_exists({partition_key_name})"
             )
             return "Success"
-        except Exception as e:
-            raise ValueError(f"Could not add record. {partition_key_name} {item[partition_key_name]} already exists in the table")
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                raise ValueError(f"Could not add record. {partition_key_name} {item[partition_key_name]} already exists in the table")
+            else:
+                raise e
         
-    def get_record(self, partition_id: str) -> BaseData:
-        """
-        Retrieve a record with the partition_key 'partition_id' from DynamoDB table
-        """
+    def get_record(self, partition_id: Any) -> BaseData:
+        """Function to retrieve a record with the partition_key values as attribute 'partition_id' from 
+            the associated DynamoDB table"""
+        
         self.__param_checker("get", partition_id=partition_id)
         
         response = self.table.get_item(Key={self.partition_key[0]: partition_id})
         if 'Item' not in response:
-            raise ValueError(f"Could not find a Dynamo DB item for id {id} in table {self.table_name}")
-        item: Dict[int, Any] = response['Item']
+            raise ValueError(f"Could not find a DynamoDB item for {self.partition_key[0]} {partition_id} in table {self.table_name}")
+        item: Dict[str, Any] = response['Item']
         
         if len(item) != len(self.EnumClass.Attribute):
             raise ValueError(f"Could not approve record with missing/extra attributes")
         
+        item = self.__number_decoder(item)        
         self.__param_checker("approve", **item)
         return self.DataClass(**item)
     
-    def update_record(self, partition_id: str, **kwargs) -> Literal['Success']:
-        """
-        Update status for a given request id
-        """
+    def update_record(self, partition_id: Any, **kwargs) -> Literal['Success']:
+        """Function to update a record with the partition_key values as attribute 'partition_id' from 
+            the associated DynamoDB table. It takes in changes in attributes as keyword arguments"""
         if len(kwargs) == 0:
             raise ValueError("Cannot update record without any changes")
         
         self.__param_checker("update", partition_id=partition_id, **kwargs)
-        partition_key_name = self.EnumClass.partition_key[0]
-        expression = "SET "
+        partition_key_name = self.partition_key[0]
         
+        expression = []
         attribute_names = {}
+        attribute_values = {}
         for attr in kwargs.keys():
-            expression += f"{attr}=:{attr}, "
-            attribute_names[f':{attr}'] = kwargs[attr]
+            expression.append(f"#{attr}=:{attr}")
+            attribute_names[f'#{attr}'] = attr
+            attribute_values[f':{attr}'] = kwargs[attr]
+        expression = f"SET {', '.join(expression)}"
         
         try:
             self.table.update_item(
@@ -165,18 +197,20 @@ class BaseDDBUtil:
                 },
                 UpdateExpression=expression,
                 ExpressionAttributeNames=attribute_names,
-                ConditionExpression="attribute_exists(request_id)"
+                ExpressionAttributeValues=attribute_values,
+                ConditionExpression=f"attribute_exists({partition_key_name})"
             )
             return "Success"
-        except Exception as e:
-            print(e)
-            print(f"Could not update attributes for {partition_key_name} {partition_id}")
-            raise ValueError(f"Could not update attributes for {partition_key_name} {partition_id}")
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                raise ValueError(f"Could not find a DynamoDB item to update for {self.partition_key[0]} {partition_id} in table {self.table_name}")
+            else:
+                raise e
     
-    def delete_record(self, partition_id: str) -> Literal['Success']:
-        """
-        Delete a record with the partition_key value 'partition_id' from DynamoDB table
-        """
+    def delete_record(self, partition_id: Any) -> Literal['Success']:
+        """Function to delete a record with the partition_key values as attribute 'partition_id' from 
+            the associated DynamoDB table"""
+            
         self.__param_checker("delete", partition_id=partition_id)
         partition_key_name = self.partition_key[0]
         
@@ -187,37 +221,56 @@ class BaseDDBUtil:
                 },
                 ConditionExpression=f"attribute_exists({partition_key_name})"
             )
-            
             return "Success"
-        except Exception as e:
-            print(e)
-            print(f"Could not delete status for {partition_key_name} {partition_id}")
-            raise ValueError(f"Could not delete status for {partition_key_name} {partition_id}")
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                raise ValueError(f"Could not find a DynamoDB item to delete for {self.partition_key[0]} {partition_id} in table {self.table_name}")
+            else:
+                raise e
         
     def __param_checker(self, operation: str, **kwargs):
-        kwargs = kwargs.items()
+        """Helper function to perform a validity check on the parameters of the BaseDDBUtil functions"""
         
-        for attribute, value in kwargs:
+        kwargs_items = kwargs.items()
+        for attribute, value in kwargs_items:
             if attribute == 'record_data':
-                if attribute is not None:
+                if value is not None:
                     if type(value) is not self.DataClass:
                         raise ValueError(f"Could not {operation} record with {attribute} not of correct type")
                     if len(kwargs) > 1:
                         raise ValueError(f"Cannot provide other attributes if {attribute} is provided")
+                    self.__param_checker(operation, **asdict(value))
                 elif len(kwargs) == 1:
                     raise ValueError(f"Could not {operation} record with missing attributes")
-                pass
+                continue
             elif attribute == 'partition_id':
                 partition_key_name = self.partition_key[0]
                 if partition_key_name in kwargs:
-                    raise ValueError(f"Could provide multiple values for {partition_key_name}")
+                    raise ValueError(f"Cannot {operation} record with multiple values for {partition_key_name}")
                 attribute = partition_key_name
                 
             if attribute not in self.EnumClass.Attribute:
-                raise ValueError(f"Attribute not found in table {self.table_name}")
+                raise ValueError(f"Attribute '{attribute}' not found in table {self.table_name}")
             elif value is None:
                 raise ValueError(f"Could not {operation} record with {attribute}: None")
             elif type(value) is not self.DataClass.__dataclass_fields__[attribute].type:
                 raise ValueError(f"Could not {operation} record with {attribute} not of correct type")
             elif getattr(self.EnumClass, attribute.capitalize(), None) is not None and value not in getattr(self.EnumClass, attribute.capitalize()):
                 raise ValueError(f"Could not {operation} record with invalid {attribute}: {value}")
+            
+    def __number_decoder(self, item: Dict[str, Any]) -> Dict[str, Any]:
+        """Helper function that converts any Decimal attributes into their associated types according to BaseData schema. 
+            To be used on records retrieved from DynamoDB tables."""
+            
+        for key, value in item.items():
+            if type(value) is Decimal:
+                if key in self.EnumClass.Attribute:
+                    key_type = self.DataClass.__dataclass_fields__[key].type
+                    if type(value) != key_type:
+                        if value != key_type(value):
+                            raise ValueError(f"Could not approve record with {key} not of correct type")
+                        item[key] = key_type(value)
+                else:
+                    raise ValueError(f"Attribute {key} not found in table {self.table_name}")
+            pass
+        return item

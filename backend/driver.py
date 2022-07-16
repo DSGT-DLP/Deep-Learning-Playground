@@ -171,9 +171,8 @@ def root(path):
         return send_from_directory(app.static_folder, 'index.html')
 
 
-@app.route("/run", methods=["GET", "POST"])
+@app.route("/run", methods=["POST"])
 def train_and_output():
-    print("Hi")
     request_data = json.loads(request.data)
 
     user_arch = request_data["user_arch"]
@@ -270,6 +269,7 @@ def send_email_route():
     except Exception:
         print(traceback.format_exc())
         return jsonify({"success": False}), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')

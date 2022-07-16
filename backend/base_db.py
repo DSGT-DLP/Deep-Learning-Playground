@@ -1,8 +1,7 @@
 from enum import Enum, EnumMeta
-from dataclasses import dataclass, asdict
+from dataclasses import asdict
 from typing import Any, List, Dict, Literal
 import boto3
-from numpy import partition
 
 class _BaseEnumMeta(EnumMeta):
     def __contains__(cls, item):
@@ -23,7 +22,7 @@ class BaseData:
 
 def enumclass(cls=None, /, *, DataClass: BaseData = None, **kwargs):  
     def process(cls):
-        if not issubclass(cls, BaseData):
+        if not issubclass(DataClass, BaseData):
             raise ValueError("DataClass provided is not a dataclass")
         
         data_fields = list(DataClass.__dataclass_fields__.keys())
@@ -49,8 +48,6 @@ def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass: _BaseEnum =
         
         if not issubclass(DataClass, BaseData):
             raise ValueError("DataClass provided is not a subclass of type: BaseData")
-        if not issubclass(EnumClass, _BaseEnum):
-            raise ValueError("EnumClass provided is not a subclass of type: _BaseEnum")
         
         cls.DataClass = DataClass
         cls.EnumClass = EnumClass
@@ -72,7 +69,11 @@ class BaseDDBUtil:
     def __init__(self, table_name: str, region: str, table=None):
         self.table_name = table_name
         self.dynamodb = boto3.resource('dynamodb', region)
-        self.table = table if table else boto3.resource('dynamodb', region).Table(self.table_name)
+        
+        try:
+            self.table = table if table else boto3.resource('dynamodb', region).Table(self.table_name)
+        except:
+            self.create_table()
         
     def create_table(self, read_capacity_units: int = 10, write_capacity_units: int = 10) -> None:
         """
@@ -105,7 +106,7 @@ class BaseDDBUtil:
         """
         Create a record in DynamoDB table with the data corresponding to the input parameters
         """
-        self.param_checker("create", record_data=record_data, **kwargs)
+        self.__param_checker("create", record_data=record_data, **kwargs)
         partition_key_name = self.partition_key[0]
         
         if record_data is not None:
@@ -128,7 +129,7 @@ class BaseDDBUtil:
         """
         Retrieve a record with the partition_key 'partition_id' from DynamoDB table
         """
-        self.param_checker("get", partition_id=partition_id)
+        self.__param_checker("get", partition_id=partition_id)
         
         response = self.table.get_item(Key={self.partition_key[0]: partition_id})
         if 'Item' not in response:
@@ -138,7 +139,7 @@ class BaseDDBUtil:
         if len(item) != len(self.EnumClass.Attribute):
             raise ValueError(f"Could not approve record with missing/extra attributes")
         
-        self.param_checker("approve", **item)
+        self.__param_checker("approve", **item)
         return self.DataClass(**item)
     
     def update_record(self, partition_id: str, **kwargs) -> Literal['Success']:
@@ -148,7 +149,7 @@ class BaseDDBUtil:
         if len(kwargs) == 0:
             raise ValueError("Cannot update record without any changes")
         
-        self.param_checker("update", partition_id=partition_id, **kwargs)
+        self.__param_checker("update", partition_id=partition_id, **kwargs)
         partition_key_name = self.EnumClass.partition_key[0]
         expression = "SET "
         
@@ -176,7 +177,7 @@ class BaseDDBUtil:
         """
         Delete a record with the partition_key value 'partition_id' from DynamoDB table
         """
-        self.param_checker("delete", partition_id=partition_id)
+        self.__param_checker("delete", partition_id=partition_id)
         partition_key_name = self.partition_key[0]
         
         try:
@@ -193,7 +194,7 @@ class BaseDDBUtil:
             print(f"Could not delete status for {partition_key_name} {partition_id}")
             raise ValueError(f"Could not delete status for {partition_key_name} {partition_id}")
         
-    def param_checker(self, operation: str, **kwargs):
+    def __param_checker(self, operation: str, **kwargs):
         kwargs = kwargs.items()
         
         for attribute, value in kwargs:
@@ -220,24 +221,3 @@ class BaseDDBUtil:
                 raise ValueError(f"Could not {operation} record with {attribute} not of correct type")
             elif getattr(self.EnumClass, attribute.capitalize(), None) is not None and value not in getattr(self.EnumClass, attribute.capitalize()):
                 raise ValueError(f"Could not {operation} record with invalid {attribute}: {value}")
-            
-                
-
-# Usage
-if __name__ == '__main__':
-    @dataclass
-    class StatusData(BaseData):
-        request_id: str
-        status: str 
-        timestamp: str
-
-    @enumclass(DataClass=StatusData, partition_key=['request_id', 'S'], status=['started', 'in_progress', 'success', 'failed'])
-    class StatusEnums:
-        pass
-    
-    @changevar(DataClass=StatusData, EnumClass=StatusEnums)
-    class StatusDDBUtil(BaseDDBUtil):
-        pass
-    
-    table = StatusDDBUtil('status-table', 'us-west-2')
-    print(table.get_record('234'))

@@ -36,6 +36,7 @@ DEFAULT_DATASETS = {
 }
 UNZIPPED_DIR_NAME = "unzipped_data"
 SENDER = "DSGT Playground <dsgtplayground@gmail.com>"
+USER_TABLE_NAME = "user-table"
 AWS_REGION = "us-east-2"
 CHARSET = "utf-8"
 TENSOR_ONLY_TRANSFORMS = [

@@ -24,6 +24,7 @@ import {
   EmailInput,
   TitleText,
   CodeSnippet,
+  HomeCSVInputURL,
 } from "./components";
 import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
@@ -80,9 +81,8 @@ const Home = () => {
   }));
 
   const dl_results_data = dlpBackendResponse?.dl_results || [];
-  const train_loss_data = dlpBackendResponse?.train_loss_results;
   const auc_roc_data_res =
-    dlpBackendResponse?.train_loss_results?.AUC_ROC_curve_data || [];
+    dlpBackendResponse?.auxiliary_outputs?.AUC_ROC_curve_data || [];
   const auc_roc_data = [];
   auc_roc_data.push({
     name: "baseline",
@@ -111,60 +111,6 @@ const Home = () => {
     csvColumnsCopy.splice(e.value, 1);
     setInputFeatureColumnOptions(csvColumnsCopy);
   };
-
-  async function handleURL(url) {
-    const headers = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Origin",
-    };
-    try {
-      if (!url) return;
-
-      let response = await fetch(url);
-      response = await response.text();
-      const responseLines = response.split(/\r\n|\n/);
-      const headers = responseLines[0].split(
-        /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
-      );
-
-      const list = [];
-      for (let i = 1; i < responseLines.length; i++) {
-        const row = responseLines[i].split(
-          /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
-        );
-        if (headers && row.length === headers.length) {
-          const obj = {};
-          for (let j = 0; j < headers.length; j++) {
-            let d = row[j];
-            if (d.length > 0) {
-              if (d[0] == '"') d = d.substring(1, d.length - 1);
-              if (d[d.length - 1] == '"') d = d.substring(d.length - 2, 1);
-            }
-            if (headers[j]) {
-              obj[headers[j]] = d;
-            }
-          }
-
-          // remove the blank rows
-          if (Object.values(obj).filter((x) => x).length > 0) {
-            list.push(obj);
-          }
-        }
-
-        // prepare columns list from headers
-        const columns = headers.map((c) => ({
-          name: c,
-          selector: (row) => row[c],
-        }));
-
-        setCSVDataInput(list);
-        setCSVColumns(columns);
-        setFileURL(url);
-      }
-    } catch (e) {
-      console.log("Incorrect URL");
-    }
-  }
 
   const input_queries = [
     {
@@ -240,13 +186,29 @@ const Home = () => {
       })
     );
 
+    const mapResponses = (key) =>
+      dlpBackendResponse?.dl_results.map((e) => e[key]) || [];
+
+    const FIGURE_HEIGHT = 500;
+    const FIGURE_WIDTH = 750;
+
     return (
       <>
         <CSVLink data={dl_results_data} headers={dl_results_columns_react_csv}>
-          <button style={styles.download_csv_res}>
+          <button style={{ ...styles.download_csv_res, padding: 5.5 }}>
             📄 Download Results (CSV)
           </button>
         </CSVLink>
+        <span style={{ marginLeft: 8 }}>
+          <a href={ONNX_OUTPUT_PATH} download style={styles.download_csv_res}>
+            📄 Download ONNX Output File
+          </a>
+        </span>
+        <span style={{ marginLeft: 8 }}>
+          <a href={PT_PATH} download style={styles.download_csv_res}>
+            📄 Download model.pt File
+          </a>
+        </span>
 
         <DataTable
           pagination
@@ -257,24 +219,15 @@ const Home = () => {
           }))}
           data={dl_results_data}
         />
-        <span>
-          <a href={ONNX_OUTPUT_PATH} download style={styles.download_csv_res}>
-            📈 Download ONNX Output File
-          </a>
-        </span>
-        <span style={{ marginLeft: 8 }}>
-          <a href={PT_PATH} download style={styles.download_csv_res}>
-            📈 Download model.pt File
-          </a>
-        </span>
+
         <div style={{ marginTop: 8 }}>
           {problemType.value === "classification" ? (
             <Plot
               data={[
                 {
                   name: "Train accuracy",
-                  x: train_loss_data?.epochs || [],
-                  y: train_loss_data?.train_acc || [],
+                  x: mapResponses("epoch"),
+                  y: mapResponses("train_acc"),
                   type: "scatter",
                   mode: "markers",
                   marker: { color: "red", size: 10 },
@@ -282,8 +235,8 @@ const Home = () => {
                 },
                 {
                   name: "Test accuracy",
-                  x: train_loss_data?.epochs || [],
-                  y: train_loss_data?.test_acc || [],
+                  x: mapResponses("epoch"),
+                  y: mapResponses("val/test acc"),
                   type: "scatter",
                   mode: "markers",
                   marker: { color: "blue", size: 10 },
@@ -291,21 +244,21 @@ const Home = () => {
                 },
               ]}
               layout={{
-                width: 750,
-                height: 750,
+                width: FIGURE_WIDTH,
+                height: FIGURE_HEIGHT,
                 xaxis: { title: "Epoch Number" },
                 yaxis: { title: "Accuracy" },
                 title: "Train vs. Test Accuracy for your Deep Learning Model",
                 showlegend: true,
               }}
             />
-          ) : undefined}
+          ) : null}
           <Plot
             data={[
               {
                 name: "Train loss",
-                x: train_loss_data?.epochs || [],
-                y: train_loss_data?.train_loss || [],
+                x: mapResponses("epoch"),
+                y: mapResponses("train_loss"),
                 type: "scatter",
                 mode: "markers",
                 marker: { color: "red", size: 10 },
@@ -313,8 +266,8 @@ const Home = () => {
               },
               {
                 name: "Test loss",
-                x: train_loss_data?.epochs || [],
-                y: train_loss_data?.test_loss || [],
+                x: mapResponses("epoch"),
+                y: mapResponses("test_loss"),
                 type: "scatter",
                 mode: "markers",
                 marker: { color: "blue", size: 10 },
@@ -322,8 +275,8 @@ const Home = () => {
               },
             ]}
             layout={{
-              width: 750,
-              height: 750,
+              width: FIGURE_WIDTH,
+              height: FIGURE_HEIGHT,
               xaxis: { title: "Epoch Number" },
               yaxis: { title: "Loss" },
               title: "Train vs. Test Loss for your Deep Learning Model",
@@ -335,15 +288,15 @@ const Home = () => {
             <Plot
               data={auc_roc_data}
               layout={{
-                width: 750,
-                height: 750,
+                width: FIGURE_WIDTH,
+                height: FIGURE_HEIGHT,
                 xaxis: { title: "False Positive Rate" },
                 yaxis: { title: "True Positive Rate" },
                 title: "AUC/ROC Curves for your Deep Learning Model",
                 showlegend: true,
               }}
             />
-          ) : undefined}
+          ) : null}
           {problemType.value === "classification" &&
           auc_roc_data_res.length == 0 ? (
             <p style={{ textAlign: "center" }}>
@@ -351,14 +304,29 @@ const Home = () => {
               check that shuffle is set to true to produce a more balanced
               train/test split which would enable correct AUC score calculation
             </p>
-          ) : undefined}
+          ) : null}
           {problemType.value === "classification" ? (
-            <><img
-              src={CONFUSION_VIZ}
-              alt="Confusion matrix for the last epoch of your Deep Learning Model" /><a href={CONFUSION_VIZ} download style={styles.download_csv_res}>
-                📈 Download Confusion matrix
-              </a></>
-          ) : undefined}
+            <Plot
+              data={[
+                {
+                  z: dlpBackendResponse?.auxiliary_outputs?.confusion_matrix,
+                  type: "heatmap",
+                  colorscale: [
+                    [0, "#e6f6fe"],
+                    [1, COLORS.dark_blue],
+                  ],
+                },
+              ]}
+              layout={{
+                title: "Confusion Matrix (Last Epoch)",
+                xaxis: { title: "Predicted" },
+                yaxis: { title: "Actual", autorange: "reversed" },
+                showlegend: true,
+                width: FIGURE_HEIGHT,
+                height: FIGURE_HEIGHT,
+              }}
+            />
+          ) : null}
         </div>
       </>
     );
@@ -376,16 +344,15 @@ const Home = () => {
               setData={setCSVDataInput}
               setColumns={setCSVColumns}
             />
-            <input
-              style={{ width: "100%" }}
-              placeholder="Or type in URL..."
-              value={fileURL}
-              onChange={(e) => setFileURL(e.target.value)}
-              onBlur={(e) => handleURL(e.target.value)}
+            <HomeCSVInputURL
+              fileURL={fileURL}
+              setFileURL={setFileURL}
+              setCSVColumns={setCSVColumns}
+              setCSVDataInput={setCSVDataInput}
             />
           </RectContainer>
 
-          {addedLayers.map((e, i) => (
+          {addedLayers.map((_, i) => (
             <AddedLayer
               thisLayerIndex={i}
               addedLayers={addedLayers}
@@ -483,5 +450,6 @@ const styles = {
     cursor: "pointer",
     padding: 8,
     textDecoration: "none",
+    fontSize: "medium",
   },
 };

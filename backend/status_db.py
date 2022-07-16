@@ -2,7 +2,7 @@ from typing import Dict, Any
 from enum import Enum, EnumMeta
 from dataclasses import dataclass, asdict 
 import boto3
-from backend.constants import STATUS_TABLE_NAME, AWS_REGION
+from constants import STATUS_TABLE_NAME, AWS_REGION
 
 class StatusEnumMeta(EnumMeta):
     def __contains__(cls, item):
@@ -12,17 +12,14 @@ class StatusEnumMeta(EnumMeta):
             return False
         return True
 
-
 class StatusAttribute(Enum, metaclass=StatusEnumMeta):
     """
     Enum class to represent all valid attributes for a Dynamo DB
     item from the Status table
     """
-
     REQUEST_ID = "request_id"  # UUID/GUID for this request
     STATUS = "status"  # status of request (started, in progress, success, fail)
     TIMESTAMP = "timestamp"
-
 
 class StatusEnum(Enum):
     STARTED = "STARTED"
@@ -30,23 +27,19 @@ class StatusEnum(Enum):
     SUCCESS = "SUCCESS"
     FAILED = "FAILED"
 
-
 @dataclass
 class StatusData:
     """
     Data class to represent a Dynamo DB item from the status table
     """
-
     request_id: str
     status: str
     timestamp: str
-
 
 class StatusDDBUtil:
     """
     Data access object for Status table
     """
-
     def __init__(self, table_name: str, region: str, table=None):
         self.table_name = table_name
         self.dynamodb = boto3.resource('dynamodb', region)

@@ -1,6 +1,6 @@
 from enum import Enum, EnumMeta
 from dataclasses import dataclass
-from typing import Any, List
+from typing import Any, List, Dict, Literal
 import boto3
 
 class _BaseEnumMeta(EnumMeta):
@@ -62,8 +62,8 @@ class BaseDDBUtil:
     """    
     def __init__(self, table_name: str, region: str, table=None):
         self.table_name = table_name
-        #self.dynamodb = boto3.resource('dynamodb', region)
-        #self.table = table if table else boto3.resource('dynamodb', region).Table(self.table_name)
+        self.dynamodb = boto3.resource('dynamodb', region)
+        self.table = table if table else boto3.resource('dynamodb', region).Table(self.table_name)
         
     def create_table(self, read_capacity_units: int = 10, write_capacity_units: int = 10) -> None:
         """
@@ -92,8 +92,46 @@ class BaseDDBUtil:
         )
         self.table = table
         
+    def get_record(self, partition_id: Any) -> BaseData:
+        """
+        Retrieve record with the partition_key 'partition_id' from DynamoDB table
+        """
+        self.param_checker("get", partition_id=partition_id)
+        
+        response = self.table.get_item(Key={self.EnumClass.partition_key[0]: partition_id})
+        if 'Item' not in response:
+            raise ValueError(f"Could not find a Dynamo DB item for id {id} in table {self.table_name}")
+        
+        item: Dict[int, Any] = response['Item']
+        self.param_checker("approve", **item)
+        return self.DataClass(**item)
+    
+    def delete_record(self, partition_id: Any) -> Literal['Success']:
+        """
+        Delete record with the partition_key value 'partition_id' from DynamoDB table
+        """
+        self.param_checker("delete", partition_id=partition_id)
+        partition_key_name = self.EnumClass.partition_key[0]
+        
+        try:
+            self.table.delete_item(
+                Key={
+                    partition_key_name: partition_id
+                },
+                ConditionExpression=f"attribute_exists({partition_key_name})"
+            )
+            
+            return "Success"
+        except Exception as e:
+            print(e)
+            print(f"Oops. Could not delete status for {partition_key_name} {partition_id}")
+            raise ValueError(f"Oops. Could not delete status for {partition_key_name} {partition_id}")
+        
     def param_checker(self, operation: str, **kwargs):
         kwargs = kwargs.items()
+        
+        if operation == "approve" and len(kwargs) != len(self.EnumClass.Attribute):
+            raise ValueError(f"Could not {operation} record with missing attributes")
         
         for attribute, value in kwargs:
             if attribute == 'record_data':
@@ -114,7 +152,7 @@ class BaseDDBUtil:
                 raise ValueError(f"Could not {operation} record with {attribute}: None")
             elif type(value) is not self.DataClass.__dataclass_fields__[attribute].type:
                 raise ValueError(f"Could not {operation} record with {attribute} not of correct type")
-            elif getattr(self.EnumClass, attribute, None) is not None and value not in getattr(self.EnumClass, attribute):
+            elif getattr(self.EnumClass, attribute.capitalize(), None) is not None and value not in getattr(self.EnumClass, attribute.capitalize()):
                 raise ValueError(f"Could not {operation} record with invalid {attribute}: {value}")
             
                 
@@ -131,17 +169,9 @@ if __name__ == '__main__':
     class StatusEnums:
         pass
     
-    #print(StatusEnums)
-    #print(StatusEnums.Attribute)
-    #print(StatusEnums.Status)
-    #print(StatusEnums.Status.IN_PROGRESS.value)
-    #print('IN_PROGRESS' in StatusEnums.Status)
-    
     @changevar(DataClass=StatusData, EnumClass=StatusEnums)
     class StatusDDBUtil(BaseDDBUtil):
         pass
     
-    a = StatusData(1, 2, 3)
-    print(dir(a))
-    print(type(a).__name__)
-    print(type(a) is StatusData)
+    table = StatusDDBUtil('status-table', 'us-west-2')
+    print(table.get_record('234'))

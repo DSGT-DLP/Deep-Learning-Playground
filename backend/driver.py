@@ -58,9 +58,15 @@ def ml_drive(
             y = input_df[target]
             X = input_df[features]
 
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, random_state=0, shuffle=shuffle
-        )
+        if shuffle and problem_type.upper() == "CLASSIFICATION":
+            # using stratify only for classification problems to ensure correct AUC calculation
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=test_size, random_state=0, shuffle=True, stratify=y
+            )
+        else:
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=test_size, random_state=0, shuffle=shuffle
+            )
         model = get_object(user_model)
         train_classical_ml_model(
             model, X_train, X_test, y_train, y_test, problem_type=problem_type
@@ -120,13 +126,19 @@ def dl_drive(
             print(y.head())
 
         # Convert to tensor
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, random_state=0, shuffle=shuffle
-        )
+        if shuffle and problem_type.upper() == "CLASSIFICATION":
+            # using stratify only for classification problems to ensure correct AUC calculation
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=test_size, random_state=0, shuffle=True, stratify=y
+            )
+        else:
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=test_size, random_state=0, shuffle=shuffle
+            )
+
         X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor = get_tensors(
             X_train, X_test, y_train, y_test
         )
-
         # Build the Deep Learning model that the user wants
         model = DLModel(parse_deep_user_architecture(user_arch))
         print(f"model: {model}")

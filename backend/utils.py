@@ -10,7 +10,8 @@ from constants import (
     TRAIN_ACC,
     TEST,
     VAL_TEST_ACC,
-    CONFUSION_VIZ
+    CONFUSION_VIZ,
+    AUC_ROC_VIZ
 )
 import pandas as pd
 import numpy as np
@@ -21,7 +22,7 @@ import seaborn as sns
 from enum import Enum
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, roc_curve, roc_auc_score
 import csv
 import os
 import json
@@ -178,20 +179,18 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     y_pred = []
     categoryList = []    
 
-    for labels in labels_last_epoch:
-        for l in labels.tolist():
-            label.append(l[0])
+    for l in labels_last_epoch.tolist():
+        label.append(l[0])
 
-    for pred in y_pred_last_epoch:
-        predictions = torch.argmax(
-            pred, dim=-1
-        )
-        for prediction in predictions.tolist():
-            y_pred.append(prediction[0])
+    predictions = torch.argmax(
+        y_pred_last_epoch, dim=-1
+    )
+    for prediction in predictions.tolist():
+        y_pred.append(prediction[0])
 
     # generating a category list for confusion matrix axis labels
     if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):
-        for i, x in enumerate(y_pred_last_epoch[0][0][0]):
+        for i, x in enumerate(y_pred_last_epoch[0][0]):
             categoryList.append(i)
 
 
@@ -204,7 +203,63 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     ax.set_xlabel('Predicted');ax.set_ylabel('Actual'); 
     ax.set_title('Confusion Matrix (last Epoch)'); 
     ax.xaxis.set_ticklabels(categoryList); ax.yaxis.set_ticklabels(categoryList);
-    plt.savefig(CONFUSION_VIZ) 
+    plt.savefig(CONFUSION_VIZ)
+
+
+def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
+    label_list = []
+    y_preds_list = []
+    categoryList = []
+    plot_data = []  
+
+    # generating a category list for confusion matrix axis labels, and setting up the y_preds_list and label_list for each category
+    if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):
+        for i, x in enumerate(y_pred_last_epoch[0][0]):
+            categoryList.append(i)
+            y_preds_list.append([])
+            label_list.append([])
+
+    for label in labels_last_epoch:
+        ground_truth = label.item();
+        for x in range(len(label_list)):
+            # toggle on a 1 for the category that corresponds to the ground truth, this is to produce the 1-vs-all system for multiclass classification
+            if x == ground_truth:
+                label_list[x].append(1)
+            else:
+                label_list[x].append(0)
+
+    for row in y_pred_last_epoch:
+        for i, tensor in enumerate(row[0]):
+            # appending tensor values to each category's probability predicitons in y_preds_list
+            y_preds_list[i].append(tensor.item())
+    
+    # making a AUC/ROC graph for each category's probability predicitons
+    try:
+        # using matplotlib in addition to plotly so that we can generate graph image in backend and email this to user
+        plt.clf()
+        plt.title('AUC/ROC Curves for your Deep Learning Model')
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.plot([0, 1], [0, 1], linestyle='--', label=f'baseline')
+        for i in range(len(categoryList)):
+            pred_prob = np. array(y_preds_list[i])
+            y_test = np. array(label_list[i])
+            fpr, tpr, _ = roc_curve(y_test, pred_prob)
+            auc = roc_auc_score(y_test, pred_prob)
+            # this data will be sent to frontend to make interactive plotly graph
+            plot_data.append([fpr.tolist(), tpr.tolist(), auc])
+            plt.plot(fpr, tpr, linestyle='-', label=f'{i} (AUC: {round(auc,4)})')
+        plt.legend()
+        plt.savefig(AUC_ROC_VIZ)
+
+
+    except:
+        return []
+
+    return plot_data
+
+
+
 
 
 def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: str = None) -> str:

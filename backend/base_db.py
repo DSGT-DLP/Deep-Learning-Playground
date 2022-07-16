@@ -16,6 +16,7 @@ class _BaseEnumMeta(EnumMeta):
     
 class _BaseEnum(Enum, metaclass=_BaseEnumMeta):
     """Defines a custom Enum to provide subclasses the functionality of _BaseEnumMeta"""
+    pass
 
 class BaseData:
     """Class to provide common parent type to dataclasses, and for future uses"""
@@ -49,8 +50,7 @@ def enumclass(cls=None, /, *, DataClass: BaseData = None, **kwargs):
         raise Exception("Please provide a corresponding dataclass")
     return process
 
-def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass = None, partition_key: List[str] = None, 
-                gsi: List[str] = None):
+def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass = None, partition_key: str = None):
     """Decorator function used to assign static variables to subclasses of BaseDDBUtil that are also utilized
     in BaseDDBUtil function implementations. It is sort of analogous to how instance variables of a class are used in instance methods, 
     but the instances of the class can assign various different values to the instance variables.
@@ -58,20 +58,13 @@ def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass = None, part
     Args:
         DataClass: dataclass of the form of a BaseData (eg: UserData)
         EnumClass: class that stored enums (eg: UserEnums)
-        partition_key: the partition_key of DynamoDB table of the form [<attibute_name>, <attribute_type>]
-        gsi: the global secondary indices of the DynamoDB table
+        partition_key: the partition_key of DynamoDB table
     """
     def process(cls):
-        if partition_key[0] in EnumClass.Attribute:
+        if partition_key in EnumClass.Attribute:
             cls.partition_key = partition_key
         else:
-            raise ValueError(f"{partition_key[0]} is not an attribute of the table")
-        
-        if gsi is not None:
-            for attribute in gsi:
-                if attribute not in EnumClass.Attribute:
-                    raise ValueError(f"{attribute} is not an attribute of the table")
-            cls.gsi = gsi
+            raise ValueError(f"{partition_key} is not an attribute of the table")
         
         if not issubclass(DataClass, BaseData):
             raise ValueError("DataClass provided is not a subclass of type: BaseData")
@@ -84,14 +77,14 @@ def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass = None, part
         raise Exception("Please provide the corresponding arguments")
     return process
 
+_type_mapper = {int: 'N', Decimal: 'N', str: 'S'}
 
 class BaseDDBUtil:
     """Base class that interacts with AWS DynamoDB to manipulate information stored in the DynamoDB tables.
     Acts as a template, whose subclasses (eg: StatusDDBUtil) manipulates corresponding tables (eg: status-table)"""
     DataClass: BaseData = None
     EnumClass = None
-    partition_key: List[str] = None           # Stores partition_key of table of the form [<attibute_name>, <attribute_type>]    
-    gsi: List[str] = None                     # Stores all the global secondary indices of the table
+    partition_key: str = None               # Stores partition_key of the table
     
     def __init__(self, table_name: str, region: str):
         self.table_name = table_name
@@ -109,15 +102,15 @@ class BaseDDBUtil:
             TableName=self.table_name,
             KeySchema=[
                 {
-                    'AttributeName': self.partition_key[0],
+                    'AttributeName': self.partition_key,
                     'KeyType': 'HASH'  # Partition key
                 },
             ],
             AttributeDefinitions=[
                 {
-                    'AttributeName': self.partition_key[0],
+                    'AttributeName': self.partition_key,
                     # AttributeType defines the data type. 'S' is string type and 'N' is number type
-                    'AttributeType': self.partition_key[1]
+                    'AttributeType': _type_mapper[self.DataClass.__dataclass_fields__[self.partition_key].type]
                 }
             ],
             ProvisionedThroughput={
@@ -128,12 +121,67 @@ class BaseDDBUtil:
         )
         self.table = table
         
+    def create_gsi(self, index_name: str, attribute_name: str, attribute_type: str, read_capacity: int, write_capacity: int,
+                        projection_type: str, nonkey_attributes: List[str] = None) -> Literal['Success']:
+        """Function that adds a global secondary index to the associated table"""
+        
+        if (type(index_name) != str or type(attribute_name) != str or type(attribute_type) != str or type(read_capacity) != int or 
+                type(write_capacity) != int or type(projection_type) != str):
+            raise ValueError("Cannot create global secondary index with invalid argument")        
+        
+        if attribute_name not in self.EnumClass.Attribute:
+            raise ValueError(f"Attribute '{attribute_name}' not found in table {self.table_name}")
+        if projection_type not in ['ALL', 'KEYS_ONLY', 'INCLUDE']:
+            raise ValueError(f"Invalid projection_type argument")
+        
+        if projection_type == 'INCLUDE':
+            if nonkey_attributes is None:
+                raise ValueError(f"nonkey_attributes need to be provided for projection_type 'INCLUDE'")
+            else:
+                for attribute in nonkey_attributes:
+                    if attribute not in self.EnumClass.Attribute:
+                        raise ValueError(f"Attribute '{attribute}' not found in table {self.table_name}")
+        elif nonkey_attributes is not None:
+            raise ValueError(f"nonkey_attributes should not be provided for projection_type 'f{projection_type}'")
+    
+        projection = {'ProjectionType': projection_type}
+        if projection_type == 'INCLUDE':
+            projection['NonKeyAttributes'] = nonkey_attributes
+        
+        self.table = self.table.update(
+            AttributeDefinitions=[
+                {
+                    'AttributeName': attribute_name,
+                    'AttributeType': _type_mapper[self.DataClass.__dataclass_fields__[attribute_name].type]
+                }
+            ],
+            GlobalSecondaryIndexUpdates=[
+                {
+                    'Create': {
+                        'IndexName': index_name,
+                        'KeySchema': [
+                            {
+                                'AttributeName': attribute_name,
+                                'KeyType': attribute_type
+                            },
+                        ],
+                        'Projection': projection,
+                        'ProvisionedThroughput': {
+                            'ReadCapacityUnits': read_capacity,
+                            'WriteCapacityUnits': write_capacity
+                        }
+                    }
+                }
+            ]
+        )
+        return "Success"
+        
     def create_record(self, record_data: BaseData = None, **kwargs) -> Literal['Success']:
         """Function to create a record in the associated DynamoDB table with the data corresponding to the input parameters.
         Either takes a BaseData input, or the attribute values as keyword arguments"""
         
         self.__param_checker("create", record_data=record_data, **kwargs)
-        partition_key_name = self.partition_key[0]
+        partition_key_name = self.partition_key
         
         if record_data is not None:
             item = asdict(record_data)
@@ -160,9 +208,9 @@ class BaseDDBUtil:
         
         self.__param_checker("get", partition_id=partition_id)
         
-        response = self.table.get_item(Key={self.partition_key[0]: partition_id})
+        response = self.table.get_item(Key={self.partition_key: partition_id})
         if 'Item' not in response:
-            raise ValueError(f"Could not find a DynamoDB item for {self.partition_key[0]} {partition_id} in table {self.table_name}")
+            raise ValueError(f"Could not find a DynamoDB item for {self.partition_key} {partition_id} in table {self.table_name}")
         item: Dict[str, Any] = response['Item']
         
         if len(item) != len(self.EnumClass.Attribute):
@@ -179,7 +227,7 @@ class BaseDDBUtil:
             raise ValueError("Cannot update record without any changes")
         
         self.__param_checker("update", partition_id=partition_id, **kwargs)
-        partition_key_name = self.partition_key[0]
+        partition_key_name = self.partition_key
         
         expression = []
         attribute_names = {}
@@ -203,7 +251,7 @@ class BaseDDBUtil:
             return "Success"
         except ClientError as e:
             if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
-                raise ValueError(f"Could not find a DynamoDB item to update for {self.partition_key[0]} {partition_id} in table {self.table_name}")
+                raise ValueError(f"Could not find a DynamoDB item to update for {self.partition_key} {partition_id} in table {self.table_name}")
             else:
                 raise e
     
@@ -212,7 +260,7 @@ class BaseDDBUtil:
             the associated DynamoDB table"""
             
         self.__param_checker("delete", partition_id=partition_id)
-        partition_key_name = self.partition_key[0]
+        partition_key_name = self.partition_key
         
         try:
             self.table.delete_item(
@@ -224,7 +272,7 @@ class BaseDDBUtil:
             return "Success"
         except ClientError as e:
             if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
-                raise ValueError(f"Could not find a DynamoDB item to delete for {self.partition_key[0]} {partition_id} in table {self.table_name}")
+                raise ValueError(f"Could not find a DynamoDB item to delete for {self.partition_key} {partition_id} in table {self.table_name}")
             else:
                 raise e
         
@@ -244,7 +292,7 @@ class BaseDDBUtil:
                     raise ValueError(f"Could not {operation} record with missing attributes")
                 continue
             elif attribute == 'partition_id':
-                partition_key_name = self.partition_key[0]
+                partition_key_name = self.partition_key
                 if partition_key_name in kwargs:
                     raise ValueError(f"Cannot {operation} record with multiple values for {partition_key_name}")
                 attribute = partition_key_name

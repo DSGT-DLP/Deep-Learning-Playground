@@ -16,7 +16,7 @@ class StatusEnums:
         StatusEnums.Status - Enum that defines the categorical values associated with the 'status' attribute"""
     pass
 
-@changevar(DataClass=StatusData, EnumClass=StatusEnums, partition_key=['request_id', 'S'])
+@changevar(DataClass=StatusData, EnumClass=StatusEnums, partition_key='request_id')
 class StatusDDBUtil(BaseDDBUtil):
     """Class that interacts with AWS DynamoDB to manipulate information stored in the status-table DynamoDB table"""
     pass

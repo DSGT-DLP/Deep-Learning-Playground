@@ -92,18 +92,20 @@ class BaseDDBUtil:
         )
         self.table = table
         
-    def create_record(self, record_data: BaseData = None, **kwargs):
+    def create_record(self, record_data: BaseData = None, **kwargs) -> Literal['Success']:
         """
         Create a record in DynamoDB table with the data corresponding to the input parameters
         """
-        self.param_checker(record_data=record_data, **kwargs)
+        self.param_checker("create", record_data=record_data, **kwargs)
         partition_key_name = self.EnumClass.partition_key[0]
         
         if record_data is not None:
             item = asdict(record_data)
         else:
             item = kwargs
-            
+        
+        if len(item) != len(self.EnumClass.Attribute):
+            raise ValueError(f"Could not create record with missing/extra attributes")   
         try:
             self.table.put_item(
                 Item=item,
@@ -122,10 +124,44 @@ class BaseDDBUtil:
         response = self.table.get_item(Key={self.EnumClass.partition_key[0]: partition_id})
         if 'Item' not in response:
             raise ValueError(f"Could not find a Dynamo DB item for id {id} in table {self.table_name}")
-        
         item: Dict[int, Any] = response['Item']
+        
+        if len(item) != len(self.EnumClass.Attribute):
+            raise ValueError(f"Could not approve record with missing/extra attributes")
+        
         self.param_checker("approve", **item)
         return self.DataClass(**item)
+    
+    def update_record(self, partition_id: Any, **kwargs) -> Literal['Success']:
+        """
+        Update status for a given request id
+        """
+        self.param_checker("update", partition_id=partition_id, **kwargs)
+        partition_key_name = self.EnumClass.partition_key[0]
+        expression = "SET "
+        
+        if len(kwargs) == 0:
+            raise ValueError("Cannot update record without any changes")
+        
+        attribute_names = {}
+        for attr in kwargs.keys():
+            expression += f"{attr}=:{attr}, "
+            attribute_names[f':{attr}'] = kwargs[attr]
+        
+        try:
+            self.table.update_item(
+                Key={
+                    partition_key_name: partition_id
+                },
+                UpdateExpression=expression,
+                ExpressionAttributeNames=attribute_names,
+                ConditionExpression="attribute_exists(request_id)"
+            )
+            return "Success"
+        except Exception as e:
+            print(e)
+            print(f"Could not update attributes for {partition_key_name} {partition_id}")
+            raise ValueError(f"Could not update attributes for {partition_key_name} {partition_id}")
     
     def delete_record(self, partition_id: Any) -> Literal['Success']:
         """
@@ -145,14 +181,11 @@ class BaseDDBUtil:
             return "Success"
         except Exception as e:
             print(e)
-            print(f"Oops. Could not delete status for {partition_key_name} {partition_id}")
-            raise ValueError(f"Oops. Could not delete status for {partition_key_name} {partition_id}")
+            print(f"Could not delete status for {partition_key_name} {partition_id}")
+            raise ValueError(f"Could not delete status for {partition_key_name} {partition_id}")
         
     def param_checker(self, operation: str, **kwargs):
         kwargs = kwargs.items()
-        
-        if operation == "approve" and len(kwargs) != len(self.EnumClass.Attribute):
-            raise ValueError(f"Could not {operation} record with missing attributes")
         
         for attribute, value in kwargs:
             if attribute == 'record_data':
@@ -165,7 +198,10 @@ class BaseDDBUtil:
                     raise ValueError(f"Could not {operation} record with missing attributes")
                 pass
             elif attribute == 'partition_id':
-                attribute = self.EnumClass.partition_key[0]
+                partition_key_name = self.EnumClass.partition_key[0]
+                if partition_key_name in kwargs:
+                    raise ValueError(f"Could provide multiple values for {partition_key_name}")
+                attribute = partition_key_name
                 
             if attribute not in self.EnumClass.Attribute:
                 raise ValueError(f"Attribute not found in table {self.table_name}")

@@ -175,9 +175,8 @@ def root(path):
         return send_from_directory(app.static_folder, "index.html")
 
 
-@app.route("/run", methods=["GET", "POST"])
+@app.route("/run", methods=["POST"])
 def train_and_output():
-    print("Hi")
     request_data = json.loads(request.data)
 
     user_arch = request_data["user_arch"]
@@ -194,16 +193,16 @@ def train_and_output():
     fileURL = request_data["fileURL"]
     email = request_data["email"]
     if request.method == "POST":
-        if not default:
-            if fileURL:
-                read_dataset(fileURL)
-            elif csvDataStr:
-                pass
-            else:
-                raise ValueError("Need a file input")
-                return
-
         try:
+            if not default:
+                if fileURL:
+                    read_dataset(fileURL)
+                elif csvDataStr:
+                    pass
+                else:
+                    raise ValueError("Need a file input")
+                    return
+
             train_loss_results = dl_drive(
                 user_arch=user_arch,
                 criterion=criterion,
@@ -223,7 +222,7 @@ def train_and_output():
                         "success": True,
                         "message": "Dataset trained and results outputted successfully",
                         "dl_results": csv_to_json(),
-                        "train_loss_results": train_loss_results,
+                        "auxiliary_outputs": train_loss_results
                     }
                 ),
                 200,

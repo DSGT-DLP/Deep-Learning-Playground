@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Select from "react-select";
-import { GENERAL_STYLES } from "../constants";
+import { GENERAL_STYLES } from "../../constants";
 
 const DropDown = (props) => {
   const { options, onChange, defaultValue, isMulti } = props;

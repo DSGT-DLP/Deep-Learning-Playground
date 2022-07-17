@@ -43,7 +43,7 @@ def train_deep_classification_model(
         optimizer (torch.optim.Optimizer): Optimizer to use when training model
         criterion(str): Loss function
         epochs (int): number of epochs
-    :return: a dictionary containing the epochs, train and test accuracy and loss results, each in a list
+    :return: a dictionary containing confusion matrix and AUC/ROC plot raw data
     """
     try:
         train_loss = []  # accumulate training loss over each epoch
@@ -108,18 +108,22 @@ def train_deep_classification_model(
             }
         )
         print(result_table.head())
-        generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch)
+        confusion_matrix = generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch)
+
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
 
-        # Collecting train accuracy and loss into one dictionary
-        accuracy_loss_res = {}
-        accuracy_loss_res |= generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
-        accuracy_loss_res |= generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        
+        # Collecting additional outputs to give to the frontend
+        auxiliary_outputs = {}
+        auxiliary_outputs["confusion_matrix"] = confusion_matrix
+        
         # Generating AUC_ROC curve data to send to frontend to make interactive plot
         AUC_ROC_curve_data = generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch)
-        accuracy_loss_res["AUC_ROC_curve_data"] = AUC_ROC_curve_data
+        auxiliary_outputs["AUC_ROC_curve_data"] = AUC_ROC_curve_data
         torch.save(model, SAVED_MODEL) # saving model into a pt file
-        return accuracy_loss_res
+        return auxiliary_outputs
     except Exception:
         raise Exception("Deep Learning classification didn't train properly")
 
@@ -136,7 +140,7 @@ def train_deep_regression_model(
         optimizer (torch.optim.Optimizer): Optimizer to use when training model
         criterion: Loss function
         epochs (int): number of epochs
-    :return: a dictionary containing the epochs, train and test accuracy results, each in a list
+    :return: an empty dictionary
     """
     try:
 
@@ -179,8 +183,10 @@ def train_deep_regression_model(
         )
         print(result_table.head())
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
-        torch.save(model, SAVED_MODEL)  # saving model into a pt file
-        return generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        torch.save(model, SAVED_MODEL) # saving model into a pt file
+        generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        return {}
+
     except Exception:
         raise Exception("Deep learning regression model didn't run properly")
 

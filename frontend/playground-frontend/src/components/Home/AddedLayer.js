@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
-import { COLORS, GENERAL_STYLES, LAYOUT } from "../constants";
+import { COLORS, GENERAL_STYLES, LAYOUT } from "../../constants";
 
 const _InputOutputPromptResponse = (props) => {
   const { param_key, allParamInputs, setAddedLayers, thisLayerIndex } = props;
@@ -61,8 +61,8 @@ const AddedLayer = (props) => {
 };
 
 AddedLayer.propTypes = {
-  thisLayerIndex: PropTypes.number.isRequired, 
-  addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired, 
+  thisLayerIndex: PropTypes.number.isRequired,
+  addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
   setAddedLayers: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };

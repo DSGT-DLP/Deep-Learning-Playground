@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import RectContainer from "./RectContainer";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { COLORS, GENERAL_STYLES, ITEM_TYPES } from "../constants";
+import { COLORS, GENERAL_STYLES, ITEM_TYPES } from "../../constants";
 import { styled } from "@mui/material/styles";
 import { useDrag } from "react-dnd";
 import InfoIcon from "@mui/icons-material/Info";

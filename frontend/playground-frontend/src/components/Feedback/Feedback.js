@@ -1,10 +1,10 @@
-import EmailInput from "./EmailInput";
+import EmailInput from "../Home/EmailInput";
 import ReCAPTCHA from "react-google-recaptcha";
 import React, { useState } from "react";
-import TitleText from "./mini_components/TitleText";
-import { COLORS, GENERAL_STYLES } from "../constants";
+import TitleText from "../general/TitleText";
+import { COLORS, GENERAL_STYLES } from "../../constants";
 
-export default function Feedback() {
+const Feedback = () => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -108,7 +108,7 @@ export default function Feedback() {
       </div>
     </>
   );
-}
+};
 
 const send_feedback_mail = async (firstName, lastName, email, feedback) => {
   const runResult = await fetch("/sendemail", {
@@ -122,6 +122,8 @@ const send_feedback_mail = async (firstName, lastName, email, feedback) => {
   const resultJson = await runResult.json();
   return resultJson.success;
 };
+
+export default Feedback;
 
 const styles = {
   submit_button: {

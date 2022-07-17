@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from base_db import BaseData, BaseDDBUtil, enumclass, changevar
 
 import sys, os
-backend = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))))
+backend = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 sys.path.append(backend)
-from backend.common.constants import STATUS_TABLE_NAME, AWS_REGION
+from common.constants import STATUS_TABLE_NAME, AWS_REGION
 
 @dataclass
 class StatusData(BaseData):

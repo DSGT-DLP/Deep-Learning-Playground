@@ -3,19 +3,19 @@ import traceback
 import os
 from flask import Flask, json, request, jsonify
 
-from utils import *
-from constants import CSV_FILE_NAME, ONNX_MODEL
-from dataset import read_local_csv_file, read_dataset
-from optimizer import get_optimizer
-from model_parser import parse_deep_user_architecture, get_object
-from dl_trainer import train_deep_model, get_deep_predictions
-from ml_trainer import train_classical_ml_model
-from model import DLModel
+from common.utils import *
+from common.constants import CSV_FILE_NAME, ONNX_MODEL
+from common.dataset import read_local_csv_file, read_dataset
+from common.optimizer import get_optimizer
+from dl.dl_model_parser import parse_deep_user_architecture, get_object
+from dl.dl_trainer import train_deep_model, get_deep_predictions
+from ml.ml_trainer import train_classical_ml_model
+from dl.dl_model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
-from default_datasets import get_default_dataset
+from common.default_datasets import get_default_dataset
 from flask_cors import CORS
-from email_notifier import send_email
+from common.email_notifier import send_email
 from flask import send_from_directory
 
 app = Flask(

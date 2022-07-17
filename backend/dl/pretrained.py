@@ -18,11 +18,11 @@ from torchvision import models
 from fastai.callback.hook import num_features_model
 
 try:
-    from dataset import dataset_from_zipped
-    from constants import DEFAULT_TRANSFORM, SAVED_MODEL
+    from common.dataset import dataset_from_zipped
+    from common.constants import DEFAULT_TRANSFORM, SAVED_MODEL
 except:
-    from backend.dataset import dataset_from_zipped
-    from backend.constants import DEFAULT_TRANSFORM, SAVED_MODEL
+    from backend.common.dataset import dataset_from_zipped
+    from backend.common.constants import DEFAULT_TRANSFORM, SAVED_MODEL
 
 
 def train(

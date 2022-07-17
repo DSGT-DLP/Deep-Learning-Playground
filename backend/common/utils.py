@@ -1,4 +1,4 @@
-from constants import (
+from .constants import (
     LOSS_VIZ,
     ACC_VIZ,
     TRAIN_TIME_CSV,

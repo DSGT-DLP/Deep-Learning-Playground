@@ -1,7 +1,7 @@
 import pytest
 import torch.nn as nn
 from torch.autograd import Variable
-from backend.model import *
+from backend.dl.dl_model import *
 
 
 @pytest.mark.parametrize(

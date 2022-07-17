@@ -1,6 +1,6 @@
 import pytest
 import torch.nn
-from backend.pretrained import train, get_all
+from backend.dl.pretrained import train, get_all
 from fastai.vision.all import Adam, SGD
 import os
 import pandas as pd

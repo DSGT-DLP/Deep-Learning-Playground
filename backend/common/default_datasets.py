@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.datasets import *
 from enum import Enum
-from .constants import DEFAULT_DATASETS
+from backend.common.constants import DEFAULT_DATASETS
 
 def get_default_dataset(dataset):
     """

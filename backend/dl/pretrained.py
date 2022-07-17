@@ -17,12 +17,8 @@ from torchvision.models import *
 from torchvision import models
 from fastai.callback.hook import num_features_model
 
-try:
-    from common.dataset import dataset_from_zipped
-    from common.constants import DEFAULT_TRANSFORM, SAVED_MODEL
-except:
-    from backend.common.dataset import dataset_from_zipped
-    from backend.common.constants import DEFAULT_TRANSFORM, SAVED_MODEL
+from backend.common.dataset import dataset_from_zipped
+from backend.common.constants import DEFAULT_TRANSFORM, SAVED_MODEL
 
 
 def train(
@@ -237,4 +233,4 @@ def is_pytorch(model_name):
     return False
 
 if __name__ == "__main__":
-    train("../tests/zip_files/double_zipped.zip", "resnet34", 2, torch.nn.CrossEntropyLoss(), 2)
+    train("./tests/zip_files/double_zipped.zip", "resnet34", 2, torch.nn.CrossEntropyLoss(), 2)

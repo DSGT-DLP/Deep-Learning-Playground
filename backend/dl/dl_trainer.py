@@ -1,8 +1,8 @@
-from common.loss_functions import compute_loss
-from .dl_eval import compute_accuracy
-from common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
-from common.utils import ProblemType
-from common.constants import (
+from backend.common.loss_functions import compute_loss
+from backend.dl.dl_eval import compute_accuracy
+from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
+from backend.common.utils import ProblemType
+from backend.common.constants import (
     DEEP_LEARNING_RESULT_CSV_PATH,
     EPOCH,
     TRAIN_TIME,

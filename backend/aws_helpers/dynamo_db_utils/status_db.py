@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from base_db import BaseData, BaseDDBUtil, enumclass, changevar
+from backend.aws_helpers.dynamo_db_utils.base_db import BaseData, BaseDDBUtil, enumclass, changevar
 
 import sys, os
 backend = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))

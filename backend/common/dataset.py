@@ -12,10 +12,7 @@ from torch.utils.data import DataLoader
 from zipfile import ZipFile, is_zipfile
 from os import mkdir, path
 
-try:
-    from backend.common.constants import *
-except:
-    from .constants import *
+from backend.common.constants import *
 
 
 def read_dataset(url):
@@ -240,7 +237,7 @@ if __name__ == "__main__":
     read_local_csv_file("test.csv")
 
     train_loader, valid_loader = loader_from_zipped(
-        "../tests/zip_files/double_zipped.Zip",
+        "./tests/zip_files/double_zipped.Zip",
         train_transform=[
             transforms.ToTensor(),
             transforms.transforms.RandomChoice(transforms=[transforms.ToTensor()]),
@@ -248,5 +245,5 @@ if __name__ == "__main__":
     )
 
     train_dataset, valid_dataset = dataset_from_zipped(
-        zipped_folder="../tests/zip_files/double_zipped.Zip"
+        zipped_folder="./tests/zip_files/double_zipped.Zip"
     )

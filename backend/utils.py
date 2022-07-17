@@ -92,7 +92,7 @@ def get_dataloaders(
     return train_loader, test_loader
 
 
-def generate_loss_plot(results_path) -> dict[str: list[float]]:
+def generate_loss_plot(results_path) -> dict[str : list[float]]:
     """
     Given a training result file, plot the loss in a matplotlib plot
     Args:
@@ -122,10 +122,14 @@ def generate_loss_plot(results_path) -> dict[str: list[float]]:
     plt.ylabel("Loss")
     plt.savefig(LOSS_VIZ)
 
-    return {"epochs": x_axis, "train_loss": train_loss.values.tolist(), "test_loss": test_loss.values.tolist()}
+    return {
+        "epochs": x_axis,
+        "train_loss": train_loss.values.tolist(),
+        "test_loss": test_loss.values.tolist(),
+    }
 
 
-def generate_acc_plot(results_path) -> dict[str: list[float]]:
+def generate_acc_plot(results_path) -> dict[str : list[float]]:
     """
     Given training result file, plot the accuracy in a matplotlib plot
     Args:
@@ -153,7 +157,11 @@ def generate_acc_plot(results_path) -> dict[str: list[float]]:
     plt.ylabel("Accuracy")
     plt.savefig(ACC_VIZ)
 
-    return {"epochs": x_axis, "train_acc": train_acc.values.tolist(), "test_acc": val_acc.values.tolist()}
+    return {
+        "epochs": x_axis,
+        "train_acc": train_acc.values.tolist(),
+        "test_acc": val_acc.values.tolist(),
+    }
 
 
 def generate_train_time_csv(epoch_time):
@@ -178,7 +186,7 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     """
     label = []
     y_pred = []
-    categoryList = []    
+    categoryList = []
 
     for l in labels_last_epoch.tolist():
         label.append(l[0])
@@ -193,7 +201,6 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):
         for i, x in enumerate(y_pred_last_epoch[0][0]):
             categoryList.append(i)
-
 
     plt.clf()
     label_np = np.array(label)
@@ -259,9 +266,6 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
         return []
 
     return plot_data
-
-
-
 
 
 def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: str = None) -> str:

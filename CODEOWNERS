@@ -12,14 +12,16 @@
 # For files in the /backend directory, @karkir0003 will be requested in a pull request
 /backend @karkir0003
 /backend/email_notifier.py @avayedawadi
+/backend/dataset.py @vidushiMaheshwari
 /backend/driver.py @farisdurrani @andrewpeng02 @avayedawadi
+/backend/pretrained.py @vidushiMaheshwari
 
 
 # For unit tests, @LucasZhang58 and @karkir0003 will be requested in such a pull request
 /tests/test_data_processing.py @LucasZhang58 @karkir0003
 /tests/test_zip_loader.py @vidushiMaheshwari
+/tests/test_pretrained_train.py @andrewpeng02
 /tests/expected/unzipped/double_zipped @vidushiMaheshwari
-
 
 #
 # Frontend

@@ -18,8 +18,12 @@ from flask_cors import CORS
 from email_notifier import send_email
 from flask import send_from_directory
 
-app = Flask(__name__, static_folder=os.path.join(os.path.dirname(
-    os.getcwd()), 'frontend', 'playground-frontend', 'build'))
+app = Flask(
+    __name__,
+    static_folder=os.path.join(
+        os.path.dirname(os.getcwd()), "frontend", "playground-frontend", "build"
+    ),
+)
 CORS(app)
 
 
@@ -162,13 +166,13 @@ def dl_drive(
         raise e
 
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
 def root(path):
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
+    if path != "" and os.path.exists(app.static_folder + "/" + path):
         return send_from_directory(app.static_folder, path)
     else:
-        return send_from_directory(app.static_folder, 'index.html')
+        return send_from_directory(app.static_folder, "index.html")
 
 
 @app.route("/run", methods=["POST"])
@@ -210,7 +214,7 @@ def train_and_output():
                 test_size=test_size,
                 epochs=epochs,
                 shuffle=shuffle,
-                json_csv_data_str=csvDataStr
+                json_csv_data_str=csvDataStr,
             )
             return (
                 jsonify(
@@ -227,8 +231,7 @@ def train_and_output():
         except Exception:
             print(traceback.format_exc())
             return (
-                jsonify(
-                    {"success": False, "message": traceback.format_exc(limit=1)}),
+                jsonify({"success": False, "message": traceback.format_exc(limit=1)}),
                 400,
             )
 
@@ -272,4 +275,4 @@ def send_email_route():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host="0.0.0.0")

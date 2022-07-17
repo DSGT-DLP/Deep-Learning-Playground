@@ -182,6 +182,7 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
         label: array consisting of ground truth values
         y_pred: array consisting of predicted results
         categoryList: list of strings that represent the categories to classify into (this will be used to label the axis)
+    Returns: the confusion matrix in a 2D-array format
     """
     label = []
     y_pred = []
@@ -211,6 +212,7 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     ax.set_title('Confusion Matrix (last Epoch)'); 
     ax.xaxis.set_ticklabels(categoryList); ax.yaxis.set_ticklabels(categoryList);
     plt.savefig(CONFUSION_VIZ)
+    return cm.tolist()
 
 
 def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):

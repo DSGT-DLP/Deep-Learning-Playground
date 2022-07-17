@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { COLORS } from "../constants";
+import { COLORS } from "../../constants";
 
 const BackgroundLayout = (props) => {
   return <div style={styles.layoutBackground}>{props.children}</div>;

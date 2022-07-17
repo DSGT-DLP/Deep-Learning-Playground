@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
-import { COLORS, GENERAL_STYLES, LAYOUT } from "../constants";
-import { DropDown } from "../components";
-import { CRITERIONS } from "../settings";
+import { COLORS, GENERAL_STYLES, LAYOUT } from "../../constants";
+import { DropDown } from "..";
+import { CRITERIONS } from "../../settings";
 
 const Input = (props) => {
   const {

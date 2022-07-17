@@ -25,51 +25,58 @@
 ```
 📦playground-frontend
  ┣ 📂layer_docs
- ┃ ┣ 📜Linear.md - Doc for Linear layer 
+ ┃ ┣ 📜Linear.md - Doc for Linear layer
  ┃ ┣ 📜ReLU.md - Doc for ReLU later
  ┃ ┣ 📜Softmax.md - Doc for Softmax layer
  ┃ ┗ 📜softmax_equation.png - PNG file of Softmax equation
  ┣ 📂public
- ┃ ┣ 📜favicon.ico - Default React icon
+ ┃ ┣ 📜dlp-logo.ico - DLP Logo
+ ┃ ┣ 📜dlp-logo.png - DLP Logo
+ ┃ ┣ 📜dlp-logo.svg - DLP Logo
  ┃ ┣ 📜index.html - Base HTML file that will be initially rendered
- ┃ ┣ 📜logo192.png - Default React icon for tab logo
- ┃ ┣ 📜manifest.json - Default React file for choosing icon based on preferred size
- ┃ ┗ 📜robots.txt - Default React file
+ ┃ ┣ 📜manifest.json - Default React file for choosing icon based on
+ ┃ ┗ 📜robots.txt
  ┣ 📂src
  ┃ ┣ 📂backend_outputs
- ┃ ┃ ┣ 📂visualization_output
- ┃ ┃ ┃ ┗ 📜my_confusion_matrix.png - Last Confusion Matrix output file
- ┃ ┃ ┣ 📜model.pt - Last .pt output file
- ┃ ┃ ┗ 📜my_deep_learning_model.onnx - Last .onnx output file
+ ┃ ┃ ┣ 📜model.pt - Last model.pt output
+ ┃ ┃ ┗ 📜my_deep_learning_model.onnx - Last ONNX file output
  ┃ ┣ 📂components
  ┃ ┃ ┣ 📂About
- ┃ ┃ ┃ ┗ 📜About.js - Renders the About page
+ ┃ ┃ ┃ ┗ 📜About.js - Primary About page component
+ ┃ ┃ ┣ 📂Feedback
+ ┃ ┃ ┃ ┗ 📜Feedback.js - Primary Feedback page component
  ┃ ┃ ┣ 📂Footer
  ┃ ┃ ┃ ┣ 📜Footer.css - CSS file for Footer
- ┃ ┃ ┃ ┗ 📜Footer.js - Renders the Footer
- ┃ ┃ ┣ 📂mini_components
+ ┃ ┃ ┃ ┗ 📜Footer.js - Primary Footer page component
+ ┃ ┃ ┣ 📂general
  ┃ ┃ ┃ ┗ 📜TitleText.js - Renders a simple header for a small subsection title
+ ┃ ┃ ┣ 📂helper_functions
+ ┃ ┃ ┃ ┗ 📜TalkWithBackend.js - Sends ML/DL parameters to the backend and receives the backend
+ ┃ ┃ ┣ 📂Home
+ ┃ ┃ ┃ ┣ 📜AddedLayer.js - Renders an added layer container in the topmost row
+ ┃ ┃ ┃ ┣ 📜AddNewLayer.js - Renders a fillable layer container for the user to drag LayerChoice components into, where the new layer input will be filled by an AddedLayer component
+ ┃ ┃ ┃ ┣ 📜BackgroundLayout.js - Renders a light blue horizontally-stretched row to serve as a background to contain other components in one subsection in the Homepage
+ ┃ ┃ ┃ ┣ 📜CodeSnippet.js - Renders the code snippet container
+ ┃ ┃ ┃ ┣ 📜CSVInputFile.js - Renders the CSV file input contents (if any)
+ ┃ ┃ ┃ ┣ 📜CSVInputURL.js - Renders the CSV URL input contents (if any)
+ ┃ ┃ ┃ ┣ 📜DropDown.js - Renders the drop down components using react-select package
+ ┃ ┃ ┃ ┣ 📜EmailInput.js - Renders the email input form
+ ┃ ┃ ┃ ┣ 📜Input.js - Renders the Parameters for the machine/deep learning tools (often DropDown input components)
+ ┃ ┃ ┃ ┣ 📜LayerChoice.js - Renders a layer container for all the possible layers, for the user to drag from into the AddNewLayer component
+ ┃ ┃ ┃ ┣ 📜RectContainer.js - Renders a stylizable fixed-sized rectangle for the layers
+ ┃ ┃ ┃ ┣ 📜Results.js - Renders the results after a train session, or a simple text if no train sessions have been done or a session has failed with the backend's message
+ ┃ ┃ ┃ ┗ 📜TrainButton.js - Renders the Train button, clicking which will call the backend with the ML/DL parameters
  ┃ ┃ ┣ 📂Navbar
- ┃ ┃ ┃ ┗ 📜Navbar.js - Renders the Navbar
+ ┃ ┃ ┃ ┗ 📜Navbar.js - Primary Navbar page component
  ┃ ┃ ┣ 📂Wiki
- ┃ ┃ ┃ ┣ 📜Wiki.js - Renders the Wiki page
- ┃ ┃ ┣ 📜AddedLayer.js - Renders a added layer container in the topmost row
- ┃ ┃ ┣ 📜AddNewLayer.js - Renders a fillable layer container for the user to drag LayerChoice components into, where the new layer input will be filled by an AddedLayer component 
- ┃ ┃ ┣ 📜BackgroundLayout.js - Renders a light blue horizontally-stretched row to serve as a background to contain other components in one subsection in the Homepage
- ┃ ┃ ┣ 📜CodeSnippet.js - Renders the code snippet container
- ┃ ┃ ┣ 📜CSVInput.js - Renders the CSV file input contents(if any)
- ┃ ┃ ┣ 📜DropDown.js - Renders the drop down components using react-select package
- ┃ ┃ ┣ 📜EmailInput.js - Renders the email input form
- ┃ ┃ ┣ 📜FeedBackForm.js - Renders the Feedback Form page
- ┃ ┃ ┣ 📜index.js - Centralized location to import any components from outside of this ./components directory
- ┃ ┃ ┣ 📜Input.js - Renders the Parameters for the machine/deep learning tools (often DropDown input components)
- ┃ ┃ ┣ 📜LayerChoice.js - Renders a layer container for all the possible layers, for the user to drag from into the AddNewLayer component
- ┃ ┃ ┣ 📜RectContainer.js - Renders a stylizable fixed-sized rectangle for the layers
- ┃ ┃ ┗ 📜TrainButton.js - Renders the Train button, clicking which will call the backend with the ML/DL parameters
- ┃ ┣ 📂helper_functions
- ┃ ┃ ┗ 📜TalkWithBackend.js - Sends ML/DL parameters to the backend and receives the backend response, setting the frontend states triggering an output display change
+ ┃ ┃ ┃ ┣ 📜softmax_equation.png - Softmax equation screenshot for reference in Wiki
+ ┃ ┃ ┃ ┗ 📜Wiki.js - Primary Wiki page component
+ ┃ ┃ ┗ 📜index.js - Centralized location to import any components from outside of this ./components directory
  ┃ ┣ 📂images
  ┃ ┃ ┣ 📂logos
+ ┃ ┃ ┃ ┣ 📂dlp_branding
+ ┃ ┃ ┃ ┃ ┣ 📜dlp-logo.png - DLP Logo, duplicate of files in public, but essential as the frontend can't read public
+ ┃ ┃ ┃ ┃ ┗ 📜dlp-logo.svg - DLP Logo, duplicate of files in public, but essential as the frontend can't read public
  ┃ ┃ ┃ ┣ 📜aws-logo.png
  ┃ ┃ ┃ ┣ 📜dsgt-logo-dark.png
  ┃ ┃ ┃ ┣ 📜dsgt-logo-light.png
@@ -79,7 +86,7 @@
  ┃ ┃ ┃ ┣ 📜python-logo.png
  ┃ ┃ ┃ ┣ 📜pytorch-logo.png
  ┃ ┃ ┃ ┗ 📜react-logo.png
- ┃ ┃ ┗ 📜demo_video.gif
+ ┃ ┃ ┗ 📜demo_video.gif - GIF tutorial of a simple classification training session
  ┃ ┣ 📜App.css - General CSS file
  ┃ ┣ 📜App.js - Base React file
  ┃ ┣ 📜constants.js - Constants for the frontend
@@ -90,4 +97,4 @@
  ┣ 📜.gitignore
  ┣ 📜package-lock.json
  ┗ 📜package.json
- ```
+```

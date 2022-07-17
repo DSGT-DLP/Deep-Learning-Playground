@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import * as XLSX from "xlsx";
 
 // src: https://www.cluemediator.com/read-csv-file-in-react
-const CSVInput = (props) => {
+const CSVInputFile = (props) => {
   const { setData, setColumns } = props;
 
   // process CSV data
@@ -76,9 +76,9 @@ const CSVInput = (props) => {
   );
 };
 
-CSVInput.propTypes = {
+CSVInputFile.propTypes = {
   setData: PropTypes.func.isRequired,
   setColumns: PropTypes.func.isRequired,
 };
 
-export default CSVInput;
+export default CSVInputFile;

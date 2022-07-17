@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
-import { COLORS, GENERAL_STYLES, LAYOUT } from "../constants";
+import { COLORS, GENERAL_STYLES } from "../../constants";
 import { train_and_output } from "../helper_functions/TalkWithBackend";
 
 const TrainButton = (props) => {

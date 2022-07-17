@@ -1,15 +1,6 @@
 from loss import compute_loss
 from dl_eval import compute_accuracy
-<<<<<<< HEAD
-from utils import (
-    generate_acc_plot,
-    generate_loss_plot,
-    generate_train_time_csv,
-    generate_confusion_matrix,
-)
-=======
 from utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
->>>>>>> 05c74a816e4501df869a76822dc6641a894de343
 from utils import ProblemType
 from constants import (
     DEEP_LEARNING_RESULT_CSV_PATH,

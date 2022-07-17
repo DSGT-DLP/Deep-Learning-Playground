@@ -1,11 +1,15 @@
 from loss import compute_loss
 from dl_eval import compute_accuracy
+<<<<<<< HEAD
 from utils import (
     generate_acc_plot,
     generate_loss_plot,
     generate_train_time_csv,
     generate_confusion_matrix,
 )
+=======
+from utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
+>>>>>>> 05c74a816e4501df869a76822dc6641a894de343
 from utils import ProblemType
 from constants import (
     DEEP_LEARNING_RESULT_CSV_PATH,
@@ -87,13 +91,11 @@ def train_deep_classification_model(
             for i, data in enumerate(test_loader):
                 input, labels = data
                 test_pred = model(input)
-
-                # currently only preserving the prediction array and label array for the last epoch for
+                # currently only preserving the prediction array and label array for the last epoch for 
                 # confusion matrix calculation
-                if epoch == epochs - 1:
-                    y_pred_last_epoch.append(test_pred)
-                    labels_last_epoch.append(labels)
-
+                if(epoch == epochs - 1):
+                    y_pred_last_epoch = test_pred
+                    labels_last_epoch = labels
                 batch_test_acc.append(compute_accuracy(test_pred, labels))
                 batch_loss.append(test_pred.detach().numpy())
             mean_test_loss = np.mean(batch_loss)
@@ -122,7 +124,10 @@ def train_deep_classification_model(
         accuracy_loss_res = {}
         accuracy_loss_res |= generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
         accuracy_loss_res |= generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
-        torch.save(model, SAVED_MODEL)  # saving model into a pt file
+        # Generating AUC_ROC curve data to send to frontend to make interactive plot
+        AUC_ROC_curve_data = generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch)
+        accuracy_loss_res["AUC_ROC_curve_data"] = AUC_ROC_curve_data
+        torch.save(model, SAVED_MODEL) # saving model into a pt file
         return accuracy_loss_res
     except Exception:
         raise Exception("Deep Learning classification didn't train properly")

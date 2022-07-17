@@ -4,7 +4,6 @@ from sklearn.datasets import *
 from enum import Enum
 from constants import DEFAULT_DATASETS
 
-
 def get_default_dataset(dataset):
     """
     If user doesn't specify dataset

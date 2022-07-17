@@ -1,4 +1,4 @@
-from loss import compute_loss
+from loss_functions import compute_loss
 from dl_eval import compute_accuracy
 from utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
 from utils import ProblemType

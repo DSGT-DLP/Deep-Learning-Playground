@@ -18,8 +18,12 @@ from flask_cors import CORS
 from email_notifier import send_email
 from flask import send_from_directory
 
-app = Flask(__name__, static_folder=os.path.join(os.path.dirname(
-    os.getcwd()), 'frontend', 'playground-frontend', 'build'))
+app = Flask(
+    __name__,
+    static_folder=os.path.join(
+        os.path.dirname(os.getcwd()), "frontend", "playground-frontend", "build"
+    ),
+)
 CORS(app)
 
 
@@ -58,9 +62,15 @@ def ml_drive(
             y = input_df[target]
             X = input_df[features]
 
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, random_state=0, shuffle=shuffle
-        )
+        if shuffle and problem_type.upper() == "CLASSIFICATION":
+            # using stratify only for classification problems to ensure correct AUC calculation
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=test_size, random_state=0, shuffle=True, stratify=y
+            )
+        else:
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=test_size, random_state=0, shuffle=shuffle
+            )
         model = get_object(user_model)
         train_classical_ml_model(
             model, X_train, X_test, y_train, y_test, problem_type=problem_type
@@ -120,13 +130,19 @@ def dl_drive(
             print(y.head())
 
         # Convert to tensor
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, random_state=0, shuffle=shuffle
-        )
+        if shuffle and problem_type.upper() == "CLASSIFICATION":
+            # using stratify only for classification problems to ensure correct AUC calculation
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=test_size, random_state=0, shuffle=True, stratify=y
+            )
+        else:
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=test_size, random_state=0, shuffle=shuffle
+            )
+
         X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor = get_tensors(
             X_train, X_test, y_train, y_test
         )
-
         # Build the Deep Learning model that the user wants
         model = DLModel(parse_deep_user_architecture(user_arch))
         print(f"model: {model}")
@@ -150,18 +166,17 @@ def dl_drive(
         raise e
 
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
 def root(path):
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
+    if path != "" and os.path.exists(app.static_folder + "/" + path):
         return send_from_directory(app.static_folder, path)
     else:
-        return send_from_directory(app.static_folder, 'index.html')
+        return send_from_directory(app.static_folder, "index.html")
 
 
-@app.route("/run", methods=["GET", "POST"])
+@app.route("/run", methods=["POST"])
 def train_and_output():
-    print("Hi")
     request_data = json.loads(request.data)
 
     user_arch = request_data["user_arch"]
@@ -178,16 +193,16 @@ def train_and_output():
     fileURL = request_data["fileURL"]
     email = request_data["email"]
     if request.method == "POST":
-        if not default:
-            if fileURL:
-                read_dataset(fileURL)
-            elif csvDataStr:
-                pass
-            else:
-                raise ValueError("Need a file input")
-                return
-
         try:
+            if not default:
+                if fileURL:
+                    read_dataset(fileURL)
+                elif csvDataStr:
+                    pass
+                else:
+                    raise ValueError("Need a file input")
+                    return
+
             train_loss_results = dl_drive(
                 user_arch=user_arch,
                 criterion=criterion,
@@ -199,7 +214,7 @@ def train_and_output():
                 test_size=test_size,
                 epochs=epochs,
                 shuffle=shuffle,
-                json_csv_data_str=csvDataStr
+                json_csv_data_str=csvDataStr,
             )
             return (
                 jsonify(
@@ -207,7 +222,7 @@ def train_and_output():
                         "success": True,
                         "message": "Dataset trained and results outputted successfully",
                         "dl_results": csv_to_json(),
-                        "train_loss_results": train_loss_results
+                        "auxiliary_outputs": train_loss_results
                     }
                 ),
                 200,
@@ -216,8 +231,7 @@ def train_and_output():
         except Exception:
             print(traceback.format_exc())
             return (
-                jsonify(
-                    {"success": False, "message": traceback.format_exc(limit=1)}),
+                jsonify({"success": False, "message": traceback.format_exc(limit=1)}),
                 400,
             )
 
@@ -259,5 +273,6 @@ def send_email_route():
         print(traceback.format_exc())
         return jsonify({"success": False}), 500
 
+
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host="0.0.0.0")

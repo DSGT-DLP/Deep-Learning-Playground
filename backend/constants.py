@@ -11,6 +11,7 @@ ONNX_MODEL = (
 LOSS_VIZ = "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_loss_plot.png"
 ACC_VIZ = "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_accuracy_plot.png"
 CONFUSION_VIZ = "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_confusion_matrix.png"
+AUC_ROC_VIZ = "../frontend/playground-frontend/src/backend_outputs/visualization_output/my_AUC_ROC_Curve.png"
 SAVED_MODEL = "../frontend/playground-frontend/src/backend_outputs/model.pt"
 TRAIN_TIME_CSV = "epoch_times.csv"
 NETRON_URL = "https://netron.app/"
@@ -36,9 +37,15 @@ DEFAULT_DATASETS = {
 }
 UNZIPPED_DIR_NAME = "unzipped_data"
 SENDER = "DSGT Playground <dsgtplayground@gmail.com>"
-AWS_REGION = "us-east-2"
+AWS_REGION = "us-west-2"
+STATUS_TABLE_NAME = "status-table"
 CHARSET = "utf-8"
-TENSOR_ONLY_TRANSFORMS = [transforms.LinearTransformation, transforms.Normalize, transforms.ConvertImageDtype, transforms.RandomErasing]
+TENSOR_ONLY_TRANSFORMS = [
+    transforms.LinearTransformation,
+    transforms.Normalize,
+    transforms.ConvertImageDtype,
+    transforms.RandomErasing,
+]
 
 DEFAULT_TRANSFORM = [transforms.Resize((256, 256)), transforms.ToTensor()]
 

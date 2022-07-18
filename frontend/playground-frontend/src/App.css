@@ -267,6 +267,7 @@ img.tech-img-content {
   float: left;
   max-width: 10%;
   max-height: 100%;
+  cursor: pointer;
 }
 textarea {
   border-width: 0.5px;

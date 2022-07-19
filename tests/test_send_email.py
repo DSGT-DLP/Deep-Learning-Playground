@@ -1,5 +1,5 @@
 import pytest
-from backend import email_notifier as em
+from backend.common import email_notifier as em
 import json
 
 

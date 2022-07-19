@@ -18,6 +18,8 @@ Author URI:   https://datasciencegt.org/
   --primary: #003057;
   --secondary: #b3a36a;
   --layer: #cd7bff;
+  --whitehover: #f7f7f7;
+  --footer-dark-blue: #00233f;
   /* box sizing border box specifies no padding, width = width etc */
   box-sizing: border-box;
 }
@@ -87,7 +89,7 @@ input {
   color: white;
   overflow: hidden;
   z-index: 10;
-  top: 0vmax;
+  top: 0;
   max-width: 100%;
   width: 100vw;
   display: flex;
@@ -105,7 +107,7 @@ input {
 }
 
 #nav-bar .navElement:hover {
-  background-color: #f7f7f7;
+  background-color: var(--whitehover);
 }
 
 #nav-bar .navElement:hover > a {
@@ -197,11 +199,11 @@ input {
 }
 
 .navElement:hover {
-  background-color: #f7f7f7;
+  background-color: var(--whitehover);
 }
 
 .navElement:hover > a {
-  color: #003058;
+  color: var(--primary);
 }
 
 @media screen and (max-width: 600px) {
@@ -281,22 +283,22 @@ textarea {
 /* -------------------------------------------------------------------------- */
 
 #footer {
-  padding: 1rem;
+  padding: 0.75rem;
   margin: auto;
 }
 
 #footer-name {
-  background-color: #00233f;
-  padding: 1rem;
+  background-color: var(--footer-dark-blue);
+  padding: 0.75rem;
   text-align: center;
 }
 
 .foot-element {
   display: inline-block;
   object-fit: contain;
+  margin: 0.2em;
+  size: 1em;
 }
-
-
 
 
 /* -------------------------------------------------------------------------- */

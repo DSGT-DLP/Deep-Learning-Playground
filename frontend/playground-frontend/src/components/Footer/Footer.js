@@ -12,7 +12,7 @@ import { IconContext } from "react-icons";
 const Footer = () => {
   return (
     <>
-    <IconContext.Provider value={{color: "white", size: "3rem", className:"foot-element"}}>
+    <IconContext.Provider value={{color: "white", size: "2.5rem", className:"foot-element"}}>
       <div className="header-footer" id="footer">
         <div className="foot-element">
           <a href={URLs.linkedin}>

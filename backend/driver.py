@@ -1,4 +1,3 @@
-from msilib.schema import Error
 import pandas as pd
 import traceback
 import os

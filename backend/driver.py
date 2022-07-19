@@ -1,3 +1,4 @@
+from msilib.schema import Error
 import pandas as pd
 import traceback
 import os
@@ -123,6 +124,9 @@ def dl_drive(
 
             y = input_df[target]
             X = input_df[features]
+
+        if (len(y) * test_size < batch_size or len(y) * (1 - test_size) < batch_size):
+            raise ValueError("reduce batch size, not enough values in dataframe")
 
         if problem_type.upper() == "CLASSIFICATION":
             # label encode the categorical values to numbers

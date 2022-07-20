@@ -11,10 +11,12 @@
 
 # For files in the /backend directory, @karkir0003 will be requested in a pull request
 /backend @karkir0003
-/backend/email_notifier.py @avayedawadi
-/backend/dataset.py @vidushiMaheshwari
+/backend/common/email_notifier.py @avayedawadi
+/backend/common/dataset.py @vidushiMaheshwari
 /backend/driver.py @farisdurrani @andrewpeng02 @avayedawadi
-/backend/pretrained.py @vidushiMaheshwari
+/backend/dl/pretrained.py @vidushiMaheshwari
+/backend/aws_helpers/dynamo_db_utils/base_db.py @samarth52
+/backend/aws_helpers/dynamo_db_utils/status_db.py @karkir0003 @samarth52
 
 
 # For unit tests, @LucasZhang58 and @karkir0003 will be requested in such a pull request

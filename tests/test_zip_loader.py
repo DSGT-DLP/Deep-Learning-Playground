@@ -1,8 +1,8 @@
 import torchvision.transforms as transforms
 import pytest
 from pathlib import Path
-from backend.dataset import loader_from_zipped, errorMessage
-from backend.constants import UNZIPPED_DIR_NAME
+from backend.common.dataset import loader_from_zipped, errorMessage
+from backend.common.constants import UNZIPPED_DIR_NAME
 from filecmp import dircmp
 import torch
 import os

@@ -12,7 +12,7 @@ Web Application where people new to Deep Learning can input a dataset and toy ar
 
 * Updating an environment: `conda env update -f environment.yml` in the `/conda` directory
 ## Backend Infra
-`python driver.py` in the `/backend` directory
+`python -m backend.driver` from the `~/Deep-Learning-Playground` directory
 
 The backend supports training of a deep learning model and/or a classical ML model!
 ## Backend Architecture

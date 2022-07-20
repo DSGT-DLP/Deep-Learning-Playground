@@ -16,6 +16,9 @@ const Navbar = () => {
           <Link to="/">Home</Link>
         </li>
         <li className="navElement">
+          <Link to="/img-models">Image Models</Link>
+        </li>
+        <li className="navElement">
           <Link to="/About">About</Link>
         </li>
         <li className="navElement">

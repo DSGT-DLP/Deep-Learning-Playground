@@ -29,3 +29,7 @@ export { default as Feedback } from "./Feedback/Feedback";
 export { default as Navbar } from "./Navbar/Navbar";
 
 // Footer
+
+
+// Image Models page
+export { default as ImageModels } from "./ImageModels/ImageModels";

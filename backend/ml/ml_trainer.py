@@ -4,8 +4,8 @@ Trainer for classical ML models
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, roc_auc_score
-from constants import CLASSICAL_ML_CONFUSION_MATRIX, CLASSICAL_ML_RESULT_CSV_PATH
-from utils import ProblemType
+from backend.common.constants import CLASSICAL_ML_CONFUSION_MATRIX, CLASSICAL_ML_RESULT_CSV_PATH
+from backend.common.utils import ProblemType
 
 
 def train_classical_ml_classification(model, X_train, X_test, y_train, y_test):

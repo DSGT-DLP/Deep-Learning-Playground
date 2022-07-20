@@ -1,7 +1,7 @@
 import pytest
 import torch.nn as nn
 from torch.autograd import Variable
-from backend.model_parser import *
+from backend.dl.dl_model_parser import *
 
 # come up with the expected parsing
 # 2 linear layers in a row, you should know what it should look like

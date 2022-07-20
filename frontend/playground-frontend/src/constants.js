@@ -71,3 +71,13 @@ export const DEFAULT_ADDED_LAYERS = [
     },
   },
 ];
+
+export const DEFAULT_TRANSFORMS = [
+  {
+    display_name: "To Tensor",
+    object_name: "transforms.ToTensor",
+    parameters: {},
+    label: "To Tensor",
+    value: "TT",
+  }
+]

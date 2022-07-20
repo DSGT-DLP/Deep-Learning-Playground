@@ -4,12 +4,18 @@ import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "../../constants";
 
 const _InputOutputPromptResponse = (props) => {
-  const { param_key, allParamInputs, setAddedLayers, thisLayerIndex } = props;
+  const {
+    param_key,
+    allParamInputs,
+    setAddedLayers,
+    thisLayerIndex,
+    finalStyle,
+  } = props;
   const { parameter_name, value } = allParamInputs[param_key];
 
   return (
     <div style={{ ...LAYOUT.row, alignItems: "center" }}>
-      <p style={styles.input_prompt}>{`${parameter_name}:`}</p>
+      <p style={finalStyle.input_prompt}>{`${parameter_name}:`}</p>
       <input
         value={value}
         onChange={(e) =>
@@ -21,16 +27,23 @@ const _InputOutputPromptResponse = (props) => {
             return copyCurrent;
           })
         }
-        style={styles.input_text}
+        style={finalStyle.input_text}
       />
     </div>
   );
 };
 
 const AddedLayer = (props) => {
-  const { thisLayerIndex, addedLayers, setAddedLayers, onDelete } = props;
+  const { thisLayerIndex, addedLayers, setAddedLayers, onDelete, style } =
+    props;
   const thisLayer = addedLayers[thisLayerIndex];
   const { display_name, parameters } = thisLayer;
+
+  let finalStyle = style;
+
+  if (finalStyle == null) {
+    finalStyle = styles;
+  }
 
   // converts the parameters object for each layer into an array of parameter objects
   const param_array = [];
@@ -43,6 +56,7 @@ const AddedLayer = (props) => {
         allParamInputs={thisLayer.parameters}
         setAddedLayers={setAddedLayers}
         thisLayerIndex={thisLayerIndex}
+        finalStyle={finalStyle}
       />
     );
   });
@@ -50,12 +64,12 @@ const AddedLayer = (props) => {
   return (
     <div style={LAYOUT.column}>
       <RectContainer style={{ backgroundColor: COLORS.layer }}>
-        <button style={styles.delete_btn} onClick={onDelete}>
+        <button style={finalStyle.delete_btn} onClick={onDelete}>
           ❌
         </button>
-        <p style={styles.text}>{display_name}</p>
+        <p style={finalStyle.text}>{display_name}</p>
       </RectContainer>
-      <div style={styles.input_box}>{param_array}</div>
+      <div style={finalStyle.input_box}>{param_array}</div>
     </div>
   );
 };

@@ -1,36 +1,34 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Transforms from "./Transforms";
-import AddedLayer from "../Home/AddedLayer";
 import { POSSIBLE_TRANSFORMS } from "../../settings";
+import { DEFAULT_ADDED_LAYERS, DEFAULT_TRANSFORMS } from "../../constants";
 
 const ImageModels = () => {
-    const [trainTransforms, setTrainTransforms] = useState([]);
-    const [testTransforms, setTestTransforms] = useState([]);
+  const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
+  const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
+  const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
 
-    const input_responses = {
-        trainTransforms: trainTransforms,
-        testTransforms: testTransforms,
-    };
+  const input_responses = {
+    trainTransforms: trainTransforms,
+    testTransforms: testTransforms,
+  };
 
-    return (
-        <div>
-
-            <Transforms 
-                queryText = {"Train Transform"}
-                options = {POSSIBLE_TRANSFORMS}
-                transforms = {trainTransforms}
-                setTransforms = {setTrainTransforms}
-            />
-
-            <Transforms
-                queryText={"Test Transform"}
-                options = {POSSIBLE_TRANSFORMS}
-                transforms = {testTransforms}
-                setTransforms = {setTestTransforms}
-            />
-
-        </div>
-    )
-}
+  return (
+    <div>
+      <Transforms
+        queryText={"Train Transform"}
+        options={POSSIBLE_TRANSFORMS}
+        transforms={trainTransforms}
+        setTransforms={setTrainTransforms}
+      />
+      <Transforms
+        queryText={"Test Transform"}
+        options={POSSIBLE_TRANSFORMS}
+        transforms={testTransforms}
+        setTransforms={setTestTransforms}
+      />
+    </div>
+  );
+};
 
 export default ImageModels;

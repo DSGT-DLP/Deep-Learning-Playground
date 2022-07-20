@@ -171,9 +171,9 @@ export const POSSIBLE_LAYERS = [
 export const POSSIBLE_TRANSFORMS = [
   {
     display_name: "Random Horizontal Flip",
-    object_name: "transforms",
+    object_name: "transforms.RandomHorizontalFlip",
     parameters: {
-        probability: {index:0, parameter_name: "Prob"},
+      probability: { index: 0, parameter_name: "Prob" },
     },
     label: "Random Horizontal Flip",
     value: "HF",
@@ -181,9 +181,9 @@ export const POSSIBLE_TRANSFORMS = [
 
   {
     display_name: "Random Vertical Flip",
-    object_name: "",
+    object_name: "transforms.RandomVerticalFlip",
     parameters: {
-      probability : {index: 0, parameter_name: "Prob"},
+      probability: { index: 0, parameter_name: "Prob" },
     },
     label: "Random Vertical Flip",
     value: "VF",
@@ -191,12 +191,12 @@ export const POSSIBLE_TRANSFORMS = [
 
   {
     display_name: "To Tensor",
-    object_name: "",
+    object_name: "transforms.ToTensor",
     parameters: {},
     label: "To Tensor",
     value: "TT",
-  }
-]
+  },
+];
 
 
 export const CRITERIONS = [

@@ -24,6 +24,10 @@ Author URI:   https://datasciencegt.org/
 /*	1. General HTML
 /* -------------------------------------------------------------------------- */
 
+html, body, .wrapper, #root {
+  height: 100%
+}
+
 body {
   box-sizing: border-box;
   margin: 0;
@@ -187,6 +191,22 @@ textarea {
   border-color: var(--layer);
   border-radius: 10px;
   padding: 5px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. Login
+/* -------------------------------------------------------------------------- */
+#login-page {
+  height: 100%;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#login-main-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr
 }
 
 /* -------------------------------------------------------------------------- */

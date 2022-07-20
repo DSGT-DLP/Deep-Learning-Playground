@@ -91,6 +91,7 @@ def dl_drive(
     epochs=5,
     shuffle=True,
     json_csv_data_str="",
+    batch_size=20,
 ):
     """
     Driver function/entrypoint into backend for deep learning model. Onnx file is generated containing model architecture for user to visualize in netron.app
@@ -123,6 +124,9 @@ def dl_drive(
             y = input_df[target]
             X = input_df[features]
 
+        if (len(y) * test_size < batch_size or len(y) * (1 - test_size) < batch_size):
+            raise ValueError("reduce batch size, not enough values in dataframe")
+
         if problem_type.upper() == "CLASSIFICATION":
             # label encode the categorical values to numbers
             y = y.astype("category")
@@ -152,7 +156,7 @@ def dl_drive(
         # criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
         print(f"loss criterion: {criterion}")
         train_loader, test_loader = get_dataloaders(
-            X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=20
+            X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=batch_size
         )
         train_loss_results = train_deep_model(
             model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
@@ -187,6 +191,7 @@ def train_and_output():
     features = request_data["features"]
     default = request_data["default"]
     test_size = request_data["test_size"]
+    batch_size = request_data["batch_size"]
     epochs = request_data["epochs"]
     shuffle = request_data["shuffle"]
     csvDataStr = request_data["csvData"]
@@ -215,6 +220,7 @@ def train_and_output():
                 epochs=epochs,
                 shuffle=shuffle,
                 json_csv_data_str=csvDataStr,
+                batch_size=batch_size,
             )
             return (
                 jsonify(

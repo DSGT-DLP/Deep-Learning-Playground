@@ -84,7 +84,7 @@ CodeSnippet.propTypes = {
   backendResponse: PropTypes.shape({
     success: PropTypes.bool,
     message: PropTypes.string,
-  }).isRequired,
+  }),
   layers: PropTypes.array.isRequired,
 };
 

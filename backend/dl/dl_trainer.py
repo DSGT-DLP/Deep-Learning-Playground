@@ -79,8 +79,8 @@ def train_deep_classification_model(
                 
             epoch_time.append(time.time() - start_time)
             mean_train_acc = train_correct / epoch_train_size
-            train_acc.append(mean_train_acc)
             mean_train_loss = epoch_batch_loss / num_train_epochs
+            train_acc.append(mean_train_acc)
             train_loss.append(mean_train_loss)
 
             model.train(False)  # test the model on test set
@@ -94,10 +94,12 @@ def train_deep_classification_model(
                     y_pred_last_epoch = test_pred
                     labels_last_epoch = labels
                 test_correct += compute_correct(test_pred, labels)
-                epoch_batch_loss += float(test_pred.detach().mean())
+                loss = compute_loss(criterion, test_pred, labels)
+                epoch_batch_loss += float(loss.detach())
+                
             mean_test_acc = test_correct / epoch_test_size
-            val_acc.append(mean_test_acc)
             mean_test_loss = epoch_batch_loss / num_test_epochs
+            val_acc.append(mean_test_acc)
             test_loss.append(mean_test_loss)
 
             print(

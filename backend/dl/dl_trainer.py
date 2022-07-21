@@ -1,5 +1,5 @@
 from backend.common.loss_functions import compute_loss
-from backend.dl.dl_eval import compute_accuracy
+from backend.dl.dl_eval import compute_correct, compute_accuracy
 from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
 from backend.common.utils import ProblemType
 from backend.common.constants import (
@@ -53,32 +53,38 @@ def train_deep_classification_model(
         val_acc = []  # accuracy of test/validation set
         labels_last_epoch = []
         y_pred_last_epoch = []
+        
+        num_train_epochs = len(train_loader)
+        epoch_train_size = train_loader.batch_size * num_train_epochs  # total number of data points used for training per epoch
+        num_test_epochs = len(test_loader)
+        epoch_test_size = test_loader.batch_size * num_test_epochs  # total number of data points used for testing per epoch
 
         for epoch in range(epochs):
-            batch_train_acc = []  # find train accuracy for each batch
-            batch_test_acc = []  # find test accuracy for each batch
+            train_correct = 0  # number of correct predictions in training set in current epoch
+            test_correct = 0  # number of correct predictions in testing set in current epoch
+            epoch_batch_loss = 0  # cumulative training/testing loss per epoch
+            
             start_time = time.time()
             model.train(True)  # set model to train mode
-            batch_loss = []  # accumulate list of loss per batch
             for i, data in enumerate(train_loader):
                 # each batch is (input, label) pair in dataloader
                 input, labels = data
                 optimizer.zero_grad()  # zero out gradient for each batch
                 output = model(input)  # make prediction on input
-                batch_train_acc.append(compute_accuracy(output, labels))
-
+                train_correct += compute_correct(output, labels)
                 loss = compute_loss(criterion, output, labels)  # compute the loss
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
-                batch_loss.append(loss.detach().numpy())
+                epoch_batch_loss += float(loss.detach())
+                
             epoch_time.append(time.time() - start_time)
-            mean_train_loss = np.mean(batch_loss)
-            mean_train_acc = np.mean(batch_train_acc)
-            train_loss.append(mean_train_loss)
+            mean_train_acc = train_correct / epoch_train_size
             train_acc.append(mean_train_acc)
+            mean_train_loss = epoch_batch_loss / num_train_epochs
+            train_loss.append(mean_train_loss)
 
             model.train(False)  # test the model on test set
-            batch_loss = []
+            epoch_batch_loss = 0
             for i, data in enumerate(test_loader):
                 input, labels = data
                 test_pred = model(input)
@@ -87,12 +93,12 @@ def train_deep_classification_model(
                 if(epoch == epochs - 1):
                     y_pred_last_epoch = test_pred
                     labels_last_epoch = labels
-                batch_test_acc.append(compute_accuracy(test_pred, labels))
-                batch_loss.append(test_pred.detach().numpy())
-            mean_test_loss = np.mean(batch_loss)
-            mean_test_acc = np.mean(batch_test_acc)
-            test_loss.append(mean_test_loss)
+                test_correct += compute_correct(test_pred, labels)
+                epoch_batch_loss += float(test_pred.detach().mean())
+            mean_test_acc = test_correct / epoch_test_size
             val_acc.append(mean_test_acc)
+            mean_test_loss = epoch_batch_loss / num_test_epochs
+            test_loss.append(mean_test_loss)
 
             print(
                 f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}"

@@ -33,8 +33,7 @@ const TrainButton = (props) => {
       const parameters = addedLayer.parameters;
       let parameter_call_input = "";
       const parameters_to_be_added = Array(Object.keys(parameters).length);
-      Object.entries(parameters).forEach((entry) => {
-        const [k, v] = entry;
+      Object.values(parameters).forEach((v) => {
         parameters_to_be_added[v.index] = v.value;
       });
       parameters_to_be_added.forEach((e) => {
@@ -151,15 +150,20 @@ const TrainButton = (props) => {
 
 TrainButton.propTypes = {
   addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  targetCol: PropTypes.string,
-  features: PropTypes.arrayOf(PropTypes.string),
-  problemType: PropTypes.string.isRequired,
+  batchSize: PropTypes.number.isRequired,
   criterion: PropTypes.string.isRequired,
-  optimizerName: PropTypes.string.isRequired,
-  usingDefaultDataset: PropTypes.string,
-  shuffle: PropTypes.bool.isRequired,
+  csvDataInput: PropTypes.array,
+  email: PropTypes.string,
   epochs: PropTypes.number.isRequired,
+  features: PropTypes.arrayOf(PropTypes.string),
+  fileURL: PropTypes.string,
+  optimizerName: PropTypes.string.isRequired,
+  problemType: PropTypes.string.isRequired,
+  setDLPBackendResponse: PropTypes.func.isRequired,
+  shuffle: PropTypes.bool.isRequired,
+  targetCol: PropTypes.string,
   testSize: PropTypes.number.isRequired,
+  usingDefaultDataset: PropTypes.string,
 };
 
 export default TrainButton;

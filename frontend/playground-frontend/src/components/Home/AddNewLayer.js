@@ -1,10 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, ITEM_TYPES } from "../../constants";
 import { useDrop } from "react-dnd";
 
-const AddNewLayer = (props) => {
+const AddNewLayer = () => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: ITEM_TYPES.NEW_LAYER,
     drop: () => ({ name: "AddNewLayer" }),
@@ -30,8 +29,6 @@ const AddNewLayer = (props) => {
     </RectContainer>
   );
 };
-
-AddNewLayer.propTypes = {};
 
 export default AddNewLayer;
 

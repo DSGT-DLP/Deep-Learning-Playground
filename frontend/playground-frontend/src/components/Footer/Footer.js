@@ -32,7 +32,7 @@ const Footer = () => {
       </div>
       <div id="navElement">
         <a href="https://github.com/karkir0003/Deep-Learning-Playground">
-          <FaGithub size="60" />
+          {/* <FaGithub size="60" /> */}
         </a>
       </div>
     </div>

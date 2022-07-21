@@ -1,9 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "../../constants";
 import { DropDown } from "..";
-import { CRITERIONS } from "../../settings";
 
 const Input = (props) => {
   const {
@@ -59,6 +57,7 @@ Input.propTypes = {
     PropTypes.array,
   ]),
   isMultiSelect: PropTypes.bool,
+  freeInputCustomRestrictions: PropTypes.shape({ type: PropTypes.string }),
 };
 
 export default Input;

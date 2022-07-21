@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const CodeSnippet = (props) => {
   const { backendResponse, layers } = props;
@@ -26,7 +27,7 @@ const CodeSnippet = (props) => {
  * @returns string with correct python syntax to 'train' data
  */
 function codeSnippetFormat(layers) {
-  var codeSnippet =
+  const codeSnippet =
     "import torch\n" +
     "import torch.nn as nn \n" +
     "from torch.autograd import Variable\n" +
@@ -52,10 +53,10 @@ function codeSnippetFormat(layers) {
  * @returns string in form of 'self.model = nn.Sequential(*[layerToString(layers[0]),... ,layerToString(layers[N-1])])
  */
 function layersToString(layers) {
-  var prepend = "self.model = nn.Sequential(*[";
-  var layersToString = prepend;
-  var resultingList = [];
-  for (var i = 0; i < layers.length; i++) {
+  const prepend = "self.model = nn.Sequential(*[";
+  let layersToString = prepend;
+  const resultingList = [];
+  for (let i = 0; i < layers.length; i++) {
     resultingList.push(layerToString(layers[i]));
   }
   layersToString += resultingList.join(",") + "])";
@@ -68,7 +69,7 @@ function layersToString(layers) {
  * @returns string in form of <layer name>(<parameters>)
  */
 function layerToString(layer) {
-  var layerToString = layer.object_name + "(";
+  let layerToString = layer.object_name + "(";
   if (typeof layer.parameters.inputSize !== "undefined") {
     layerToString += layer.parameters.inputSize.value;
     if (typeof layer.parameters.outputSize !== "undefined") {
@@ -78,5 +79,13 @@ function layerToString(layer) {
   layerToString += ")";
   return layerToString;
 }
+
+CodeSnippet.PropTypes = {
+  backendResponse: PropTypes.shape({
+    success: PropTypes.bool,
+    message: PropTypes.string,
+  }).isRequired,
+  layers: PropTypes.array.isRequired,
+};
 
 export default CodeSnippet;

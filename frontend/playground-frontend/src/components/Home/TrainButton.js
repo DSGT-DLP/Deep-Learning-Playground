@@ -93,20 +93,23 @@ const TrainButton = (props) => {
     const csvDataStr = JSON.stringify(csvDataInput);
 
     const response = await train_and_output(
-      user_arch,
-      criterion,
-      optimizerName,
-      problemType,
-      targetCol,
-      features,
-      usingDefaultDataset,
-      testSize,
-      epochs,
-      batchSize,
-      shuffle,
-      csvDataStr,
-      fileURL,
-      email
+      "tabular",
+      {
+        user_arch: user_arch,
+        criterion: criterion,
+        optimizer_name: optimizerName,
+        problem_type: problemType,
+        target: targetCol,
+        features: features,
+        using_default_dataset: usingDefaultDataset,
+        test_size: testSize,
+        epochs: epochs,
+        batch_size: batchSize,
+        shuffle: shuffle,
+        csv_data: csvDataStr,
+        file_URL: fileURL,
+        email: email
+      }
     );
 
     setDLPBackendResponse(response);

@@ -182,20 +182,19 @@ def root(path):
 @app.route("/run", methods=["POST"])
 def train_and_output():
     request_data = json.loads(request.data)
-
     user_arch = request_data["user_arch"]
     criterion = request_data["criterion"]
-    optimizer_name = request_data["optimizer_name"]
+    optimizer_name = request_data["optimizer_name"]    
     problem_type = request_data["problem_type"]
     target = request_data["target"]
     features = request_data["features"]
-    default = request_data["default"]
+    default = request_data["using_default_dataset"]
     test_size = request_data["test_size"]
     batch_size = request_data["batch_size"]
     epochs = request_data["epochs"]
     shuffle = request_data["shuffle"]
-    csvDataStr = request_data["csvData"]
-    fileURL = request_data["fileURL"]
+    csvDataStr = request_data["csv_data"]
+    fileURL = request_data["file_URL"]
     email = request_data["email"]
     if request.method == "POST":
         try:

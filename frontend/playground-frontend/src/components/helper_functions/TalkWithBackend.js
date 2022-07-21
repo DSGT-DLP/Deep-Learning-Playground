@@ -4,6 +4,7 @@ const routeDict = {
 };
 
 export const train_and_output = async (choice, choiceDict) => {
+
   const runResult = await fetch(routeDict[choice], {
     method: "POST",
     body: JSON.stringify(choiceDict),

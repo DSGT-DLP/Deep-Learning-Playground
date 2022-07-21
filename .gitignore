@@ -142,5 +142,4 @@ dmypy.json
 
 # Results
 backend/dl_results.csv
-backend/my_deep_learning_model.onnx
 unzipped_data/

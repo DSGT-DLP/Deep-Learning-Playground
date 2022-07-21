@@ -155,10 +155,13 @@ def train_deep_regression_model(
         train_loss = []  # accumulate training loss over each epoch
         test_loss = []  # accumulate testing loss over each epoch
         epoch_time = []  # how much time it takes for each epoch
+        num_train_epochs = len(train_loader)
+        num_test_epochs = len(test_loader)
+        print(num_train_epochs, num_test_epochs)
         for epoch in range(epochs):
             start_time = time.time()
             model.train(True)  # set model to train mode
-            batch_loss = []  # accumulate list of loss per batch
+            epoch_batch_loss = 0  # cumulative training/testing loss per epoch
             for i, data in enumerate(train_loader):
                 # each batch is (input, label) pair in dataloader
                 input, labels = data
@@ -167,17 +170,18 @@ def train_deep_regression_model(
                 loss = compute_loss(criterion, output, labels)  # compute the loss
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
-                batch_loss.append(loss.detach().numpy())
+                epoch_batch_loss += float(loss.detach())
             epoch_time.append(time.time() - start_time)
-            train_loss.append(np.mean(batch_loss))
+            train_loss.append(epoch_batch_loss / num_train_epochs)
 
             model.train(False)  # test the model on test set
-            batch_loss = []
+            epoch_batch_loss = 0
             for i, data in enumerate(test_loader):
                 input, labels = data
-                loss_test = model(input)
-                batch_loss.append(loss_test.detach().numpy())
-            test_loss.append(np.mean(batch_loss))
+                test_pred = model(input)
+                loss = compute_loss(criterion, test_pred, labels)
+                epoch_batch_loss += float(loss.detach())
+            test_loss.append(epoch_batch_loss / num_test_epochs)
             print(
                 f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}"
             )

@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { COLORS, DEFAULT_ADDED_LAYERS, LAYOUT } from "./constants";
 import {
   BOOL_OPTIONS,
+  CRITERIONS,
   DEFAULT_DATASETS,
   OPTIMIZER_NAMES,
   POSSIBLE_LAYERS,
-  PROBLEM_TYPES,
+  PROBLEM_TYPES
 } from "./settings";
 import {
   AddNewLayer,
@@ -23,7 +24,6 @@ import {
   TrainButton,
 } from "./components";
 import DataTable from "react-data-table-component";
-import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -223,7 +223,7 @@ const Home = () => {
                   const copyCurrent = [...currentAddedLayers];
                   const layerCopy = deepCopyObj(newLayer);
                   Object.values(layerCopy.parameters).forEach((val) => {
-                    val["value"] = "";
+                    val.value = "";
                   });
                   copyCurrent.push(layerCopy);
                   return copyCurrent;

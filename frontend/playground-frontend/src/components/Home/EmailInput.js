@@ -35,7 +35,7 @@ const EmailInput = (props) => {
   );
 };
 
-EmailInput.PropTypes = {
+EmailInput.propTypes = {
   setEmail: PropTypes.func.isRequired,
 };
 

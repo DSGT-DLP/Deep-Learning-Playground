@@ -80,7 +80,7 @@ function layerToString(layer) {
   return layerToString;
 }
 
-CodeSnippet.PropTypes = {
+CodeSnippet.propTypes = {
   backendResponse: PropTypes.shape({
     success: PropTypes.bool,
     message: PropTypes.string,

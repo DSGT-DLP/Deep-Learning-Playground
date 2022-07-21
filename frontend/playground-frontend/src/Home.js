@@ -87,7 +87,7 @@ const Home = () => {
     },
     config: { responsive: true },
   });
-  for (var i = 0; i < auc_roc_data_res.length; i++) {
+  for (let i = 0; i < auc_roc_data_res.length; i++) {
     auc_roc_data.push({
       name: `${i} (AUC: ${auc_roc_data_res[i][2]})`,
       x: auc_roc_data_res[i][0] || [],

@@ -1,3 +1,5 @@
+import React from "react";
+
 export const POSSIBLE_LAYERS = [
   {
     display_name: "Linear",

@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { COLORS, DEFAULT_ADDED_LAYERS, LAYOUT } from "./constants";
 import {
   BOOL_OPTIONS,
+  CRITERIONS,
   DEFAULT_DATASETS,
   OPTIMIZER_NAMES,
   POSSIBLE_LAYERS,
-  PROBLEM_TYPES,
+  PROBLEM_TYPES
 } from "./settings";
 import {
   AddNewLayer,
@@ -23,7 +24,6 @@ import {
   TrainButton,
 } from "./components";
 import DataTable from "react-data-table-component";
-import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -45,6 +45,7 @@ const Home = () => {
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
+  const [batchSize, setBatchSize] = useState(20);
   const [inputFeatureColumnOptions, setInputFeatureColumnOptions] = useState(
     csvColumns.map((e, i) => ({
       label: e.name,
@@ -62,6 +63,7 @@ const Home = () => {
     shuffle: shuffle?.value,
     epochs: epochs,
     testSize: testSize,
+    batchSize : batchSize,
     fileURL: fileURL,
     email: email,
   };
@@ -85,7 +87,7 @@ const Home = () => {
     },
     config: { responsive: true },
   });
-  for (var i = 0; i < auc_roc_data_res.length; i++) {
+  for (let i = 0; i < auc_roc_data_res.length; i++) {
     auc_roc_data.push({
       name: `${i} (AUC: ${auc_roc_data_res[i][2]})`,
       x: auc_roc_data_res[i][0] || [],
@@ -158,6 +160,12 @@ const Home = () => {
       defaultValue: testSize,
       freeInputCustomRestrictions: { type: "number", min: 0, step: 0.1 },
     },
+    {
+      queryText: "Batch Size",
+      onChange: setBatchSize,
+      defaultValue: batchSize,
+      freeInputCustomRestrictions: { type: "number", min: 0 },
+    }
   ];
 
   return (
@@ -215,7 +223,7 @@ const Home = () => {
                   const copyCurrent = [...currentAddedLayers];
                   const layerCopy = deepCopyObj(newLayer);
                   Object.values(layerCopy.parameters).forEach((val) => {
-                    val["value"] = "";
+                    val.value = "";
                   });
                   copyCurrent.push(layerCopy);
                   return copyCurrent;

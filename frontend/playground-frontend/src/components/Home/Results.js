@@ -203,7 +203,7 @@ const Results = (props) => {
           <AUC_ROC_curves />
         ) : null}
         {problemType.value === "classification" &&
-        auc_roc_data_res.length == 0 ? (
+        auc_roc_data_res.length === 0 ? (
           <p style={{ textAlign: "center" }}>
             No AUC/ROC curve could be generated. If this is not intended, check
             that shuffle is set to true to produce a more balanced train/test

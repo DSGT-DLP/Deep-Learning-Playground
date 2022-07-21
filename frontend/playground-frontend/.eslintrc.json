@@ -3,7 +3,7 @@
     "browser": true,
     "es2021": true
   },
-  "extends": "eslint:recommended",
+  "extends": ["plugin:react/recommended", "standard", "prettier"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -13,6 +13,8 @@
   },
   "plugins": ["react"],
   "rules": {
-    "no-control-regex": 0
+    "no-control-regex": 0,
+    "camelcase": 0,
+    "react/no-unescaped-entities": 0
   }
 }

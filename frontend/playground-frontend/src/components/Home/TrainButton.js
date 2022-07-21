@@ -3,24 +3,15 @@ import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../../constants";
 import { train_and_output } from "../helper_functions/TalkWithBackend";
+import { validateTabularInputs, sendBackendJSON } from "../helper_functions/TrainButtonFunctions";
 
 const TrainButton = (props) => {
   const {
     addedLayers,
-    targetCol = null,
-    features = null,
-    problemType,
-    criterion,
-    optimizerName,
-    usingDefaultDataset = null,
-    shuffle,
-    epochs,
-    testSize,
-    batchSize,
     setDLPBackendResponse,
     csvDataInput = null,
-    fileURL = null,
-    email,
+    paramaters,
+    choice = "tabular",
   } = props;
 
   const [pendingResponse, setPendingResponse] = useState(false);
@@ -51,31 +42,9 @@ const TrainButton = (props) => {
 
   const validateInputs = (user_arch) => {
     let alertMessage = "";
-    if (!user_arch?.length)
-      alertMessage += "At least one layer must be added. ";
-    if (!criterion) alertMessage += "A criterion must be specified. ";
-    if (!optimizerName) alertMessage += "An optimizer name must be specified. ";
-    if (!problemType) alertMessage += "A problem type must be specified. ";
-    if (!usingDefaultDataset) {
-      if (!targetCol || !features?.length) {
-        alertMessage +=
-          "Must specify an input file, target, and features if not selecting default dataset. ";
-      }
-      for (let i = 0; i < features.length; i++) {
-        if (targetCol === features[i]) {
-          alertMessage +=
-            "A column that is selected as the target column cannot also be a feature column. ";
-          break;
-        }
-      }
-      if (!csvDataInput && !fileURL) {
-        alertMessage +=
-          "Must specify an input file either from local storage or from an internet URL. ";
-      }
-    }
+    if (choice === "tabular") alertMessage = validateTabularInputs(user_arch, props);
 
     if (alertMessage.length === 0) return true;
-
     alert(alertMessage);
     return false;
   };
@@ -90,26 +59,8 @@ const TrainButton = (props) => {
       return;
     }
 
-    const csvDataStr = JSON.stringify(csvDataInput);
-
-    const response = await train_and_output(
-      "tabular",
-      {
-        user_arch: user_arch,
-        criterion: criterion,
-        optimizer_name: optimizerName,
-        problem_type: problemType,
-        target: targetCol,
-        features: features,
-        using_default_dataset: usingDefaultDataset,
-        test_size: testSize,
-        epochs: epochs,
-        batch_size: batchSize,
-        shuffle: shuffle,
-        csv_data: csvDataStr,
-        file_URL: fileURL,
-        email: email
-      }
+    const response = await train_and_output("tabular",
+      sendBackendJSON(user_arch, props)
     );
 
     setDLPBackendResponse(response);
@@ -153,16 +104,16 @@ const TrainButton = (props) => {
 };
 
 TrainButton.propTypes = {
-  addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  addedLayers: PropTypes.arrayOf(PropTypes.object),
   targetCol: PropTypes.string,
   features: PropTypes.arrayOf(PropTypes.string),
-  problemType: PropTypes.string.isRequired,
-  criterion: PropTypes.string.isRequired,
-  optimizerName: PropTypes.string.isRequired,
+  problemType: PropTypes.string,
+  criterion: PropTypes.string,
+  optimizerName: PropTypes.string,
   usingDefaultDataset: PropTypes.string,
-  shuffle: PropTypes.bool.isRequired,
-  epochs: PropTypes.number.isRequired,
-  testSize: PropTypes.number.isRequired,
+  shuffle: PropTypes.bool,
+  epochs: PropTypes.number,
+  testSize: PropTypes.number,
 };
 
 export default TrainButton;

@@ -182,9 +182,13 @@ def root(path):
 @app.route("/run", methods=["POST"])
 def train_and_output():
     request_data = json.loads(request.data)
+    print("requested")
     user_arch = request_data["user_arch"]
+    print(user_arch)
     criterion = request_data["criterion"]
+    print(criterion)
     optimizer_name = request_data["optimizer_name"]    
+    print(optimizer_name)
     problem_type = request_data["problem_type"]
     target = request_data["target"]
     features = request_data["features"]

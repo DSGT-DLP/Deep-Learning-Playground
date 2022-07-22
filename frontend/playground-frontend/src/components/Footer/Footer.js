@@ -29,7 +29,9 @@ const Footer = () => {
         </div>
       </IconContext.Provider>
       <div className="header-footer" id="footer-name">
-        Deep Learning Playground © {new Date().getFullYear()}
+        <p className="copyright">
+          Deep Learning Playground © {new Date().getFullYear()}
+        </p>
       </div>
     </>
   );

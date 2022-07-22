@@ -290,7 +290,6 @@ textarea {
 
 #footer-name {
   background-color: var(--footer-dark-blue);
-  padding: 0.75rem;
   text-align: center;
   color: var(--dark-grey);
   font-size: small;

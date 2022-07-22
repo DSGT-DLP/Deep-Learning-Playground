@@ -21,8 +21,6 @@ Author URI:   https://datasciencegt.org/
   --whitehover: #f7f7f7;
   --footer-dark-blue: #00233f;
   --dark-grey: #d3d3d3;
-  /* box sizing border box specifies no padding, width = width etc */
-  box-sizing: border-box;
 }
 
 /* -------------------------------------------------------------------------- */

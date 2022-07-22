@@ -164,7 +164,7 @@ const Home = () => {
       queryText: "Batch Size",
       onChange: setBatchSize,
       defaultValue: batchSize,
-      freeInputCustomRestrictions: { type: "number", min: 0 },
+      freeInputCustomRestrictions: { type: "number", min: 2 },
     }
   ];
 

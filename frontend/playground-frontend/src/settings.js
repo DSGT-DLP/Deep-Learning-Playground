@@ -168,6 +168,16 @@ export const POSSIBLE_LAYERS = [
   },
 ];
 
+export const IMAGE_LAYERS = [
+  {
+    display_name: "Conv2D",
+    object_name: "nn.Conv2D",
+    parameters: {
+      
+    }
+  }
+];
+
 export const POSSIBLE_TRANSFORMS = [
   {
     display_name: "Random Horizontal Flip",
@@ -198,7 +208,6 @@ export const POSSIBLE_TRANSFORMS = [
   },
 ];
 
-
 export const CRITERIONS = [
   {
     label: "L1LOSS",
@@ -219,6 +228,19 @@ export const CRITERIONS = [
     label: "CELOSS",
     value: "CELOSS",
     object_name: "nn.CrossEntropyLoss(reduction='mean')",
+  },
+];
+
+export const IMAGE_CLASSIFICATION_CRITERION = [
+  {
+    label: "CELOSS",
+    value: "CELOSS",
+    object_name: "nn.CrossEntropyLoss",
+  },
+  {
+    label: "WCELOSS",
+    value: "WCELOSS",
+    object_name: "nn.CrossEntropyLoss", //will define a randomized weights for classes in backend
   },
 ];
 
@@ -243,3 +265,9 @@ export const DEFAULT_DATASETS = [
   { label: "DIGITS", value: "DIGITS" },
   { label: "WINE", value: "WINE" },
 ];
+
+export const IMAGE_DEFAULT_DATASETS = [
+  {label: "MNIST", value: "MNIST"},
+  {label: "FashionMNIST", value: "FASHIONMNIST"},
+  {label: "CIFAR10", value: "CIFAR10"}
+]

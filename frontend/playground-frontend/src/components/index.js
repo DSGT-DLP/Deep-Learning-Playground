@@ -16,7 +16,6 @@ export { default as RectContainer } from "./Home/RectContainer";
 export { default as Results } from "./Home/Results";
 export { default as TrainButton } from "./Home/TrainButton";
 
-
 // About
 export { default as About } from "./About/About";
 
@@ -30,4 +29,4 @@ export { default as Feedback } from "./Feedback/Feedback";
 export { default as Navbar } from "./Navbar/Navbar";
 
 // Footer
-export { default as Footer} from "./Footer/Footer";
+export { default as Footer } from "./Footer/Footer";

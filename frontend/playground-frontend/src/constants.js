@@ -4,9 +4,9 @@ export const COLORS = {
   addLayer: "#F2ECFF",
   disabled: "#6c757d",
   background: "#F6F6FF",
-  dark_blue: "#003058",  // primary
-  gold: "#B3A36A",  // secondary
-  visited: "#808080"
+  dark_blue: "#003058", // primary
+  gold: "#B3A36A", // secondary
+  visited: "#808080",
 };
 
 export const URLs = {
@@ -14,7 +14,7 @@ export const URLs = {
   youtube: "https://www.youtube.com/channel/UC1DGL6Tb9ffwC-aHChadxMw",
   instagram: "https://www.instagram.com/datasciencegt/",
   github: "https://github.com/karkir0003/Deep-Learning-Playground",
-}
+};
 export const LAYOUT = {
   row: {
     display: "flex",

@@ -1,40 +1,32 @@
 import React from "react";
 import "../../App.css";
-import {
-  FaGithub,
-  FaInstagram,
-  FaLinkedin,
-  FaYoutube,
-} from "react-icons/fa";
-import { URLs } from "../../constants";
+import { FaGithub, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
+import { COLORS, URLs } from "../../constants";
 import { IconContext } from "react-icons";
 
 const Footer = () => {
   return (
     <>
-    <IconContext.Provider value={{color: "white", size: "2.5rem", className:"foot-element"}}>
-      <div className="header-footer" id="footer">
-        <div className="foot-element">
-          <a href={URLs.linkedin}>
+      <IconContext.Provider
+        value={{
+          color: COLORS.dark_blue,
+          size: "2.0rem",
+        }}
+      >
+        <div className="header-footer" id="footer">
+          <a className="foot-element" href={URLs.linkedin}>
             <FaLinkedin />
           </a>
-        </div>
-        <div className="foot-element">
-          <a href={URLs.youtube}>
+          <a className="foot-element" href={URLs.youtube}>
             <FaYoutube />
           </a>
-        </div>
-        <div className="foot-element">
-          <a href={URLs.instagram}>
+          <a className="foot-element" href={URLs.instagram}>
             <FaInstagram />
           </a>
-        </div>
-        <div className="foot-element">
-          <a href={URLs.github}>
+          <a className="foot-element" href={URLs.github}>
             <FaGithub />
           </a>
         </div>
-      </div>
       </IconContext.Provider>
       <div className="header-footer" id="footer-name">
         Deep Learning Playground © {new Date().getFullYear()}

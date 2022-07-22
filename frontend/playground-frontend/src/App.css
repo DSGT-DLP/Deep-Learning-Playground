@@ -20,7 +20,7 @@ Author URI:   https://datasciencegt.org/
   --layer: #cd7bff;
   --whitehover: #f7f7f7;
   --footer-dark-blue: #00233f;
-  --dark-grey: #a7a7a7;
+  --dark-grey: #d3d3d3;
   /* box sizing border box specifies no padding, width = width etc */
   box-sizing: border-box;
 }
@@ -224,7 +224,6 @@ input {
   overflow: hidden;
 }
 
-
 #title-name {
   float: left;
   font-size: large;
@@ -245,14 +244,13 @@ input {
 }
 
 .image-title {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-
 /* -------------------------------------------------------------------------- */
-/*	2. About and Wiki
+/*	1. About and Wiki
 /* -------------------------------------------------------------------------- */
 
 .sections {
@@ -280,14 +278,14 @@ textarea {
 }
 
 /* -------------------------------------------------------------------------- */
-/*	3. Footer
+/*	1. Footer
 /* -------------------------------------------------------------------------- */
 
 #footer {
   padding: 0.75rem;
   margin: auto;
   align-items: center;
-  height: 6rem;
+  height: 150px;
 }
 
 #footer-name {
@@ -295,18 +293,30 @@ textarea {
   padding: 0.75rem;
   text-align: center;
   color: var(--dark-grey);
+  font-size: small;
 }
 
 .foot-element {
-  display: inline-block;
-  object-fit: contain;
-  margin: 0.2em;
-  size: 1em;
+  margin-inline: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 50%;
+  height: 50px;
+  aspect-ratio: 1;
 }
 
+.foot-element:hover, .foot-element:focus {
+  background-color: var(--secondary);
+}
+
+.foot-element > a {
+  display: flex;
+}
 
 /* -------------------------------------------------------------------------- */
-/*	4. Loader (Animated)
+/*	1. Loader (Animated)
 /*  Reference: https://www.w3schools.com/howto/howto_css_loader.asp
 /* -------------------------------------------------------------------------- */
 

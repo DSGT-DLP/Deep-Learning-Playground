@@ -16,6 +16,7 @@
     "no-control-regex": 0,
     "camelcase": 0,
     "react/no-unescaped-entities": 0,
-    "object-shorthand": ["error", "consistent-as-needed"]
+    "object-shorthand": ["error", "consistent-as-needed"],
+    "no-var": ["error"]
   }
 }

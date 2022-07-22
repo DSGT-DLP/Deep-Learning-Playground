@@ -221,6 +221,9 @@ const Wiki = () => {
             <b>Test Size</b> - The proportion of the total data set to be used
             to test the performance of the model.
           </li>
+          <li>
+            <b>Batch Size</b> - Number of datapoints processed each time before the model is updated.
+          </li>
         </ul>
       </div>
     </>

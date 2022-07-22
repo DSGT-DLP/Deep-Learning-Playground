@@ -55,9 +55,11 @@ const About = () => {
               src={pythonLogo}
               className="tech-img-content"
               onClick={urlOpener("https://docs.python.org/3/")}
-            ></img>
+              alt="Python logo"
+            />
             <span className="tech-text-content">
-              <b>Python:</b> Programming language widely used for Data Science, AI, and ML. Easily understandable by a human and has a lot of
+              <b>Python:</b> Programming language widely used for Data Science,
+              AI, and ML. Easily understandable by a human and has a lot of
               developer support
             </span>
           </div>
@@ -66,16 +68,19 @@ const About = () => {
               src={pyTorchLogo}
               className="tech-img-content"
               onClick={urlOpener("https://pytorch.org/docs/stable/index.html")}
-            ></img>
-            <b>Pytorch:</b> Libary that helps build, train, test deep learning models.
-            We use this library to build the user-defined deep learning model
+              alt="Pytorch logo"
+            />
+            <b>Pytorch:</b> Libary that helps build, train, test deep learning
+            models. We use this library to build the user-defined deep learning
+            model
           </div>
           <div className="tech-row-content">
             <img
               src={pandasLogo}
               className="tech-img-content"
               onClick={urlOpener("https://pandas.pydata.org/docs/")}
-            ></img>
+              alt="pandas logo"
+            />
             <b>pandas:</b> Python library that allows one to parse CSV files and
             extract relevant information. It's very user friendly and has
             helpful documentation
@@ -85,8 +90,10 @@ const About = () => {
               src={flaskLogo}
               className="tech-img-content"
               onClick={urlOpener("https://flask.palletsprojects.com/en/2.1.x/")}
-            ></img>
-            <b>Flask:</b> Backend service that allows for the modeling magic to happen
+              alt="Flask logo"
+            />
+            <b>Flask:</b> Backend service that allows for the modeling magic to
+            happen
           </div>
           <div className="tech-row-content">
             <img
@@ -95,15 +102,18 @@ const About = () => {
               onClick={urlOpener(
                 "https://reactjs.org/docs/getting-started.html"
               )}
-            ></img>
-            <b>React:</b> JavaScript library used to display the website to the user
+              alt="React logo"
+            />
+            <b>React:</b> JavaScript library used to display the website to the
+            user
           </div>
           <div className="tech-row-content">
             <img
               src={awsLogo}
               className="tech-img-content"
               onClick={urlOpener("https://docs.aws.amazon.com/")}
-            ></img>
+              alt="AWS logo"
+            />
             <b>AWS:</b> Amazon Web Services provides on-demand cloud computing
             platforms and APIs to this project on a metered pay-as-you-go basis
           </div>

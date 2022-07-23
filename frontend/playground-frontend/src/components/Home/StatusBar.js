@@ -5,33 +5,30 @@ const StatusBar = ({ pendingResponse, setPendingResponse }) => {
   const [logData, setLogData] = useState(null)
   // const [stream, setStream] = useState(null)
   
-  console.log('pendingResponse in StatusBar:', pendingResponse)
+  // console.log('pendingResponse in StatusBar:', pendingResponse)
 
   useEffect(() => {
-    let logStream
-    if (pendingResponse) {
-      logStream = new EventSource('/training_log')
-      
-      logStream.onmessage = (event) => {
-        console.log('handle stream:', event)
-        setLogData(event.data)
-      }
-    } else {
-      if (logStream) {
-        logStream.close()
-        console.log('closing stream in else statement')
-        setLogData(null)
-      }
-      setLogData(null)
-    }
-    return () => {
-      if (logStream) {
-        logStream.close()
+    const getData = async () => {
+      if (pendingResponse) {
+        // console.log('waiting')
+        const logResponse = await fetch('/training_log').then((res) => res.json()).then((data) => data.log)
+        // console.log('logResponse', logResponse)
+        if (logResponse && logResponse !== logData) {
+          // console.log(logData)
+          setLogData(logResponse)
+        }
       }
     }
+    getData()
   }, )
 
-  console.log('logData:', logData)
+  useEffect(() => {
+    if (!pendingResponse) {
+      setLogData(null)
+    }
+  }, [pendingResponse])
+
+  // console.log('logData:', logData)
 
   return <></>
 }

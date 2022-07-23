@@ -16,9 +16,7 @@ from sklearn.model_selection import train_test_split
 from backend.common.default_datasets import get_default_dataset
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
-from flask import send_from_directory, Response
-from backend.common.utils import LogDataQueue
-from datetime import datetime
+from flask import send_from_directory
 
 app = Flask(
     __name__,
@@ -28,7 +26,7 @@ app = Flask(
 )
 CORS(app)
 
-logDataQueue = None
+logData = None
 
 def ml_drive(
     user_model,
@@ -87,7 +85,7 @@ def dl_drive(
     criterion,
     optimizer_name,
     problem_type,
-    setData,
+    setLogData,
     target=None,
     features=None,
     default=None,
@@ -164,7 +162,7 @@ def dl_drive(
             X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=batch_size
         )
         train_loss_results = train_deep_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, setData
+            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, setLogData
         )
         pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
@@ -186,7 +184,7 @@ def root(path):
 
 @app.route("/run", methods=["POST"])
 def train_and_output():
-    setData('reached backend')
+    setLogData('reached backend')
     
     request_data = json.loads(request.data)
 
@@ -220,7 +218,7 @@ def train_and_output():
                 criterion=criterion,
                 optimizer_name=optimizer_name,
                 problem_type=problem_type,
-                setData=setData,
+                setLogData=setLogData,
                 target=target,
                 features=features,
                 default=default,
@@ -231,7 +229,7 @@ def train_and_output():
                 batch_size=batch_size,
             )
             
-            setData(None)
+            setLogData(None)
             
             return (
                 jsonify(
@@ -290,23 +288,15 @@ def send_email_route():
         print(traceback.format_exc())
         return jsonify({"success": False}), 500
 
-@app.route('/training_log')
+@app.route('/training_log', methods=['GET'])
 def send_training_log():
-    global logDataQueue
-    def get_data():
-        print('getting')
-        #print(logDataQueue.queue)
-        #if (logDataQueue is not None and logDataQueue.isNotEmpty()):
-        if (logDataQueue is not None):
-            yield f'data: {logDataQueue} \n\n'
-        #for i in [1, 2]:
-        #    yield f'data: {i} \n\n'
-    
-    return Response(get_data(), mimetype='text/event-stream')
+    global logData
+    #print('returning', logData)
+    return jsonify({'log': logData})
 
-def setData(message):
-    global logDataQueue
-    logDataQueue = message
+def setLogData(message):
+    global logData
+    logData = message
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")

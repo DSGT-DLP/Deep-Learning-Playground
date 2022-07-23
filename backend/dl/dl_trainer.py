@@ -1,6 +1,6 @@
 from backend.common.loss_functions import compute_loss
 from backend.dl.dl_eval import compute_correct, compute_accuracy
-from backend.common.utils import LogDataQueue, generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
+from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
 from backend.common.utils import ProblemType
 from backend.common.constants import (
     DEEP_LEARNING_RESULT_CSV_PATH,
@@ -32,7 +32,7 @@ https://towardsdatascience.com/building-rnn-lstm-and-gru-for-time-series-using-p
 
 
 def train_deep_classification_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs, logDataQueue
+    model, train_loader, test_loader, optimizer, criterion, epochs, setData
 ):
     """
     Function for training pytorch model for classification. This function also times how long it takes to complete each epoch
@@ -102,9 +102,9 @@ def train_deep_classification_model(
             val_acc.append(mean_test_acc)
             test_loss.append(mean_test_loss)
 
-            #print(
-            #    f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}"
-            #)
+            message = f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}"
+            setData(message)
+            print(message)
         result_table = pd.DataFrame(
             {
                 EPOCH: [i for i in range(1, epochs + 1)],
@@ -137,7 +137,7 @@ def train_deep_classification_model(
 
 
 def train_deep_regression_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs, logDataQueue
+    model, train_loader, test_loader, optimizer, criterion, epochs, setData
 ):
     """
     Train Regression model in Pytorch. This function also times how long it takes to complete each epoch
@@ -182,9 +182,9 @@ def train_deep_regression_model(
                 loss = compute_loss(criterion, test_pred, labels)
                 epoch_batch_loss += float(loss.detach())
             test_loss.append(epoch_batch_loss / num_test_epochs)
-            print(
-                f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}"
-            )
+            message = f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}"
+            setData(message)
+            print(message)
         result_table = pd.DataFrame(
             {
                 EPOCH: [i for i in range(1, epochs + 1)],
@@ -204,7 +204,7 @@ def train_deep_regression_model(
 
 
 def train_deep_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, logDataQueue
+    model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, setData
 ):
     """
     Given train loader, train torch model
@@ -219,11 +219,11 @@ def train_deep_model(
     """
     if problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION):
         return train_deep_classification_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs, logDataQueue
+            model, train_loader, test_loader, optimizer, criterion, epochs, setData
         )
     elif problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION):
         return train_deep_regression_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs, logDataQueue
+            model, train_loader, test_loader, optimizer, criterion, epochs, setData
         )
 
 

@@ -308,8 +308,8 @@ class LogDataQueue:
         self.queue = Queue()
     
     def enqueue(self, log: str) -> None:
-        jsonLog = f'data: {log} \n\n'
-        self.queue.put(jsonLog)
+        #jsonLog = f'data: {log} \n\n'
+        self.queue.put(log)
         
     def dequeue(self):
         return self.queue.get()

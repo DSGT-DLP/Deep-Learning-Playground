@@ -5,7 +5,11 @@ name: React Build Check
 
 on:
   push:
+    paths:
+      - 'frontend/**'
   pull_request:
+    paths:
+      - 'frontend/**'
 
 jobs:
   build:

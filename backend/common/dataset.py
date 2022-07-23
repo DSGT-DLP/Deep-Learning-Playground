@@ -58,15 +58,8 @@ def read_local_csv_file(file_path):
 
 
 class errorMessage(Enum):
-    TRAIN_AND_VALID_VOID = "The zip file doesn't contain train and valid folders"
-    TRAIN_VOID = "The zip file doesn't contain train folder"
-    VALID_VOID = "The zip file doesn't contain valid folder"
-    NOT_ZIP = "The given file is not a zip file"
-    UNEQUAL_CLASSES = "Train and valid datasets have different number of classes"
-    TRAIN_NO_FILES = "Train folder has no files"
-    VALID_NO_FILES = "Valid folder has no files"
-    FILE_NOT_EXIST = "The file doesn't exist"
-    INVALID_TRANSFORM = "The sequence of transformations is invalid"
+    CHECK_FILE_STRUCTURE = "The file doesn't have correct structure"
+    CHECK_TRANSFORM = "The transforms applied are not valid"
 
 
 def get_unzipped(zipped_file):
@@ -74,129 +67,60 @@ def get_unzipped(zipped_file):
     Creates and returns a train and valid directory path from a zipped file
     """
 
-    if not path.exists(zipped_file):
-        raise ValueError(errorMessage.FILE_NOT_EXIST.value)
+    try:
+        if path.exists(UNZIPPED_DIR_NAME):
+            shutil.rmtree(UNZIPPED_DIR_NAME)
 
-    if not is_zipfile(zipped_file):
-        raise ValueError(errorMessage.NOT_ZIP.value)
+        mkdir(UNZIPPED_DIR_NAME)
+        mkdir(os.path.join(UNZIPPED_DIR_NAME, "input"))
 
-    if path.exists(UNZIPPED_DIR_NAME):
-        shutil.rmtree(UNZIPPED_DIR_NAME)
+        files = ZipFile(zipped_file, "r")
+        files.extractall(os.path.join(UNZIPPED_DIR_NAME, "input"))
+        files.close()
 
-    mkdir(UNZIPPED_DIR_NAME)
-    mkdir(os.path.join(UNZIPPED_DIR_NAME, "input"))
+        train_dir = os.path.join(UNZIPPED_DIR_NAME, "input", "train")
+        test_dir = os.path.join(UNZIPPED_DIR_NAME, "input", "valid")
 
-    files = ZipFile(zipped_file, "r")
-    files.extractall(os.path.join(UNZIPPED_DIR_NAME, "input"))
-    files.close()
+        if (not os.path.exists(train_dir) or not os.path.exists(test_dir)):
+            name = os.path.splitext(zipped_file)[0]
+            name = name.split("/")[-1]
+            name = name.split("\\")[-1]
+            train_dir = os.path.join(UNZIPPED_DIR_NAME, "input", name, "train")
+            test_dir = os.path.join(UNZIPPED_DIR_NAME, "input", name, "valid")
+        
+        if (not os.path.exists(train_dir) or not os.path.exists(test_dir)):
+            raise ValueError(errorMessage.CHECK_FILE_STRUCTURE.value)
+        
+        if (len(train_dir) != len(test_dir)):
+            raise ValueError(errorMessage.CHECK_FILE_STRUCTURE.value)
 
-    name = os.path.splitext(zipped_file)[0]
-    name = name.split("/")[-1]
-    name = name.split("\\")[-1]
-
-    def check_inside_file(dir_name):
-        if not path.exists(dir_name):
-            return None, None
-
-        train_dir = None
-        valid_dir = None
-
-        for filename in os.listdir(dir_name):
-            if filename == "train":
-                train_dir = os.path.join(dir_name, filename)
-                if valid_dir is not None:
-                    return train_dir, valid_dir
-            elif filename == "valid":
-                valid_dir = os.path.join(dir_name, filename)
-                if train_dir is not None:
-                    return train_dir, valid_dir
-
-        return train_dir, valid_dir
-
-    train_dir, valid_dir = check_inside_file(os.path.join(UNZIPPED_DIR_NAME, "input"))
-
-    if not train_dir or valid_dir == None:
-        train_dir, valid_dir = check_inside_file(
-            os.path.join(UNZIPPED_DIR_NAME, "input", name)
-        )
-
-    ## All cases of errors
-    if train_dir is None and valid_dir is None:
-        shutil.rmtree(UNZIPPED_DIR_NAME)
-        raise ValueError(errorMessage.TRAIN_AND_VALID_VOID.value)
-    elif train_dir is None:
-        shutil.rmtree(UNZIPPED_DIR_NAME)
-        raise ValueError(errorMessage.TRAIN_VOID.value)
-    elif valid_dir is None:
-        shutil.rmtree(UNZIPPED_DIR_NAME)
-        raise ValueError(errorMessage.VALID_VOID.value)
-
-    if len(os.listdir(train_dir)) == 0:
-        shutil.rmtree(UNZIPPED_DIR_NAME)
-        raise ValueError(errorMessage.TRAIN_NO_FILES.value)
-
-    if len(os.listdir(valid_dir)) == 0:
-        shutil.rmtree(UNZIPPED_DIR_NAME)
-        raise ValueError(errorMessage.VALID_NO_FILES.value)
-
-    if not len(os.listdir(train_dir)) == len(os.listdir(valid_dir)):
-        shutil.rmtree(UNZIPPED_DIR_NAME)
-        raise ValueError(errorMessage.UNEQUAL_CLASSES.value)
-
-    return train_dir, valid_dir
-
+        return train_dir, test_dir
+    except:
+        raise ValueError(errorMessage.CHECK_FILE_STRUCTURE.value)
 
 def dataset_from_zipped(
-    zipped_folder, train_transform=DEFAULT_TRANSFORM, valid_transform=DEFAULT_TRANSFORM
+    zipped_folder, train_transform=DEFAULT_TRANSFORM, test_transform=DEFAULT_TRANSFORM
 ):
 
     """
-    Returns a dataset from a zipped folder applying train and valid transformation (if they are legal).
-    Calls get_unzipped to create unzipped folder and obtain train and valid directories
+    Returns a dataset from a zipped folder applying train and  trtestansformation (if they are legal).
+    Calls get_unzipped to create unzipped folder and obtain train and test directories
     """
 
-    train_dir, valid_dir = get_unzipped(zipped_folder)
+    try:
+        train_dir, test_dir = get_unzipped(zipped_folder)
 
-    def check_valid_transform(transform):
-        if not transform:
-            raise ValueError(errorMessage.INVALID_TRANSFORM.value)
-        if transform == DEFAULT_TRANSFORM:
-            return True
-        to_tensor_idx = -1
-        idx = 0
-        for x in transform:
-            if isinstance(x, transforms.ToTensor):
-                to_tensor_idx = idx
-            else:
-                if to_tensor_idx == -1:
-                    for y in TENSOR_ONLY_TRANSFORMS:
-                        if isinstance(x, y):
-                            raise ValueError(errorMessage.INVALID_TRANSFORM.value)
-                else:
-                    for y in PIL_ONLY_TRANSFORMS:
-                        if isinstance(x, y) and to_tensor_idx != -1:
-                            raise ValueError(errorMessage.INVALID_TRANSFORM.value)
-            idx += 1
-        if to_tensor_idx == -1:
-            raise ValueError(errorMessage.INVALID_TRANSFORM.value)
-        else:
-            return True
+        train_transform = transforms.Compose([x for x in train_transform])
+        test_transform = transforms.Compose([x for x in test_transform])
 
-    def create_transform(transform):
-        """
-        Converts a list of transform to a valid transform
-        Assumes the list to be valid
-        """
-        if check_valid_transform(transform):
-            return transforms.Compose([x for x in transform])
+        train_dataset = datasets.ImageFolder(root=train_dir, transform=train_transform)
+        test_dataset = datasets.ImageFolder(root=test_dir, transform=test_transform)
 
-    train_transform = create_transform(train_transform)
-    valid_transform = create_transform(valid_transform)
+        return train_dataset, test_dataset
+    except Exception as e:
+        error = errorMessage.CHECK_FILE_STRUCTURE if (str(e) == errorMessage.CHECK_FILE_STRUCTURE.value) else errorMessage.CHECK_TRANSFORM
+        raise ValueError(error.value)
 
-    train_dataset = datasets.ImageFolder(root=train_dir, transform=train_transform)
-    valid_dataset = datasets.ImageFolder(root=valid_dir, transform=valid_transform)
-
-    return train_dataset, valid_dataset
 
 
 def loader_from_zipped(
@@ -204,7 +128,7 @@ def loader_from_zipped(
     batch_size=32,
     shuffle=False,
     train_transform=DEFAULT_TRANSFORM,
-    valid_transform=DEFAULT_TRANSFORM,
+    test_transform=DEFAULT_TRANSFORM,
 ):
     """
     Creates a dataloader from a zipped file
@@ -217,19 +141,21 @@ def loader_from_zipped(
     Returns:
         train_dataloader, valid_dataloader
     """
+    try:
+        train_dataset, test_dataset = dataset_from_zipped(
+            zipped_file, train_transform=train_transform, test_transform=test_transform
+        )
 
-    train_dataset, valid_dataset = dataset_from_zipped(
-        zipped_file, train_transform=train_transform, valid_transform=valid_transform
-    )
+        train_loader = DataLoader(
+            train_dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True
+        )
+        test_loader = DataLoader(
+            test_dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True
+        )
 
-    train_loader = DataLoader(
-        train_dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True
-    )
-    valid_loader = DataLoader(
-        valid_dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True
-    )
-
-    return train_loader, valid_loader
+        return train_loader, test_loader
+    except Exception as e:
+        raise ValueError(e)
 
 
 if __name__ == "__main__":

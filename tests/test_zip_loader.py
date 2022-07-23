@@ -19,8 +19,8 @@ dir_in = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "tes
 @pytest.mark.parametrize(
     "filepath,expected",
     [
-        (not_zip, errorMessage.NOT_ZIP.value),
-        (different_folder, errorMessage.TRAIN_AND_VALID_VOID.value),
+        (not_zip, errorMessage.CHECK_FILE_STRUCTURE.value),
+        (different_folder, errorMessage.CHECK_FILE_STRUCTURE.value),
     ],
 )
 def test_invalid_file_structure(filepath, expected):
@@ -96,7 +96,7 @@ def test_load_correct_file_structure(filepath, relative_output_path):
 def check_diff_transforms(train_transform, valid_transform, filepath):
     filepath = os.path.join(dir_in, filepath)
     train_loader, valid_loader = loader_from_zipped(
-        filepath, valid_transform=valid_transform, train_transform=train_transform
+        filepath, test_transform=valid_transform, train_transform=train_transform
     )
 
     for data, index in train_loader:
@@ -119,8 +119,11 @@ def check_diff_transforms(train_transform, valid_transform, filepath):
         (double_zipped, [transforms.Normalize(0, 1)]),  ## Applying Tensor only
         (
             double_zipped,
-            [transforms.RandomVerticalFlip(p=0.3)],
-        ),  ## Legal without toTensor
+            [
+            transforms.RandomVerticalFlip(p=0.3),
+            transforms.ToTensor()
+            ], 
+        ), 
         (
             double_zipped,
             [
@@ -135,4 +138,4 @@ def check_ordered_transforms(filepath, tensor_array):
         train_loader, valid_loader = loader_from_zipped(
             filepath, train_transform=tensor_array
         )
-    assert str(e.value) == errorMessage.INVALID_TRANSFORM.value
+    assert str(e.value) == errorMessage.CHECK_TRANSFORM.value

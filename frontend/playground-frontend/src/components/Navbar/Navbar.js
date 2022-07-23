@@ -15,8 +15,12 @@ const Navbar = () => {
         <li className="navElement">
           <Link to="/">Home</Link>
         </li>
+        {/**Will figure out a way to make nav bar shorter. Putting everything here for the ease of development */}
         <li className="navElement">
           <Link to="/img-models">Image Models</Link>
+        </li>
+        <li className="navElement">
+          <Link to="/pretrained">Pretrained</Link>
         </li>
         <li className="navElement">
           <Link to="/About">About</Link>

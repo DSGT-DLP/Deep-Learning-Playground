@@ -12,9 +12,12 @@ const TrainButton = (props) => {
     csvDataInput = null,
     paramaters,
     choice = "tabular",
+    style,
   } = props;
 
   const [pendingResponse, setPendingResponse] = useState(false);
+
+  styles = {...styles, ...style}; // style would take precedence
 
   const make_user_arch = () => {
     // making a user_arch array by including all added layers and their parameters to make something like:
@@ -118,7 +121,7 @@ TrainButton.propTypes = {
 
 export default TrainButton;
 
-const styles = {
+let styles = {
   container: {
     padding: 0,
     width: 130,

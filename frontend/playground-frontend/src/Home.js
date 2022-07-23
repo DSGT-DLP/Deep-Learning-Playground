@@ -26,11 +26,13 @@ import {
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import StatusBar from './components/Home/StatusBar'
 
 const Home = () => {
   const [csvDataInput, setCSVDataInput] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
+  const [pendingResponse, setPendingResponse] = useState(false);
 
   // input responses
   const [fileURL, setFileURL] = useState("");
@@ -207,6 +209,8 @@ const Home = () => {
             {...input_responses}
             csvDataInput={csvDataInput}
             setDLPBackendResponse={setDLPBackendResponse}
+            pendingResponse={pendingResponse}
+            setPendingResponse={setPendingResponse}
           />
         </BackgroundLayout>
 
@@ -252,6 +256,8 @@ const Home = () => {
         columns={csvColumns}
         data={csvDataInput}
       />
+
+      <StatusBar pendingResponse={pendingResponse} setPendingResponse={setPendingResponse} />
 
       <TitleText text="Deep Learning Results" />
       <Results

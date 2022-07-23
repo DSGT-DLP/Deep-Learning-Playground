@@ -16,7 +16,9 @@ from sklearn.model_selection import train_test_split
 from backend.common.default_datasets import get_default_dataset
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
-from flask import send_from_directory
+from flask import send_from_directory, Response
+from backend.common.utils import LogDataQueue
+import time
 
 app = Flask(
     __name__,
@@ -26,6 +28,7 @@ app = Flask(
 )
 CORS(app)
 
+logDataQueue = None
 
 def ml_drive(
     user_model,
@@ -84,6 +87,7 @@ def dl_drive(
     criterion,
     optimizer_name,
     problem_type,
+    logDataQueue,
     target=None,
     features=None,
     default=None,
@@ -150,6 +154,8 @@ def dl_drive(
         # Build the Deep Learning model that the user wants
         model = DLModel(parse_deep_user_architecture(user_arch))
         print(f"model: {model}")
+        logDataQueue.enqueue('Architecture Built!')
+        #time.sleep(10)
         optimizer = get_optimizer(
             model, optimizer_name=optimizer_name, learning_rate=0.05
         )
@@ -159,7 +165,7 @@ def dl_drive(
             X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=batch_size
         )
         train_loss_results = train_deep_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
+            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, logDataQueue
         )
         pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
@@ -181,6 +187,12 @@ def root(path):
 
 @app.route("/run", methods=["POST"])
 def train_and_output():
+    global logDataQueue
+    logDataQueue = LogDataQueue()
+    print(logDataQueue)
+    print(logDataQueue.queue)
+    logDataQueue.enqueue('queue created')
+    
     request_data = json.loads(request.data)
 
     user_arch = request_data["user_arch"]
@@ -221,7 +233,11 @@ def train_and_output():
                 shuffle=shuffle,
                 json_csv_data_str=csvDataStr,
                 batch_size=batch_size,
+                logDataQueue=logDataQueue
             )
+            
+            logDataQueue = None
+            
             return (
                 jsonify(
                     {
@@ -279,6 +295,16 @@ def send_email_route():
         print(traceback.format_exc())
         return jsonify({"success": False}), 500
 
+@app.route('/training_log')
+def send_training_log():
+    global logDataQueue
+    def get_data():
+        print('getting')
+        #print(logDataQueue.queue)
+        if (logDataQueue is not None and logDataQueue.isNotEmpty()):
+            yield logDataQueue.dequeue()
+    
+    return Response(get_data(), mimetype='text/event-stream')
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")

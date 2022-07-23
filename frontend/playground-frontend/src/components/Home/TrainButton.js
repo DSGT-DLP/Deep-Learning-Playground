@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from 'react'
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../../constants";
@@ -18,12 +18,12 @@ const TrainButton = (props) => {
     testSize,
     batchSize,
     setDLPBackendResponse,
+    pendingResponse,
+    setPendingResponse,
     csvDataInput = null,
     fileURL = null,
     email,
   } = props;
-
-  const [pendingResponse, setPendingResponse] = useState(false);
 
   const make_user_arch = () => {
     // making a user_arch array by including all added layers and their parameters to make something like:
@@ -160,6 +160,8 @@ TrainButton.propTypes = {
   optimizerName: PropTypes.string.isRequired,
   problemType: PropTypes.string.isRequired,
   setDLPBackendResponse: PropTypes.func.isRequired,
+  pendingResponse: PropTypes.bool.isRequired,
+  setPendingResponse: PropTypes.func.isRequired,
   shuffle: PropTypes.bool.isRequired,
   targetCol: PropTypes.string,
   testSize: PropTypes.number.isRequired,

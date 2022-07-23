@@ -26,6 +26,7 @@ from sklearn.metrics import confusion_matrix, roc_curve, roc_auc_score
 import csv
 import os
 import json
+from queue import Queue
 
 matplotlib.use("Agg")
 
@@ -301,3 +302,17 @@ def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: 
             jsonf.write(jsonString)
 
     return jsonData
+
+class LogDataQueue:
+    def __init__(self):
+        self.queue = Queue()
+    
+    def enqueue(self, log: str) -> None:
+        jsonLog = f'data: {log} \n\n'
+        self.queue.put(jsonLog)
+        
+    def dequeue(self):
+        return self.queue.get()
+    
+    def isNotEmpty(self):
+        return not self.queue.empty()

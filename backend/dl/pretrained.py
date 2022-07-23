@@ -33,7 +33,7 @@ def train(
     cut=None,
     n_classes=10,
     train_transform=DEFAULT_TRANSFORM,
-    valid_transform=DEFAULT_TRANSFORM,
+    test_transform=DEFAULT_TRANSFORM,
     chan_in=3,
 ):
     """
@@ -49,12 +49,12 @@ def train(
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    train_dataset, valid_dataset = dataset_from_zipped(
-        zipped_file, valid_transform=valid_transform, train_transform=train_transform
+    train_dataset, test_dataset = dataset_from_zipped(
+        zipped_file, test_transform=test_transform, train_transform=train_transform
     )
 
     dls = DataLoaders.from_dsets(
-        train_dataset, valid_dataset, device=device, shuffle=shuffle, bs=batch_size
+        train_dataset, test_dataset, device=device, shuffle=shuffle, bs=batch_size
     )
 
     setattr(dls, "device", device)

@@ -171,7 +171,7 @@ const Home = () => {
   ];
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: 20, marginBottom: 50 }}>
       <DndProvider backend={HTML5Backend}>
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>

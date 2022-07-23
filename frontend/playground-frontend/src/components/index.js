@@ -29,3 +29,4 @@ export { default as Feedback } from "./Feedback/Feedback";
 export { default as Navbar } from "./Navbar/Navbar";
 
 // Footer
+export { default as Footer } from "./Footer/Footer";

@@ -18,6 +18,9 @@ Author URI:   https://datasciencegt.org/
   --primary: #003058;
   --secondary: #b3a36a;
   --layer: #cd7bff;
+  --whitehover: #f7f7f7;
+  --footer-dark-blue: #00233f;
+  --dark-grey: #d3d3d3;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -25,7 +28,6 @@ Author URI:   https://datasciencegt.org/
 /* -------------------------------------------------------------------------- */
 
 body {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
   color: black;
@@ -86,7 +88,7 @@ input {
   color: white;
   overflow: hidden;
   z-index: 10;
-  top: 0vmax;
+  top: 0;
   max-width: 100%;
   width: 100vw;
   display: flex;
@@ -104,7 +106,7 @@ input {
 }
 
 #nav-bar .navElement:hover {
-  background-color: #f7f7f7;
+  background-color: var(--whitehover);
 }
 
 #nav-bar .navElement:hover > a {
@@ -162,6 +164,90 @@ input {
 }
 
 /* -------------------------------------------------------------------------- */
+/*	1. Navbar
+/* -------------------------------------------------------------------------- */
+
+.header-footer {
+  margin: 0;
+  position: static;
+  background-color: var(--primary);
+  color: white;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+#nav-bar {
+  position: sticky;
+  z-index: 10;
+  top: 0vmax;
+  max-width: 100%;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.navElement {
+  display: block;
+  padding: 20px;
+  color: inherit;
+  float: right;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.navElement:hover {
+  background-color: var(--whitehover);
+}
+
+.navElement:hover > a {
+  color: var(--primary);
+}
+
+@media screen and (max-width: 600px) {
+  #nav-bar li:not(:first-child) {
+    display: none;
+  }
+}
+
+.nav {
+  padding-inline: 10px;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  box-sizing: inherit;
+  width: fit-content;
+  height: inherit;
+  overflow: hidden;
+}
+
+#title-name {
+  float: left;
+  font-size: large;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav li {
+  list-style: none;
+  float: left;
+}
+.nav li a {
+  text-decoration: none;
+  color: white;
+  font-size: 25px;
+}
+
+.image-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/* -------------------------------------------------------------------------- */
 /*	1. About and Wiki
 /* -------------------------------------------------------------------------- */
 
@@ -187,6 +273,43 @@ textarea {
   border-color: var(--layer);
   border-radius: 10px;
   padding: 5px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. Footer
+/* -------------------------------------------------------------------------- */
+
+#footer {
+  padding: 0.75rem;
+  margin: auto;
+  align-items: center;
+  height: 150px;
+}
+
+#footer-name {
+  background-color: var(--footer-dark-blue);
+  text-align: center;
+  color: var(--dark-grey);
+  font-size: small;
+}
+
+.foot-element {
+  margin-inline: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 50%;
+  height: 50px;
+  aspect-ratio: 1;
+}
+
+.foot-element:hover, .foot-element:focus {
+  background-color: var(--secondary);
+}
+
+.foot-element > a {
+  display: flex;
 }
 
 /* -------------------------------------------------------------------------- */

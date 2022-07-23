@@ -79,19 +79,20 @@ def get_unzipped(zipped_file):
         files.close()
 
         train_dir = os.path.join(UNZIPPED_DIR_NAME, "input", "train")
-        test_dir = os.path.join(UNZIPPED_DIR_NAME, "input", "valid")
+        test_dir = os.path.join(UNZIPPED_DIR_NAME, "input", "test")
 
         if (not os.path.exists(train_dir) or not os.path.exists(test_dir)):
             name = os.path.splitext(zipped_file)[0]
             name = name.split("/")[-1]
             name = name.split("\\")[-1]
             train_dir = os.path.join(UNZIPPED_DIR_NAME, "input", name, "train")
-            test_dir = os.path.join(UNZIPPED_DIR_NAME, "input", name, "valid")
+            test_dir = os.path.join(UNZIPPED_DIR_NAME, "input", name, "test")
+            print(train_dir)
         
         if (not os.path.exists(train_dir) or not os.path.exists(test_dir)):
             raise ValueError(errorMessage.CHECK_FILE_STRUCTURE.value)
         
-        if (len(train_dir) != len(test_dir)):
+        if (len(os.listdir(train_dir)) != len(os.listdir(test_dir))):
             raise ValueError(errorMessage.CHECK_FILE_STRUCTURE.value)
 
         return train_dir, test_dir

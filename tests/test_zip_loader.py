@@ -46,7 +46,6 @@ def test_load_correct_file_structure(filepath, relative_output_path):
 
         filepath = os.path.join(dir_in, "zip_files")
         filepath = filepath + "/" + expected_filename
-        # print(filepath)
         loader_from_zipped(
             filepath,
             train_transform=[

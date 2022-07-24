@@ -43,6 +43,24 @@ export const train_and_output = async (
   if (runResult.success) {
     // send email if provided
     if (email?.length) {
+      const attachments = [
+        // we will not create constant values for the source files because the constants cannot be used in Home
+        "./frontend/playground-frontend/src/backend_outputs/my_deep_learning_model.onnx",
+        "./frontend/playground-frontend/src/backend_outputs/model.pt",
+        "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_loss_plot.png",
+      ];
+
+      if (problemType === "classification") {
+        attachments.push(
+          "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_accuracy_plot.png"
+        );
+        attachments.push(
+          "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_confusion_matrix.png"
+        );
+        attachments.push(
+          "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_AUC_ROC_Curve.png"
+        );
+      }
       await fetch("/sendemail", {
         method: "POST",
         body: JSON.stringify({
@@ -51,15 +69,7 @@ export const train_and_output = async (
             "Your output files and visualizations from Deep Learning Playground",
           body_text:
             "Attached are the output files and visualizations that you just created in Deep Learning Playground on datasciencegt-dlp.com. Please notify us if there are any problems.",
-          attachment_array: [
-            // we will not create constant values for the source files because the constants cannot be used in Home
-            "./frontend/playground-frontend/src/backend_outputs/my_deep_learning_model.onnx",
-            "./frontend/playground-frontend/src/backend_outputs/model.pt",
-            "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_loss_plot.png",
-            "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_accuracy_plot.png",
-            "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_confusion_matrix.png",
-            "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_AUC_ROC_Curve.png",
-          ],
+          attachment_array: attachments,
         }),
       });
     }

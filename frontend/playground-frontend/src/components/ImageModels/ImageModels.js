@@ -8,6 +8,7 @@ import {
   POSSIBLE_LAYERS,
   POSSIBLE_TRANSFORMS,
   IMAGE_LAYERS,
+  IMAGE_CLASSIFICATION_CRITERION,
 } from "../../settings";
 import {
   DEFAULT_ADDED_LAYERS,
@@ -35,7 +36,7 @@ const ImageModels = () => {
   const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
   const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
   const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
-  const [criterion, setCriterion] = useState(CRITERIONS[3]);
+  const [criterion, setCriterion] = useState(IMAGE_CLASSIFICATION_CRITERION[0]);
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
   const [usingDefaultDataset, setUsingDefaultDataset] = useState();
   const [epochs, setEpochs] = useState(5);
@@ -46,6 +47,7 @@ const ImageModels = () => {
 
   const input_responses = {
     batchSize: batchSize,
+    criterion: criterion,
     shuffle: shuffle,
     epochs: epochs,
     optimizerName: optimizerName,
@@ -123,6 +125,7 @@ const ImageModels = () => {
           <TrainButton
             {...input_responses}
             setDLPBackendResponse={setDLPBackendResponse}
+            choice = "image"
           />
         </BackgroundLayout>
 

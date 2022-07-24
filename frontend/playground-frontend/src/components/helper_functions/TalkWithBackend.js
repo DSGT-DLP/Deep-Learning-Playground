@@ -1,6 +1,7 @@
 const routeDict = {
-  tabular: "/run",
-  image: "/img-run",
+  "tabular": "/run",
+  "image": "/img-run",
+  "pretrained": "/pretrain-run"
 };
 
 export const train_and_output = async (choice, choiceDict) => {

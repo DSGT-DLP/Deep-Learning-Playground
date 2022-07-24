@@ -18,7 +18,7 @@ import TrainButton from "../Home/TrainButton";
 
 const Pretrained = () => {
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
-  const [modelName, setModelName] = useState("");
+  const [modelName, setModelName] = useState();
   const [email, setEmail] = useState("");
   const [criterion, setCriterion] = useState(IMAGE_CLASSIFICATION_CRITERION[0]);
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
@@ -99,6 +99,7 @@ const Pretrained = () => {
                 width: 155,
               },
             }}
+            choice = "pretrained"
           />
         </BackgroundLayout>
         <BackgroundLayout>

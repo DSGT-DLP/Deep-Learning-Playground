@@ -3,7 +3,14 @@ import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../../constants";
 import { train_and_output } from "../helper_functions/TalkWithBackend";
-import { validateTabularInputs, sendBackendJSON } from "../helper_functions/TrainButtonFunctions";
+import {
+  validateTabularInputs,
+  sendTabularJSON,
+  validateImageInputs,
+  sendPretrainedJSON,
+  validatePretrainedInput,
+  sendImageJSON,
+} from "../helper_functions/TrainButtonFunctions";
 
 const TrainButton = (props) => {
   const {
@@ -17,9 +24,11 @@ const TrainButton = (props) => {
 
   const [pendingResponse, setPendingResponse] = useState(false);
 
-  styles = {...styles, ...style}; // style would take precedence
+  styles = { ...styles, ...style }; // style would take precedence
 
   const make_user_arch = () => {
+    if (!addedLayers) return; // prevention for pretrained. ValidateInputs throw error in case of empty layer in Image and Tabular
+
     // making a user_arch array by including all added layers and their parameters to make something like:
     // ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"]
     const user_arch = [];
@@ -45,7 +54,12 @@ const TrainButton = (props) => {
 
   const validateInputs = (user_arch) => {
     let alertMessage = "";
-    if (choice === "tabular") alertMessage = validateTabularInputs(user_arch, props);
+    if (choice === "tabular")
+      alertMessage = validateTabularInputs(user_arch, props);
+    if (choice === "image")
+      alertMessage = validateImageInputs(user_arch, props);
+    if (choice === "pretrained")
+      alertMessage = validatePretrainedInput(user_arch, props);
 
     if (alertMessage.length === 0) return true;
     alert(alertMessage);
@@ -62,9 +76,22 @@ const TrainButton = (props) => {
       return;
     }
 
-    const response = await train_and_output("tabular",
-      sendBackendJSON(user_arch, props)
-    );
+    let response;
+    if (choice === "tabular")
+      response = await train_and_output(
+        choice,
+        sendTabularJSON(user_arch, props)
+      );
+    if (choice === "image")
+      response = await train_and_output(
+        choice,
+        sendImageJSON(user_arch, props)
+      );
+    if (choice === "pretrained")
+      response = await train_and_output(
+        choice,
+        sendPretrainedJSON(user_arch, props)
+      );
 
     setDLPBackendResponse(response);
     setPendingResponse(false);
@@ -106,18 +133,18 @@ const TrainButton = (props) => {
   );
 };
 
-TrainButton.propTypes = {
-  addedLayers: PropTypes.arrayOf(PropTypes.object),
-  targetCol: PropTypes.string,
-  features: PropTypes.arrayOf(PropTypes.string),
-  problemType: PropTypes.string,
-  criterion: PropTypes.string,
-  optimizerName: PropTypes.string,
-  usingDefaultDataset: PropTypes.string,
-  shuffle: PropTypes.bool,
-  epochs: PropTypes.number,
-  testSize: PropTypes.number,
-};
+// TrainButton.propTypes = {
+//   addedLayers: PropTypes.arrayOf(PropTypes.object),
+//   targetCol: PropTypes.string,
+//   features: PropTypes.arrayOf(PropTypes.string),
+//   problemType: PropTypes.string,
+//   criterion: PropTypes.string,
+//   optimizerName: PropTypes.string,
+//   usingDefaultDataset: PropTypes.string,
+//   shuffle: PropTypes.bool,
+//   epochs: PropTypes.number,
+//   testSize: PropTypes.number,
+// };
 
 export default TrainButton;
 

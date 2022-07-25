@@ -26,11 +26,12 @@ const TrainButton = (props) => {
 
   styles = { ...styles, ...style }; // style would take precedence
 
-  const make_user_arch = () => {
-    if (!addedLayers) return; // prevention for pretrained. ValidateInputs throw error in case of empty layer in Image and Tabular
+  const make_obj_param_list = (obj_list) => {
+    if (!obj_list) return; // ValidateInputs throw error in case of empty things. This is to prevent an unnecessary errors in case of creating a layer 
 
-    // making a user_arch array by including all added layers and their parameters to make something like:
-    // ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"]
+    // making a array of relating methods (like "nn.Linear") with their parameters (in_feature, out_feature) by including all methods and their parameters to make something like:
+    // ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"] OR
+    // ["transforms.ToTensor()", "transforms.RandomHorizontalFlip(0.8)"]
     const user_arch = [];
     addedLayers.forEach((addedLayer) => {
       const parameters = addedLayer.parameters;
@@ -70,7 +71,8 @@ const TrainButton = (props) => {
     setPendingResponse(true);
     setDLPBackendResponse(undefined);
 
-    const user_arch = make_user_arch();
+    const user_arch = make_obj_param_list(props.addedLayers);
+
     if (!validateInputs(user_arch)) {
       setPendingResponse(false);
       return;
@@ -82,11 +84,17 @@ const TrainButton = (props) => {
         choice,
         sendTabularJSON(user_arch, props)
       );
-    if (choice === "image")
+    if (choice === "image") {
       response = await train_and_output(
         choice,
-        sendImageJSON(user_arch, props)
+        sendImageJSON(
+          user_arch,
+          make_obj_param_list(paramaters["trainTransform"]),
+          make_obj_param_list(paramaters["testTransform"]),
+          props
+        )
       );
+    }
     if (choice === "pretrained")
       response = await train_and_output(
         choice,

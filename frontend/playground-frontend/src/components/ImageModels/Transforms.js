@@ -1,7 +1,6 @@
 import Input from "../Home/Input";
 import AddedLayer from "../Home/AddedLayer";
 import React, { useState } from "react";
-import RectContainer from "../Home/RectContainer";
 import BackgroundLayout from "../Home/BackgroundLayout";
 import { GENERAL_STYLES, LAYOUT, COLORS } from "../../constants";
 
@@ -15,7 +14,7 @@ const Transforms = (props) => {
       val["value"] = "";
     });
     copyTransform.push(selectedTransform);
-    setTransforms(copyTransform);
+    setTransforms(copyTransform);    
   };
 
   return (
@@ -42,7 +41,7 @@ const Transforms = (props) => {
                 currentLayers.splice(i, 1);
                 setTransforms(currentLayers);
               }}
-              style={styles}
+              // style={styles}
             />
           </div>
         ))}

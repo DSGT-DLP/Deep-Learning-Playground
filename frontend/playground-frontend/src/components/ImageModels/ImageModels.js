@@ -50,7 +50,7 @@ const ImageModels = () => {
     criterion: criterion,
     shuffle: shuffle,
     epochs: epochs,
-    optimizerName: optimizerName,
+    optimizerName: optimizerName?.value,
     addedLayers: addedLayers,
     usingDefaultDataset: usingDefaultDataset?.value,
     trainTransforms: trainTransforms,
@@ -119,13 +119,25 @@ const ImageModels = () => {
                 currentLayers.splice(i, 1);
                 setAddedLayers(currentLayers);
               }}
+              style={{
+                input_box: {
+                  margin: 7.5,
+                  backgroundColor: "white",
+                  width: 170,
+                  paddingInline: 5,
+                },
+                layer_box: {
+                  width: 150,
+                  backgroundColor: COLORS.layer,
+                },
+              }}
             />
           ))}
           <AddNewLayer />
           <TrainButton
             {...input_responses}
             setDLPBackendResponse={setDLPBackendResponse}
-            choice = "image"
+            choice="image"
           />
         </BackgroundLayout>
 
@@ -163,7 +175,7 @@ const ImageModels = () => {
       </BackgroundLayout>
 
       <div style={{ marginTop: 20 }} />
-      <TitleText text="Image Transformations"/>
+      <TitleText text="Image Transformations" />
       <Transforms
         queryText={"Test Transform"}
         options={POSSIBLE_TRANSFORMS}

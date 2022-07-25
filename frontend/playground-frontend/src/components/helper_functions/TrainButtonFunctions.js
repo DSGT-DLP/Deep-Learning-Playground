@@ -77,7 +77,7 @@ export const validateImageInputs = (user_arch, ...args) => {
   return alertMessage;
 };
 
-export const sendImageJSON = (user_arch, ...args) => {
+export const sendImageJSON = (user_arch, trainTransform, testTransform, ...args) => {
   args = args[0];
 
   return {
@@ -92,9 +92,9 @@ export const sendImageJSON = (user_arch, ...args) => {
     shuffle: args.shuffle,
     // csv_data: csvDataStr,
     file_URL: args.fileURL,
-    train_transform: args.trainTransforms,
-    test_transform: args.testTransforms,
-    email: args.email,
+    train_transform: trainTransform,
+    test_transform: testTransform,
+    email: args.email?args.email : null,
   };
 };
 

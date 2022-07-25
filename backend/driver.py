@@ -1,7 +1,7 @@
 import pandas as pd
 import traceback
 import os
-from flask import Flask, json, request, jsonify
+from flask import Flask, json, request, jsonify, make_response
 
 from backend.common.utils import *
 from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL
@@ -17,6 +17,13 @@ from backend.common.default_datasets import get_default_dataset
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
 from flask import send_from_directory
+import boto3
+import base64
+from botocore.exceptions import ClientError
+import pyrebase
+from functools import wraps
+import firebase_admin
+from firebase_admin import credentials, auth
 
 app = Flask(
     __name__,
@@ -278,6 +285,195 @@ def send_email_route():
     except Exception:
         print(traceback.format_exc())
         return jsonify({"success": False}), 500
+
+def get_secret():
+
+    secret_name = "DLP/Firebase"
+    region_name = "us-west-2"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    # In this sample we only handle the specific exceptions for the 'GetSecretValue' API.
+    # See https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+    # We rethrow the exception by default.
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'DecryptionFailureException':
+            # Secrets Manager can't decrypt the protected secret text using the provided KMS key.
+            # Deal with the exception here, and/or rethrow at your discretion.
+            raise e
+        elif e.response['Error']['Code'] == 'InternalServiceErrorException':
+            # An error occurred on the server side.
+            # Deal with the exception here, and/or rethrow at your discretion.
+            raise e
+        elif e.response['Error']['Code'] == 'InvalidParameterException':
+            # You provided an invalid value for a parameter.
+            # Deal with the exception here, and/or rethrow at your discretion.
+            raise e
+        elif e.response['Error']['Code'] == 'InvalidRequestException':
+            # You provided a parameter value that is not valid for the current state of the resource.
+            # Deal with the exception here, and/or rethrow at your discretion.
+            raise e
+        elif e.response['Error']['Code'] == 'ResourceNotFoundException':
+            # We can't find the resource that you asked for.
+            # Deal with the exception here, and/or rethrow at your discretion.
+            raise e
+    else:
+        # Decrypts secret using the associated KMS key.
+        # Depending on whether the secret is a string or binary, one of these fields will be populated.
+        if 'SecretString' in get_secret_value_response:
+            secret = get_secret_value_response['SecretString']
+            return secret
+        else:
+            decoded_binary_secret = base64.b64decode(get_secret_value_response['SecretBinary'])
+            return decoded_binary_secret
+            
+    # Your code goes here. 
+
+def get_admin_sdk():
+
+    secret_name = "DLP/Firebase/Admin_SDK"
+    region_name = "us-west-2"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    # In this sample we only handle the specific exceptions for the 'GetSecretValue' API.
+    # See https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+    # We rethrow the exception by default.
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'DecryptionFailureException':
+            # Secrets Manager can't decrypt the protected secret text using the provided KMS key.
+            # Deal with the exception here, and/or rethrow at your discretion.
+            raise e
+        elif e.response['Error']['Code'] == 'InternalServiceErrorException':
+            # An error occurred on the server side.
+            # Deal with the exception here, and/or rethrow at your discretion.
+            raise e
+        elif e.response['Error']['Code'] == 'InvalidParameterException':
+            # You provided an invalid value for a parameter.
+            # Deal with the exception here, and/or rethrow at your discretion.
+            raise e
+        elif e.response['Error']['Code'] == 'InvalidRequestException':
+            # You provided a parameter value that is not valid for the current state of the resource.
+            # Deal with the exception here, and/or rethrow at your discretion.
+            raise e
+        elif e.response['Error']['Code'] == 'ResourceNotFoundException':
+            # We can't find the resource that you asked for.
+            # Deal with the exception here, and/or rethrow at your discretion.
+            raise e
+    else:
+        # Decrypts secret using the associated KMS key.
+        # Depending on whether the secret is a string or binary, one of these fields will be populated.
+        if 'SecretString' in get_secret_value_response:
+            secret = get_secret_value_response['SecretString']
+            return secret
+        else:
+            decoded_binary_secret = base64.b64decode(get_secret_value_response['SecretBinary'])
+            return decoded_binary_secret
+            
+    # Your code goes here. 
+
+
+config = json.loads(get_secret())
+config["databaseURL"] = ""
+admin_sdk_config = json.loads(get_admin_sdk())
+cred = credentials.Certificate(admin_sdk_config)
+firebase = firebase_admin.initialize_app(cred)
+pb = pyrebase.initialize_app(config)
+
+#Api route to sign up a new user
+@app.route('/signup')
+def signup():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    if email is None or password is None:
+        return {'message': 'Error missing email or password'},400
+    try:
+        user = auth.create_user(
+               email=email,
+               password=password
+        )
+        jwt = user['idToken']
+        response = make_response({'msg': 'Successfully created user!'})
+        response.status = 200
+        response.headers['Access-Control-Allow-Credentials'] = True
+        response.set_cookie('access_token', value=jwt,httponly=True)
+
+        return response
+    except:
+        return {'message': 'Error creating user'},400
+
+#Api route to login a valid user
+@app.route('/login')
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    try:
+        user = pb.auth().sign_in_with_email_and_password(email, password)
+        jwt = user['idToken']
+
+        
+        response = make_response({'msg': 'successfully logged in!'})
+        response.status = 200
+        response.headers['Access-Control-Allow-Credentials'] = True
+        response.set_cookie('access_token', value=jwt,httponly=True)
+
+        return response
+    except:
+       return {'message': 'There was an error logging in'},400
+
+def check_token(f):
+    @wraps(f)
+    def wrap(*args,**kwargs):
+        if not request.cookies.get('access_token'):
+            return {'message': 'No token provided'},400
+        try:
+            user = auth.verify_id_token(request.cookies.get('access_token'))
+            request.user = user
+        except:
+            return {'message':'Invalid token provided.'},400
+        return f(*args, **kwargs)
+    return wrap
+
+@app.route('/checklogin')
+@check_token
+def userinfo():
+    return {'message':'Authorized'}
+
+@app.route('/logout')
+@check_token
+def logout():
+    response = make_response({'msg': 'successfully logged out!'})
+    response.headers['Access-Control-Allow-Credentials'] = True
+    response.set_cookie('access_token', '', expires=0)
+    response.status = 200
+
+    return response
+
+
+
+
+
+
 
 
 if __name__ == "__main__":

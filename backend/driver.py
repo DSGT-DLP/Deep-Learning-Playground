@@ -1,7 +1,8 @@
 import pandas as pd
 import traceback
 import os
-from flask import Flask, json, request, jsonify
+from flask import Flask, json, request, jsonify, make_response, redirect, url_for, flash
+from werkzeug.utils import secure_filename
 
 from backend.common.utils import *
 from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL
@@ -17,6 +18,8 @@ from backend.common.default_datasets import get_default_dataset
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
 from flask import send_from_directory
+import logging
+
 
 app = Flask(
     __name__,
@@ -25,7 +28,8 @@ app = Flask(
     ),
 )
 CORS(app)
-
+app.config['SECRET_KEY'] = 'the random string' 
+app.config['MAX_CONTENT_LENGTH'] = 5000 * 1024 * 1024
 
 def ml_drive(
     user_model,
@@ -278,6 +282,24 @@ def send_email_route():
     except Exception:
         print(traceback.format_exc())
         return jsonify({"success": False}), 500
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join('backend/image_data_uploads', filename))
+            return '200'
 
 
 if __name__ == "__main__":

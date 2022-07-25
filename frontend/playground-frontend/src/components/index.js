@@ -33,3 +33,4 @@ export { default as Navbar } from "./Navbar/Navbar";
 
 // Image Models page
 export { default as ImageModels } from "./ImageModels/ImageModels";
+export { default as LargeFileUpload } from "./general/LargeFileUpload"

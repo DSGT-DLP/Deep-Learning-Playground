@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { COLORS, DEFAULT_ADDED_LAYERS, LAYOUT } from "./constants";
 import {
   BOOL_OPTIONS,
+  CRITERIONS,
   DEFAULT_DATASETS,
   OPTIMIZER_NAMES,
   POSSIBLE_LAYERS,
-  PROBLEM_TYPES,
+  PROBLEM_TYPES
 } from "./settings";
 import {
   AddNewLayer,
@@ -23,7 +24,6 @@ import {
   TrainButton,
 } from "./components";
 import DataTable from "react-data-table-component";
-import { CRITERIONS } from "./settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -87,7 +87,7 @@ const Home = () => {
     },
     config: { responsive: true },
   });
-  for (var i = 0; i < auc_roc_data_res.length; i++) {
+  for (let i = 0; i < auc_roc_data_res.length; i++) {
     auc_roc_data.push({
       name: `${i} (AUC: ${auc_roc_data_res[i][2]})`,
       x: auc_roc_data_res[i][0] || [],
@@ -169,7 +169,7 @@ const Home = () => {
   ];
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: 20, marginBottom: 50 }}>
       <DndProvider backend={HTML5Backend}>
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
@@ -223,7 +223,7 @@ const Home = () => {
                   const copyCurrent = [...currentAddedLayers];
                   const layerCopy = deepCopyObj(newLayer);
                   Object.values(layerCopy.parameters).forEach((val) => {
-                    val["value"] = "";
+                    val.value = "";
                   });
                   copyCurrent.push(layerCopy);
                   return copyCurrent;

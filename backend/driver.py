@@ -1,7 +1,7 @@
 import pandas as pd
 import traceback
 import os
-from flask import Flask, json, request, jsonify, make_response, redirect, url_for, flash
+from flask import Flask, json, request, jsonify, make_response, redirect, url_for, flash,copy_current_request_context
 from werkzeug.utils import secure_filename
 
 from backend.common.utils import *
@@ -19,6 +19,8 @@ from flask_cors import CORS
 from backend.common.email_notifier import send_email
 from flask import send_from_directory
 import logging
+import threading
+import datetime
 
 
 app = Flask(
@@ -30,6 +32,8 @@ app = Flask(
 CORS(app)
 app.config['SECRET_KEY'] = 'the random string' 
 app.config['MAX_CONTENT_LENGTH'] = 5000 * 1024 * 1024
+
+upload_path = ""
 
 def ml_drive(
     user_model,
@@ -288,21 +292,25 @@ def send_email_route():
 
 @app.route('/upload', methods=['POST'])
 def upload():
+    @copy_current_request_context
+    def save_file(closeAfterWrite):
+        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " i am doing")
+        f = request.files['file']
+        basepath = os.path.dirname(__file__) 
+        upload_path = os.path.join(basepath, 'image_data_uploads',secure_filename(f.filename)) 
+        f.save(upload_path)
+        closeAfterWrite()
+        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " write done")
+    def passExit():
+        pass
     if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file:
-            filename = secure_filename(file.filename)
-            file.save(os.path.join('backend/image_data_uploads', filename))
-            return '200'
+        f= request.files['file']
+        normalExit = f.stream.close
+        f.stream.close = passExit
+        t = threading.Thread(target=save_file,args=(normalExit,))
+        t.start()
+        return '200'
+    return '200'
 
 
 if __name__ == "__main__":

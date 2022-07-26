@@ -34,15 +34,11 @@ const LargeFileUpload = () => {
 
   return (
     <>
-      <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/dropzone.min.css" />
-
-      <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/basic.min.css" />
-      <form method="POST" action='/upload' className="dropzone dz-clickable"
-        id="dropper" encType="multipart/form-data">
+      <iframe name="dummyframe" id="dummyframe" style={{'display':"none"}}></iframe>
+      <form action="/upload" enctype='multipart/form-data' method='POST' target="dummyframe">
+        <input type="file" name="file"></input>
+        <input type="submit" value="upload"></input>
       </form>
-      <div className="myId"></div>
     </>
   );
 };

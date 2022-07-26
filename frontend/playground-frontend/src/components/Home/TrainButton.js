@@ -3,31 +3,35 @@ import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../../constants";
 import { train_and_output } from "../helper_functions/TalkWithBackend";
+import {
+  validateTabularInputs,
+  sendTabularJSON,
+  validateImageInputs,
+  sendPretrainedJSON,
+  validatePretrainedInput,
+  sendImageJSON,
+} from "../helper_functions/TrainButtonFunctions";
 
 const TrainButton = (props) => {
   const {
     addedLayers,
-    targetCol = null,
-    features = null,
-    problemType,
-    criterion,
-    optimizerName,
-    usingDefaultDataset = null,
-    shuffle,
-    epochs,
-    testSize,
-    batchSize,
     setDLPBackendResponse,
     csvDataInput = null,
-    fileURL = null,
-    email,
+    paramaters,
+    choice = "tabular",
+    style,
   } = props;
 
   const [pendingResponse, setPendingResponse] = useState(false);
 
-  const make_user_arch = () => {
-    // making a user_arch array by including all added layers and their parameters to make something like:
-    // ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"]
+  styles = { ...styles, ...style }; // style would take precedence
+
+  const make_obj_param_list = (obj_list) => {
+    if (!obj_list) return; // ValidateInputs throw error in case of empty things. This is to prevent an unnecessary errors in case of creating a layer 
+
+    // making a array of relating methods (like "nn.Linear") with their parameters (in_feature, out_feature) by including all methods and their parameters to make something like:
+    // ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"] OR
+    // ["transforms.ToTensor()", "transforms.RandomHorizontalFlip(0.8)"]
     const user_arch = [];
     addedLayers.forEach((addedLayer) => {
       const parameters = addedLayer.parameters;
@@ -51,31 +55,14 @@ const TrainButton = (props) => {
 
   const validateInputs = (user_arch) => {
     let alertMessage = "";
-    if (!user_arch?.length)
-      alertMessage += "At least one layer must be added. ";
-    if (!criterion) alertMessage += "A criterion must be specified. ";
-    if (!optimizerName) alertMessage += "An optimizer name must be specified. ";
-    if (!problemType) alertMessage += "A problem type must be specified. ";
-    if (!usingDefaultDataset) {
-      if (!targetCol || !features?.length) {
-        alertMessage +=
-          "Must specify an input file, target, and features if not selecting default dataset. ";
-      }
-      for (let i = 0; i < features.length; i++) {
-        if (targetCol === features[i]) {
-          alertMessage +=
-            "A column that is selected as the target column cannot also be a feature column. ";
-          break;
-        }
-      }
-      if (!csvDataInput && !fileURL) {
-        alertMessage +=
-          "Must specify an input file either from local storage or from an internet URL. ";
-      }
-    }
+    if (choice === "tabular")
+      alertMessage = validateTabularInputs(user_arch, props);
+    if (choice === "image")
+      alertMessage = validateImageInputs(user_arch, props);
+    if (choice === "pretrained")
+      alertMessage = validatePretrainedInput(user_arch, props);
 
     if (alertMessage.length === 0) return true;
-
     alert(alertMessage);
     return false;
   };
@@ -84,30 +71,35 @@ const TrainButton = (props) => {
     setPendingResponse(true);
     setDLPBackendResponse(undefined);
 
-    const user_arch = make_user_arch();
+    const user_arch = make_obj_param_list(props.addedLayers);
+
     if (!validateInputs(user_arch)) {
       setPendingResponse(false);
       return;
     }
 
-    const csvDataStr = JSON.stringify(csvDataInput);
-
-    const response = await train_and_output(
-      user_arch,
-      criterion,
-      optimizerName,
-      problemType,
-      targetCol,
-      features,
-      usingDefaultDataset,
-      testSize,
-      epochs,
-      batchSize,
-      shuffle,
-      csvDataStr,
-      fileURL,
-      email
-    );
+    let response;
+    if (choice === "tabular")
+      response = await train_and_output(
+        choice,
+        sendTabularJSON(user_arch, props)
+      );
+    if (choice === "image") {
+      response = await train_and_output(
+        choice,
+        sendImageJSON(
+          user_arch,
+          make_obj_param_list(paramaters["trainTransform"]),
+          make_obj_param_list(paramaters["testTransform"]),
+          props
+        )
+      );
+    }
+    if (choice === "pretrained")
+      response = await train_and_output(
+        choice,
+        sendPretrainedJSON(user_arch, props)
+      );
 
     setDLPBackendResponse(response);
     setPendingResponse(false);
@@ -149,22 +141,22 @@ const TrainButton = (props) => {
   );
 };
 
-TrainButton.propTypes = {
-  addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  targetCol: PropTypes.string,
-  features: PropTypes.arrayOf(PropTypes.string),
-  problemType: PropTypes.string.isRequired,
-  criterion: PropTypes.string.isRequired,
-  optimizerName: PropTypes.string.isRequired,
-  usingDefaultDataset: PropTypes.string,
-  shuffle: PropTypes.bool.isRequired,
-  epochs: PropTypes.number.isRequired,
-  testSize: PropTypes.number.isRequired,
-};
+// TrainButton.propTypes = {
+//   addedLayers: PropTypes.arrayOf(PropTypes.object),
+//   targetCol: PropTypes.string,
+//   features: PropTypes.arrayOf(PropTypes.string),
+//   problemType: PropTypes.string,
+//   criterion: PropTypes.string,
+//   optimizerName: PropTypes.string,
+//   usingDefaultDataset: PropTypes.string,
+//   shuffle: PropTypes.bool,
+//   epochs: PropTypes.number,
+//   testSize: PropTypes.number,
+// };
 
 export default TrainButton;
 
-const styles = {
+let styles = {
   container: {
     padding: 0,
     width: 130,

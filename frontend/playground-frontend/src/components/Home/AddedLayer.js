@@ -39,10 +39,13 @@ const AddedLayer = (props) => {
   const thisLayer = addedLayers[thisLayerIndex];
   const { display_name, parameters } = thisLayer;
 
-  let finalStyle = style;
+  let finalStyle = styles;
 
-  if (finalStyle == null) {
-    finalStyle = styles;
+  if (style) {
+    Object.keys(style).forEach(key => {
+      console.log(key);
+      finalStyle[key] = style[key];
+    });
   }
 
   // converts the parameters object for each layer into an array of parameter objects
@@ -63,7 +66,7 @@ const AddedLayer = (props) => {
 
   return (
     <div style={LAYOUT.column}>
-      <RectContainer style={{ backgroundColor: COLORS.layer }}>
+      <RectContainer style={finalStyle.layer_box}>
         <button style={finalStyle.delete_btn} onClick={onDelete}>
           ❌
         </button>
@@ -84,6 +87,10 @@ AddedLayer.propTypes = {
 export default AddedLayer;
 
 const styles = {
+  layer_box : {
+    backgroundColor: COLORS.layer,
+    width: 130,
+  },
   delete_btn: {
     position: "absolute",
     top: 0,

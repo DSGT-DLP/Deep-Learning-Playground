@@ -168,6 +168,186 @@ export const POSSIBLE_LAYERS = [
   },
 ];
 
+export const IMAGE_LAYERS = [
+  {
+    display_name: "Conv2D",
+    object_name: "nn.Conv2D",
+    parameters: {
+      in_channels: {
+        index: 0,
+        parameter_name: "in channels",
+      },
+      out_channels: {
+        index: 1,
+        parameter_name: "out channels",
+      },
+      kernel_size: {
+        index: 2,
+        parameter_name: "kernel_size",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p>
+          <strong>
+            Applies a 2D convolution over an input signal composed of several
+            input planes.
+          </strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>in channels (int)</em> Number of channels in the input image. (3
+            for RGB, 1 for grayscale)
+          </li>
+          <li>
+            <em>out_channels (int)</em> Number of channels produced by the
+            convolution
+          </li>
+          <li>
+            <em>kernel_size (int or tuple)</em> Size of convolving tuple
+          </li>
+        </ul>
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html">
+          More info
+        </a>
+      </>
+    ),
+  },
+  {
+    display_name: "BatchNorm2D",
+    object_name: "nn.BatchNorm2d",
+    parameters: {
+      num_features: {
+        index: 0,
+        parameter_name: "num features",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p>
+          <strong>
+            Applies Batch Normalization over a 4D input (a mini-batch of 2D
+            inputs with additional channel dimension) as described in the paper{" "}
+            <a href="https://arxiv.org/abs/1502.03167">
+              Batch Normalization: Accelerating Deep Network Training by
+              Reducing Internal Covariate Shift.
+            </a>
+          </strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>num features (int)</em> C from an expected input of size (N, C,
+            H, W)
+          </li>
+        </ul>
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html">
+          More info
+        </a>
+      </>
+    ),
+  },
+  {
+    display_name: "MaxPool2d",
+    object_name: "nn.MaxPool2d",
+    parameters: {
+      kernel_size: { index: 0, parameter_name: "Kernel size" },
+    },
+    tooltip_info: (
+      <>
+        <p>
+          <strong>
+            Applies a 2D max pooling over an input signal composed of several
+            input planes.
+          </strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>Kernel Size (int)</em> - the size of the window to take a max
+            over
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.MaxPool2d.html">
+          More info
+        </a>
+      </>
+    ),
+  },
+  {
+    display_name: "AdaptiveAvgPool2d",
+    object_name: "nn.AdaptiveAvgPool2d",
+    parameters: {
+      output_size: { index: 0, parameter_name: "Output size" },
+    },
+    tooltip_info: (
+      <>
+        <p>
+          <strong>
+            Applies a 2D adaptive average pooling over an input signal composed
+            of several input planes.
+          </strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>Output Size (int or tuple)</em> - the target output size of the
+            image of the form H x W. Can be a tuple (H, W) or a single H for a
+            square image H x H. H and W can be either a int, or None which means
+            the size will be the same as that of the input.
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.MaxPool2d.html">
+          More info
+        </a>
+      </>
+    ),
+  },
+  {
+    display_name: "Dropout",
+    object_name: "nn.Dropout",
+    parameters: {
+      p: { index: 0, parameter_name: "Probability" },
+    },
+    tooltip_info: (
+      <>
+        <p>
+          <strong>
+            During training, randomly zeroes some of the elements of the input
+            tensor with probability p using samples from a Bernoulli
+            distribution. Each channel will be zeroed out independently on every
+            forward call.
+          </strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>Probability (float)</em> - probability of an element to be
+            zeroed. Default: 0.5
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.MaxPool2d.html">
+          More info
+        </a>
+      </>
+    ),
+  },
+];
+
 export const POSSIBLE_TRANSFORMS = [
   {
     display_name: "Random Horizontal Flip",
@@ -183,7 +363,7 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Random Vertical Flip",
     object_name: "transforms.RandomVerticalFlip",
     parameters: {
-      probability: { index: 0, parameter_name: "Prob" },
+      p: { index: 0, parameter_name: "probability" },
     },
     label: "Random Vertical Flip",
     value: "VF",
@@ -196,8 +376,16 @@ export const POSSIBLE_TRANSFORMS = [
     label: "To Tensor",
     value: "TT",
   },
+  {
+    display_name: "Resize",
+    object_name: "transforms.Resize",
+    parameters: {
+      size: { index: 0, parameter_name: "(H, W)" },
+    },
+    label: "Resize",
+    value: "R",
+  },
 ];
-
 
 export const CRITERIONS = [
   {
@@ -222,6 +410,19 @@ export const CRITERIONS = [
   },
 ];
 
+export const IMAGE_CLASSIFICATION_CRITERION = [
+  {
+    label: "CELOSS",
+    value: "CELOSS",
+    object_name: "nn.CrossEntropyLoss()",
+  },
+  {
+    label: "WCELOSS",
+    value: "WCELOSS",
+    object_name: "nn.CrossEntropyLoss()", // will define a randomized weights for classes in backend
+  },
+];
+
 export const PROBLEM_TYPES = [
   { label: "Classification", value: "classification" },
   { label: "Regression", value: "regression" },
@@ -243,3 +444,13 @@ export const DEFAULT_DATASETS = [
   { label: "DIGITS", value: "DIGITS" },
   { label: "WINE", value: "WINE" },
 ];
+
+export const IMAGE_DEFAULT_DATASETS = [
+  {label: "MNIST", value: "MNIST"},
+  {label: "FashionMNIST", value: "FASHIONMNIST"},
+  {label: "CIFAR10", value: "CIFAR10"}
+]
+
+export const PRETRAINED_MODELS = [
+  {label: "RESNET18", value: "RESNET18"}
+]

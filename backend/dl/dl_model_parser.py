@@ -5,6 +5,7 @@ from sklearn.naive_bayes import *
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
+import torchvision.transforms as transforms
 
 
 def parse_deep_user_architecture(user_model):
@@ -46,6 +47,13 @@ def get_object(element):
     return eval(
         element
     )  # takes in the string representation and returns the "instantiated object"
+
+def get_transforms(transform_list):
+    """
+    returns a list of transforms object (NOT COMPOSED) as obtained from frontend
+    """
+
+    return get_object(transform_list)
 
 
 if __name__ == "__main__":

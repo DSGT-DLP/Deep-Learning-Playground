@@ -1,4 +1,3 @@
-import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import RectContainer from "./RectContainer";
@@ -44,7 +43,7 @@ const LayerChoice = (props) => {
   return (
     <RectContainer
       ref2={drag}
-      style={{ backgroundColor: COLORS.addLayer }}
+      style={{ backgroundColor: COLORS.addLayer, width: 180}}
       dataTestid={`box`}
     >
       <div>

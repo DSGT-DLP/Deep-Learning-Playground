@@ -145,3 +145,7 @@ backend/dl_results.csv
 backend/my_deep_learning_model.onnx
 unzipped_data/
 frontend/playground-frontend/src/backend_outputs/*
+
+#Image Dataset Upload
+backend/image_data_uploads/*
+!backend/image_data_uploads/.gitkeep

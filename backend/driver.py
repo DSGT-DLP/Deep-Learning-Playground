@@ -31,7 +31,7 @@ app = Flask(
 )
 CORS(app)
 app.config['SECRET_KEY'] = 'the random string' 
-app.config['MAX_CONTENT_LENGTH'] = 5000 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 10000 * 1024 * 1024
 
 upload_path = ""
 

@@ -35,7 +35,7 @@ const LargeFileUpload = () => {
   return (
     <>
       <iframe name="dummyframe" id="dummyframe" style={{'display':"none"}}></iframe>
-      <form action="/upload" enctype='multipart/form-data' method='POST' target="dummyframe">
+      <form action="/upload" encType='multipart/form-data' method='POST' target="dummyframe">
         <input type="file" name="file"></input>
         <input type="submit" value="upload"></input>
       </form>

@@ -171,7 +171,7 @@ export const POSSIBLE_LAYERS = [
 export const IMAGE_LAYERS = [
   {
     display_name: "Conv2D",
-    object_name: "nn.Conv2D",
+    object_name: "nn.Conv2d",
     parameters: {
       in_channels: {
         index: 0,
@@ -183,7 +183,15 @@ export const IMAGE_LAYERS = [
       },
       kernel_size: {
         index: 2,
-        parameter_name: "kernel_size",
+        parameter_name: "kernel size",
+      },
+      padding: {
+        index: 3,
+        parameter_name: "padding",
+      },
+      stride: {
+        index: 4,
+        parameter_name: "stride",
       },
     },
     tooltip_info: (
@@ -341,6 +349,37 @@ export const IMAGE_LAYERS = [
         </ul>
 
         <a href="https://pytorch.org/docs/stable/generated/torch.nn.MaxPool2d.html">
+          More info
+        </a>
+      </>
+    ),
+  },
+
+  {
+    display_name: "Flatten",
+    object_name: "nn.Flatten",
+    parameters: {
+      start_dim: { index: 0, parameter_name: "start dim" },
+      end_dim: { index: 1, parameter_name: "end dim" },
+    },
+    tooltip_info: (
+      <>
+        <p>
+          <strong>Flattens a contiguous range of dims into a tensor.</strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>Start Dim (int)</em> - First dimension to flatten Default: 1
+          </li>
+          <li>
+            <em>End Dim (int)</em> - Last dimension to flatten Default: -1
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.Flatten.html">
           More info
         </a>
       </>

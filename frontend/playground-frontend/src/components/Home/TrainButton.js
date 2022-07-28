@@ -33,8 +33,8 @@ const TrainButton = (props) => {
     // ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"] OR
     // ["transforms.ToTensor()", "transforms.RandomHorizontalFlip(0.8)"]
     const user_arch = [];
-    addedLayers.forEach((addedLayer) => {
-      const parameters = addedLayer.parameters;
+    obj_list.forEach((obj_list_item) => {
+      const parameters = obj_list_item.parameters;
       let parameter_call_input = "";
       const parameters_to_be_added = Array(Object.keys(parameters).length);
       Object.entries(parameters).forEach((entry) => {
@@ -47,7 +47,7 @@ const TrainButton = (props) => {
       // removing the last ','
       parameter_call_input = parameter_call_input.slice(0, -1);
 
-      const callback = `${addedLayer.object_name}(${parameter_call_input})`;
+      const callback = `${obj_list_item.object_name}(${parameter_call_input})`;
       user_arch.push(callback);
     });
     return user_arch;
@@ -89,8 +89,8 @@ const TrainButton = (props) => {
         choice,
         sendImageJSON(
           user_arch,
-          make_obj_param_list(paramaters["trainTransform"]),
-          make_obj_param_list(paramaters["testTransform"]),
+          make_obj_param_list(props.trainTransforms),
+          make_obj_param_list(props.testTransforms),
           props
         )
       );

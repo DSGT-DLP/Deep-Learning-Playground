@@ -6,10 +6,10 @@ from werkzeug.utils import secure_filename
 
 from backend.common.utils import *
 from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL
-from backend.common.dataset import read_local_csv_file, read_dataset
+from backend.common.dataset import loader_from_zipped, read_local_csv_file, read_dataset
 from backend.common.optimizer import get_optimizer
 from backend.dl.dl_model_parser import parse_deep_user_architecture, get_object
-from backend.dl.dl_trainer import train_deep_model, get_deep_predictions
+from backend.dl.dl_trainer import train_deep_classification_model, train_deep_model, get_deep_predictions, train_deep_image_classification
 from backend.ml.ml_trainer import train_classical_ml_model
 from backend.dl.dl_model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
@@ -21,7 +21,6 @@ from flask import send_from_directory
 import logging
 import threading
 import datetime
-
 
 app = Flask(
     __name__,
@@ -132,7 +131,7 @@ def dl_drive(
             y = input_df[target]
             X = input_df[features]
 
-        if (len(y) * test_size < batch_size or len(y) * (1 - test_size) < batch_size):
+        if len(y) * test_size < batch_size or len(y) * (1 - test_size) < batch_size:
             raise ValueError("reduce batch size, not enough values in dataframe")
 
         if problem_type.upper() == "CLASSIFICATION":
@@ -187,16 +186,51 @@ def root(path):
         return send_from_directory(app.static_folder, "index.html")
 
 
+@app.route("/img-run", methods=["POST"])
+def testing():
+    request_data = json.loads(request.data)
+    train_transform = request_data["train_transform"]
+    test_transform = request_data["test_transform"]
+    user_arch = request_data["user_arch"]
+    criterion = request_data["criterion"]
+    optimizer_name = request_data["optimizer_name"]
+    default = request_data["using_default_dataset"]
+    epochs = request_data["epochs"]
+    batch_size = request_data["batch_size"]
+    shuffle = request_data["shuffle"]
+    email = request_data["email"]
+
+    model = DLModel(parse_deep_user_architecture(user_arch))
+
+    train_transform = parse_deep_user_architecture(train_transform)
+    test_transform = parse_deep_user_architecture(test_transform)
+
+    train_loader, test_loader = loader_from_zipped("./tests/zip_files/double_zipped.zip", batch_size=2, train_transform=train_transform, valid_transform=test_transform )    
+
+    optimizer = get_optimizer(
+            model, optimizer_name=optimizer_name, learning_rate=0.05
+    )    
+
+    train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs)
+
+    print("damn")
+
+    return (
+                jsonify(
+                    {
+                        "success": True,
+                        "message": "Dataset trained and results outputted successfully",
+                    }
+                ),
+                200,
+    )
+
 @app.route("/run", methods=["POST"])
 def train_and_output():
     request_data = json.loads(request.data)
-    print("requested")
     user_arch = request_data["user_arch"]
-    print(user_arch)
     criterion = request_data["criterion"]
-    print(criterion)
     optimizer_name = request_data["optimizer_name"]    
-    print(optimizer_name)
     problem_type = request_data["problem_type"]
     target = request_data["target"]
     features = request_data["features"]

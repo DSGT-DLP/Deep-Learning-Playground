@@ -11,7 +11,7 @@ import {
   IMAGE_CLASSIFICATION_CRITERION,
 } from "../../settings";
 import {
-  DEFAULT_ADDED_LAYERS,
+  DEFAULT_IMG_LAYERS,
   DEFAULT_TRANSFORMS,
   COLORS,
   LAYOUT,
@@ -33,7 +33,7 @@ import {
 } from "..";
 
 const ImageModels = () => {
-  const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
+  const [addedLayers, setAddedLayers] = useState(DEFAULT_IMG_LAYERS);
   const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
   const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
   const [criterion, setCriterion] = useState(IMAGE_CLASSIFICATION_CRITERION[0]);
@@ -47,8 +47,8 @@ const ImageModels = () => {
 
   const input_responses = {
     batchSize: batchSize,
-    criterion: criterion,
-    shuffle: shuffle,
+    criterion: criterion?.value,
+    shuffle: shuffle?.value,
     epochs: epochs,
     optimizerName: optimizerName?.value,
     addedLayers: addedLayers,

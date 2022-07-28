@@ -66,3 +66,17 @@ def compute_loss(loss_function_name, output, labels):
     raise Exception(
         "Invalid loss function name provided. Please contact admin to request addition of it. Provide documentation of this loss function"
     )
+
+
+def compute_img_loss(criterion, pred, ground_truth):
+    '''
+    Computes CE and WCE loss. pred and y are processed to different shapes supported by the corresponding functions.
+    '''
+    loss_obj = LossFunctions.get_loss_obj(LossFunctions[criterion])    
+    print("pred", pred)
+    print("ground truth", ground_truth)
+    print(ground_truth.squeeze().size())
+    print(pred.size()) # (2, 2)
+
+    if criterion == LossFunctions.CELOSS.name:
+        return loss_obj(pred , ground_truth.squeeze())

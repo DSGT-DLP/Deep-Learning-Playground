@@ -48,14 +48,6 @@ def get_object(element):
         element
     )  # takes in the string representation and returns the "instantiated object"
 
-def get_transforms(transform_list):
-    """
-    returns a list of transforms object (NOT COMPOSED) as obtained from frontend
-    """
-
-    return get_object(transform_list)
-
-
 if __name__ == "__main__":
     print("starting")
     print(

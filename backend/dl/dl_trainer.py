@@ -1,4 +1,4 @@
-from backend.common.loss_functions import compute_loss
+from backend.common.loss_functions import compute_loss, compute_img_loss
 from backend.dl.dl_eval import compute_accuracy
 from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
 from backend.common.utils import ProblemType
@@ -237,3 +237,94 @@ def get_deep_predictions(model: nn.Module, test_loader):
     ground_truth_tensor = torch.from_numpy(np.array(ground_truth_values).T)
 
     return prediction_tensor, ground_truth_tensor
+
+def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs):
+    try:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model = model.to(device)
+        train_loss = []  # accumulate training loss over each epoch
+        test_loss = []  # accumulate testing loss over each epoch
+        epoch_time = []  # how much time it takes for each epoch
+        train_acc = []  # accuracy of training set
+        val_acc = []  # accuracy of test/validation set
+        labels_last_epoch = []
+        y_pred_last_epoch = []
+
+        for epoch in range(epochs):
+            start_time = time.time()
+            batch_train_acc = []
+            batch_test_acc = []
+            model.train(True)
+            batch_loss = []
+
+            loss, correct = 0, 0
+            for x in train_loader:
+                y = x[1] ## label for image
+                x = x[0] ## (C, H, W) image
+                x, y = x.to(device), y.to(device)
+                optimizer.zero_grad()
+                pred= model(x)
+                print("Ground truth:::: ",y.size()) ## [3, 32, 32]
+                print("x.size::", x.size())
+                loss = compute_img_loss(criterion, pred, y)
+                
+                loss.backward()
+                optimizer.step()
+                y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
+                correct += (y_pred == y_true).type(torch.float).sum().item()
+                batch_loss.append(loss)
+                batch_train_acc.append(correct)
+            epoch_time.append(time.time() - start_time)
+            print("*************batch loss**********")
+            print(torch.stack(batch_loss).detach().numpy())
+            print("*************batch loss**********")
+            mean_train_loss = np.mean(torch.stack(batch_loss).detach().numpy())
+            mean_train_acc = np.mean(batch_train_acc)
+            train_loss.append(mean_train_loss)
+            train_acc.append(mean_train_acc)
+
+            model.train(False)
+            batch_loss = []
+
+            for batch, (x, y) in enumerate(test_loader):
+                x, y = x.to(device), y.to(device)
+
+                pred = model(x)
+                loss = compute_img_loss(criterion, pred, y.long().squeeze())
+
+                y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
+                correct += (y_pred == y_true).type(torch.float).sum().item()
+                batch_test_acc.append(correct)
+                batch_loss.append(loss)
+            mean_test_loss = np.mean(torch.stack(batch_loss).detach().numpy())
+            mean_test_acc = np.mean(batch_test_acc)
+            test_loss.append(mean_test_loss)
+            val_acc.append(mean_test_acc)
+
+            print(
+                f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}"
+            )
+        result_table = pd.DataFrame(
+            {
+                EPOCH: [i for i in range(1, epochs + 1)],
+                TRAIN_TIME: epoch_time,
+                TRAIN_LOSS: train_loss,
+                TEST_LOSS: test_loss,
+                TRAIN_ACC: train_acc,
+                VAL_TEST_ACC: val_acc,
+            }
+        )
+        print(result_table.head())
+        # confusion_matrix = generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch)
+
+        result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
+
+        generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        
+
+        # TODO: Create confusion matrix, AUC_ROC curve, 
+        torch.save(model, SAVED_MODEL) # saving model into a pt file
+
+    except Exception:
+        raise Exception("Deep Learning classification didn't train properly")

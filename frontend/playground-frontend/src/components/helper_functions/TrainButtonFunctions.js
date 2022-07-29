@@ -37,7 +37,6 @@ export const sendTabularJSON = (user_arch, ...args) => {
 
   const csvDataStr = JSON.stringify(args.csvDataInput);
 
-  console.log(args.criterion);
   return {
     user_arch: user_arch,
     criterion: args.criterion,

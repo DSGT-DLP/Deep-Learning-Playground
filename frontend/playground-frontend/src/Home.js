@@ -21,7 +21,6 @@ import {
   Results,
   TitleText,
   TrainButton,
-  LargeFileUpload
 } from "./components";
 import DataTable from "react-data-table-component";
 import { CRITERIONS } from "./settings";
@@ -257,8 +256,6 @@ const Home = () => {
 
       <TitleText text="Email (optional)" />
       <EmailInput email={email} setEmail={setEmail} />
-
-      <LargeFileUpload></LargeFileUpload>
 
       <TitleText text="CSV Input" />
       <DataTable

@@ -185,13 +185,13 @@ export const IMAGE_LAYERS = [
         index: 2,
         parameter_name: "kernel size",
       },
-      padding: {
-        index: 3,
-        parameter_name: "padding",
-      },
       stride: {
-        index: 4,
+        index: 3,
         parameter_name: "stride",
+      },
+      padding: {
+        index: 4,
+        parameter_name: "padding",
       },
     },
     tooltip_info: (
@@ -265,6 +265,10 @@ export const IMAGE_LAYERS = [
     object_name: "nn.MaxPool2d",
     parameters: {
       kernel_size: { index: 0, parameter_name: "Kernel size" },
+      stride: {
+        index: 1,
+        parameter_name: "stride",
+      },
     },
     tooltip_info: (
       <>

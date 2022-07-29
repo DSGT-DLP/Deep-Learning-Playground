@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Transforms from "./Transforms";
+import LargeFileUpload from "../general/LargeFileUpload";
 import {
   BOOL_OPTIONS,
   CRITERIONS,
@@ -30,6 +31,7 @@ import {
   TrainButton,
   LayerChoice,
   EmailInput,
+  Results,
 } from "..";
 
 const ImageModels = () => {
@@ -99,14 +101,38 @@ const ImageModels = () => {
 
   const ALL_LAYERS = POSSIBLE_LAYERS.concat(IMAGE_LAYERS);
 
-  // ADD ZIP INPUT FILE CONTAINER INSIDE <RectContainer style={styles.fileInput}>
+  const auc_roc_data_res =
+    dlpBackendResponse?.auxiliary_outputs?.AUC_ROC_curve_data || [];
+  const auc_roc_data = [];
+  auc_roc_data.push({
+    name: "baseline",
+    x: [0, 1],
+    y: [0, 1],
+    type: "line",
+    marker: { color: "grey" },
+    line: {
+      dash: "dash",
+    },
+    config: { responsive: true },
+  });
+  for (var i = 0; i < auc_roc_data_res.length; i++) {
+    auc_roc_data.push({
+      name: `${i} (AUC: ${auc_roc_data_res[i][2]})`,
+      x: auc_roc_data_res[i][0] || [],
+      y: auc_roc_data_res[i][1] || [],
+      type: "line",
+      config: { responsive: true },
+    });
+  }
 
   return (
     <div style={{ padding: 20 }}>
       <DndProvider backend={HTML5Backend}>
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
-          <RectContainer style={styles.fileInput}></RectContainer>
+          <RectContainer style={styles.fileInput}>
+            <LargeFileUpload />
+          </RectContainer>
 
           {addedLayers.map((_, i) => (
             <AddedLayer
@@ -191,6 +217,16 @@ const ImageModels = () => {
       />
       <TitleText text="Email (optional)" />
       <EmailInput email={email} setEmail={setEmail} />
+      <TitleText text="Deep Learning Results" />
+      {/* <Results
+        dlpBackendResponse={dlpBackendResponse}
+        problemType="classification"
+        auc_roc_data={auc_roc_data}
+        auc_roc_data_res={auc_roc_data_res}
+      /> */}
+
+      <TitleText text="Code Snippet" />
+      {/* <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} /> */}
     </div>
   );
 };

@@ -72,11 +72,7 @@ def compute_img_loss(criterion, pred, ground_truth):
     '''
     Computes CE and WCE loss. pred and y are processed to different shapes supported by the corresponding functions.
     '''
-    loss_obj = LossFunctions.get_loss_obj(LossFunctions[criterion])    
-    print("pred", pred)
-    print("ground truth", ground_truth)
-    print(ground_truth.squeeze().size())
-    print(pred.size()) # (2, 2)
+    loss_obj = LossFunctions.get_loss_obj(LossFunctions[criterion])
 
     if criterion == LossFunctions.CELOSS.name:
         return loss_obj(pred , ground_truth.squeeze())

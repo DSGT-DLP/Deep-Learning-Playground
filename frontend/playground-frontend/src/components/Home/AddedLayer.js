@@ -43,7 +43,6 @@ const AddedLayer = (props) => {
 
   if (style) {
     Object.keys(style).forEach(key => {
-      console.log(key);
       finalStyle[key] = style[key];
     });
   }

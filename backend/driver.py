@@ -3,6 +3,8 @@ import traceback
 import os
 from flask import Flask, json, request, jsonify, make_response, redirect, url_for, flash,copy_current_request_context
 from werkzeug.utils import secure_filename
+from torchvision import datasets, transforms
+import torchvision
 
 from backend.common.utils import *
 from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL
@@ -200,17 +202,28 @@ def testing():
     shuffle = request_data["shuffle"]
     email = request_data["email"]
 
+    # upload()
+    print(user_arch)
     model = DLModel(parse_deep_user_architecture(user_arch))
 
     train_transform = parse_deep_user_architecture(train_transform)
     test_transform = parse_deep_user_architecture(test_transform)
 
-    train_loader, test_loader = loader_from_zipped("./tests/zip_files/double_zipped.zip", batch_size=2, train_transform=train_transform, valid_transform=test_transform )    
+    train_transform = torchvision.transforms.Compose([x for x in train_transform])
+    test_transform = torchvision.transforms.Compose([x for x in test_transform])
+
+    train_set = torchvision.datasets.FashionMNIST(root="./", train=True, download=True, transform=train_transform)
+    test_set = torchvision.datasets.FashionMNIST(root="./", train=False, download=True, transform=test_transform)
+    train_loader = torch.utils.data.DataLoader(train_set, batch_size=10, shuffle=True)
+    test_loader = torch.utils.data.DataLoader(test_set, batch_size=10, shuffle=True)
+
+    # train_loader, test_loader = loader_from_zipped("./tests/zip_files/double_zipped.zip", batch_size=2, train_transform=train_transform, valid_transform=test_transform )    
 
     optimizer = get_optimizer(
             model, optimizer_name=optimizer_name, learning_rate=0.05
     )    
 
+    # train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs)
     train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs)
 
     print("damn")
@@ -220,6 +233,8 @@ def testing():
                     {
                         "success": True,
                         "message": "Dataset trained and results outputted successfully",
+                        # "dl_results": csv_to_json(),
+                        # "auxiliary_outputs": train_loss_results
                     }
                 ),
                 200,

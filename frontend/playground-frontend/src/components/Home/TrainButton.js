@@ -37,8 +37,7 @@ const TrainButton = (props) => {
       const parameters = obj_list_item.parameters;
       let parameter_call_input = "";
       const parameters_to_be_added = Array(Object.keys(parameters).length);
-      Object.entries(parameters).forEach((entry) => {
-        const [k, v] = entry;
+      Object.values(parameters).forEach((v) => {
         parameters_to_be_added[v.index] = v.value;
       });
       parameters_to_be_added.forEach((e) => {

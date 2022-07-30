@@ -49,8 +49,7 @@ const AddedLayer = (props) => {
 
   // converts the parameters object for each layer into an array of parameter objects
   const param_array = [];
-  Object.entries(parameters).forEach((entry) => {
-    const [key, value] = entry;
+  Object.keys(parameters).forEach((key) => {
     param_array.push(
       <_InputOutputPromptResponse
         key={key}
@@ -74,6 +73,16 @@ const AddedLayer = (props) => {
       <div style={finalStyle.input_box}>{param_array}</div>
     </div>
   );
+};
+
+_InputOutputPromptResponse.propTypes = {
+  param_key: PropTypes.string.isRequired,
+  allParamInputs: PropTypes.shape({
+    parameter_name: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }).isRequired,
+  setAddedLayers: PropTypes.func.isRequired,
+  thisLayerIndex: PropTypes.number.isRequired,
 };
 
 AddedLayer.propTypes = {

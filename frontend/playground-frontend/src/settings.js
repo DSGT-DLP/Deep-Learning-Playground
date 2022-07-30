@@ -490,7 +490,7 @@ export const DEFAULT_DATASETS = [
 
 export const IMAGE_DEFAULT_DATASETS = [
   {label: "MNIST", value: "MNIST"},
-  {label: "FashionMNIST", value: "FASHIONMNIST"},
+  {label: "FashionMNIST", value: "FashionMNIST"},
   {label: "CIFAR10", value: "CIFAR10"}
 ]
 

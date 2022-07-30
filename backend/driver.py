@@ -3,11 +3,10 @@ import traceback
 import os
 from flask import Flask, json, request, jsonify, make_response, redirect, url_for, flash,copy_current_request_context
 from werkzeug.utils import secure_filename
-from torchvision import datasets, transforms
-import torchvision
+import shutil
 
 from backend.common.utils import *
-from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL
+from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL, UNZIPPED_DIR_NAME
 from backend.common.dataset import loader_from_zipped, read_local_csv_file, read_dataset
 from backend.common.optimizer import get_optimizer
 from backend.dl.dl_model_parser import parse_deep_user_architecture, get_object
@@ -16,7 +15,7 @@ from backend.ml.ml_trainer import train_classical_ml_model
 from backend.dl.dl_model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
-from backend.common.default_datasets import get_default_dataset
+from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
 from flask import send_from_directory
@@ -190,55 +189,71 @@ def root(path):
 
 @app.route("/img-run", methods=["POST"])
 def testing():
-    request_data = json.loads(request.data)
-    train_transform = request_data["train_transform"]
-    test_transform = request_data["test_transform"]
-    user_arch = request_data["user_arch"]
-    criterion = request_data["criterion"]
-    optimizer_name = request_data["optimizer_name"]
-    default = request_data["using_default_dataset"]
-    epochs = request_data["epochs"]
-    batch_size = request_data["batch_size"]
-    shuffle = request_data["shuffle"]
-    email = request_data["email"]
+    try: 
+        IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
+        request_data = json.loads(request.data)
+        train_transform = request_data["train_transform"]
+        test_transform = request_data["test_transform"]
+        user_arch = request_data["user_arch"]
+        criterion = request_data["criterion"]
+        optimizer_name = request_data["optimizer_name"]
+        default = request_data["using_default_dataset"]
+        epochs = request_data["epochs"]
+        batch_size = request_data["batch_size"]
+        shuffle = request_data["shuffle"]
+        email = request_data["email"]
 
-    # upload()
-    print(user_arch)
-    model = DLModel(parse_deep_user_architecture(user_arch))
+        # upload()
+        print(user_arch)
+        model = DLModel(parse_deep_user_architecture(user_arch))
 
-    train_transform = parse_deep_user_architecture(train_transform)
-    test_transform = parse_deep_user_architecture(test_transform)
+        train_transform = parse_deep_user_architecture(train_transform)
+        test_transform = parse_deep_user_architecture(test_transform)
 
-    train_transform = torchvision.transforms.Compose([x for x in train_transform])
-    test_transform = torchvision.transforms.Compose([x for x in test_transform])
+        if not default:
+            for x in os.listdir(IMAGE_UPLOAD_FOLDER):
+                if x != ".gitkeep":
+                    zip_file = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
+                    break
+            train_loader, test_loader = loader_from_zipped(zip_file, batch_size, shuffle, train_transform, test_transform)
+        else:
+            train_loader, test_loader = get_img_default_dataset_loaders(default, test_transform, train_transform, batch_size, shuffle)
 
-    train_set = torchvision.datasets.FashionMNIST(root="./", train=True, download=True, transform=train_transform)
-    test_set = torchvision.datasets.FashionMNIST(root="./", train=False, download=True, transform=test_transform)
-    train_loader = torch.utils.data.DataLoader(train_set, batch_size=10, shuffle=True)
-    test_loader = torch.utils.data.DataLoader(test_set, batch_size=10, shuffle=True)
+        print("got data loaders")
 
-    # train_loader, test_loader = loader_from_zipped("./tests/zip_files/double_zipped.zip", batch_size=2, train_transform=train_transform, valid_transform=test_transform )    
+        optimizer = get_optimizer(
+                model, optimizer_name=optimizer_name, learning_rate=0.05
+        )    
 
-    optimizer = get_optimizer(
-            model, optimizer_name=optimizer_name, learning_rate=0.05
-    )    
+        train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs)
 
-    train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs)
-    # train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs)
+        print("damn")
 
-    print("damn")
-
-    return (
-                jsonify(
-                    {
-                        "success": True,
-                        "message": "Dataset trained and results outputted successfully",
-                        "dl_results": csv_to_json(),
-                        "auxiliary_outputs": train_loss_results
-                    }
-                ),
-                200,
-    )
+        return (
+                    jsonify(
+                        {
+                            "success": True,
+                            "message": "Dataset trained and results outputted successfully",
+                            "dl_results": csv_to_json(),
+                            "auxiliary_outputs": train_loss_results
+                        }
+                    ),
+                    200,
+        )
+    except Exception as e:
+        print(e)
+        print(traceback.format_exc())
+        return (
+            jsonify({"success": False, "message": traceback.format_exc(limit=1)}),
+                400,
+        )
+    finally:
+        for x in os.listdir(IMAGE_UPLOAD_FOLDER):
+            print(x)
+            if (x != ".gitkeep"):
+                os.remove(os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER) , x))
+        if os.path.exists(UNZIPPED_DIR_NAME):
+            shutil.rmtree(UNZIPPED_DIR_NAME)
 
 @app.route("/run", methods=["POST"])
 def train_and_output():

@@ -33,6 +33,7 @@ import {
   LayerChoice,
   EmailInput,
   Results,
+  CodeSnippet,
 } from "..";
 
 const ImageModels = () => {
@@ -47,6 +48,7 @@ const ImageModels = () => {
   const [batchSize, setBatchSize] = useState(20);
   const [email, setEmail] = useState("");
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
+  const [dataUploaded, setDataUploaded] = useState(false);
 
   const input_responses = {
     batchSize: batchSize,
@@ -227,7 +229,7 @@ const ImageModels = () => {
       />
 
       <TitleText text="Code Snippet" />
-      {/* <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} /> */}
+      <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
     </div>
   );
 };

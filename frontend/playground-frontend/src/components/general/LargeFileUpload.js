@@ -27,14 +27,14 @@ const LargeFileUpload = () => {
       }
     }
     Dropzone.options.dropper.init();
-    console.log(Dropzone.options.dropper);
+    // console.log(Dropzone.options.dropper);
   });
 
   return (
     <>
       <iframe name="dummyframe" id="dummyframe" style={{'display':"none"}}></iframe>
       <form action="/upload" encType='multipart/form-data' method='POST' target="dummyframe">
-        <input type="file" name="file"></input>
+        <input type="file" name="file" accept=".zip"></input>
         <input type="submit" value="upload"></input>
       </form>
     </>

@@ -95,9 +95,6 @@ def get_unzipped(zipped_file):
     name = name.split("\\")[-1]
 
     def check_inside_file(dir_name):
-        if not path.exists(dir_name):
-            return None, None
-
         train_dir = None
         valid_dir = None
 
@@ -106,12 +103,18 @@ def get_unzipped(zipped_file):
                 train_dir = os.path.join(dir_name, filename)
                 if valid_dir is not None:
                     return train_dir, valid_dir
-            elif filename == "valid":
+            elif filename == "test":
                 valid_dir = os.path.join(dir_name, filename)
                 if train_dir is not None:
                     return train_dir, valid_dir
 
-        return train_dir, valid_dir
+        if train_dir and valid_dir:
+            return train_dir, valid_dir
+        else:
+            if not path.exists(dir_name):
+                return None, None
+            else:
+                check_inside_file(dir_name)
 
     train_dir, valid_dir = check_inside_file(os.path.join(UNZIPPED_DIR_NAME, "input"))
 
@@ -142,6 +145,8 @@ def get_unzipped(zipped_file):
     if not len(os.listdir(train_dir)) == len(os.listdir(valid_dir)):
         shutil.rmtree(UNZIPPED_DIR_NAME)
         raise ValueError(errorMessage.UNEQUAL_CLASSES.value)
+
+    print("huhhhhhh")
 
     return train_dir, valid_dir
 
@@ -196,6 +201,8 @@ def dataset_from_zipped(
     train_dataset = datasets.ImageFolder(root=train_dir, transform=train_transform)
     valid_dataset = datasets.ImageFolder(root=valid_dir, transform=valid_transform)
 
+    print("pass 2")
+
     return train_dataset, valid_dataset
 
 
@@ -229,6 +236,7 @@ def loader_from_zipped(
         valid_dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True
     )
 
+    print("pass 3")
     return train_loader, valid_loader
 
 

@@ -3,6 +3,8 @@ import numpy as np
 from sklearn.datasets import *
 from enum import Enum
 from backend.common.constants import DEFAULT_DATASETS
+import torchvision
+import torch
 
 def get_default_dataset(dataset):
     """
@@ -34,3 +36,22 @@ def get_default_dataset(dataset):
 
     except Exception:
         raise Exception(f"Unable to load the {dataset} file into Pandas DataFrame")
+
+def get_img_default_dataset_loaders(datasetname, test_transform, train_transform, batch_size, shuffle):
+    """
+    Returns dataloaders from default datasets
+    Args:
+        datasetname (str) : Name of dataset
+        test_transform (list) : list of transforms
+        train_transform (list) : list of transforms
+        batch_size (int) : batch_size
+    """
+
+    train_transform = torchvision.transforms.Compose([x for x in train_transform])
+    test_transform = torchvision.transforms.Compose([x for x in test_transform])
+
+    train_set = eval(f"torchvision.datasets.{datasetname}(root='./backend/image_data_uploads', train=True, download=True, transform=train_transform)")
+    test_set = eval(f'torchvision.datasets.{datasetname}(root="./backend/image_data_uploads", train=False, download=True, transform=test_transform)')
+    train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=shuffle)
+    test_loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size, shuffle=shuffle)
+    return train_loader, test_loader

@@ -18,7 +18,7 @@ export const train_and_output = async (choice, choiceDict) => {
     .catch((error) => error);
 
   if (runResult.success) {
-    const email = choiceDict["email"];
+    const email = choiceDict.email;
     // send email if provided
     if (email?.length) {
       const attachments = [
@@ -28,7 +28,7 @@ export const train_and_output = async (choice, choiceDict) => {
         "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_loss_plot.png",
       ];
 
-      if (choiceDict["problemType"] === "classification") {
+      if (choiceDict.problemType === "classification") {
         attachments.push(
           "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_accuracy_plot.png"
         );

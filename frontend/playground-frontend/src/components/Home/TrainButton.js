@@ -14,10 +14,7 @@ import {
 
 const TrainButton = (props) => {
   const {
-    addedLayers,
     setDLPBackendResponse,
-    csvDataInput = null,
-    paramaters,
     choice = "tabular",
     style,
   } = props;
@@ -140,18 +137,14 @@ const TrainButton = (props) => {
   );
 };
 
-// TrainButton.propTypes = {
-//   addedLayers: PropTypes.arrayOf(PropTypes.object),
-//   targetCol: PropTypes.string,
-//   features: PropTypes.arrayOf(PropTypes.string),
-//   problemType: PropTypes.string,
-//   criterion: PropTypes.string,
-//   optimizerName: PropTypes.string,
-//   usingDefaultDataset: PropTypes.string,
-//   shuffle: PropTypes.bool,
-//   epochs: PropTypes.number,
-//   testSize: PropTypes.number,
-// };
+TrainButton.propTypes = {
+  addedLayers: PropTypes.any,
+  trainTransforms: PropTypes.any,
+  testTransforms: PropTypes.any,
+  setDLPBackendResponse: PropTypes.any,
+  choice: PropTypes.string,
+  style: PropTypes.any,
+};
 
 export default TrainButton;
 

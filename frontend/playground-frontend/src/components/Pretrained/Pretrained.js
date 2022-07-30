@@ -7,7 +7,7 @@ import {
   PRETRAINED_MODELS,
   POSSIBLE_TRANSFORMS,
 } from "../../settings";
-import { COLORS, LAYOUT, GENERAL_STYLES } from "../../constants";
+import { COLORS, LAYOUT } from "../../constants";
 
 import Input from "../Home/Input";
 import RectContainer from "../Home/RectContainer";
@@ -17,9 +17,9 @@ import Transforms from "../ImageModels/Transforms";
 import TrainButton from "../Home/TrainButton";
 
 const Pretrained = () => {
-  const [dlpBackendResponse, setDLPBackendResponse] = useState();
+  // const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [modelName, setModelName] = useState();
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
   const [criterion, setCriterion] = useState(IMAGE_CLASSIFICATION_CRITERION[0]);
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
   const [usingDefaultDataset, setUsingDefaultDataset] = useState();
@@ -37,7 +37,7 @@ const Pretrained = () => {
     shuffle: shuffle?.value,
     epochs: epochs,
     batchSize: batchSize,
-    email: email,
+    // email: email,
   };
 
   const input_queries = [
@@ -93,7 +93,7 @@ const Pretrained = () => {
           <RectContainer style={styles.fileInput}></RectContainer>
           <TrainButton
             {...input_responses}
-            setDLPBackendResponse={setDLPBackendResponse}
+            // setDLPBackendResponse={setDLPBackendResponse}
             style={{
               container: {
                 width: 155,

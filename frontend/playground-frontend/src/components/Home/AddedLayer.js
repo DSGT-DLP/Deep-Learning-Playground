@@ -39,7 +39,7 @@ const AddedLayer = (props) => {
   const thisLayer = addedLayers[thisLayerIndex];
   const { display_name, parameters } = thisLayer;
 
-  let finalStyle = styles;
+  const finalStyle = styles;
 
   if (style) {
     Object.keys(style).forEach(key => {
@@ -83,6 +83,7 @@ _InputOutputPromptResponse.propTypes = {
   }).isRequired,
   setAddedLayers: PropTypes.func.isRequired,
   thisLayerIndex: PropTypes.number.isRequired,
+  finalStyle: PropTypes.any,
 };
 
 AddedLayer.propTypes = {
@@ -90,6 +91,7 @@ AddedLayer.propTypes = {
   addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
   setAddedLayers: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  style: PropTypes.any,
 };
 
 export default AddedLayer;

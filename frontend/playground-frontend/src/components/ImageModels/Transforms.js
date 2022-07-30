@@ -1,8 +1,9 @@
 import Input from "../Home/Input";
 import AddedLayer from "../Home/AddedLayer";
-import React, { useState } from "react";
+import React from "react";
 import BackgroundLayout from "../Home/BackgroundLayout";
-import { GENERAL_STYLES, LAYOUT, COLORS } from "../../constants";
+import { PropTypes } from "prop-types";
+import { GENERAL_STYLES, COLORS } from "../../constants";
 
 const Transforms = (props) => {
   const { queryText, options, transforms, setTransforms } = props;
@@ -11,7 +12,7 @@ const Transforms = (props) => {
     const copyTransform = [...transforms];
     const selectedTransform = deepCopyObj(e);
     Object.values(selectedTransform.parameters).forEach((val) => {
-      val["value"] = "";
+      val.value = "";
     });
     copyTransform.push(selectedTransform);
     setTransforms(copyTransform);    
@@ -41,7 +42,7 @@ const Transforms = (props) => {
                 currentLayers.splice(i, 1);
                 setTransforms(currentLayers);
               }}
-              // style={styles}
+              style={styles}
             />
           </div>
         ))}
@@ -53,6 +54,13 @@ const Transforms = (props) => {
 export default Transforms;
 
 const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));
+
+Transforms.propTypes = {
+  queryText: PropTypes.string,
+  options: PropTypes.any,
+  transforms: PropTypes.any,
+  setTransforms: PropTypes.any,
+}
 
 const styles = {
   delete_btn: {

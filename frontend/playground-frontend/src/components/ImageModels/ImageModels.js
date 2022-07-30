@@ -48,7 +48,7 @@ const ImageModels = () => {
   const [batchSize, setBatchSize] = useState(20);
   const [email, setEmail] = useState("");
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
-  const [dataUploaded, setDataUploaded] = useState(false);
+  // const [dataUploaded, setDataUploaded] = useState(false);
 
   const input_responses = {
     batchSize: batchSize,
@@ -118,7 +118,7 @@ const ImageModels = () => {
     },
     config: { responsive: true },
   });
-  for (var i = 0; i < auc_roc_data_res.length; i++) {
+  for (let i = 0; i < auc_roc_data_res.length; i++) {
     auc_roc_data.push({
       name: `${i} (AUC: ${auc_roc_data_res[i][2]})`,
       x: auc_roc_data_res[i][0] || [],
@@ -183,7 +183,7 @@ const ImageModels = () => {
                   const copyCurrent = [...currentAddedLayers];
                   const layerCopy = deepCopyObj(newLayer);
                   Object.values(layerCopy.parameters).forEach((val) => {
-                    val["value"] = "";
+                    val.value = "";
                   });
                   copyCurrent.push(layerCopy);
                   return copyCurrent;

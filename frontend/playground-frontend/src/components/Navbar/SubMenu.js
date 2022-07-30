@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import { PropTypes } from "prop-types";
 
 const SubMenu = (props) => {
   const { title, dropDown } = props;
@@ -16,5 +17,10 @@ const SubMenu = (props) => {
     </ul>
   )
 };
+
+SubMenu.propTypes = {
+  title: PropTypes.any,
+  dropDown: PropTypes.any,
+}
 
 export default SubMenu;

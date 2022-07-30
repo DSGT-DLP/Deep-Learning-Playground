@@ -1,8 +1,13 @@
 import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";
 import React from "react";
 import { Link } from "react-router-dom";
+import SubMenu from "./SubMenu";
 
 const Navbar = () => {
+
+  // const [dropDown, setDropDown]= useState(false);
+  const subMenuTitle = ["Pretrained", "Image Models", "Tabular"]
+
   return (
     <div className="header-footer" id="nav-bar">
       <a href="/" className="image-title">
@@ -15,7 +20,9 @@ const Navbar = () => {
         <li className="navElement">
           <Link to="/">Home</Link>
         </li>
-        {/**Will figure out a way to make nav bar shorter. Putting everything here for the ease of development */}
+
+        <SubMenu title= { subMenuTitle } />
+
         <li className="navElement">
           <Link to="/img-models">Image Models</Link>
         </li>

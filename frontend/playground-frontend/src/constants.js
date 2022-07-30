@@ -111,14 +111,14 @@ export const DEFAULT_IMG_LAYERS = [
         parameter_name: "kernel_size",
         value: 3,
       },
-      padding: {
+      stride: {
         index: 3,
-        parameter_name: "padding",
+        parameter_name: "stride",
         value: 1,
       },
-      stride: {
+      padding: {
         index: 4,
-        parameter_name: "stride",
+        parameter_name: "padding",
         value: 1,
       },
     },

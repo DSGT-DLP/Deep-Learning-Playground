@@ -223,8 +223,8 @@ def testing():
             model, optimizer_name=optimizer_name, learning_rate=0.05
     )    
 
-    # train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs)
-    train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs)
+    train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs)
+    # train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs)
 
     print("damn")
 
@@ -233,8 +233,8 @@ def testing():
                     {
                         "success": True,
                         "message": "Dataset trained and results outputted successfully",
-                        # "dl_results": csv_to_json(),
-                        # "auxiliary_outputs": train_loss_results
+                        "dl_results": csv_to_json(),
+                        "auxiliary_outputs": train_loss_results
                     }
                 ),
                 200,

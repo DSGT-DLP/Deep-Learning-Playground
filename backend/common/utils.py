@@ -179,23 +179,22 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     """
     Given the prediction results and label, generate confusion matrix (only applicable to classification tasks)
     Args:
-        label: array consisting of ground truth values
-        y_pred: array consisting of predicted results
-        categoryList: list of strings that represent the categories to classify into (this will be used to label the axis)
+        labels_last_epoc: array (of len batch_size) consisting of arrays of ground truth values (Tensors)
+        y_pred: array consisting of predicted results (in probability form)
+        # categoryList: list of strings that represent the categories to classify into (this will be used to label the axis)
     Returns: the confusion matrix in a 2D-array format
     """
     label = []
     y_pred = []
     categoryList = []
 
-    for l in labels_last_epoch.tolist():
-        label.append(l[0])
+    for batch in labels_last_epoch:
+        for val in batch.detach().numpy():
+            label.append(val.item())
 
-    predictions = torch.argmax(
-        y_pred_last_epoch, dim=-1
-    )
-    for prediction in predictions.tolist():
-        y_pred.append(prediction[0])
+    for batch in y_pred_last_epoch:
+        for val in batch:
+            y_pred.append(np.argmax(val))
 
     # generating a category list for confusion matrix axis labels
     if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):
@@ -210,7 +209,7 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     sns.heatmap(cm, annot=True, fmt='g', ax=ax, cmap='Purples');  #annot=True to annotate cells, ftm='g' to disable scientific notation
     ax.set_xlabel('Predicted');ax.set_ylabel('Actual'); 
     ax.set_title('Confusion Matrix (last Epoch)'); 
-    ax.xaxis.set_ticklabels(categoryList); ax.yaxis.set_ticklabels(categoryList);
+    ax.xaxis.set_ticklabels(categoryList); ax.yaxis.set_ticklabels(categoryList)
     plt.savefig(CONFUSION_VIZ)
     return cm.tolist()
 
@@ -228,19 +227,21 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
             y_preds_list.append([])
             label_list.append([])
 
-    for label in labels_last_epoch:
-        ground_truth = label.item();
-        for x in range(len(label_list)):
-            # toggle on a 1 for the category that corresponds to the ground truth, this is to produce the 1-vs-all system for multiclass classification
-            if x == ground_truth:
-                label_list[x].append(1)
-            else:
-                label_list[x].append(0)
+    for batch in labels_last_epoch:
+        for label in batch:
+            ground_truth = label.item()
+            for x in range(len(label_list)):
+                # toggle on a 1 for the category that corresponds to the ground truth, this is to produce the 1-vs-all system for multiclass classification
+                if x == ground_truth:
+                    label_list[x].append(1)
+                else:
+                    label_list[x].append(0)
 
-    for row in y_pred_last_epoch:
-        for i, tensor in enumerate(row[0]):
-            # appending tensor values to each category's probability predicitons in y_preds_list
-            y_preds_list[i].append(tensor.item())
+    for batch in y_pred_last_epoch:
+        for row in batch:
+            for i, tensor in enumerate(row):
+                # appending tensor values to each category's probability predicitons in y_preds_list
+                y_preds_list[i].append(tensor)
     
     # making a AUC/ROC graph for each category's probability predicitons
     try:

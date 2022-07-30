@@ -70,7 +70,7 @@ def train_deep_classification_model(
                 loss = compute_loss(criterion, output, labels)  # compute the loss
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
-                batch_loss.append(loss.detach().numpy())
+                batch_loss.append(loss.detach())
             epoch_time.append(time.time() - start_time)
             mean_train_loss = np.mean(batch_loss)
             mean_train_acc = np.mean(batch_train_acc)
@@ -85,8 +85,10 @@ def train_deep_classification_model(
                 # currently only preserving the prediction array and label array for the last epoch for 
                 # confusion matrix calculation
                 if(epoch == epochs - 1):
-                    y_pred_last_epoch = test_pred
-                    labels_last_epoch = labels
+                    y_pred_last_epoch.append(test_pred.detach().numpy().squeeze())
+
+                    labels_last_epoch.append(labels)
+
                 batch_test_acc.append(compute_accuracy(test_pred, labels))
                 batch_loss.append(test_pred.detach().numpy())
             mean_test_loss = np.mean(batch_loss)
@@ -272,7 +274,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                 correct += (y_pred == y_true).type(torch.float).sum().item()
                 batch_loss.append(loss)
                 batch_train_acc.append(correct)
-            epoch_time.append(time.time() - start_time)            
+            epoch_time.append(time.time() - start_time)
             mean_train_loss = np.mean(torch.stack(batch_loss).detach().numpy())
             mean_train_acc = correct / len(train_loader.dataset)
             train_loss.append(mean_train_loss)
@@ -291,17 +293,17 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
 
                 pred = model(x)
                 loss = compute_img_loss(criterion, pred, y)
+                y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
 
                 if(epoch == epochs - 1):
-                    y_pred_last_epoch = pred
-                    labels_last_epoch = y
+                    y_pred_last_epoch.append(pred.detach().numpy())
+                    labels_last_epoch.append(y)
 
                 batch_test_acc.append(compute_accuracy(pred, y))
-
-                y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
                 correct += (y_pred == y_true).type(torch.float).sum().item()
                 batch_test_acc.append(correct)
                 batch_loss.append(loss)
+
             mean_test_loss = np.mean(torch.stack(batch_loss).detach().numpy())
             mean_test_acc = correct / len(test_loader.dataset)
             test_loss.append(mean_test_loss)
@@ -321,20 +323,22 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
             }
         )
         print(result_table)
-        # confusion_matrix = generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch)
 
-        # result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
+        confusion_matrix = generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch)
 
-        # generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
-        # generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
 
-        # auxiliary_outputs = {}
-        # auxiliary_outputs["confusion_matrix"] = confusion_matrix
-        # AUC_ROC_curve_data = generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch)
-        # auxiliary_outputs["AUC_ROC_curve_data"] = AUC_ROC_curve_data
+        generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+        generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+
+        auxiliary_outputs = {}
+        auxiliary_outputs["confusion_matrix"] = confusion_matrix
+        AUC_ROC_curve_data = generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch)
+
+        auxiliary_outputs["AUC_ROC_curve_data"] = AUC_ROC_curve_data
         torch.save(model, SAVED_MODEL) # saving model into a pt file
 
-        # return auxiliary_outputs
+        return auxiliary_outputs
 
     except Exception:
         raise Exception("Deep Learning classification didn't train properly")

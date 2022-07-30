@@ -10,6 +10,7 @@ import {
   POSSIBLE_TRANSFORMS,
   IMAGE_LAYERS,
   IMAGE_CLASSIFICATION_CRITERION,
+  PROBLEM_TYPES,
 } from "../../settings";
 import {
   DEFAULT_IMG_LAYERS,
@@ -218,12 +219,12 @@ const ImageModels = () => {
       <TitleText text="Email (optional)" />
       <EmailInput email={email} setEmail={setEmail} />
       <TitleText text="Deep Learning Results" />
-      {/* <Results
+      <Results
         dlpBackendResponse={dlpBackendResponse}
-        problemType="classification"
+        problemType= {PROBLEM_TYPES[0]}
         auc_roc_data={auc_roc_data}
         auc_roc_data_res={auc_roc_data_res}
-      /> */}
+      />
 
       <TitleText text="Code Snippet" />
       {/* <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} /> */}

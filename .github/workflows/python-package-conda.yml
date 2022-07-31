@@ -4,7 +4,11 @@ on:
     branches:
       - "main"
       - "prod-deploy"
+    paths:
+      - 'backend/**'
   pull_request:
+    paths:
+      - 'backend/**'
 
 jobs:
   build-linux:

@@ -25,7 +25,13 @@ const Navbar = () => {
           <Link to="/Feedback">Feedback</Link>
         </li>
         <li className="navElement">
-          <a href="https://buy.stripe.com/9AQ3e4eO81X57y8aEG" target="_blank" >Donate</a>
+          <a
+            href="https://buy.stripe.com/9AQ3e4eO81X57y8aEG"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Donate
+          </a>
         </li>
       </ul>
     </div>

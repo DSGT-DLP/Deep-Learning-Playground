@@ -15,6 +15,7 @@ import TitleText from "../general/TitleText";
 import BackgroundLayout from "../Home/BackgroundLayout";
 import Transforms from "../ImageModels/Transforms";
 import TrainButton from "../Home/TrainButton";
+import ChoiceTab from "../Home/ChoiceTab";
 
 const Pretrained = () => {
   // const [dlpBackendResponse, setDLPBackendResponse] = useState();
@@ -87,6 +88,7 @@ const Pretrained = () => {
 
   return (
     <div style={{ padding: 20 }}>
+      <ChoiceTab />
       <TitleText text="Data & Parameters" />
       <div style={{ display: "flex" }}>
         <BackgroundLayout>

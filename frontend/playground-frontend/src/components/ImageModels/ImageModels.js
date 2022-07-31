@@ -34,6 +34,7 @@ import {
   EmailInput,
   Results,
   CodeSnippet,
+  ChoiceTab,
 } from "..";
 
 const ImageModels = () => {
@@ -131,6 +132,7 @@ const ImageModels = () => {
   return (
     <div style={{ padding: 20 }}>
       <DndProvider backend={HTML5Backend}>
+        <ChoiceTab />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <RectContainer style={styles.fileInput}>

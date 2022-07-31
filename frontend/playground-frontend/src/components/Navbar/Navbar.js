@@ -1,12 +1,8 @@
 import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";
 import React from "react";
 import { Link } from "react-router-dom";
-import SubMenu from "./SubMenu";
 
 const Navbar = () => {
-
-  // const [dropDown, setDropDown]= useState(false);
-  const subMenuTitle = ["Pretrained", "Image Models", "Tabular"]
 
   return (
     <div className="header-footer" id="nav-bar">
@@ -21,14 +17,6 @@ const Navbar = () => {
           <Link to="/">Home</Link>
         </li>
 
-        <SubMenu title= { subMenuTitle } />
-
-        <li className="navElement">
-          <Link to="/img-models">Image Models</Link>
-        </li>
-        <li className="navElement">
-          <Link to="/pretrained">Pretrained</Link>
-        </li>
         <li className="navElement">
           <Link to="/About">About</Link>
         </li>

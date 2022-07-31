@@ -22,6 +22,7 @@ import {
   Results,
   TitleText,
   TrainButton,
+  ChoiceTab,
 } from "./components";
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
@@ -171,6 +172,7 @@ const Home = () => {
   return (
     <div style={{ padding: 20, marginBottom: 50 }}>
       <DndProvider backend={HTML5Backend}>
+        <ChoiceTab />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <RectContainer style={styles.fileInput}>
@@ -275,8 +277,6 @@ const Home = () => {
 
       <TitleText text="Code Snippet" />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
-
-      
     </div>
   );
 };

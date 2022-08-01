@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../../constants";
-import { sendEmail, train_and_output } from "../helper_functions/TalkWithBackend";
+import { socket, sendEmail, train_and_output } from "../helper_functions/TalkWithBackend";
+import { Circle } from 'rc-progress'
 
 const TrainButton = (props) => {
   const {
@@ -18,14 +19,28 @@ const TrainButton = (props) => {
     testSize,
     batchSize,
     setDLPBackendResponse,
-    pendingResponse,
-    setPendingResponse,
-    result,
-    reset,
     csvDataInput = null,
     fileURL = null,
     email,
   } = props;
+
+  const [pendingResponse, setPendingResponse] = useState(false)
+  const [progress, setProgress] = useState(null)
+  const [result, setResult] = useState(null)
+
+  useEffect(() => {
+    socket.on('trainingProgress', (progressData) => {
+      setProgress(Number.parseFloat(progressData))
+    })
+    socket.on('trainingResult', (resultData) => {
+      setResult(resultData)
+    })
+  }, [socket])
+
+  const reset = () => {
+    setProgress(null)
+    setResult(null)
+  }
 
   const make_user_arch = () => {
     // making a user_arch array by including all added layers and their parameters to make something like:
@@ -84,10 +99,12 @@ const TrainButton = (props) => {
   const onClick = async () => {
     setPendingResponse(true);
     setDLPBackendResponse(undefined);
+    setProgress(0)
 
     const user_arch = make_user_arch();
     if (!validateInputs(user_arch)) {
       setPendingResponse(false);
+      setProgress(null)
       return;
     }
 
@@ -118,9 +135,9 @@ const TrainButton = (props) => {
         }
         alert("SUCCESS: Training successful! Scroll to see results!")
       } else if (result.message) {
-        console.log(result.message)
+        alert("FAILED: Training failed. Check output traceback message")
       } else {
-        alert("FAILED: Training failed. Check your inputs");
+        alert("FAILED: Training failed. Check your inputs")
       }
       setDLPBackendResponse(result);
       setPendingResponse(false);
@@ -148,8 +165,8 @@ const TrainButton = (props) => {
         </button>
       </RectContainer>
       {pendingResponse ? (
-        <div style={{ marginTop: 10 }}>
-          <div className="loader" />
+        <div style={{ marginLeft: 5, marginTop: 10, width: 90, height: 90 }}>
+          <Circle percent={progress} strokeWidth={4} />
         </div>
       ) : null}
     </>
@@ -168,10 +185,6 @@ TrainButton.propTypes = {
   optimizerName: PropTypes.string.isRequired,
   problemType: PropTypes.string.isRequired,
   setDLPBackendResponse: PropTypes.func.isRequired,
-  pendingResponse: PropTypes.bool.isRequired,
-  setPendingResponse: PropTypes.func.isRequired,
-  result: PropTypes.object,
-  reset: PropTypes.func.isRequired,
   shuffle: PropTypes.bool.isRequired,
   targetCol: PropTypes.string,
   testSize: PropTypes.number.isRequired,

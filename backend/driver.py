@@ -4,7 +4,7 @@ from matplotlib.pyplot import xkcd
 import pandas as pd
 import traceback
 import os
-from flask import Flask, json, request, jsonify
+from flask import Flask
 
 from backend.common.utils import *
 from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL
@@ -20,9 +20,10 @@ from backend.common.default_datasets import get_default_dataset
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
 from flask import send_from_directory
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO
 import eventlet
-eventlet.monkey_patch()
+
+eventlet.patcher.monkey_patch(time=True)
 
 app = Flask(
     __name__,
@@ -31,7 +32,7 @@ app = Flask(
     ),
 )
 CORS(app)
-socketio = SocketIO(app, cors_allowed_origins="*")
+socket = SocketIO(app, cors_allowed_origins="*")
 
 logData = None
 
@@ -92,7 +93,7 @@ def dl_drive(
     criterion,
     optimizer_name,
     problem_type,
-    setLogData,
+    send_progress,
     target=None,
     features=None,
     default=None,
@@ -169,7 +170,7 @@ def dl_drive(
             X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=batch_size
         )
         train_loss_results = train_deep_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, setLogData
+            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, send_progress
         )
         pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
@@ -188,16 +189,12 @@ def root(path):
     else:
         return send_from_directory(app.static_folder, "index.html")
 
+@socket.on('frontendLog')
+def frontend_log(log):
+    app.logger.info(f'"frontend: {log}"')
 
-# @app.route("/run", methods=["POST"])
-@socketio.on('run')
+@socket.on('runTraining')
 def train_and_output(request_data):
-    # setLogData('reached backend')
-    print(request_data)
-    # send_log('reached backend')
-    
-    # request_data = json.loads(body)
-
     user_arch = request_data["user_arch"]
     criterion = request_data["criterion"]
     optimizer_name = request_data["optimizer_name"]
@@ -211,7 +208,7 @@ def train_and_output(request_data):
     shuffle = request_data["shuffle"]
     csvDataStr = request_data["csvData"]
     fileURL = request_data["fileURL"]
-    # if request.method == "POST":
+    
     try:
         if not default:
             if fileURL:
@@ -226,7 +223,7 @@ def train_and_output(request_data):
             criterion=criterion,
             optimizer_name=optimizer_name,
             problem_type=problem_type,
-            setLogData=lambda log: send_log(log),
+            send_progress=send_progress,
             target=target,
             features=features,
             default=default,
@@ -237,9 +234,7 @@ def train_and_output(request_data):
             batch_size=batch_size,
         )
             
-        # setLogData(None)
-            
-        socketio.emit('TrainingResult',
+        socket.emit('trainingResult',
             {
                 "success": True,
                 "message": "Dataset trained and results outputted successfully",
@@ -251,7 +246,7 @@ def train_and_output(request_data):
 
     except Exception:
         print(traceback.format_exc())
-        socketio.emit('TrainingResult',
+        socket.emit('trainingResult',
             {
                 "success": False,
                 "message": traceback.format_exc(limit=1),
@@ -259,19 +254,18 @@ def train_and_output(request_data):
             }
         )
 
-    # return jsonify({"success": False}), 500
 
-
-@app.route("/sendemail", methods=["POST"])
-def send_email_route():
-    request_data = json.loads(request.data)
-
+@socket.on('sendEmail')
+def send_email_route(request_data):
     # extract data
     required_params = ["email_address", "subject", "body_text"]
     for required_param in required_params:
         if required_param not in request_data:
-            return jsonify(
-                {"success": False, "message": "Missing parameter " + required_param}
+            return socket.emit('emailResult',
+                {
+                    "success": False,
+                    "message": "Missing parameter " + required_param
+                }
             )
 
     email_address = request_data["email_address"]
@@ -280,7 +274,7 @@ def send_email_route():
     if "attachment_array" in request_data:
         attachment_array = request_data["attachment_array"]
         if not isinstance(attachment_array, list):
-            return jsonify(
+            return socket.emit('emailResult',
                 {
                     "success": False,
                     "message": "Attachment array must be a list of filepaths",
@@ -292,26 +286,24 @@ def send_email_route():
     # try to send email
     try:
         send_email(email_address, subject, body_text, attachment_array)
-        return jsonify({"success": True, "message": "Sent email to " + email_address})
+        return socket.emit('emailResult',
+            {
+                "success": True,
+                "message": "Sent email to " + email_address
+            }
+        )
     except Exception:
         print(traceback.format_exc())
-        return jsonify({"success": False}), 500
+        return socket.emit('emailResult',
+            {
+                "success": False,
+                "message": traceback.format_exc(limit=1)
+            }
+        )
 
-# @app.route('/training_log', methods=['GET'])
-# def send_training_log():
-#     global logData
-#     #print('returning', logData)
-#     return jsonify({'log': logData})
-# 
-# def setLogData(message):
-#     global logData
-#     logData = message
-# @socketio.on('SendLog')
-def send_log(log):
-    print('sending log', log)
-    socketio.emit('TrainingProgress', log)
-    time.sleep(0.0000000000001)
-    print('sent')
+def send_progress(progress):
+    socket.emit('trainingProgress', progress)
+    time.sleep(0.0000000000001)                # to prevent logs from being grouped and sent together at the end of training
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, host="0.0.0.0")
+    socket.run(app, debug=True, host="0.0.0.0")

@@ -1,3 +1,5 @@
+from unicodedata import name
+from matplotlib.pyplot import xkcd
 import pandas as pd
 import traceback
 import os
@@ -17,6 +19,9 @@ from backend.common.default_datasets import get_default_dataset
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
 from flask import send_from_directory
+from flask_socketio import SocketIO, send
+import eventlet
+eventlet.monkey_patch()
 
 app = Flask(
     __name__,
@@ -25,6 +30,7 @@ app = Flask(
     ),
 )
 CORS(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 logData = None
 
@@ -184,7 +190,8 @@ def root(path):
 
 @app.route("/run", methods=["POST"])
 def train_and_output():
-    setLogData('reached backend')
+    # setLogData('reached backend')
+    send_log('reached backend')
     
     request_data = json.loads(request.data)
 
@@ -218,7 +225,7 @@ def train_and_output():
                 criterion=criterion,
                 optimizer_name=optimizer_name,
                 problem_type=problem_type,
-                setLogData=setLogData,
+                setLogData=lambda log: send_log(log),
                 target=target,
                 features=features,
                 default=default,
@@ -229,7 +236,7 @@ def train_and_output():
                 batch_size=batch_size,
             )
             
-            setLogData(None)
+            # setLogData(None)
             
             return (
                 jsonify(
@@ -288,15 +295,20 @@ def send_email_route():
         print(traceback.format_exc())
         return jsonify({"success": False}), 500
 
-@app.route('/training_log', methods=['GET'])
-def send_training_log():
-    global logData
-    #print('returning', logData)
-    return jsonify({'log': logData})
-
-def setLogData(message):
-    global logData
-    logData = message
+# @app.route('/training_log', methods=['GET'])
+# def send_training_log():
+#     global logData
+#     #print('returning', logData)
+#     return jsonify({'log': logData})
+# 
+# def setLogData(message):
+#     global logData
+#     logData = message
+# @socketio.on('SendLog')
+def send_log(log):
+    print('sending log', log)
+    socketio.emit('SendLog', log)
+    print('sent')
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    socketio.run(app, debug=True, host="0.0.0.0")

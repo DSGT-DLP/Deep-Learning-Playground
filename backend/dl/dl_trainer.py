@@ -183,7 +183,7 @@ def train_deep_regression_model(
                 epoch_batch_loss += float(loss.detach())
             test_loss.append(epoch_batch_loss / num_test_epochs)
             message = f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}"
-            setLogData(message)
+            # setLogData(message)
             print(message)
         result_table = pd.DataFrame(
             {

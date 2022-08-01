@@ -39,7 +39,7 @@ export const train_and_output = async (
     .then((res) => res.json())
     .then((data) => data)
     .catch((error) => error);
-
+  console.log('training completed')
   if (runResult.success) {
     // send email if provided
     if (email?.length) {

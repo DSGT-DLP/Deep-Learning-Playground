@@ -251,9 +251,8 @@ def get_deep_predictions(model: nn.Module, test_loader):
 
     return prediction_tensor, ground_truth_tensor
 
-def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs):
+def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device):
     try:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = model.to(device)
         train_loss = []  # accumulate training loss over each epoch
         test_loss = []  # accumulate testing loss over each epoch

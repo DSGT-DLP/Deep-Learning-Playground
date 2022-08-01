@@ -221,11 +221,14 @@ def testing():
 
         print("got data loaders")
 
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model.to(device) # model should go to GPU before initializing optimizer  https://stackoverflow.com/questions/66091226/runtimeerror-expected-all-tensors-to-be-on-the-same-device-but-found-at-least/66096687#66096687 
+
         optimizer = get_optimizer(
                 model, optimizer_name=optimizer_name, learning_rate=0.05
-        )    
+        )
 
-        train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs)
+        train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device)
 
         print("damn")
 

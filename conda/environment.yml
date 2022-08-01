@@ -12,8 +12,7 @@ dependencies:
   - pytest
   - python=3.9
   - pandas
-  - gcc=12.1.0
-  - libgcc=5.2.0
+  - libgcc
   - scikit-learn
   - boto3
   - pyyaml

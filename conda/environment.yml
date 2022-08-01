@@ -23,7 +23,9 @@ dependencies:
   - black
   - flask
   - flask-cors
+  - flask-socketio
   - ruamel.yaml
+  - eventlet
   - pip:
      - torchvision
      - timm

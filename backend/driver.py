@@ -34,8 +34,6 @@ app = Flask(
 CORS(app)
 socket = SocketIO(app, cors_allowed_origins="*")
 
-logData = None
-
 def ml_drive(
     user_model,
     problem_type,

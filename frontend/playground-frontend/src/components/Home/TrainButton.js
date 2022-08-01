@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../../constants";
-import { train_and_output } from "../helper_functions/TalkWithBackend";
+import { sendEmail, train_and_output } from "../helper_functions/TalkWithBackend";
 
 const TrainButton = (props) => {
   const {
@@ -20,6 +20,8 @@ const TrainButton = (props) => {
     setDLPBackendResponse,
     pendingResponse,
     setPendingResponse,
+    result,
+    reset,
     csvDataInput = null,
     fileURL = null,
     email,
@@ -91,7 +93,7 @@ const TrainButton = (props) => {
 
     const csvDataStr = JSON.stringify(csvDataInput);
 
-    const response = await train_and_output(
+    train_and_output(
       user_arch,
       criterion,
       optimizerName,
@@ -105,20 +107,26 @@ const TrainButton = (props) => {
       shuffle,
       csvDataStr,
       fileURL,
-      email
-    );
+    )
+  }
 
-    setDLPBackendResponse(response);
-    setPendingResponse(false);
-
-    if (response.success === true) {
-      alert("SUCCESS: Training successful! Scroll to see results!");
-    } else if (response.message) {
-      alert("FAILED: Training failed. Check output traceback message");
-    } else {
-      alert("FAILED: Training failed. Check your inputs");
+  useEffect(() => {
+    if (result) {
+      if (result.success) {
+        if (email?.length) {
+          sendEmail(email, problemType)
+        }
+        alert("SUCCESS: Training successful! Scroll to see results!")
+      } else if (result.message) {
+        console.log(result.message)
+      } else {
+        alert("FAILED: Training failed. Check your inputs");
+      }
+      setDLPBackendResponse(result);
+      setPendingResponse(false);
+      reset()
     }
-  };
+  }, [result])
 
   return (
     <>
@@ -162,6 +170,8 @@ TrainButton.propTypes = {
   setDLPBackendResponse: PropTypes.func.isRequired,
   pendingResponse: PropTypes.bool.isRequired,
   setPendingResponse: PropTypes.func.isRequired,
+  result: PropTypes.object,
+  reset: PropTypes.func.isRequired,
   shuffle: PropTypes.bool.isRequired,
   targetCol: PropTypes.string,
   testSize: PropTypes.number.isRequired,

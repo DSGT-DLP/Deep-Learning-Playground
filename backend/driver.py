@@ -1,3 +1,4 @@
+import time
 from unicodedata import name
 from matplotlib.pyplot import xkcd
 import pandas as pd
@@ -188,12 +189,14 @@ def root(path):
         return send_from_directory(app.static_folder, "index.html")
 
 
-@app.route("/run", methods=["POST"])
-def train_and_output():
+# @app.route("/run", methods=["POST"])
+@socketio.on('run')
+def train_and_output(request_data):
     # setLogData('reached backend')
-    send_log('reached backend')
+    print(request_data)
+    # send_log('reached backend')
     
-    request_data = json.loads(request.data)
+    # request_data = json.loads(body)
 
     user_arch = request_data["user_arch"]
     criterion = request_data["criterion"]
@@ -208,56 +211,55 @@ def train_and_output():
     shuffle = request_data["shuffle"]
     csvDataStr = request_data["csvData"]
     fileURL = request_data["fileURL"]
-    email = request_data["email"]
-    if request.method == "POST":
-        try:
-            if not default:
-                if fileURL:
-                    read_dataset(fileURL)
-                elif csvDataStr:
-                    pass
-                else:
-                    raise ValueError("Need a file input")
-                    return
+    # if request.method == "POST":
+    try:
+        if not default:
+            if fileURL:
+                read_dataset(fileURL)
+            elif csvDataStr:
+                pass
+            else:
+                raise ValueError("Need a file input")
 
-            train_loss_results = dl_drive(
-                user_arch=user_arch,
-                criterion=criterion,
-                optimizer_name=optimizer_name,
-                problem_type=problem_type,
-                setLogData=lambda log: send_log(log),
-                target=target,
-                features=features,
-                default=default,
-                test_size=test_size,
-                epochs=epochs,
-                shuffle=shuffle,
-                json_csv_data_str=csvDataStr,
-                batch_size=batch_size,
-            )
+        train_loss_results = dl_drive(
+            user_arch=user_arch,
+            criterion=criterion,
+            optimizer_name=optimizer_name,
+            problem_type=problem_type,
+            setLogData=lambda log: send_log(log),
+            target=target,
+            features=features,
+            default=default,
+            test_size=test_size,
+            epochs=epochs,
+            shuffle=shuffle,
+            json_csv_data_str=csvDataStr,
+            batch_size=batch_size,
+        )
             
-            # setLogData(None)
+        # setLogData(None)
             
-            return (
-                jsonify(
-                    {
-                        "success": True,
-                        "message": "Dataset trained and results outputted successfully",
-                        "dl_results": csv_to_json(),
-                        "auxiliary_outputs": train_loss_results
-                    }
-                ),
-                200,
-            )
+        socketio.emit('TrainingResult',
+            {
+                "success": True,
+                "message": "Dataset trained and results outputted successfully",
+                "dl_results": csv_to_json(),
+                "auxiliary_outputs": train_loss_results,
+                "status": 200
+            }
+        )
 
-        except Exception:
-            print(traceback.format_exc())
-            return (
-                jsonify({"success": False, "message": traceback.format_exc(limit=1)}),
-                400,
-            )
+    except Exception:
+        print(traceback.format_exc())
+        socketio.emit('TrainingResult',
+            {
+                "success": False,
+                "message": traceback.format_exc(limit=1),
+                "status": 400
+            }
+        )
 
-    return jsonify({"success": False}), 500
+    # return jsonify({"success": False}), 500
 
 
 @app.route("/sendemail", methods=["POST"])
@@ -307,7 +309,8 @@ def send_email_route():
 # @socketio.on('SendLog')
 def send_log(log):
     print('sending log', log)
-    socketio.emit('SendLog', log)
+    socketio.emit('TrainingProgress', log)
+    time.sleep(0.0000000000001)
     print('sent')
 
 if __name__ == "__main__":

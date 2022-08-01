@@ -103,7 +103,7 @@ def train_deep_classification_model(
             test_loss.append(mean_test_loss)
 
             message = f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}"
-            setLogData(message)
+            setLogData((epoch + 1) / epochs * 100)
             print(message)
         result_table = pd.DataFrame(
             {
@@ -183,7 +183,7 @@ def train_deep_regression_model(
                 epoch_batch_loss += float(loss.detach())
             test_loss.append(epoch_batch_loss / num_test_epochs)
             message = f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}"
-            # setLogData(message)
+            setLogData((epoch + 1) / epochs * 100)
             print(message)
         result_table = pd.DataFrame(
             {

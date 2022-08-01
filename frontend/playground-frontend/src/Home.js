@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { COLORS, DEFAULT_ADDED_LAYERS, LAYOUT } from "./constants";
 import {
   BOOL_OPTIONS,
@@ -27,12 +27,31 @@ import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import StatusBar from './components/Home/StatusBar'
+import { socket } from './components/helper_functions/TalkWithBackend'
 
 const Home = () => {
   const [csvDataInput, setCSVDataInput] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [pendingResponse, setPendingResponse] = useState(false);
+  const [progress, setProgress] = useState(null)
+  const [result, setResult] = useState(null)
+
+  useEffect(() => {
+    socket.on('TrainingProgress', (progressData) => {
+      setProgress(Number.parseFloat(progressData))
+      console.log('inside TrainingProgress:', progressData)
+    })
+    socket.on('TrainingResult', (resultData) => {
+      setResult(resultData)
+      console.log('inside TrainingResult:', resultData)
+    })
+  }, [socket])
+
+  const reset = () => {
+    setProgress(null)
+    setResult(null)
+  }
 
   // input responses
   const [fileURL, setFileURL] = useState("");
@@ -211,10 +230,17 @@ const Home = () => {
             setDLPBackendResponse={setDLPBackendResponse}
             pendingResponse={pendingResponse}
             setPendingResponse={setPendingResponse}
+            result={result}
+            reset={reset}
           />
         </BackgroundLayout>
 
         <div style={{ marginTop: 20 }} />
+        <StatusBar 
+          pendingResponse={pendingResponse} 
+          setPendingResponse={setPendingResponse}
+          progress={progress}
+        />
 
         <TitleText text="Layers Inventory" />
         <BackgroundLayout>
@@ -256,8 +282,6 @@ const Home = () => {
         columns={csvColumns}
         data={csvDataInput}
       />
-
-      <StatusBar pendingResponse={pendingResponse} setPendingResponse={setPendingResponse} />
 
       <TitleText text="Deep Learning Results" />
       <Results

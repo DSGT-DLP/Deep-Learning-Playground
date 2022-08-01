@@ -3,7 +3,6 @@ import Transforms from "./Transforms";
 import LargeFileUpload from "../general/LargeFileUpload";
 import {
   BOOL_OPTIONS,
-  CRITERIONS,
   IMAGE_DEFAULT_DATASETS,
   OPTIMIZER_NAMES,
   POSSIBLE_LAYERS,
@@ -72,7 +71,7 @@ const ImageModels = () => {
     },
     {
       queryText: "Criterion",
-      options: CRITERIONS,
+      options: IMAGE_CLASSIFICATION_CRITERION,
       onChange: setCriterion,
       defaultValue: criterion,
     },

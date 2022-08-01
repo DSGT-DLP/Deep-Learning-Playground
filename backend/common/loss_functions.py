@@ -1,8 +1,11 @@
 import torch
 import torch.nn as nn
+import os
 
 from typing import Union
 from enum import Enum
+
+from backend.common.constants import UNZIPPED_DIR_NAME
 
 
 class LossFunctions(Enum):
@@ -12,6 +15,7 @@ class LossFunctions(Enum):
     BCELOSS = nn.BCELoss()
     BCEWITHLOGITSLOSS = nn.BCEWithLogitsLoss()
     CELOSS = nn.CrossEntropyLoss(reduction="mean")
+    WCELOSS = nn.CrossEntropyLoss(reduction="mean") # Will not use this, just to prevent errors
 
     def get_loss_obj(self):
         return self.value
@@ -76,3 +80,13 @@ def compute_img_loss(criterion, pred, ground_truth):
 
     if criterion == LossFunctions.CELOSS.name:
         return loss_obj(pred , ground_truth.squeeze())
+    if criterion == "WCELOSS":
+        weight_tensor = []
+        # Weighting the class with least representation in dataset with maximum weight
+
+        for classes in os.listdir(os.path.join(UNZIPPED_DIR_NAME, "input", "train")):
+            files = os.listdir(os.path.join(UNZIPPED_DIR_NAME, "input", "train", classes))
+            weight_tensor.append(1.0/len(files))
+
+        loss = nn.CrossEntropyLoss(weight=torch.FloatTensor(weight_tensor), reduction='mean')
+        return loss(pred, ground_truth.squeeze())

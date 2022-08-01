@@ -33,9 +33,9 @@ const LargeFileUpload = () => {
   return (
     <>
       <iframe name="dummyframe" id="dummyframe" style={{'display':"none"}}></iframe>
-      <form action="/upload" encType='multipart/form-data' method='POST' target="dummyframe">
-        <input type="file" name="file" accept=".zip"></input>
-        <input type="submit" value="upload"></input>
+      <form action="/upload" encType='multipart/form-data' method='POST' target="dummyframe" >
+        <input type="file" name="file" accept=".zip" style={{marginLeft: "40px"}}></input>
+        <input type="submit" value="upload" style={{marginLeft: "43px"}}></input>
       </form>
     </>
   );

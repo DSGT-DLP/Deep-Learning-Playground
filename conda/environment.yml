@@ -4,6 +4,7 @@ channels:
   - defaults
 dependencies:
   - libgcc
+  - scipy.optimize
   - flake8
   - jupyter
   - matplotlib
@@ -13,7 +14,6 @@ dependencies:
   - pytest
   - python=3.9
   - pandas
-  - scipy
   - scikit-learn
   - boto3
   - pyyaml

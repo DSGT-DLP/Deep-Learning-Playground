@@ -31,6 +31,9 @@ jobs:
         cd conda && ls
         ls
         conda env update -f environment.yml
+        sudo apt-get install apt-file
+        sudo apt-file update
+        sudo apt-get install libstdc++6
         conda init bash
         source $(conda info --base)/etc/profile.d/conda.sh
         conda activate dlplayground

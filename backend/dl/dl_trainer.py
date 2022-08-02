@@ -102,9 +102,8 @@ def train_deep_classification_model(
             val_acc.append(mean_test_acc)
             test_loss.append(mean_test_loss)
 
-            message = f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}"
             send_progress((epoch + 1) / epochs * 100)
-            print(message)
+            print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}")
         result_table = pd.DataFrame(
             {
                 EPOCH: [i for i in range(1, epochs + 1)],
@@ -182,9 +181,8 @@ def train_deep_regression_model(
                 loss = compute_loss(criterion, test_pred, labels)
                 epoch_batch_loss += float(loss.detach())
             test_loss.append(epoch_batch_loss / num_test_epochs)
-            message = f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}"
             send_progress((epoch + 1) / epochs * 100)
-            print(message)
+            print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
         result_table = pd.DataFrame(
             {
                 EPOCH: [i for i in range(1, epochs + 1)],

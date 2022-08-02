@@ -38,6 +38,7 @@ const TrainButton = (props) => {
   }, [socket])
 
   const reset = () => {
+    setPendingResponse(false)
     setProgress(null)
     setResult(null)
   }
@@ -140,7 +141,6 @@ const TrainButton = (props) => {
         alert("FAILED: Training failed. Check your inputs")
       }
       setDLPBackendResponse(result);
-      setPendingResponse(false);
       reset()
     }
   }, [result])

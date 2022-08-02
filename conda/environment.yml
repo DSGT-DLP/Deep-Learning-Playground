@@ -25,7 +25,6 @@ dependencies:
   - flask
   - flask-cors
   - ruamel.yaml
-  - libgcc
   - pip:
      - torchvision
      - timm

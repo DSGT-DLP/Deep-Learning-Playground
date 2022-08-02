@@ -13,5 +13,5 @@ COPY . .
 
 RUN cd frontend/playground-frontend && npm install && npm run build
 
-CMD python -m backend.driver
+CMD python -u backend/driver.py
 

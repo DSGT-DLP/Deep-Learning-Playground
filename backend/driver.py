@@ -1,6 +1,4 @@
 import time
-from unicodedata import name
-from matplotlib.pyplot import xkcd
 import pandas as pd
 import traceback
 import os

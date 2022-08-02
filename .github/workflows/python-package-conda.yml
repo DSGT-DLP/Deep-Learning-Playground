@@ -63,6 +63,7 @@ jobs:
         conda init bash
         source $(conda info --base)/etc/profile.d/conda.sh
         conda activate dlplayground
+        sudo apt-get install libstdc++6
         conda install -c conda-forge gcc=12.1.0
         ls
         pytest tests

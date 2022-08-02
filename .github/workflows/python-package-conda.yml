@@ -4,11 +4,11 @@ on:
     branches:
       - "main"
       - "prod-deploy"
-    # paths:
-    #   - 'backend/**'
+    paths:
+      - 'backend/**'
   pull_request:
-    # paths:
-    #   - 'backend/**'
+    paths:
+      - 'backend/**'
 
 jobs:
   build-linux:
@@ -66,9 +66,5 @@ jobs:
         conda init bash
         source $(conda info --base)/etc/profile.d/conda.sh
         conda activate dlplayground
-        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-        sudo apt-get update
-        sudo apt-get upgrade libstdc++6
-        conda install -c conda-forge gcc=12.1.0
         ls
         pytest tests

@@ -12,7 +12,6 @@ dependencies:
   - pytest
   - python=3.9
   - pandas
-  - libgcc
   - scikit-learn
   - boto3
   - pyyaml

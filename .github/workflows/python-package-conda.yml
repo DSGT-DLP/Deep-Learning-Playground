@@ -60,9 +60,9 @@ jobs:
         git push
     - name: Test with pytest
       run: |
-        conda install -c conda-forge gcc=12.1.0
         conda init bash
         source $(conda info --base)/etc/profile.d/conda.sh
+        conda install -c conda-forge gcc=12.1.0
         conda activate dlplayground
         ls
         pytest tests

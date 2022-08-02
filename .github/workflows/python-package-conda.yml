@@ -34,7 +34,6 @@ jobs:
         conda init bash
         source $(conda info --base)/etc/profile.d/conda.sh
         conda activate dlplayground
-        conda update libstdcxx-ng
     - name: Formatting Fixes
       run: |
         conda init bash

@@ -29,4 +29,5 @@ dependencies:
      - torchvision
      - timm
      - wwf
+     - pytorch-quantization
      - fastai==2.7.4

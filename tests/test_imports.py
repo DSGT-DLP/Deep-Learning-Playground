@@ -1,4 +1,5 @@
 def test_all_imports():
+  import backend.driver
   import backend.aws_helpers.dynamo_db_utils.base_db
   import backend.aws_helpers.dynamo_db_utils.status_db
   import backend.common.constants

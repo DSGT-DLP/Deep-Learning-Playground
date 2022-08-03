@@ -1,7 +1,7 @@
 import pandas as pd
 import traceback
 import os
-from flask import Flask, json, request, jsonify
+from flask import Flask
 
 from backend.common.utils import *
 from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL
@@ -17,6 +17,8 @@ from backend.common.default_datasets import get_default_dataset
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
 from flask import send_from_directory
+from flask_socketio import SocketIO
+import eventlet
 
 app = Flask(
     __name__,
@@ -25,7 +27,7 @@ app = Flask(
     ),
 )
 CORS(app)
-
+socket = SocketIO(app, cors_allowed_origins="*")
 
 def ml_drive(
     user_model,
@@ -84,6 +86,7 @@ def dl_drive(
     criterion,
     optimizer_name,
     problem_type,
+    send_progress,
     target=None,
     features=None,
     default=None,
@@ -150,6 +153,7 @@ def dl_drive(
         # Build the Deep Learning model that the user wants
         model = DLModel(parse_deep_user_architecture(user_arch))
         print(f"model: {model}")
+        
         optimizer = get_optimizer(
             model, optimizer_name=optimizer_name, learning_rate=0.05
         )
@@ -159,7 +163,7 @@ def dl_drive(
             X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=batch_size
         )
         train_loss_results = train_deep_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
+            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, send_progress
         )
         pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
@@ -178,11 +182,12 @@ def root(path):
     else:
         return send_from_directory(app.static_folder, "index.html")
 
+@socket.on('frontendLog')
+def frontend_log(log):
+    app.logger.info(f'"frontend: {log}"')
 
-@app.route("/run", methods=["POST"])
-def train_and_output():
-    request_data = json.loads(request.data)
-
+@socket.on('runTraining')
+def train_and_output(request_data):
     user_arch = request_data["user_arch"]
     criterion = request_data["criterion"]
     optimizer_name = request_data["optimizer_name"]
@@ -196,64 +201,64 @@ def train_and_output():
     shuffle = request_data["shuffle"]
     csvDataStr = request_data["csvData"]
     fileURL = request_data["fileURL"]
-    email = request_data["email"]
-    if request.method == "POST":
-        try:
-            if not default:
-                if fileURL:
-                    read_dataset(fileURL)
-                elif csvDataStr:
-                    pass
-                else:
-                    raise ValueError("Need a file input")
-                    return
+    
+    try:
+        if not default:
+            if fileURL:
+                read_dataset(fileURL)
+            elif csvDataStr:
+                pass
+            else:
+                raise ValueError("Need a file input")
 
-            train_loss_results = dl_drive(
-                user_arch=user_arch,
-                criterion=criterion,
-                optimizer_name=optimizer_name,
-                problem_type=problem_type,
-                target=target,
-                features=features,
-                default=default,
-                test_size=test_size,
-                epochs=epochs,
-                shuffle=shuffle,
-                json_csv_data_str=csvDataStr,
-                batch_size=batch_size,
-            )
-            return (
-                jsonify(
-                    {
-                        "success": True,
-                        "message": "Dataset trained and results outputted successfully",
-                        "dl_results": csv_to_json(),
-                        "auxiliary_outputs": train_loss_results
-                    }
-                ),
-                200,
-            )
+        train_loss_results = dl_drive(
+            user_arch=user_arch,
+            criterion=criterion,
+            optimizer_name=optimizer_name,
+            problem_type=problem_type,
+            send_progress=send_progress,
+            target=target,
+            features=features,
+            default=default,
+            test_size=test_size,
+            epochs=epochs,
+            shuffle=shuffle,
+            json_csv_data_str=csvDataStr,
+            batch_size=batch_size,
+        )
+            
+        socket.emit('trainingResult',
+            {
+                "success": True,
+                "message": "Dataset trained and results outputted successfully",
+                "dl_results": csv_to_json(),
+                "auxiliary_outputs": train_loss_results,
+                "status": 200
+            }
+        )
 
-        except Exception:
-            print(traceback.format_exc())
-            return (
-                jsonify({"success": False, "message": traceback.format_exc(limit=1)}),
-                400,
-            )
+    except Exception:
+        print(traceback.format_exc())
+        socket.emit('trainingResult',
+            {
+                "success": False,
+                "message": traceback.format_exc(limit=1),
+                "status": 400
+            }
+        )
 
-    return jsonify({"success": False}), 500
 
-
-@app.route("/sendemail", methods=["POST"])
-def send_email_route():
-    request_data = json.loads(request.data)
-
+@socket.on('sendEmail')
+def send_email_route(request_data):
     # extract data
     required_params = ["email_address", "subject", "body_text"]
     for required_param in required_params:
         if required_param not in request_data:
-            return jsonify(
-                {"success": False, "message": "Missing parameter " + required_param}
+            return socket.emit('emailResult',
+                {
+                    "success": False,
+                    "message": "Missing parameter " + required_param
+                }
             )
 
     email_address = request_data["email_address"]
@@ -262,7 +267,7 @@ def send_email_route():
     if "attachment_array" in request_data:
         attachment_array = request_data["attachment_array"]
         if not isinstance(attachment_array, list):
-            return jsonify(
+            return socket.emit('emailResult',
                 {
                     "success": False,
                     "message": "Attachment array must be a list of filepaths",
@@ -274,11 +279,24 @@ def send_email_route():
     # try to send email
     try:
         send_email(email_address, subject, body_text, attachment_array)
-        return jsonify({"success": True, "message": "Sent email to " + email_address})
+        return socket.emit('emailResult',
+            {
+                "success": True,
+                "message": "Sent email to " + email_address
+            }
+        )
     except Exception:
         print(traceback.format_exc())
-        return jsonify({"success": False}), 500
+        return socket.emit('emailResult',
+            {
+                "success": False,
+                "message": traceback.format_exc(limit=1)
+            }
+        )
 
+def send_progress(progress):
+    socket.emit('trainingProgress', progress)
+    eventlet.greenthread.sleep(0)                 # to prevent logs from being grouped and sent together at the end of training
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    socket.run(app, debug=True, host="0.0.0.0")

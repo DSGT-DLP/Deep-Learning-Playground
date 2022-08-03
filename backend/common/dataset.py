@@ -152,7 +152,7 @@ def loader_from_zipped(
         )
         test_loader = DataLoader(
             test_dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True
-        )
+        ) ### DROP LAST drops the last non full batch. 97 data points and batchsize = 10 would lead to creation of only 9 datasets, 7 extra data points will be lost 
 
         return train_loader, test_loader
     except Exception as e:

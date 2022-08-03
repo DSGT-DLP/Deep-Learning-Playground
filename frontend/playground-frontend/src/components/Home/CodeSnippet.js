@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 const CodeSnippet = (props) => {
   const { backendResponse, layers} = props;
 
+  console.log(backendResponse);
   if (!backendResponse?.success) {
     return (
       backendResponse?.message || (
@@ -68,12 +69,10 @@ function layersToString(layers) {
  * @param {layers} layer
  * @returns string in form of <layer name>(<parameters>)
  */
-function layerToString(layer) {
+export function layerToString(layer) {
   let layerToString = layer.object_name + "(";
 
   if (layer.parameters !== undefined && layer.parameters !== null) {
-    // const EVAL = eval;
-
     const params = Object.keys(layer.parameters);
     // params : [0: "inputSize", 1:"outputSize"]
     if (params !== null && params !== undefined && params.length !== 0) {

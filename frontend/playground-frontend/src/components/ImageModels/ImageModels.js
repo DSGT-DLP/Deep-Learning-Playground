@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Transforms from "./Transforms";
+import DataCodeSnippet from "./DataCodeSnippet";
 import LargeFileUpload from "../general/LargeFileUpload";
 import {
   BOOL_OPTIONS,
@@ -231,6 +232,7 @@ const ImageModels = () => {
 
       <TitleText text="Code Snippet" />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
+      <DataCodeSnippet backendResponse={dlpBackendResponse} trainTransforms={trainTransforms} testTransforms={testTransforms} batchSize={batchSize} shuffle={shuffle} defaultData={usingDefaultDataset} />
     </div>
   );
 };

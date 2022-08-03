@@ -1,7 +1,7 @@
 import pandas as pd
 import traceback
 import os
-from flask import Flask, json, request, jsonify, make_response, redirect, url_for, flash,copy_current_request_context
+from flask import Flask, request, copy_current_request_context
 from werkzeug.utils import secure_filename
 import shutil
 
@@ -30,7 +30,7 @@ app = Flask(
     ),
 )
 CORS(app)
-socket = SocketIO(app, cors_allowed_origins="*")
+socket = SocketIO(app, cors_allowed_origins="*", ping_interval=12000, pingInterval=5000)
 
 def ml_drive(
     user_model,

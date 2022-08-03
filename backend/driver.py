@@ -1,4 +1,3 @@
-import time
 import pandas as pd
 import traceback
 import os
@@ -20,8 +19,6 @@ from backend.common.email_notifier import send_email
 from flask import send_from_directory
 from flask_socketio import SocketIO
 import eventlet
-
-eventlet.patcher.monkey_patch(time=True)
 
 app = Flask(
     __name__,
@@ -299,7 +296,7 @@ def send_email_route(request_data):
 
 def send_progress(progress):
     socket.emit('trainingProgress', progress)
-    time.sleep(0.0000000000001)                # to prevent logs from being grouped and sent together at the end of training
+    eventlet.greenthread.sleep(0)                 # to prevent logs from being grouped and sent together at the end of training
 
 if __name__ == "__main__":
     socket.run(app, debug=True, host="0.0.0.0")

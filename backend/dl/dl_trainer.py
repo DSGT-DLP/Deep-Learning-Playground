@@ -95,11 +95,11 @@ def train_deep_classification_model(
 
                     labels_last_epoch.append(labels)
 
-                batch_test_acc.append(compute_accuracy(test_pred, labels))
-                batch_loss.append(test_pred.detach().numpy())
-            mean_test_loss = np.mean(batch_loss)
-            mean_test_acc = np.mean(batch_test_acc)
-            test_loss.append(mean_test_loss)
+                test_correct += compute_correct(test_pred, labels)
+                loss = compute_loss(criterion, test_pred, labels)
+                epoch_batch_loss += float(loss.detach())
+            mean_test_loss = test_correct / epoch_test_size
+            mean_test_acc = epoch_batch_loss / num_test_epochs
             val_acc.append(mean_test_acc)
             test_loss.append(mean_test_loss)
 

@@ -254,7 +254,11 @@ def testing():
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
             print(x)
             if (x != ".gitkeep"):
-                os.remove(os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER) , x))
+                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER) , x)
+                if (os.path.isdir(file_rem)):
+                    shutil.rmtree(file_rem)
+                else:
+                    os.remove(file_rem)
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
 

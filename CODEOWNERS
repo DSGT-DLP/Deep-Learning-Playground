@@ -10,7 +10,7 @@
 # 
 
 # For files in the /backend directory, @karkir0003 will be requested in a pull request
-/backend @karkir0003
+/backend @karkir0003 @samarth52
 /backend/common/email_notifier.py @avayedawadi
 /backend/common/dataset.py @vidushiMaheshwari
 /backend/driver.py @farisdurrani @andrewpeng02 @avayedawadi
@@ -35,3 +35,5 @@
 # For the About page and Navbar, contact @anikethswain
 /frontend/playground-frontend/components/About @anikethswain
 /frontend/playground-frontend/components/NavBar @anikethswain
+/frontend/playground-frontend/components/helper_functions/TalkWithBackend @farisdurrani @samarth52
+/frontend/playground-frontend/components/Home/TrainButton @farisdurrani @samarth52

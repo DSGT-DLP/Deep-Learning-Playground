@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^13.5.0",
     "plotly.js": "^2.12.1",
     "prop-types": "^15.8.1",
+    "rc-progress": "^3.4.0",
     "react": "^18.1.0",
     "react-csv": "^2.2.2",
     "react-data-table-component": "^7.5.2",
@@ -25,6 +26,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-select": "^5.3.2",
+    "socket.io-client": "^4.5.1",
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"

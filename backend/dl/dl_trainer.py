@@ -32,7 +32,7 @@ https://towardsdatascience.com/building-rnn-lstm-and-gru-for-time-series-using-p
 
 
 def train_deep_classification_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs
+    model, train_loader, test_loader, optimizer, criterion, epochs, send_progress
 ):
     """
     Function for training pytorch model for classification. This function also times how long it takes to complete each epoch
@@ -102,9 +102,8 @@ def train_deep_classification_model(
             val_acc.append(mean_test_acc)
             test_loss.append(mean_test_loss)
 
-            print(
-                f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}"
-            )
+            send_progress((epoch + 1) / epochs * 100)
+            print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}")
         result_table = pd.DataFrame(
             {
                 EPOCH: [i for i in range(1, epochs + 1)],
@@ -137,7 +136,7 @@ def train_deep_classification_model(
 
 
 def train_deep_regression_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs
+    model, train_loader, test_loader, optimizer, criterion, epochs, send_progress
 ):
     """
     Train Regression model in Pytorch. This function also times how long it takes to complete each epoch
@@ -182,9 +181,8 @@ def train_deep_regression_model(
                 loss = compute_loss(criterion, test_pred, labels)
                 epoch_batch_loss += float(loss.detach())
             test_loss.append(epoch_batch_loss / num_test_epochs)
-            print(
-                f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}"
-            )
+            send_progress((epoch + 1) / epochs * 100)
+            print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
         result_table = pd.DataFrame(
             {
                 EPOCH: [i for i in range(1, epochs + 1)],
@@ -204,7 +202,7 @@ def train_deep_regression_model(
 
 
 def train_deep_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
+    model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, send_progress
 ):
     """
     Given train loader, train torch model
@@ -219,11 +217,11 @@ def train_deep_model(
     """
     if problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION):
         return train_deep_classification_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs
+            model, train_loader, test_loader, optimizer, criterion, epochs, send_progress
         )
     elif problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION):
         return train_deep_regression_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs
+            model, train_loader, test_loader, optimizer, criterion, epochs, send_progress
         )
 
 

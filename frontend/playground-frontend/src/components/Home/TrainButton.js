@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react'
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../../constants";
-import { train_and_output } from "../helper_functions/TalkWithBackend";
 import {
   validateTabularInputs,
   sendTabularJSON,
@@ -11,6 +10,8 @@ import {
   validatePretrainedInput,
   sendImageJSON,
 } from "../helper_functions/TrainButtonFunctions";
+import { socket, sendEmail, train_and_output } from "../helper_functions/TalkWithBackend";
+import { Circle } from 'rc-progress'
 
 const TrainButton = (props) => {
   const {
@@ -19,7 +20,24 @@ const TrainButton = (props) => {
     style,
   } = props;
 
-  const [pendingResponse, setPendingResponse] = useState(false);
+  const [pendingResponse, setPendingResponse] = useState(false)
+  const [progress, setProgress] = useState(null)
+  const [result, setResult] = useState(null)
+
+  useEffect(() => {
+    socket.on('trainingProgress', (progressData) => { // triggered by send_progress() function
+      setProgress(Number.parseFloat(progressData))
+    })
+    socket.on('trainingResult', (resultData) => {
+      setResult(resultData)
+    })
+  }, [socket])
+
+  const reset = () => {
+    setPendingResponse(false)
+    setProgress(null)
+    setResult(null)
+  }
 
   styles = { ...styles, ...style }; // style would take precedence
 
@@ -66,22 +84,23 @@ const TrainButton = (props) => {
   const onClick = async () => {
     setPendingResponse(true);
     setDLPBackendResponse(undefined);
+    setProgress(0)
 
     const user_arch = make_obj_param_list(props.addedLayers);
 
     if (!validateInputs(user_arch)) {
       setPendingResponse(false);
+      setProgress(null)
       return;
     }
 
-    let response;
     if (choice === "tabular")
-      response = await train_and_output(
+      train_and_output(
         choice,
         sendTabularJSON(user_arch, props)
       );
-    if (choice === "image") {
-      response = await train_and_output(
+    if (choice === "image")
+      train_and_output(
         choice,
         sendImageJSON(
           user_arch,
@@ -90,24 +109,30 @@ const TrainButton = (props) => {
           props
         )
       );
-    }
     if (choice === "pretrained")
-      response = await train_and_output(
+      train_and_output(
         choice,
         sendPretrainedJSON(user_arch, props)
       );
-
-    setDLPBackendResponse(response);
-    setPendingResponse(false);
-
-    if (response.success === true) {
-      alert("SUCCESS: Training successful! Scroll to see results!");
-    } else if (response.message) {
-      alert("FAILED: Training failed. Check output traceback message");
-    } else {
-      alert("FAILED: Training failed. Check your inputs");
     }
-  };
+
+  useEffect(() => {
+    if (result) {
+      if (result.success) {
+        // currently just works for tabular.. Will implement for images by if statements
+        if (props.email?.length) {
+          sendEmail(props.email, props.problemType)
+        }
+        alert("SUCCESS: Training successful! Scroll to see results!")
+      } else if (result.message) {
+        alert("FAILED: Training failed. Check output traceback message")
+      } else {
+        alert("FAILED: Training failed. Check your inputs")
+      }
+      setDLPBackendResponse(result);
+      reset()
+    }
+  }, [result])
 
   return (
     <>
@@ -129,8 +154,8 @@ const TrainButton = (props) => {
         </button>
       </RectContainer>
       {pendingResponse ? (
-        <div style={{ marginTop: 10 }}>
-          <div className="loader" />
+        <div style={{ marginLeft: 5, marginTop: 10, width: 90, height: 90 }}>
+          <Circle percent={progress} strokeWidth={4} />
         </div>
       ) : null}
     </>
@@ -139,11 +164,13 @@ const TrainButton = (props) => {
 
 TrainButton.propTypes = {
   addedLayers: PropTypes.any,
+  email: PropTypes.string,
   trainTransforms: PropTypes.any,
   testTransforms: PropTypes.any,
   setDLPBackendResponse: PropTypes.any,
   choice: PropTypes.string,
   style: PropTypes.any,
+  problemType: PropTypes.any,
 };
 
 export default TrainButton;

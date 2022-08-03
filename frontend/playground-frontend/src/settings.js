@@ -401,7 +401,7 @@ export const POSSIBLE_TRANSFORMS = [
       probability: { index: 0, parameter_name: "Prob" },
     },
     label: "Random Horizontal Flip",
-    value: "HF",
+    value: "RandomHorizontalFlip",
   },
 
   {
@@ -411,7 +411,7 @@ export const POSSIBLE_TRANSFORMS = [
       p: { index: 0, parameter_name: "probability" },
     },
     label: "Random Vertical Flip",
-    value: "VF",
+    value: "RandomVerticalFlip",
   },
 
   {
@@ -419,7 +419,7 @@ export const POSSIBLE_TRANSFORMS = [
     object_name: "transforms.ToTensor",
     parameters: {},
     label: "To Tensor",
-    value: "TT",
+    value: "ToTensor",
   },
   {
     display_name: "Resize",
@@ -428,8 +428,34 @@ export const POSSIBLE_TRANSFORMS = [
       size: { index: 0, parameter_name: "(H, W)" },
     },
     label: "Resize",
-    value: "R",
+    value: "Resize",
   },
+  {
+    display_name: "Gaussian Blur",
+    object_name: "transforms.GaussianBlur",
+    parameters: {
+      kernel_size: {index: 0, parameter_name: "kernel size"},
+    },
+    label: "Gaussian Blur",
+    value: "GaussianBlur",
+  },
+  {
+    display_name: "Grayscale",
+    object_name: "transforms.Grayscale",
+    parameters: {},
+    label: "Grayscale",
+    value: "Grayscale",
+  },
+  {
+    display_name: "Normalize",
+    object_name: "transforms.Normalize",
+    parameters: {
+      mean: {index: 0, parameter_name: "mean"},
+      std: {index: 1, parameter_name: "std"},
+    },
+    label: "Normalize",
+    value: "Normalize"
+  }
 ];
 
 export const CRITERIONS = [

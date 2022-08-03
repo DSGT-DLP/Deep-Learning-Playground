@@ -81,6 +81,13 @@ export const DEFAULT_ADDED_LAYERS = [
 
 export const DEFAULT_TRANSFORMS = [
   {
+    display_name: "Grayscale",
+    object_name: "transforms.Grayscale",
+    parameters: {},
+    label: "Grayscale",
+    value: "Grayscale",
+  },
+  {
     display_name: "To Tensor",
     object_name: "transforms.ToTensor",
     parameters: {},
@@ -91,7 +98,7 @@ export const DEFAULT_TRANSFORMS = [
     display_name: "Resize",
     object_name: "transforms.Resize",
     parameters: {
-      size: { index: 0, parameter_name: "(H, W)" , value: "(32, 32)"},
+      size: { index: 0, parameter_name: "(H, W)", value: "(32, 32)" },
     },
     label: "Resize",
     value: "R",
@@ -106,7 +113,7 @@ export const DEFAULT_IMG_LAYERS = [
       in_channels: {
         index: 0,
         parameter_name: "in channels",
-        value: 3,
+        value: 1,
       },
       out_channels: {
         index: 1,
@@ -150,7 +157,7 @@ export const DEFAULT_IMG_LAYERS = [
     object_name: "nn.Linear",
     parameters: {
       inputSize: { index: 0, parameter_name: "Input size", value: 10 * 10 * 5 },
-      outputSize: { index: 1, parameter_name: "Output size", value: 2 },
+      outputSize: { index: 1, parameter_name: "Output size", value: 10 },
     },
   },
   {

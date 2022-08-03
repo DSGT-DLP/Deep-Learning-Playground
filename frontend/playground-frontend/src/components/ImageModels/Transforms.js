@@ -8,6 +8,8 @@ import { GENERAL_STYLES, COLORS } from "../../constants";
 const Transforms = (props) => {
   const { queryText, options, transforms, setTransforms } = props;
 
+  options.sort((a, b) => a.label.localeCompare(b.label))
+
   const addTransform = (e, transforms, setTransforms) => {
     const copyTransform = [...transforms];
     const selectedTransform = deepCopyObj(e);
@@ -28,6 +30,7 @@ const Transforms = (props) => {
             addTransform(e, transforms, setTransforms);
           }}
           style={{ float: "left" }}
+
         />
 
         {transforms.map((_, i) => (

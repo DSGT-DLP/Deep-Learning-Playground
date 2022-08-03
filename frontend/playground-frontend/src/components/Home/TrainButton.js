@@ -10,7 +10,7 @@ import {
   validatePretrainedInput,
   sendImageJSON,
 } from "../helper_functions/TrainButtonFunctions";
-import { socket, sendEmail, train_and_output } from "../helper_functions/TalkWithBackend";
+import { socket, sendEmail ,train_and_output } from "../helper_functions/TalkWithBackend";
 import { Circle } from 'rc-progress'
 
 const TrainButton = (props) => {
@@ -26,6 +26,7 @@ const TrainButton = (props) => {
 
   useEffect(() => {
     socket.on('trainingProgress', (progressData) => { // triggered by send_progress() function
+      console.log("recieveing in frontend")
       setProgress(Number.parseFloat(progressData))
     })
     socket.on('trainingResult', (resultData) => {
@@ -120,9 +121,11 @@ const TrainButton = (props) => {
     if (result) {
       if (result.success) {
         // currently just works for tabular.. Will implement for images by if statements
+
         if (props.email?.length) {
           sendEmail(props.email, props.problemType)
         }
+
         alert("SUCCESS: Training successful! Scroll to see results!")
       } else if (result.message) {
         alert("FAILED: Training failed. Check output traceback message")
@@ -145,10 +148,10 @@ const TrainButton = (props) => {
         <button
           style={{
             ...styles.button,
-            cursor: pendingResponse ? "wait" : "pointer",
+            // cursor: pendingResponse ? "wait" : "pointer",
           }}
           onClick={onClick}
-          disabled={pendingResponse}
+          // disabled={pendingResponse}
         >
           Train!
         </button>

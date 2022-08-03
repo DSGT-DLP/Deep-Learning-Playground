@@ -98,8 +98,8 @@ def train_deep_classification_model(
                 test_correct += compute_correct(test_pred, labels)
                 loss = compute_loss(criterion, test_pred, labels)
                 epoch_batch_loss += float(loss.detach())
-            mean_test_loss = test_correct / epoch_test_size
-            mean_test_acc = epoch_batch_loss / num_test_epochs
+            mean_test_acc = test_correct / epoch_test_size
+            mean_test_loss = epoch_batch_loss / num_test_epochs
             val_acc.append(mean_test_acc)
             test_loss.append(mean_test_loss)
 
@@ -249,7 +249,7 @@ def get_deep_predictions(model: nn.Module, test_loader):
 
     return prediction_tensor, ground_truth_tensor
 
-def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device):
+def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress):
     try:
         model = model.to(device)
         train_loss = []  # accumulate training loss over each epoch
@@ -316,6 +316,8 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
             mean_test_acc = correct / len(test_loader.dataset)
             test_loss.append(mean_test_loss)
             val_acc.append(mean_test_acc)
+
+            send_progress((epoch + 1) / epochs*100)
 
             print(
                 f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}"

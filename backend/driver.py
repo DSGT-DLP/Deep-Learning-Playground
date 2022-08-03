@@ -189,11 +189,12 @@ def root(path):
 def frontend_log(log):
     app.logger.info(f'"frontend: {log}"')
 
-@app.route("/img-run", methods=["POST"])
-def testing():
+@socket.on("img-run")
+def testing(request_data):
     try: 
+        print("STARTTTT")
         IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
-        request_data = json.loads(request.data)
+        # request_data = json.loads(request.data)
         train_transform = request_data["train_transform"]
         test_transform = request_data["test_transform"]
         user_arch = request_data["user_arch"]
@@ -203,7 +204,6 @@ def testing():
         epochs = request_data["epochs"]
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
-        email = request_data["email"]
 
         # upload()
         print(user_arch)
@@ -230,27 +230,27 @@ def testing():
                 model, optimizer_name=optimizer_name, learning_rate=0.05
         )
 
-        train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device)
+        train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress)
 
         print("damn")
 
-        return (
-                    jsonify(
+        socket.emit("trainingResult",
                         {
                             "success": True,
                             "message": "Dataset trained and results outputted successfully",
                             "dl_results": csv_to_json(),
-                            "auxiliary_outputs": train_loss_results
+                            "auxiliary_outputs": train_loss_results,
+                            "status": 200
                         }
-                    ),
-                    200,
         )
     except Exception as e:
-        print(e)
         print(traceback.format_exc())
-        return (
-            jsonify({"success": False, "message": traceback.format_exc(limit=1)}),
-                400,
+        socket.emit('trainingResult',
+            {
+                "success": False,
+                "message": traceback.format_exc(limit=1),
+                "status": 400
+            }
         )
     finally:
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
@@ -266,7 +266,6 @@ def testing():
 
 @socket.on('runTraining')
 def train_and_output(request_data):
-    print(request_data)
     user_arch = request_data["user_arch"]
     criterion = request_data["criterion"]
     optimizer_name = request_data["optimizer_name"]    
@@ -396,6 +395,7 @@ def upload():
     return '200'
 
 def send_progress(progress):
+    print("hey i am in training process")
     socket.emit('trainingProgress', progress)
     eventlet.greenthread.sleep(0)                 # to prevent logs from being grouped and sent together at the end of training
 

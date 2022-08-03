@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-export const socketEventDict = {
+const socketEventDict = {
   tabular: "runTraining",
   image: "img-run",
   pretrained: "pretrain-run",
@@ -12,6 +12,7 @@ socket.on("connect", () => {
 });
 socket.on("connect_error", (err) => {
   console.log(`connection error due to: ${err.message}`);
+  console.log(err)
   socket.close();
 });
 

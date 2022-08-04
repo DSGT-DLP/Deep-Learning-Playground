@@ -9,6 +9,7 @@ export { default as CSVInputFile } from "./Home/CSVInputFile";
 export { default as CSVInputURL } from "./Home/CSVInputURL";
 export { default as CodeSnippet } from "./Home/CodeSnippet";
 export { default as DropDown } from "./Home/DropDown";
+export { default as Dropzone } from "./Home/Dropzone";
 export { default as EmailInput } from "./Home/EmailInput";
 export { default as Input } from "./Home/Input";
 export { default as LayerChoice } from "./Home/LayerChoice";

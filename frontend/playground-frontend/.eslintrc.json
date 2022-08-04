@@ -1,9 +1,10 @@
 {
   "env": {
+    "node": true,
     "browser": true,
     "es2021": true
   },
-  "extends": ["plugin:react/recommended"],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -16,6 +17,7 @@
     "no-control-regex": 0,
     "react/no-unescaped-entities": 0,
     "object-shorthand": ["error", "consistent-as-needed"],
-    "no-var": "error"
+    "no-var": "error",
+    "semi": "error"
   }
 }

@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../../constants";
-import { socket, sendEmail, train_and_output } from "../helper_functions/TalkWithBackend";
-import { Circle } from 'rc-progress'
+import {
+  socket,
+  sendEmail,
+  train_and_output,
+} from "../helper_functions/TalkWithBackend";
+import { Circle } from "rc-progress";
 
 const TrainButton = (props) => {
   const {
@@ -24,24 +28,24 @@ const TrainButton = (props) => {
     email,
   } = props;
 
-  const [pendingResponse, setPendingResponse] = useState(false)
-  const [progress, setProgress] = useState(null)
-  const [result, setResult] = useState(null)
+  const [pendingResponse, setPendingResponse] = useState(false);
+  const [progress, setProgress] = useState(null);
+  const [result, setResult] = useState(null);
 
   useEffect(() => {
-    socket.on('trainingProgress', (progressData) => {
-      setProgress(Number.parseFloat(progressData))
-    })
-    socket.on('trainingResult', (resultData) => {
-      setResult(resultData)
-    })
-  }, [socket])
+    socket.on("trainingProgress", (progressData) => {
+      setProgress(Number.parseFloat(progressData));
+    });
+    socket.on("trainingResult", (resultData) => {
+      setResult(resultData);
+    });
+  }, [socket]);
 
   const reset = () => {
-    setPendingResponse(false)
-    setProgress(null)
-    setResult(null)
-  }
+    setPendingResponse(false);
+    setProgress(null);
+    setResult(null);
+  };
 
   const make_user_arch = () => {
     // making a user_arch array by including all added layers and their parameters to make something like:
@@ -100,12 +104,12 @@ const TrainButton = (props) => {
   const onClick = async () => {
     setPendingResponse(true);
     setDLPBackendResponse(undefined);
-    setProgress(0)
+    setProgress(0);
 
     const user_arch = make_user_arch();
     if (!validateInputs(user_arch)) {
       setPendingResponse(false);
-      setProgress(null)
+      setProgress(null);
       return;
     }
 
@@ -124,26 +128,26 @@ const TrainButton = (props) => {
       batchSize,
       shuffle,
       csvDataStr,
-      fileURL,
-    )
-  }
+      fileURL
+    );
+  };
 
   useEffect(() => {
     if (result) {
       if (result.success) {
         if (email?.length) {
-          sendEmail(email, problemType)
+          sendEmail(email, problemType);
         }
-        alert("SUCCESS: Training successful! Scroll to see results!")
+        alert("SUCCESS: Training successful! Scroll to see results!");
       } else if (result.message) {
-        alert("FAILED: Training failed. Check output traceback message")
+        alert("FAILED: Training failed. Check output traceback message");
       } else {
-        alert("FAILED: Training failed. Check your inputs")
+        alert("FAILED: Training failed. Check your inputs");
       }
       setDLPBackendResponse(result);
-      reset()
+      reset();
     }
-  }, [result])
+  }, [result]);
 
   return (
     <>

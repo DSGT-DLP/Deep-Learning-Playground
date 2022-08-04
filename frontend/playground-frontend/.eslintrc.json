@@ -3,7 +3,7 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["plugin:react/recommended", "standard", "prettier"],
+  "extends": ["plugin:react/recommended"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -14,9 +14,8 @@
   "plugins": ["react"],
   "rules": {
     "no-control-regex": 0,
-    "camelcase": 0,
     "react/no-unescaped-entities": 0,
     "object-shorthand": ["error", "consistent-as-needed"],
-    "no-var": ["error"]
+    "no-var": "error"
   }
 }

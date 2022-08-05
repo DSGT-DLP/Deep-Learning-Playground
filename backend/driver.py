@@ -30,7 +30,7 @@ app = Flask(
     ),
 )
 CORS(app)
-socket = SocketIO(app, cors_allowed_origins="*", ping_timeout=120, ping_interval=5)
+socket = SocketIO(app, cors_allowed_origins="*", ping_timeout=600, ping_interval=15)
 
 def ml_drive(
     user_model,

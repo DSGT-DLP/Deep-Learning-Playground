@@ -10,9 +10,7 @@ const socket = io(":5000", { timeout: 60000 });
 socket.on("connect", () => {
   frontendLog(`connected to socket`);
 });
-socket.on("connect_error", (err) => {
-  console.log(`connection error due to: ${err.message}`);
-  console.log(err)
+socket.on("connect_error", () => {
   socket.close();
 });
 

@@ -6,6 +6,7 @@ from backend.common.constants import DEFAULT_DATASETS
 import torchvision
 import torch
 
+
 def get_default_dataset(dataset):
     """
     If user doesn't specify dataset
@@ -37,7 +38,10 @@ def get_default_dataset(dataset):
     except Exception:
         raise Exception(f"Unable to load the {dataset} file into Pandas DataFrame")
 
-def get_img_default_dataset_loaders(datasetname, test_transform, train_transform, batch_size, shuffle):
+
+def get_img_default_dataset_loaders(
+    datasetname, test_transform, train_transform, batch_size, shuffle
+):
     """
     Returns dataloaders from default datasets
     Args:
@@ -46,12 +50,26 @@ def get_img_default_dataset_loaders(datasetname, test_transform, train_transform
         train_transform (list) : list of transforms
         batch_size (int) : batch_size
     """
+    if datasetname == "MNIST":
+        new_mirror = "https://ossci-datasets.s3.amazonaws.com/mnist" ## torchvision default MNIST route causes 503 error
+        torchvision.datasets.MNIST.resources = [
+            ("/".join([new_mirror, url.split("/")[-1]]), md5)
+            for url, md5 in torchvision.datasets.MNIST.resources
+        ]
 
     train_transform = torchvision.transforms.Compose([x for x in train_transform])
     test_transform = torchvision.transforms.Compose([x for x in test_transform])
 
-    train_set = eval(f"torchvision.datasets.{datasetname}(root='./backend/image_data_uploads', train=True, download=True, transform=train_transform)")
-    test_set = eval(f'torchvision.datasets.{datasetname}(root="./backend/image_data_uploads", train=False, download=True, transform=test_transform)')
-    train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=shuffle)
-    test_loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size, shuffle=shuffle)
+    train_set = eval(
+        f"torchvision.datasets.{datasetname}(root='./backend/image_data_uploads', train=True, download=True, transform=train_transform)"
+    )
+    test_set = eval(
+        f'torchvision.datasets.{datasetname}(root="./backend/image_data_uploads", train=False, download=True, transform=test_transform)'
+    )
+    train_loader = torch.utils.data.DataLoader(
+        train_set, batch_size=batch_size, shuffle=shuffle
+    )
+    test_loader = torch.utils.data.DataLoader(
+        test_set, batch_size=batch_size, shuffle=shuffle
+    )
     return train_loader, test_loader

@@ -15,7 +15,6 @@ import {
   CSVInputFile,
   CSVInputURL,
   CodeSnippet,
-  Dropzone,
   EmailInput,
   Input,
   LayerChoice,
@@ -150,7 +149,6 @@ const Home = () => {
       <DndProvider backend={HTML5Backend}>
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
-          <Dropzone />
           <RectContainer style={styles.fileInput}>
             <CSVInputFile
               setData={setCSVDataInput}

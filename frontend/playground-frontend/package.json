@@ -20,7 +20,6 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.1.0",
-    "react-dropzone": "^14.2.2",
     "react-google-recaptcha": "^2.1.0",
     "react-icons": "^4.4.0",
     "react-plotly.js": "^2.5.1",

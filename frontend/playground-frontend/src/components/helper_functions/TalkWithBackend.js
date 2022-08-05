@@ -6,7 +6,7 @@ const socketEventDict = {
   pretrained: "pretrain-run",
 };
 
-const socket = io(":5000");
+const socket = io(":5000", { timeout: 60000 });
 socket.on("connect", () => {
   frontendLog(`connected to socket`);
 });

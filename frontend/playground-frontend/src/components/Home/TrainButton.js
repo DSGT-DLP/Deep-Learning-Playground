@@ -148,10 +148,10 @@ const TrainButton = (props) => {
         <button
           style={{
             ...styles.button,
-            // cursor: pendingResponse ? "wait" : "pointer",
+            cursor: pendingResponse ? "wait" : "pointer",
           }}
           onClick={onClick}
-          // disabled={pendingResponse}
+          disabled={pendingResponse}
         >
           Train!
         </button>

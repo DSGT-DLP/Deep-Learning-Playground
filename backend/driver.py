@@ -395,7 +395,6 @@ def upload():
     return '200'
 
 def send_progress(progress):
-    print("hey i am in training process")
     socket.emit('trainingProgress', progress)
     eventlet.greenthread.sleep(0)                 # to prevent logs from being grouped and sent together at the end of training
 

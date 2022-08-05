@@ -4,15 +4,15 @@ import { layerToString } from "../Home/CodeSnippet";
 
 const DataCodeSnippet = (props) => {
   const { backendResponse } = props;
-  console.log(backendResponse);
 
   if (backendResponse?.success) {
     return (
       <div>
+        <p style={{margin: "2px" }} >Getting dataloaders</p>
         <textarea
           readOnly
           rows="10"
-          style={{ width: "100%", marginTop: "10px"}}
+          style={{ width: "100%"}}
           value={codeSnippetFormat(props)}
         />
       </div>

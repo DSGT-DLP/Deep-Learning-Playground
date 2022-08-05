@@ -26,7 +26,6 @@ const TrainButton = (props) => {
 
   useEffect(() => {
     socket.on('trainingProgress', (progressData) => { // triggered by send_progress() function
-      console.log("recieveing in frontend")
       setProgress(Number.parseFloat(progressData))
     })
     socket.on('trainingResult', (resultData) => {

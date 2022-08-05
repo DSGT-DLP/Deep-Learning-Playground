@@ -6,6 +6,7 @@ from backend.common.constants import DEFAULT_DATASETS
 import torchvision
 import torch
 
+torchvision.datasets.MNIST.mirrors = [torchvision.datasets.MNIST.mirrors[1]]   ## torchvision default MNIST route causes 503 error sometimes
 
 def get_default_dataset(dataset):
     """
@@ -50,13 +51,6 @@ def get_img_default_dataset_loaders(
         train_transform (list) : list of transforms
         batch_size (int) : batch_size
     """
-    if datasetname == "MNIST":
-        new_mirror = "https://ossci-datasets.s3.amazonaws.com/mnist" ## torchvision default MNIST route causes 503 error
-        torchvision.datasets.MNIST.resources = [
-            ("/".join([new_mirror, url.split("/")[-1]]), md5)
-            for url, md5 in torchvision.datasets.MNIST.resources
-        ]
-
     train_transform = torchvision.transforms.Compose([x for x in train_transform])
     test_transform = torchvision.transforms.Compose([x for x in test_transform])
 

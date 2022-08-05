@@ -18,6 +18,8 @@
     "react/no-unescaped-entities": 0,
     "object-shorthand": ["error", "consistent-as-needed"],
     "no-var": "error",
-    "semi": "error"
+    "semi": "error",
+    "eol-last": "error",
+    "no-multiple-empty-lines": ["error", { "max": 1, "maxBOF": 0, "maxEOF": 1 }]
   }
 }

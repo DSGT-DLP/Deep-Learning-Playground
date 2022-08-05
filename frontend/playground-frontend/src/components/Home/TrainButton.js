@@ -8,6 +8,7 @@ import {
   train_and_output,
 } from "../helper_functions/TalkWithBackend";
 import { Circle } from "rc-progress";
+import { toast } from "react-toastify";
 
 const TrainButton = (props) => {
   const {
@@ -97,7 +98,7 @@ const TrainButton = (props) => {
 
     if (alertMessage.length === 0) return true;
 
-    alert(alertMessage);
+    toast.error(alertMessage);
     return false;
   };
 
@@ -138,11 +139,11 @@ const TrainButton = (props) => {
         if (email?.length) {
           sendEmail(email, problemType);
         }
-        alert("SUCCESS: Training successful! Scroll to see results!");
+        toast.success("Training successful! Scroll to see results!");
       } else if (result.message) {
-        alert("FAILED: Training failed. Check output traceback message");
+        toast.error("Training failed. Check output traceback message");
       } else {
-        alert("FAILED: Training failed. Check your inputs");
+        toast.error("Training failed. Check your inputs");
       }
       setDLPBackendResponse(result);
       reset();

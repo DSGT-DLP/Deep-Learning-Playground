@@ -1,4 +1,5 @@
 import { io } from "socket.io-client";
+import { toast } from "react-toastify";
 
 const socket = io(":5000");
 socket.on("connect", () => {
@@ -78,7 +79,7 @@ const sendEmail = (email, problemType) => {
 
 socket.on("emailResult", (result) => {
   if (!result.success) {
-    alert(result.message);
+    toast.error(result.message);
   }
 });
 

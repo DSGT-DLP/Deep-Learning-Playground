@@ -58,7 +58,6 @@ export const sendTabularJSON = (user_arch, ...args) => {
 };
 
 // IMAGE
-
 export const validateImageInputs = (user_arch, ...args) => {
   args = args[0];
   let alertMessage = "";
@@ -66,14 +65,10 @@ export const validateImageInputs = (user_arch, ...args) => {
   if (!args.criterion) alertMessage += "A criterion must be specified. ";
   if (!args.optimizerName)
     alertMessage += "An optimizer name must be specified. ";
-  // if (!args.usingDefaultDataset) {
-  //   if (!args.dataInput && !args.fileURL) {
-  //     alertMessage +=
-  //       "Must specify an input file either from local storage or from an internet URL. ";
-  //   }
-  // }
+  if (args.batchSize < 2) alertMessage += "Batch size cannot be less than 2";
+  if (!args.dataUploaded && !args.usingDefaultDataset) alertMessage += "Please specify a valid data from default or upload";
+  // can easily add a epoch limit
 
-  // Think about checking epochs and batch size here
   return alertMessage;
 };
 
@@ -119,7 +114,6 @@ export const validatePretrainedInput = (user_arch, ...args) => {
 export const sendPretrainedJSON = (user_arch, ...args) => {
   args = args[0];
 
-  console.log(args.criterion);
   return {
     model_name: args.modelName,
     criterion: args.criterion,

@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 const CodeSnippet = (props) => {
   const { backendResponse, layers} = props;
 
-  console.log(backendResponse);
   if (!backendResponse?.success) {
     return (
       backendResponse?.message || (
@@ -79,7 +78,6 @@ export function layerToString(layer) {
       // const paramList= Array{[params.length]}
 
       const paramList = new Array(params.length)
-      // console.log(params)
       for (let i = 0; i < params.length; i++) {
         const param = params[i];
         // param: "inputSize"

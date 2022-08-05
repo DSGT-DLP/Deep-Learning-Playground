@@ -267,10 +267,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
         epoch_test_size = test_loader.batch_size * num_test_epochs  # total number of data points used for testing per epoch
 
         for epoch in range(epochs):
-            # batch_train_acc = []
-            # batch_test_acc = []
             model.train(True)
-            # batch_loss = []
 
             loss, train_correct, epoch_batch_loss = 0, 0, 0
             start_time = time.time()
@@ -286,11 +283,8 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                 optimizer.step()
                 y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
                 train_correct += (y_pred == y_true).type(torch.float).sum().item()
-                epoch_batch_loss += float(loss.detach())
-                # batch_loss.append(loss)
-                # batch_train_acc.append(correct)
+                epoch_batch_loss += float(loss.detach())                
             epoch_time.append(time.time() - start_time)
-            # mean_train_loss = np.mean(torch.stack(batch_loss).detach().numpy())
             mean_train_loss = epoch_batch_loss / num_train_epochs
             mean_train_acc = train_correct / epoch_train_size
             train_loss.append(mean_train_loss)
@@ -299,7 +293,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
 
             model.train(False)
             loss, test_correct = 0, 0
-            print("going to tests")
+            print("training for this epoch finished, going to validation")
 
             for x in test_loader:
                 y = x[1]
@@ -315,16 +309,11 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                     labels_last_epoch.append(y)
 
                 test_correct += compute_accuracy(pred, y)
-                # batch_test_acc.append(compute_accuracy(pred, y))
                 test_correct += (y_pred == y_true).type(torch.float).sum().item()
-                # batch_test_acc.append(correct)
                 loss = compute_img_loss(criterion, pred, y)
                 epoch_batch_loss += float(loss.detach())
-                # batch_loss.append(loss)
 
-            # mean_test_loss = np.mean(torch.stack(batch_loss).detach().numpy())
             mean_test_loss = epoch_batch_loss / num_test_epochs
-            # mean_test_acc = correct / len(test_loader.dataset)
             mean_test_acc = test_correct / epoch_test_size
             test_loss.append(mean_test_loss)
             val_acc.append(mean_test_acc)

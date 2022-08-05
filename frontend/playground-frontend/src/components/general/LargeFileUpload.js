@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
+import { PropTypes } from "prop-types";
 
 const { Dropzone } = require("dropzone");
 
+const LargeFileUpload = (props) => {
 
-const LargeFileUpload = () => {
+  const {setDataUploaded } = props;
 
   const script = document.createElement("script");
 
@@ -23,11 +25,10 @@ const LargeFileUpload = () => {
       maxFilesize: 5000, // megabytes
       chunkSize: 1000000, // bytes
       init: function() {
-        console.log("init");
+        ;
       }
     }
     Dropzone.options.dropper.init();
-    // console.log(Dropzone.options.dropper);
   });
 
   return (
@@ -35,10 +36,14 @@ const LargeFileUpload = () => {
       <iframe name="dummyframe" id="dummyframe" style={{'display':"none"}}></iframe>
       <form action="/upload" encType='multipart/form-data' method='POST' target="dummyframe" >
         <input type="file" name="file" accept=".zip" style={{marginLeft: "40px"}}></input>
-        <input type="submit" value="upload" style={{marginLeft: "43px"}}></input>
+        <input type="submit" value="upload" style={{marginLeft: "43px"}} onClick={()=> setDataUploaded(true)}></input>
       </form>
     </>
   );
 };
+
+LargeFileUpload.propTypes = {
+  setDataUploaded: PropTypes.any,
+}
 
 export default LargeFileUpload;

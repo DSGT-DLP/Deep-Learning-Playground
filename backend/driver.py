@@ -192,7 +192,7 @@ def frontend_log(log):
 @socket.on("img-run")
 def testing(request_data):
     try: 
-        print("STARTTTT")
+        print("backend started")
         IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
         # request_data = json.loads(request.data)
         train_transform = request_data["train_transform"]
@@ -232,7 +232,7 @@ def testing(request_data):
 
         train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress)
 
-        print("damn")
+        print("training successfully finished")
 
         socket.emit("trainingResult",
                         {
@@ -254,7 +254,6 @@ def testing(request_data):
         )
     finally:
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
-            print(x)
             if (x != ".gitkeep"):
                 file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER) , x)
                 if (os.path.isdir(file_rem)):
@@ -376,13 +375,13 @@ def send_email_route(request_data):
 def upload():
     @copy_current_request_context
     def save_file(closeAfterWrite):
-        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " i am doing")
+        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " dropzone is working")
         f = request.files['file']
         basepath = os.path.dirname(__file__) 
         upload_path = os.path.join(basepath, 'image_data_uploads',secure_filename(f.filename)) 
         f.save(upload_path)
         closeAfterWrite()
-        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " write done")
+        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " dropzone has finished its task")
     def passExit():
         pass
     if request.method == 'POST':

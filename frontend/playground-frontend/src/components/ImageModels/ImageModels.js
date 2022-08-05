@@ -49,7 +49,7 @@ const ImageModels = () => {
   const [batchSize, setBatchSize] = useState(20);
   const [email, setEmail] = useState("");
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
-  // const [dataUploaded, setDataUploaded] = useState(false);
+  const [dataUploaded, setDataUploaded] = useState(false);
 
   const input_responses = {
     batchSize: batchSize,
@@ -61,6 +61,7 @@ const ImageModels = () => {
     usingDefaultDataset: usingDefaultDataset?.value,
     trainTransforms: trainTransforms,
     testTransforms: testTransforms,
+    dataUploaded: dataUploaded,
   };
 
   const input_queries = [
@@ -136,7 +137,7 @@ const ImageModels = () => {
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <RectContainer style={styles.fileInput}>
-            <LargeFileUpload />
+            <LargeFileUpload setDataUploaded={setDataUploaded} />
           </RectContainer>
 
           {addedLayers.map((_, i) => (

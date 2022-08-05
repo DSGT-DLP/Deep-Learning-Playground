@@ -9,13 +9,12 @@ const _InputOutputPromptResponse = (props) => {
     allParamInputs,
     setAddedLayers,
     thisLayerIndex,
-    finalStyle,
   } = props;
   const { parameter_name, value } = allParamInputs[param_key];
 
   return (
     <div style={{ ...LAYOUT.row, alignItems: "center" }}>
-      <p style={finalStyle.input_prompt}>{`${parameter_name}:`}</p>
+      <p style={styles.input_prompt}>{`${parameter_name}:`}</p>
       <input
         value={value}
         onChange={(e) =>
@@ -27,7 +26,7 @@ const _InputOutputPromptResponse = (props) => {
             return copyCurrent;
           })
         }
-        style={finalStyle.input_text}
+        style={styles.input_text}
       />
     </div>
   );
@@ -39,13 +38,7 @@ const AddedLayer = (props) => {
   const thisLayer = addedLayers[thisLayerIndex];
   const { display_name, parameters } = thisLayer;
 
-  const finalStyle = styles;
-
-  if (style) {
-    Object.keys(style).forEach(key => {
-      finalStyle[key] = style[key];
-    });
-  }
+  styles = {...styles, ...style}
 
   // converts the parameters object for each layer into an array of parameter objects
   const param_array = [];
@@ -57,20 +50,19 @@ const AddedLayer = (props) => {
         allParamInputs={thisLayer.parameters}
         setAddedLayers={setAddedLayers}
         thisLayerIndex={thisLayerIndex}
-        finalStyle={finalStyle}
       />
     );
   });
 
   return (
     <div style={LAYOUT.column}>
-      <RectContainer style={finalStyle.layer_box}>
-        <button style={finalStyle.delete_btn} onClick={onDelete}>
+      <RectContainer style={styles.layer_box}>
+        <button style={styles.delete_btn} onClick={onDelete}>
           ❌
         </button>
-        <p style={finalStyle.text}>{display_name}</p>
+        <p style={styles.text}>{display_name}</p>
       </RectContainer>
-      <div style={finalStyle.input_box}>{param_array}</div>
+      <div style={styles.input_box}>{param_array}</div>
     </div>
   );
 };
@@ -96,8 +88,8 @@ AddedLayer.propTypes = {
 
 export default AddedLayer;
 
-const styles = {
-  layer_box : {
+let styles = {
+  layer_box: {
     backgroundColor: COLORS.layer,
     width: 130,
   },
@@ -112,7 +104,7 @@ const styles = {
   input_box: {
     margin: 7.5,
     backgroundColor: "white",
-    width: 130,
+    width: 150,
     paddingInline: 5,
   },
   input_prompt: {

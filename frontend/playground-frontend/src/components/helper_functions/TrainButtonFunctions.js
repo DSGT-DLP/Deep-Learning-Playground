@@ -29,6 +29,7 @@ export const validateTabularInputs = (user_arch, ...args) => {
         "Must specify an input file either from local storage or from an internet URL. ";
     }
   }
+  if (args.batchSize < 2) alertMessage += "Batch size cannot be less than 2";
   return alertMessage;
 };
 

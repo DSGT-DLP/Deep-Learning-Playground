@@ -201,18 +201,6 @@ const Home = () => {
                 currentLayers.splice(i, 1);
                 setAddedLayers(currentLayers);
               }}
-              style={{
-                input_box: {
-                  margin: 7.5,
-                  backgroundColor: "white",
-                  width: 150,
-                  paddingInline: 5,
-                },
-                layer_box: {
-                  width: 130,
-                  backgroundColor: COLORS.layer,
-                },
-              }}
             />
           ))}
           <AddNewLayer />

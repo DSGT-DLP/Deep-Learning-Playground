@@ -179,7 +179,7 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     """
     Given the prediction results and label, generate confusion matrix (only applicable to classification tasks)
     Args:
-        labels_last_epoc: array (of len batch_size) consisting of arrays of ground truth values (Tensors)
+        labels_last_epoch: array (of len batch_size) consisting of arrays of ground truth values (Tensors)
         y_pred: array consisting of predicted results (in probability form)
         # categoryList: list of strings that represent the categories to classify into (this will be used to label the axis)
     Returns: the confusion matrix in a 2D-array format
@@ -187,14 +187,18 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     label = []
     y_pred = []
     categoryList = []
+    
+    for label_batch, y_pred_batch in zip(labels_last_epoch, y_pred_last_epoch):
+        pass #implement the logic to do both the work in ONE iteration!
 
     for batch in labels_last_epoch:
         for val in batch.detach().numpy():
             label.append(val.item())
 
     for batch in y_pred_last_epoch:
-        for val in batch:
-            y_pred.append(np.argmax(val))
+        y_pred = np.concatenate((y_pred, np.argmax(batch, axis=1)), axis=None) #flatten and concatenate
+        
+        
 
     # generating a category list for confusion matrix axis labels
     if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):

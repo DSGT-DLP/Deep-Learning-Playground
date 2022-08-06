@@ -88,12 +88,12 @@ def train_deep_classification_model(
             for i, data in enumerate(test_loader):
                 input, labels = data
                 test_pred = model(input)
-                # currently only preserving the prediction array and label array for the last epoch for 
+                # currently only preserving the prediction array and label array for the last epoch for
                 # confusion matrix calculation
                 if(epoch == epochs - 1):
                     y_pred_last_epoch.append(test_pred.detach().numpy().squeeze())
 
-                    labels_last_epoch.append(labels)
+                    labels_last_epoch.append(labels.detach().numpy().squeeze())
 
                 test_correct += compute_correct(test_pred, labels)
                 loss = compute_loss(criterion, test_pred, labels)

@@ -226,14 +226,21 @@ const ImageModels = () => {
       <TitleText text="Deep Learning Results" />
       <Results
         dlpBackendResponse={dlpBackendResponse}
-        problemType= {PROBLEM_TYPES[0]}
+        problemType={PROBLEM_TYPES[0]}
         auc_roc_data={auc_roc_data}
         auc_roc_data_res={auc_roc_data_res}
       />
 
       <TitleText text="Code Snippet" />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
-      <DataCodeSnippet backendResponse={dlpBackendResponse} trainTransforms={trainTransforms} testTransforms={testTransforms} batchSize={batchSize} shuffle={shuffle} defaultData={usingDefaultDataset} />
+      <DataCodeSnippet
+        backendResponse={dlpBackendResponse}
+        trainTransforms={trainTransforms}
+        testTransforms={testTransforms}
+        batchSize={batchSize}
+        shuffle={shuffle}
+        defaultData={usingDefaultDataset}
+      />
     </div>
   );
 };
@@ -244,7 +251,7 @@ const styles = {
   fileInput: {
     ...LAYOUT.column,
     backgroundColor: COLORS.input,
-    width: 200,
+    width: 155,
   },
   transformChoice: {
     top_left_tooltip: {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../../constants";
@@ -11,7 +11,8 @@ import {
   sendImageJSON,
 } from "../helper_functions/TrainButtonFunctions";
 import { socket, sendEmail ,train_and_output } from "../helper_functions/TalkWithBackend";
-import { Circle } from 'rc-progress'
+import { Circle } from 'rc-progress';
+import { toast } from "react-toastify";
 
 const TrainButton = (props) => {
   const {
@@ -20,24 +21,24 @@ const TrainButton = (props) => {
     style,
   } = props;
 
-  const [pendingResponse, setPendingResponse] = useState(false)
-  const [progress, setProgress] = useState(null)
-  const [result, setResult] = useState(null)
+  const [pendingResponse, setPendingResponse] = useState(false);
+  const [progress, setProgress] = useState(null);
+  const [result, setResult] = useState(null);
 
   useEffect(() => {
-    socket.on('trainingProgress', (progressData) => { // triggered by send_progress() function
-      setProgress(Number.parseFloat(progressData))
-    })
-    socket.on('trainingResult', (resultData) => {
-      setResult(resultData)
-    })
-  }, [socket])
+    socket.on("trainingProgress", (progressData) => {
+      setProgress(Number.parseFloat(progressData));
+    });
+    socket.on("trainingResult", (resultData) => {
+      setResult(resultData);
+    });
+  }, [socket]);
 
   const reset = () => {
-    setPendingResponse(false)
-    setProgress(null)
-    setResult(null)
-  }
+    setPendingResponse(false);
+    setProgress(null);
+    setResult(null);
+  };
 
   styles = { ...styles, ...style }; // style would take precedence
 
@@ -77,20 +78,20 @@ const TrainButton = (props) => {
       alertMessage = validatePretrainedInput(user_arch, props);
 
     if (alertMessage.length === 0) return true;
-    alert(alertMessage);
+    toast.error(alertMessage);
     return false;
   };
 
   const onClick = async () => {
     setPendingResponse(true);
     setDLPBackendResponse(undefined);
-    setProgress(0)
+    setProgress(0);
 
     const user_arch = make_obj_param_list(props.addedLayers);
 
     if (!validateInputs(user_arch)) {
       setPendingResponse(false);
-      setProgress(null)
+      setProgress(null);
       return;
     }
 
@@ -114,27 +115,24 @@ const TrainButton = (props) => {
         choice,
         sendPretrainedJSON(user_arch, props)
       );
-    }
+  };
 
   useEffect(() => {
     if (result) {
       if (result.success) {
-        // currently just works for tabular.. Will implement for images by if statements
-
         if (props.email?.length) {
-          sendEmail(props.email, props.problemType)
+          sendEmail(props.email, props.problemType);
         }
-
-        alert("SUCCESS: Training successful! Scroll to see results!")
+        toast.success("Training successful! Scroll to see results!");
       } else if (result.message) {
-        alert("FAILED: Training failed. Check output traceback message")
+        toast.error("Training failed. Check output traceback message");
       } else {
-        alert("FAILED: Training failed. Check your inputs")
+        toast.error("Training failed. Check your inputs");
       }
       setDLPBackendResponse(result);
-      reset()
+      reset();
     }
-  }, [result])
+  }, [result]);
 
   return (
     <>

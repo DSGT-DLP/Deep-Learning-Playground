@@ -38,7 +38,7 @@ const AddedLayer = (props) => {
   const thisLayer = addedLayers[thisLayerIndex];
   const { display_name, parameters } = thisLayer;
 
-  styles = {...styles, ...style}
+  styles = {...styles, ...style};
 
   // converts the parameters object for each layer into an array of parameter objects
   const param_array = [];

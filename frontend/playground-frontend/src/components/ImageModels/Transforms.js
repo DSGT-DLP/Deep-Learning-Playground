@@ -8,7 +8,7 @@ import { GENERAL_STYLES, COLORS } from "../../constants";
 const Transforms = (props) => {
   const { queryText, options, transforms, setTransforms } = props;
 
-  options.sort((a, b) => a.label.localeCompare(b.label))
+  options.sort((a, b) => a.label.localeCompare(b.label));
 
   const addTransform = (e, transforms, setTransforms) => {
     const copyTransform = [...transforms];
@@ -17,7 +17,7 @@ const Transforms = (props) => {
       val.value = "";
     });
     copyTransform.push(selectedTransform);
-    setTransforms(copyTransform);    
+    setTransforms(copyTransform);
   };
 
   return (
@@ -30,7 +30,6 @@ const Transforms = (props) => {
             addTransform(e, transforms, setTransforms);
           }}
           style={{ float: "left" }}
-
         />
 
         {transforms.map((_, i) => (
@@ -63,7 +62,7 @@ Transforms.propTypes = {
   options: PropTypes.any,
   transforms: PropTypes.any,
   setTransforms: PropTypes.any,
-}
+};
 
 const styles = {
   delete_btn: {

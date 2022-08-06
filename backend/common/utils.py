@@ -120,6 +120,7 @@ def generate_loss_plot(results_path) -> dict[str : list[float]]:
     plt.title("Train vs. Test loss for your Deep Learning Model")
     plt.xlabel("Epoch Number")
     plt.ylabel("Loss")
+    make_directory(LOSS_VIZ)
     plt.savefig(LOSS_VIZ)
 
     return {
@@ -155,6 +156,7 @@ def generate_acc_plot(results_path) -> dict[str : list[float]]:
     plt.title("Train vs. Test accuracy for your Deep Learning Model")
     plt.xlabel("Epoch Number")
     plt.ylabel("Accuracy")
+    make_directory(ACC_VIZ)
     plt.savefig(ACC_VIZ)
 
     return {
@@ -203,7 +205,8 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     sns.heatmap(cm, annot=True, fmt='g', ax=ax, cmap='Purples');  #annot=True to annotate cells, ftm='g' to disable scientific notation
     ax.set_xlabel('Predicted');ax.set_ylabel('Actual'); 
     ax.set_title('Confusion Matrix (last Epoch)'); 
-    ax.xaxis.set_ticklabels(categoryList); ax.yaxis.set_ticklabels(categoryList)
+    ax.xaxis.set_ticklabels(categoryList); ax.yaxis.set_ticklabels(categoryList);
+    make_directory(CONFUSION_VIZ)
     plt.savefig(CONFUSION_VIZ)
     return cm.tolist()
 
@@ -243,6 +246,7 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
             plot_data.append([fpr.tolist(), tpr.tolist(), auc])
             plt.plot(fpr, tpr, linestyle='-', label=f'{i} (AUC: {round(auc,4)})')
         plt.legend()
+        make_directory(AUC_ROC_VIZ)
         plt.savefig(AUC_ROC_VIZ)
 
 
@@ -285,3 +289,18 @@ def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: 
             jsonf.write(jsonString)
 
     return jsonData
+
+def make_directory(filepath: str):
+    """
+    Recursively creates the directory for this filepath, if it doesn't exist.
+
+    :param filepath: relative filepath of the file
+    :return: None
+    """
+    if os.path.exists(filepath):
+        return
+
+    if os.path.isdir(filepath):
+        os.makedirs(filepath, exist_ok=True)
+    else:
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)

@@ -434,7 +434,7 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Gaussian Blur",
     object_name: "transforms.GaussianBlur",
     parameters: {
-      kernel_size: {index: 0, parameter_name: "kernel size"},
+      kernel_size: { index: 0, parameter_name: "kernel size" },
     },
     label: "Gaussian Blur",
     value: "GaussianBlur",
@@ -450,12 +450,12 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Normalize",
     object_name: "transforms.Normalize",
     parameters: {
-      mean: {index: 0, parameter_name: "mean"},
-      std: {index: 1, parameter_name: "std"},
+      mean: { index: 0, parameter_name: "mean" },
+      std: { index: 1, parameter_name: "std" },
     },
     label: "Normalize",
-    value: "Normalize"
-  }
+    value: "Normalize",
+  },
 ];
 
 export const CRITERIONS = [
@@ -517,11 +517,9 @@ export const DEFAULT_DATASETS = [
 ];
 
 export const IMAGE_DEFAULT_DATASETS = [
-  {label: "MNIST", value: "MNIST"},
-  {label: "FashionMNIST", value: "FashionMNIST"},
-  {label: "CIFAR10", value: "CIFAR10"}
-]
+  { label: "MNIST", value: "MNIST" },
+  { label: "FashionMNIST", value: "FashionMNIST" },
+  { label: "CIFAR10", value: "CIFAR10" },
+];
 
-export const PRETRAINED_MODELS = [
-  {label: "RESNET18", value: "RESNET18"}
-]
+export const PRETRAINED_MODELS = [{ label: "RESNET18", value: "RESNET18" }];

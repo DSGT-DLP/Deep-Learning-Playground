@@ -8,9 +8,7 @@ import { CSVLink } from "react-csv";
 import { GENERAL_STYLES, COLORS } from "../../constants";
 
 const Results = (props) => {
-  const { dlpBackendResponse, problemType, auc_roc_data, auc_roc_data_res } =
-    props;
-
+  const { dlpBackendResponse, problemType } = props;
   const dl_results_data = dlpBackendResponse?.dl_results || [];
 
   if (!dlpBackendResponse?.success) {
@@ -19,6 +17,30 @@ const Results = (props) => {
         <p style={{ textAlign: "center" }}>There are no records to display</p>
       )
     );
+  }
+
+  const auc_roc_data_res =
+    dlpBackendResponse?.auxiliary_outputs?.AUC_ROC_curve_data || [];
+  const auc_roc_data = [];
+  auc_roc_data.push({
+    name: "baseline",
+    x: [0, 1],
+    y: [0, 1],
+    type: "line",
+    marker: { color: "grey" },
+    line: {
+      dash: "dash",
+    },
+    config: { responsive: true },
+  });
+  for (let i = 0; i < auc_roc_data_res.length; i++) {
+    auc_roc_data.push({
+      name: `${i} (AUC: ${auc_roc_data_res[i][2]})`,
+      x: auc_roc_data_res[i][0] || [],
+      y: auc_roc_data_res[i][1] || [],
+      type: "line",
+      config: { responsive: true },
+    });
   }
 
   const dl_results_columns_react_csv = Object.keys(dl_results_data[0]).map(
@@ -224,8 +246,6 @@ Results.propTypes = {
     success: PropTypes.bool.isRequired,
   }),
   problemType: PropTypes.objectOf(PropTypes.string).isRequired,
-  auc_roc_data: PropTypes.arrayOf(PropTypes.object).isRequired,
-  auc_roc_data_res: PropTypes.arrayOf(PropTypes.array).isRequired,
 };
 
 export default Results;

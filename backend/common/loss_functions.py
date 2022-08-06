@@ -72,7 +72,7 @@ def compute_loss(loss_function_name, output, labels):
     )
 
 
-def compute_img_loss(criterion, pred, ground_truth):
+def compute_img_loss(criterion, pred, ground_truth, weights_dict):
     '''
     Computes CE and WCE loss. pred and y are processed to different shapes supported by the corresponding functions.
     '''
@@ -81,12 +81,10 @@ def compute_img_loss(criterion, pred, ground_truth):
     if criterion == LossFunctions.CELOSS.name:
         return loss_obj(pred , ground_truth.squeeze())
     if criterion == "WCELOSS":
-        weight_tensor = []
+        weight_list = [0] * len(pred[0])
+        for i in weights_dict.keys():
+            weight_list[i] = 1/weights_dict[i]
         # Weighting the class with least representation in dataset with maximum weight
 
-        for classes in os.listdir(os.path.join(UNZIPPED_DIR_NAME, "input", "train")):
-            files = os.listdir(os.path.join(UNZIPPED_DIR_NAME, "input", "train", classes))
-            weight_tensor.append(1.0/len(files))
-
-        loss = nn.CrossEntropyLoss(weight=torch.FloatTensor(weight_tensor), reduction='mean')
+        loss = nn.CrossEntropyLoss(weight=torch.FloatTensor(weight_list), reduction='mean')
         return loss(pred, ground_truth.squeeze())

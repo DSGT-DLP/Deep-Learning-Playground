@@ -265,6 +265,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
         epoch_train_size = train_loader.batch_size * num_train_epochs  # total number of data points used for training per epoch
         num_test_epochs = len(test_loader)
         epoch_test_size = test_loader.batch_size * num_test_epochs  # total number of data points used for testing per epoch
+        weights_dict = {}
 
         for epoch in range(epochs):
             model.train(True)
@@ -272,12 +273,21 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
             loss, train_correct, epoch_batch_loss = 0, 0, 0
             start_time = time.time()
             for x in train_loader:
-                y = x[1] ## label for image
+                y = x[1] ## label for all images in the batch
                 x = x[0] ## (C, H, W) image
+
+                if (criterion == "WCELOSS"):
+                    for labels in y:
+                        if (labels in weights_dict.keys()):
+                            print("updating y")
+                            weights_dict[labels.item()] += 1
+                        else:
+                            weights_dict[labels.item()] = 1
+
                 x, y = x.to(device), y.to(device)
                 optimizer.zero_grad()
                 pred= model(x)
-                loss = compute_img_loss(criterion, pred, y)
+                loss = compute_img_loss(criterion, pred, y, weights_dict)
 
                 loss.backward()
                 optimizer.step()
@@ -295,13 +305,23 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
             loss, test_correct = 0, 0
             print("training for this epoch finished, going to validation")
 
+            weights_dict = {}
+
             for x in test_loader:
                 y = x[1]
                 x = x[0]
                 x, y = x.to(device), y.to(device)
 
+                if (criterion == "WCELOSS"):
+                    for labels in y:
+                        if (labels in weights_dict.keys()):
+                            print("updating y")
+                            weights_dict[labels.item()] += 1
+                        else:
+                            weights_dict[labels.item()] = 1
+
                 pred = model(x)
-                loss = compute_img_loss(criterion, pred, y)
+                loss = compute_img_loss(criterion, pred, y, weights_dict)
                 y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
 
                 if(epoch == epochs - 1):
@@ -310,7 +330,6 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
 
                 test_correct += compute_accuracy(pred, y)
                 test_correct += (y_pred == y_true).type(torch.float).sum().item()
-                loss = compute_img_loss(criterion, pred, y)
                 epoch_batch_loss += float(loss.detach())
 
             mean_test_loss = epoch_batch_loss / num_test_epochs

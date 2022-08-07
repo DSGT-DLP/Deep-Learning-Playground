@@ -189,7 +189,7 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     label = []
     y_pred = []
     categoryList = []
-    
+
     label = np.array(labels_last_epoch).flatten()
 
     for batch in y_pred_last_epoch:

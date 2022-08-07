@@ -315,8 +315,8 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                 y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
 
                 if(epoch == epochs - 1):
-                    y_pred_last_epoch.append(pred.detach().numpy())
-                    labels_last_epoch.append(y)
+                    y_pred_last_epoch.append(pred.detach().numpy().squeeze())
+                    labels_last_epoch.append(y.detach().numpy().squeeze())
 
                 test_correct += compute_accuracy(pred, y)
                 test_correct += (y_pred == y_true).type(torch.float).sum().item()

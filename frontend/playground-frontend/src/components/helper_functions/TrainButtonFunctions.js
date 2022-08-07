@@ -74,9 +74,7 @@ export const validateImageInputs = (user_arch, ...args) => {
   return alertMessage;
 };
 
-export const sendImageJSON = (
-  ...args
-) => {
+export const sendImageJSON = (...args) => {
   args = args[0];
 
   return {

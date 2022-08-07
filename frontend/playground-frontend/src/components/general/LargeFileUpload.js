@@ -32,7 +32,7 @@ const LargeFileUpload = (props) => {
       maxFilesize: 5000, // megabytes
       chunkSize: 1000000, // bytes
       init: function () {
-        2+2;
+        2 + 2;
       },
     };
     Dropzone.options.dropper.init();

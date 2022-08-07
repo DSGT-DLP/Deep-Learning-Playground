@@ -1,3 +1,4 @@
+from collections import Counter
 import torch
 import torch.nn as nn
 import os
@@ -72,7 +73,7 @@ def compute_loss(loss_function_name, output, labels):
     )
 
 
-def compute_img_loss(criterion, pred, ground_truth, weights_dict):
+def compute_img_loss(criterion, pred, ground_truth, weights_counter):
     '''
     Computes CE and WCE loss. pred and y are processed to different shapes supported by the corresponding functions.
     '''
@@ -82,8 +83,10 @@ def compute_img_loss(criterion, pred, ground_truth, weights_dict):
         return loss_obj(pred , ground_truth.squeeze())
     if criterion == "WCELOSS":
         weight_list = [0] * len(pred[0])
-        for i in weights_dict.keys():
-            weight_list[i] = 1/weights_dict[i]
+
+        for i in range(len(weight_list)):
+            if (weights_counter[i] != 0):
+                weight_list[i] = 1/weights_counter[i]
         # Weighting the class with least representation in dataset with maximum weight
 
         loss = nn.CrossEntropyLoss(weight=torch.FloatTensor(weight_list), reduction='mean')

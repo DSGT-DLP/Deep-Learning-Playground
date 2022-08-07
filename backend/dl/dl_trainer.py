@@ -1,3 +1,4 @@
+from collections import Counter
 from backend.common.loss_functions import compute_loss, compute_img_loss
 from backend.dl.dl_eval import compute_accuracy, compute_correct
 from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
@@ -265,7 +266,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
         epoch_train_size = train_loader.batch_size * num_train_epochs  # total number of data points used for training per epoch
         num_test_epochs = len(test_loader)
         epoch_test_size = test_loader.batch_size * num_test_epochs  # total number of data points used for testing per epoch
-        weights_dict = {}
+        weights_count = Counter()
 
         for epoch in range(epochs):
             model.train(True)
@@ -277,17 +278,12 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                 x = x[0] ## (C, H, W) image
 
                 if (criterion == "WCELOSS"):
-                    for labels in y:
-                        if (labels in weights_dict.keys()):
-                            print("updating y")
-                            weights_dict[labels.item()] += 1
-                        else:
-                            weights_dict[labels.item()] = 1
+                    weights_count.update(np.array(y).flatten())
 
                 x, y = x.to(device), y.to(device)
                 optimizer.zero_grad()
                 pred= model(x)
-                loss = compute_img_loss(criterion, pred, y, weights_dict)
+                loss = compute_img_loss(criterion, pred, y, weights_count)
 
                 loss.backward()
                 optimizer.step()
@@ -305,23 +301,16 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
             loss, test_correct = 0, 0
             print("training for this epoch finished, going to validation")
 
-            weights_dict = {}
-
             for x in test_loader:
                 y = x[1]
                 x = x[0]
                 x, y = x.to(device), y.to(device)
 
                 if (criterion == "WCELOSS"):
-                    for labels in y:
-                        if (labels in weights_dict.keys()):
-                            print("updating y")
-                            weights_dict[labels.item()] += 1
-                        else:
-                            weights_dict[labels.item()] = 1
+                    weights_count.update(np.array(y).flatten())
 
                 pred = model(x)
-                loss = compute_img_loss(criterion, pred, y, weights_dict)
+                loss = compute_img_loss(criterion, pred, y, weights_count)
                 y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
 
                 if(epoch == epochs - 1):

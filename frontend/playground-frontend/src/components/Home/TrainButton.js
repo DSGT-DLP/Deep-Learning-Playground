@@ -10,16 +10,16 @@ import {
   validatePretrainedInput,
   sendImageJSON,
 } from "../helper_functions/TrainButtonFunctions";
-import { socket, sendEmail ,train_and_output } from "../helper_functions/TalkWithBackend";
-import { Circle } from 'rc-progress';
+import {
+  socket,
+  sendEmail,
+  train_and_output,
+} from "../helper_functions/TalkWithBackend";
+import { Circle } from "rc-progress";
 import { toast } from "react-toastify";
 
 const TrainButton = (props) => {
-  const {
-    setDLPBackendResponse,
-    choice = "tabular",
-    style,
-  } = props;
+  const { setDLPBackendResponse, choice = "tabular", style } = props;
 
   const [pendingResponse, setPendingResponse] = useState(false);
   const [progress, setProgress] = useState(null);
@@ -43,7 +43,7 @@ const TrainButton = (props) => {
   styles = { ...styles, ...style }; // style would take precedence
 
   const make_obj_param_list = (obj_list) => {
-    if (!obj_list) return; // ValidateInputs throw error in case of empty things. This is to prevent an unnecessary errors in case of creating a layer 
+    if (!obj_list) return; // ValidateInputs throw error in case of empty things. This is to prevent an unnecessary errors in case of creating a layer
 
     // making a array of relating methods (like "nn.Linear") with their parameters (in_feature, out_feature) by including all methods and their parameters to make something like:
     // ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"] OR
@@ -96,10 +96,7 @@ const TrainButton = (props) => {
     }
 
     if (choice === "tabular")
-      train_and_output(
-        choice,
-        sendTabularJSON(user_arch, props)
-      );
+      train_and_output(choice, sendTabularJSON(user_arch, props));
     if (choice === "image")
       train_and_output(
         choice,
@@ -111,10 +108,7 @@ const TrainButton = (props) => {
         )
       );
     if (choice === "pretrained")
-      train_and_output(
-        choice,
-        sendPretrainedJSON(user_arch, props)
-      );
+      train_and_output(choice, sendPretrainedJSON(user_arch, props));
   };
 
   useEffect(() => {

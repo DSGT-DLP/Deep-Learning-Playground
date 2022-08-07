@@ -20,9 +20,7 @@ const frontendLog = (log) => {
 };
 
 const train_and_output = (choice, choiceDict) => {
-  socket.emit(socketEventDict[choice],
-    choiceDict
-  );
+  socket.emit(socketEventDict[choice], choiceDict);
 };
 
 const sendEmail = (email, problemType) => {

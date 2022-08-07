@@ -67,13 +67,19 @@ export const validateImageInputs = (user_arch, ...args) => {
   if (!args.optimizerName)
     alertMessage += "An optimizer name must be specified. ";
   if (args.batchSize < 2) alertMessage += "Batch size cannot be less than 2";
-  if (!args.dataUploaded && !args.usingDefaultDataset) alertMessage += "Please specify a valid data from default or upload";
+  if (!args.dataUploaded && !args.usingDefaultDataset)
+    alertMessage += "Please specify a valid data from default or upload";
   // can easily add a epoch limit
 
   return alertMessage;
 };
 
-export const sendImageJSON = (user_arch, trainTransform, testTransform, ...args) => {
+export const sendImageJSON = (
+  user_arch,
+  trainTransform,
+  testTransform,
+  ...args
+) => {
   args = args[0];
 
   return {
@@ -89,7 +95,7 @@ export const sendImageJSON = (user_arch, trainTransform, testTransform, ...args)
     file_URL: args.fileURL,
     train_transform: trainTransform,
     test_transform: testTransform,
-    email: args.email?args.email : null,
+    email: args.email ? args.email : null,
   };
 };
 

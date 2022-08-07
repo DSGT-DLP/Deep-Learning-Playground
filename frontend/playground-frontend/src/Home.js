@@ -142,7 +142,7 @@ const Home = () => {
       onChange: setBatchSize,
       defaultValue: batchSize,
       freeInputCustomRestrictions: { type: "number", min: 2 },
-    }
+    },
   ];
 
   return (

@@ -101,7 +101,7 @@ const Pretrained = () => {
                 width: 155,
               },
             }}
-            choice = "pretrained"
+            choice="pretrained"
           />
         </BackgroundLayout>
         <BackgroundLayout>
@@ -137,6 +137,6 @@ const styles = {
     ...LAYOUT.column,
     backgroundColor: COLORS.input,
     width: 155,
-    height: 75
+    height: 75,
   },
 };

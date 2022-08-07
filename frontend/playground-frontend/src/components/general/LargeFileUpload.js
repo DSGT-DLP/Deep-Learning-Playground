@@ -18,7 +18,6 @@ const LargeFileUpload = (props) => {
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    // setDataUploaded(true);
     setFileName(file.name.substring(0, 20));
   };
 

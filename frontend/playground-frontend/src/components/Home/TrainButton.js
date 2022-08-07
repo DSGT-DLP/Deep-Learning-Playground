@@ -48,6 +48,7 @@ const TrainButton = (props) => {
     // making a array of relating methods (like "nn.Linear") with their parameters (in_feature, out_feature) by including all methods and their parameters to make something like:
     // ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"] OR
     // ["transforms.ToTensor()", "transforms.RandomHorizontalFlip(0.8)"]
+
     const user_arch = [];
     obj_list.forEach((obj_list_item) => {
       const parameters = obj_list_item.parameters;
@@ -104,20 +105,6 @@ const TrainButton = (props) => {
     const paramList = { ...props, trainTransforms, testTransforms, user_arch };
 
     train_and_output(choice, functionMap[choice][1](paramList));
-    // if (choice === "tabular")
-    //   train_and_output(choice, sendTabularJSON(user_arch, props));
-    // if (choice === "image")
-    //   train_and_output(
-    //     choice,
-    //     sendImageJSON(
-    //       user_arch,
-    //       make_obj_param_list(props.trainTransforms),
-    //       make_obj_param_list(props.testTransforms),
-    //       props
-    //     )
-    //   );
-    // if (choice === "pretrained")
-    //   train_and_output(choice, sendPretrainedJSON(user_arch, props));
   };
 
   useEffect(() => {

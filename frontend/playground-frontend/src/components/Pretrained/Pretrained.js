@@ -6,6 +6,7 @@ import {
   IMAGE_DEFAULT_DATASETS,
   PRETRAINED_MODELS,
   POSSIBLE_TRANSFORMS,
+  PROBLEM_TYPES,
 } from "../../settings";
 import { COLORS, LAYOUT } from "../../constants";
 
@@ -16,11 +17,13 @@ import BackgroundLayout from "../Home/BackgroundLayout";
 import Transforms from "../ImageModels/Transforms";
 import TrainButton from "../Home/TrainButton";
 import ChoiceTab from "../Home/ChoiceTab";
+import EmailInput from "../Home/EmailInput";
+import Results from "../Home/Results";
 
 const Pretrained = () => {
-  // const [dlpBackendResponse, setDLPBackendResponse] = useState();
+  const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [modelName, setModelName] = useState();
-  // const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [criterion, setCriterion] = useState(IMAGE_CLASSIFICATION_CRITERION[0]);
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
   const [usingDefaultDataset, setUsingDefaultDataset] = useState();
@@ -38,7 +41,7 @@ const Pretrained = () => {
     shuffle: shuffle?.value,
     epochs: epochs,
     batchSize: batchSize,
-    // email: email,
+    email: email,
   };
 
   const input_queries = [
@@ -95,7 +98,7 @@ const Pretrained = () => {
           <RectContainer style={styles.fileInput}></RectContainer>
           <TrainButton
             {...input_responses}
-            // setDLPBackendResponse={setDLPBackendResponse}
+            setDLPBackendResponse={setDLPBackendResponse}
             style={{
               container: {
                 width: 155,
@@ -125,6 +128,13 @@ const Pretrained = () => {
         options={POSSIBLE_TRANSFORMS}
         transforms={testTransforms}
         setTransforms={setTestTransforms}
+      />
+      <TitleText text="Email (optional)" />
+      <EmailInput email={email} setEmail={setEmail} />
+      <TitleText text="Deep Learning Results" />
+      <Results
+        dlpBackendResponse={dlpBackendResponse}
+        problemType={PROBLEM_TYPES[0]}
       />
     </div>
   );

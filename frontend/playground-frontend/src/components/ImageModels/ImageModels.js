@@ -106,30 +106,6 @@ const ImageModels = () => {
 
   const ALL_LAYERS = POSSIBLE_LAYERS.concat(IMAGE_LAYERS);
 
-  const auc_roc_data_res =
-    dlpBackendResponse?.auxiliary_outputs?.AUC_ROC_curve_data || [];
-  const auc_roc_data = [];
-  auc_roc_data.push({
-    name: "baseline",
-    x: [0, 1],
-    y: [0, 1],
-    type: "line",
-    marker: { color: "grey" },
-    line: {
-      dash: "dash",
-    },
-    config: { responsive: true },
-  });
-  for (let i = 0; i < auc_roc_data_res.length; i++) {
-    auc_roc_data.push({
-      name: `${i} (AUC: ${auc_roc_data_res[i][2]})`,
-      x: auc_roc_data_res[i][0] || [],
-      y: auc_roc_data_res[i][1] || [],
-      type: "line",
-      config: { responsive: true },
-    });
-  }
-
   return (
     <div style={{ padding: 20 }}>
       <DndProvider backend={HTML5Backend}>
@@ -227,8 +203,6 @@ const ImageModels = () => {
       <Results
         dlpBackendResponse={dlpBackendResponse}
         problemType={PROBLEM_TYPES[0]}
-        auc_roc_data={auc_roc_data}
-        auc_roc_data_res={auc_roc_data_res}
       />
 
       <TitleText text="Code Snippet" />

@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import * as XLSX from "xlsx";
+import { FaCloudUploadAlt } from "react-icons/fa";
 
 // src: https://www.cluemediator.com/read-csv-file-in-react
 const CSVInputFile = (props) => {
   const { setData, setColumns } = props;
+  const [fileName, setFileName] = useState();
 
   // process CSV data
   const processData = (dataString) => {
@@ -51,6 +53,7 @@ const CSVInputFile = (props) => {
   // handle file upload
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
+    setFileName(file.name.substring(0, 20));
     const reader = new FileReader();
     reader.onload = (evt) => {
       /* Parse data */
@@ -67,12 +70,18 @@ const CSVInputFile = (props) => {
   };
 
   return (
-    <input
-      type="file"
-      accept=".csv,.xlsx,.xls"
-      onChange={handleFileUpload}
-      style={{ width: "100%" }}
-    />
+    <>
+      <label htmlFor="csv-upload" className="custom-file-upload">
+        <FaCloudUploadAlt /> {fileName || "Upload CSV"}
+      </label>
+      <input
+        type="file"
+        id="csv-upload"
+        accept=".csv,.xlsx,.xls"
+        onChange={handleFileUpload}
+        style={{ width: "100%" }}
+      />
+    </>
   );
 };
 

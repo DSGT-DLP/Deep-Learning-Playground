@@ -1,7 +1,34 @@
-import React from "react";
-import { Form, Formik } from "formik";
+import React from 'react';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 import { useNavigate } from "react-router-dom";
-import { TextField, ProtectedField } from "../form_components/formfields";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCMq0RmoCB1G6JHwwAvVXdcaykAhvwfv4Q",
+  authDomain: "dsgt-authentication.firebaseapp.com",
+  projectId: "dsgt-authentication",
+  storageBucket: "dsgt-authentication.appspot.com",
+  messagingSenderId: "15938712141",
+  appId: "1:15938712141:web:0ecd946393c0584e72a204",
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Configure FirebaseUI.
+const uiConfig = {
+  // Popup signin flow rather than redirect flow.
+  signInFlow: "popup",
+  // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
+  signInSuccessUrl: "/signedIn",
+  // We will display Google and Facebook as auth providers.
+  signInOptions: [
+    firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+  ],
+};
 
 const Info = () => (
   <div id="login-info">
@@ -9,48 +36,11 @@ const Info = () => (
   </div>
 );
 
-const FormBody = ({ formik, navigate }) => (
-  <Form className="w-full">
-    <TextField
-      label="Email"
-      name="email"
-      type="text"
-      placeholder="myemail@gmail.com"
-      disabled={formik.isSubmitting}
-    />
-    <ProtectedField
-      label="Password"
-      name="password"
-      type="password"
-      placeholder="password"
-      disabled={formik.isSubmitting}
-    />
-    <div className="grid grid-cols-2 gap-4 mt-8 mb-3">
-      <button
-        onClick={() => navigate("/")}
-        disabled={formik.isSubmitting}
-        type="button"
-      >
-        Cancel
-      </button>
-      <button disabled={formik.isSubmitting} type="submit">
-        Log in
-      </button>
-    </div>
-  </Form>
-);
-
 const Login = () => {
   const navigate = useNavigate();
   return (
     <div id="login-section">
-      <Formik
-        initialValues={{ email: "", password: "" }}
-        validationSchema={undefined}
-        onSubmit={(values, submitProps) => {}}
-      >
-        {(formik) => <FormBody formik={formik} navigate={navigate} />}
-      </Formik>
+      <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
     </div>
   );
 };

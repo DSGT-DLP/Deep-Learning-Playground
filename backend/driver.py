@@ -1,7 +1,7 @@
 import pandas as pd
 import traceback
 import os
-from flask import Flask, json, request, jsonify, make_response
+from flask import Flask
 
 from backend.common.utils import *
 from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL, AWS_REGION
@@ -17,13 +17,8 @@ from backend.common.default_datasets import get_default_dataset
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
 from flask import send_from_directory
-import boto3
-import base64
-from botocore.exceptions import ClientError
-import pyrebase
-from functools import wraps
-import firebase_admin
-from firebase_admin import credentials, auth
+from flask_socketio import SocketIO
+import eventlet
 
 app = Flask(
     __name__,
@@ -32,7 +27,7 @@ app = Flask(
     ),
 )
 CORS(app)
-
+socket = SocketIO(app, cors_allowed_origins="*")
 
 def ml_drive(
     user_model,
@@ -91,6 +86,7 @@ def dl_drive(
     criterion,
     optimizer_name,
     problem_type,
+    send_progress,
     target=None,
     features=None,
     default=None,
@@ -157,6 +153,7 @@ def dl_drive(
         # Build the Deep Learning model that the user wants
         model = DLModel(parse_deep_user_architecture(user_arch))
         print(f"model: {model}")
+        
         optimizer = get_optimizer(
             model, optimizer_name=optimizer_name, learning_rate=0.05
         )
@@ -166,7 +163,7 @@ def dl_drive(
             X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=batch_size
         )
         train_loss_results = train_deep_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
+            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, send_progress
         )
         pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
@@ -185,11 +182,12 @@ def root(path):
     else:
         return send_from_directory(app.static_folder, "index.html")
 
+@socket.on('frontendLog')
+def frontend_log(log):
+    app.logger.info(f'"frontend: {log}"')
 
-@app.route("/run", methods=["POST"])
-def train_and_output():
-    request_data = json.loads(request.data)
-
+@socket.on('runTraining')
+def train_and_output(request_data):
     user_arch = request_data["user_arch"]
     criterion = request_data["criterion"]
     optimizer_name = request_data["optimizer_name"]
@@ -203,64 +201,64 @@ def train_and_output():
     shuffle = request_data["shuffle"]
     csvDataStr = request_data["csvData"]
     fileURL = request_data["fileURL"]
-    email = request_data["email"]
-    if request.method == "POST":
-        try:
-            if not default:
-                if fileURL:
-                    read_dataset(fileURL)
-                elif csvDataStr:
-                    pass
-                else:
-                    raise ValueError("Need a file input")
-                    return
+    
+    try:
+        if not default:
+            if fileURL:
+                read_dataset(fileURL)
+            elif csvDataStr:
+                pass
+            else:
+                raise ValueError("Need a file input")
 
-            train_loss_results = dl_drive(
-                user_arch=user_arch,
-                criterion=criterion,
-                optimizer_name=optimizer_name,
-                problem_type=problem_type,
-                target=target,
-                features=features,
-                default=default,
-                test_size=test_size,
-                epochs=epochs,
-                shuffle=shuffle,
-                json_csv_data_str=csvDataStr,
-                batch_size=batch_size,
-            )
-            return (
-                jsonify(
-                    {
-                        "success": True,
-                        "message": "Dataset trained and results outputted successfully",
-                        "dl_results": csv_to_json(),
-                        "auxiliary_outputs": train_loss_results
-                    }
-                ),
-                200,
-            )
+        train_loss_results = dl_drive(
+            user_arch=user_arch,
+            criterion=criterion,
+            optimizer_name=optimizer_name,
+            problem_type=problem_type,
+            send_progress=send_progress,
+            target=target,
+            features=features,
+            default=default,
+            test_size=test_size,
+            epochs=epochs,
+            shuffle=shuffle,
+            json_csv_data_str=csvDataStr,
+            batch_size=batch_size,
+        )
+            
+        socket.emit('trainingResult',
+            {
+                "success": True,
+                "message": "Dataset trained and results outputted successfully",
+                "dl_results": csv_to_json(),
+                "auxiliary_outputs": train_loss_results,
+                "status": 200
+            }
+        )
 
-        except Exception:
-            print(traceback.format_exc())
-            return (
-                jsonify({"success": False, "message": traceback.format_exc(limit=1)}),
-                400,
-            )
+    except Exception:
+        print(traceback.format_exc())
+        socket.emit('trainingResult',
+            {
+                "success": False,
+                "message": traceback.format_exc(limit=1),
+                "status": 400
+            }
+        )
 
-    return jsonify({"success": False}), 500
 
-
-@app.route("/sendemail", methods=["POST"])
-def send_email_route():
-    request_data = json.loads(request.data)
-
+@socket.on('sendEmail')
+def send_email_route(request_data):
     # extract data
     required_params = ["email_address", "subject", "body_text"]
     for required_param in required_params:
         if required_param not in request_data:
-            return jsonify(
-                {"success": False, "message": "Missing parameter " + required_param}
+            return socket.emit('emailResult',
+                {
+                    "success": False,
+                    "message": "Missing parameter " + required_param
+                }
             )
 
     email_address = request_data["email_address"]
@@ -269,7 +267,7 @@ def send_email_route():
     if "attachment_array" in request_data:
         attachment_array = request_data["attachment_array"]
         if not isinstance(attachment_array, list):
-            return jsonify(
+            return socket.emit('emailResult',
                 {
                     "success": False,
                     "message": "Attachment array must be a list of filepaths",
@@ -281,145 +279,24 @@ def send_email_route():
     # try to send email
     try:
         send_email(email_address, subject, body_text, attachment_array)
-        return jsonify({"success": True, "message": "Sent email to " + email_address})
+        return socket.emit('emailResult',
+            {
+                "success": True,
+                "message": "Sent email to " + email_address
+            }
+        )
     except Exception:
         print(traceback.format_exc())
-        return jsonify({"success": False}), 500
-
-def get_secret(secret_name_input):
-
-    secret_name = secret_name_input
-    region_name = AWS_REGION
-
-    # Create a Secrets Manager client
-    session = boto3.session.Session()
-    client = session.client(
-        service_name='secretsmanager',
-        region_name=region_name
-    )
-
-    # In this sample we only handle the specific exceptions for the 'GetSecretValue' API.
-    # See https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-    # We rethrow the exception by default.
-
-    try:
-        get_secret_value_response = client.get_secret_value(
-            SecretId=secret_name
+        return socket.emit('emailResult',
+            {
+                "success": False,
+                "message": traceback.format_exc(limit=1)
+            }
         )
-    except ClientError as e:
-        if e.response['Error']['Code'] == 'DecryptionFailureException':
-            # Secrets Manager can't decrypt the protected secret text using the provided KMS key.
-            # Deal with the exception here, and/or rethrow at your discretion.
-            raise e
-        elif e.response['Error']['Code'] == 'InternalServiceErrorException':
-            # An error occurred on the server side.
-            # Deal with the exception here, and/or rethrow at your discretion.
-            raise e
-        elif e.response['Error']['Code'] == 'InvalidParameterException':
-            # You provided an invalid value for a parameter.
-            # Deal with the exception here, and/or rethrow at your discretion.
-            raise e
-        elif e.response['Error']['Code'] == 'InvalidRequestException':
-            # You provided a parameter value that is not valid for the current state of the resource.
-            # Deal with the exception here, and/or rethrow at your discretion.
-            raise e
-        elif e.response['Error']['Code'] == 'ResourceNotFoundException':
-            # We can't find the resource that you asked for.
-            # Deal with the exception here, and/or rethrow at your discretion.
-            raise e
-    else:
-        # Decrypts secret using the associated KMS key.
-        # Depending on whether the secret is a string or binary, one of these fields will be populated.
-        if 'SecretString' in get_secret_value_response:
-            secret = get_secret_value_response['SecretString']
-            return secret
-        else:
-            decoded_binary_secret = base64.b64decode(get_secret_value_response['SecretBinary'])
-            return decoded_binary_secret
 
-
-config = json.loads(get_secret("DLP/Firebase"))
-config["databaseURL"] = ""
-admin_sdk_config = json.loads(get_secret("DLP/Firebase/Admin_SDK"))
-cred = credentials.Certificate(admin_sdk_config)
-firebase = firebase_admin.initialize_app(cred)
-pb = pyrebase.initialize_app(config)
-
-#Api route to sign up a new user
-@app.route('/signup')
-def signup():
-    email = request.form.get('email')
-    password = request.form.get('password')
-    if email is None or password is None:
-        return {'message': 'Error missing email or password'},400
-    try:
-        user = auth.create_user(
-               email=email,
-               password=password
-        )
-        jwt = user['idToken']
-        response = make_response({'msg': 'Successfully created user!'})
-        response.status = 200
-        response.headers['Access-Control-Allow-Credentials'] = True
-        response.set_cookie('access_token', value=jwt,httponly=True)
-
-        return response
-    except:
-        return {'message': 'Error creating user'},400
-
-#Api route to login a valid user
-@app.route('/login')
-def login():
-    email = request.form.get('email')
-    password = request.form.get('password')
-    try:
-        user = pb.auth().sign_in_with_email_and_password(email, password)
-        jwt = user['idToken']
-
-        
-        response = make_response({'msg': 'successfully logged in!'})
-        response.status = 200
-        response.headers['Access-Control-Allow-Credentials'] = True
-        response.set_cookie('access_token', value=jwt,httponly=True)
-
-        return response
-    except:
-       return {'message': 'There was an error logging in'},400
-
-def check_token(f):
-    @wraps(f)
-    def wrap(*args,**kwargs):
-        if not request.cookies.get('access_token'):
-            return {'message': 'No token provided'},400
-        try:
-            user = auth.verify_id_token(request.cookies.get('access_token'))
-            request.user = user
-        except:
-            return {'message':'Invalid token provided.'},400
-        return f(*args, **kwargs)
-    return wrap
-
-@app.route('/checklogin')
-@check_token
-def userinfo():
-    return {'message':'Authorized'}
-
-@app.route('/logout')
-@check_token
-def logout():
-    response = make_response({'msg': 'successfully logged out!'})
-    response.headers['Access-Control-Allow-Credentials'] = True
-    response.set_cookie('access_token', '', expires=0)
-    response.status = 200
-
-    return response
-
-
-
-
-
-
-
+def send_progress(progress):
+    socket.emit('trainingProgress', progress)
+    eventlet.greenthread.sleep(0)                 # to prevent logs from being grouped and sent together at the end of training
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    socket.run(app, debug=True, host="0.0.0.0")

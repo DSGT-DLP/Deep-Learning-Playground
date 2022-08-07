@@ -68,15 +68,15 @@ const TrainButton = (props) => {
     return user_arch;
   };
 
+  const functionMap = {
+    tabular: [validateTabularInputs, sendTabularJSON],
+    image: [validateImageInputs, sendImageJSON],
+    pretrained: [validatePretrainedInput, sendPretrainedJSON],
+  };
+
   const validateInputs = (user_arch) => {
     let alertMessage = "";
-    if (choice === "tabular")
-      alertMessage = validateTabularInputs(user_arch, props);
-    if (choice === "image")
-      alertMessage = validateImageInputs(user_arch, props);
-    if (choice === "pretrained")
-      alertMessage = validatePretrainedInput(user_arch, props);
-
+    alertMessage = functionMap[choice][0](user_arch, props);
     if (alertMessage.length === 0) return true;
     toast.error(alertMessage);
     return false;
@@ -88,6 +88,12 @@ const TrainButton = (props) => {
     setProgress(0);
 
     const user_arch = make_obj_param_list(props.addedLayers);
+    let trainTransforms = 0;
+    let testTransforms = 0;
+    if (props.trainTransforms) {
+      trainTransforms = make_obj_param_list(props.trainTransforms);
+      testTransforms = make_obj_param_list(props.testTransforms);
+    }
 
     if (!validateInputs(user_arch)) {
       setPendingResponse(false);
@@ -95,20 +101,23 @@ const TrainButton = (props) => {
       return;
     }
 
-    if (choice === "tabular")
-      train_and_output(choice, sendTabularJSON(user_arch, props));
-    if (choice === "image")
-      train_and_output(
-        choice,
-        sendImageJSON(
-          user_arch,
-          make_obj_param_list(props.trainTransforms),
-          make_obj_param_list(props.testTransforms),
-          props
-        )
-      );
-    if (choice === "pretrained")
-      train_and_output(choice, sendPretrainedJSON(user_arch, props));
+    const paramList = { ...props, trainTransforms, testTransforms, user_arch };
+
+    train_and_output(choice, functionMap[choice][1](paramList));
+    // if (choice === "tabular")
+    //   train_and_output(choice, sendTabularJSON(user_arch, props));
+    // if (choice === "image")
+    //   train_and_output(
+    //     choice,
+    //     sendImageJSON(
+    //       user_arch,
+    //       make_obj_param_list(props.trainTransforms),
+    //       make_obj_param_list(props.testTransforms),
+    //       props
+    //     )
+    //   );
+    // if (choice === "pretrained")
+    //   train_and_output(choice, sendPretrainedJSON(user_arch, props));
   };
 
   useEffect(() => {

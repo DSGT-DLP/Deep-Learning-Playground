@@ -54,7 +54,7 @@ def train_deep_classification_model(
         val_acc = []  # accuracy of test/validation set
         labels_last_epoch = []
         y_pred_last_epoch = []
-        
+
         num_train_epochs = len(train_loader)
         epoch_train_size = train_loader.batch_size * num_train_epochs  # total number of data points used for training per epoch
         num_test_epochs = len(test_loader)
@@ -64,9 +64,9 @@ def train_deep_classification_model(
             train_correct = 0  # number of correct predictions in training set in current epoch
             test_correct = 0  # number of correct predictions in testing set in current epoch
             epoch_batch_loss = 0  # cumulative training/testing loss per epoch
-            
+
             start_time = time.time()
-            model.train(True)  # set model to train mode
+            model.train(True)  # set model to train model
             for i, data in enumerate(train_loader):
                 # each batch is (input, label) pair in dataloader
                 input, labels = data
@@ -77,7 +77,7 @@ def train_deep_classification_model(
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
                 epoch_batch_loss += float(loss.detach())
-                
+
             epoch_time.append(time.time() - start_time)
             mean_train_acc = train_correct / epoch_train_size
             mean_train_loss = epoch_batch_loss / num_train_epochs
@@ -266,10 +266,17 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
         epoch_train_size = train_loader.batch_size * num_train_epochs  # total number of data points used for training per epoch
         num_test_epochs = len(test_loader)
         epoch_test_size = test_loader.batch_size * num_test_epochs  # total number of data points used for testing per epoch
-        weights_count = Counter()
+        train_weights_count = Counter()
+        test_weights_count = Counter()
 
         for epoch in range(epochs):
             model.train(True)
+
+            if epoch == 0 and criterion == "WCELOSS":
+                for i, j in train_loader:
+                    train_weights_count.update(j.detach().numpy().flatten())
+                for i, j in test_loader:
+                    test_weights_count.update(j.detach().numpy().flatten())
 
             loss, train_correct, epoch_batch_loss = 0, 0, 0
             start_time = time.time()
@@ -277,13 +284,10 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                 y = x[1] ## label for all images in the batch
                 x = x[0] ## (C, H, W) image
 
-                if (criterion == "WCELOSS"):
-                    weights_count.update(np.array(y).flatten())
-
                 x, y = x.to(device), y.to(device)
                 optimizer.zero_grad()
                 pred= model(x)
-                loss = compute_img_loss(criterion, pred, y, weights_count)
+                loss = compute_img_loss(criterion, pred, y, train_weights_count)
 
                 loss.backward()
                 optimizer.step()
@@ -306,11 +310,8 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                 x = x[0]
                 x, y = x.to(device), y.to(device)
 
-                if (criterion == "WCELOSS"):
-                    weights_count.update(np.array(y).flatten())
-
                 pred = model(x)
-                loss = compute_img_loss(criterion, pred, y, weights_count)
+                loss = compute_img_loss(criterion, pred, y, test_weights_count)
                 y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
 
                 if(epoch == epochs - 1):

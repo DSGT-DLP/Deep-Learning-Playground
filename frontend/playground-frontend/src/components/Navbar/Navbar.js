@@ -1,8 +1,45 @@
 import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { auth } from "../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
-const Navbar = () => {
+const AccountButton = ({ setShowLogin }) => {
+  const [user] = useAuthState(auth);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  if (user) {
+    return (
+      <div id="accountButtonWrapper">
+        <button
+          className="loginButton accountButtonMain"
+          onClick={() => setShowDropdown((prev) => !prev)}
+        >
+          Account
+        </button>
+        {showDropdown && (
+          <div id="accountButtons">
+            <button className="accountButton">Dashboard</button>
+            <button className="accountButton">Settings</button>
+            <button className="accountButton">My Learning</button>
+            <button className="accountButton" onClick={() => auth.signOut()}>
+              Log out
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  } else {
+    return (
+      <button className="loginButton" onClick={() => setShowLogin(true)}>
+        Log in
+      </button>
+    );
+  }
+};
+
+const Navbar = ({ setShowLogin }) => {
   return (
     <div className="header-footer" id="nav-bar">
       <a href="/" className="image-title">
@@ -33,8 +70,19 @@ const Navbar = () => {
             Donate
           </a>
         </li>
+        <li className="navElement">
+          <AccountButton setShowLogin={setShowLogin} />
+        </li>
       </ul>
     </div>
   );
 };
 export default Navbar;
+
+AccountButton.propTypes = {
+  setShowLogin: PropTypes.func.isRequired,
+};
+
+Navbar.propTypes = {
+  setShowLogin: PropTypes.func.isRequired,
+};

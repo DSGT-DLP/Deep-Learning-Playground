@@ -27,8 +27,16 @@ Author URI:   https://datasciencegt.org/
 /*	1. General HTML
 /* -------------------------------------------------------------------------- */
 
-html, body, .wrapper, #root {
-  height: 100%
+html,
+body,
+.wrapper,
+#root {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+  position: relative;
 }
 
 body {
@@ -90,7 +98,6 @@ input {
   position: sticky;
   background-color: var(--primary);
   color: white;
-  overflow: hidden;
   z-index: 10;
   top: 0;
   max-width: 100%;
@@ -109,11 +116,48 @@ input {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+#nav-bar .loginButton {
+  display: block;
+  color: inherit;
+  font-size: x-large;
+  background-color: transparent;
+  cursor: pointer;
+  border: 0;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#accountButtonWrapper {
+  position: relative;
+}
+
+#accountButtons {
+  position: absolute;
+  background-color: var(--primary);
+  margin-top: 5px;
+  padding: 15px;
+  width: 125px;
+  margin-left: -20px;
+}
+
+.accountButton {
+  display: block;
+  color: inherit;
+  font-size: large;
+  background-color: transparent;
+  cursor: pointer;
+  border: 0;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-top: 15px;
+}
+
 #nav-bar .navElement:hover {
   background-color: var(--whitehover);
 }
 
-#nav-bar .navElement:hover > a {
+#nav-bar .navElement:hover > a,
+#nav-bar .navElement:hover > button, #nav-bar .navElement:hover > div > button {
   color: var(--primary);
 }
 
@@ -131,7 +175,6 @@ input {
   box-sizing: inherit;
   width: fit-content;
   height: inherit;
-  overflow: hidden;
 }
 
 #nav-bar #title-name {
@@ -176,7 +219,6 @@ input {
   position: static;
   background-color: var(--primary);
   color: white;
-  overflow: hidden;
   display: flex;
   justify-content: center;
 }
@@ -223,7 +265,6 @@ input {
   box-sizing: inherit;
   width: fit-content;
   height: inherit;
-  overflow: hidden;
 }
 
 #title-name {
@@ -295,17 +336,33 @@ textarea {
 /* -------------------------------------------------------------------------- */
 /*	1. Login
 /* -------------------------------------------------------------------------- */
-#login-page {
-  height: 100%;
-  
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+#login-popup {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 50;
+  transform: translate(-50%, -50%);
+
+  background-color: white;
+  padding: 10px;
 }
 
-#login-main-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr
+#page-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+#login-popup-h1 {
+  color: var(--primary);
+  font-size: x-large;
+  text-align: center;
+
+  margin-bottom: 40px;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -337,7 +394,8 @@ textarea {
   aspect-ratio: 1;
 }
 
-.foot-element:hover, .foot-element:focus {
+.foot-element:hover,
+.foot-element:focus {
   background-color: var(--secondary);
 }
 

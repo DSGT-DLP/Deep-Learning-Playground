@@ -50,13 +50,11 @@ const styles = {
     marginRight: "5px",
     marginLeft: "5px",
     borderColor: COLORS.background,
-    // border: "3px",
     borderStyle: "solid",
     paddingLeft: "10px",
     paddingRight: "10px",
     borderRadius: "25px",
     fontSize: "17px",
-    // backgroundColor: COLORS.dark_blue ,
     color: COLORS.background,
   },
   linkelEment: {

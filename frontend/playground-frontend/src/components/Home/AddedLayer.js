@@ -70,7 +70,6 @@ _InputOutputPromptResponse.propTypes = {
   }).isRequired,
   setAddedLayers: PropTypes.func.isRequired,
   thisLayerIndex: PropTypes.number.isRequired,
-  finalStyle: PropTypes.any,
 };
 
 AddedLayer.propTypes = {
@@ -78,7 +77,7 @@ AddedLayer.propTypes = {
   addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
   setAddedLayers: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  style: PropTypes.any,
+  style: PropTypes.object,
 };
 
 export default AddedLayer;

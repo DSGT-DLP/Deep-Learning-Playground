@@ -72,7 +72,7 @@ const LargeFileUpload = (props) => {
 };
 
 LargeFileUpload.propTypes = {
-  setDataUploaded: PropTypes.any,
+  setDataUploaded: PropTypes.func.isRequired,
 };
 
 export default LargeFileUpload;

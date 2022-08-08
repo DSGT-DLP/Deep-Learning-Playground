@@ -153,14 +153,14 @@ const TrainButton = (props) => {
 };
 
 TrainButton.propTypes = {
-  addedLayers: PropTypes.any,
+  addedLayers: PropTypes.array,
   email: PropTypes.string,
-  trainTransforms: PropTypes.any,
-  testTransforms: PropTypes.any,
-  setDLPBackendResponse: PropTypes.any,
+  trainTransforms: PropTypes.array,
+  testTransforms: PropTypes.array,
+  setDLPBackendResponse: PropTypes.func.isRequired,
   choice: PropTypes.string,
-  style: PropTypes.any,
-  problemType: PropTypes.any,
+  style: PropTypes.object,
+  problemType: PropTypes.string,
 };
 
 export default TrainButton;

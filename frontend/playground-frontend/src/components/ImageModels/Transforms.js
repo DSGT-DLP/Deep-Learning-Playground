@@ -59,9 +59,9 @@ const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));
 
 Transforms.propTypes = {
   queryText: PropTypes.string,
-  options: PropTypes.any,
-  transforms: PropTypes.any,
-  setTransforms: PropTypes.any,
+  options: PropTypes.array,
+  transforms: PropTypes.array.isRequired,
+  setTransforms: PropTypes.func.isRequired,
 };
 
 const styles = {

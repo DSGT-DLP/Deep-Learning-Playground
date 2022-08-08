@@ -1,41 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { PropTypes } from "prop-types";
 import { FaCloudUploadAlt } from "react-icons/fa";
-
-const { Dropzone } = require("dropzone");
 
 const LargeFileUpload = (props) => {
   const { setDataUploaded } = props;
   const [fileName, setFileName] = useState();
 
-  const script = document.createElement("script");
-
-  script.src =
-    "https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone-amd-module.min.js";
-  script.async = true;
-
-  document.body.appendChild(script);
-
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     setFileName(file.name.substring(0, 20));
   };
-
-  useEffect(() => {
-    Dropzone.autoDiscover = false;
-    Dropzone.options.dropper = {
-      paramName: "file",
-      chunking: true,
-      forceChunking: true,
-      url: "/upload",
-      maxFilesize: 5000, // megabytes
-      chunkSize: 1000000, // bytes
-      init: function () {
-        2 + 2;
-      },
-    };
-    Dropzone.options.dropper.init();
-  });
 
   return (
     <>
@@ -55,6 +29,7 @@ const LargeFileUpload = (props) => {
         </label>
         <input
           type="file"
+          name="file"
           id="file-upload"
           accept=".zip"
           onChange={handleFileUpload}
@@ -62,7 +37,7 @@ const LargeFileUpload = (props) => {
         />
         <input
           type="submit"
-          value="upload"
+          value="Upload"
           style={{ marginLeft: "48px", marginTop: "8px" }}
           onClick={() => setDataUploaded(true)}
         ></input>

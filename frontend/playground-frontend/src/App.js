@@ -21,7 +21,7 @@ function App() {
   return (
     <div id="app">
       <Router>
-        <Navbar />
+        <Navbar setShowLogin={setShowLogin} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/img-models" element={<ImageModels />} />

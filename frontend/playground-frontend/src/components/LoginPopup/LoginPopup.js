@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import StyledFirebaseAuth from "./StyledFirebaseAuth";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import PropTypes from "prop-types";
@@ -36,6 +36,8 @@ const LoginPopup = ({ setShowLogin }) => {
         <StyledFirebaseAuth
           uiConfig={uiConfig}
           firebaseAuth={app.auth()}
+          className={"login-page"}
+          uiCallback={null}
         />
       </div>
     </>

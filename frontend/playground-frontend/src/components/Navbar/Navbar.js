@@ -52,6 +52,7 @@ const Navbar = ({ setShowLogin }) => {
         <li className="navElement">
           <Link to="/">Home</Link>
         </li>
+
         <li className="navElement">
           <Link to="/About">About</Link>
         </li>

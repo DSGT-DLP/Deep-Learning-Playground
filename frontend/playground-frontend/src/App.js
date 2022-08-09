@@ -6,6 +6,8 @@ import {
   Wiki,
   Feedback,
   Navbar,
+  ImageModels,
+  Pretrained,
   Footer,
 } from "./components";
 import { ToastContainer } from "react-toastify";
@@ -19,9 +21,11 @@ function App() {
   return (
     <div id="app">
       <Router>
-        <Navbar setShowLogin={setShowLogin} />
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/img-models" element={<ImageModels />} />
+          <Route path="/pretrained" element={<Pretrained />} />
           <Route path="/About" element={<About />} />
           <Route path="/Wiki" element={<Wiki />} />
           <Route path="/feedback" element={<Feedback />} />

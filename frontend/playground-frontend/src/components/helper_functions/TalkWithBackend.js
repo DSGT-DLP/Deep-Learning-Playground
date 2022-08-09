@@ -1,12 +1,17 @@
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 
-const socket = io(":5000");
+const socketEventDict = {
+  tabular: "runTraining",
+  image: "img-run",
+  pretrained: "pretrain-run",
+};
+
+const socket = io(":5000", { timeout: 60000 });
 socket.on("connect", () => {
   frontendLog(`connected to socket`);
 });
-socket.on("connect_error", (err) => {
-  console.log(`connection error due to: ${err.message}`);
+socket.on("connect_error", () => {
   socket.close();
 });
 
@@ -14,36 +19,8 @@ const frontendLog = (log) => {
   socket.emit("frontendLog", log);
 };
 
-const train_and_output = (
-  user_arch,
-  criterion,
-  optimizerName,
-  problemType,
-  targetCol = null,
-  features = null,
-  usingDefaultDataset = null,
-  testSize,
-  epochs,
-  batchSize,
-  shuffle,
-  csvData = null,
-  fileURL = null
-) => {
-  socket.emit("runTraining", {
-    user_arch: user_arch,
-    criterion: criterion,
-    optimizer_name: optimizerName,
-    problem_type: problemType,
-    target: targetCol,
-    features: features,
-    default: usingDefaultDataset,
-    test_size: testSize,
-    epochs: epochs,
-    batch_size: batchSize,
-    shuffle: shuffle,
-    csvData: csvData,
-    fileURL: fileURL,
-  });
+const train_and_output = (choice, choiceDict) => {
+  socket.emit(socketEventDict[choice], choiceDict);
 };
 
 const sendEmail = (email, problemType) => {

@@ -1,106 +1,70 @@
 import React, { useState } from "react";
-import { COLORS, DEFAULT_ADDED_LAYERS, LAYOUT } from "./constants";
+import Transforms from "./Transforms";
+import DataCodeSnippet from "./DataCodeSnippet";
+import LargeFileUpload from "../general/LargeFileUpload";
 import {
   BOOL_OPTIONS,
-  CRITERIONS,
-  DEFAULT_DATASETS,
+  IMAGE_DEFAULT_DATASETS,
   OPTIMIZER_NAMES,
   POSSIBLE_LAYERS,
+  POSSIBLE_TRANSFORMS,
+  IMAGE_LAYERS,
+  IMAGE_CLASSIFICATION_CRITERION,
   PROBLEM_TYPES,
-} from "./settings";
+} from "../../settings";
 import {
-  AddNewLayer,
-  AddedLayer,
-  BackgroundLayout,
-  CSVInputFile,
-  CSVInputURL,
-  CodeSnippet,
-  EmailInput,
-  Input,
-  LayerChoice,
-  RectContainer,
-  Results,
-  TitleText,
-  TrainButton,
-  ChoiceTab,
-} from "./components";
-import DataTable from "react-data-table-component";
+  DEFAULT_IMG_LAYERS,
+  DEFAULT_TRANSFORMS,
+  COLORS,
+  LAYOUT,
+  GENERAL_STYLES,
+} from "../../constants";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-const Home = () => {
-  const [csvDataInput, setCSVDataInput] = useState([]);
-  const [csvColumns, setCSVColumns] = useState([]);
-  const [dlpBackendResponse, setDLPBackendResponse] = useState();
+import {
+  Input,
+  TitleText,
+  BackgroundLayout,
+  RectContainer,
+  AddedLayer,
+  AddNewLayer,
+  TrainButton,
+  LayerChoice,
+  EmailInput,
+  Results,
+  CodeSnippet,
+  ChoiceTab,
+} from "..";
 
-  // input responses
-  const [fileURL, setFileURL] = useState("");
-  const [email, setEmail] = useState("");
-  const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
-  const [targetCol, setTargetCol] = useState();
-  const [features, setFeatures] = useState([]);
-  const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
-  const [criterion, setCriterion] = useState(CRITERIONS[3]);
+const ImageModels = () => {
+  const [addedLayers, setAddedLayers] = useState(DEFAULT_IMG_LAYERS);
+  const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
+  const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
+  const [criterion, setCriterion] = useState(IMAGE_CLASSIFICATION_CRITERION[0]);
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
   const [usingDefaultDataset, setUsingDefaultDataset] = useState();
-  const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [epochs, setEpochs] = useState(5);
-  const [testSize, setTestSize] = useState(0.2);
+  const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [batchSize, setBatchSize] = useState(20);
-  const [inputFeatureColumnOptions, setInputFeatureColumnOptions] = useState(
-    csvColumns.map((e, i) => ({
-      label: e.name,
-      value: i,
-    }))
-  );
+  const [email, setEmail] = useState("");
+  const [dlpBackendResponse, setDLPBackendResponse] = useState();
+  const [dataUploaded, setDataUploaded] = useState(false);
+
   const input_responses = {
-    addedLayers: addedLayers,
-    targetCol: targetCol?.label,
-    features: features?.map((e) => e.label),
-    problemType: problemType?.value,
+    batchSize: batchSize,
     criterion: criterion?.value,
-    optimizerName: optimizerName?.value,
-    usingDefaultDataset: usingDefaultDataset?.value,
     shuffle: shuffle?.value,
     epochs: epochs,
-    testSize: testSize,
-    batchSize: batchSize,
-    fileURL: fileURL,
-    email: email,
-  };
-
-  const inputColumnOptions = csvColumns.map((e, i) => ({
-    label: e.name,
-    value: i,
-  }));
-
-  const handleTargetChange = (e) => {
-    setTargetCol(e);
-    const csvColumnsCopy = JSON.parse(JSON.stringify(inputColumnOptions));
-    csvColumnsCopy.splice(e.value, 1);
-    setInputFeatureColumnOptions(csvColumnsCopy);
+    optimizerName: optimizerName?.value,
+    addedLayers: addedLayers,
+    usingDefaultDataset: usingDefaultDataset?.value,
+    trainTransforms: trainTransforms,
+    testTransforms: testTransforms,
+    dataUploaded: dataUploaded,
   };
 
   const input_queries = [
-    {
-      queryText: "Target Column",
-      options: inputColumnOptions,
-      onChange: handleTargetChange,
-      defaultValue: targetCol,
-    },
-    {
-      queryText: "Features",
-      options: inputFeatureColumnOptions,
-      onChange: setFeatures,
-      isMultiSelect: true,
-      defaultValue: features,
-    },
-    {
-      queryText: "Problem Type",
-      options: PROBLEM_TYPES,
-      onChange: setProblemType,
-      defaultValue: problemType,
-    },
     {
       queryText: "Optimizer Name",
       options: OPTIMIZER_NAMES,
@@ -109,13 +73,13 @@ const Home = () => {
     },
     {
       queryText: "Criterion",
-      options: CRITERIONS,
+      options: IMAGE_CLASSIFICATION_CRITERION,
       onChange: setCriterion,
       defaultValue: criterion,
     },
     {
       queryText: "Default",
-      options: DEFAULT_DATASETS,
+      options: IMAGE_DEFAULT_DATASETS,
       onChange: setUsingDefaultDataset,
       defaultValue: usingDefaultDataset,
     },
@@ -131,12 +95,7 @@ const Home = () => {
       onChange: setShuffle,
       defaultValue: shuffle,
     },
-    {
-      queryText: "Test Size",
-      onChange: setTestSize,
-      defaultValue: testSize,
-      freeInputCustomRestrictions: { type: "number", min: 0, step: 0.1 },
-    },
+
     {
       queryText: "Batch Size",
       onChange: setBatchSize,
@@ -145,23 +104,16 @@ const Home = () => {
     },
   ];
 
+  const ALL_LAYERS = POSSIBLE_LAYERS.concat(IMAGE_LAYERS);
+
   return (
-    <div style={{ padding: 20, marginBottom: 50 }}>
+    <div style={{ padding: 20 }}>
       <DndProvider backend={HTML5Backend}>
         <ChoiceTab />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <RectContainer style={styles.fileInput}>
-            <CSVInputFile
-              setData={setCSVDataInput}
-              setColumns={setCSVColumns}
-            />
-            <CSVInputURL
-              fileURL={fileURL}
-              setFileURL={setFileURL}
-              setCSVColumns={setCSVColumns}
-              setCSVDataInput={setCSVDataInput}
-            />
+            <LargeFileUpload setDataUploaded={setDataUploaded} />
           </RectContainer>
 
           {addedLayers.map((_, i) => (
@@ -175,22 +127,33 @@ const Home = () => {
                 currentLayers.splice(i, 1);
                 setAddedLayers(currentLayers);
               }}
+              style={{
+                input_box: {
+                  margin: 7.5,
+                  backgroundColor: "white",
+                  width: 170,
+                  paddingInline: 5,
+                },
+                layer_box: {
+                  width: 150,
+                  backgroundColor: COLORS.layer,
+                },
+              }}
             />
           ))}
           <AddNewLayer />
-
           <TrainButton
             {...input_responses}
-            csvDataInput={csvDataInput}
             setDLPBackendResponse={setDLPBackendResponse}
+            choice="image"
           />
         </BackgroundLayout>
 
         <div style={{ marginTop: 20 }} />
 
-        <TitleText text="Layers Inventory" />
+        <TitleText test="Layers Inventory" />
         <BackgroundLayout>
-          {POSSIBLE_LAYERS.map((e) => (
+          {ALL_LAYERS.map((e) => (
             <LayerChoice
               layer={e}
               key={e.display_name}
@@ -209,6 +172,7 @@ const Home = () => {
           ))}
         </BackgroundLayout>
       </DndProvider>
+
       <div style={{ marginTop: 20 }} />
 
       <TitleText text="Deep Learning Parameters" />
@@ -218,37 +182,65 @@ const Home = () => {
         ))}
       </BackgroundLayout>
 
+      <div style={{ marginTop: 20 }} />
+      <TitleText text="Image Transformations" />
+      <Transforms
+        queryText={"Test Transform"}
+        options={POSSIBLE_TRANSFORMS}
+        transforms={trainTransforms}
+        setTransforms={setTrainTransforms}
+      />
+      <div style={{ marginTop: 10 }} />
+      <Transforms
+        queryText={"Test Transform"}
+        options={POSSIBLE_TRANSFORMS}
+        transforms={testTransforms}
+        setTransforms={setTestTransforms}
+      />
       <TitleText text="Email (optional)" />
       <EmailInput email={email} setEmail={setEmail} />
-
-      <TitleText text="CSV Input" />
-      <DataTable
-        pagination
-        highlightOnHover
-        columns={csvColumns}
-        data={csvDataInput}
-      />
-
       <TitleText text="Deep Learning Results" />
       <Results
         dlpBackendResponse={dlpBackendResponse}
-        problemType={problemType}
+        problemType={PROBLEM_TYPES[0]}
       />
 
       <TitleText text="Code Snippet" />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
+      <DataCodeSnippet
+        backendResponse={dlpBackendResponse}
+        trainTransforms={trainTransforms}
+        testTransforms={testTransforms}
+        batchSize={batchSize}
+        shuffle={shuffle}
+        defaultData={usingDefaultDataset}
+      />
     </div>
   );
 };
 
-export default Home;
-
-const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));
+export default ImageModels;
 
 const styles = {
   fileInput: {
     ...LAYOUT.column,
     backgroundColor: COLORS.input,
-    width: 200,
+    width: 155,
+  },
+  transformChoice: {
+    top_left_tooltip: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      backgroundColor: "transparent",
+      borderWidth: 0,
+    },
+    text: {
+      ...GENERAL_STYLES.p,
+      color: COLORS.layer,
+      fontSize: 16,
+    },
   },
 };
+
+const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));

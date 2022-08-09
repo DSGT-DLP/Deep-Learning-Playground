@@ -14,5 +14,5 @@ const styles = {
 };
 
 TitleText.propTypes = {
-  text: PropTypes.string.isRequired,
+  text: PropTypes.string,
 };

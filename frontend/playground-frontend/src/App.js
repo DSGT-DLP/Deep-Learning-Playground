@@ -19,7 +19,7 @@ function App() {
   return (
     <div id="app">
       <Router>
-        <Navbar setShowLogin={setShowLogin}/>
+        <Navbar setShowLogin={setShowLogin} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/About" element={<About />} />

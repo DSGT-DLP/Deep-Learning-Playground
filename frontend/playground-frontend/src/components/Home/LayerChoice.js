@@ -1,4 +1,4 @@
-import InfoIcon from "@mui/icons-material/Info";
+import {Info} from "@mui/icons-material";
 import PropTypes from "prop-types";
 import React from "react";
 import RectContainer from "./RectContainer";
@@ -56,7 +56,7 @@ const LayerChoice = (props) => {
           }
         >
           <button style={styles.top_left_tooltip}>
-            <InfoIcon style={{ color: COLORS.layer, fontSize: 18 }} />
+            <Info style={{ color: COLORS.layer, fontSize: 18 }} />
           </button>
         </HtmlTooltip>
       </div>

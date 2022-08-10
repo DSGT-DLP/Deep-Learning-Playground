@@ -71,11 +71,11 @@ const TrainButton = (props) => {
         alertMessage +=
           "Must specify an input file either from local storage or from an internet URL. ";
       }
-      for (let i = 0; i < features.length; i++) {
-        for (let j = 0; j < csvDataInput.length; j++) {
+      for (let i = 0; i < csvDataInput.length; i++) {
+        for (let j = 0; j < features.length; j++) {
           if (
-            Number.isNaN(parseFloat(csvDataInput[j][features[i]])) ||
-            !isFinite(csvDataInput[j][features[i]])
+            Number.isNaN(parseFloat(csvDataInput[i][features[j]])) ||
+            !isFinite(csvDataInput[i][features[j]])
           ) {
             alertMessage += "Feature columns values need to be purely numeric";
             i = Number.MAX_SAFE_INTEGER;

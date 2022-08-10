@@ -1,4 +1,4 @@
-import {Info} from "@mui/icons-material";
+import { Info } from "@mui/icons-material";
 import PropTypes from "prop-types";
 import React from "react";
 import RectContainer from "./RectContainer";

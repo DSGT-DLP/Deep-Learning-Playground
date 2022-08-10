@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 
+<<<<<<< HEAD
 const socketEventDict = {
   tabular: "runTraining",
   image: "img-run",
@@ -8,6 +9,9 @@ const socketEventDict = {
 };
 
 const socket = io(":5000", { timeout: 60000 });
+=======
+const socket = io(":8000");
+>>>>>>> c7a2a4dd0c415944be20e103049aa8d4c48d8dd0
 socket.on("connect", () => {
   frontendLog(`connected to socket`);
 });

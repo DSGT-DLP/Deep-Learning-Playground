@@ -32,7 +32,7 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 
 > **Note:** You will need the `.env` file from @farisdurrani to get the `Feedback` page working, but other pages work fine without it
 
-1. For complete functionality with the backend, first, start the backend using the instructions above. The backend will be live at http://localhost:5000/run
+1. For complete functionality with the backend, first, start the backend using the instructions above. The backend will be live at http://localhost:8000/
 
 2. Then in a separate terminal, start the frontend development server. After installing [nodeJS v16](https://nodejs.org/en/download/), run the following commands:
 

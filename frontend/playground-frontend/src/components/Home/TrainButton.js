@@ -26,7 +26,8 @@ const TrainButton = (props) => {
   const [result, setResult] = useState(null);
 
   useEffect(() => {
-    socket.on("trainingProgress", (progressData) => { // triggered by send_progress() function
+    socket.on("trainingProgress", (progressData) => {
+      // triggered by send_progress() function
       setProgress(Number.parseFloat(progressData));
     });
     socket.on("trainingResult", (resultData) => {
@@ -112,7 +113,6 @@ const TrainButton = (props) => {
   useEffect(() => {
     if (result) {
       if (result.success) {
-
         if (props.email?.length) {
           sendEmail(props.email, props.problemType);
         }

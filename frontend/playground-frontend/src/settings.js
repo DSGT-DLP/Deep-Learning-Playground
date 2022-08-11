@@ -520,8 +520,8 @@ export const IMAGE_DEFAULT_DATASETS = [
   {label: "MNIST", value: "MNIST"},
   {label: "FashionMNIST", value: "FashionMNIST"},
   {label: "CIFAR10", value: "CIFAR10"}
-]
+];
 
 export const PRETRAINED_MODELS = [
   {label: "RESNET18", value: "RESNET18"}
-]
+];

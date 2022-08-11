@@ -6,7 +6,7 @@ import {
   DEFAULT_DATASETS,
   OPTIMIZER_NAMES,
   POSSIBLE_LAYERS,
-  PROBLEM_TYPES
+  PROBLEM_TYPES,
 } from "./settings";
 import {
   AddNewLayer,
@@ -64,7 +64,7 @@ const Home = () => {
     shuffle: shuffle?.value,
     epochs: epochs,
     testSize: testSize,
-    batchSize : batchSize,
+    batchSize: batchSize,
     fileURL: fileURL,
     email: email,
   };
@@ -73,30 +73,6 @@ const Home = () => {
     label: e.name,
     value: i,
   }));
-
-  const auc_roc_data_res =
-    dlpBackendResponse?.auxiliary_outputs?.AUC_ROC_curve_data || [];
-  const auc_roc_data = [];
-  auc_roc_data.push({
-    name: "baseline",
-    x: [0, 1],
-    y: [0, 1],
-    type: "line",
-    marker: { color: "grey" },
-    line: {
-      dash: "dash",
-    },
-    config: { responsive: true },
-  });
-  for (let i = 0; i < auc_roc_data_res.length; i++) {
-    auc_roc_data.push({
-      name: `${i} (AUC: ${auc_roc_data_res[i][2]})`,
-      x: auc_roc_data_res[i][0] || [],
-      y: auc_roc_data_res[i][1] || [],
-      type: "line",
-      config: { responsive: true },
-    });
-  }
 
   const handleTargetChange = (e) => {
     setTargetCol(e);
@@ -177,8 +153,6 @@ const Home = () => {
         <BackgroundLayout>
           <RectContainer style={styles.fileInput}>
             <CSVInputFile
-              data={csvDataInput}
-              columns={csvColumns}
               setData={setCSVDataInput}
               setColumns={setCSVColumns}
             />
@@ -259,8 +233,6 @@ const Home = () => {
       <Results
         dlpBackendResponse={dlpBackendResponse}
         problemType={problemType}
-        auc_roc_data={auc_roc_data}
-        auc_roc_data_res={auc_roc_data_res}
       />
 
       <TitleText text="Code Snippet" />

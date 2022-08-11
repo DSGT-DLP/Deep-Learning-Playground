@@ -1,9 +1,10 @@
 {
   "env": {
+    "node": true,
     "browser": true,
     "es2021": true
   },
-  "extends": ["plugin:react/recommended", "standard", "prettier"],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -14,9 +15,11 @@
   "plugins": ["react"],
   "rules": {
     "no-control-regex": 0,
-    "camelcase": 0,
     "react/no-unescaped-entities": 0,
     "object-shorthand": ["error", "consistent-as-needed"],
-    "no-var": ["error"]
+    "no-var": "error",
+    "semi": "error",
+    "eol-last": "error",
+    "no-multiple-empty-lines": ["error", { "max": 1, "maxBOF": 0, "maxEOF": 1 }]
   }
 }

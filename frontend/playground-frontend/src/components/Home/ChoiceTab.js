@@ -2,15 +2,14 @@ import React from "react";
 import { COLORS } from "../../constants";
 import { Link, useLocation } from "react-router-dom";
 
-const ChoiceTab = (props) => {
+const ChoiceTab = () => {
 
   const loc = useLocation().pathname;
 
   const getBackground = (id) => {    
     if (id === loc) return COLORS.gold ;
     return COLORS.dark_blue;
-  }
-
+  };
 
   return (
     <div style={{ display: "flex", marginBottom: "0px", float: "right"}}>
@@ -38,10 +37,9 @@ const ChoiceTab = (props) => {
         </Link>
       </button>
 
-
     </div>
   );
-}
+};
 
 export default ChoiceTab;
 
@@ -64,5 +62,5 @@ const styles = {
     color: COLORS.background,
     textDecoration: "none"
   },
-  
+
 };

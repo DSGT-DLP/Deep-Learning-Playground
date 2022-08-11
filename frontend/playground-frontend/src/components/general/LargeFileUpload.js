@@ -13,7 +13,6 @@ const LargeFileUpload = (props) => {
   script.async = true;
 
   document.body.appendChild(script);
-
   
   useEffect(() => {
     Dropzone.autoDiscover = false;
@@ -25,9 +24,9 @@ const LargeFileUpload = (props) => {
       maxFilesize: 5000, // megabytes
       chunkSize: 1000000, // bytes
       init: function() {
-        ;
+
       }
-    }
+    };
     Dropzone.options.dropper.init();
   });
 
@@ -44,6 +43,6 @@ const LargeFileUpload = (props) => {
 
 LargeFileUpload.propTypes = {
   setDataUploaded: PropTypes.any,
-}
+};
 
 export default LargeFileUpload;

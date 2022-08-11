@@ -77,7 +77,7 @@ export function layerToString(layer) {
     if (params !== null && params !== undefined && params.length !== 0) {
       // const paramList= Array{[params.length]}
 
-      const paramList = new Array(params.length)
+      const paramList = new Array(params.length);
       for (let i = 0; i < params.length; i++) {
         const param = params[i];
         // param: "inputSize"

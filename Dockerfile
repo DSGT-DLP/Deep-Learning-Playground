@@ -1,7 +1,7 @@
 # FROM nikolaik/python3.9-nodejs16
 FROM nikolaik/python-nodejs:latest
 
-EXPOSE 5000
+EXPOSE 8000
 
 WORKDIR /
 

@@ -88,7 +88,7 @@ const TrainButton = (props) => {
     setDLPBackendResponse(undefined);
     setProgress(0);
 
-    document.getElementById('fileUploadInput').click();
+    document.getElementById("fileUploadInput").click();
 
     const user_arch = make_obj_param_list(props.addedLayers);
     let trainTransforms = 0;

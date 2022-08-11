@@ -106,13 +106,14 @@ const ImageModels = () => {
 
   const ALL_LAYERS = POSSIBLE_LAYERS.concat(IMAGE_LAYERS);
 
-  const ResultMemo = useMemo(() => (
-    <Results
-      dlpBackendResponse={dlpBackendResponse}
-      problemType={PROBLEM_TYPES[0]}
-    />
-  ),
-  [dlpBackendResponse, PROBLEM_TYPES[0]]
+  const ResultMemo = useMemo(
+    () => (
+      <Results
+        dlpBackendResponse={dlpBackendResponse}
+        problemType={PROBLEM_TYPES[0]}
+      />
+    ),
+    [dlpBackendResponse, PROBLEM_TYPES[0]]
   );
 
   return (

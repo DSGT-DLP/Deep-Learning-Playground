@@ -38,8 +38,10 @@ const LargeFileUpload = (props) => {
         <input
           type="submit"
           value="Upload"
+          id="fileUploadInput"
           style={{ marginLeft: "48px", marginTop: "8px" }}
           onClick={() => setDataUploaded(true)}
+          hidden
         ></input>
       </form>
     </>

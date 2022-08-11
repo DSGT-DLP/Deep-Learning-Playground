@@ -8,11 +8,11 @@ const DataCodeSnippet = (props) => {
   if (backendResponse?.success) {
     return (
       <div>
-        <p style={{margin: "2px" }} >Getting dataloaders</p>
+        <p style={{ margin: "2px" }}>Getting dataloaders</p>
         <textarea
           readOnly
           rows="10"
-          style={{ width: "100%"}}
+          style={{ width: "100%" }}
           value={codeSnippetFormat(props)}
         />
       </div>

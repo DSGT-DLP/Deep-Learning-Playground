@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const CodeSnippet = (props) => {
-  const { backendResponse, layers} = props;
+  const { backendResponse, layers } = props;
 
   if (!backendResponse?.success) {
     return (
@@ -83,8 +83,8 @@ export function layerToString(layer) {
         // param: "inputSize"
 
         if (typeof layer.parameters[param] !== "undefined") {
-
-          paramList[layer.parameters[param].index] = layer.parameters[param].value;
+          paramList[layer.parameters[param].index] =
+            layer.parameters[param].value;
         }
       }
       for (let i = 0; i < paramList.length; i++) {

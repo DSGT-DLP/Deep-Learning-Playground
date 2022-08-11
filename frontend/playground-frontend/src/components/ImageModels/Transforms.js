@@ -17,7 +17,7 @@ const Transforms = (props) => {
       val.value = "";
     });
     copyTransform.push(selectedTransform);
-    setTransforms(copyTransform);    
+    setTransforms(copyTransform);
   };
 
   return (
@@ -30,7 +30,6 @@ const Transforms = (props) => {
             addTransform(e, transforms, setTransforms);
           }}
           style={{ float: "left" }}
-
         />
 
         {transforms.map((_, i) => (
@@ -60,9 +59,9 @@ const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));
 
 Transforms.propTypes = {
   queryText: PropTypes.string,
-  options: PropTypes.any,
-  transforms: PropTypes.any,
-  setTransforms: PropTypes.any,
+  options: PropTypes.array,
+  transforms: PropTypes.array.isRequired,
+  setTransforms: PropTypes.func.isRequired,
 };
 
 const styles = {

@@ -43,7 +43,7 @@ const LayerChoice = (props) => {
   return (
     <RectContainer
       ref2={drag}
-      style={{ backgroundColor: COLORS.addLayer, width: 180}}
+      style={{ backgroundColor: COLORS.addLayer, width: 180 }}
       dataTestid={`box`}
     >
       <div>

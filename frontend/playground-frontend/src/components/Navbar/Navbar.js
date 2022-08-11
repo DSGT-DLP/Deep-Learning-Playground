@@ -3,7 +3,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
-
   return (
     <div className="header-footer" id="nav-bar">
       <a href="/" className="image-title">

@@ -1,3 +1,4 @@
+from collections import Counter
 from backend.common.loss_functions import compute_loss, compute_img_loss
 from backend.dl.dl_eval import compute_accuracy, compute_correct
 from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
@@ -53,7 +54,7 @@ def train_deep_classification_model(
         val_acc = []  # accuracy of test/validation set
         labels_last_epoch = []
         y_pred_last_epoch = []
-        
+
         num_train_epochs = len(train_loader)
         epoch_train_size = train_loader.batch_size * num_train_epochs  # total number of data points used for training per epoch
         num_test_epochs = len(test_loader)
@@ -63,9 +64,9 @@ def train_deep_classification_model(
             train_correct = 0  # number of correct predictions in training set in current epoch
             test_correct = 0  # number of correct predictions in testing set in current epoch
             epoch_batch_loss = 0  # cumulative training/testing loss per epoch
-            
+
             start_time = time.time()
-            model.train(True)  # set model to train mode
+            model.train(True)  # set model to train model
             for i, data in enumerate(train_loader):
                 # each batch is (input, label) pair in dataloader
                 input, labels = data
@@ -76,7 +77,7 @@ def train_deep_classification_model(
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
                 epoch_batch_loss += float(loss.detach())
-                
+
             epoch_time.append(time.time() - start_time)
             mean_train_acc = train_correct / epoch_train_size
             mean_train_loss = epoch_batch_loss / num_train_epochs
@@ -88,12 +89,12 @@ def train_deep_classification_model(
             for i, data in enumerate(test_loader):
                 input, labels = data
                 test_pred = model(input)
-                # currently only preserving the prediction array and label array for the last epoch for 
+                # currently only preserving the prediction array and label array for the last epoch for
                 # confusion matrix calculation
                 if(epoch == epochs - 1):
                     y_pred_last_epoch.append(test_pred.detach().numpy().squeeze())
 
-                    labels_last_epoch.append(labels)
+                    labels_last_epoch.append(labels.detach().numpy().squeeze())
 
                 test_correct += compute_correct(test_pred, labels)
                 loss = compute_loss(criterion, test_pred, labels)
@@ -265,10 +266,17 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
         epoch_train_size = train_loader.batch_size * num_train_epochs  # total number of data points used for training per epoch
         num_test_epochs = len(test_loader)
         epoch_test_size = test_loader.batch_size * num_test_epochs  # total number of data points used for testing per epoch
-        weights_dict = {}
+        train_weights_count = Counter()
+        test_weights_count = Counter()
 
         for epoch in range(epochs):
             model.train(True)
+
+            if epoch == 0 and criterion == "WCELOSS":
+                for i, j in train_loader:
+                    train_weights_count.update(j.detach().numpy().flatten())
+                for i, j in test_loader:
+                    test_weights_count.update(j.detach().numpy().flatten())
 
             loss, train_correct, epoch_batch_loss = 0, 0, 0
             start_time = time.time()
@@ -276,18 +284,10 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                 y = x[1] ## label for all images in the batch
                 x = x[0] ## (C, H, W) image
 
-                if (criterion == "WCELOSS"):
-                    for labels in y:
-                        if (labels in weights_dict.keys()):
-                            print("updating y")
-                            weights_dict[labels.item()] += 1
-                        else:
-                            weights_dict[labels.item()] = 1
-
                 x, y = x.to(device), y.to(device)
                 optimizer.zero_grad()
                 pred= model(x)
-                loss = compute_img_loss(criterion, pred, y, weights_dict)
+                loss = compute_img_loss(criterion, pred, y, train_weights_count)
 
                 loss.backward()
                 optimizer.step()
@@ -305,28 +305,18 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
             loss, test_correct = 0, 0
             print("training for this epoch finished, going to validation")
 
-            weights_dict = {}
-
             for x in test_loader:
                 y = x[1]
                 x = x[0]
                 x, y = x.to(device), y.to(device)
 
-                if (criterion == "WCELOSS"):
-                    for labels in y:
-                        if (labels in weights_dict.keys()):
-                            print("updating y")
-                            weights_dict[labels.item()] += 1
-                        else:
-                            weights_dict[labels.item()] = 1
-
                 pred = model(x)
-                loss = compute_img_loss(criterion, pred, y, weights_dict)
+                loss = compute_img_loss(criterion, pred, y, test_weights_count)
                 y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
 
                 if(epoch == epochs - 1):
-                    y_pred_last_epoch.append(pred.detach().numpy())
-                    labels_last_epoch.append(y)
+                    y_pred_last_epoch.append(pred.detach().numpy().squeeze())
+                    labels_last_epoch.append(y.detach().numpy().squeeze())
 
                 test_correct += compute_accuracy(pred, y)
                 test_correct += (y_pred == y_true).type(torch.float).sum().item()

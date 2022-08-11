@@ -4,12 +4,7 @@ import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "../../constants";
 
 const _InputOutputPromptResponse = (props) => {
-  const {
-    param_key,
-    allParamInputs,
-    setAddedLayers,
-    thisLayerIndex,
-  } = props;
+  const { param_key, allParamInputs, setAddedLayers, thisLayerIndex } = props;
   const { parameter_name, value } = allParamInputs[param_key];
 
   return (
@@ -38,7 +33,7 @@ const AddedLayer = (props) => {
   const thisLayer = addedLayers[thisLayerIndex];
   const { display_name, parameters } = thisLayer;
 
-  styles = {...styles, ...style};
+  styles = { ...styles, ...style };
 
   // converts the parameters object for each layer into an array of parameter objects
   const param_array = [];
@@ -75,7 +70,6 @@ _InputOutputPromptResponse.propTypes = {
   }).isRequired,
   setAddedLayers: PropTypes.func.isRequired,
   thisLayerIndex: PropTypes.number.isRequired,
-  finalStyle: PropTypes.any,
 };
 
 AddedLayer.propTypes = {
@@ -83,7 +77,7 @@ AddedLayer.propTypes = {
   addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
   setAddedLayers: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  style: PropTypes.any,
+  style: PropTypes.object,
 };
 
 export default AddedLayer;

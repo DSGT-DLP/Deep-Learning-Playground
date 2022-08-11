@@ -35,6 +35,6 @@ export { default as Footer } from "./Footer/Footer";
 // Image Models page
 export { default as ImageModels } from "./ImageModels/ImageModels";
 
-// Pretrained page 
-export {default as Pretrained} from "./Pretrained/Pretrained";
-export {default as LargeFileUpload} from "./general/LargeFileUpload";
+// Pretrained page
+export { default as Pretrained } from "./Pretrained/Pretrained";
+export { default as LargeFileUpload } from "./general/LargeFileUpload";

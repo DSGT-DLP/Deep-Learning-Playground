@@ -1,48 +1,55 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { PropTypes } from "prop-types";
-
-const { Dropzone } = require("dropzone");
+import { FaCloudUploadAlt } from "react-icons/fa";
 
 const LargeFileUpload = (props) => {
+  const { setDataUploaded } = props;
+  const [fileName, setFileName] = useState();
 
-  const {setDataUploaded } = props;
-
-  const script = document.createElement("script");
-
-  script.src = "https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone-amd-module.min.js";
-  script.async = true;
-
-  document.body.appendChild(script);
-  
-  useEffect(() => {
-    Dropzone.autoDiscover = false;
-    Dropzone.options.dropper = {
-      paramName: 'file',
-      chunking: true,
-      forceChunking: true,
-      url: '/upload',
-      maxFilesize: 5000, // megabytes
-      chunkSize: 1000000, // bytes
-      init: function() {
-
-      }
-    };
-    Dropzone.options.dropper.init();
-  });
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    setFileName(file.name.substring(0, 20));
+  };
 
   return (
     <>
-      <iframe name="dummyframe" id="dummyframe" style={{'display':"none"}}></iframe>
-      <form action="/upload" encType='multipart/form-data' method='POST' target="dummyframe" >
-        <input type="file" name="file" accept=".zip" style={{marginLeft: "40px"}}></input>
-        <input type="submit" value="upload" style={{marginLeft: "43px"}} onClick={()=> setDataUploaded(true)}></input>
+      <iframe
+        name="dummyframe"
+        id="dummyframe"
+        style={{ display: "none" }}
+      ></iframe>
+      <form
+        action="/upload"
+        encType="multipart/form-data"
+        method="POST"
+        target="dummyframe"
+      >
+        <label htmlFor="file-upload" className="custom-file-upload">
+          <FaCloudUploadAlt /> {fileName || "Choose zip file"}
+        </label>
+        <input
+          type="file"
+          name="file"
+          id="file-upload"
+          accept=".zip"
+          onChange={handleFileUpload}
+          style={{ width: "100%" }}
+        />
+        <input
+          type="submit"
+          value="Upload"
+          id="fileUploadInput"
+          style={{ marginLeft: "48px", marginTop: "8px" }}
+          onClick={() => setDataUploaded(true)}
+          hidden
+        ></input>
       </form>
     </>
   );
 };
 
 LargeFileUpload.propTypes = {
-  setDataUploaded: PropTypes.any,
+  setDataUploaded: PropTypes.func.isRequired,
 };
 
 export default LargeFileUpload;

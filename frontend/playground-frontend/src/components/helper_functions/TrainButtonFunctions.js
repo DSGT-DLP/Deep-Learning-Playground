@@ -33,13 +33,13 @@ export const validateTabularInputs = (user_arch, ...args) => {
   return alertMessage;
 };
 
-export const sendTabularJSON = (user_arch, ...args) => {
+export const sendTabularJSON = (...args) => {
   args = args[0];
 
   const csvDataStr = JSON.stringify(args.csvDataInput);
 
   return {
-    user_arch: user_arch,
+    user_arch: args.user_arch,
     criterion: args.criterion,
     optimizer_name: args.optimizerName,
     problem_type: args.problemType,
@@ -67,17 +67,18 @@ export const validateImageInputs = (user_arch, ...args) => {
   if (!args.optimizerName)
     alertMessage += "An optimizer name must be specified. ";
   if (args.batchSize < 2) alertMessage += "Batch size cannot be less than 2";
-  if (!args.dataUploaded && !args.usingDefaultDataset) alertMessage += "Please specify a valid data from default or upload";
+  if (!args.dataUploaded && !args.usingDefaultDataset)
+    alertMessage += "Please specify a valid data from default or upload";
   // can easily add a epoch limit
 
   return alertMessage;
 };
 
-export const sendImageJSON = (user_arch, trainTransform, testTransform, ...args) => {
+export const sendImageJSON = (...args) => {
   args = args[0];
 
   return {
-    user_arch: user_arch,
+    user_arch: args.user_arch,
     criterion: args.criterion,
     optimizer_name: args.optimizerName,
     using_default_dataset: args.usingDefaultDataset
@@ -87,9 +88,9 @@ export const sendImageJSON = (user_arch, trainTransform, testTransform, ...args)
     batch_size: args.batchSize,
     shuffle: args.shuffle,
     file_URL: args.fileURL,
-    train_transform: trainTransform,
-    test_transform: testTransform,
-    email: args.email?args.email : null,
+    train_transform: args.trainTransforms,
+    test_transform: args.testTransforms,
+    email: args.email ? args.email : null,
   };
 };
 
@@ -112,7 +113,7 @@ export const validatePretrainedInput = (user_arch, ...args) => {
   return alertMessage;
 };
 
-export const sendPretrainedJSON = (user_arch, ...args) => {
+export const sendPretrainedJSON = (...args) => {
   args = args[0];
 
   return {

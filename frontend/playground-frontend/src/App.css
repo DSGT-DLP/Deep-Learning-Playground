@@ -111,6 +111,9 @@ input {
   border: 0;
   text-align: center;
   font-family: Arial, Helvetica, sans-serif;
+  padding: 0;
+  margin: none;
+  height: 28px;
 }
 
 #accountButtonWrapper {

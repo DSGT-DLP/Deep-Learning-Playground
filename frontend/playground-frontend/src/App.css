@@ -93,20 +93,6 @@ input {
   box-sizing: border-box;
 }
 
-#nav-bar {
-  margin: 0;
-  position: sticky;
-  background-color: var(--primary);
-  color: white;
-  z-index: 10;
-  top: 0;
-  max-width: 100%;
-  width: 100vw;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
 #nav-bar .navElement {
   display: block;
   padding: 20px;
@@ -119,7 +105,7 @@ input {
 #nav-bar .loginButton {
   display: block;
   color: inherit;
-  font-size: x-large;
+  font-size: 25px;
   background-color: transparent;
   cursor: pointer;
   border: 0;

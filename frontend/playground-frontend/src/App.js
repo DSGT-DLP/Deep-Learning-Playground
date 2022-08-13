@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import {
   About,
   LoginPopup,
@@ -11,10 +16,27 @@ import {
   Footer,
   UserSettings,
 } from "./components";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import Home from "./Home";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import PropTypes from "prop-types";
+import { auth } from "./firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+
+const AuthRoute = ({ children }) => {
+  const [user, loading] = useAuthState(auth);
+
+  if (loading) return <></>;
+
+  // check if authenticated
+  if (user) {
+    return children;
+  } else {
+    toast.error("User not logged in");
+    return <Navigate to="/" replace />;
+  }
+};
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -29,7 +51,14 @@ function App() {
           <Route path="/pretrained" element={<Pretrained />} />
           <Route path="/About" element={<About />} />
           <Route path="/Wiki" element={<Wiki />} />
-          <Route path="/usersettings" element={<UserSettings />} />
+          <Route
+            path="/usersettings"
+            element={
+              <AuthRoute>
+                <UserSettings />
+              </AuthRoute>
+            }
+          />
           <Route path="/feedback" element={<Feedback />} />
         </Routes>
         <ToastContainer position="top-center" />
@@ -40,3 +69,7 @@ function App() {
   );
 }
 export default App;
+
+AuthRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+};

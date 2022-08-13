@@ -1,6 +1,6 @@
 import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -8,6 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 const AccountButton = ({ setShowLogin }) => {
   const [user] = useAuthState(auth);
   const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
 
   if (user) {
     return (
@@ -21,7 +22,15 @@ const AccountButton = ({ setShowLogin }) => {
         {showDropdown && (
           <div id="accountButtons">
             <button className="accountButton">Dashboard</button>
-            <button className="accountButton">Settings</button>
+            <button
+              className="accountButton"
+              onClick={() => {
+                setShowDropdown(false);
+                navigate("/usersettings");
+              }}
+            >
+              Settings
+            </button>
             <button className="accountButton">My Learning</button>
             <button className="accountButton" onClick={() => auth.signOut()}>
               Log out

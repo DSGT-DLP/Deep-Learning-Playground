@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {CopyToClipboard} from 'react-copy-to-clipboard';
-import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 
 const CodeSnippet = (props) => {
   const { backendResponse, layers } = props;
@@ -14,7 +14,7 @@ const CodeSnippet = (props) => {
     );
   }
   return (
-      <>
+    <>
       <textarea
         readOnly
         rows="10"
@@ -22,9 +22,11 @@ const CodeSnippet = (props) => {
         value={codeSnippetFormat(layers)}
       />
       <CopyToClipboard text={codeSnippetFormat(layers)}>
-      <button id="code-snippet-clipboard"><ContentPasteIcon/></button>
+        <button id="code-snippet-clipboard">
+          <ContentPasteIcon />
+        </button>
       </CopyToClipboard>
-      </>
+    </>
   );
 };
 

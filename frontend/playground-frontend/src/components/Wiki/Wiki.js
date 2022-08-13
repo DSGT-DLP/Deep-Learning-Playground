@@ -1,8 +1,22 @@
-import React from "react";
+import React, {useState} from "react";
 import DEMO_VIDEO from "../../images/demo_video.gif";
 import softmax_eq from "./softmax_equation.png";
 
 const Wiki = () => {
+
+  const [linearDisp, setLinearDisp] = useState("none");
+  const [softmax, setSoftmax] = useState("none");
+  const [relu, setRelu] = useState("none");
+  const [sigmoid, setSigmoid] = useState("none");
+
+  const displayChange = (display, setdisplay) => {
+    if (display === "block") {
+      setdisplay("none");
+    } else {
+      setdisplay("block");
+    }
+  };
+
   return (
     <>
       <div id="header-section">
@@ -20,6 +34,7 @@ const Wiki = () => {
       </div>
 
       <div className="sections" id="basics">
+        <h2>What is Deep Learning?</h2>
         <p>
           Deep learning is a field of machine learning that uses a{" "}
           <b>neural network</b> to mimic how human brains (which many consider
@@ -58,137 +73,176 @@ const Wiki = () => {
           Choose the activation function of the neural network. Click for more
           information about each function.
         </p>
-        <h4>
-          <a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">
-            Linear Layer
-          </a>
-        </h4>
-        <p>
-          This layer in Pytorch is how you add a "hidden layer" in a neural
-          network. When you say for example `nn.Linear(10, 4)`, what you are
-          doing is multiplying a `1x10` matrix by a `10x4` matrix to get a `1x4`
-          matrix. This `10x4` matrix contains weights that need to be learned
-          along with a "bias" term (additive bias). In linear algebra terms, the
-          Linear layer is doing `xW^(T) + b` where `W` is the weight matrix (ie:
-          the `10x4` in our example).
-        </p>
 
-        <h5>Example Usage in Pytorch</h5>
+        <ul>
+          <li style={{ marginBottom: "10px" }}>
+            {/* Linear Layer */}
+            <button
+              className="layer-info-button"
+              onClick={() => displayChange(linearDisp, setLinearDisp)}
+            >
+              Linear Layer
+            </button>
+            <div style={{ display: linearDisp }} className="wiki-content">
+              <p>
+                This layer in Pytorch is how you add a "hidden layer" in a
+                neural network. When you say for example `nn.Linear(10, 4)`,
+                what you are doing is multiplying a `1x10` matrix by a `10x4`
+                matrix to get a `1x4` matrix. This `10x4` matrix contains
+                weights that need to be learned along with a "bias" term
+                (additive bias). In linear algebra terms, the Linear layer is
+                doing `xW^(T) + b` where `W` is the weight matrix (ie: the
+                `10x4` in our example).
+              </p>
 
-        <pre>
-          <code>
-            {`
+              <h5>Example Usage in Pytorch</h5>
+
+              <pre>
+                <code>
+                  {`
           x = torch.randn(10, 20)  # 10x20 matrix 
           lin_layer = nn.Linear(20, 5)  # create linear layer that's 20x5 matrix
           lin_layer(x) # run/apply linear layer on input x
           `}
-          </code>
-        </pre>
+                </code>
+              </pre>
 
-        <h5>Documentation</h5>
+              <h5>Documentation</h5>
 
-        <p>
-          Check out{" "}
-          <a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">
-            the documentation on Pytorch's Linear Layer!
-          </a>
-        </p>
+              <p>
+                Check out{" "}
+                <a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">
+                  the documentation on Pytorch's Linear Layer!
+                </a>
+              </p>
+            </div>
+          </li>
 
-        <h4>
-          <a href="https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html">
-            Softmax Layer
-          </a>
-        </h4>
+          <li style={{ marginBottom: "10px" }}>
+            <button
+              className="layer-info-button"
+              onClick={() => displayChange(softmax, setSoftmax)}
+            >
+              Softmax Layer
+            </button>
 
-        <p>
-          The Softmax function is an activation function commonly used. You are
-          taking an array of numbers and converting it into an array of
-          probabilities. This is useful within multiclass classification because
-          it would be nice to figure out what the probability of your input
-          being in one of `K` classes is in order to make an "informed
-          judgement/classification". Since Softmax layer covnerts a list of
-          numbers into a list of probabilities, it follows that the
-          probabilities must add to 1.
-        </p>
+            <div style={{ display: softmax }} className="wiki-content">
+              <p>
+                The Softmax function is an activation function commonly used.
+                You are taking an array of numbers and converting it into an
+                array of probabilities. This is useful within multiclass
+                classification because it would be nice to figure out what the
+                probability of your input being in one of `K` classes is in
+                order to make an "informed judgement/classification". Since
+                Softmax layer covnerts a list of numbers into a list of
+                probabilities, it follows that the probabilities must add to 1.
+              </p>
 
-        <p>
-          Suppose you had an array of numbers in the form `[z_1, z_2, ... z_ k]`
-        </p>
+              <p>
+                Suppose you had an array of numbers in the form `[z_1, z_2, ...
+                z_ k]`
+              </p>
 
-        <p>The Softmax formula is:</p>
+              <p>The Softmax formula is:</p>
 
-        <img
-          src={softmax_eq}
-          alt="Softmax equation"
-          style={{ maxHeight: 200, marginInline: "auto" }}
-        />
+              <img
+                src={softmax_eq}
+                alt="Softmax equation"
+                style={{ maxHeight: 200, marginInline: "auto" }}
+              />
 
-        <p>
-          Essentially, you are exponentiating each number (using `e` as the
-          base) and then normalizing by dividing these exponentiated numbers by
-          the total.
-        </p>
+              <p>
+                Essentially, you are exponentiating each number (using `e` as
+                the base) and then normalizing by dividing these exponentiated
+                numbers by the total.
+              </p>
 
-        <h5>Documentation</h5>
+              <h5>Documentation</h5>
 
-        <p>
-          Check out{" "}
-          <a href="https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html">
-            the documentation on Pytorch's Softmax Layer!
-          </a>
-        </p>
+              <p>
+                Check out{" "}
+                <a href="https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html">
+                  the documentation on Pytorch's Softmax Layer!
+                </a>
+              </p>
+            </div>
+          </li>
 
-        <h4>
-          <a href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html">
-            ReLU Layer
-          </a>
-        </h4>
+          <li style={{ marginBotton: "10px" }}>
+            <button
+              className="layer-info-button"
+              onClick={() => displayChange(relu, setRelu)}
+            >
+              ReLU layer
+            </button>
 
-        <p>
-          ReLU is a common activation function. It stands for Rectified Linear
-          Unit. This activation function helps to introduce nonlinearity into
-          our models (commonly seen in neural networks). One big advantage of
-          ReLU is that this function is easy to differentiate, which is helpful
-          for backpropagation.{" "}
-        </p>
+            <div style={{ display: relu }} className="wiki-content">
+              <p>
+                ReLU is a common activation function. It stands for Rectified
+                Linear Unit. This activation function helps to introduce
+                nonlinearity into our models (commonly seen in neural networks).
+                One big advantage of ReLU is that this function is easy to
+                differentiate, which is helpful for backpropagation.{" "}
+              </p>
 
-        <h5>Formula</h5>
+              <h5>Formula</h5>
 
-        <p>
-          If the number `x` passed into ReLU is less than 0, return 0. If the
-          number `x` is at least 0, return `x`.
-        </p>
-        <p>
-          Note: there are other variants of ReLU such as "Leaky ReLU" that you
-          can play around with as well!
-        </p>
+              <p>
+                If the number `x` passed into ReLU is less than 0, return 0. If
+                the number `x` is at least 0, return `x`.
+              </p>
+              <p>
+                Note: there are other variants of ReLU such as "Leaky ReLU" that
+                you can play around with as well!
+              </p>
 
-        <h5>Documentation</h5>
+              <h5>Documentation</h5>
 
-        <p>
-          Check out{" "}
-          <a href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html">
-            the documentation on ReLU Layer here!
-          </a>
-        </p>
+              <p>
+                Check out{" "}
+                <a href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html">
+                  the documentation on ReLU Layer here!
+                </a>
+              </p>
+            </div>
+          </li>
 
-        <h4>Other layers</h4>
-        <ul>
-          <li>
-            <a href="https://pytorch.org/docs/stable/generated/torch.nn.Sigmoid.html">
+          <li style={{ marginBottom: "10px" }}>
+            <button
+              className="layer-info-button"
+              onClick={() => displayChange(sigmoid, setSigmoid)}
+            >
               Sigmoid
-            </a>
+            </button>
+            <div style={{display: sigmoid}} className="wiki-content">
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat
+              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+              sunt in culpa qui officia deserunt mollit anim id est laborum."
+            </div>
           </li>
-          <li>
-            <a href="https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html">
-              Tanh
-            </a>
-          </li>
-          <li>
-            <a href="https://pytorch.org/docs/stable/generated/torch.nn.LogSoftmax.html">
-              LogSoftmax
-            </a>
-          </li>
+
+          <h4>Other layers</h4>
+          {/* <ul>
+            <li>
+              <a href="https://pytorch.org/docs/stable/generated/torch.nn.Sigmoid.html">
+                Sigmoid
+              </a>
+            </li>
+            <li>
+              <a href="https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html">
+                Tanh
+              </a>
+            </li>
+            <li>
+              <a href="https://pytorch.org/docs/stable/generated/torch.nn.LogSoftmax.html">
+                LogSoftmax
+              </a>
+            </li>
+          </ul> */}
         </ul>
         <h3>Deep Learning Parameters</h3>
         <h4>

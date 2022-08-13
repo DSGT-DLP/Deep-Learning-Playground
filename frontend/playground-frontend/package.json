@@ -1,5 +1,10 @@
 {
   "name": "playground-frontend",
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!react-dnd|dnd-core|@react-dnd)"
+    ]
+  },
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:8000",

@@ -10,123 +10,158 @@ const displayChange = (display, setdisplay) => {
   }
 };
 
-const render_layer_info = (layer_info) => {
+const render_layer_info  = (layer_info) => {
+  let body = [];
+  for (let i = 0; i < layer_info.docs.length; i++) {
+    body.push(
+      <li style={{ marginBottom: "10px", display: layer_info.displayState }}>
+        <button
+          onClick={() =>
+            displayChange(
+              layer_info.docs[i].displayState,
+              layer_info.docs[i].setDisplayState
+            )
+          }
+          className="layer-info-button"
+        >
+          {layer_info.docs[i].layer_name}
+        </button>
+
+        <div
+          style={{ display: layer_info.docs[i].displayState }}
+          className="wiki-content"
+        >
+          {layer_info.docs[i].body}
+        </div>
+      </li>
+    );
+    console.log(body);
+  }
   return (
-    <li style={{ marginBottom: "10px" }}>
+    <div>
       <button
         onClick={() =>
           displayChange(layer_info.displayState, layer_info.setDisplayState)
         }
-        className="layer-info-button"
-      >
-        {layer_info.title}
-      </button>
-
-      <div
-        style={{ display: layer_info.displayState }}
-        className="wiki-content"
-      >
-        {layer_info.body}
-      </div>
-    </li>
+      >{layer_info.title}</button>
+      <>
+      {body}
+      </>
+    </div>
   );
 };
 
-const render_all_layers = (layer_wiki) => {
-  layer_wiki = layer_wiki.sort((a, b) => (a.title > b.title ? 1 : -1));
+const render_all_layer_info = (layer_wiki) => {
   const body = [];
-
   for (let i = 0; i < layer_wiki.length; i++) {
-    console.log(layer_wiki[i]);
     body.push(render_layer_info(layer_wiki[i]));
   }
-  console.log(body);
-  return <ul>{body}</ul>;
+  return body;
 };
 
 const Wiki = () => {
+  const [linearTitle, setLinearTitle] = useState("none");
   const [linearDisp, setLinearDisp] = useState("none");
   const [softmax, setSoftmax] = useState("none");
   const [relu, setRelu] = useState("none");
+  const [nla, setnla] = useState("none");
+  const [outerrelu, setouterrelu] = useState("none");
 
   const layer_wiki = [
     {
-      title: "Linear Layer",
-      body: (
-        <>
-          <p>
-            This layer in Pytorch is how you add a "hidden layer" in a neural
-            network. When you say for example `nn.Linear(10, 4)`, what you are
-            doing is multiplying a `1x10` matrix by a `10x4` matrix to get a
-            `1x4` matrix. This `10x4` matrix contains weights that need to be
-            learned along with a "bias" term (additive bias). In linear algebra
-            terms, the Linear layer is doing `xW^(T) + b` where `W` is the
-            weight matrix (ie: the `10x4` in our example).
-          </p>
+      title: "Linear",
+      docs: [
+        {
+          layer_name: "Linear Layer",
+          body: (
+            <>
+              <p>
+                This layer in Pytorch is how you add a "hidden layer" in a
+                neural network. When you say for example `nn.Linear(10, 4)`,
+                what you are doing is multiplying a `1x10` matrix by a `10x4`
+                matrix to get a `1x4` matrix. This `10x4` matrix contains
+                weights that need to be learned along with a "bias" term
+                (additive bias). In linear algebra terms, the Linear layer is
+                doing `xW^(T) + b` where `W` is the weight matrix (ie: the
+                `10x4` in our example).
+              </p>
 
-          <h5>Example Usage in Pytorch</h5>
+              <h5>Example Usage in Pytorch</h5>
 
-          <pre>
-            <code>
-              {`
+              <pre>
+                <code>
+                  {`
           x = torch.randn(10, 20)  # 10x20 matrix 
           lin_layer = nn.Linear(20, 5)  # create linear layer that's 20x5 matrix
           lin_layer(x) # run/apply linear layer on input x
           `}
-            </code>
-          </pre>
+                </code>
+              </pre>
 
-          <h5>Documentation</h5>
+              <h5>Documentation</h5>
 
-          <p>
-            Check out{" "}
-            <a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">
-              the documentation on Pytorch's Linear Layer!
-            </a>
-          </p>
-        </>
-      ),
-      displayState: linearDisp,
-      setDisplayState: setLinearDisp,
+              <p>
+                Check out{" "}
+                <a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">
+                  the documentation on Pytorch's Linear Layer!
+                </a>
+              </p>
+            </>
+          ),
+          displayState: linearDisp,
+          setDisplayState: setLinearDisp,
+        },
+      ],
+      displayState: linearTitle,
+      setDisplayState: setLinearTitle,
     },
     {
-      title: "ReLU",
-      body: (
-        <>
-          <p>
-            ReLU is a common activation function. It stands for Rectified Linear
-            Unit. This activation function helps to introduce nonlinearity into
-            our models (commonly seen in neural networks). One big advantage of
-            ReLU is that this function is easy to differentiate, which is
-            helpful for backpropagation.{" "}
-          </p>
+      title: "Non-linear Activations (weighted sum, nonlinearity)",
+      docs: [
+        { 
+          layer_name: "ReLU",
+          body: (
+            <>
+              <p>
+                ReLU is a common activation function. It stands for Rectified
+                Linear Unit. This activation function helps to introduce
+                nonlinearity into our models (commonly seen in neural networks).
+                One big advantage of ReLU is that this function is easy to
+                differentiate, which is helpful for backpropagation.{" "}
+              </p>
 
-          <h5>Formula</h5>
+              <h5>Formula</h5>
 
-          <p>
-            If the number `x` passed into ReLU is less than 0, return 0. If the
-            number `x` is at least 0, return `x`.
-          </p>
-          <p>
-            Note: there are other variants of ReLU such as "Leaky ReLU" that you
-            can play around with as well!
-          </p>
+              <p>
+                If the number `x` passed into ReLU is less than 0, return 0. If
+                the number `x` is at least 0, return `x`.
+              </p>
+              <p>
+                Note: there are other variants of ReLU such as "Leaky ReLU" that
+                you can play around with as well!
+              </p>
 
-          <h5>Documentation</h5>
+              <h5>Documentation</h5>
 
-          <p>
-            Check out{" "}
-            <a href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html">
-              the documentation on ReLU Layer here!
-            </a>
-          </p>
-        </>
-      ),
-      displayState: relu,
-      setDisplayState: setRelu,
+              <p>
+                Check out{" "}
+                <a href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html">
+                  the documentation on ReLU Layer here!
+                </a>
+              </p>
+            </>
+          ),
+          displayState: relu,
+          setDisplayState: setRelu,
+        },
+      ],
+      displayState: outerrelu,
+      setDisplayState: setouterrelu
     },
     {
-      title: "Softmax",
+      title: "Non-Linear Activations",
+      docs : [ {
+      layer_name: "Softmax",
       body: (
         <>
           <p>
@@ -171,6 +206,9 @@ const Wiki = () => {
       ),
       displayState: softmax,
       setDisplayState: setSoftmax,
+    }],
+    displayState: nla,
+    setDisplayState: setnla
     },
   ];
 
@@ -231,7 +269,8 @@ const Wiki = () => {
           information about each function.
         </p>
 
-        {render_all_layers(layer_wiki)}
+        {/* {render_all_layers(layer_wiki)} */}
+        {render_all_layer_info(layer_wiki)}
 
         <h3>Deep Learning Parameters</h3>
         <p>

@@ -11,25 +11,29 @@ const displayChange = (display, setdisplay) => {
 };
 
 const render_layer_info = (layer_info) => {
-    return (
-      <li style={{marginBottom: "10px"}}>
-        <button
-          onClick={() =>
-            displayChange(layer_info.displayState, layer_info.setDisplayState)
-          }
-          className="layer-info-button"
-        >
-          {layer_info.title}
-        </button>
+  return (
+    <li style={{ marginBottom: "10px" }}>
+      <button
+        onClick={() =>
+          displayChange(layer_info.displayState, layer_info.setDisplayState)
+        }
+        className="layer-info-button"
+      >
+        {layer_info.title}
+      </button>
 
-        <div style={{ display: layer_info.displayState }} className="wiki-content">
-          {layer_info.body}
-        </div>
-      </li>
-    );
+      <div
+        style={{ display: layer_info.displayState }}
+        className="wiki-content"
+      >
+        {layer_info.body}
+      </div>
+    </li>
+  );
 };
 
 const render_all_layers = (layer_wiki) => {
+  layer_wiki = layer_wiki.sort((a, b) => (a.title > b.title ? 1 : -1));
   const body = [];
 
   for (let i = 0; i < layer_wiki.length; i++) {
@@ -37,19 +41,13 @@ const render_all_layers = (layer_wiki) => {
     body.push(render_layer_info(layer_wiki[i]));
   }
   console.log(body);
-  return (<ul>
-    {body}
-  </ul>
-  );
+  return <ul>{body}</ul>;
 };
 
 const Wiki = () => {
   const [linearDisp, setLinearDisp] = useState("none");
   const [softmax, setSoftmax] = useState("none");
   const [relu, setRelu] = useState("none");
-  const [sigmoid, setSigmoid] = useState("none");
-  console.log(sigmoid);
-  console.log(setSigmoid);
 
   const layer_wiki = [
     {
@@ -233,17 +231,14 @@ const Wiki = () => {
           information about each function.
         </p>
 
-        <ul>
+        {render_all_layers(layer_wiki)}
 
-          {render_all_layers(layer_wiki)}
-
-        </ul>
         <h3>Deep Learning Parameters</h3>
-        <h4>
+        <p>
           Parameters that change behavior about the model itself. Specified
           before the model is trained.
-        </h4>
-        <ul>
+        </p>
+        <ul style={{ gap: "10px", display: "grid" }}>
           <li>
             <b>Target Column</b> - The column with the intended outputs of the
             model.

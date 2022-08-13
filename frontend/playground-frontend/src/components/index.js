@@ -38,3 +38,6 @@ export { default as ImageModels } from "./ImageModels/ImageModels";
 // Pretrained page
 export { default as Pretrained } from "./Pretrained/Pretrained";
 export { default as LargeFileUpload } from "./general/LargeFileUpload";
+
+// User pages
+export { default as UserSettings } from "./UserSettings/UserSettings";

@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../../constants";
-import { train_and_output } from "../helper_functions/TalkWithBackend";
+import {
+  socket,
+  sendEmail,
+  train_and_output,
+} from "../helper_functions/TalkWithBackend";
+import { Circle } from "rc-progress";
+import { toast } from "react-toastify";
 
 const TrainButton = (props) => {
   const {
@@ -24,6 +30,23 @@ const TrainButton = (props) => {
   } = props;
 
   const [pendingResponse, setPendingResponse] = useState(false);
+  const [progress, setProgress] = useState(null);
+  const [result, setResult] = useState(null);
+
+  useEffect(() => {
+    socket.on("trainingProgress", (progressData) => {
+      setProgress(Number.parseFloat(progressData));
+    });
+    socket.on("trainingResult", (resultData) => {
+      setResult(resultData);
+    });
+  }, [socket]);
+
+  const reset = () => {
+    setPendingResponse(false);
+    setProgress(null);
+    setResult(null);
+  };
 
   const make_user_arch = () => {
     // making a user_arch array by including all added layers and their parameters to make something like:
@@ -87,23 +110,25 @@ const TrainButton = (props) => {
 
     if (alertMessage.length === 0) return true;
 
-    alert(alertMessage);
+    toast.error(alertMessage);
     return false;
   };
 
   const onClick = async () => {
     setPendingResponse(true);
     setDLPBackendResponse(undefined);
+    setProgress(0);
 
     const user_arch = make_user_arch();
     if (!validateInputs(user_arch)) {
       setPendingResponse(false);
+      setProgress(null);
       return;
     }
 
     const csvDataStr = JSON.stringify(csvDataInput);
 
-    const response = await train_and_output(
+    train_and_output(
       user_arch,
       criterion,
       optimizerName,
@@ -116,21 +141,26 @@ const TrainButton = (props) => {
       batchSize,
       shuffle,
       csvDataStr,
-      fileURL,
-      email
+      fileURL
     );
-
-    setDLPBackendResponse(response);
-    setPendingResponse(false);
-
-    if (response.success === true) {
-      alert("SUCCESS: Training successful! Scroll to see results!");
-    } else if (response.message) {
-      alert("FAILED: Training failed. Check output traceback message");
-    } else {
-      alert("FAILED: Training failed. Check your inputs");
-    }
   };
+
+  useEffect(() => {
+    if (result) {
+      if (result.success) {
+        if (email?.length) {
+          sendEmail(email, problemType);
+        }
+        toast.success("Training successful! Scroll to see results!");
+      } else if (result.message) {
+        toast.error("Training failed. Check output traceback message");
+      } else {
+        toast.error("Training failed. Check your inputs");
+      }
+      setDLPBackendResponse(result);
+      reset();
+    }
+  }, [result]);
 
   return (
     <>
@@ -152,8 +182,8 @@ const TrainButton = (props) => {
         </button>
       </RectContainer>
       {pendingResponse ? (
-        <div style={{ marginTop: 10 }}>
-          <div className="loader" />
+        <div style={{ marginLeft: 5, marginTop: 10, width: 90, height: 90 }}>
+          <Circle percent={progress} strokeWidth={4} />
         </div>
       ) : null}
     </>

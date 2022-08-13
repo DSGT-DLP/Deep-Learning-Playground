@@ -2,7 +2,7 @@
   "name": "playground-frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:8000",
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^13.5.0",
     "plotly.js": "^2.12.1",
     "prop-types": "^15.8.1",
+    "rc-progress": "^3.4.0",
     "react": "^18.1.0",
     "react-csv": "^2.2.2",
     "react-data-table-component": "^7.5.2",
@@ -25,6 +26,8 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-select": "^5.3.2",
+    "react-toastify": "^9.0.7",
+    "socket.io-client": "^4.5.1",
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
@@ -33,7 +36,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src/"
   },
   "eslintConfig": {
     "extends": [

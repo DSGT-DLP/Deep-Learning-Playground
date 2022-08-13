@@ -21,7 +21,7 @@
  ┃ ┣ 📜dl_model.py - torch model based on user specifications from drag and drop
  ┃ ┣ 📜dl_model_parser.py - parse the user specified pytorch model
  ┃ ┣ 📜dl_trainer.py - train a deep learning model on the dataset
- ┃ ┗ 📜pretrained.py - Functionality to support user training pretrained models (eg: alexnet, resnet, vgg16, etc) via timmodels + fast AI 
+ ┃ ┗ 📜pretrained.py - Functionality to support user training pretrained models (eg: alexnet, resnet, vgg16, etc) via timmodels + fast AI
  ┣ 📂ml
  ┃ ┗ 📜ml_trainer.py - train a classical machine learning learning model on the dataset
  ┣ 📜data.csv - data csv file for use in the playground

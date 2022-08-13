@@ -300,6 +300,15 @@ textarea {
   margin-bottom: 0;
 }
 
+.layer-outer-button {
+  border: none;
+  background: none;
+  padding-left: 0;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+}
+
 .wiki-content {
   font-size: medium;
   padding-top: 0;

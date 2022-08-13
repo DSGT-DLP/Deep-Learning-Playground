@@ -35,26 +35,27 @@ const render_layer_info  = (layer_info) => {
         </div>
       </li>
     );
-    console.log(body);
   }
   return (
-    <div>
+    <>
       <button
         onClick={() =>
           displayChange(layer_info.displayState, layer_info.setDisplayState)
         }
+        className="layer-outer-button"
+        style={{marginBottom: layer_info.displayState === "none" ? "10px" : 0 }}
       >{layer_info.title}</button>
-      <>
+      <ul>
       {body}
-      </>
-    </div>
+      </ul>
+    </>
   );
 };
 
 const render_all_layer_info = (layer_wiki) => {
   const body = [];
   for (let i = 0; i < layer_wiki.length; i++) {
-    body.push(render_layer_info(layer_wiki[i]));
+    body.push(<li>{render_layer_info(layer_wiki[i])}</li>);
   }
   return body;
 };

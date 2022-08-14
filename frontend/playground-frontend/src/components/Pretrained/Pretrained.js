@@ -30,10 +30,10 @@ const Pretrained = () => {
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [epochs, setEpochs] = useState(5);
   const [batchSize, setBatchSize] = useState(20);
-  const [trainTransforms, setTrainTransforms] =  useState(DEFAULT_TRANSFORMS);
+  const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
   const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
   const [dataUploaded, setDataUploaded] = useState(false);
-  
+
   const input_responses = {
     modelName: modelName?.value,
     criterion: criterion?.value,
@@ -100,9 +100,7 @@ const Pretrained = () => {
       <div style={{ display: "flex" }}>
         <BackgroundLayout>
           <RectContainer style={styles.fileInput}>
-            <LargeFileUpload 
-              setDataUploaded={setDataUploaded} 
-            />
+            <LargeFileUpload setDataUploaded={setDataUploaded} />
           </RectContainer>
           <TrainButton
             {...input_responses}

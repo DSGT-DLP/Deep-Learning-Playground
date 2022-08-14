@@ -167,7 +167,7 @@ TrainButton.propTypes = {
   choice: PropTypes.string,
   style: PropTypes.object,
   problemType: PropTypes.string,
-  usingDefaultDataset: PropTypes.bool,
+  usingDefaultDataset: PropTypes.string,
 };
 
 export default TrainButton;

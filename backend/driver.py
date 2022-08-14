@@ -262,6 +262,10 @@ def testing(request_data):
         print("got data loaders")
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        if(torch.cuda.is_available()):
+            print("cuda")
+        else:
+            print("cpu")
         model.to(
             device
         )  # model should go to GPU before initializing optimizer  https://stackoverflow.com/questions/66091226/runtimeerror-expected-all-tensors-to-be-on-the-same-device-but-found-at-least/66096687#66096687

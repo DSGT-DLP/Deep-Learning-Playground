@@ -20,6 +20,7 @@ from backend.common.loss_functions import LossFunctions
 from backend.common.dataset import dataset_from_zipped
 from backend.common.constants import DEFAULT_TRANSFORM, SAVED_MODEL
 from backend.common.optimizer import get_optimizer
+from backend.common.utils import generate_AUC_ROC_CURVE
 
 
 def train(
@@ -65,12 +66,8 @@ def train(
     dls = DataLoaders.from_dsets(
         train_dataset, test_dataset, device=device, shuffle=shuffle, bs=batch_size
     )
-    # b1, b2 = dls.one_batch()
-    # print(b1[0].shape)
-    # channels= b1[0].shape[0]
-    # print(channels)
+    setattr(dls, "device", device)
     loss_func = LossFunctions.get_loss_obj(LossFunctions[loss_func])
-    print("criterion ", loss_func)
     if is_pytorch(model_name.lower()):
         print("torch model")
         model = eval("torchvision.models.{}".format(model_name.lower()))
@@ -121,7 +118,15 @@ def train(
     learner.fit(
         n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv"))]
     )
+    preds,y,losses = learner.get_preds(with_loss=True)
+    interp = ClassificationInterpretation(learner, preds, y, losses)
     auxiliary_outputs = {}
+    auxiliary_outputs["confusion_matrix"] = interp.confusion_matrix()
+    auxiliary_outputs["AUC_ROC_cuve_data"] = generate_AUC_ROC_CURVE(y, preds)
+    print("confusion ", auxiliary_outputs["confusion_matrix"])
+    print("AUC ROC ", auxiliary_outputs["AUC_ROC_curve_data"])
+    print("labels ", y)
+    #auxiliary_output["confusion_matrix"] = interp.confusion_matrix()
     return auxiliary_outputs, learner
 
 

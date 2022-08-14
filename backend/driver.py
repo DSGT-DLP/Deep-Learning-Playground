@@ -422,4 +422,4 @@ def send_progress(progress):
     eventlet.greenthread.sleep(0)                 # to prevent logs from being grouped and sent together at the end of training
 
 if __name__ == "__main__":
-    socket.run(app, debug=True, host="0.0.0.0")
+    socket.run(app, debug=True, host="0.0.0.0", port=8000)

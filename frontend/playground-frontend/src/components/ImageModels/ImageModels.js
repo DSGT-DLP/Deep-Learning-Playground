@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Transforms from "./Transforms";
 import DataCodeSnippet from "./DataCodeSnippet";
 import LargeFileUpload from "../general/LargeFileUpload";
@@ -106,6 +106,16 @@ const ImageModels = () => {
 
   const ALL_LAYERS = POSSIBLE_LAYERS.concat(IMAGE_LAYERS);
 
+  const ResultMemo = useMemo(
+    () => (
+      <Results
+        dlpBackendResponse={dlpBackendResponse}
+        problemType={PROBLEM_TYPES[0]}
+      />
+    ),
+    [dlpBackendResponse, PROBLEM_TYPES[0]]
+  );
+
   return (
     <div style={{ padding: 20 }}>
       <DndProvider backend={HTML5Backend}>
@@ -200,11 +210,7 @@ const ImageModels = () => {
       <TitleText text="Email (optional)" />
       <EmailInput email={email} setEmail={setEmail} />
       <TitleText text="Deep Learning Results" />
-      <Results
-        dlpBackendResponse={dlpBackendResponse}
-        problemType={PROBLEM_TYPES[0]}
-      />
-
+      {ResultMemo}
       <TitleText text="Code Snippet" />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
       <DataCodeSnippet

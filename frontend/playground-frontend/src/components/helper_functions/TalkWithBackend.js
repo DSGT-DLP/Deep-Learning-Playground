@@ -7,11 +7,12 @@ const socketEventDict = {
   pretrained: "pretrain-run",
 };
 
-const socket = io(":5000", { timeout: 60000 });
+const socket = io(":8000");
 socket.on("connect", () => {
   frontendLog(`connected to socket`);
 });
-socket.on("connect_error", () => {
+socket.on("connect_error", (err) => {
+  console.log(`connection error due to: ${err.message}`);
   socket.close();
 });
 

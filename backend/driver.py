@@ -7,15 +7,29 @@ import shutil
 
 from backend.common.utils import *
 from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL, UNZIPPED_DIR_NAME
-from backend.common.dataset import loader_from_zipped, read_local_csv_file, read_dataset, dataset_from_zipped
+from backend.common.dataset import (
+    loader_from_zipped,
+    read_local_csv_file,
+    read_dataset,
+    dataset_from_zipped,
+)
 from backend.common.optimizer import get_optimizer
 from backend.dl.dl_model_parser import parse_deep_user_architecture, get_object
-from backend.dl.dl_trainer import train_deep_classification_model, train_deep_model, get_deep_predictions, train_deep_image_classification
+from backend.dl.dl_trainer import (
+    train_deep_classification_model,
+    train_deep_model,
+    get_deep_predictions,
+    train_deep_image_classification,
+)
 from backend.ml.ml_trainer import train_classical_ml_model
 from backend.dl.dl_model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
-from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders, get_img_default_dataset
+from backend.common.default_datasets import (
+    get_default_dataset,
+    get_img_default_dataset_loaders,
+    get_img_default_dataset,
+)
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
 from flask import send_from_directory
@@ -32,6 +46,7 @@ app = Flask(
 )
 CORS(app)
 socket = SocketIO(app, cors_allowed_origins="*", ping_timeout=600, ping_interval=15)
+
 
 def ml_drive(
     user_model,
@@ -157,17 +172,28 @@ def dl_drive(
         # Build the Deep Learning model that the user wants
         model = DLModel(parse_deep_user_architecture(user_arch))
         print(f"model: {model}")
-        
+
         optimizer = get_optimizer(
             model, optimizer_name=optimizer_name, learning_rate=0.05
         )
         # criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
         print(f"loss criterion: {criterion}")
         train_loader, test_loader = get_dataloaders(
-            X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=batch_size
+            X_train_tensor,
+            y_train_tensor,
+            X_test_tensor,
+            y_test_tensor,
+            batch_size=batch_size,
         )
         train_loss_results = train_deep_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, send_progress
+            model,
+            train_loader,
+            test_loader,
+            optimizer,
+            criterion,
+            epochs,
+            problem_type,
+            send_progress,
         )
         pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
@@ -186,13 +212,15 @@ def root(path):
     else:
         return send_from_directory(app.static_folder, "index.html")
 
-@socket.on('frontendLog')
+
+@socket.on("frontendLog")
 def frontend_log(log):
     app.logger.info(f'"frontend: {log}"')
 
+
 @socket.on("img-run")
 def testing(request_data):
-    try: 
+    try:
         print("backend started")
         IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
         # request_data = json.loads(request.data)
@@ -223,57 +251,71 @@ def testing(request_data):
                 if x != ".gitkeep":
                     zip_file = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
                     break
-            train_loader, test_loader = loader_from_zipped(zip_file, batch_size, shuffle, train_transform, test_transform)
+            train_loader, test_loader = loader_from_zipped(
+                zip_file, batch_size, shuffle, train_transform, test_transform
+            )
         else:
-            train_loader, test_loader = get_img_default_dataset_loaders(default, test_transform, train_transform, batch_size, shuffle)
+            train_loader, test_loader = get_img_default_dataset_loaders(
+                default, test_transform, train_transform, batch_size, shuffle
+            )
 
         print("got data loaders")
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        model.to(device) # model should go to GPU before initializing optimizer  https://stackoverflow.com/questions/66091226/runtimeerror-expected-all-tensors-to-be-on-the-same-device-but-found-at-least/66096687#66096687 
+        model.to(
+            device
+        )  # model should go to GPU before initializing optimizer  https://stackoverflow.com/questions/66091226/runtimeerror-expected-all-tensors-to-be-on-the-same-device-but-found-at-least/66096687#66096687
 
         optimizer = get_optimizer(
-                model, optimizer_name=optimizer_name, learning_rate=0.05
+            model, optimizer_name=optimizer_name, learning_rate=0.05
         )
 
-        train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress)
+        train_loss_results = train_deep_image_classification(
+            model,
+            train_loader,
+            test_loader,
+            optimizer,
+            criterion,
+            epochs,
+            device,
+            send_progress=send_progress,
+        )
 
         print("training successfully finished")
 
-        socket.emit("trainingResult",
-                        {
-                            "success": True,
-                            "message": "Dataset trained and results outputted successfully",
-                            "dl_results": csv_to_json(),
-                            "auxiliary_outputs": train_loss_results,
-                            "status": 200
-                        }
+        socket.emit(
+            "trainingResult",
+            {
+                "success": True,
+                "message": "Dataset trained and results outputted successfully",
+                "dl_results": csv_to_json(),
+                "auxiliary_outputs": train_loss_results,
+                "status": 200,
+            },
         )
     except Exception as e:
         print(traceback.format_exc())
-        socket.emit('trainingResult',
-            {
-                "success": False,
-                "message": traceback.format_exc(limit=1),
-                "status": 400
-            }
+        socket.emit(
+            "trainingResult",
+            {"success": False, "message": traceback.format_exc(limit=1), "status": 400},
         )
     finally:
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
-            if (x != ".gitkeep"):
-                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER) , x)
-                if (os.path.isdir(file_rem)):
+            if x != ".gitkeep":
+                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
+                if os.path.isdir(file_rem):
                     shutil.rmtree(file_rem)
                 else:
                     os.remove(file_rem)
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
 
-@socket.on('runTraining')
+
+@socket.on("runTraining")
 def train_and_output(request_data):
     user_arch = request_data["user_arch"]
     criterion = request_data["criterion"]
-    optimizer_name = request_data["optimizer_name"]    
+    optimizer_name = request_data["optimizer_name"]
     problem_type = request_data["problem_type"]
     target = request_data["target"]
     features = request_data["features"]
@@ -284,7 +326,7 @@ def train_and_output(request_data):
     shuffle = request_data["shuffle"]
     csvDataStr = request_data["csv_data"]
     fileURL = request_data["file_URL"]
-    
+
     try:
         if not default:
             if fileURL:
@@ -309,33 +351,32 @@ def train_and_output(request_data):
             json_csv_data_str=csvDataStr,
             batch_size=batch_size,
         )
-            
-        socket.emit('trainingResult',
+
+        socket.emit(
+            "trainingResult",
             {
                 "success": True,
                 "message": "Dataset trained and results outputted successfully",
                 "dl_results": csv_to_json(),
                 "auxiliary_outputs": train_loss_results,
-                "status": 200
-            }
+                "status": 200,
+            },
         )
 
     except Exception:
         print(traceback.format_exc())
-        socket.emit('trainingResult',
-            {
-                "success": False,
-                "message": traceback.format_exc(limit=1),
-                "status": 400
-            }
+        socket.emit(
+            "trainingResult",
+            {"success": False, "message": traceback.format_exc(limit=1), "status": 400},
         )
 
-@socket.on('pretrain-run')
+
+@socket.on("pretrain-run")
 def train_pretrained(request_data):
-    try: 
+    try:
         print("backend started")
         IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
-        #request_data = json.loads(request.data)
+        # request_data = json.loads(request.data)
         train_transform = request_data["train_transform"]
         test_transform = request_data["test_transform"]
         criterion = request_data["criterion"]
@@ -345,49 +386,59 @@ def train_pretrained(request_data):
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
         model_name = request_data["model_name"]
-        #train_transform.append("transforms.Lambda(lambda x: x.repeat(3, 1, 1) )")
-        #test_transform.append("transforms.Lambda(lambda x: x.repeat(3, 1, 1) )")
+        # train_transform.append("transforms.Lambda(lambda x: x.repeat(3, 1, 1) )")
+        # test_transform.append("transforms.Lambda(lambda x: x.repeat(3, 1, 1) )")
         train_transform = parse_deep_user_architecture(train_transform)
-        test_transform = parse_deep_user_architecture(test_transform)  
+        test_transform = parse_deep_user_architecture(test_transform)
         if not default:
             zip_file = "tests/zip_files/double_zipped.zip"
             print(zip_file)
-            train_dataset, test_dataset = dataset_from_zipped(zip_file, test_transform=test_transform, train_transform=train_transform)
+            train_dataset, test_dataset = dataset_from_zipped(
+                zip_file, test_transform=test_transform, train_transform=train_transform
+            )
             print("dataset ", train_dataset)
         else:
-            train_dataset, test_dataset = get_img_default_dataset(default, test_transform, train_transform)
+            train_dataset, test_dataset = get_img_default_dataset(
+                default, test_transform, train_transform
+            )
 
-        print("got data loaders")
-
+        print("got datasets")
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        
 
-        train_loss_results, learner = train(train_dataset, test_dataset, model_name,  batch_size, criterion, epochs)
+        train_loss_results, learner = train(
+            train_dataset,
+            test_dataset,
+            model_name,
+            batch_size,
+            criterion,
+            epochs,
+            optimizer_name=optimizer_name,
+            shuffle=shuffle,
+            chan_in=train_dataset[0][0].shape[0]
+        )
         print("training successfully finished")
         print("learner ", learner)
-        socket.emit("trainingResult",
-                        {
-                            "success": True,
-                            "message": "Dataset trained and results outputted successfully",
-                            "dl_results": csv_to_json(),
-                            "auxiliary_outputs": train_loss_results,
-                            "status": 200
-                        }
+        socket.emit(
+            "trainingResult",
+            {
+                "success": True,
+                "message": "Dataset trained and results outputted successfully",
+                "dl_results": csv_to_json(),
+                "auxiliary_outputs": train_loss_results,
+                "status": 200,
+            },
         )
     except Exception as e:
         print(traceback.format_exc())
-        socket.emit('trainingResult',
-            {
-                "success": False,
-                "message": traceback.format_exc(limit=1),
-                "status": 400
-            }
+        socket.emit(
+            "trainingResult",
+            {"success": False, "message": traceback.format_exc(limit=1), "status": 400},
         )
     finally:
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
-            if (x != ".gitkeep"):
-                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER) , x)
-                if (os.path.isdir(file_rem)):
+            if x != ".gitkeep":
+                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
+                if os.path.isdir(file_rem):
                     shutil.rmtree(file_rem)
                 else:
                     os.remove(file_rem)
@@ -395,31 +446,45 @@ def train_pretrained(request_data):
             shutil.rmtree(UNZIPPED_DIR_NAME)
 
 
-@app.route('/upload', methods=['POST'])
+@app.route("/upload", methods=["POST"])
 def upload():
     @copy_current_request_context
     def save_file(closeAfterWrite):
-        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " dropzone is working")
-        f = request.files['file']
-        basepath = os.path.dirname(__file__) 
-        upload_path = os.path.join(basepath, 'image_data_uploads',secure_filename(f.filename)) 
+        print(
+            datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            + " dropzone is working"
+        )
+        f = request.files["file"]
+        basepath = os.path.dirname(__file__)
+        upload_path = os.path.join(
+            basepath, "image_data_uploads", secure_filename(f.filename)
+        )
         f.save(upload_path)
         closeAfterWrite()
-        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " dropzone has finished its task")
+        print(
+            datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            + " dropzone has finished its task"
+        )
+
     def passExit():
         pass
-    if request.method == 'POST':
-        f= request.files['file']
+
+    if request.method == "POST":
+        f = request.files["file"]
         normalExit = f.stream.close
         f.stream.close = passExit
-        t = threading.Thread(target=save_file,args=(normalExit,))
+        t = threading.Thread(target=save_file, args=(normalExit,))
         t.start()
-        return '200'
-    return '200'
+        return "200"
+    return "200"
+
 
 def send_progress(progress):
-    socket.emit('trainingProgress', progress)
-    eventlet.greenthread.sleep(0)                 # to prevent logs from being grouped and sent together at the end of training
+    socket.emit("trainingProgress", progress)
+    eventlet.greenthread.sleep(
+        0
+    )  # to prevent logs from being grouped and sent together at the end of training
+
 
 if __name__ == "__main__":
     socket.run(app, debug=True, host="0.0.0.0", port=8000)

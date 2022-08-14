@@ -19,6 +19,7 @@ from fastai.callback.hook import num_features_model
 from backend.common.loss_functions import LossFunctions
 from backend.common.dataset import dataset_from_zipped
 from backend.common.constants import DEFAULT_TRANSFORM, SAVED_MODEL
+from backend.common.optimizer import get_optimizer
 
 
 def train(
@@ -28,15 +29,12 @@ def train(
     batch_size,
     loss_func,
     n_epochs,
-    default = None,
+    default=None,
     shuffle=False,
-    optimizer=Adam,
+    optimizer_name="Adam",
     lr=1e-3,
     cut=None,
-
     n_classes=10,
-    train_transform=DEFAULT_TRANSFORM,
-    test_transform=DEFAULT_TRANSFORM,
     chan_in=3,
 ):
     """
@@ -67,10 +65,10 @@ def train(
     dls = DataLoaders.from_dsets(
         train_dataset, test_dataset, device=device, shuffle=shuffle, bs=batch_size
     )
-    #b1, b2 = dls.one_batch()
-    #print(b1[0].shape)
-    #channels= b1[0].shape[0]
-    #print(channels)
+    # b1, b2 = dls.one_batch()
+    # print(b1[0].shape)
+    # channels= b1[0].shape[0]
+    # print(channels)
     loss_func = LossFunctions.get_loss_obj(LossFunctions[loss_func])
     print("criterion ", loss_func)
     if is_pytorch(model_name.lower()):
@@ -80,7 +78,7 @@ def train(
             dls,
             model,
             lr=lr,
-            opt_func=optimizer,
+            opt_func=eval(optimizer_name),
             pretrained=True,
             cut=cut,
             normalize=False,
@@ -91,11 +89,13 @@ def train(
         )
     elif is_timm(model_name.lower()):
         print("made the zipped file")
+        # model = timm.create_model(model_name.lower(), num_classes=n_classes)
+        # optimizer = get_optimizer(model, optimizer_name=optimizer_name, learning_rate=lr)
         learner = local_timm_learner(
             dls,
             model_name.lower(),
             lr=lr,
-            opt_func=optimizer,
+            opt_func= eval(optimizer_name),
             n_out=n_classes,
             cut=cut,
             normalize=False,
@@ -112,7 +112,11 @@ def train(
         else "../backend"
     )
 
-    saved_model = SAVED_MODEL if not "frontend" in os.listdir(os.getcwd()) else "/".join(SAVED_MODEL.split("/")[1:])
+    # saved_model = (
+    #     SAVED_MODEL
+    #     if not "frontend" in os.listdir(os.getcwd())
+    #     else "/".join(SAVED_MODEL.split("/")[1:])
+    # )
 
     learner.fit(
         n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv"))]
@@ -247,5 +251,9 @@ def is_pytorch(model_name):
             return True
     return False
 
+
 if __name__ == "__main__":
-    train("./tests/zip_files/double_zipped.zip", "resnet34", 2, torch.nn.CrossEntropyLoss(), 2)
+    train_dataset, test_dataset = dataset_from_zipped(
+        "./tests/zip_files/double_zipped.zip"
+    )
+    train(train_dataset, test_dataset, "resnet18", 2, "CELOSS", 2)

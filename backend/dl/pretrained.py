@@ -16,21 +16,24 @@ from wwf.vision.timm import *
 from torchvision.models import *
 from torchvision import models
 from fastai.callback.hook import num_features_model
-
+from backend.common.loss_functions import LossFunctions
 from backend.common.dataset import dataset_from_zipped
 from backend.common.constants import DEFAULT_TRANSFORM, SAVED_MODEL
 
 
 def train(
-    zipped_file,
+    train_dataset,
+    test_dataset,
     model_name,
     batch_size,
     loss_func,
     n_epochs,
+    default = None,
     shuffle=False,
     optimizer=Adam,
     lr=1e-3,
     cut=None,
+
     n_classes=10,
     train_transform=DEFAULT_TRANSFORM,
     test_transform=DEFAULT_TRANSFORM,
@@ -48,19 +51,31 @@ def train(
     """
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
-
+    """
     train_dataset, test_dataset = dataset_from_zipped(
         zipped_file, test_transform=test_transform, train_transform=train_transform
     )
+    
+    
+    dls = DataLoaders.from_dsets(
+        train_dataset, test_dataset, device=device, shuffle=shuffle, bs=batch_size
+    )
+    
+    setattr(dls, "device", device)
+    """
 
     dls = DataLoaders.from_dsets(
         train_dataset, test_dataset, device=device, shuffle=shuffle, bs=batch_size
     )
-
-    setattr(dls, "device", device)
-
-    if is_pytorch(model_name):
-        model = eval("torchvision.models.{}".format(model_name))
+    #b1, b2 = dls.one_batch()
+    #print(b1[0].shape)
+    #channels= b1[0].shape[0]
+    #print(channels)
+    loss_func = LossFunctions.get_loss_obj(LossFunctions[loss_func])
+    print("criterion ", loss_func)
+    if is_pytorch(model_name.lower()):
+        print("torch model")
+        model = eval("torchvision.models.{}".format(model_name.lower()))
         learner = vision_learner(
             dls,
             model,
@@ -74,11 +89,11 @@ def train(
             n_in=chan_in,
             # model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
         )
-    elif is_timm(model_name):
+    elif is_timm(model_name.lower()):
         print("made the zipped file")
         learner = local_timm_learner(
             dls,
-            model_name,
+            model_name.lower(),
             lr=lr,
             opt_func=optimizer,
             n_out=n_classes,
@@ -102,8 +117,8 @@ def train(
     learner.fit(
         n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv"))]
     )
-    save_model(saved_model, learner.model, getattr(learner, 'opt', None))
-    return learner
+    auxiliary_outputs = {}
+    return auxiliary_outputs, learner
 
 
 def get_all():

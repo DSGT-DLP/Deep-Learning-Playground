@@ -7,7 +7,7 @@ import shutil
 
 from backend.common.utils import *
 from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL, UNZIPPED_DIR_NAME
-from backend.common.dataset import loader_from_zipped, read_local_csv_file, read_dataset
+from backend.common.dataset import loader_from_zipped, read_local_csv_file, read_dataset, dataset_from_zipped
 from backend.common.optimizer import get_optimizer
 from backend.dl.dl_model_parser import parse_deep_user_architecture, get_object
 from backend.dl.dl_trainer import train_deep_classification_model, train_deep_model, get_deep_predictions, train_deep_image_classification
@@ -15,13 +15,14 @@ from backend.ml.ml_trainer import train_classical_ml_model
 from backend.dl.dl_model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
-from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders
+from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders, get_img_default_dataset
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
 from flask import send_from_directory
 from flask_socketio import SocketIO
 import eventlet
 import datetime, threading
+from backend.dl.pretrained import train
 
 app = Flask(
     __name__,
@@ -205,13 +206,18 @@ def testing(request_data):
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
 
+        print(train_transform)
+        print(test_transform)
+
         # upload()
         print(user_arch)
+        print("sdsakdnasjfk", request_data["user_arch"])
         model = DLModel(parse_deep_user_architecture(user_arch))
 
         train_transform = parse_deep_user_architecture(train_transform)
         test_transform = parse_deep_user_architecture(test_transform)
-
+        print(train_transform)
+        print(test_transform)
         if not default:
             for x in os.listdir(IMAGE_UPLOAD_FOLDER):
                 if x != ".gitkeep":
@@ -324,52 +330,70 @@ def train_and_output(request_data):
             }
         )
 
+@socket.on('pretrain-run')
+def train_pretrained(request_data):
+    try: 
+        print("backend started")
+        IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
+        #request_data = json.loads(request.data)
+        train_transform = request_data["train_transform"]
+        test_transform = request_data["test_transform"]
+        criterion = request_data["criterion"]
+        optimizer_name = request_data["optimizer_name"]
+        default = request_data["using_default_dataset"]
+        epochs = request_data["epochs"]
+        batch_size = request_data["batch_size"]
+        shuffle = request_data["shuffle"]
+        model_name = request_data["model_name"]
+        #train_transform.append("transforms.Lambda(lambda x: x.repeat(3, 1, 1) )")
+        #test_transform.append("transforms.Lambda(lambda x: x.repeat(3, 1, 1) )")
+        train_transform = parse_deep_user_architecture(train_transform)
+        test_transform = parse_deep_user_architecture(test_transform)  
+        if not default:
+            zip_file = "tests/zip_files/double_zipped.zip"
+            print(zip_file)
+            train_dataset, test_dataset = dataset_from_zipped(zip_file, test_transform=test_transform, train_transform=train_transform)
+            print("dataset ", train_dataset)
+        else:
+            train_dataset, test_dataset = get_img_default_dataset(default, test_transform, train_transform)
 
-@socket.on('sendEmail')
-def send_email_route(request_data):
-    # extract data
-    required_params = ["email_address", "subject", "body_text"]
-    for required_param in required_params:
-        if required_param not in request_data:
-            return socket.emit('emailResult',
-                {
-                    "success": False,
-                    "message": "Missing parameter " + required_param
-                }
-            )
+        print("got data loaders")
 
-    email_address = request_data["email_address"]
-    subject = request_data["subject"]
-    body_text = request_data["body_text"]
-    if "attachment_array" in request_data:
-        attachment_array = request_data["attachment_array"]
-        if not isinstance(attachment_array, list):
-            return socket.emit('emailResult',
-                {
-                    "success": False,
-                    "message": "Attachment array must be a list of filepaths",
-                }
-            )
-    else:
-        attachment_array = []
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        
 
-    # try to send email
-    try:
-        send_email(email_address, subject, body_text, attachment_array)
-        return socket.emit('emailResult',
-            {
-                "success": True,
-                "message": "Sent email to " + email_address
-            }
+        train_loss_results, learner = train(train_dataset, test_dataset, model_name,  batch_size, criterion, epochs)
+        print("training successfully finished")
+        print("learner ", learner)
+        socket.emit("trainingResult",
+                        {
+                            "success": True,
+                            "message": "Dataset trained and results outputted successfully",
+                            "dl_results": csv_to_json(),
+                            "auxiliary_outputs": train_loss_results,
+                            "status": 200
+                        }
         )
-    except Exception:
+    except Exception as e:
         print(traceback.format_exc())
-        return socket.emit('emailResult',
+        socket.emit('trainingResult',
             {
                 "success": False,
-                "message": traceback.format_exc(limit=1)
+                "message": traceback.format_exc(limit=1),
+                "status": 400
             }
         )
+    finally:
+        for x in os.listdir(IMAGE_UPLOAD_FOLDER):
+            if (x != ".gitkeep"):
+                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER) , x)
+                if (os.path.isdir(file_rem)):
+                    shutil.rmtree(file_rem)
+                else:
+                    os.remove(file_rem)
+        if os.path.exists(UNZIPPED_DIR_NAME):
+            shutil.rmtree(UNZIPPED_DIR_NAME)
+
 
 @app.route('/upload', methods=['POST'])
 def upload():

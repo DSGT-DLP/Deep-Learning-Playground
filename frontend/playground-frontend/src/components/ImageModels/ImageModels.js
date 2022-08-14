@@ -49,7 +49,7 @@ const ImageModels = () => {
   const [batchSize, setBatchSize] = useState(20);
   const [email, setEmail] = useState("");
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
-  const [dataUploaded, setDataUploaded] = useState(false);
+  const [dataUploaded, setDataUploaded] = useState();
 
   const input_responses = {
     batchSize: batchSize,

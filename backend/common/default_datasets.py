@@ -5,6 +5,9 @@ from enum import Enum
 from backend.common.constants import DEFAULT_DATASETS
 import torchvision
 import torch
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 torchvision.datasets.MNIST.mirrors = [torchvision.datasets.MNIST.mirrors[1]]   ## torchvision default MNIST route causes 503 error sometimes
 
@@ -67,3 +70,25 @@ def get_img_default_dataset_loaders(
         test_set, batch_size=batch_size, shuffle=shuffle
     )
     return train_loader, test_loader
+
+def get_img_default_dataset(
+    datasetname, test_transform, train_transform
+):
+    """
+    Returns dataloaders from default datasets
+    Args:
+        datasetname (str) : Name of dataset
+        test_transform (list) : list of transforms
+        train_transform (list) : list of transforms
+        batch_size (int) : batch_size
+    """
+    train_transform = torchvision.transforms.Compose([x for x in train_transform])
+    test_transform = torchvision.transforms.Compose([x for x in test_transform])
+
+    train_set = eval(
+        f"torchvision.datasets.{datasetname}(root='./backend/image_data_uploads', train=True, download=True, transform=train_transform)"
+    )
+    test_set = eval(
+        f'torchvision.datasets.{datasetname}(root="./backend/image_data_uploads", train=False, download=True, transform=test_transform)'
+    )
+    return train_set, test_set

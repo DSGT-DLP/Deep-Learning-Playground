@@ -3,7 +3,7 @@ import { PropTypes } from "prop-types";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
 const LargeFileUpload = (props) => {
-  const { setDataUploaded } = props;
+  const { setDataUploaded} = props;
   const [fileName, setFileName] = useState();
 
   const handleFileUpload = (e) => {
@@ -48,6 +48,7 @@ const LargeFileUpload = (props) => {
 
 LargeFileUpload.propTypes = {
   setDataUploaded: PropTypes.func.isRequired,
+
 };
 
 export default LargeFileUpload;

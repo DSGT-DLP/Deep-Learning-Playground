@@ -29,6 +29,8 @@ def parse_deep_user_architecture(user_model):
     parsed_modules = []
     for element in user_model:
         layer = get_object(element)
+        print("layer ", layer)
+        print("layer type ", type(layer))
         parsed_modules.append(layer)
     return parsed_modules
 
@@ -44,6 +46,7 @@ def get_object(element):
     return:
         Instantiated object behind the "string representation of the instance"
     """
+    
     return eval(
         element
     )  # takes in the string representation and returns the "instantiated object"

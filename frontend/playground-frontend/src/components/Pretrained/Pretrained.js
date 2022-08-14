@@ -8,7 +8,7 @@ import {
   POSSIBLE_TRANSFORMS,
   PROBLEM_TYPES,
 } from "../../settings";
-import { COLORS, LAYOUT } from "../../constants";
+import { COLORS, LAYOUT, DEFAULT_TRANSFORMS } from "../../constants";
 
 import Input from "../Home/Input";
 import RectContainer from "../Home/RectContainer";
@@ -19,7 +19,7 @@ import TrainButton from "../Home/TrainButton";
 import ChoiceTab from "../Home/ChoiceTab";
 import EmailInput from "../Home/EmailInput";
 import Results from "../Home/Results";
-
+import LargeFileUpload from "../general/LargeFileUpload";
 const Pretrained = () => {
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [modelName, setModelName] = useState();
@@ -30,18 +30,22 @@ const Pretrained = () => {
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [epochs, setEpochs] = useState(5);
   const [batchSize, setBatchSize] = useState(20);
-  const [trainTransforms, setTrainTransforms] = useState([]);
-  const [testTransforms, setTestTransforms] = useState([]);
-
+  const [trainTransforms, setTrainTransforms] =  useState(DEFAULT_TRANSFORMS);
+  const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
+  const [dataUploaded, setDataUploaded] = useState(false);
+  
   const input_responses = {
     modelName: modelName?.value,
     criterion: criterion?.value,
     optimizerName: optimizerName?.value,
     usingDefaultDataset: usingDefaultDataset?.value,
+    trainTransforms: trainTransforms,
+    testTransforms: testTransforms,
     shuffle: shuffle?.value,
     epochs: epochs,
     batchSize: batchSize,
     email: email,
+    dataUploaded: dataUploaded,
   };
 
   const input_queries = [
@@ -95,7 +99,11 @@ const Pretrained = () => {
       <TitleText text="Data & Parameters" />
       <div style={{ display: "flex" }}>
         <BackgroundLayout>
-          <RectContainer style={styles.fileInput}></RectContainer>
+          <RectContainer style={styles.fileInput}>
+            <LargeFileUpload 
+              setDataUploaded={setDataUploaded} 
+            />
+          </RectContainer>
           <TrainButton
             {...input_responses}
             setDLPBackendResponse={setDLPBackendResponse}
@@ -117,7 +125,7 @@ const Pretrained = () => {
       <div style={{ marginTop: 20 }} />
       <TitleText text="Image Transformations" />
       <Transforms
-        queryText={"Test Transform"}
+        queryText={"Train Transform"}
         options={POSSIBLE_TRANSFORMS}
         transforms={trainTransforms}
         setTransforms={setTrainTransforms}

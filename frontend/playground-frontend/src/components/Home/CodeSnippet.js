@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+// import {CopyToClipboard} from 'react-copy-to-clipboard';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 
 const CodeSnippet = (props) => {
@@ -13,6 +13,9 @@ const CodeSnippet = (props) => {
       )
     );
   }
+  // function copyToClipboard () {
+  //   navigator.clipboard.writeText(codeSnippetFormat(layers));
+  // }
   return (
       <>
       <textarea
@@ -21,9 +24,9 @@ const CodeSnippet = (props) => {
         style={{ width: "100%" }}
         value={codeSnippetFormat(layers)}
       />
-      <CopyToClipboard text={codeSnippetFormat(layers)}>
-      <button id="code-snippet-clipboard"><ContentPasteIcon/></button>
-      </CopyToClipboard>
+      {/* <CopyToClipboard text={codeSnippetFormat(layers)}> */}
+      <button id="code-snippet-clipboard" onClick={() => navigator.clipboard.writeText(codeSnippetFormat(layers))}><ContentPasteIcon/></button>
+      {/* </CopyToClipboard> */}
       </>
   );
 };

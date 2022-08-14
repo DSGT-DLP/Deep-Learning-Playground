@@ -1,10 +1,10 @@
 import pytest
 import torch.nn
 from backend.dl.pretrained import train, get_all
-from fastai.vision.all import Adam, SGD
 import os
 import pandas as pd
-import timm
+from backend.common.dataset import dataset_from_zipped
+from backend.common.constants import DEFAULT_TRANSFORM
 
 train_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "tests"
 backend_dir = (
@@ -37,18 +37,20 @@ valid_2 = os.path.join(train_dir, "zip_files/valid_2.zip")
     ],
 )
 def test_train_valid_input_diff_models(path_to_file, model_name):
-    learner = train(
-        zipped_file=path_to_file,
+    train_dataset, test_dataset = dataset_from_zipped(
+                path_to_file, test_transform=DEFAULT_TRANSFORM, train_transform=DEFAULT_TRANSFORM
+            )
+
+    train(
+        train_dataset=train_dataset,
+        test_dataset=test_dataset,
         model_name=model_name,
         batch_size=2,
-        loss_func=torch.nn.CrossEntropyLoss(),
+        loss_func="CELOSS",
         n_epochs=3,
         n_classes=2,
         lr=1e-2,
     )
-
-    assert type(learner.loss_func) is torch.nn.CrossEntropyLoss
-    # assert get_num_features(learner) == 2
 
     val = pd.read_csv(os.path.join(backend_dir, "dl_results.csv"))
     if val["train_loss"].isnull().any():
@@ -67,18 +69,18 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
     ],
 )
 def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
-    learner = train(
-        zipped_file=path_to_file,
+
+    train_dataset, test_dataset = dataset_from_zipped(path_to_file, DEFAULT_TRANSFORM, DEFAULT_TRANSFORM)
+    train(
+        train_dataset=train_dataset,
+        test_dataset=test_dataset,
         model_name=model_name,
         batch_size=2,
-        loss_func=torch.nn.CrossEntropyLoss(),
+        loss_func="CELOSS",
         n_epochs=2,
         lr=1e-3,
         n_classes=n_classes,
     )
-
-    assert type(learner.loss_func) is torch.nn.CrossEntropyLoss
-    # assert get_num_features(learner) == n_classes
 
     val = pd.read_csv(os.path.join(backend_dir, "dl_results.csv"))
     if val["train_loss"].isnull().any():
@@ -98,4 +100,4 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
 )
 def test_train_invalid_path(path_to_file, model_name):
     with pytest.raises(ValueError):
-        train(path_to_file, model_name, 8, None, 1)
+        dataset_from_zipped(path_to_file, DEFAULT_TRANSFORM, DEFAULT_TRANSFORM)

@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import DEMO_VIDEO from "../../images/demo_video.gif";
 import softmax_eq from "./softmax_equation.png";
+import tanh_eq from "./tanh_equation.png";
+import tanh_plot from "./tanh_plot.png";
+import sigmoid_eq from "./sigmoid_equation.png";
+import dropout_dg from "./dropout_diagram.png";
+import conv2dgif from "./conv2d.gif";
+import conv2dgif2 from "./conv2d2.gif";
+import maxpool2dgif from "./maxpool2d.gif";
+import avgmaxpoolgif from "./avgpool_maxpool.gif";
 
 const displayChange = (display, setdisplay) => {
   if (display === "block") {
@@ -61,16 +69,23 @@ const render_all_layer_info = (layer_wiki) => {
 };
 
 const Wiki = () => {
-  const [linearTitle, setLinearTitle] = useState("none");
+  const [common, setCommon] = useState("none");
   const [linearDisp, setLinearDisp] = useState("none");
+  const [conv, setConv] = useState("none");
   const [softmax, setSoftmax] = useState("none");
   const [relu, setRelu] = useState("none");
   const [nla, setnla] = useState("none");
   const [outerrelu, setouterrelu] = useState("none");
+  const [tanh, settanh] = useState("none");
+  const [sigmoid, setSigmoid] = useState("none");
+  const [conv2d, setconv2d] = useState("none");
+  const [maxpool2d, setMaxpool2d] = useState("none");
+  const [adaptiveAvgPool2d, setAdaptiveAvgPool2d] = useState("none");
+  const [dropout, setDropout] = useState("none");
 
   const layer_wiki = [
     {
-      title: "Linear",
+      title: "Common Layers",
       docs: [
         {
           layer_name: "Linear Layer",
@@ -112,9 +127,33 @@ const Wiki = () => {
           displayState: linearDisp,
           setDisplayState: setLinearDisp,
         },
+        {
+          layer_name: "Dropout",
+          body: (
+            <>
+              <p>
+                When we are training deep learning models, one common problem that can 
+                come up is that the model overfits (ie: the model learns from the data it's fed in well, but 
+                cannot generalize well to unseen data). We need to find a way to mitigate this problem. 
+                One common pattern used is to implement a Dropout layer. This layer will randomly
+                zero out the weight of some of the neurons that feed into the Dropout layer. 
+                In other words, we are "crippling" our neural network in a probabilistic fashion
+              </p>
+
+              <p> Below is the dropout layer in action (notice the X marks) </p>
+              <img
+                src={dropout_dg}
+                alt="Dropout diagram"
+                style={{ maxHeight: 200, marginInline: "auto" }}
+              />
+            </>
+          ),
+          displayState: dropout,
+          setDisplayState: setDropout
+        }
       ],
-      displayState: linearTitle,
-      setDisplayState: setLinearTitle,
+      displayState: common,
+      setDisplayState: setCommon,
     },
     {
       title: "Non-linear Activations (weighted sum, nonlinearity)",
@@ -155,6 +194,63 @@ const Wiki = () => {
           displayState: relu,
           setDisplayState: setRelu,
         },
+        {
+          layer_name: "Tanh",
+          body: (
+            <>
+              <p>
+                Tanh (hyperbolic tangent) is a common activation function. This function helps to introduce 
+                nonlinearity into out models (which helps make our neural networks better able to learn more 
+                complex patterns in our data). The advantage is that the negative inputs will be mapped strongly negative 
+                and the zero inputs will be mapped near zero in the tanh graph.
+              </p>            
+              <p>The Tanh formula is:</p>
+
+              <img
+                src={tanh_eq}
+                alt="Tanh equation"
+                style={{ maxHeight: 200, marginInline: "auto" }}
+              />
+
+              <p> Below is a plot for tanh to get an intuition for what this function is doing: </p>
+
+              <img
+                src={tanh_plot}
+                alt="Tanh plot"
+                style={{ maxHeight: 300, marginInline: "auto" }}
+              />
+
+            </>
+          ),
+          displayState: tanh,
+          setDisplayState: settanh
+        },
+        {
+          layer_name: "Sigmoid",
+          body: (
+            <>
+              <p>
+                Sigmoid is a common activation function. This function is commonly used within neural networks. Contrary to the Tanh 
+                activation function, sigmoid will squish very negative value near 0 and squish very positive values near 1. While sigmoid 
+                is an easy to differentiate function, it suffers from what's called the "vanishing gradient problem". Essentially, when your neural 
+                network is trying to learn from your data, it is performing optimizations to update the weights for each "hyperparameter" (think about manipulating
+                the dials and knobs to minimize your loss). The neural network's optimization involves calculating gradients (AKA "rates of change") and if the rates of change 
+                are too small, then the neural network ends up updating its weights by a very tiny amount. As shown in the below plot, the vanishing gradient 
+                problem tends to occur when applying the sigmoid on very negative or very positive values. 
+              </p>
+
+              <p> Plot and Equation of the sigmoid function is shown below</p>
+              <img 
+                src={sigmoid_eq}
+                alt="Sigmoid plot"
+                style={{ maxHeight: 300, marginInline: "auto" }}
+              />
+
+            </>
+          ),
+          displayState: sigmoid,
+          setDisplayState: setSigmoid
+        }
       ],
       displayState: outerrelu,
       setDisplayState: setouterrelu
@@ -211,6 +307,91 @@ const Wiki = () => {
     displayState: nla,
     setDisplayState: setnla
     },
+    {
+      title: "Convolution Layers",
+      docs : [ 
+        {
+          layer_name: "Conv2d",
+          body: (
+            <>
+              <p>
+                Convolution layers are commonly used within image datasets. 
+                Convolution is a fancy word for "sliding window" (you specify the dimensions of the windows you want
+                to look at). Images can be thought of as a rectangular
+                matrix of pixels where each pixel communicates the RGB value to describe the particular
+                color for a particular location in the image. Conv2d is a layer that takes in a matrix of weights and
+                goes through all possible "windows" in a sliding fashion. In each window, we take the pixel values, multiply them by the corresponding 
+                weights in the matrix (elementwise) and then sum up those products to populate in our result matrix (AKA weighted sum of pixels). This layer is best 
+                understood through visual demonstrations (as shown below)
+              </p>
+
+              <p>Helpful gifs to understand conv2d</p>
+
+              <img 
+                src={conv2dgif}
+                alt="Conv 2d gif #1"
+                style={{ maxHeight: 400, marginInline: "auto" }}
+              />
+
+              <img 
+                src={conv2dgif2}
+                alt="Conv 2d gif #2"
+                style={{ maxHeight: 500, marginInline: "auto" }}
+              />
+            </>
+          ),
+          displayState: conv2d,
+          setDisplayState: setconv2d,
+        },
+        {
+          layer_name: "Max Pool 2d",
+          body: (
+            <>
+              <p>
+                This layer traverses all possible MxN windows in the image (you specify the dimension 
+                of the windows to look at). Instead of doing a weighted sum of pixels, each window you see, 
+                you will simply take the maximum pixel value and populate the resulting matrix. 
+              </p>
+
+              <p>Max pool in action</p>
+
+              <img  
+                src={maxpool2dgif}
+                alt="Max pool 2d gif"
+                style={{ maxHeight: 400, marginInline: "auto" }}
+              />
+            </>
+          ),
+          displayState: maxpool2d,
+          setDisplayState: setMaxpool2d
+        },
+        {
+          layer_name: "Adaptive Average Pool 2d",
+          body: (
+            <>
+               <p>
+                Adaptive Average Pool 2d is a layer that allows you to specify the dimensions of the output. 
+                This layer will infer what window size should be used to get your output dimension. The auto-inference 
+                of the window size is the "Adaptive" aspect, but the "Average Pool" aspect will take an average (arithmetic mean) 
+                of the pixel values for each "window". 
+               </p>
+
+               <p>Adaptive Avg Pool and Max Pool 2d in action</p>
+
+               <img 
+                 src={avgmaxpoolgif}
+                 alt="Max pool and Avg pool side by side"
+                 style={{ maxHeight: 400, marginInline: "auto" }}
+               />
+            </>
+          ),
+          displayState: adaptiveAvgPool2d,
+          setDisplayState: setAdaptiveAvgPool2d
+        }
+      ],
+    displayState: conv,
+    setDisplayState: setConv
+    }
   ];
 
   return (
@@ -266,8 +447,8 @@ const Wiki = () => {
         <h2>Deep Learning Playground Documentation</h2>
         <h3>Layers Inventory</h3>
         <p>
-          Choose the activation function of the neural network. Click for more
-          information about each function.
+          Click for more
+          information about each layer.
         </p>
 
         {/* {render_all_layers(layer_wiki)} */}

@@ -9,6 +9,7 @@ import conv2dgif from "./conv2d.gif";
 import conv2dgif2 from "./conv2d2.gif";
 import maxpool2dgif from "./maxpool2d.gif";
 import avgmaxpoolgif from "./avgpool_maxpool.gif";
+import batchnorm from "./batchnorm_diagram.png";
 
 const displayChange = (display, setdisplay) => {
   if (display === "block") {
@@ -82,6 +83,7 @@ const Wiki = () => {
   const [maxpool2d, setMaxpool2d] = useState("none");
   const [adaptiveAvgPool2d, setAdaptiveAvgPool2d] = useState("none");
   const [dropout, setDropout] = useState("none");
+  const [batchNorm2d, setBatchNorm2d] = useState("none");
 
   const layer_wiki = [
     {
@@ -146,6 +148,14 @@ const Wiki = () => {
                 alt="Dropout diagram"
                 style={{ maxHeight: 200, marginInline: "auto" }}
               />
+              
+              <h5>Documentation</h5>
+              <p>
+                Check out{" "}
+                <a href="https://pytorch.org/docs/stable/generated/torch.nn.Dropout.html">
+                  the documentation on Pytorch's Dropout Layer!
+                </a>
+              </p>
             </>
           ),
           displayState: dropout,
@@ -219,6 +229,15 @@ const Wiki = () => {
                 alt="Tanh plot"
                 style={{ maxHeight: 300, marginInline: "auto" }}
               />
+              
+              <h5>Documentation</h5>
+
+              <p>
+                Check out{" "}
+                <a href="https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html">
+                  the documentation on Tanh Activation function here!
+                </a>
+              </p>
 
             </>
           ),
@@ -245,7 +264,16 @@ const Wiki = () => {
                 alt="Sigmoid plot"
                 style={{ maxHeight: 300, marginInline: "auto" }}
               />
+              
+              <h5>Documentation</h5>
 
+              <p>
+                Check out{" "}
+                <a href="https://pytorch.org/docs/stable/generated/torch.nn.Sigmoid.html">
+                  the documentation on Sigmoid Activation function here!
+                </a>
+              </p>
+              
             </>
           ),
           displayState: sigmoid,
@@ -338,6 +366,15 @@ const Wiki = () => {
                 alt="Conv 2d gif #2"
                 style={{ maxHeight: 500, marginInline: "auto" }}
               />
+              
+              <h5>Documentation</h5>
+
+              <p>
+                Check out{" "}
+                <a href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html">
+                  the documentation on Conv2d layer here!
+                </a>
+              </p>
             </>
           ),
           displayState: conv2d,
@@ -360,6 +397,15 @@ const Wiki = () => {
                 alt="Max pool 2d gif"
                 style={{ maxHeight: 400, marginInline: "auto" }}
               />
+              
+              <h5>Documentation</h5>
+
+              <p>
+                Check out{" "}
+                <a href="https://pytorch.org/docs/stable/generated/torch.nn.MaxPool2d.html">
+                  the documentation on MaxPool2d layer here!
+                </a>
+              </p>
             </>
           ),
           displayState: maxpool2d,
@@ -383,10 +429,76 @@ const Wiki = () => {
                  alt="Max pool and Avg pool side by side"
                  style={{ maxHeight: 400, marginInline: "auto" }}
                />
+               
+               <h5>Documentation</h5>
+
+               <p>
+                Check out{" "}
+                <a href="https://pytorch.org/docs/stable/generated/torch.nn.AdaptiveAvgPool2d.html">
+                  the documentation on Adaptive Avg Pool 2d layer here!
+                </a>
+              </p>
             </>
           ),
           displayState: adaptiveAvgPool2d,
           setDisplayState: setAdaptiveAvgPool2d
+        },
+        {
+          layer_name: "Batch Norm 2d",
+          body: (
+            <>
+              <p>
+                In data science, you generally tend to work with datasets that have 
+                "multiple features" (ie: multiple attributes that can influence the target you want to predict or classify).
+                It would be very simplistic to assume that all features (ie: inputs) are always on the same scale. Before feeding data into
+                a model, it is considered good practice to normalize your features such that all inputs are on the same scale and you 
+                can do an "apples to apples" comparison. In deep learning, it would be nice to normalize the input coming from previous layers 
+                before feeding into the next layer such that the model can reach optimal weights in less iterations. Batch norm handles this for us!
+              </p>
+
+              <p>Below is a diagram showing what happens under the hood in Batch norm</p>
+
+              <img src={batchnorm}
+                alt="Batch norm 2d"
+                style={{ maxHeight: 400, marginInline: "auto" }}
+              />
+
+              <p>
+                What you really need to take away from this diagram is the following:
+
+                So, you have input data coming in from the previous layer in your model (since deep learning involves layers of computations). Batch norm is doing the following:
+
+                <ol>
+                  <br/>
+                  <item>1. Calculate the mean and variance for each feature/column. </item>
+                  <br/>
+                  <br/>
+                  <item>2. Knowing the mean and variance of each feature allows you to standardize your features (in the same way you calculate what's called a "z-score"). Now, your normalized data will have mean 0 and variance 1</item>
+                  <br/>
+                  <br/>
+                  <item>3. Scale and Shift is performed. Note that you don't necessarily specify the scale and shift parameters. Batch Norm actually can learn the optimal scale/shift parameters
+                just like other weights in your deep learning model. This is part of the magic of Batch Norm!</item>
+                  <br/>
+                  <br/>
+                  <item>4. Instead of storing the mean and variance for each feature/column, Batch Norm actually stores the moving average for mean and variance for efficiency. These values are generally
+                good approximations for the real mean/variance of your features. The moving average for mean and variance allows for Batch Norm to learn the optimal scale/shift parameters during backpropagation
+                in deep learning</item>
+                </ol>
+              </p>
+
+              <h5>Documentation</h5>
+              <a href="https://towardsdatascience.com/batch-norm-explained-visually-how-it-works-and-why-neural-networks-need-it-b18919692739">Check out this helpful article for intuitively understanding Batch Norm</a>
+              <p>
+                Check out{" "}
+                <a href="https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html">
+                  the documentation on Adaptive Avg Pool 2d layer here!
+                </a>
+              </p>
+
+            </>
+          ),
+          displayState: batchNorm2d,
+          setDisplayState: setBatchNorm2d
         }
       ],
     displayState: conv,

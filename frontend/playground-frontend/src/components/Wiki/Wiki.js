@@ -19,7 +19,7 @@ const displayChange = (display, setdisplay) => {
   }
 };
 
-const render_layer_info  = (layer_info) => {
+const render_layer_info = (layer_info) => {
   let body = [];
   for (let i = 0; i < layer_info.docs.length; i++) {
     body.push(
@@ -52,11 +52,13 @@ const render_layer_info  = (layer_info) => {
           displayChange(layer_info.displayState, layer_info.setDisplayState)
         }
         className="layer-outer-button"
-        style={{marginBottom: layer_info.displayState === "none" ? "10px" : 0 }}
-      >{layer_info.title}</button>
-      <ul>
-      {body}
-      </ul>
+        style={{
+          marginBottom: layer_info.displayState === "none" ? "10px" : 0,
+        }}
+      >
+        {layer_info.title}
+      </button>
+      <ul>{body}</ul>
     </>
   );
 };
@@ -134,12 +136,14 @@ const Wiki = () => {
           body: (
             <>
               <p>
-                When we are training deep learning models, one common problem that can 
-                come up is that the model overfits (ie: the model learns from the data it's fed in well, but 
-                cannot generalize well to unseen data). We need to find a way to mitigate this problem. 
-                One common pattern used is to implement a Dropout layer. This layer will randomly
-                zero out the weight of some of the neurons that feed into the Dropout layer. 
-                In other words, we are "crippling" our neural network in a probabilistic fashion
+                When we are training deep learning models, one common problem
+                that can come up is that the model overfits (ie: the model
+                learns from the data it's fed in well, but cannot generalize
+                well to unseen data). We need to find a way to mitigate this
+                problem. One common pattern used is to implement a Dropout
+                layer. This layer will randomly zero out the weight of some of
+                the neurons that feed into the Dropout layer. In other words, we
+                are "crippling" our neural network in a probabilistic fashion
               </p>
 
               <p> Below is the dropout layer in action (notice the X marks) </p>
@@ -148,7 +152,7 @@ const Wiki = () => {
                 alt="Dropout diagram"
                 style={{ maxHeight: 200, marginInline: "auto" }}
               />
-              
+
               <h5>Documentation</h5>
               <p>
                 Check out{" "}
@@ -159,8 +163,8 @@ const Wiki = () => {
             </>
           ),
           displayState: dropout,
-          setDisplayState: setDropout
-        }
+          setDisplayState: setDropout,
+        },
       ],
       displayState: common,
       setDisplayState: setCommon,
@@ -168,7 +172,7 @@ const Wiki = () => {
     {
       title: "Non-linear Activations (weighted sum, nonlinearity)",
       docs: [
-        { 
+        {
           layer_name: "ReLU",
           body: (
             <>
@@ -209,11 +213,13 @@ const Wiki = () => {
           body: (
             <>
               <p>
-                Tanh (hyperbolic tangent) is a common activation function. This function helps to introduce 
-                nonlinearity into out models (which helps make our neural networks better able to learn more 
-                complex patterns in our data). The advantage is that the negative inputs will be mapped strongly negative 
-                and the zero inputs will be mapped near zero in the tanh graph.
-              </p>            
+                Tanh (hyperbolic tangent) is a common activation function. This
+                function helps to introduce nonlinearity into out models (which
+                helps make our neural networks better able to learn more complex
+                patterns in our data). The advantage is that the negative inputs
+                will be mapped strongly negative and the zero inputs will be
+                mapped near zero in the tanh graph.
+              </p>
               <p>The Tanh formula is:</p>
 
               <img
@@ -222,14 +228,18 @@ const Wiki = () => {
                 style={{ maxHeight: 200, marginInline: "auto" }}
               />
 
-              <p> Below is a plot for tanh to get an intuition for what this function is doing: </p>
+              <p>
+                {" "}
+                Below is a plot for tanh to get an intuition for what this
+                function is doing:{" "}
+              </p>
 
               <img
                 src={tanh_plot}
                 alt="Tanh plot"
                 style={{ maxHeight: 300, marginInline: "auto" }}
               />
-              
+
               <h5>Documentation</h5>
 
               <p>
@@ -238,33 +248,40 @@ const Wiki = () => {
                   the documentation on Tanh Activation function here!
                 </a>
               </p>
-
             </>
           ),
           displayState: tanh,
-          setDisplayState: settanh
+          setDisplayState: settanh,
         },
         {
           layer_name: "Sigmoid",
           body: (
             <>
               <p>
-                Sigmoid is a common activation function. This function is commonly used within neural networks. Contrary to the Tanh 
-                activation function, sigmoid will squish very negative value near 0 and squish very positive values near 1. While sigmoid 
-                is an easy to differentiate function, it suffers from what's called the "vanishing gradient problem". Essentially, when your neural 
-                network is trying to learn from your data, it is performing optimizations to update the weights for each "hyperparameter" (think about manipulating
-                the dials and knobs to minimize your loss). The neural network's optimization involves calculating gradients (AKA "rates of change") and if the rates of change 
-                are too small, then the neural network ends up updating its weights by a very tiny amount. As shown in the below plot, the vanishing gradient 
-                problem tends to occur when applying the sigmoid on very negative or very positive values. 
+                Sigmoid is a common activation function. This function is
+                commonly used within neural networks. Contrary to the Tanh
+                activation function, sigmoid will squish very negative value
+                near 0 and squish very positive values near 1. While sigmoid is
+                an easy to differentiate function, it suffers from what's called
+                the "vanishing gradient problem". Essentially, when your neural
+                network is trying to learn from your data, it is performing
+                optimizations to update the weights for each "hyperparameter"
+                (think about manipulating the dials and knobs to minimize your
+                loss). The neural network's optimization involves calculating
+                gradients (AKA "rates of change") and if the rates of change are
+                too small, then the neural network ends up updating its weights
+                by a very tiny amount. As shown in the below plot, the vanishing
+                gradient problem tends to occur when applying the sigmoid on
+                very negative or very positive values.
               </p>
 
               <p> Plot and Equation of the sigmoid function is shown below</p>
-              <img 
+              <img
                 src={sigmoid_eq}
                 alt="Sigmoid plot"
                 style={{ maxHeight: 300, marginInline: "auto" }}
               />
-              
+
               <h5>Documentation</h5>
 
               <p>
@@ -273,100 +290,105 @@ const Wiki = () => {
                   the documentation on Sigmoid Activation function here!
                 </a>
               </p>
-              
             </>
           ),
           displayState: sigmoid,
-          setDisplayState: setSigmoid
-        }
+          setDisplayState: setSigmoid,
+        },
       ],
       displayState: outerrelu,
-      setDisplayState: setouterrelu
+      setDisplayState: setouterrelu,
     },
     {
       title: "Non-Linear Activations",
-      docs : [ {
-      layer_name: "Softmax",
-      body: (
-        <>
-          <p>
-            The Softmax function is an activation function commonly used. You
-            are taking an array of numbers and converting it into an array of
-            probabilities. This is useful within multiclass classification
-            because it would be nice to figure out what the probability of your
-            input being in one of `K` classes is in order to make an "informed
-            judgement/classification". Since Softmax layer covnerts a list of
-            numbers into a list of probabilities, it follows that the
-            probabilities must add to 1.
-          </p>
+      docs: [
+        {
+          layer_name: "Softmax",
+          body: (
+            <>
+              <p>
+                The Softmax function is an activation function commonly used.
+                You are taking an array of numbers and converting it into an
+                array of probabilities. This is useful within multiclass
+                classification because it would be nice to figure out what the
+                probability of your input being in one of `K` classes is in
+                order to make an "informed judgement/classification". Since
+                Softmax layer covnerts a list of numbers into a list of
+                probabilities, it follows that the probabilities must add to 1.
+              </p>
 
-          <p>
-            Suppose you had an array of numbers in the form `[z_1, z_2, ... z_
-            k]`
-          </p>
+              <p>
+                Suppose you had an array of numbers in the form `[z_1, z_2, ...
+                z_ k]`
+              </p>
 
-          <p>The Softmax formula is:</p>
+              <p>The Softmax formula is:</p>
 
-          <img
-            src={softmax_eq}
-            alt="Softmax equation"
-            style={{ maxHeight: 200, marginInline: "auto" }}
-          />
+              <img
+                src={softmax_eq}
+                alt="Softmax equation"
+                style={{ maxHeight: 200, marginInline: "auto" }}
+              />
 
-          <p>
-            Essentially, you are exponentiating each number (using `e` as the
-            base) and then normalizing by dividing these exponentiated numbers
-            by the total.
-          </p>
+              <p>
+                Essentially, you are exponentiating each number (using `e` as
+                the base) and then normalizing by dividing these exponentiated
+                numbers by the total.
+              </p>
 
-          <h5>Documentation</h5>
+              <h5>Documentation</h5>
 
-          <p>
-            Check out{" "}
-            <a href="https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html">
-              the documentation on Pytorch's Softmax Layer!
-            </a>
-          </p>
-        </>
-      ),
-      displayState: softmax,
-      setDisplayState: setSoftmax,
-    }],
-    displayState: nla,
-    setDisplayState: setnla
+              <p>
+                Check out{" "}
+                <a href="https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html">
+                  the documentation on Pytorch's Softmax Layer!
+                </a>
+              </p>
+            </>
+          ),
+          displayState: softmax,
+          setDisplayState: setSoftmax,
+        },
+      ],
+      displayState: nla,
+      setDisplayState: setnla,
     },
     {
       title: "Convolution Layers",
-      docs : [ 
+      docs: [
         {
           layer_name: "Conv2d",
           body: (
             <>
               <p>
-                Convolution layers are commonly used within image datasets. 
-                Convolution is a fancy word for "sliding window" (you specify the dimensions of the windows you want
-                to look at). Images can be thought of as a rectangular
-                matrix of pixels where each pixel communicates the RGB value to describe the particular
-                color for a particular location in the image. Conv2d is a layer that takes in a matrix of weights and
-                goes through all possible "windows" in a sliding fashion. In each window, we take the pixel values, multiply them by the corresponding 
-                weights in the matrix (elementwise) and then sum up those products to populate in our result matrix (AKA weighted sum of pixels). This layer is best 
+                Convolution layers are commonly used within image datasets.
+                Convolution is a fancy word for "sliding window" (you specify
+                the dimensions of the windows you want to look at). Images can
+                be thought of as a rectangular matrix of pixels where each pixel
+                communicates the RGB value to describe the particular color for
+                a particular location in the image. Conv2d is a layer that takes
+                in a matrix of weights and goes through all possible "windows"
+                in a sliding fashion. In each window, we take the pixel values,
+                multiply them by the corresponding weights in the matrix
+                (elementwise) and then sum up those products to populate in our
+                result matrix (AKA weighted sum of pixels). This layer is best
                 understood through visual demonstrations (as shown below)
               </p>
 
               <p>Helpful gifs to understand conv2d</p>
 
-              <img 
+              <img
                 src={conv2dgif}
                 alt="Conv 2d gif #1"
                 style={{ maxHeight: 400, marginInline: "auto" }}
               />
 
-              <img 
+              <img
                 src={conv2dgif2}
                 alt="Conv 2d gif #2"
                 style={{ maxHeight: 500, marginInline: "auto" }}
               />
-              
+
               <h5>Documentation</h5>
 
               <p>
@@ -385,19 +407,21 @@ const Wiki = () => {
           body: (
             <>
               <p>
-                This layer traverses all possible MxN windows in the image (you specify the dimension 
-                of the windows to look at). Instead of doing a weighted sum of pixels, each window you see, 
-                you will simply take the maximum pixel value and populate the resulting matrix. 
+                This layer traverses all possible MxN windows in the image (you
+                specify the dimension of the windows to look at). Instead of
+                doing a weighted sum of pixels, each window you see, you will
+                simply take the maximum pixel value and populate the resulting
+                matrix.
               </p>
 
               <p>Max pool in action</p>
 
-              <img  
+              <img
                 src={maxpool2dgif}
                 alt="Max pool 2d gif"
                 style={{ maxHeight: 400, marginInline: "auto" }}
               />
-              
+
               <h5>Documentation</h5>
 
               <p>
@@ -409,30 +433,32 @@ const Wiki = () => {
             </>
           ),
           displayState: maxpool2d,
-          setDisplayState: setMaxpool2d
+          setDisplayState: setMaxpool2d,
         },
         {
           layer_name: "Adaptive Average Pool 2d",
           body: (
             <>
-               <p>
-                Adaptive Average Pool 2d is a layer that allows you to specify the dimensions of the output. 
-                This layer will infer what window size should be used to get your output dimension. The auto-inference 
-                of the window size is the "Adaptive" aspect, but the "Average Pool" aspect will take an average (arithmetic mean) 
-                of the pixel values for each "window". 
-               </p>
+              <p>
+                Adaptive Average Pool 2d is a layer that allows you to specify
+                the dimensions of the output. This layer will infer what window
+                size should be used to get your output dimension. The
+                auto-inference of the window size is the "Adaptive" aspect, but
+                the "Average Pool" aspect will take an average (arithmetic mean)
+                of the pixel values for each "window".
+              </p>
 
-               <p>Adaptive Avg Pool and Max Pool 2d in action</p>
+              <p>Adaptive Avg Pool and Max Pool 2d in action</p>
 
-               <img 
-                 src={avgmaxpoolgif}
-                 alt="Max pool and Avg pool side by side"
-                 style={{ maxHeight: 400, marginInline: "auto" }}
-               />
-               
-               <h5>Documentation</h5>
+              <img
+                src={avgmaxpoolgif}
+                alt="Max pool and Avg pool side by side"
+                style={{ maxHeight: 400, marginInline: "auto" }}
+              />
 
-               <p>
+              <h5>Documentation</h5>
+
+              <p>
                 Check out{" "}
                 <a href="https://pytorch.org/docs/stable/generated/torch.nn.AdaptiveAvgPool2d.html">
                   the documentation on Adaptive Avg Pool 2d layer here!
@@ -441,69 +467,98 @@ const Wiki = () => {
             </>
           ),
           displayState: adaptiveAvgPool2d,
-          setDisplayState: setAdaptiveAvgPool2d
+          setDisplayState: setAdaptiveAvgPool2d,
         },
         {
           layer_name: "Batch Norm 2d",
           body: (
             <>
               <p>
-                In data science, you generally tend to work with datasets that have 
-                "multiple features" (ie: multiple attributes that can influence the target you want to predict or classify).
-                It would be very simplistic to assume that all features (ie: inputs) are always on the same scale. Before feeding data into
-                a model, it is considered good practice to normalize your features such that all inputs are on the same scale and you 
-                can do an "apples to apples" comparison. In deep learning, it would be nice to normalize the input coming from previous layers 
-                before feeding into the next layer such that the model can reach optimal weights in less iterations. Batch norm handles this for us!
+                In data science, you generally tend to work with datasets that
+                have "multiple features" (ie: multiple attributes that can
+                influence the target you want to predict or classify). It would
+                be very simplistic to assume that all features (ie: inputs) are
+                always on the same scale. Before feeding data into a model, it
+                is considered good practice to normalize your features such that
+                all inputs are on the same scale and you can do an "apples to
+                apples" comparison. In deep learning, it would be nice to
+                normalize the input coming from previous layers before feeding
+                into the next layer such that the model can reach optimal
+                weights in less iterations. Batch norm handles this for us!
               </p>
 
-              <p>Below is a diagram showing what happens under the hood in Batch norm</p>
+              <p>
+                Below is a diagram showing what happens under the hood in Batch
+                norm
+              </p>
 
-              <img src={batchnorm}
+              <img
+                src={batchnorm}
                 alt="Batch norm 2d"
                 style={{ maxHeight: 400, marginInline: "auto" }}
               />
 
               <p>
-                What you really need to take away from this diagram is the following:
-
-                So, you have input data coming in from the previous layer in your model (since deep learning involves layers of computations). Batch norm is doing the following:
-
+                What you really need to take away from this diagram is the
+                following: So, you have input data coming in from the previous
+                layer in your model (since deep learning involves layers of
+                computations). Batch norm is doing the following:
                 <ol>
-                  <br/>
-                  <item>1. Calculate the mean and variance for each feature/column. </item>
-                  <br/>
-                  <br/>
-                  <item>2. Knowing the mean and variance of each feature allows you to standardize your features (in the same way you calculate what's called a "z-score"). Now, your normalized data will have mean 0 and variance 1</item>
-                  <br/>
-                  <br/>
-                  <item>3. Scale and Shift is performed. Note that you don't necessarily specify the scale and shift parameters. Batch Norm actually can learn the optimal scale/shift parameters
-                just like other weights in your deep learning model. This is part of the magic of Batch Norm!</item>
-                  <br/>
-                  <br/>
-                  <item>4. Instead of storing the mean and variance for each feature/column, Batch Norm actually stores the moving average for mean and variance for efficiency. These values are generally
-                good approximations for the real mean/variance of your features. The moving average for mean and variance allows for Batch Norm to learn the optimal scale/shift parameters during backpropagation
-                in deep learning</item>
+                  <br />
+                  <item>
+                    1. Calculate the mean and variance for each feature/column.{" "}
+                  </item>
+                  <br />
+                  <br />
+                  <item>
+                    2. Knowing the mean and variance of each feature allows you
+                    to standardize your features (in the same way you calculate
+                    what's called a "z-score"). Now, your normalized data will
+                    have mean 0 and variance 1
+                  </item>
+                  <br />
+                  <br />
+                  <item>
+                    3. Scale and Shift is performed. Note that you don't
+                    necessarily specify the scale and shift parameters. Batch
+                    Norm actually can learn the optimal scale/shift parameters
+                    just like other weights in your deep learning model. This is
+                    part of the magic of Batch Norm!
+                  </item>
+                  <br />
+                  <br />
+                  <item>
+                    4. Instead of storing the mean and variance for each
+                    feature/column, Batch Norm actually stores the moving
+                    average for mean and variance for efficiency. These values
+                    are generally good approximations for the real mean/variance
+                    of your features. The moving average for mean and variance
+                    allows for Batch Norm to learn the optimal scale/shift
+                    parameters during backpropagation in deep learning
+                  </item>
                 </ol>
               </p>
 
               <h5>Documentation</h5>
-              <a href="https://towardsdatascience.com/batch-norm-explained-visually-how-it-works-and-why-neural-networks-need-it-b18919692739">Check out this helpful article for intuitively understanding Batch Norm</a>
+              <a href="https://towardsdatascience.com/batch-norm-explained-visually-how-it-works-and-why-neural-networks-need-it-b18919692739">
+                Check out this helpful article for intuitively understanding
+                Batch Norm
+              </a>
               <p>
                 Check out{" "}
                 <a href="https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html">
                   the documentation on Adaptive Avg Pool 2d layer here!
                 </a>
               </p>
-
             </>
           ),
           displayState: batchNorm2d,
-          setDisplayState: setBatchNorm2d
-        }
+          setDisplayState: setBatchNorm2d,
+        },
       ],
-    displayState: conv,
-    setDisplayState: setConv
-    }
+      displayState: conv,
+      setDisplayState: setConv,
+    },
   ];
 
   return (
@@ -558,10 +613,7 @@ const Wiki = () => {
       <div className="sections" id="documentation">
         <h2>Deep Learning Playground Documentation</h2>
         <h3>Layers Inventory</h3>
-        <p>
-          Click for more
-          information about each layer.
-        </p>
+        <p>Click for more information about each layer.</p>
 
         {/* {render_all_layers(layer_wiki)} */}
         {render_all_layer_info(layer_wiki)}

@@ -3,10 +3,10 @@ on:
   push:
     paths:
       - 'backend/**'
+      - '.github/workflows/python-package-conda.yml'
   pull_request:
     paths:
       - 'backend/**'
-      - '.github/workflows/python-package-conda.yml'
 
 jobs:
   build-linux:

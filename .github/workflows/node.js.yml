@@ -7,10 +7,10 @@ on:
   push:
     paths:
       - 'frontend/**'
+      - '.github/workflows/node.js.yml'
   pull_request:
     paths:
       - 'frontend/**'
-      - '.github/workflows/node.js.yml'
 
 jobs:
   build:

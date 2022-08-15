@@ -28,9 +28,11 @@ dependencies:
   - ruamel.yaml
   - eventlet
   - pip:
+     - fastai==2.7.4
      - torchvision
+     - torchaudio
      - timm
      - wwf
-     - fastai==2.7.4
      - firebase_admin
      - pyrebase4
+     - PySoundFile

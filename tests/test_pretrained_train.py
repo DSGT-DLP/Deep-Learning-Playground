@@ -55,7 +55,7 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
     val = pd.read_csv(os.path.join(backend_dir, "dl_results.csv"))
     if val["train_loss"].isnull().any():
         assert False
-    elif val["valid_loss"].isnull().any():
+    elif val["test_loss"].isnull().any():
         assert False
     assert val.shape[0] == 3
     assert True
@@ -85,7 +85,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
     val = pd.read_csv(os.path.join(backend_dir, "dl_results.csv"))
     if val["train_loss"].isnull().any():
         assert False
-    elif val["valid_loss"].isnull().any():
+    elif val["test_loss"].isnull().any():
         assert False
     assert val.shape[0] == 2  # n_epochs
     assert True

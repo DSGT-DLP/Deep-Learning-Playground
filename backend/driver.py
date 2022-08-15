@@ -418,7 +418,8 @@ def train_pretrained(request_data):
             epochs,
             optimizer_name=optimizer_name,
             shuffle=shuffle,
-            chan_in=train_dataset[0][0].shape[0]
+            chan_in=train_dataset[0][0].shape[0],
+            n_classes=len(train_dataset.classes)
         )
         print("training successfully finished")
         print("learner ", learner)

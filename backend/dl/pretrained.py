@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.hub
 import torchvision
 import os
+from ..common.utils import generate_confusion_matrix, generate_loss_plot, generate_AUC_ROC_CURVE
 
 from fastai.data.core import DataLoaders
 from fastai.learner import save_model
@@ -18,9 +19,8 @@ from torchvision import models
 from fastai.callback.hook import num_features_model
 from backend.common.loss_functions import LossFunctions
 from backend.common.dataset import dataset_from_zipped
-from backend.common.constants import DEFAULT_TRANSFORM, SAVED_MODEL
-from backend.common.optimizer import get_optimizer
-from backend.common.utils import generate_AUC_ROC_CURVE
+from backend.common.constants import SAVED_MODEL, DEEP_LEARNING_RESULT_CSV_PATH
+import pandas as pd
 
 
 def train(
@@ -63,10 +63,16 @@ def train(
     setattr(dls, "device", device)
     """
 
+    print(n_classes)
     dls = DataLoaders.from_dsets(
         train_dataset, test_dataset, device=device, shuffle=shuffle, bs=batch_size
     )
     setattr(dls, "device", device)
+
+    # b1, b2 = dls.one_batch()
+    # print(b1[0].shape)
+    # channels= b1[0].shape[0]
+    # print(channels)
     loss_func = LossFunctions.get_loss_obj(LossFunctions[loss_func])
     if is_pytorch(model_name.lower()):
         print("torch model")
@@ -118,15 +124,23 @@ def train(
     learner.fit(
         n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv"))]
     )
-    preds,y,losses = learner.get_preds(with_loss=True)
-    interp = ClassificationInterpretation(learner, preds, y, losses)
+    preds, target = learner.get_preds()
+
+    y_pred_list = []
+    y_pred_list.append(to_np(preds))
     auxiliary_outputs = {}
-    auxiliary_outputs["confusion_matrix"] = interp.confusion_matrix()
-    auxiliary_outputs["AUC_ROC_cuve_data"] = generate_AUC_ROC_CURVE(y, preds)
-    print("confusion ", auxiliary_outputs["confusion_matrix"])
-    print("AUC ROC ", auxiliary_outputs["AUC_ROC_curve_data"])
-    print("labels ", y)
-    #auxiliary_output["confusion_matrix"] = interp.confusion_matrix()
+
+    confusion_matrix = generate_confusion_matrix(labels_last_epoch=to_np(target), y_pred_last_epoch=y_pred_list)
+    auxiliary_outputs["confusion_matrix"] = confusion_matrix
+
+    AUC_ROC_curve_data = generate_AUC_ROC_CURVE(labels_last_epoch=to_np(target), y_pred_last_epoch=y_pred_list)
+    auxiliary_outputs["AUC_ROC_curve_data"] = AUC_ROC_curve_data
+
+    val = pd.read_csv(DEEP_LEARNING_RESULT_CSV_PATH)
+    val.columns = ['epoch','train_loss','test_loss','time']
+    val.to_csv(DEEP_LEARNING_RESULT_CSV_PATH)
+    generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+
     return auxiliary_outputs, learner
 
 
@@ -261,4 +275,4 @@ if __name__ == "__main__":
     train_dataset, test_dataset = dataset_from_zipped(
         "./tests/zip_files/double_zipped.zip"
     )
-    train(train_dataset, test_dataset, "resnet18", 2, "CELOSS", 2)
+    train(train_dataset, test_dataset, "resnet18", 2, "CELOSS", 2, n_classes=2)

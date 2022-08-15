@@ -120,7 +120,10 @@ const TrainButton = (props) => {
 
   useEffect(() => {
     if (uploaded && trainParams) {
-      train_and_output(trainParams.choice, functionMap[trainParams.choice][1](trainParams.paramList));
+      train_and_output(
+        trainParams.choice,
+        functionMap[trainParams.choice][1](trainParams.paramList)
+      );
       setUploaded(false);
       setTrainParams(null);
     }

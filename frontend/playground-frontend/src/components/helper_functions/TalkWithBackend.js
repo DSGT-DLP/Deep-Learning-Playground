@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 
 const socketEventDict = {
-  tabular: "runTraining",
+  tabular: "tabular-run",
   image: "img-run",
   pretrained: "pretrain-run",
 };

@@ -388,8 +388,8 @@ def upload():
         f= request.files['file']
         normalExit = f.stream.close
         f.stream.close = passExit
-        t = threading.Thread(target=save_file,args=(normalExit,))
-        t.start()
+        save_file(normalExit)
+        socket.emit('uploadComplete')
         return '200'
     return '200'
 

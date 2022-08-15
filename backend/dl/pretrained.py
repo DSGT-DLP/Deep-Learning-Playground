@@ -105,7 +105,6 @@ def train(
             normalize=False,
             n_in=chan_in,
             loss_func=loss_func,
-            device=device,
             # model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
         )
 

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-// import {CopyToClipboard} from 'react-copy-to-clipboard';
-import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import { FaCopy } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const CodeSnippet = (props) => {
   const { backendResponse, layers } = props;
@@ -13,21 +13,25 @@ const CodeSnippet = (props) => {
       )
     );
   }
-  // function copyToClipboard () {
-  //   navigator.clipboard.writeText(codeSnippetFormat(layers));
-  // }
+
   return (
-      <>
+    <div id="code-snippet-div">
       <textarea
+        id="code-snippet-text"
         readOnly
         rows="10"
-        style={{ width: "100%" }}
         value={codeSnippetFormat(layers)}
       />
-      {/* <CopyToClipboard text={codeSnippetFormat(layers)}> */}
-      <button id="code-snippet-clipboard" onClick={() => navigator.clipboard.writeText(codeSnippetFormat(layers))}><ContentPasteIcon/></button>
-      {/* </CopyToClipboard> */}
-      </>
+      <button
+        id="code-snippet-clipboard"
+        onClick={() => {
+          navigator.clipboard.writeText(codeSnippetFormat(layers));
+          toast.info("Code snippet copied");
+        }}
+      >
+        <FaCopy />
+      </button>
+    </div>
   );
 };
 

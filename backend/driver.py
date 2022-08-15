@@ -396,11 +396,9 @@ def train_pretrained(request_data):
         test_transform = parse_deep_user_architecture(test_transform)
         if not default:
             zip_file = "tests/zip_files/double_zipped.zip"
-            print(zip_file)
             train_dataset, test_dataset = dataset_from_zipped(
                 zip_file, test_transform=test_transform, train_transform=train_transform
             )
-            print("dataset ", train_dataset)
         else:
             train_dataset, test_dataset = get_img_default_dataset(
                 default, test_transform, train_transform
@@ -422,7 +420,6 @@ def train_pretrained(request_data):
             n_classes=len(train_dataset.classes)
         )
         print("training successfully finished")
-        print("learner ", learner)
         socket.emit(
             "trainingResult",
             {

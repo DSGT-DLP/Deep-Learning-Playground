@@ -68,11 +68,6 @@ def train(
         train_dataset, test_dataset, device=device, shuffle=shuffle, bs=batch_size
     )
     setattr(dls, "device", device)
-
-    # b1, b2 = dls.one_batch()
-    # print(b1[0].shape)
-    # channels= b1[0].shape[0]
-    # print(channels)
     loss_func = LossFunctions.get_loss_obj(LossFunctions[loss_func])
     if is_pytorch(model_name.lower()):
         print("torch model")

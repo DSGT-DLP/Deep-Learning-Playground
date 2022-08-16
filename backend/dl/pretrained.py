@@ -3,9 +3,9 @@
 import timm
 import torch.nn as nn
 import torch.hub
-import torchvision
 import os
-from ..common.utils import generate_confusion_matrix, generate_loss_plot, generate_AUC_ROC_CURVE
+import torchvision
+from ..common.utils import generate_acc_plot, generate_confusion_matrix, generate_loss_plot, generate_AUC_ROC_CURVE
 
 from fastai.data.core import DataLoaders
 from fastai.learner import save_model
@@ -34,8 +34,7 @@ class PretrainCallback(Callback):
         self.send_progress((self.learn.epoch+1)/self.n_epochs*100)
         print("percent done: ", (self.learn.epoch + 1) / self.n_epochs*100)
 
-
-
+from backend.common.constants import DEFAULT_TRANSFORM, ONNX_MODEL, SAVED_MODEL
 
 
 def train(
@@ -45,7 +44,7 @@ def train(
     batch_size,
     loss_func,
     n_epochs,
-    send_progress,
+    send_progress=lambda a: print("Warning: instantiate send progress"),
     default=None,
     shuffle=False,
     optimizer_name="Adam",
@@ -64,27 +63,22 @@ def train(
         chan_in (int) : number of input channels
         cut (int or Callable) : indices where you want to cut the model and create head and body
     """
-
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    """
-    train_dataset, test_dataset = dataset_from_zipped(
-        zipped_file, test_transform=test_transform, train_transform=train_transform
-    )
-    
-    
-    dls = DataLoaders.from_dsets(
-        train_dataset, test_dataset, device=device, shuffle=shuffle, bs=batch_size
-    )
-    
-    setattr(dls, "device", device)
-    """
 
-    print(n_classes)
+    img_shape = 0
     dls = DataLoaders.from_dsets(
         train_dataset, test_dataset, device=device, shuffle=shuffle, bs=batch_size
     )
     setattr(dls, "device", device)
+
+    for i in dls:
+        for j in i:
+            img_shape = j[0][0].shape
+            break
+        break
+
     loss_func = LossFunctions.get_loss_obj(LossFunctions[loss_func])
+    train_accuaracy = train_acc
     if is_pytorch(model_name.lower()):
         print("torch model")
         model = eval("torchvision.models.{}".format(model_name.lower()))
@@ -99,12 +93,10 @@ def train(
             loss_func=loss_func,
             n_out=n_classes,
             n_in=chan_in,
-            # model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
+            metrics=[train_accuaracy, accuracy]
         )
     elif is_timm(model_name.lower()):
         print("made the zipped file")
-        # model = timm.create_model(model_name.lower(), num_classes=n_classes)
-        # optimizer = get_optimizer(model, optimizer_name=optimizer_name, learning_rate=lr)
         learner = local_timm_learner(
             dls,
             model_name.lower(),
@@ -115,7 +107,6 @@ def train(
             normalize=False,
             n_in=chan_in,
             loss_func=loss_func,
-            # model_dir=os.path.join(*ONNX_MODEL.split("/")[0:-1]),
         )
 
     backend_dir = (
@@ -135,6 +126,7 @@ def train(
     learner.fit(
         n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv")), PretrainCallback(n_epochs, send_progress)]
     )
+
     preds, target = learner.get_preds()
 
     y_pred_list = []
@@ -148,11 +140,21 @@ def train(
     auxiliary_outputs["AUC_ROC_curve_data"] = AUC_ROC_curve_data
 
     val = pd.read_csv(DEEP_LEARNING_RESULT_CSV_PATH)
-    val.columns = ['epoch','train_loss','test_loss','time']
+    val.columns = ['epoch','train_loss','test_loss','train_acc','val/test acc','time']
     val.to_csv(DEEP_LEARNING_RESULT_CSV_PATH)
     generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+    generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
+
+    save_model(SAVED_MODEL, learner.model, getattr(learner, 'opt', None))
+    torch.onnx.export(
+        learner.model, torch.randn(1, chan_in, img_shape[2], img_shape[1]), ONNX_MODEL)
 
     return auxiliary_outputs, learner
+
+def train_acc(batch_preds, batch_targ):
+    y_pred, y_true = torch.argmax(batch_preds, axis=1), batch_targ.long().squeeze()
+    train_correct = (y_pred == y_true).type(torch.float).sum().item()
+    return train_correct
 
 
 def get_all():

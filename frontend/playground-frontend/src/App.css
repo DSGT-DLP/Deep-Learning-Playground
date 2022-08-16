@@ -260,6 +260,33 @@ input[type="file"] {
   cursor: pointer;
 }
 
+textarea#code-snippet-text {
+  width: 100%;
+}
+
+#code-snippet-div {
+  position: relative;
+}
+
+#code-snippet-clipboard {
+  background-color: #ececec;
+  border-radius: 4px;
+  border-style: none;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  cursor: pointer;
+}
+
+#code-snippet-clipboard:hover,
+#code-snippet-clipboard:focus {
+  background-color: #fcfcfc;
+}
+
+#code-snippet-clipboard:active {
+  background-color: var(--layer);
+}
+
 /* -------------------------------------------------------------------------- */
 /*	1. About and Wiki
 /* -------------------------------------------------------------------------- */
@@ -316,36 +343,6 @@ textarea {
   margin-top: 0;
 }
 
-/* .layer-info-button:hover {
-  
-} */
-
-textarea#code-snippet-text {
-  width: 100%;
-}
-
-#code-snippet-div {
-  position: relative;
-}
-
-#code-snippet-clipboard {
-  background-color: #ececec;
-  border-radius: 4px;
-  border-style: none;
-  position: absolute;
-  right: 10px;
-  top: 5px;
-  cursor: pointer;
-}
-
-#code-snippet-clipboard:hover, #code-snippet-clipboard:focus {
-  background-color: #fcfcfc;
-}
-
-#code-snippet-clipboard:active {
-  background-color: var(--layer);
-}
-
 /* -------------------------------------------------------------------------- */
 /*	1. Footer
 /* -------------------------------------------------------------------------- */
@@ -375,7 +372,8 @@ textarea#code-snippet-text {
   aspect-ratio: 1;
 }
 
-.foot-element:hover, .foot-element:focus {
+.foot-element:hover,
+.foot-element:focus {
   background-color: var(--secondary);
 }
 

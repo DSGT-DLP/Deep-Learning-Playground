@@ -233,10 +233,9 @@ def testing(request_data):
         epochs = request_data["epochs"]
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
-
         print(train_transform)
         print(test_transform)
-
+        zip_file = ""
         # upload()
         print(user_arch)
         print("sdsakdnasjfk", request_data["user_arch"])
@@ -394,8 +393,12 @@ def train_pretrained(request_data):
         # test_transform.append("transforms.Lambda(lambda x: x.repeat(3, 1, 1) )")
         train_transform = parse_deep_user_architecture(train_transform)
         test_transform = parse_deep_user_architecture(test_transform)
+        zip_file = ""
         if not default:
-            zip_file = "tests/zip_files/double_zipped.zip"
+            for x in os.listdir(IMAGE_UPLOAD_FOLDER):
+                if x != ".gitkeep":
+                    zip_file = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
+                    break
             train_dataset, test_dataset = dataset_from_zipped(
                 zip_file, test_transform=test_transform, train_transform=train_transform
             )

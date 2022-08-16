@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { COLORS, DEFAULT_ADDED_LAYERS, LAYOUT } from "./constants";
 import {
   BOOL_OPTIONS,
@@ -144,6 +144,16 @@ const Home = () => {
     },
   ];
 
+  const ResultsMemo = useMemo(
+    () => (
+      <Results
+        dlpBackendResponse={dlpBackendResponse}
+        problemType={problemType}
+      />
+    ),
+    [dlpBackendResponse, problemType]
+  );
+
   return (
     <div style={{ padding: 20, marginBottom: 50 }}>
       <DndProvider backend={HTML5Backend}>
@@ -228,10 +238,7 @@ const Home = () => {
       />
 
       <TitleText text="Deep Learning Results" />
-      <Results
-        dlpBackendResponse={dlpBackendResponse}
-        problemType={problemType}
-      />
+      {ResultsMemo}
 
       <TitleText text="Code Snippet" />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />

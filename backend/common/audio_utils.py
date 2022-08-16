@@ -1,5 +1,6 @@
 import random
-import torchaudio
+import torchaudio.datasets
+import torchaudio.transforms as T
 import torch
 
 dataset_labels = {
@@ -8,15 +9,17 @@ dataset_labels = {
     )}
 }
 
-def make_collate_fn(dataset_name, sample_rate, max_sec):
+def make_collate_fn(dataset_name, sample_rate, new_sample_rate, max_sec):
     def make_collate_fn(batch):
         max_len = int(sample_rate * max_sec)
         aud_tensors = []
         labels = []
         label_to_index = dataset_labels[dataset_name]
+        resampler = T.Resample(sample_rate, new_sample_rate)
         
         for aud_tensor, _, label, *_ in batch:
-            aud_tensors.append(batch_equate_len(aud_tensor, max_len))
+            aud_tensors.append(equate_tensor_len(aud_tensor, max_len))
+            aud_tensors[-1] = resampler(aud_tensors[-1])
             labels.append(label_to_index[label])
             
         aud_tensors = torch.stack(tuple(aud_tensors))
@@ -24,7 +27,7 @@ def make_collate_fn(dataset_name, sample_rate, max_sec):
     
     return make_collate_fn
 
-def batch_equate_len(tensor, max_len):
+def equate_tensor_len(tensor, max_len):
     num_channels, signal_len = tensor.shape
     if (signal_len < max_len):
         tensor = pad_audio_tensor(tensor, num_channels, signal_len, max_len)
@@ -53,10 +56,12 @@ def pad_audio_tensor(tensor, num_channels, signal_len, new_len):
 
 if __name__=='__main__':
     train_set = torchaudio.datasets.SPEECHCOMMANDS('./backend/audio_data_uploads', subset='training', download=False)
+    if train_set[0][0].shape[0] > 1:
+        raise ValueError('DLP currently supports only single channel datasets')
     train_loader = torch.utils.data.DataLoader(
         train_set,
         batch_size=256,
-        collate_fn=make_collate_fn('SPEECHCOMMANDS', 16000, 0.9),
+        collate_fn=make_collate_fn('SPEECHCOMMANDS', 16000, 32000, 0.9),
         shuffle=False
     )
     

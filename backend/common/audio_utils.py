@@ -2,19 +2,35 @@ import random
 import torchaudio
 import torch
 
-def batch_equate_len(batch, sample_rate, max_sec):
-    max_len = int(sample_rate * max_sec)
-    new_batch = []
+dataset_labels = {
+    'SPEECHCOMMANDS': {label: i for i, label in enumerate(
+        ['up', 'yes', 'learn', 'visual', 'down', 'zero', 'left', 'sheila', 'eight', 'bed', 'forward', 'three', 'wow', 'happy', 'off', 'four', 'dog', 'nine', 'tree', 'five', 'marvin', 'six', 'right', 'seven', 'on', 'backward', 'house', 'no', 'cat', 'stop', 'one', 'follow', 'bird', 'two', 'go']
+    )}
+}
+
+def make_collate_fn(dataset_name, sample_rate, max_sec):
+    def make_collate_fn(batch):
+        max_len = int(sample_rate * max_sec)
+        aud_tensors = []
+        labels = []
+        label_to_index = dataset_labels[dataset_name]
+        
+        for aud_tensor, _, label, *_ in batch:
+            aud_tensors.append(batch_equate_len(aud_tensor, max_len))
+            labels.append(label_to_index[label])
+            
+        aud_tensors = torch.stack(tuple(aud_tensors))
+        return (aud_tensors, labels)
     
-    for tensor in batch:
-        num_channels, signal_len = tensor.shape
-        if (signal_len < max_len):
-            tensor = pad_audio_tensor(tensor, num_channels, signal_len, max_len)
-        elif (signal_len > max_len):
-            tensor = tensor[:,:max_len]
-        new_batch.append(tensor)
-    
-    return torch.stack(tuple(new_batch))
+    return make_collate_fn
+
+def batch_equate_len(tensor, max_len):
+    num_channels, signal_len = tensor.shape
+    if (signal_len < max_len):
+        tensor = pad_audio_tensor(tensor, num_channels, signal_len, max_len)
+    elif (signal_len > max_len):
+        tensor = tensor[:,:max_len]
+    return tensor
         
 def pad_audio_tensor(tensor, num_channels, signal_len, new_len):
     pad_len = new_len - signal_len
@@ -28,15 +44,26 @@ def pad_audio_tensor(tensor, num_channels, signal_len, new_len):
         new_tensor.append(new_signal)
     return torch.stack(tuple(new_tensor))
 
+# def get_unique_labels(dataset):
+#     unique_labels = set()
+#     for data in dataset:
+#         unique_labels.add(data[2])
+#     print(unique_labels)
+#     return unique_labels
+
 if __name__=='__main__':
     train_set = torchaudio.datasets.SPEECHCOMMANDS('./backend/audio_data_uploads', subset='training', download=False)
-    # datapoint = train_set[0]
-    # new_datapoint = batch_equate_len(datapoint[0], 16000, 1.1)
-    # print(new_datapoint)
-    # print(new_datapoint.shape)
-    # train_loader = torch.utils.data.DataLoader(train_set, batch_size=256, shuffle=False)
-    # batch = next(iter(train_loader))[0]
-    batch = torch.tensor([train_set[i][0].tolist() for i in range(39)])
-    print(batch)
-    print(batch_equate_len(batch, 16000, 0.9))
+    train_loader = torch.utils.data.DataLoader(
+        train_set,
+        batch_size=256,
+        collate_fn=make_collate_fn('SPEECHCOMMANDS', 16000, 0.9),
+        shuffle=False
+    )
+    
+    print(next(iter(train_loader)))
+    # print(train_set[39], train_set[39][0].shape)
+    # print(train_set[40], train_set[40][0].shape)
+    # batch = [train_set[i] for i in range(40)]
+    # print(batch)
+    # print(make_batch_equate_len(16000, 0.9)(batch))
     

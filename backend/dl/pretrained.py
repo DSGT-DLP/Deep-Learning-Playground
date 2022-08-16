@@ -13,6 +13,7 @@ from fastai.vision.learner import has_pool_type
 from fastai.vision.learner import _update_first_layer
 from fastai.vision.all import *
 from fastai.callback.progress import CSVLogger
+
 from wwf.vision.timm import *
 from torchvision.models import *
 from torchvision import models
@@ -22,6 +23,20 @@ from backend.common.dataset import dataset_from_zipped
 from backend.common.constants import SAVED_MODEL, DEEP_LEARNING_RESULT_CSV_PATH
 import pandas as pd
 
+class PretrainCallback(Callback):
+    "Log the results displayed in `learn.path/fname`"
+    order=60
+    def __init__(self, n_epochs, send_progress):
+        self.n_epochs, self.send_progress = n_epochs, send_progress
+
+
+    def after_epoch(self):
+        self.send_progress((self.learn.epoch+1)/self.n_epochs*100)
+        print("percent done: ", (self.learn.epoch + 1) / self.n_epochs*100)
+
+
+
+
 
 def train(
     train_dataset,
@@ -30,6 +45,7 @@ def train(
     batch_size,
     loss_func,
     n_epochs,
+    send_progress,
     default=None,
     shuffle=False,
     optimizer_name="Adam",
@@ -117,7 +133,7 @@ def train(
     # )
 
     learner.fit(
-        n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv"))]
+        n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv")), PretrainCallback(n_epochs, send_progress)]
     )
     preds, target = learner.get_preds()
 

@@ -414,6 +414,7 @@ def train_pretrained(request_data):
             batch_size,
             criterion,
             epochs,
+            send_progress,
             optimizer_name=optimizer_name,
             shuffle=shuffle,
             chan_in=train_dataset[0][0].shape[0],

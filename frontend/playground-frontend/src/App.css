@@ -289,6 +289,37 @@ textarea {
   resize: none;
 }
 
+.layer-info-button {
+  border: none;
+  background: none;
+  padding-left: 0;
+  cursor: pointer;
+  font-size: medium;
+  font-weight: 550;
+  text-decoration: underline;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.layer-outer-button {
+  border: none;
+  background: none;
+  padding-left: 0;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.wiki-content {
+  font-size: medium;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+/* .layer-info-button:hover {
+  
+} */
+
 textarea#code-snippet-text {
   width: 100%;
 }

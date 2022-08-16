@@ -208,6 +208,7 @@ export const OPTIMIZER_NAMES = [
 ];
 
 export const DEFAULT_DATASETS = [
+  { label: "NONE", value: null },
   { label: "IRIS", value: "IRIS" },
   { label: "CALIFORNIAHOUSING", value: "CALIFORNIAHOUSING" },
   { label: "DIABETES", value: "DIABETES" },

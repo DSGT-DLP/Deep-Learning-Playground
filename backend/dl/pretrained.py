@@ -74,9 +74,10 @@ def train(
     for i in dls:
         for j in i:
             img_shape = j[0][0].shape
+            print("img_shape ", img_shape)
             break
         break
-
+    print("img_shape ", img_shape)
     loss_func = LossFunctions.get_loss_obj(LossFunctions[loss_func])
     train_accuaracy = train_acc
     if is_pytorch(model_name.lower()):

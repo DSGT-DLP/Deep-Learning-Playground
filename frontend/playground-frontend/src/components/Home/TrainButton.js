@@ -105,7 +105,7 @@ const TrainButton = (props) => {
 
     const paramList = { ...props, trainTransforms, testTransforms, user_arch };
 
-    if (choice === "image" && !props.usingDefaultDataset) {
+    if ((choice === "image" || choice === "pretrained") && !props.usingDefaultDataset) {
       document.getElementById("fileUploadInput")?.click();
       //TODO: Some way to know that the upload is finished
     }

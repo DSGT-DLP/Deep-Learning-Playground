@@ -233,23 +233,18 @@ def testing(request_data):
         epochs = request_data["epochs"]
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
-        print(train_transform)
-        print(test_transform)
         zip_file = ""
         # upload()
-        print(user_arch)
         print("sdsakdnasjfk", request_data["user_arch"])
         model = DLModel(parse_deep_user_architecture(user_arch))
-
         train_transform = parse_deep_user_architecture(train_transform)
         test_transform = parse_deep_user_architecture(test_transform)
-        print(train_transform)
-        print(test_transform)
         if not default:
             for x in os.listdir(IMAGE_UPLOAD_FOLDER):
                 if x != ".gitkeep":
                     zip_file = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
                     break
+            print("zip file ", zip_file)
             train_loader, test_loader = loader_from_zipped(
                 zip_file, batch_size, shuffle, train_transform, test_transform
             )
@@ -261,10 +256,6 @@ def testing(request_data):
         print("got data loaders")
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        if(torch.cuda.is_available()):
-            print("cuda")
-        else:
-            print("cpu")
         model.to(
             device
         )  # model should go to GPU before initializing optimizer  https://stackoverflow.com/questions/66091226/runtimeerror-expected-all-tensors-to-be-on-the-same-device-but-found-at-least/66096687#66096687
@@ -399,6 +390,7 @@ def train_pretrained(request_data):
                 if x != ".gitkeep":
                     zip_file = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
                     break
+            print("zip file ", zip_file)
             train_dataset, test_dataset = dataset_from_zipped(
                 zip_file, test_transform=test_transform, train_transform=train_transform
             )

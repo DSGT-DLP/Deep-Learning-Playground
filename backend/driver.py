@@ -390,7 +390,7 @@ def train_pretrained(request_data):
                 if x != ".gitkeep":
                     zip_file = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
                     break
-            print("zip file ", zip_file)
+            zip_file = "../tests/double_zipped.zip"
             train_dataset, test_dataset = dataset_from_zipped(
                 zip_file, test_transform=test_transform, train_transform=train_transform
             )

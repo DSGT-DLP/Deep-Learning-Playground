@@ -155,7 +155,7 @@ def train(
 def train_acc(batch_preds, batch_targ):
     y_pred, y_true = torch.argmax(batch_preds, axis=1), batch_targ.long().squeeze()
     train_correct = (y_pred == y_true).type(torch.float).sum().item()
-    return train_correct
+    return train_correct/y_true.shape[0]
 
 
 def get_all():

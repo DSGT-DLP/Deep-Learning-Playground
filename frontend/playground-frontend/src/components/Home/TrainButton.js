@@ -110,7 +110,10 @@ const TrainButton = (props) => {
 
     const paramList = { ...props, trainTransforms, testTransforms, user_arch };
 
-    if ((choice === "image" || choice === "pretrained") && !props.usingDefaultDataset) {
+    if (
+      (choice === "image" || choice === "pretrained") &&
+      !props.usingDefaultDataset
+    ) {
       document.getElementById("fileUploadInput")?.click();
     } else {
       train_and_output(choice, functionMap[choice][1](paramList));

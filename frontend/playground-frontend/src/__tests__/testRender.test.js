@@ -5,6 +5,7 @@ import App from '../App';
 window.URL.createObjectURL = function() {};
 
 it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
+    window.URL.createObjectURL = function() {};
+    const div = document.createElement('div');
+    ReactDOM.render(<App />, div);
 });

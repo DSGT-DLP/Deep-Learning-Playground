@@ -110,7 +110,9 @@ const Home = () => {
     },
     {
       queryText: "Criterion",
-      options: CRITERIONS,
+      options: CRITERIONS.filter((crit) =>
+        crit.problem_type.includes(problemType.value)
+      ),
       onChange: setCriterion,
       defaultValue: criterion,
     },

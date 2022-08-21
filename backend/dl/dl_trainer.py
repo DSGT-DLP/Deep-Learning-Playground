@@ -56,10 +56,10 @@ def train_deep_classification_model(
         labels_last_epoch = []
         y_pred_last_epoch = []
 
-        num_train_epochs = len(train_loader)
-        epoch_train_size = train_loader.batch_size * num_train_epochs  # total number of data points used for training per epoch
-        num_test_epochs = len(test_loader)
-        epoch_test_size = test_loader.batch_size * num_test_epochs  # total number of data points used for testing per epoch
+        num_train_batches = len(train_loader)
+        epoch_train_size = train_loader.batch_size * num_train_batches  # total number of data points used for training per epoch
+        num_test_batches = len(test_loader)
+        epoch_test_size = test_loader.batch_size * num_test_batches  # total number of data points used for testing per epoch
 
         for epoch in range(epochs):
             train_correct = 0  # number of correct predictions in training set in current epoch
@@ -81,7 +81,7 @@ def train_deep_classification_model(
 
             epoch_time.append(time.time() - start_time)
             mean_train_acc = train_correct / epoch_train_size
-            mean_train_loss = epoch_batch_loss / num_train_epochs
+            mean_train_loss = epoch_batch_loss / num_train_batches
             train_acc.append(mean_train_acc)
             train_loss.append(mean_train_loss)
 
@@ -101,7 +101,7 @@ def train_deep_classification_model(
                 loss = compute_loss(criterion, test_pred, labels)
                 epoch_batch_loss += float(loss.detach())
             mean_test_acc = test_correct / epoch_test_size
-            mean_test_loss = epoch_batch_loss / num_test_epochs
+            mean_test_loss = epoch_batch_loss / num_test_batches
             val_acc.append(mean_test_acc)
             test_loss.append(mean_test_loss)
 
@@ -157,9 +157,9 @@ def train_deep_regression_model(
         train_loss = []  # accumulate training loss over each epoch
         test_loss = []  # accumulate testing loss over each epoch
         epoch_time = []  # how much time it takes for each epoch
-        num_train_epochs = len(train_loader)
-        num_test_epochs = len(test_loader)
-        print(num_train_epochs, num_test_epochs)
+        num_train_batches = len(train_loader)
+        num_test_batches = len(test_loader)
+        print(num_train_batches, num_test_batches)
         for epoch in range(epochs):
             start_time = time.time()
             model.train(True)  # set model to train mode
@@ -174,7 +174,7 @@ def train_deep_regression_model(
                 optimizer.step()  # adjust optimizer weights
                 epoch_batch_loss += float(loss.detach())
             epoch_time.append(time.time() - start_time)
-            train_loss.append(epoch_batch_loss / num_train_epochs)
+            train_loss.append(epoch_batch_loss / num_train_batches)
 
             model.train(False)  # test the model on test set
             epoch_batch_loss = 0
@@ -183,7 +183,7 @@ def train_deep_regression_model(
                 test_pred = model(input)
                 loss = compute_loss(criterion, test_pred, labels)
                 epoch_batch_loss += float(loss.detach())
-            test_loss.append(epoch_batch_loss / num_test_epochs)
+            test_loss.append(epoch_batch_loss / num_test_batches)
             send_progress((epoch + 1) / epochs * 100)
             print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
         result_table = pd.DataFrame(
@@ -263,10 +263,10 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
         labels_last_epoch = []
         y_pred_last_epoch = []
 
-        num_train_epochs = len(train_loader)
-        epoch_train_size = train_loader.batch_size * num_train_epochs  # total number of data points used for training per epoch
-        num_test_epochs = len(test_loader)
-        epoch_test_size = test_loader.batch_size * num_test_epochs  # total number of data points used for testing per epoch
+        num_train_batches = len(train_loader)
+        epoch_train_size = train_loader.batch_size * num_train_batches  # total number of data points used for training per epoch
+        num_test_batches = len(test_loader)
+        epoch_test_size = test_loader.batch_size * num_test_batches  # total number of data points used for testing per epoch
         train_weights_count = Counter()
         test_weights_count = Counter()
 
@@ -296,7 +296,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                 train_correct += (y_pred == y_true).type(torch.float).sum().item()
                 epoch_batch_loss += float(loss.detach())           
             epoch_time.append(time.time() - start_time)
-            mean_train_loss = epoch_batch_loss / num_train_epochs
+            mean_train_loss = epoch_batch_loss / num_train_batches
             mean_train_acc = train_correct / epoch_train_size
             train_loss.append(mean_train_loss)
 
@@ -323,7 +323,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                 test_correct += (y_pred == y_true).type(torch.float).sum().item()
                 epoch_batch_loss += float(loss.detach())
 
-            mean_test_loss = epoch_batch_loss / num_test_epochs
+            mean_test_loss = epoch_batch_loss / num_test_batches
             mean_test_acc = test_correct / epoch_test_size
             test_loss.append(mean_test_loss)
             val_acc.append(mean_test_acc)

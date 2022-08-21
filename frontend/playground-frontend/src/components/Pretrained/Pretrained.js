@@ -20,6 +20,7 @@ import ChoiceTab from "../Home/ChoiceTab";
 import EmailInput from "../Home/EmailInput";
 import Results from "../Home/Results";
 import LargeFileUpload from "../general/LargeFileUpload";
+
 const Pretrained = () => {
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [modelName, setModelName] = useState();
@@ -142,6 +143,7 @@ const Pretrained = () => {
         dlpBackendResponse={dlpBackendResponse}
         problemType={PROBLEM_TYPES[0]}
       />
+      <TitleText text="Code Snippet" />
     </div>
   );
 };

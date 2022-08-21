@@ -13,6 +13,7 @@ from backend.common.constants import (
     TEST,
     VAL_TEST_ACC,
     SAVED_MODEL,
+    ONNX_MODEL
 )
 import torch  # pytorch
 import torch.nn as nn
@@ -293,7 +294,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                 optimizer.step()
                 y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
                 train_correct += (y_pred == y_true).type(torch.float).sum().item()
-                epoch_batch_loss += float(loss.detach())                
+                epoch_batch_loss += float(loss.detach())           
             epoch_time.append(time.time() - start_time)
             mean_train_loss = epoch_batch_loss / num_train_epochs
             mean_train_acc = train_correct / epoch_train_size
@@ -357,6 +358,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
 
         auxiliary_outputs["AUC_ROC_curve_data"] = AUC_ROC_curve_data
         torch.save(model, SAVED_MODEL) # saving model into a pt file
+        torch.onnx.export(model, train_loader, ONNX_MODEL)
 
         return auxiliary_outputs
 

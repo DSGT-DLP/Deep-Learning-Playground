@@ -42,7 +42,9 @@ const Home = () => {
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
   const [criterion, setCriterion] = useState(CRITERIONS[3]);
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
-  const [usingDefaultDataset, setUsingDefaultDataset] = useState();
+  const [usingDefaultDataset, setUsingDefaultDataset] = useState(
+    DEFAULT_DATASETS[0]
+  );
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [epochs, setEpochs] = useState(5);
   const [testSize, setTestSize] = useState(0.2);
@@ -109,7 +111,9 @@ const Home = () => {
     },
     {
       queryText: "Criterion",
-      options: CRITERIONS,
+      options: CRITERIONS.filter((crit) =>
+        crit.problem_type.includes(problemType.value)
+      ),
       onChange: setCriterion,
       defaultValue: criterion,
     },

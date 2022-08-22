@@ -1,7 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { FaCopy } from "react-icons/fa";
-import { toast } from "react-toastify";
 
 const CodeSnippet = (props) => {
   const { backendResponse, layers } = props;
@@ -13,25 +11,13 @@ const CodeSnippet = (props) => {
       )
     );
   }
-
   return (
-    <div id="code-snippet-div">
-      <textarea
-        id="code-snippet-text"
-        readOnly
-        rows="10"
-        value={codeSnippetFormat(layers)}
-      />
-      <button
-        id="code-snippet-clipboard"
-        onClick={() => {
-          navigator.clipboard.writeText(codeSnippetFormat(layers));
-          toast.info("Code snippet copied");
-        }}
-      >
-        <FaCopy />
-      </button>
-    </div>
+    <textarea
+      readOnly
+      rows="10"
+      style={{ width: "100%" }}
+      value={codeSnippetFormat(layers)}
+    />
   );
 };
 

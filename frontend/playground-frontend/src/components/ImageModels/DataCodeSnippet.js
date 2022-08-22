@@ -35,8 +35,8 @@ function codeSnippetFormat(props) {
       `test_transform = ${testTransform}\n` +
       `train_set = datasets.${props.defaultData.value}(root='/path/to/download', train=True, download=True, transform=train_transform)\n` +
       `test_set = datasets.${props.defaultData.value}(root='/path/to/download', train=False, download=True, transform=test_transform)\n` +
-      `train_loader = DataLoader(train_set, batch_size=${props.batchSize}, shuffle=${props.shuffle.label}, drop_last=True)\n` +
-      `test_loader = DataLoader(test_set, batch_size=${props.batchSize}, shuffle=${props.shuffle.label}, drop_last=True)\n`;
+      `train_loader = DataLoader(train_set, batch_size=${props.batchSize}, shuffle=${props.shuffle.label})\n` +
+      `test_loader = DataLoader(test_set, batch_size=${props.batchSize}, shuffle=${props.shuffle.label})\n`;
   } else {
     codeSnippet =
       "import torchvision.datasets as datasets\n" +
@@ -47,8 +47,8 @@ function codeSnippetFormat(props) {
       "# unzip the folder and change the path to the unzipped individual folders in root\n" +
       "train_set= datasets.ImageFolder(root='/path/to/train/folder', transform=train_transform)\n" +
       "test_set = datasets.ImageFolder(root='/path/to/test/folder', transform=test_transform)\n" +
-      `train_loader = DataLoader(train_set, batch_size=${props.batchSize}, shuffle=${props.shuffle.label}, drop_last=True)\n` +
-      `test_loader = DataLoader(test_set, batch_size=${props.batchSize}, shuffle=${props.shuffle.label}, drop_last=True)`;
+      `train_loader = DataLoader(train_set, batch_size=${props.batchSize}, shuffle=${props.shuffle.label})\n` +
+      `test_loader = DataLoader(test_set, batch_size=${props.batchSize}, shuffle=${props.shuffle.label})`;
   }
 
   return codeSnippet;

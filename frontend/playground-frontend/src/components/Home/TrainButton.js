@@ -24,8 +24,6 @@ const TrainButton = (props) => {
   const [pendingResponse, setPendingResponse] = useState(false);
   const [progress, setProgress] = useState(null);
   const [result, setResult] = useState(null);
-  const [uploaded, setUploaded] = useState(false);
-  const [trainParams, setTrainParams] = useState(null);
 
   useEffect(() => {
     socket.on("trainingProgress", (progressData) => {
@@ -34,9 +32,6 @@ const TrainButton = (props) => {
     });
     socket.on("trainingResult", (resultData) => {
       setResult(resultData);
-    });
-    socket.on("uploadComplete", () => {
-      setUploaded(true);
     });
   }, [socket]);
 
@@ -111,23 +106,12 @@ const TrainButton = (props) => {
     const paramList = { ...props, trainTransforms, testTransforms, user_arch };
 
     if (choice === "image" && !props.usingDefaultDataset) {
-      setTrainParams({ choice, paramList });
       document.getElementById("fileUploadInput")?.click();
-    } else {
-      train_and_output(choice, functionMap[choice][1](paramList));
+      //TODO: Some way to know that the upload is finished
     }
-  };
 
-  useEffect(() => {
-    if (uploaded && trainParams) {
-      train_and_output(
-        trainParams.choice,
-        functionMap[trainParams.choice][1](trainParams.paramList)
-      );
-      setUploaded(false);
-      setTrainParams(null);
-    }
-  }, [uploaded, trainParams]);
+    train_and_output(choice, functionMap[choice][1](paramList));
+  };
 
   useEffect(() => {
     if (result) {
@@ -183,7 +167,7 @@ TrainButton.propTypes = {
   choice: PropTypes.string,
   style: PropTypes.object,
   problemType: PropTypes.string,
-  usingDefaultDataset: PropTypes.string,
+  usingDefaultDataset: PropTypes.bool,
 };
 
 export default TrainButton;

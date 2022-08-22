@@ -458,33 +458,26 @@ export const POSSIBLE_TRANSFORMS = [
   },
 ];
 
-const CLASSIFICATION = "classification";
-const REGRESSION = "regression";
-
 export const CRITERIONS = [
   {
     label: "L1LOSS",
     value: "L1LOSS",
     object_name: "nn.L1Loss()",
-    problem_type: [REGRESSION],
   },
   {
     label: "MSELOSS",
     value: "MSELOSS",
     object_name: "nn.MSELoss()",
-    problem_type: [REGRESSION],
   },
   {
     label: "BCELOSS",
     value: "BCELOSS",
     object_name: "nn.BCELoss()",
-    problem_type: [CLASSIFICATION],
   },
   {
     label: "CELOSS",
     value: "CELOSS",
     object_name: "nn.CrossEntropyLoss(reduction='mean')",
-    problem_type: [CLASSIFICATION],
   },
 ];
 
@@ -502,8 +495,8 @@ export const IMAGE_CLASSIFICATION_CRITERION = [
 ];
 
 export const PROBLEM_TYPES = [
-  { label: "Classification", value: CLASSIFICATION },
-  { label: "Regression", value: REGRESSION },
+  { label: "Classification", value: "classification" },
+  { label: "Regression", value: "regression" },
 ];
 
 export const BOOL_OPTIONS = [
@@ -516,7 +509,6 @@ export const OPTIMIZER_NAMES = [
 ];
 
 export const DEFAULT_DATASETS = [
-  { label: "NONE", value: null },
   { label: "IRIS", value: "IRIS" },
   { label: "CALIFORNIAHOUSING", value: "CALIFORNIAHOUSING" },
   { label: "DIABETES", value: "DIABETES" },

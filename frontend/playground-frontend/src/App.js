@@ -12,6 +12,7 @@ import {
   Feedback,
   Navbar,
   ImageModels,
+  Pretrained,
   Footer,
   UserSettings,
 } from "./components";
@@ -47,6 +48,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/img-models" element={<ImageModels />} />
+          <Route path="/pretrained" element={<Pretrained />} />
           <Route path="/About" element={<About />} />
           <Route path="/Wiki" element={<Wiki />} />
           <Route

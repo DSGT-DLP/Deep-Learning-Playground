@@ -28,17 +28,6 @@ const ChoiceTab = () => {
           Image Models
         </Link>
       </button>
-
-      <button
-        style={{
-          ...styles.button,
-          backgroundColor: getBackground("/pretrained"),
-        }}
-      >
-        <Link to="/pretrained" style={styles.linkelEment}>
-          Pretrained
-        </Link>
-      </button>
     </div>
   );
 };

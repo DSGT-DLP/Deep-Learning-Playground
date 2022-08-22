@@ -40,7 +40,7 @@ StyledFirebaseAuth.propTypes = {
   uiConfig: PropTypes.any.isRequired,
   firebaseAuth: PropTypes.any.isRequired,
   className: PropTypes.string.isRequired,
-  uiCallback: PropTypes.object.isRequired,
+  uiCallback: PropTypes.object,
 };
 
 export default StyledFirebaseAuth;

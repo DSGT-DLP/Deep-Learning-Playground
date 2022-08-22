@@ -40,7 +40,9 @@ const Home = () => {
   const [targetCol, setTargetCol] = useState();
   const [features, setFeatures] = useState([]);
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
-  const [criterion, setCriterion] = useState(problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0]);
+  const [criterion, setCriterion] = useState(
+    problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0]
+  );
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
   const [usingDefaultDataset, setUsingDefaultDataset] = useState(
     DEFAULT_DATASETS[0]
@@ -160,7 +162,9 @@ const Home = () => {
   );
 
   useEffect(() => {
-    setCriterion(problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0]);
+    setCriterion(
+      problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0]
+    );
     setInputKey((e) => e + 1);
   }, [problemType]);
 

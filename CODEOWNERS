@@ -10,10 +10,10 @@
 # 
 
 # For files in the /backend directory, @karkir0003 will be requested in a pull request
-/backend @karkir0003 @samarth52
+/backend @karkir0003
 /backend/common/email_notifier.py @avayedawadi
 /backend/common/dataset.py @vidushiMaheshwari
-/backend/driver.py @farisdurrani @andrewpeng02 @avayedawadi
+/backend/driver.py @farisdurrani @andrewpeng02 @avayedawadi @samarth52
 /backend/dl/pretrained.py @vidushiMaheshwari
 /backend/aws_helpers/dynamo_db_utils/base_db.py @samarth52
 /backend/aws_helpers/dynamo_db_utils/status_db.py @karkir0003 @samarth52
@@ -37,3 +37,4 @@
 /frontend/playground-frontend/components/NavBar @anikethswain
 /frontend/playground-frontend/components/helper_functions/TalkWithBackend @farisdurrani @samarth52
 /frontend/playground-frontend/components/Home/TrainButton @farisdurrani @samarth52
+/frontend/playground-frontend/components/ImageModels @vidushiMaheshwari

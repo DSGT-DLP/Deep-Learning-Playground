@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { COLORS, DEFAULT_ADDED_LAYERS, LAYOUT } from "./constants";
 import {
   BOOL_OPTIONS,
@@ -32,7 +32,7 @@ const Home = () => {
   const [csvDataInput, setCSVDataInput] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
-
+  const [inputKey, setInputKey] = useState(0);
   // input responses
   const [fileURL, setFileURL] = useState("");
   const [email, setEmail] = useState("");
@@ -40,7 +40,7 @@ const Home = () => {
   const [targetCol, setTargetCol] = useState();
   const [features, setFeatures] = useState([]);
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
-  const [criterion, setCriterion] = useState(CRITERIONS[3]);
+  const [criterion, setCriterion] = useState(problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0]);
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
   const [usingDefaultDataset, setUsingDefaultDataset] = useState(
     DEFAULT_DATASETS[0]
@@ -159,6 +159,11 @@ const Home = () => {
     [dlpBackendResponse, problemType]
   );
 
+  useEffect(() => {
+    setCriterion(problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0]);
+    setInputKey((e) => e + 1);
+  }, [problemType]);
+
   return (
     <div style={{ padding: 20, marginBottom: 50 }}>
       <DndProvider backend={HTML5Backend}>
@@ -228,7 +233,7 @@ const Home = () => {
       <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
         {input_queries.map((e) => (
-          <Input {...e} key={e.queryText} />
+          <Input {...e} key={e.queryText + inputKey} />
         ))}
       </BackgroundLayout>
 

@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import Home from "./Home";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import LearnMod from "./components/LearnMod/LearnMod";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/About" element={<About />} />
         <Route path="/Wiki" element={<Wiki />} />
         <Route path="/feedback" element={<Feedback />} />
+        <Route path="/learningModules" element= {<LearnMod/>} />
       </Routes>
       <ToastContainer position="top-center" />
       <Footer />

@@ -63,10 +63,10 @@ def get_img_default_dataset_loaders(
         f'torchvision.datasets.{datasetname}(root="./backend/image_data_uploads", train=False, download=True, transform=test_transform)'
     )
     train_loader = torch.utils.data.DataLoader(
-        train_set, batch_size=batch_size, shuffle=shuffle
+        train_set, batch_size=batch_size, shuffle=shuffle, drop_last=True
     )
     test_loader = torch.utils.data.DataLoader(
-        test_set, batch_size=batch_size, shuffle=shuffle
+        test_set, batch_size=batch_size, shuffle=shuffle, drop_last=True
     )
     return train_loader, test_loader
 

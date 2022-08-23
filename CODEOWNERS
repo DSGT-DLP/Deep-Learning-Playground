@@ -2,15 +2,38 @@
 # the repo. Unless a later match takes precedence,
 # the contributors all will be requested for
 # review when someone opens a pull request.
+
 *       @karkir0003 @farisdurrani @LucasZhang58
 
-#For files in the /backend directory, @karkir0003 will be requested in a pull request
-/backend @karkir0003
+# 
+# Backend
+# 
 
-#For files in the /frontend directory, @farisdurrani will be requested in such a pull rewuest
-/frontend @farisdurrani
+# For files in the /backend directory, @karkir0003 will be requested in a pull request
+/backend @karkir0003 @samarth52
+/backend/common/email_notifier.py @avayedawadi
+/backend/common/dataset.py @vidushiMaheshwari
+/backend/driver.py @farisdurrani @andrewpeng02 @avayedawadi
+/backend/dl/pretrained.py @vidushiMaheshwari
+/backend/aws_helpers/dynamo_db_utils/base_db.py @samarth52
+/backend/aws_helpers/dynamo_db_utils/status_db.py @karkir0003 @samarth52
 
-#For unit tests, @LucasZhang58 and @karkir0003 will be requested in such a pull request
+
+# For unit tests, @LucasZhang58 and @karkir0003 will be requested in such a pull request
 /tests/test_data_processing.py @LucasZhang58 @karkir0003
 /tests/test_zip_loader.py @vidushiMaheshwari
+/tests/test_pretrained_train.py @andrewpeng02
 /tests/expected/unzipped/double_zipped @vidushiMaheshwari
+
+#
+# Frontend
+#
+
+# For files in the /frontend directory, @farisdurrani will be requested in such a pull rewuest
+/frontend @farisdurrani
+
+# For the About page and Navbar, contact @anikethswain
+/frontend/playground-frontend/components/About @anikethswain
+/frontend/playground-frontend/components/NavBar @anikethswain
+/frontend/playground-frontend/components/helper_functions/TalkWithBackend @farisdurrani @samarth52
+/frontend/playground-frontend/components/Home/TrainButton @farisdurrani @samarth52

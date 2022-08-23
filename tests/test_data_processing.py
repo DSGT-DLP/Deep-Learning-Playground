@@ -3,8 +3,8 @@
 from urllib.error import URLError
 import pytest
 import csv
-from backend.constants import *
-from backend.dataset import *
+from backend.common.constants import *
+from backend.common.dataset import *
 import filecmp
 
 
@@ -29,7 +29,6 @@ def test_dataset_url_reading(url, path_to_file):
             reader1 = csv.reader(f1)
             reader2 = csv.reader(f2)
             assert [line for line in reader1][:-1] == [line for line in reader2]
-
 
 
 @pytest.mark.parametrize(

@@ -2,11 +2,19 @@ export const COLORS = {
   input: "#E2E2E2",
   layer: "#CD7BFF",
   addLayer: "#F2ECFF",
+  disabled: "#6c757d",
   background: "#F6F6FF",
-  dark_blue: "#003058",
-  gold: "#B3A36A",
+  dark_blue: "#003058", // primary
+  gold: "#B3A36A", // secondary
+  visited: "#808080",
 };
 
+export const URLs = {
+  linkedin: "https://www.linkedin.com/company/dsgt/",
+  youtube: "https://www.youtube.com/channel/UC1DGL6Tb9ffwC-aHChadxMw",
+  instagram: "https://www.instagram.com/datasciencegt/",
+  github: "https://github.com/karkir0003/Deep-Learning-Playground",
+};
 export const LAYOUT = {
   row: {
     display: "flex",
@@ -28,8 +36,45 @@ export const GENERAL_STYLES = {
     fontFamily: "Arial, Helvetica, sans-serif",
     fontWeight: "bold",
   },
+  error_text: {
+    color: "red",
+    fontSize: "0.8rem",
+    marginLeft: 3,
+    marginTop: 5,
+  },
 };
 
 export const ITEM_TYPES = {
   NEW_LAYER: "new_layer",
 };
+
+export const DEFAULT_ADDED_LAYERS = [
+  {
+    display_name: "Linear",
+    object_name: "nn.Linear",
+    parameters: {
+      inputSize: { index: 0, parameter_name: "Input size", value: 4 },
+      outputSize: { index: 1, parameter_name: "Output size", value: 10 },
+    },
+  },
+  {
+    display_name: "ReLU",
+    object_name: "nn.ReLU",
+    parameters: {},
+  },
+  {
+    display_name: "Linear",
+    object_name: "nn.Linear",
+    parameters: {
+      inputSize: { index: 0, parameter_name: "Input size", value: 10 },
+      outputSize: { index: 1, parameter_name: "Output size", value: 3 },
+    },
+  },
+  {
+    display_name: "Softmax",
+    object_name: "nn.Softmax",
+    parameters: {
+      inputSize: { index: 0, parameter_name: "dim", value: -1 },
+    },
+  },
+];

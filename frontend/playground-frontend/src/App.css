@@ -1,0 +1,488 @@
+@charset "UTF-8";
+/* 
+Theme Name:   DSGT Deep Learning Playground
+Text Domain:  datasciencegt-dlp
+Version:      1.0
+License:      GNU General Public License v3 or later
+License URI:  https://www.gnu.org/licenses/gpl-3.0.en.html
+Description:  A deep learning playground to provoke appease and calamity
+Author:       See CODEOWNDERS
+Author URI:   https://datasciencegt.org/
+*/
+
+/* -------------------------------------------------------------------------- */
+/*	1. Root
+/* -------------------------------------------------------------------------- */
+
+:root {
+  --primary: #003058;
+  --secondary: #b3a36a;
+  --layer: #cd7bff;
+  --whitehover: #f7f7f7;
+  --footer-dark-blue: #00233f;
+  --dark-grey: #d3d3d3;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. General HTML
+/* -------------------------------------------------------------------------- */
+
+html,
+body,
+.wrapper,
+#root {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+  position: relative;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: black;
+  font-family: Arial, sans-serif, Helvetica;
+}
+img {
+  display: block;
+  height: auto;
+}
+input {
+  border-width: 0.5px;
+  border-color: var(--layer);
+  border-radius: 10px;
+  padding: 5px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. General DLP Styles
+/* -------------------------------------------------------------------------- */
+
+.sections {
+  margin: auto;
+  background-color: #f6f6ff;
+  width: 50%;
+  padding: 1rem;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. Header
+/* -------------------------------------------------------------------------- */
+
+#header-section {
+  box-sizing: content-box;
+  position: static;
+  padding: 30px;
+  background-color: var(--secondary);
+  text-align: center;
+  color: white;
+}
+#nav-bar .nav #title-name > a {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+#nav-bar html {
+  /* box sizing border box specifies no padding, width = width etc */
+  box-sizing: border-box;
+}
+
+#nav-bar .navElement {
+  display: block;
+  padding: 20px;
+  color: inherit;
+  float: right;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#nav-bar .loginButton {
+  display: block;
+  color: inherit;
+  font-size: 25px;
+  background-color: transparent;
+  cursor: pointer;
+  border: 0;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 0;
+  margin: none;
+  height: 28px;
+}
+
+#accountButtonWrapper {
+  position: relative;
+}
+
+#accountButtons {
+  position: absolute;
+  background-color: var(--primary);
+  margin-top: 5px;
+  padding: 15px;
+  width: 125px;
+  margin-left: -20px;
+}
+
+.accountButton {
+  display: block;
+  color: inherit;
+  font-size: large;
+  background-color: transparent;
+  cursor: pointer;
+  border: 0;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-top: 15px;
+}
+
+#nav-bar .navElement:hover {
+  background-color: var(--whitehover);
+}
+
+#nav-bar .navElement:hover > a,
+#nav-bar .navElement:hover > button, #nav-bar .navElement:hover > div > button {
+  color: var(--primary);
+}
+
+@media screen and (max-width: 600px) {
+  #nav-bar li:not(:first-child) {
+    display: none;
+  }
+}
+
+#nav-bar .nav {
+  padding-inline: 10px;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  box-sizing: inherit;
+  width: fit-content;
+  height: inherit;
+}
+
+#nav-bar #title-name {
+  float: left;
+  font-size: large;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#nav-bar .nav li {
+  list-style: none;
+  float: left;
+}
+#nav-bar .nav li a {
+  text-decoration: none;
+  color: white;
+  font-size: 25px;
+}
+
+#nav-bar a.image-title {
+  margin-left: 10px;
+  color: white;
+  text-decoration: none;
+  font-size: 25px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#nav-bar a.image-title:hover,
+#nav-bar a.image-title:focus {
+  color: var(--secondary);
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. Navbar
+/* -------------------------------------------------------------------------- */
+
+.header-footer {
+  margin: 0;
+  position: static;
+  background-color: var(--primary);
+  color: white;
+  display: flex;
+  justify-content: center;
+}
+
+#nav-bar {
+  position: sticky;
+  z-index: 10;
+  top: 0vmax;
+  max-width: 100%;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.navElement {
+  display: block;
+  padding: 20px;
+  color: inherit;
+  float: right;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.navElement:hover {
+  background-color: var(--whitehover);
+}
+
+.navElement:hover > a {
+  color: var(--primary);
+}
+
+@media screen and (max-width: 600px) {
+  #nav-bar li:not(:first-child) {
+    display: none;
+  }
+}
+
+.nav {
+  padding-inline: 10px;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  box-sizing: inherit;
+  width: fit-content;
+  height: inherit;
+}
+
+#title-name {
+  float: left;
+  font-size: large;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav li {
+  list-style: none;
+  float: left;
+}
+.nav li a {
+  text-decoration: none;
+  color: white;
+  font-size: 25px;
+}
+
+.image-title {
+  margin-left: 10px;
+  color: white;
+  text-decoration: none;
+  font-size: 25px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  display: flex;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. Home
+/* -------------------------------------------------------------------------- */
+
+input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  padding: 12px 12px;
+  cursor: pointer;
+}
+
+textarea#code-snippet-text {
+  width: 100%;
+}
+
+#code-snippet-div {
+  position: relative;
+}
+
+#code-snippet-clipboard {
+  background-color: #ececec;
+  border-radius: 4px;
+  border-style: none;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  cursor: pointer;
+}
+
+#code-snippet-clipboard:hover,
+#code-snippet-clipboard:focus {
+  background-color: #fcfcfc;
+}
+
+#code-snippet-clipboard:active {
+  background-color: var(--layer);
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. About and Wiki
+/* -------------------------------------------------------------------------- */
+
+.sections {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+.tech-row-content {
+  width: auto;
+  min-height: 3em;
+  padding: 0.5em;
+  margin: 1em;
+  display: inline-block;
+}
+img.tech-img-content {
+  float: left;
+  max-width: 10%;
+  max-height: 100%;
+  cursor: pointer;
+}
+textarea {
+  border-width: 0.5px;
+  border-color: var(--layer);
+  border-radius: 10px;
+  padding: 5px;
+  resize: none;
+}
+
+.layer-info-button {
+  border: none;
+  background: none;
+  padding-left: 0;
+  cursor: pointer;
+  font-size: medium;
+  font-weight: 550;
+  text-decoration: underline;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.layer-outer-button {
+  border: none;
+  background: none;
+  padding-left: 0;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.wiki-content {
+  font-size: medium;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. Login
+/* -------------------------------------------------------------------------- */
+
+#login-popup {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 50;
+  transform: translate(-50%, -50%);
+
+  background-color: white;
+  padding: 10px;
+}
+
+#page-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+#login-popup-h1 {
+  color: var(--primary);
+  font-size: x-large;
+  text-align: center;
+
+  margin-bottom: 40px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. Footer
+/* -------------------------------------------------------------------------- */
+
+#footer {
+  padding: 0.75rem;
+  margin: auto;
+  align-items: center;
+  height: 150px;
+}
+
+#footer-name {
+  background-color: var(--footer-dark-blue);
+  text-align: center;
+  color: var(--dark-grey);
+  font-size: small;
+}
+
+.foot-element {
+  margin-inline: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 50%;
+  height: 50px;
+  aspect-ratio: 1;
+}
+
+.foot-element:hover,
+.foot-element:focus {
+  background-color: var(--secondary);
+}
+
+.foot-element > a {
+  display: flex;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. Loader (Animated)
+/*  Reference: https://www.w3schools.com/howto/howto_css_loader.asp
+/* -------------------------------------------------------------------------- */
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid var(--primary);
+  width: 50px;
+  height: 50px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

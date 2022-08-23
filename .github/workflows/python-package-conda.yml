@@ -1,6 +1,14 @@
 name: Python Package using Conda
-
-on: [push]
+on:
+  push:
+    branches:
+      - "main"
+      - "prod-deploy"
+    paths:
+      - 'backend/**'
+  pull_request:
+    paths:
+      - 'backend/**'
 
 jobs:
   build-linux:

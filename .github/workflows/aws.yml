@@ -27,14 +27,11 @@
 name: Deploy to Amazon ECS
 
 
-# Only trigger, when the build workflow succeeded
+# Only trigger, when we push to prod-deploy
 on:
   push:
     branches:
        - "prod-deploy"
-
-
-
 
 env:
   AWS_REGION: "us-west-2"                    # set this to your preferred AWS region, e.g. us-west-1
@@ -70,7 +67,6 @@ jobs:
         verbose: true
         wait-interval: 10
     
-    
     - name: Checkout
       uses: actions/checkout@v3
 
@@ -105,10 +101,6 @@ jobs:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
         container-name: ${{ env.CONTAINER_NAME }}
         image: ${{ steps.build-image.outputs.image }}
-
-    - name: Describe ECR repos
-      run: |
-        aws ecr describe-repositories
         
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1

@@ -1,3 +1,5 @@
+import React from "react";
+
 export const POSSIBLE_LAYERS = [
   {
     display_name: "Linear",
@@ -6,11 +8,62 @@ export const POSSIBLE_LAYERS = [
       inputSize: { index: 0, parameter_name: "Input size" },
       outputSize: { index: 1, parameter_name: "Output size" },
     },
+    tooltip_info: (
+      <>
+        <p>
+          <strong>
+            Applies a linear transformation to the incoming data:{" "}
+            <i>
+              y = xA
+              <sup>T</sup> + b
+            </i>
+            .
+          </strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>in_features</em> - size of each input sample
+          </li>
+          <li>
+            <em>out_features</em> - size of each output sample
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">
+          More info
+        </a>
+      </>
+    ),
   },
   {
     display_name: "ReLU",
     object_name: "nn.ReLU",
     parameters: {},
+    tooltip_info: (
+      <>
+        <p>
+          <strong>
+            Applies the rectified linear unit function element-wise: ReLU
+            <i>
+              (x) = (x)<sup>+</sup> ={" "}
+            </i>
+            max(0, <i>x)</i>.
+          </strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <p>
+          <i>None</i>
+        </p>
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html">
+          More info
+        </a>
+      </>
+    ),
   },
   {
     display_name: "Softmax",
@@ -18,16 +71,73 @@ export const POSSIBLE_LAYERS = [
     parameters: {
       inputSize: { index: 0, parameter_name: "dim" },
     },
+    tooltip_info: (
+      <>
+        <p>
+          <strong>
+            Applies the Softmax function to an <i>n</i>-dimensional input Tensor
+            rescaling them so that the elements of the <i>n</i>-dimensional
+            output Tensor lie in the range [0,1] and sum to 1.
+          </strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>dim (int)</em> - A dimension along which Softmax will be
+            computed (so every slice along dim will sum to 1).
+          </li>
+        </ul>
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html">
+          More info
+        </a>
+      </>
+    ),
   },
   {
     display_name: "Sigmoid",
     object_name: "nn.Sigmoid",
     parameters: {},
+    tooltip_info: (
+      <>
+        <p>
+          <strong>Applies the Sigmoid function.</strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <p>
+          <i>None</i>
+        </p>
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.Sigmoid.html">
+          More info
+        </a>
+      </>
+    ),
   },
   {
     display_name: "Tanh",
     object_name: "nn.Tanh",
     parameters: {},
+    tooltip_info: (
+      <>
+        <p>
+          <strong>
+            Applies the Hyperbolic Tangent (Tanh) function element-wise.
+          </strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <p>
+          <i>None</i>
+        </p>
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html">
+          More info
+        </a>
+      </>
+    ),
   },
   {
     display_name: "LogSoftmax",
@@ -35,6 +145,28 @@ export const POSSIBLE_LAYERS = [
     parameters: {
       inputSize: { index: 0, parameter_name: "dim" },
     },
+    tooltip_info: (
+      <>
+        <p>
+          <strong>
+            Applies the log(Softmax(<i>x</i>)) function to an <i>n</i>
+            -dimensional input Tensor.
+          </strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>dim (int)</em> - A dimension along which LogSoftmax will be
+            computed.
+          </li>
+        </ul>
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.LogSoftmax.html">
+          More info
+        </a>
+      </>
+    ),
   },
 ];
 
@@ -76,6 +208,7 @@ export const OPTIMIZER_NAMES = [
 ];
 
 export const DEFAULT_DATASETS = [
+  { label: "NONE", value: null },
   { label: "IRIS", value: "IRIS" },
   { label: "CALIFORNIAHOUSING", value: "CALIFORNIAHOUSING" },
   { label: "DIABETES", value: "DIABETES" },

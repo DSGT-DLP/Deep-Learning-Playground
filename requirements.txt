@@ -5,6 +5,7 @@ seaborn
 mypy
 numpy
 pytest
+python=3.9
 pandas
 scikit-learn
 boto3
@@ -12,10 +13,9 @@ pyyaml
 pip
 statsmodels
 torch
-selenium
-sendgrid
 black
 flask
 flask-cors
+pipreqs
 ruamel.yaml
 torchvision

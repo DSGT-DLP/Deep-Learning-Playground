@@ -5,7 +5,6 @@ seaborn
 mypy
 numpy
 pytest
-python=3.9
 pandas
 scikit-learn
 boto3

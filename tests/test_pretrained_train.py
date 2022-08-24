@@ -12,7 +12,7 @@ backend_dir = (
     if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests"
     else "backend"
 )
-double_zipped = os.path.join(train_dir, "zip_files/double_zipped.zip")
+double_zipped = os.path.join(train_dir, "zip_files/better_zipped.zip")
 valid_2 = os.path.join(train_dir, "zip_files/valid_2.zip")
 
 # timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075

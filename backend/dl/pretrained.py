@@ -287,6 +287,6 @@ def is_pytorch(model_name):
 
 if __name__ == "__main__":
     train_dataset, test_dataset = dataset_from_zipped(
-        "./tests/zip_files/double_zipped.zip"
+        "./tests/zip_files/better_zipped.zip"
     )
     train(train_dataset, test_dataset, "resnet18", 2, "CELOSS", 2, n_classes=2)

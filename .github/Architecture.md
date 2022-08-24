@@ -61,13 +61,16 @@
  ┃ ┃ ┃ ┣ 📜Footer.css - CSS file for Footer
  ┃ ┃ ┃ ┗ 📜Footer.js - Primary Footer page component
  ┃ ┃ ┣ 📂general
+ ┃ ┃ ┃ ┣ 📜LargeFileUpload.js - Renders a dropzone component to upload large files
  ┃ ┃ ┃ ┗ 📜TitleText.js - Renders a simple header for a small subsection title
  ┃ ┃ ┣ 📂helper_functions
  ┃ ┃ ┃ ┗ 📜TalkWithBackend.js - Sends ML/DL parameters to the backend and receives the backend
+ ┃ ┃ ┃ ┗ 📜TrainButtonFunctions.js - Stores the logic for validating and creating JSON to send to backend
  ┃ ┃ ┣ 📂Home
  ┃ ┃ ┃ ┣ 📜AddedLayer.js - Renders an added layer container in the topmost row
  ┃ ┃ ┃ ┣ 📜AddNewLayer.js - Renders a fillable layer container for the user to drag LayerChoice components into, where the new layer input will be filled by an AddedLayer component
  ┃ ┃ ┃ ┣ 📜BackgroundLayout.js - Renders a light blue horizontally-stretched row to serve as a background to contain other components in one subsection in the Homepage
+ ┃ ┃ ┃ ┣ 📜ChoiceTab.js - Renders the navigation tab to switch between types of DL training
  ┃ ┃ ┃ ┣ 📜CodeSnippet.js - Renders the code snippet container
  ┃ ┃ ┃ ┣ 📜CSVInputFile.js - Renders the CSV file input contents (if any)
  ┃ ┃ ┃ ┣ 📜CSVInputURL.js - Renders the CSV URL input contents (if any)
@@ -78,8 +81,14 @@
  ┃ ┃ ┃ ┣ 📜RectContainer.js - Renders a stylizable fixed-sized rectangle for the layers
  ┃ ┃ ┃ ┣ 📜Results.js - Renders the results after a train session, or a simple text if no train sessions have been done or a session has failed with the backend's message
  ┃ ┃ ┃ ┗ 📜TrainButton.js - Renders the Train button, clicking which will call the backend with the ML/DL parameters
+ ┃ ┃ ┣ 📂ImageModels
+ ┃ ┃ ┃ ┣ 📜DataCodeSnippet.js - Renders the dataloaders snippet
+ ┃ ┃ ┃ ┣ 📜ImageModels.js - Primary Image Models page component
+ ┃ ┃ ┃ ┗ 📜Transforms.js - Renders a dropdown select and drag and drop component
  ┃ ┃ ┣ 📂Navbar
- ┃ ┃ ┃ ┗ 📜Navbar.js - Primary Navbar page component
+ ┃ ┃ ┃ ┗ 📜Navbar.js
+ ┃ ┃ ┣ 📂Pretrained
+ ┃ ┃ ┃ ┗ 📜Pretrained.js - Primary Pretrained page component
  ┃ ┃ ┣ 📂Wiki
  ┃ ┃ ┃ ┣ 📜softmax_equation.png - Softmax equation screenshot for reference in Wiki
  ┃ ┃ ┃ ┗ 📜Wiki.js - Primary Wiki page component

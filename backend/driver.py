@@ -16,9 +16,32 @@ from sklearn.model_selection import train_test_split
 from backend.common.default_datasets import get_default_dataset
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
-from flask import send_from_directory
+from flask import send_from_directory, request
 from flask_socketio import SocketIO
 import eventlet
+import firebase_admin
+import firebase_admin.auth
+from functools import wraps
+import boto3
+import json
+
+def get_secret():
+    secret_name = "DLP/Firebase/Admin_SDK"
+    region_name = "us-west-2"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    return json.loads(client.get_secret_value(SecretId=secret_name)['SecretString'])
+firebase_secret = get_secret()
+firebase_secret['type'] = 'service_account'
+
+creds = firebase_admin.credentials.Certificate(firebase_secret)
+firebase_admin.initialize_app(creds)
 
 app = Flask(
     __name__,
@@ -28,6 +51,30 @@ app = Flask(
 )
 CORS(app)
 socket = SocketIO(app, cors_allowed_origins="*")
+
+def authenticated(request_data):
+    authorization = request_data['authorization']
+    if not authorization:
+        socket.emit('authenticationResult',
+            {
+                "success": False,
+                "message": "No token provided"
+            }
+        )
+        return False
+    try:
+        user = firebase_admin.auth.verify_id_token(authorization)
+        request.user = user
+    except Exception as e:
+        print(e)
+        socket.emit('authenticationResult',
+            {
+                "success": False,
+                "message": "Invalid token provided"
+            }
+        )
+        return False
+    return True
 
 def ml_drive(
     user_model,
@@ -293,6 +340,12 @@ def send_email_route(request_data):
                 "message": traceback.format_exc(limit=1)
             }
         )
+
+@socket.on('updateUserSettings')
+def update_user_settings(request_data):
+    authenticationError = authenticated(request_data)
+    if not authenticationError:
+        return
 
 def send_progress(progress):
     socket.emit('trainingProgress', progress)

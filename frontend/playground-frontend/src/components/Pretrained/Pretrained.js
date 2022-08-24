@@ -20,6 +20,8 @@ import ChoiceTab from "../Home/ChoiceTab";
 import EmailInput from "../Home/EmailInput";
 import Results from "../Home/Results";
 import LargeFileUpload from "../general/LargeFileUpload";
+import DataCodeSnippet from "../ImageModels/DataCodeSnippet";
+import PretrainedCodeSnippet from "./PretrainedCodeSnippet";
 
 const Pretrained = () => {
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
@@ -144,6 +146,15 @@ const Pretrained = () => {
         problemType={PROBLEM_TYPES[0]}
       />
       <TitleText text="Code Snippet" />
+      <PretrainedCodeSnippet backendResponse={dlpBackendResponse} trainLayers={trainTransforms} />
+      <DataCodeSnippet
+        backendResponse={dlpBackendResponse}
+        trainTransforms={trainTransforms}
+        testTransforms={testTransforms}
+        batchSize={batchSize}
+        shuffle={shuffle}
+        defaultData={usingDefaultDataset}
+      />
     </div>
   );
 };

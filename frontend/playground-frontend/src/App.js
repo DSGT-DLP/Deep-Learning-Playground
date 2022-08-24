@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import {
   About,
@@ -13,15 +13,9 @@ import { ToastContainer } from "react-toastify";
 import Home from "./Home";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import { updateUserSettings } from "./components/helper_functions/TalkWithBackend";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
-  useEffect(() => {
-    setTimeout(() => {
-      updateUserSettings();
-    }, 1000);
-  });
 
   return (
     <div id="app">

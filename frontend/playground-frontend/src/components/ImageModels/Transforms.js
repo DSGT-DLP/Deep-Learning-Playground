@@ -80,7 +80,6 @@ const styles = {
     paddingInline: 5,
   },
   input_prompt: {
-    fontFamily: "Arial, Helvetica, sans-serif",
     fontSize: 15,
     fontWeight: "bold",
   },

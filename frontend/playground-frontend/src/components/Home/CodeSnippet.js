@@ -26,7 +26,7 @@ const CodeSnippet = (props) => {
         id="code-snippet-clipboard"
         onClick={() => {
           navigator.clipboard.writeText(codeSnippetFormat(layers));
-          toast.info("Code snippet copied");
+          toast.info("Code snippet copied", { autoClose: 1000 });
         }}
       >
         <FaCopy />

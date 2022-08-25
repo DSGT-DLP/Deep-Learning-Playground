@@ -1,0 +1,23 @@
+{
+  "name": "deep-learning-playground",
+  "version": "1.0.0",
+  "description": "Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules through a drag and drop interface.",
+  "main": "index.js",
+  "scripts": {
+    "installf": "cd frontend/playground-frontend && npm install",
+    "installb": "conda --version && cd conda && conda env create -f environment.yml & conda env update -f environment.yml",
+    "startf": "cd frontend/playground-frontend && npm start",
+    "startb": "conda activate dlplayground && python -m backend.driver"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karkir0003/Deep-Learning-Playground.git"
+  },
+  "keywords": [],
+  "author": "https://github.com/karkir0003/Deep-Learning-Playground/blob/main/CODEOWNERS",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/karkir0003/Deep-Learning-Playground/issues"
+  },
+  "homepage": "https://github.com/karkir0003/Deep-Learning-Playground#readme"
+}

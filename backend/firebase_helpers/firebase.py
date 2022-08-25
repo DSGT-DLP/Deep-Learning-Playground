@@ -9,8 +9,7 @@ def get_secret():
     secret_name = "DLP/Firebase/Admin_SDK"
 
     # Create a Secrets Manager client
-    session = boto3.session.Session()
-    client = session.client(service_name="secretsmanager", region_name=AWS_REGION)
+    client = boto3.client('secretsmanager', region_name=AWS_REGION)
 
     return json.loads(client.get_secret_value(SecretId=secret_name)["SecretString"])
 

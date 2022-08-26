@@ -62,13 +62,9 @@ const updateUserSettings = async () => {
       authorization: await auth.currentUser.getIdToken(true),
     });
   } else {
-    console.log("Not logged in");
+    toast.error("Not logged in");
   }
 };
-
-socket.on("authenticationResult", (result) => {
-  console.log(result);
-});
 
 socket.on("emailResult", (result) => {
   if (!result.success) {

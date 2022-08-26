@@ -7,9 +7,6 @@ class UserData(BaseData):
     """Data class to hold the attribute values of a record of the user-table DynamoDB table"""
     user_id: str
     email: str
-    result_uri: str
-    onnx_uri: str
-    pt_uri: str
     timestamp: str
     
 @enumclass(DataClass=UserData)

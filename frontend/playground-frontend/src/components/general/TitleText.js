@@ -1,16 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { COLORS, GENERAL_STYLES } from "../../constants";
+import { COLORS } from "../../constants";
 
 const TitleText = (props) => {
   const { text } = props;
-  return <p style={styles.titleText}>{text}</p>;
+  return <h2 style={styles.titleText}>{text}</h2>;
 };
 
 export default TitleText;
 
 const styles = {
-  titleText: { ...GENERAL_STYLES.p, color: COLORS.layer, fontSize: 20 },
+  titleText: { color: COLORS.layer },
 };
 
 TitleText.propTypes = {

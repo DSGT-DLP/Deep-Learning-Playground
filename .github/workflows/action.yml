@@ -8,9 +8,9 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v3        
+    steps:      
     - name: Update frontend
+      uses: actions/checkout@v3
       with:
         ref: frontend
       run: |
@@ -19,6 +19,7 @@ jobs:
         git pull origin main
         git push 
     - name: Update backend-dev
+      uses: actions/checkout@v3
       with:
         ref: backend-dev
       run: |

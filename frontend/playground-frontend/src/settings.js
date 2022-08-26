@@ -522,4 +522,4 @@ export const IMAGE_DEFAULT_DATASETS = [
   { label: "CIFAR10", value: "CIFAR10" },
 ];
 
-export const PRETRAINED_MODELS = [{ label: "RESNET18", value: "RESNET18" }];
+export const PRETRAINED_MODELS = [{ label: "RESNET18", value: "resnet18", module: "pytorch" }];

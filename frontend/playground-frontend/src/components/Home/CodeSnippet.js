@@ -14,18 +14,20 @@ const CodeSnippet = (props) => {
     );
   }
 
+  const value = codeSnippetFormat(layers);
+
   return (
     <div id="code-snippet-div">
       <textarea
         id="code-snippet-text"
         readOnly
         rows="10"
-        value={codeSnippetFormat(layers)}
+        value={value}
       />
       <button
         id="code-snippet-clipboard"
         onClick={() => {
-          navigator.clipboard.writeText(codeSnippetFormat(layers));
+          navigator.clipboard.writeText(value);
           toast.info("Code snippet copied");
         }}
       >

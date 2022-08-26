@@ -11,6 +11,8 @@ jobs:
     steps:
     - name: Update backend-dev
       run: |
+        git fetch --all
+        git branch
         git checkout backend-dev
         git config --global user.name ${{ secrets.DLP_HELPER_USERNAME }}
         git config --global user.email ${{ secrets.DLP_HELPER_EMAIL}}

@@ -10,7 +10,7 @@ from backend.common.constants import (
 
 userDDBUtil = UserDDBUtil(USER_TABLE_NAME, AWS_REGION)
 
-def authenticate(request_data, socket):
+def authenticate(request_data):
     authorization = request_data["authorization"]
     if not authorization:
         return False

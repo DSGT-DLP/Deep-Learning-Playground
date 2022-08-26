@@ -381,7 +381,7 @@ def send_email_route(request_data):
 
 @socket.on("updateUserSettings")
 def update_user_settings(request_data):
-    if not authenticate(request_data, socket):
+    if not authenticate(request_data):
         return
     user = request.user
 

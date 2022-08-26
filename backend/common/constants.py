@@ -39,6 +39,7 @@ UNZIPPED_DIR_NAME = "unzipped_data"
 SENDER = "DSGT Playground <dsgtplayground@gmail.com>"
 AWS_REGION = "us-west-2"
 STATUS_TABLE_NAME = "status-table"
+EXECUTION_TABLE_NAME = "execution-table"
 CHARSET = "utf-8"
 TENSOR_ONLY_TRANSFORMS = [
     transforms.LinearTransformation,

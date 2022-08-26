@@ -121,8 +121,8 @@ class BaseDDBUtil:
         )
         self.table = table
         
-    def create_gsi(self, index_name: str, attribute_name: str, attribute_type: str, read_capacity: int, write_capacity: int,
-                        projection_type: str, nonkey_attributes: List[str] = None) -> Literal['Success']:
+    def create_gsi(self, index_name: str, attribute_name: str, attribute_type: str,
+                        projection_type: str, read_capacity: int = 10, write_capacity: int = 10, nonkey_attributes: List[str] = None) -> Literal['Success']:
         """Function that adds a global secondary index to the associated table"""
         
         if (type(index_name) != str or type(attribute_name) != str or type(attribute_type) != str or type(read_capacity) != int or 

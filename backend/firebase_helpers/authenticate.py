@@ -8,6 +8,8 @@ from backend.common.constants import (
     USER_TABLE_NAME,
 )
 
+userDDBUtil = UserDDBUtil(USER_TABLE_NAME, AWS_REGION)
+
 def authenticate(request_data, socket):
     authorization = request_data["authorization"]
     if not authorization:
@@ -21,7 +23,6 @@ def authenticate(request_data, socket):
 
         # create user row in user_db (user-table) if it doesn't exist
         try:
-            userDDBUtil = UserDDBUtil(USER_TABLE_NAME, AWS_REGION)
             userDDBUtil.create_record(
                 UserData(user["user_id"], user["email"], "", "", "", "")
             )

@@ -12,10 +12,10 @@ jobs:
     - uses: actions/checkout@v3
     - name: Update frontend and backend-dev
       run: |
-        git fetch --all
-        git checkout backend-dev
         git config --global user.name ${{ secrets.DLP_HELPER_USERNAME }}
         git config --global user.email ${{ secrets.DLP_HELPER_EMAIL}}
+        git fetch --all
+        git checkout backend-dev
         git pull origin main
         git push
         git checkout frontend

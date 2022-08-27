@@ -20,12 +20,12 @@ jobs:
         git status
         git pull
         git status
-        git pull origin main
+        git pull origin main --allow-unrelated-histories
         git push
         git switch backend-dev
         git status
         git pull
         git status
-        git pull origin main
+        git pull origin main --allow-unrelated-histories
         git push
         

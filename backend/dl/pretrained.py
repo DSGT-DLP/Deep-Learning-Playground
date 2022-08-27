@@ -64,6 +64,7 @@ def train(
         cut (int or Callable) : indices where you want to cut the model and create head and body
     """
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    print("got datasets")
 
     img_shape = 0
     dls = DataLoaders.from_dsets(

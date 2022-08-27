@@ -235,7 +235,7 @@ def testing(request_data):
         shuffle = request_data["shuffle"]
         zip_file = ""
         # upload()
-        print("sdsakdnasjfk", request_data["user_arch"])
+        print(user_arch)
         model = DLModel(parse_deep_user_architecture(user_arch))
         train_transform = parse_deep_user_architecture(train_transform)
         test_transform = parse_deep_user_architecture(test_transform)

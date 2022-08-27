@@ -8,7 +8,7 @@ const PretrainedCodeSnippet = (props) => {
 
   if (!backendResponse?.success) {
     return (
-      !backendResponse?.message || (
+      backendResponse?.message || (
         <p style={{ textAlign: "center" }}>There are no records to display</p>
       )
     );

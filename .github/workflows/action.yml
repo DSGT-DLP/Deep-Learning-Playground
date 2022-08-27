@@ -22,4 +22,3 @@ jobs:
         git checkout backend-dev
         git pull origin main
         git push
-        

@@ -16,10 +16,10 @@ jobs:
         git config --global user.email ${{ secrets.DLP_HELPER_EMAIL}}
         git config pull.rebase true  # rebase
         git fetch --all
-        git checkout frontend
+        git switch frontend
         git pull origin main
         git push
-        git checkout backend-dev
+        git switch backend-dev
         git pull origin main
         git push
         

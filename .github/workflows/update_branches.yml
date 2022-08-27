@@ -17,9 +17,11 @@ jobs:
         git config pull.rebase true  # rebase
         git fetch --all
         git switch frontend
+        git pull
         git pull origin main
         git push
         git switch backend-dev
+        git pull
         git pull origin main
         git push
         

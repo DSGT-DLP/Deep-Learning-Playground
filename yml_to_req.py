@@ -18,7 +18,14 @@ for dep in data["dependencies"]:
         elif dep.startswith("python"):
             continue
         else:
-            requirements.append(dep)
+            parsed_dep = dep.split("=")
+            if (parsed_dep[0] == dep):
+                requirements.append(dep)
+            elif (len(parsed_dep) > 2):
+                raise ValueError("Misformat in environment.yml file. Make sure that you have <packageName>=<version> or <packageName> format")
+            else:
+                package_name, package_version = parsed_dep[0], parsed_dep[1]
+                requirements.append(f"{parsed_dep[0]}=={parsed_dep[1]}")
     elif isinstance(dep, dict):
         for preq in dep.get("pip", []):
             requirements.append(preq)

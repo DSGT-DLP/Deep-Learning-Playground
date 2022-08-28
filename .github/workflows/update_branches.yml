@@ -17,4 +17,5 @@ jobs:
         git fetch --all
         git switch f2
         git pull --ff-only origin main
+        git push
         

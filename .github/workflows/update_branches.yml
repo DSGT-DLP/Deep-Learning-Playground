@@ -1,0 +1,23 @@
+name: Update Frontend/Backend
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update frontend and backend-dev
+      run: |
+        git config user.name ${{ secrets.DLP_HELPER_USERNAME }}
+        git config user.email ${{ secrets.DLP_HELPER_EMAIL}}
+        git fetch --all
+        git switch frontend
+        git pull --ff-only origin main
+        git push
+        git switch backend-dev
+        git pull --ff-only origin main
+        git push

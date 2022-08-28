@@ -1,6 +1,7 @@
 import firebase_admin
 import firebase_admin.auth
 from flask import request
+import time
 
 from backend.aws_helpers.dynamo_db_utils.user_db import UserDDBUtil, UserData
 from backend.common.constants import (
@@ -21,7 +22,7 @@ def authenticate(request_data):
         # create user row in user_db (user-table) if it doesn't exist
         try:
             userDDBUtil.create_record(
-                UserData(user["user_id"], user["email"])
+                UserData(user["user_id"], user["email"], str(int(time.time())))
             )
         except Exception as e:
             if "Could not add record." not in str(e):

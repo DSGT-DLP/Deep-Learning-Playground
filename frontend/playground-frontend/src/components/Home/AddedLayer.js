@@ -28,9 +28,12 @@ const _InputOutputPromptResponse = (props) => {
 };
 
 const AddedLayer = (props) => {
-  const { thisLayerIndex, addedLayers, setAddedLayers, onDelete } = props;
+  const { thisLayerIndex, addedLayers, setAddedLayers, onDelete, style } =
+    props;
   const thisLayer = addedLayers[thisLayerIndex];
   const { display_name, parameters } = thisLayer;
+
+  styles = { ...styles, ...style };
 
   // converts the parameters object for each layer into an array of parameter objects
   const param_array = [];
@@ -48,7 +51,7 @@ const AddedLayer = (props) => {
 
   return (
     <div style={LAYOUT.column}>
-      <RectContainer style={{ backgroundColor: COLORS.layer }}>
+      <RectContainer style={styles.layer_box}>
         <button style={styles.delete_btn} onClick={onDelete}>
           ❌
         </button>
@@ -74,11 +77,16 @@ AddedLayer.propTypes = {
   addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
   setAddedLayers: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  style: PropTypes.object,
 };
 
 export default AddedLayer;
 
-const styles = {
+let styles = {
+  layer_box: {
+    backgroundColor: COLORS.layer,
+    width: 130,
+  },
   delete_btn: {
     position: "absolute",
     top: 0,
@@ -90,11 +98,10 @@ const styles = {
   input_box: {
     margin: 7.5,
     backgroundColor: "white",
-    width: 130,
+    width: 150,
     paddingInline: 5,
   },
   input_prompt: {
-    fontFamily: "Arial, Helvetica, sans-serif",
     fontSize: 15,
     fontWeight: "bold",
   },

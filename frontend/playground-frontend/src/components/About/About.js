@@ -10,14 +10,14 @@ const About = () => {
   const urlOpener = (url) => () => window.open(url);
 
   return (
-    <div className="about-page">
+    <div id="about">
       <div id="header-section">
         <h1 className="headers">Deep Learning Playground</h1>
         <h2>Your destination for training Deep Learning models</h2>
       </div>
 
       <div className="sections" id="motivation">
-        <h3>Motivation</h3>
+        <h2>Motivation</h2>
         <p>
           Deep Learning has made advancements recently. People are trying to
           utilize Deep Learning to build models to solve increasingly complex
@@ -47,7 +47,7 @@ const About = () => {
       </div>
 
       <div className="sections" id="tech">
-        <h3>Technologies Used</h3>
+        <h2>Technologies Used</h2>
 
         <div className="tech-rows">
           <div className="tech-row-content">
@@ -57,11 +57,11 @@ const About = () => {
               onClick={urlOpener("https://docs.python.org/3/")}
               alt="Python logo"
             />
-            <span className="tech-text-content">
+            <p>
               <b>Python:</b> Programming language widely used for Data Science,
               AI, and ML. Easily understandable by a human and has a lot of
               developer support
-            </span>
+            </p>
           </div>
           <div className="tech-row-content">
             <img
@@ -70,9 +70,11 @@ const About = () => {
               onClick={urlOpener("https://pytorch.org/docs/stable/index.html")}
               alt="Pytorch logo"
             />
-            <b>Pytorch:</b> Libary that helps build, train, test deep learning
-            models. We use this library to build the user-defined deep learning
-            model
+            <p>
+              <b>Pytorch:</b> Libary that helps build, train, test deep learning
+              models. We use this library to build the user-defined deep
+              learning model
+            </p>
           </div>
           <div className="tech-row-content">
             <img
@@ -81,9 +83,11 @@ const About = () => {
               onClick={urlOpener("https://pandas.pydata.org/docs/")}
               alt="pandas logo"
             />
-            <b>pandas:</b> Python library that allows one to parse CSV files and
-            extract relevant information. It's very user friendly and has
-            helpful documentation
+            <p>
+              <b>pandas:</b> Python library that allows one to parse CSV files
+              and extract relevant information. It's very user friendly and has
+              helpful documentation
+            </p>
           </div>
           <div className="tech-row-content">
             <img
@@ -92,8 +96,10 @@ const About = () => {
               onClick={urlOpener("https://flask.palletsprojects.com/en/2.1.x/")}
               alt="Flask logo"
             />
-            <b>Flask:</b> Backend service that allows for the modeling magic to
-            happen
+            <p>
+              <b>Flask:</b> Backend service that allows for the modeling magic
+              to happen
+            </p>
           </div>
           <div className="tech-row-content">
             <img
@@ -104,8 +110,10 @@ const About = () => {
               )}
               alt="React logo"
             />
-            <b>React:</b> JavaScript library used to display the website to the
-            user
+            <p>
+              <b>React:</b> JavaScript library used to display the website to
+              the user
+            </p>
           </div>
           <div className="tech-row-content">
             <img
@@ -114,14 +122,17 @@ const About = () => {
               onClick={urlOpener("https://docs.aws.amazon.com/")}
               alt="AWS logo"
             />
-            <b>AWS:</b> Amazon Web Services provides on-demand cloud computing
-            platforms and APIs to this project on a metered pay-as-you-go basis
+            <p>
+              <b>AWS:</b> Amazon Web Services provides on-demand cloud computing
+              platforms and APIs to this project on a metered pay-as-you-go
+              basis
+            </p>
           </div>
         </div>
       </div>
 
       <div className="sections" id="installation">
-        <h3>Installation</h3>
+        <h2>Installation</h2>
         <p>
           See the README.md in the{" "}
           <a href="https://github.com/karkir0003/Deep-Learning-Playground">
@@ -134,7 +145,7 @@ const About = () => {
       </div>
 
       <div className="sections" id="user">
-        <h3>User</h3>
+        <h2>User</h2>
         <p>
           As the user, all you need to do in the Deep Learning Playground is
           upload your dataset or enter a URL to it (dataset must be in a CSV or
@@ -153,7 +164,7 @@ const About = () => {
       </div>
 
       <div className="sections" id="dev">
-        <h3>Development</h3>
+        <h2>Development</h2>
         <p>
           Want to contribute? Great! Email one of the collaborators in the
           Github Repo for more information on how you can get involved in
@@ -168,10 +179,9 @@ const About = () => {
       </div>
 
       <div className="sections" id="license">
-        <h3>License</h3>
-        MIT
+        <h2>License</h2>
+        <p>MIT</p>
       </div>
-      {/* <footer/> */}
     </div>
   );
 };

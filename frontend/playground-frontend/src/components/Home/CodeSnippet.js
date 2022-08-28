@@ -26,7 +26,7 @@ const CodeSnippet = (props) => {
         id="code-snippet-clipboard"
         onClick={() => {
           navigator.clipboard.writeText(codeSnippetFormat(layers));
-          toast.info("Code snippet copied");
+          toast.info("Code snippet copied", { autoClose: 1000 });
         }}
       >
         <FaCopy />
@@ -82,12 +82,34 @@ function layersToString(layers) {
  * @param {layers} layer
  * @returns string in form of <layer name>(<parameters>)
  */
-function layerToString(layer) {
+export function layerToString(layer) {
   let layerToString = layer.object_name + "(";
-  if (typeof layer.parameters.inputSize !== "undefined") {
-    layerToString += layer.parameters.inputSize.value;
-    if (typeof layer.parameters.outputSize !== "undefined") {
-      layerToString += "," + layer.parameters.outputSize.value;
+
+  if (layer.parameters !== undefined && layer.parameters !== null) {
+    const params = Object.keys(layer.parameters);
+    // params : [0: "inputSize", 1:"outputSize"]
+    if (params !== null && params !== undefined && params.length !== 0) {
+      // const paramList= Array{[params.length]}
+
+      const paramList = new Array(params.length);
+      for (let i = 0; i < params.length; i++) {
+        const param = params[i];
+        // param: "inputSize"
+
+        if (typeof layer.parameters[param] !== "undefined") {
+          paramList[layer.parameters[param].index] =
+            layer.parameters[param].value;
+        }
+      }
+      for (let i = 0; i < paramList.length; i++) {
+        layerToString += paramList[i];
+        layerToString += ",";
+      }
+
+      layerToString = layerToString.split("");
+      layerToString[layerToString.length - 1] = "";
+      layerToString = layerToString.join("");
+      // layerToString = layerToString.substring(0, layerToString.length)
     }
   }
   layerToString += ")";

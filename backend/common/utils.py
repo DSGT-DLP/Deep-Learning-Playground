@@ -181,32 +181,25 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     """
     Given the prediction results and label, generate confusion matrix (only applicable to classification tasks)
     Args:
-        label: array consisting of ground truth values
-        y_pred: array consisting of predicted results
-        categoryList: list of strings that represent the categories to classify into (this will be used to label the axis)
+        labels_last_epoch: array (of len batch_size) consisting of arrays of ground truth values (Tensors)
+        y_pred: array consisting of predicted results (in probability form)
+        # categoryList: list of strings that represent the categories to classify into (this will be used to label the axis)
     Returns: the confusion matrix in a 2D-array format
     """
     label = []
     y_pred = []
     categoryList = []
 
-    for l in labels_last_epoch.tolist():
-        label.append(l[0])
+    label = np.array(labels_last_epoch).flatten()
 
-    predictions = torch.argmax(
-        y_pred_last_epoch, dim=-1
-    )
-    for prediction in predictions.tolist():
-        y_pred.append(prediction[0])
+    for batch in y_pred_last_epoch:
+        y_pred = np.concatenate((y_pred, np.argmax(batch, axis=1)), axis=None) #flatten and concatenate
 
-    # generating a category list for confusion matrix axis labels
-    if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):
-        for i, x in enumerate(y_pred_last_epoch[0][0]):
-            categoryList.append(i)
+    categoryList = np.arange(0, len(y_pred_last_epoch[0][0])).tolist()
 
     plt.clf()
-    label_np = np.array(label)
-    pred_np = np.array(y_pred)
+    label_np = label
+    pred_np = y_pred
     cm = confusion_matrix(label_np, pred_np, labels=categoryList)
     ax= plt.subplot()
     sns.heatmap(cm, annot=True, fmt='g', ax=ax, cmap='Purples');  #annot=True to annotate cells, ftm='g' to disable scientific notation
@@ -225,26 +218,17 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
     plot_data = []  
 
     # generating a category list for confusion matrix axis labels, and setting up the y_preds_list and label_list for each category
-    if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):
-        for i, x in enumerate(y_pred_last_epoch[0][0]):
-            categoryList.append(i)
-            y_preds_list.append([])
-            label_list.append([])
 
-    for label in labels_last_epoch:
-        ground_truth = label.item();
-        for x in range(len(label_list)):
-            # toggle on a 1 for the category that corresponds to the ground truth, this is to produce the 1-vs-all system for multiclass classification
-            if x == ground_truth:
-                label_list[x].append(1)
-            else:
-                label_list[x].append(0)
+    categoryList = np.arange(0, len(y_pred_last_epoch[0][0])).tolist()
 
-    for row in y_pred_last_epoch:
-        for i, tensor in enumerate(row[0]):
-            # appending tensor values to each category's probability predicitons in y_preds_list
-            y_preds_list[i].append(tensor.item())
-    
+    labels_last_epoch = np.array(labels_last_epoch).flatten()
+    label_list = np.zeros((len(categoryList), len(labels_last_epoch)))
+
+    for i in range(len(labels_last_epoch)):
+        label_list[int(labels_last_epoch[i])][i] = 1
+
+    y_preds_list = np.transpose(np.concatenate(np.array(y_pred_last_epoch)))
+
     # making a AUC/ROC graph for each category's probability predicitons
     try:
         # using matplotlib in addition to plotly so that we can generate graph image in backend and email this to user
@@ -255,7 +239,7 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
         plt.plot([0, 1], [0, 1], linestyle='--', label=f'baseline')
         for i in range(len(categoryList)):
             pred_prob = np. array(y_preds_list[i])
-            y_test = np. array(label_list[i])
+            y_test = label_list[i]
             fpr, tpr, _ = roc_curve(y_test, pred_prob)
             auc = roc_auc_score(y_test, pred_prob)
             # this data will be sent to frontend to make interactive plotly graph

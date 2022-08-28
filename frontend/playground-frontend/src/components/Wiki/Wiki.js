@@ -562,12 +562,12 @@ const Wiki = () => {
   ];
 
   return (
-    <>
+    <div id="wiki">
       <div id="header-section">
         <h1 className="header">Deep Learning Playground Wiki</h1>
       </div>
 
-      <div className="sections" id="basics">
+      <div className="sections">
         <h2>Live Demo</h2>
         <img
           src={DEMO_VIDEO}
@@ -655,7 +655,7 @@ const Wiki = () => {
           </li>
         </ul>
       </div>
-    </>
+    </div>
   );
 };
 

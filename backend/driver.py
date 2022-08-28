@@ -35,7 +35,7 @@ from backend.common.email_notifier import send_email
 from flask import send_from_directory
 from flask_socketio import SocketIO
 import eventlet
-import datetime, threading
+import datetime
 from backend.dl.pretrained import train
 
 app = Flask(
@@ -442,6 +442,51 @@ def train_pretrained(request_data):
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
 
+@socket.on('sendEmail')
+def send_email_route(request_data):
+    # extract data
+    required_params = ["email_address", "subject", "body_text"]
+    for required_param in required_params:
+        if required_param not in request_data:
+            return socket.emit('emailResult',
+                {
+                    "success": False,
+                    "message": "Missing parameter " + required_param
+                }
+            )
+
+    email_address = request_data["email_address"]
+    subject = request_data["subject"]
+    body_text = request_data["body_text"]
+    if "attachment_array" in request_data:
+        attachment_array = request_data["attachment_array"]
+        if not isinstance(attachment_array, list):
+            return socket.emit('emailResult',
+                {
+                    "success": False,
+                    "message": "Attachment array must be a list of filepaths",
+                }
+            )
+    else:
+        attachment_array = []
+
+    # try to send email
+    try:
+        send_email(email_address, subject, body_text, attachment_array)
+        return socket.emit('emailResult',
+            {
+                "success": True,
+                "message": "Sent email to " + email_address
+            }
+        )
+    except Exception:
+        print(traceback.format_exc())
+        return socket.emit('emailResult',
+            {
+                "success": False,
+                "message": traceback.format_exc(limit=1)
+            }
+        )
 
 @app.route("/upload", methods=["POST"])
 def upload():
@@ -470,17 +515,15 @@ def upload():
         f = request.files["file"]
         normalExit = f.stream.close
         f.stream.close = passExit
-        t = threading.Thread(target=save_file, args=(normalExit,))
-        t.start()
+        save_file(normalExit)
+        socket.emit('uploadComplete')
         return "200"
     return "200"
 
 
 def send_progress(progress):
     socket.emit("trainingProgress", progress)
-    eventlet.greenthread.sleep(
-        0
-    )  # to prevent logs from being grouped and sent together at the end of training
+    eventlet.greenthread.sleep(0)  # to prevent logs from being grouped and sent together at the end of training
 
 
 if __name__ == "__main__":

@@ -8,8 +8,6 @@ class ExecutionData(BaseData):
     execution_id: str
     user_id: str
     timestamp: str
-
-    
     execution_source: str
     results_uri: str
     onnx_uri: str
@@ -31,6 +29,3 @@ class ExecutionDDBUtil(BaseDDBUtil):
 def get_execution_table(region:str = AWS_REGION) -> BaseDDBUtil:
     """Retrieves the status-table of an input region as an instance of ExecutionDDBUtil"""
     return ExecutionDDBUtil(EXECUTION_TABLE_NAME, region)
-
-execution_table = get_execution_table()
-execution_table.create_gsi("user_id", "user_id", "HASH", "KEYS_ONLY")

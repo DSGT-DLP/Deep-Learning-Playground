@@ -357,7 +357,12 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
 
         auxiliary_outputs["AUC_ROC_curve_data"] = AUC_ROC_curve_data
         torch.save(model, SAVED_MODEL) # saving model into a pt file
-        torch.onnx.export(model, train_loader, ONNX_MODEL)
+        example_data = 0
+        for i in train_loader:
+            example_data = i[0]
+            break
+
+        torch.onnx.export(model, example_data, ONNX_MODEL)
 
         return auxiliary_outputs
 

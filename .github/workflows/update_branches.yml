@@ -15,10 +15,10 @@ jobs:
         git config user.name ${{ secrets.DLP_HELPER_USERNAME }}
         git config user.email ${{ secrets.DLP_HELPER_EMAIL}}
         git fetch --all
-        git switch f2
+        git switch frontend
         git pull --ff-only origin main
         git push
-        git switch b2
+        git switch backend-dev
         git pull --ff-only origin main
         git push
         

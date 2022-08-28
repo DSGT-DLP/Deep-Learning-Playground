@@ -21,4 +21,3 @@ jobs:
         git switch backend-dev
         git pull --ff-only origin main
         git push
-        

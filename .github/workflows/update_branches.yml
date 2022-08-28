@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
     - name: Update frontend and backend-dev
       run: |
         git config --global user.name ${{ secrets.DLP_HELPER_USERNAME }}

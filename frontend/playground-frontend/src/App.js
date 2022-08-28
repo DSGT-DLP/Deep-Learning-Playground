@@ -8,6 +8,7 @@ import {
   Navbar,
   ImageModels,
   Footer,
+  Pretrained
 } from "./components";
 import { ToastContainer } from "react-toastify";
 import Home from "./Home";
@@ -25,6 +26,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/img-models" element={<ImageModels />} />
           <Route path="/About" element={<About />} />
+          <Route path="/pretrained" element={<Pretrained />} />
           <Route path="/Wiki" element={<Wiki />} />
           <Route path="/feedback" element={<Feedback />} />
         </Routes>

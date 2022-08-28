@@ -2,7 +2,7 @@ name: Update Frontend/Backend
 on:
   push:
     branches:
-      - "action"
+      - "main"
 
 jobs:
   build-linux:

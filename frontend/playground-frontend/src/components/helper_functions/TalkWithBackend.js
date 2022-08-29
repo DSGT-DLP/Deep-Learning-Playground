@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 
-const socket = io(":8000");
+const socket = io("");
 socket.on("connect", () => {
   frontendLog(`connected to socket`);
 });

@@ -31,6 +31,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 const Home = () => {
   const [csvDataInput, setCSVDataInput] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
+  const [defaultColumns, setDefaultColumns] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [inputKey, setInputKey] = useState(0);
   // input responses
@@ -57,6 +58,7 @@ const Home = () => {
       value: i,
     }))
   );
+  const [columns, setColumns] = useState([]);
 
   const input_responses = {
     addedLayers: addedLayers,
@@ -74,7 +76,7 @@ const Home = () => {
     email: email,
   };
 
-  const inputColumnOptions = csvColumns.map((e, i) => ({
+  const inputColumnOptions = columns.map((e, i) => ({
     label: e.name,
     value: i,
   }));
@@ -170,14 +172,20 @@ const Home = () => {
   }, [problemType]);
 
   useEffect(() => {
-    if(usingDefaultDataset.value) {
-      setCSVColumns(() => {
-        const columns = usingDefaultDataset.columns ? usingDefaultDataset.columns : []; 
-        console.log(columns);
-        return columns;
+      setDefaultColumns(() => {
+        return usingDefaultDataset.columns ? usingDefaultDataset.columns : []; 
       });
-    }
-  }, [usingDefaultDataset]);
+    },  [usingDefaultDataset]);
+
+    useEffect( () => {
+      setColumns( () => (usingDefaultDataset.value ? defaultColumns : csvColumns) );
+    }, [defaultColumns], [csvColumns]);
+
+    useEffect( () => {
+      setTargetCol(null);
+      setFeatures(null);
+      setInputKey((e) => e + 1);
+    }, [columns]);
   
   return (
     <div style={{ padding: 20, marginBottom: 50 }}>

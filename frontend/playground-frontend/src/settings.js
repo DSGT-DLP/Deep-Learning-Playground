@@ -517,7 +517,14 @@ export const OPTIMIZER_NAMES = [
 
 export const DEFAULT_DATASETS = [
   { label: "NONE", value: null },
-  { label: "IRIS", value: "IRIS" },
+  { label: "IRIS", value: "IRIS", columns: [
+      { name: "sepal.length" }, 
+      { name: "sepal.width" }, 
+      { name: "petal.length" }, 
+      { name: "petal.width" }, 
+      { name: "variety"}
+    ]
+  },
   { label: "CALIFORNIAHOUSING", value: "CALIFORNIAHOUSING" },
   { label: "DIABETES", value: "DIABETES" },
   { label: "DIGITS", value: "DIGITS" },

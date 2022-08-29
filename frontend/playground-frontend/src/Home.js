@@ -57,6 +57,7 @@ const Home = () => {
       value: i,
     }))
   );
+
   const input_responses = {
     addedLayers: addedLayers,
     targetCol: targetCol?.label,
@@ -168,6 +169,15 @@ const Home = () => {
     setInputKey((e) => e + 1);
   }, [problemType]);
 
+  useEffect(() => {
+    if(usingDefaultDataset.value) {
+      setCSVColumns(() => {
+        const columns = usingDefaultDataset.columns ? usingDefaultDataset.columns : []; 
+        return columns;
+      });
+    }
+  }, [usingDefaultDataset]);
+  
   return (
     <div style={{ padding: 20, marginBottom: 50 }}>
       <DndProvider backend={HTML5Backend}>

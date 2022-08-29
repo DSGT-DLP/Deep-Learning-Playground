@@ -13,13 +13,9 @@ import { ToastContainer } from "react-toastify";
 import Home from "./Home";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import { updateUserSettings } from "./components/helper_functions/TalkWithBackend";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
-  setTimeout(() => {
-    updateUserSettings();
-  }, 1000);
 
   return (
     <div id="app">

@@ -518,11 +518,11 @@ export const OPTIMIZER_NAMES = [
 export const DEFAULT_DATASETS = [
   { label: "NONE", value: null },
   { label: "IRIS", value: "IRIS", columns: [
-      { name: "sepal.length" }, 
-      { name: "sepal.width" }, 
-      { name: "petal.length" }, 
-      { name: "petal.width" }, 
-      { name: "variety"}
+      { name: "sepal length (cm)" }, 
+      { name: "sepal width (cm)" }, 
+      { name: "petal length (cm)" }, 
+      { name: "petal width (cm)" }, 
+      { name: "target"}
     ]
   },
   { label: "CALIFORNIAHOUSING", value: "CALIFORNIAHOUSING" },

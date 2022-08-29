@@ -118,15 +118,18 @@ def dl_drive(
          CSV_FILE_NAME is the data csv file for the torch model. Assumed that you have one dataset file
     """
     try:
+        print("features", features)
+        print("target", target)
+
         if default and problem_type.upper() == "CLASSIFICATION":
-            X, y = get_default_dataset(default.upper())
+            X, y = get_default_dataset(default.upper(), target, features)
             print(y.head())
         elif default and problem_type.upper() == "REGRESSION":
-            X, y = get_default_dataset(default.upper())
+            X, y = get_default_dataset(default.upper(), target, features)
         else:
             if json_csv_data_str:
                 input_df = pd.read_json(json_csv_data_str, orient="records")
-
+            
             y = input_df[target]
             X = input_df[features]
 
@@ -140,6 +143,8 @@ def dl_drive(
             print(y.head())
 
         # Convert to tensor
+        print("X", X)
+        print("y", y)
         if shuffle and problem_type.upper() == "CLASSIFICATION":
             # using stratify only for classification problems to ensure correct AUC calculation
             X_train, X_test, y_train, y_test = train_test_split(

@@ -536,4 +536,5 @@ export const PRETRAINED_MODELS = [
   { label: "ALEXNET", value: "alexnet", module: "pytorch" },
   { label: "RESNET34", value: "resnet34", module: "pytorch" },
   { label: "RESNET50", value: "resnet50", module: "pytorch" },
+  { label: "VGG16", value: "vgg16", module: "pytorch" },
 ];

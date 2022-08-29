@@ -119,12 +119,6 @@ def train(
         else "../backend"
     )
 
-    # saved_model = (
-    #     SAVED_MODEL
-    #     if not "frontend" in os.listdir(os.getcwd())
-    #     else "/".join(SAVED_MODEL.split("/")[1:])
-    # )
-
     learner.fit(
         n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv")), PretrainCallback(n_epochs, send_progress)]
     )

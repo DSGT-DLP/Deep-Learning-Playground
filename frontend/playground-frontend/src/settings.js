@@ -522,13 +522,53 @@ export const DEFAULT_DATASETS = [
       { name: "sepal width (cm)" }, 
       { name: "petal length (cm)" }, 
       { name: "petal width (cm)" }, 
-      { name: "target"}
+      { name: "target"},
     ]
   },
-  { label: "CALIFORNIAHOUSING", value: "CALIFORNIAHOUSING" },
-  { label: "DIABETES", value: "DIABETES" },
+  { label: "CALIFORNIAHOUSING", value: "CALIFORNIAHOUSING", columns: [
+      { name: "MedInc" },
+      { name: "HouseAge" },
+      { name: "AveRooms" },
+      { name: "AveBedrms" },
+      { name: "Population" },
+      { name: "AveOccup" },
+      { name: "Latitude" },
+      { name: "Longitude" },
+      { name: "target" },
+    ] 
+  },
+  { label: "DIABETES", value: "DIABETES", columns: [
+      { name: "age" },
+      { name: "sex" },
+      { name: "bmi" },
+      { name: "bp" },
+      { name: "s1" },
+      { name: "s2" },
+      { name: "s3" },
+      { name: "s4" },
+      { name: "s5" },
+      { name: "s6" },
+      { name: "target" },
+    ] 
+  },
   { label: "DIGITS", value: "DIGITS" },
-  { label: "WINE", value: "WINE" },
+  { label: "WINE", value: "WINE", columns: [
+      { name: "alcohol" },
+      { name: "malic_acid"},
+      { name: "ash" },
+      { name: "alcalinity_of_ash" },
+      { name: "magnesium" },
+      { name: "total_phenols" },
+      { name: "flavanoids" },
+      { name: "nonflavanoid_phenols" },
+      { name: "proanthocyanins" },
+      { name: "color_intensity" },
+      { name: "hue" },
+      { name: "od280/od315_of_diluted_wines" },
+      { name: "proline" },
+      { name: "target" },
+    ] 
+  },
 ];
 
 export const IMAGE_DEFAULT_DATASETS = [

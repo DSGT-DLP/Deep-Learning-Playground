@@ -173,6 +173,7 @@ const Home = () => {
     if(usingDefaultDataset.value) {
       setCSVColumns(() => {
         const columns = usingDefaultDataset.columns ? usingDefaultDataset.columns : []; 
+        console.log(columns);
         return columns;
       });
     }

@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import EmailInput from "../Home/EmailInput";
 import ReCAPTCHA from "react-google-recaptcha";
 import React, { useState } from "react";
 import TitleText from "../general/TitleText";
 import { COLORS, GENERAL_STYLES } from "../../constants";
+import { socket } from '../helper_functions/TalkWithBackend';
 
 const Feedback = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +14,12 @@ const Feedback = () => {
   const [recaptcha, setRecaptcha] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [successful, setSuccessful] = useState(false);
+
+  useEffect(() => {
+    socket.on("emailResult", (result) => {
+      setSuccessful(result.success);
+    });
+  }, [socket]);
 
   const onClickSubmit = () => {
     setSubmitted(true);
@@ -110,17 +118,12 @@ const Feedback = () => {
   );
 };
 
-const send_feedback_mail = async (firstName, lastName, email, feedback) => {
-  const runResult = await fetch("/sendemail", {
-    method: "POST",
-    body: JSON.stringify({
-      email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
-      subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
-      body_text: feedback,
-    }),
+const send_feedback_mail = (firstName, lastName, email, feedback) => {
+  socket.emit("sendEmail", {
+    email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
+    subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
+    body_text: feedback,
   });
-  const resultJson = await runResult.json();
-  return resultJson.success;
 };
 
 export default Feedback;

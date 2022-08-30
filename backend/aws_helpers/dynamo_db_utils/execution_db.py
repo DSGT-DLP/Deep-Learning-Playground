@@ -4,7 +4,7 @@ from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION
 
 @dataclass
 class ExecutionData(BaseData):
-    """Data class to hold the attribute values of a record of the status-table DynamoDB table"""
+    """Data class to hold the attribute values of a record of the execution-table DynamoDB table"""
     execution_id: str
     user_id: str
     timestamp: str
@@ -17,15 +17,16 @@ class ExecutionData(BaseData):
 @enumclass(DataClass=ExecutionData, execution_source=['TABULAR', 'PRETRAINED', 'IMAGE', 'AUDIO', 'TEXTUAL'])
 class ExecutionEnums:
     """Class that holds the enums associated with the ExecutionDDBUtil class. It includes:
-        ExecutionEnums.Attribute - Enum that defines the schema of the status-table. It holds the attribute names of the table
-        ExecutionEnums.Status - Enum that defines the categorical values associated with the 'status' attribute"""
+        ExecutionEnums.Attribute - Enum that defines the schema of the execution-table. It holds the attribute names of the table
+        ExecutionEnums.Execution_Source - Enum that defines the categorical values associated with the 'execution_source' attribute"""
     pass
 
 @changevar(DataClass=ExecutionData, EnumClass=ExecutionEnums, partition_key='execution_id')
 class ExecutionDDBUtil(BaseDDBUtil):
-    """Class that interacts with AWS DynamoDB to manipulate information stored in the status-table DynamoDB table"""
+    """Class that interacts with AWS DynamoDB to manipulate information stored in the execution-table DynamoDB table"""
     pass
 
 def get_execution_table(region:str = AWS_REGION) -> BaseDDBUtil:
-    """Retrieves the status-table of an input region as an instance of ExecutionDDBUtil"""
+    """Retrieves the execution-table of an input region as an instance of ExecutionDDBUtil"""
     return ExecutionDDBUtil(EXECUTION_TABLE_NAME, region)
+

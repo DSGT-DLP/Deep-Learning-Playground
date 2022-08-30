@@ -10,7 +10,8 @@ from typing import Dict
 
 ENV_KEYS = ["REACT_APP_SECRET_KEY",
             "REACT_APP_CAPTCHA_SITE_KEY", "REACT_APP_FEEDBACK_EMAIL"]
-FINAL_ENV_PATH = os.path.abspath(".\\frontend\playground-frontend\.env")
+FINAL_ENV_PATH = os.path.abspath(os.path.join(
+    os.getcwd(), '..', 'frontend', 'playground-frontend', '.env'))
 
 
 def get_secret():
@@ -60,7 +61,8 @@ def get_secret():
         if 'SecretString' in get_secret_value_response:
             env_values = eval(get_secret_value_response['SecretString'])
         else:
-            env_values = eval(base64.b64decode(get_secret_value_response['SecretBinary']))
+            env_values = eval(base64.b64decode(
+                get_secret_value_response['SecretBinary']))
 
         create_env_file(env_values)
 

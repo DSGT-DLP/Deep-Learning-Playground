@@ -2,11 +2,15 @@
 # If you need more information about configurations or implementing the sample code, visit the AWS docs:
 # https://aws.amazon.com/developers/getting-started/python/
 
+from backend.common.constants import AWS_REGION
 import boto3
 import base64
 import os
 from botocore.exceptions import ClientError
 from typing import Dict
+
+import sys
+sys.path.append(os.path.dirname(os.getcwd()))
 
 ENV_KEYS = ["REACT_APP_SECRET_KEY",
             "REACT_APP_CAPTCHA_SITE_KEY", "REACT_APP_FEEDBACK_EMAIL"]
@@ -16,7 +20,7 @@ FINAL_ENV_PATH = os.path.abspath(os.path.join(
 
 def get_secret():
     secret_name = "frontend_env"
-    region_name = "us-west-2"
+    region_name = AWS_REGION
 
     # Create a Secrets Manager client
     session = boto3.session.Session()

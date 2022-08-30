@@ -68,7 +68,7 @@ def get_secret():
         create_env_file(env_values)
 
 
-def create_env_file(env_values: Dict[str: str]):
+def create_env_file(env_values: Dict[str, str]):
     with open(FINAL_ENV_PATH, "w") as f:
         for key, val in env_values.items():
             f.write(f"{key}={val}\n")

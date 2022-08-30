@@ -4,12 +4,13 @@
 
 import boto3
 import base64
+import os
 from botocore.exceptions import ClientError
 from typing import Dict
 
 ENV_KEYS = ["REACT_APP_SECRET_KEY",
             "REACT_APP_CAPTCHA_SITE_KEY", "REACT_APP_FEEDBACK_EMAIL"]
-FINAL_ENV_PATH = "..\frontend\playground-frontend\.env"
+FINAL_ENV_PATH = os.path.abspath(".\\frontend\playground-frontend\.env")
 
 
 def get_secret():
@@ -56,14 +57,10 @@ def get_secret():
         # Decrypts secret using the associated KMS key.
         # Depending on whether the secret is a string or binary, one of these fields will be populated.
         env_values = {}
-        for env_key in ENV_KEYS:
-            if env_key in get_secret_value_response:
-                secret = get_secret_value_response[env_key]
-                env_values[env_key] = secret
-            else:
-                decoded_binary_secret = base64.b64decode(
-                    get_secret_value_response[env_key])
-                env_values[env_key] = decoded_binary_secret
+        if 'SecretString' in get_secret_value_response:
+            env_values = eval(get_secret_value_response['SecretString'])
+        else:
+            env_values = eval(base64.b64decode(get_secret_value_response['SecretBinary']))
 
         create_env_file(env_values)
 

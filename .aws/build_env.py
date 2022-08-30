@@ -55,7 +55,8 @@ def get_secret():
         if 'SecretString' in get_secret_value_response:
             env_values = eval(get_secret_value_response['SecretString'])
         else:
-            env_values = eval(base64.b64decode(get_secret_value_response['SecretBinary']))
+            env_values = eval(base64.b64decode(
+                get_secret_value_response['SecretBinary']))
 
         create_env_file(env_values)
 

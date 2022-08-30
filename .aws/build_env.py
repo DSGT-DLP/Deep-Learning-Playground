@@ -62,7 +62,7 @@ def get_secret():
 def create_env_file(env_values: Dict[str, str]):
     with open(aws_constants.FINAL_ENV_PATH, "w") as f:
         for key, val in env_values.items():
-            f.write(f"{key}={val}\n")
+            f.write(f'{key}="{val}"\n')
 
 
 def main():

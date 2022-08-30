@@ -9,8 +9,6 @@ from botocore.exceptions import ClientError
 from typing import Dict
 import aws_constants
 
-
-
 def get_secret():
     secret_name = aws_constants.SECRET_NAME
     region_name = aws_constants.AWS_REGION

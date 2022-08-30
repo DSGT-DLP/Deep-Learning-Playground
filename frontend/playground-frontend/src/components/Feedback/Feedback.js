@@ -95,7 +95,7 @@ const Feedback = () => {
         <div style={{ marginTop: "2%" }} />
 
         <ReCAPTCHA
-          sitekey={process.env.REACT_APP_SITE_KEY}
+          sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
           onChange={(e) => setRecaptcha(e)}
         />
         {submitted && recaptcha === "" && (
@@ -114,7 +114,7 @@ const send_feedback_mail = async (firstName, lastName, email, feedback) => {
   const runResult = await fetch("/sendemail", {
     method: "POST",
     body: JSON.stringify({
-      email_address: process.env.REACT_APP_EMAIL,
+      email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
       subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
       body_text: feedback,
     }),

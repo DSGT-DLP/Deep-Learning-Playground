@@ -7,22 +7,17 @@ import base64
 import os
 from botocore.exceptions import ClientError
 from typing import Dict
+import aws_constants
 
-ENV_KEYS = ["REACT_APP_SECRET_KEY",
-            "REACT_APP_CAPTCHA_SITE_KEY", "REACT_APP_FEEDBACK_EMAIL"]
-FINAL_ENV_PATH = os.path.abspath(".\\frontend\playground-frontend\.env")
 
 
 def get_secret():
-    secret_name = "frontend_env"
-    region_name = "us-west-2"
+    secret_name = aws_constants.SECRET_NAME
+    region_name = aws_constants.AWS_REGION
 
     # Create a Secrets Manager client
-    session = boto3.session.Session()
-    client = session.client(
-        service_name='secretsmanager',
-        region_name=region_name
-    )
+    client = boto3.client('secretsmanager', region_name=region_name)
+    
 
     # In this sample we only handle the specific exceptions for the 'GetSecretValue' API.
     # See https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
@@ -66,7 +61,7 @@ def get_secret():
 
 
 def create_env_file(env_values: Dict[str, str]):
-    with open(FINAL_ENV_PATH, "w") as f:
+    with open(aws_constants.FINAL_ENV_PATH, "w") as f:
         for key, val in env_values.items():
             f.write(f"{key}={val}\n")
 

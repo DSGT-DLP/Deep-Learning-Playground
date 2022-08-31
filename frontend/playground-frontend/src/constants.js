@@ -97,7 +97,7 @@ export const DEFAULT_TRANSFORMS = [
     display_name: "Resize",
     object_name: "transforms.Resize",
     parameters: {
-      size: { index: 0, parameter_name: "(H, W)", value: "(32, 32)" },
+      size: { index: 0, parameter_name: "(H, W)", value: "(32, 32)", min: 1, max: 1000 },
     },
     label: "Resize",
     value: "R",

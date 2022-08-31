@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 
 const HomeCSVInputURL = (props) => {
   const { fileURL, setFileURL, setCSVColumns, setCSVDataInput } = props;
@@ -50,7 +51,7 @@ const HomeCSVInputURL = (props) => {
         setFileURL(url);
       }
     } catch (e) {
-      console.log("Incorrect URL");
+      toast.error("Incorrect URL");
     }
   }
   return (

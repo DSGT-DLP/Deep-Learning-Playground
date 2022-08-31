@@ -5,16 +5,27 @@ import { toast } from "react-toastify";
  *
  */
  const numberRegex = /^-?[1-9]{1}[0-9]*$/;
- const tupleRegex = /^\([1-9]{1}[0-9]*,[1-9]{1}[0-9]*\)$/;
+ const tupleRegex = /^\(([1-9]{1}[0-9]*), ?([1-9]{1}[0-9]*)\)$/;
  
  export const validateParameter = (source, index, parameter) => {
   const { parameter_name, min, max } = parameter;
   let { value } = parameter;
-  if (parameter_name === "Resize") {
+  if (parameter_name === "(H, W)") {
     if (tupleRegex.test(value)) {
-      const groups = value.match(tupleRegex);
-      console.log(groups);
+      const result = value.match(tupleRegex);
+      const H = result[1].valueOf();
+      const W = result[2].valueOf();
+
+      if (H < min || H > max) {
+        toast.error(`${source} Layer ${index + 1}: H not in range [${min}, ${max}]`);
+        return false;
+      } else if (W < min || W > max) {
+        toast.error(`${source} Layer ${index + 1}: W not in range [${min}, ${max}]`);
+        return false;
+      }
+      return true;
     }
+    toast.error(`${source} Layer ${index + 1}: ${parameter_name} not of appropriate format: (H, W)`);
   } else {
     if (numberRegex.test(value)) {
       value = value.valueOf();
@@ -22,8 +33,8 @@ import { toast } from "react-toastify";
         return true;
       }
     }
+    toast.error(`${source} Layer ${index + 1}: ${parameter_name} not in range [${min}, ${max}]`);
   }
-  toast.error(`${source} Layer ${index + 1}: ${parameter_name} not in range [${min}, ${max}]`);
   return false;
 };
 

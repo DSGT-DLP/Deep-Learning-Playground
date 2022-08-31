@@ -432,7 +432,7 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Random Horizontal Flip",
     object_name: "transforms.RandomHorizontalFlip",
     parameters: {
-      probability: { index: 0, parameter_name: "Prob" },
+      probability: { index: 0, parameter_name: "prob", min: 0, max: 1 },
     },
     label: "Random Horizontal Flip",
     value: "RandomHorizontalFlip",
@@ -442,7 +442,7 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Random Vertical Flip",
     object_name: "transforms.RandomVerticalFlip",
     parameters: {
-      p: { index: 0, parameter_name: "probability" },
+      p: { index: 0, parameter_name: "prob", min: 0, max: 1 },
     },
     label: "Random Vertical Flip",
     value: "RandomVerticalFlip",
@@ -459,7 +459,7 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Resize",
     object_name: "transforms.Resize",
     parameters: {
-      size: { index: 0, parameter_name: "(H, W)" },
+      size: { index: 0, parameter_name: "(H, W)", min: 1, max: 1000, default: "(32, 32)" },
     },
     label: "Resize",
     value: "Resize",
@@ -468,7 +468,7 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Gaussian Blur",
     object_name: "transforms.GaussianBlur",
     parameters: {
-      kernel_size: { index: 0, parameter_name: "kernel size" },
+      kernel_size: { index: 0, parameter_name: "kernel size", min: 1, max: 1000 },
     },
     label: "Gaussian Blur",
     value: "GaussianBlur",
@@ -484,8 +484,8 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Normalize",
     object_name: "transforms.Normalize",
     parameters: {
-      mean: { index: 0, parameter_name: "mean" },
-      std: { index: 1, parameter_name: "std" },
+      mean: { index: 0, parameter_name: "mean", min: -1000, max: 1000, default: 0 },
+      std: { index: 1, parameter_name: "std", min: -1000, max: 1000, default: 1 },
     },
     label: "Normalize",
     value: "Normalize",

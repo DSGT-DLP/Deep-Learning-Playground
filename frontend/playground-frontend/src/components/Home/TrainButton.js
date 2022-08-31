@@ -108,12 +108,10 @@ const TrainButton = (props) => {
     if (props.trainTransforms) {
       trainTransforms = make_obj_param_list(props.trainTransforms, 'Train Transform');
       if (trainTransforms === false) return;
-      console.log(trainTransforms);
     } 
     if (props.testTransforms) {
       testTransforms = make_obj_param_list(props.testTransforms, 'Test Transform');
       if (testTransforms === false) return;
-      console.log(testTransforms);
     }
 
     if (!validateInputs(user_arch)) {

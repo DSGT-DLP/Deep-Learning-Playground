@@ -4,10 +4,10 @@ import { toast } from "react-toastify";
  * This file's puropose is to generalise the methods of TrainButton (focusing on Tabular, Image, and Pretrained models)
  *
  */
- const numberRegex = /^-?[1-9]{1}[0-9]*$/;
- const tupleRegex = /^\(([1-9]{1}[0-9]*), ?([1-9]{1}[0-9]*)\)$/;
- 
- export const validateParameter = (source, index, parameter) => {
+const numberRegex = /^-?[1-9]{1}[0-9]*$/;
+const tupleRegex = /^\(([1-9]{1}[0-9]*), ?([1-9]{1}[0-9]*)\)$/;
+
+export const validateParameter = (source, index, parameter) => {
   const { parameter_name, min, max } = parameter;
   let { value } = parameter;
   if (parameter_name === "(H, W)") {
@@ -17,15 +17,23 @@ import { toast } from "react-toastify";
       const W = result[2].valueOf();
 
       if (H < min || H > max) {
-        toast.error(`${source} Layer ${index + 1}: H not in range [${min}, ${max}]`);
+        toast.error(
+          `${source} Layer ${index + 1}: H not in range [${min}, ${max}]`
+        );
         return false;
       } else if (W < min || W > max) {
-        toast.error(`${source} Layer ${index + 1}: W not in range [${min}, ${max}]`);
+        toast.error(
+          `${source} Layer ${index + 1}: W not in range [${min}, ${max}]`
+        );
         return false;
       }
       return true;
     }
-    toast.error(`${source} Layer ${index + 1}: ${parameter_name} not of appropriate format: (H, W)`);
+    toast.error(
+      `${source} Layer ${
+        index + 1
+      }: ${parameter_name} not of appropriate format: (H, W)`
+    );
   } else {
     if (numberRegex.test(value)) {
       value = value.valueOf();
@@ -33,7 +41,11 @@ import { toast } from "react-toastify";
         return true;
       }
     }
-    toast.error(`${source} Layer ${index + 1}: ${parameter_name} not in range [${min}, ${max}]`);
+    toast.error(
+      `${source} Layer ${
+        index + 1
+      }: ${parameter_name} not in range [${min}, ${max}]`
+    );
   }
   return false;
 };

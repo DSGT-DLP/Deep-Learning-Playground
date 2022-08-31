@@ -459,7 +459,13 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Resize",
     object_name: "transforms.Resize",
     parameters: {
-      size: { index: 0, parameter_name: "(H, W)", min: 1, max: 1000, default: "(32, 32)" },
+      size: {
+        index: 0,
+        parameter_name: "(H, W)",
+        min: 1,
+        max: 1000,
+        default: "(32, 32)",
+      },
     },
     label: "Resize",
     value: "Resize",
@@ -468,7 +474,12 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Gaussian Blur",
     object_name: "transforms.GaussianBlur",
     parameters: {
-      kernel_size: { index: 0, parameter_name: "kernel size", min: 1, max: 1000 },
+      kernel_size: {
+        index: 0,
+        parameter_name: "kernel size",
+        min: 1,
+        max: 1000,
+      },
     },
     label: "Gaussian Blur",
     value: "GaussianBlur",
@@ -484,8 +495,20 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Normalize",
     object_name: "transforms.Normalize",
     parameters: {
-      mean: { index: 0, parameter_name: "mean", min: -1000, max: 1000, default: 0 },
-      std: { index: 1, parameter_name: "std", min: -1000, max: 1000, default: 1 },
+      mean: {
+        index: 0,
+        parameter_name: "mean",
+        min: -1000,
+        max: 1000,
+        default: 0,
+      },
+      std: {
+        index: 1,
+        parameter_name: "std",
+        min: -1000,
+        max: 1000,
+        default: 1,
+      },
     },
     label: "Normalize",
     value: "Normalize",

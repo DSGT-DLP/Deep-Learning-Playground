@@ -195,7 +195,7 @@ const ImageModels = () => {
       <div style={{ marginTop: 20 }} />
       <TitleText text="Image Transformations" />
       <Transforms
-        queryText={"Test Transform"}
+        queryText={"Train Transform"}
         options={POSSIBLE_TRANSFORMS}
         transforms={trainTransforms}
         setTransforms={setTrainTransforms}

@@ -14,7 +14,7 @@ const Transforms = (props) => {
     const copyTransform = [...transforms];
     const selectedTransform = deepCopyObj(e);
     Object.values(selectedTransform.parameters).forEach((val) => {
-      val.value = "";
+      val.value = val.default ? val.default : val.min;
     });
     copyTransform.push(selectedTransform);
     setTransforms(copyTransform);

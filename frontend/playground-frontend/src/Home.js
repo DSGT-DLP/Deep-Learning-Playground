@@ -222,7 +222,7 @@ const Home = () => {
                   const copyCurrent = [...currentAddedLayers];
                   const layerCopy = deepCopyObj(newLayer);
                   Object.values(layerCopy.parameters).forEach((val) => {
-                    val.value = "";
+                    val.value = val.default ? val.default : val.min;
                   });
                   copyCurrent.push(layerCopy);
                   return copyCurrent;

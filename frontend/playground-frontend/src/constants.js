@@ -52,8 +52,8 @@ export const DEFAULT_ADDED_LAYERS = [
     display_name: "Linear",
     object_name: "nn.Linear",
     parameters: {
-      inputSize: { index: 0, parameter_name: "Input size", value: 4 },
-      outputSize: { index: 1, parameter_name: "Output size", value: 10 },
+      inputSize: { index: 0, parameter_name: "Input size", value: 4, min: 1, max: 1600 },
+      outputSize: { index: 1, parameter_name: "Output size", value: 10, min: 1, max: 1600 },
     },
   },
   {
@@ -65,15 +65,15 @@ export const DEFAULT_ADDED_LAYERS = [
     display_name: "Linear",
     object_name: "nn.Linear",
     parameters: {
-      inputSize: { index: 0, parameter_name: "Input size", value: 10 },
-      outputSize: { index: 1, parameter_name: "Output size", value: 3 },
+      inputSize: { index: 0, parameter_name: "Input size", value: 10, min: 1, max: 1600 },
+      outputSize: { index: 1, parameter_name: "Output size", value: 3, min: 1, max: 1600 },
     },
   },
   {
     display_name: "Softmax",
     object_name: "nn.Softmax",
     parameters: {
-      inputSize: { index: 0, parameter_name: "dim", value: -1 },
+      inputSize: { index: 0, parameter_name: "dim", value: -1, min: -3, max: 2 },
     },
   },
 ];
@@ -113,26 +113,36 @@ export const DEFAULT_IMG_LAYERS = [
         index: 0,
         parameter_name: "in channels",
         value: 1,
+        min: 1,
+        max: 16,
       },
       out_channels: {
         index: 1,
         parameter_name: "out channels",
         value: 5,
+        min: 1,
+        max: 16,
       },
       kernel_size: {
         index: 2,
         parameter_name: "kernel_size",
         value: 3,
+        min: 1,
+        max: 1000,
       },
       stride: {
         index: 3,
         parameter_name: "stride",
         value: 1,
+        min: 1,
+        max: 1000,
       },
       padding: {
         index: 4,
         parameter_name: "padding",
         value: 1,
+        min: 1,
+        max: 1000,
       },
     },
   },
@@ -140,23 +150,23 @@ export const DEFAULT_IMG_LAYERS = [
     display_name: "MaxPool2d",
     object_name: "nn.MaxPool2d",
     parameters: {
-      kernel_size: { index: 0, parameter_name: "Kernel size", value: 3 },
+      kernel_size: { index: 0, parameter_name: "Kernel size", value: 3, min: 1, max: 1000 },
     },
   },
   {
     display_name: "Flatten",
     object_name: "nn.Flatten",
     parameters: {
-      start_dim: { index: 0, parameter_name: "start dim", value: 1 },
-      end_dim: { index: 1, parameter_name: "end dim", value: -1 },
+      start_dim: { index: 0, parameter_name: "start dim", value: 1, min: -4, max: 3 },
+      end_dim: { index: 1, parameter_name: "end dim", value: -1, min: -4, max: 3 },
     },
   },
   {
     display_name: "Linear",
     object_name: "nn.Linear",
     parameters: {
-      inputSize: { index: 0, parameter_name: "Input size", value: 10 * 10 * 5 },
-      outputSize: { index: 1, parameter_name: "Output size", value: 10 },
+      inputSize: { index: 0, parameter_name: "Input size", value: 10 * 10 * 5, min: 1, max: 1600 },
+      outputSize: { index: 1, parameter_name: "Output size", value: 10, min: 1, max: 1600 },
     },
   },
   {

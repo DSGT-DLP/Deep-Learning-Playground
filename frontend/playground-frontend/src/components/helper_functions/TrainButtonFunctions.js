@@ -1,7 +1,31 @@
+import { toast } from "react-toastify";
+
 /**
  * This file's puropose is to generalise the methods of TrainButton (focusing on Tabular, Image, and Pretrained models)
  *
  */
+ const numberRegex = /^-?[1-9]{1}[0-9]*$/;
+ const tupleRegex = /^\([1-9]{1}[0-9]*,[1-9]{1}[0-9]*\)$/;
+ 
+ export const validateParameter = (source, index, parameter) => {
+  const { parameter_name, min, max } = parameter;
+  let { value } = parameter;
+  if (parameter_name === "Resize") {
+    if (tupleRegex.test(value)) {
+      const groups = value.match(tupleRegex);
+      console.log(groups);
+    }
+  } else {
+    if (numberRegex.test(value)) {
+      value = value.valueOf();
+      if (value >= min && value <= max) {
+        return true;
+      }
+    }
+  }
+  toast.error(`${source} Layer ${index + 1}: ${parameter_name} not in range [${min}, ${max}]`);
+  return false;
+};
 
 // TABULAR
 export const validateTabularInputs = (user_arch, ...args) => {

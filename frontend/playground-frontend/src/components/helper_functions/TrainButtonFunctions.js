@@ -18,12 +18,12 @@ export const validateParameter = (source, index, parameter) => {
 
       if (H < min || H > max) {
         toast.error(
-          `${source} Layer ${index + 1}: H not in range [${min}, ${max}]`
+          `${source} Layer ${index + 1}: H not an integer in range [${min}, ${max}]`
         );
         return false;
       } else if (W < min || W > max) {
         toast.error(
-          `${source} Layer ${index + 1}: W not in range [${min}, ${max}]`
+          `${source} Layer ${index + 1}: W not an integer in range [${min}, ${max}]`
         );
         return false;
       }
@@ -44,7 +44,7 @@ export const validateParameter = (source, index, parameter) => {
     toast.error(
       `${source} Layer ${
         index + 1
-      }: ${parameter_name} not in range [${min}, ${max}]`
+      }: ${parameter_name} not an integer in range [${min}, ${max}]`
     );
   }
   return false;

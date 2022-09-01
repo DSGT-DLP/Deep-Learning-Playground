@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 
-
 def compute_correct(predicted, actual):
     """
     Given a prediction (usually in logit form for classification problem), count the number of data points that match

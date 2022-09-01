@@ -1,8 +1,44 @@
-# Deep-Learning-Playground
+# Deep Learning Playground
 
 Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules through a drag and drop interface.
 
-> **Deployed website:** https://datasciencegt-dlp.com/ </br> > **GitHub repo:** https://github.com/karkir0003/Deep-Learning-Playground/ </br> > **Owners:** See [CODEOWNERS](./CODEOWNERS)
+> **Deployed website:** https://datasciencegt-dlp.com/ </br>
+ **GitHub repo:** https://github.com/karkir0003/Deep-Learning-Playground/ </br> **Owners:** See [CODEOWNERS](./CODEOWNERS)
+
+# How to Run
+
+## Prerequisites
+Have the following installed first:
+
+1. [NodeJS v16](https://nodejs.org/en/download/)
+2. NPM v8
+3. [Anaconda](https://www.anaconda.com/)
+
+## Shortcuts:
+| Terminal   | Procedure   | Command |
+|-----------|-----------|-----|
+| Command Prompt | Run All | `start /B npm run startf & start npm run startb` |
+| Powershell | Run All | `cmd /C 'start /B npm run startf & start npm run startb'` |
+| Linux Terminal | Run All | `tmux new-session -d -s frontend_session 'npm run startf'; tmux new-session -d -s backend_session 'npm run startb'` |
+
+
+## Installing the frontend (one-time)
+In the root directory of this project (`~/Deep-Learning-Playground`), run: 
+```
+npm run installf
+```
+## Installing the backend (one-time)
+```
+npm run installb
+```
+## Running the frontend
+```
+npm run startf
+```
+## Running the backend
+```
+npm run startb
+```
 
 # Backend
 
@@ -47,16 +83,6 @@ npm start
 ## Frontend Architecture
 
 See [Architecture.md](./.github/Architecture.md)
-
-## How to Add New Layer Options
-
-Currently, there are three layers implemented in this playgroud—Linear, ReLU, and Softmax. A developer can easily add in a new layer to be used by the user through:
-
-1. Go to [settings.js](./frontend/playground-frontend/src/settings.js)
-2. Put in (\* = required):
-   - `display_name`\*: Name of layer to be displayed to user
-   - `object_name`\*: Layer object to be passed into the backend, e.g., `nn.linear(...)`
-   - `parameters`: An array of JS objects with at least the display name of the parameters for the layer object
 
 # License
 

@@ -15,6 +15,7 @@ export { default as LayerChoice } from "./Home/LayerChoice";
 export { default as RectContainer } from "./Home/RectContainer";
 export { default as Results } from "./Home/Results";
 export { default as TrainButton } from "./Home/TrainButton";
+export { default as ChoiceTab } from "./Home/ChoiceTab";
 
 // About
 export { default as About } from "./About/About";
@@ -33,3 +34,9 @@ export { default as Navbar } from "./Navbar/Navbar";
 
 // Footer
 export { default as Footer } from "./Footer/Footer";
+
+// Image Models page
+export { default as ImageModels } from "./ImageModels/ImageModels";
+
+// Pretrained page
+export { default as LargeFileUpload } from "./general/LargeFileUpload";

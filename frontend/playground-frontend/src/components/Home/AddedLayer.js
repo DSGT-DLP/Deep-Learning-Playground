@@ -5,12 +5,15 @@ import { COLORS, GENERAL_STYLES, LAYOUT } from "../../constants";
 
 const _InputOutputPromptResponse = (props) => {
   const { param_key, allParamInputs, setAddedLayers, thisLayerIndex } = props;
-  const { parameter_name, value } = allParamInputs[param_key];
+  const { parameter_name, value, min, max } = allParamInputs[param_key];
 
   return (
     <div style={{ ...LAYOUT.row, alignItems: "center" }}>
-      <p style={styles.input_prompt}>{`${parameter_name}:`}</p>
+      <p style={styles.input_prompt}>{`${parameter_name}:`}</p>&nbsp;
       <input
+        type={parameter_name === "(H, W)" ? "" : "number"}
+        min={min}
+        max={max}
         value={value}
         onChange={(e) =>
           // updates the addedLayers state with the current user input value of parameters
@@ -28,9 +31,12 @@ const _InputOutputPromptResponse = (props) => {
 };
 
 const AddedLayer = (props) => {
-  const { thisLayerIndex, addedLayers, setAddedLayers, onDelete } = props;
+  const { thisLayerIndex, addedLayers, setAddedLayers, onDelete, style } =
+    props;
   const thisLayer = addedLayers[thisLayerIndex];
   const { display_name, parameters } = thisLayer;
+
+  styles = { ...styles, ...style };
 
   // converts the parameters object for each layer into an array of parameter objects
   const param_array = [];
@@ -48,7 +54,7 @@ const AddedLayer = (props) => {
 
   return (
     <div style={LAYOUT.column}>
-      <RectContainer style={{ backgroundColor: COLORS.layer }}>
+      <RectContainer style={styles.layer_box}>
         <button style={styles.delete_btn} onClick={onDelete}>
           ❌
         </button>
@@ -74,11 +80,16 @@ AddedLayer.propTypes = {
   addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
   setAddedLayers: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  style: PropTypes.object,
 };
 
 export default AddedLayer;
 
-const styles = {
+let styles = {
+  layer_box: {
+    backgroundColor: COLORS.layer,
+    width: 130,
+  },
   delete_btn: {
     position: "absolute",
     top: 0,
@@ -90,11 +101,10 @@ const styles = {
   input_box: {
     margin: 7.5,
     backgroundColor: "white",
-    width: 130,
+    width: 150,
     paddingInline: 5,
   },
   input_prompt: {
-    fontFamily: "Arial, Helvetica, sans-serif",
     fontSize: 15,
     fontWeight: "bold",
   },

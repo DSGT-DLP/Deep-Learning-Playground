@@ -1,6 +1,12 @@
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 
+const socketEventDict = {
+  tabular: "runTraining",
+  image: "img-run",
+  pretrained: "pretrain-run",
+};
+
 const socket = io();
 socket.on("connect", () => {
   frontendLog(`connected to socket`);
@@ -14,36 +20,8 @@ const frontendLog = (log) => {
   socket.emit("frontendLog", log);
 };
 
-const train_and_output = (
-  user_arch,
-  criterion,
-  optimizerName,
-  problemType,
-  targetCol = null,
-  features = null,
-  usingDefaultDataset = null,
-  testSize,
-  epochs,
-  batchSize,
-  shuffle,
-  csvData = null,
-  fileURL = null
-) => {
-  socket.emit("runTraining", {
-    user_arch: user_arch,
-    criterion: criterion,
-    optimizer_name: optimizerName,
-    problem_type: problemType,
-    target: targetCol,
-    features: features,
-    default: usingDefaultDataset,
-    test_size: testSize,
-    epochs: epochs,
-    batch_size: batchSize,
-    shuffle: shuffle,
-    csvData: csvData,
-    fileURL: fileURL,
-  });
+const train_and_output = (choice, choiceDict) => {
+  socket.emit(socketEventDict[choice], choiceDict, socket.id);
 };
 
 const sendEmail = (email, problemType) => {
@@ -67,14 +45,18 @@ const sendEmail = (email, problemType) => {
     );
   }
 
-  socket.emit("sendEmail", {
-    email_address: email,
-    subject:
-      "Your output files and visualizations from Deep Learning Playground",
-    body_text:
-      "Attached are the output files and visualizations that you just created in Deep Learning Playground on datasciencegt-dlp.com. Please notify us if there are any problems.",
-    attachment_array: attachments,
-  });
+  socket.emit(
+    "sendEmail",
+    {
+      email_address: email,
+      subject:
+        "Your output files and visualizations from Deep Learning Playground",
+      body_text:
+        "Attached are the output files and visualizations that you just created in Deep Learning Playground on datasciencegt-dlp.com. Please notify us if there are any problems.",
+      attachment_array: attachments,
+    },
+    socket.id
+  );
 };
 
 socket.on("emailResult", (result) => {

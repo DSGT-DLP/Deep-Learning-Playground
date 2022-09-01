@@ -1,24 +1,27 @@
 import pandas as pd
 import traceback
 import os
-from flask import Flask
+from flask import Flask, request, copy_current_request_context
+from werkzeug.utils import secure_filename
+import shutil
 
 from backend.common.utils import *
-from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL
-from backend.common.dataset import read_local_csv_file, read_dataset
+from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL, UNZIPPED_DIR_NAME
+from backend.common.dataset import loader_from_zipped, read_local_csv_file, read_dataset
 from backend.common.optimizer import get_optimizer
 from backend.dl.dl_model_parser import parse_deep_user_architecture, get_object
-from backend.dl.dl_trainer import train_deep_model, get_deep_predictions
+from backend.dl.dl_trainer import train_deep_classification_model, train_deep_model, get_deep_predictions, train_deep_image_classification
 from backend.ml.ml_trainer import train_classical_ml_model
 from backend.dl.dl_model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
-from backend.common.default_datasets import get_default_dataset
+from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
 from flask import send_from_directory
 from flask_socketio import SocketIO
 import eventlet
+import datetime, threading
 
 app = Flask(
     __name__,
@@ -27,7 +30,7 @@ app = Flask(
     ),
 )
 CORS(app)
-socket = SocketIO(app, cors_allowed_origins="*")
+socket = SocketIO(app, cors_allowed_origins="*", ping_timeout=600, ping_interval=15)
 
 def ml_drive(
     user_model,
@@ -127,7 +130,7 @@ def dl_drive(
             y = input_df[target]
             X = input_df[features]
 
-        if (len(y) * test_size < batch_size or len(y) * (1 - test_size) < batch_size):
+        if len(y) * test_size < batch_size or len(y) * (1 - test_size) < batch_size:
             raise ValueError("reduce batch size, not enough values in dataframe")
 
         if problem_type.upper() == "CLASSIFICATION":
@@ -186,21 +189,97 @@ def root(path):
 def frontend_log(log):
     app.logger.info(f'"frontend: {log}"')
 
+@socket.on("img-run")
+def testing(request_data, socket_id):
+    try: 
+        print("backend started")
+        IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
+        # request_data = json.loads(request.data)
+        train_transform = request_data["train_transform"]
+        test_transform = request_data["test_transform"]
+        user_arch = request_data["user_arch"]
+        criterion = request_data["criterion"]
+        optimizer_name = request_data["optimizer_name"]
+        default = request_data["using_default_dataset"]
+        epochs = request_data["epochs"]
+        batch_size = request_data["batch_size"]
+        shuffle = request_data["shuffle"]
+
+        # upload()
+        print(user_arch)
+        model = DLModel(parse_deep_user_architecture(user_arch))
+
+        train_transform = parse_deep_user_architecture(train_transform)
+        test_transform = parse_deep_user_architecture(test_transform)
+
+        if not default:
+            for x in os.listdir(IMAGE_UPLOAD_FOLDER):
+                if x != ".gitkeep":
+                    zip_file = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
+                    break
+            train_loader, test_loader = loader_from_zipped(zip_file, batch_size, shuffle, train_transform, test_transform)
+        else:
+            train_loader, test_loader = get_img_default_dataset_loaders(default, test_transform, train_transform, batch_size, shuffle)
+
+        print("got data loaders")
+
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model.to(device) # model should go to GPU before initializing optimizer  https://stackoverflow.com/questions/66091226/runtimeerror-expected-all-tensors-to-be-on-the-same-device-but-found-at-least/66096687#66096687 
+
+        optimizer = get_optimizer(
+                model, optimizer_name=optimizer_name, learning_rate=0.05
+        )
+
+        train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress_helper(socket_id))
+
+        print("training successfully finished")
+
+        socket.emit("trainingResult",
+                        {
+                            "success": True,
+                            "message": "Dataset trained and results outputted successfully",
+                            "dl_results": csv_to_json(),
+                            "auxiliary_outputs": train_loss_results,
+                            "status": 200
+                        },
+                        to=socket_id
+        )
+    except Exception as e:
+        print(traceback.format_exc())
+        socket.emit('trainingResult',
+            {
+                "success": False,
+                "message": traceback.format_exc(limit=1),
+                "status": 400
+            },
+            to=socket_id
+        )
+    finally:
+        for x in os.listdir(IMAGE_UPLOAD_FOLDER):
+            if (x != ".gitkeep"):
+                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER) , x)
+                if (os.path.isdir(file_rem)):
+                    shutil.rmtree(file_rem)
+                else:
+                    os.remove(file_rem)
+        if os.path.exists(UNZIPPED_DIR_NAME):
+            shutil.rmtree(UNZIPPED_DIR_NAME)
+
 @socket.on('runTraining')
-def train_and_output(request_data):
+def train_and_output(request_data, socket_id):
     user_arch = request_data["user_arch"]
     criterion = request_data["criterion"]
-    optimizer_name = request_data["optimizer_name"]
+    optimizer_name = request_data["optimizer_name"]    
     problem_type = request_data["problem_type"]
     target = request_data["target"]
     features = request_data["features"]
-    default = request_data["default"]
+    default = request_data["using_default_dataset"]
     test_size = request_data["test_size"]
     batch_size = request_data["batch_size"]
     epochs = request_data["epochs"]
     shuffle = request_data["shuffle"]
-    csvDataStr = request_data["csvData"]
-    fileURL = request_data["fileURL"]
+    csvDataStr = request_data["csv_data"]
+    fileURL = request_data["file_URL"]
     
     try:
         if not default:
@@ -216,7 +295,7 @@ def train_and_output(request_data):
             criterion=criterion,
             optimizer_name=optimizer_name,
             problem_type=problem_type,
-            send_progress=send_progress,
+            send_progress=send_progress_helper(socket_id),
             target=target,
             features=features,
             default=default,
@@ -234,7 +313,8 @@ def train_and_output(request_data):
                 "dl_results": csv_to_json(),
                 "auxiliary_outputs": train_loss_results,
                 "status": 200
-            }
+            },
+            to=socket_id
         )
 
     except Exception:
@@ -244,12 +324,13 @@ def train_and_output(request_data):
                 "success": False,
                 "message": traceback.format_exc(limit=1),
                 "status": 400
-            }
+            },
+            to=socket_id
         )
 
 
 @socket.on('sendEmail')
-def send_email_route(request_data):
+def send_email_route(request_data, socket_id):
     # extract data
     required_params = ["email_address", "subject", "body_text"]
     for required_param in required_params:
@@ -258,7 +339,8 @@ def send_email_route(request_data):
                 {
                     "success": False,
                     "message": "Missing parameter " + required_param
-                }
+                },
+                to=socket_id
             )
 
     email_address = request_data["email_address"]
@@ -271,7 +353,8 @@ def send_email_route(request_data):
                 {
                     "success": False,
                     "message": "Attachment array must be a list of filepaths",
-                }
+                },
+                to=socket_id
             )
     else:
         attachment_array = []
@@ -283,7 +366,8 @@ def send_email_route(request_data):
             {
                 "success": True,
                 "message": "Sent email to " + email_address
-            }
+            },
+            to=socket_id
         )
     except Exception:
         print(traceback.format_exc())
@@ -291,12 +375,37 @@ def send_email_route(request_data):
             {
                 "success": False,
                 "message": traceback.format_exc(limit=1)
-            }
+            },
+            to=socket_id
         )
 
-def send_progress(progress):
-    socket.emit('trainingProgress', progress)
-    eventlet.greenthread.sleep(0)                 # to prevent logs from being grouped and sent together at the end of training
+@app.route('/upload', methods=['POST'])
+def upload():
+    @copy_current_request_context
+    def save_file(closeAfterWrite):
+        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " dropzone is working")
+        f = request.files['file']
+        basepath = os.path.dirname(__file__) 
+        upload_path = os.path.join(basepath, 'image_data_uploads',secure_filename(f.filename)) 
+        f.save(upload_path)
+        closeAfterWrite()
+        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " dropzone has finished its task")
+    def passExit():
+        pass
+    if request.method == 'POST':
+        f= request.files['file']
+        normalExit = f.stream.close
+        f.stream.close = passExit
+        save_file(normalExit)
+        socket.emit('uploadComplete')
+        return '200'
+    return '200'
+
+def send_progress_helper(socket_id):
+    def send_progress(progress):
+        socket.emit('trainingProgress', progress, to=socket_id)
+        eventlet.greenthread.sleep(0)                 # to prevent logs from being grouped and sent together at the end of training
+    return send_progress
 
 if __name__ == "__main__":
     socket.run(app, debug=True, host="0.0.0.0", port=8000)

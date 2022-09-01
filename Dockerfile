@@ -7,7 +7,7 @@ WORKDIR /
 
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 RUN unzip awscliv2.zip
-RUN sudo ./aws/install
+RUN ./aws/install
 
 ARG AWS_REGION=""
 ARG AWS_DEPLOY_SECRET_ACCESS_KEY=""

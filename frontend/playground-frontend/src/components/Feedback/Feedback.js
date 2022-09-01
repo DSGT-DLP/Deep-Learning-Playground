@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import EmailInput from "../Home/EmailInput";
 import ReCAPTCHA from "react-google-recaptcha";
 import React, { useState } from "react";
 import TitleText from "../general/TitleText";
 import { COLORS, GENERAL_STYLES } from "../../constants";
-import { socket } from '../helper_functions/TalkWithBackend';
+import { socket } from "../helper_functions/TalkWithBackend";
 
 const Feedback = () => {
   const [email, setEmail] = useState("");

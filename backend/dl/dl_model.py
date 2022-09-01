@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 
-
 class DLModel(nn.Module):
     def __init__(self, layer_list):
         """

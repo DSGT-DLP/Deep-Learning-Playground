@@ -9,9 +9,9 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 RUN unzip awscliv2.zip
 RUN ./aws/install
 
-ARG AWS_REGION=""
-ARG AWS_DEPLOY_SECRET_ACCESS_KEY=""
-ARG AWS_DEPLOY_ACCESS_KEY_ID=""
+ARG AWS_REGION
+ARG AWS_DEPLOY_SECRET_ACCESS_KEY
+ARG AWS_DEPLOY_ACCESS_KEY_ID
 
 RUN aws configure set region $AWS_REGION aws_access_key_id $AWS_DEPLOY_ACCESS_KEY_ID aws_secret_access_key $AWS_DEPLOY_SECRET_ACCESS_KEY
 

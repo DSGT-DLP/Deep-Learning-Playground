@@ -27,6 +27,8 @@ import {
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { socket } from "./components/helper_functions/TalkWithBackend";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const [csvDataInput, setCSVDataInput] = useState([]);
@@ -77,7 +79,7 @@ const Home = () => {
   };
 
   const inputColumnOptions = columns.map((e, i) => ({
-    label: e.name,
+    label: e.name ? e.name : e,
     value: i,
   }));
 
@@ -172,20 +174,35 @@ const Home = () => {
   }, [problemType]);
 
   useEffect(() => {
-      setDefaultColumns(() => {
-        return usingDefaultDataset.columns ? usingDefaultDataset.columns : []; 
-      });
+      if( usingDefaultDataset.columns ) {
+        setDefaultColumns(usingDefaultDataset.columns);
+      } else if ( usingDefaultDataset.value ) {
+        socket.emit("defaultDataset", {
+          using_default_dataset: usingDefaultDataset.value
+            ? usingDefaultDataset.value
+            : null,
+          }
+        );
+      }
     },  [usingDefaultDataset]);
 
-    useEffect( () => {
-      setColumns( () => (usingDefaultDataset.value ? defaultColumns : csvColumns) );
-    }, [defaultColumns], [csvColumns]);
+  useEffect( () => {
+    setColumns( () => (usingDefaultDataset.value ? defaultColumns : csvColumns) );
+  }, [defaultColumns], [csvColumns]);
 
-    useEffect( () => {
-      setTargetCol(null);
-      setFeatures(null);
-      setInputKey((e) => e + 1);
-    }, [columns]);
+  useEffect( () => {
+    setTargetCol(null);
+    setFeatures(null);
+    setInputKey((e) => e + 1);
+  }, [columns]);
+
+  socket.on("defaultColumns", (result) => {
+    if (!result.success) {
+      toast.error(result.message);
+    } else {
+      setColumns( result.columns );
+    }
+  });
   
   return (
     <div style={{ padding: 20, marginBottom: 50 }}>

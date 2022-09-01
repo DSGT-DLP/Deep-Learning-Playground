@@ -4,7 +4,6 @@ import os
 from flask import Flask, request, copy_current_request_context
 from werkzeug.utils import secure_filename
 import shutil
-
 from backend.common.utils import *
 from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL, UNZIPPED_DIR_NAME
 from backend.common.dataset import loader_from_zipped, read_local_csv_file, read_dataset
@@ -15,13 +14,14 @@ from backend.ml.ml_trainer import train_classical_ml_model
 from backend.dl.dl_model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
-from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders
+from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders, get_default_dataset_header
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
 from flask import send_from_directory
 from flask_socketio import SocketIO
 import eventlet
 import datetime, threading
+import json
 
 app = Flask(
     __name__,
@@ -365,6 +365,28 @@ def send_email_route(request_data):
             {
                 "success": True,
                 "message": "Sent email to " + email_address
+            }
+        )
+    except Exception:
+        print(traceback.format_exc())
+        return socket.emit('emailResult',
+            {
+                "success": False,
+                "message": traceback.format_exc(limit=1)
+            }
+        )
+
+@socket.on('defaultDataset')
+def send_columns(request_data):
+    default = request_data["using_default_dataset"]
+    print("default", default)
+    try:
+        header = get_default_dataset_header(default.upper())
+        header_list = header.tolist()
+        return socket.emit('defaultColumns', 
+            {
+                "success": True,
+                "columns": header_list
             }
         )
     except Exception:

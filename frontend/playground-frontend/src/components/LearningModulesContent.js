@@ -83,7 +83,48 @@ content = {
                     sectionType: "image",
                     path: "Diagram of Neural Network",
                     caption: "An example of the structure of a neural network",
+                },
+                {
+                    sectionType: "text",
+                    content: "As shown above, a neural network is built up of layers. There are many different types of layers that manipulate their inputs in different ways. Each layer is made up of a series of nodes, which are like neurons in the brain. Each neuron takes input from every single node in the previous layer, and produces one output value."
+                },
+                {
+                    sectionType: "text",
+                    content: "The first layer in each neural network is called the input layer, and has an equal number of nodes as the number of features. The last layer is the output layer. For regression problems, the output layer will usually have just one node, and the value that that node outputs is the final output from the model. In classification models, the output layer usually contains a number of nodes corresponding to the number of possible classifications. The classification whose node contains the highest value is then selected as the final output from the model."
+                },
+                {
+                    sectionType: "frQuestion",
+                    question: "Dave built a neural network that attempts to classify a picture as a dog, cat, or chicken. How many nodes will the last layer of his neural network have?",
+                    answer: 3
+
+                },
+                {
+                    sectionType: "heading1",
+                    text: "Linear Layers (Perceptrons)"
+                },
+                {
+                    sectionType: "text",
+                    content: "Now we know what a neural network looks like generally. But how does it take an input and create an output that makes sense. That magic happens in the layers, of which there are many different types. However, the most common type is a linear layer, also called a perceptron. In fact, a perceptron is sometimes used as a machine learning model on its own, not as part of a neural network."
+                },
+                {
+                    sectionType: "text",
+                    content: "Let's take a look at a single node. The number of inputs it recieves is equal to the number of nodes in the previous layer, since every node in a layer is mapped to every node in the next layer. That node then produces one output. Let's say we know what we want that output to be. What mathematical operations could we do to produce that value? Well, if we take a hint from the name \"linear layer\", we could multiply each input by a number, called a weight, and then add them together. Let's also add in a constant, called a bias. If you take a look at the equation we created, you can see that it looks a lot like an equation of a line, but with many inputs instead of one."
+                },
+                {
+                    sectionType: "image",
+                    path: "image-of-equation",
+                    caption: "The equation for the output from one node"
+                },
+                {
+                    sectionType: "text",
+                    content: "The beauty of neural networks comes in their flexibility. If you imagine just how many ways you can manipulate one node to turn any input into the output you want, and then you remember that it is just one node of many, you can begin to see how powerful neural networks can be. However, the next obvious question that arises is how exactly do we choose the right weights and biases to get the output that we want? That's where the learning part of machine learning comes in."
                 }
+            ]
+        },
+        {
+            title: "Activation Functions",
+            sections: [
+                
             ]
         }
     ]

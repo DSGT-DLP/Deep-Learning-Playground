@@ -17,6 +17,6 @@ def create_secret(name, secret, description=''):
 def delete_secret(secret_id):
     return client.delete_secret(SecretId=secret_id)
 
-create_secret("DUMMY_SECRET", {"username":"david","password":"EXAMPLE-PASSWORD"}, "dummy secret purely for testing purposes")
+#create_secret("DUMMY_SECRET", {"username":"david","password":"EXAMPLE-PASSWORD"}, "dummy secret purely for testing purposes")
 
-print(get_secret())
+print(get_secret("DUMMY_SECRET"))

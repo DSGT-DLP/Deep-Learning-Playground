@@ -3,15 +3,11 @@ import json
 import firebase_admin
 
 from backend.common.constants import AWS_REGION
+from backend.aws_helpers.aws_secrets_utils import aws_secrets
 
 
 def get_secret():
-    secret_name = "DLP/Firebase/Admin_SDK"
-
-    # Create a Secrets Manager client
-    client = boto3.client('secretsmanager', region_name=AWS_REGION)
-
-    return json.loads(client.get_secret_value(SecretId=secret_name)["SecretString"])
+    return aws_secrets.get_secret("DLP/Firebase/Admin_SDK")
 
 def init_firebase():
   firebase_secret = get_secret()

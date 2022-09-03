@@ -31,13 +31,13 @@ npm run installf
 ```
 npm run installb
 ```
-## Running the backend
-```
-npm run startb
-```
 ## Running the frontend
 ```
 npm run startf
+```
+## Running the backend
+```
+npm run startb
 ```
 
 # Backend

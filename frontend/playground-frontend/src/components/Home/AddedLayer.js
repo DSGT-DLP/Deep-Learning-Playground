@@ -5,12 +5,15 @@ import { COLORS, GENERAL_STYLES, LAYOUT } from "../../constants";
 
 const _InputOutputPromptResponse = (props) => {
   const { param_key, allParamInputs, setAddedLayers, thisLayerIndex } = props;
-  const { parameter_name, value } = allParamInputs[param_key];
+  const { parameter_name, value, min, max } = allParamInputs[param_key];
 
   return (
     <div style={{ ...LAYOUT.row, alignItems: "center" }}>
-      <p style={styles.input_prompt}>{`${parameter_name}:`}</p>
+      <p style={styles.input_prompt}>{`${parameter_name}:`}</p>&nbsp;
       <input
+        type={parameter_name === "(H, W)" ? "" : "number"}
+        min={min}
+        max={max}
         value={value}
         onChange={(e) =>
           // updates the addedLayers state with the current user input value of parameters

@@ -206,7 +206,7 @@ def frontend_log(log):
     app.logger.info(f'"frontend: {log}"')
 
 @socket.on("img-run")
-def testing(request_data):
+def testing(request_data, socket_id):
     try: 
         print("backend started")
         IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
@@ -246,7 +246,7 @@ def testing(request_data):
                 model, optimizer_name=optimizer_name, learning_rate=0.05
         )
 
-        train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress)
+        train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress_helper(socket_id))
 
         print("training successfully finished")
 
@@ -257,7 +257,8 @@ def testing(request_data):
                             "dl_results": csv_to_json(),
                             "auxiliary_outputs": train_loss_results,
                             "status": 200
-                        }
+                        },
+                        to=socket_id
         )
     except Exception as e:
         print(traceback.format_exc())
@@ -266,7 +267,8 @@ def testing(request_data):
                 "success": False,
                 "message": traceback.format_exc(limit=1),
                 "status": 400
-            }
+            },
+            to=socket_id
         )
     finally:
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
@@ -280,7 +282,7 @@ def testing(request_data):
             shutil.rmtree(UNZIPPED_DIR_NAME)
 
 @socket.on('runTraining')
-def train_and_output(request_data):
+def train_and_output(request_data, socket_id):
     user_arch = request_data["user_arch"]
     criterion = request_data["criterion"]
     optimizer_name = request_data["optimizer_name"]    
@@ -309,7 +311,7 @@ def train_and_output(request_data):
             criterion=criterion,
             optimizer_name=optimizer_name,
             problem_type=problem_type,
-            send_progress=send_progress,
+            send_progress=send_progress_helper(socket_id),
             target=target,
             features=features,
             default=default,
@@ -327,27 +329,36 @@ def train_and_output(request_data):
                 "message": "Dataset trained and results outputted successfully",
                 "dl_results": csv_to_json(),
                 "auxiliary_outputs": train_loss_results,
-                "status": 200,
+                "status": 200
             },
+            to=socket_id
         )
 
     except Exception:
         print(traceback.format_exc())
-        socket.emit(
-            "trainingResult",
-            {"success": False, "message": traceback.format_exc(limit=1), "status": 400},
+
+        socket.emit('trainingResult',
+            {
+                "success": False,
+                "message": traceback.format_exc(limit=1),
+                "status": 400
+            },
+            to=socket_id
         )
 
 
-@socket.on("sendEmail")
-def send_email_route(request_data):
+@socket.on('sendEmail')
+def send_email_route(request_data, socket_id):
     # extract data
     required_params = ["email_address", "subject", "body_text"]
     for required_param in required_params:
         if required_param not in request_data:
-            return socket.emit(
-                "emailResult",
-                {"success": False, "message": "Missing parameter " + required_param},
+            return socket.emit('emailResult',
+                {
+                    "success": False,
+                    "message": "Missing parameter " + required_param
+                },
+                to=socket_id
             )
 
     email_address = request_data["email_address"]
@@ -362,6 +373,7 @@ def send_email_route(request_data):
                     "success": False,
                     "message": "Attachment array must be a list of filepaths",
                 },
+                to=socket_id
             )
     else:
         attachment_array = []
@@ -369,14 +381,21 @@ def send_email_route(request_data):
     # try to send email
     try:
         send_email(email_address, subject, body_text, attachment_array)
-        return socket.emit(
-            "emailResult",
-            {"success": True, "message": "Sent email to " + email_address},
+        return socket.emit('emailResult',
+            {
+                "success": True,
+                "message": "Sent email to " + email_address
+            },
+            to=socket_id
         )
     except Exception:
         print(traceback.format_exc())
-        return socket.emit(
-            "emailResult", {"success": False, "message": traceback.format_exc(limit=1)}
+        return socket.emit('emailResult',
+            {
+                "success": False,
+                "message": traceback.format_exc(limit=1)
+            },
+            to=socket_id
         )
 
 @socket.on("updateUserSettings")
@@ -407,12 +426,12 @@ def upload():
         return '200'
     return '200'
 
-def send_progress(progress):
-    socket.emit("trainingProgress", progress)
-    eventlet.greenthread.sleep(
-        0
-    )  # to prevent logs from being grouped and sent together at the end of training
 
+def send_progress_helper(socket_id):
+    def send_progress(progress):
+        socket.emit('trainingProgress', progress, to=socket_id)
+        eventlet.greenthread.sleep(0)                 # to prevent logs from being grouped and sent together at the end of training
+    return send_progress
 
 if __name__ == "__main__":
     socket.run(app, debug=True, host="0.0.0.0", port=8000)

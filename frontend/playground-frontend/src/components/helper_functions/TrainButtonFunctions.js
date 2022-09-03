@@ -1,7 +1,58 @@
+import { toast } from "react-toastify";
+
 /**
  * This file's puropose is to generalise the methods of TrainButton (focusing on Tabular, Image, and Pretrained models)
  *
  */
+const numberRegex = /^-?[1-9]{1}[0-9]*$/;
+const tupleRegex = /^\(([1-9]{1}[0-9]*), ?([1-9]{1}[0-9]*)\)$/;
+
+export const validateParameter = (source, index, parameter) => {
+  const { parameter_name, min, max } = parameter;
+  let { value } = parameter;
+  if (parameter_name === "(H, W)") {
+    if (tupleRegex.test(value)) {
+      const result = value.match(tupleRegex);
+      const H = result[1].valueOf();
+      const W = result[2].valueOf();
+
+      if (H < min || H > max) {
+        toast.error(
+          `${source} Layer ${
+            index + 1
+          }: H not an integer in range [${min}, ${max}]`
+        );
+        return false;
+      } else if (W < min || W > max) {
+        toast.error(
+          `${source} Layer ${
+            index + 1
+          }: W not an integer in range [${min}, ${max}]`
+        );
+        return false;
+      }
+      return true;
+    }
+    toast.error(
+      `${source} Layer ${
+        index + 1
+      }: ${parameter_name} not of appropriate format: (H, W)`
+    );
+  } else {
+    if (numberRegex.test(value)) {
+      value = value.valueOf();
+      if (value >= min && value <= max) {
+        return true;
+      }
+    }
+    toast.error(
+      `${source} Layer ${
+        index + 1
+      }: ${parameter_name} not an integer in range [${min}, ${max}]`
+    );
+  }
+  return false;
+};
 
 // TABULAR
 export const validateTabularInputs = (user_arch, ...args) => {

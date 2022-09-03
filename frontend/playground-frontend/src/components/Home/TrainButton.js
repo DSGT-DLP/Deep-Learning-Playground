@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES } from "../../constants";
 import {
+  validateParameter,
   validateTabularInputs,
   sendTabularJSON,
   validateImageInputs,
@@ -48,7 +49,7 @@ const TrainButton = (props) => {
 
   styles = { ...styles, ...style }; // style would take precedence
 
-  const make_obj_param_list = (obj_list) => {
+  const make_obj_param_list = (obj_list, source) => {
     if (!obj_list) return; // ValidateInputs throw error in case of empty things. This is to prevent an unnecessary errors in case of creating a layer
 
     // making a array of relating methods (like "nn.Linear") with their parameters (in_feature, out_feature) by including all methods and their parameters to make something like:
@@ -56,13 +57,18 @@ const TrainButton = (props) => {
     // ["transforms.ToTensor()", "transforms.RandomHorizontalFlip(0.8)"]
 
     const user_arch = [];
-    obj_list.forEach((obj_list_item) => {
+    for (let i = 0; i < obj_list.length; i++) {
+      const obj_list_item = obj_list[i];
       const parameters = obj_list_item.parameters;
       let parameter_call_input = "";
       const parameters_to_be_added = Array(Object.keys(parameters).length);
-      Object.values(parameters).forEach((v) => {
+      for (const v of Object.values(parameters)) {
+        if (!validateParameter(source, i, v)) {
+          reset();
+          return false;
+        }
         parameters_to_be_added[v.index] = v.value;
-      });
+      }
       parameters_to_be_added.forEach((e) => {
         parameter_call_input += e + ",";
       });
@@ -71,7 +77,7 @@ const TrainButton = (props) => {
 
       const callback = `${obj_list_item.object_name}(${parameter_call_input})`;
       user_arch.push(callback);
-    });
+    }
     return user_arch;
   };
 
@@ -94,12 +100,24 @@ const TrainButton = (props) => {
     setDLPBackendResponse(undefined);
     setProgress(0);
 
-    const user_arch = make_obj_param_list(props.addedLayers);
+    const user_arch = make_obj_param_list(props.addedLayers, "Model");
+    if (user_arch === false) return;
+
     let trainTransforms = 0;
     let testTransforms = 0;
     if (props.trainTransforms) {
-      trainTransforms = make_obj_param_list(props.trainTransforms);
-      testTransforms = make_obj_param_list(props.testTransforms);
+      trainTransforms = make_obj_param_list(
+        props.trainTransforms,
+        "Train Transform"
+      );
+      if (trainTransforms === false) return;
+    }
+    if (props.testTransforms) {
+      testTransforms = make_obj_param_list(
+        props.testTransforms,
+        "Test Transform"
+      );
+      if (testTransforms === false) return;
     }
 
     if (!validateInputs(user_arch)) {

@@ -172,7 +172,7 @@ const ImageModels = () => {
                   const copyCurrent = [...currentAddedLayers];
                   const layerCopy = deepCopyObj(newLayer);
                   Object.values(layerCopy.parameters).forEach((val) => {
-                    val.value = "";
+                    val.value = val.default ? val.default : val.min;
                   });
                   copyCurrent.push(layerCopy);
                   return copyCurrent;
@@ -195,7 +195,7 @@ const ImageModels = () => {
       <div style={{ marginTop: 20 }} />
       <TitleText text="Image Transformations" />
       <Transforms
-        queryText={"Test Transform"}
+        queryText={"Train Transform"}
         options={POSSIBLE_TRANSFORMS}
         transforms={trainTransforms}
         setTransforms={setTrainTransforms}

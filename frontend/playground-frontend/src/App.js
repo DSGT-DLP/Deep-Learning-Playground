@@ -13,6 +13,7 @@ import Home from "./Home";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import LearnMod from "./components/LearnMod/LearnMod";
+import DashboardPage from "./components/Dashboard/DashboardPage";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -28,6 +29,7 @@ function App() {
           <Route path="/Wiki" element={<Wiki />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/learningModules" element= {<LearnMod/>} />
+          <Route path="/dashboard" element= {<DashboardPage/>} />
         </Routes>
         <ToastContainer position="top-center" />
         <Footer />

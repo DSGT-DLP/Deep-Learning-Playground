@@ -463,18 +463,43 @@ textarea {
   justify-content: space-around;
 }
 
-.progress{
-  border-radius: 10%;
+.dashboard{
+  border-radius: 6%;
   border: 1px solid black;
   background-color: var(--whitehover);
-  width: 25%;
-  height: 0%;
+  width: 55%;
   text-align: center;
-  margin-top: 10%;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  padding-top: 2rem;
+}
+
+.dashboardHeader {
+  display: flex;
+  justify-content: space-evenly;
   margin-bottom: 1rem;
 }
 
-.progress p {
+.dashboardHeader {
+  margin-left: 4rem;
+}
+
+.classTitle {
+  width: 40%;
+}
+
+.dashboard p {
+  margin-top: 1.5rem;
+  font-size: 1.3rem;
+}
+
+.dashboardRow {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#dashboardBar {
   margin-top: 1.5rem;
 }
 
@@ -484,8 +509,8 @@ textarea {
 }
 
 .class {
-  border-radius: 10%;
-  border: 1 px solid black;
+  border-radius: 1rem;
+  border: 1px solid black;
   background-color: var(--whitehover);
   margin-top: 2rem;
   margin-bottom: 2rem;
@@ -498,8 +523,45 @@ textarea {
   justify-content: space-between;
 }
 
-#classTitle {
+#classBar {
   margin-left: 3rem;
+}
+
+#classTitle {
+  margin-left: 3.3rem;
+  font-size: 1.4rem;
+}
+
+.circleWrap {
+  width: 45%;
+  display: flex;
+  justify-content: end;
+}
+
+.circleFill {
+  margin-top: 0.3rem;
+  margin-right: 2.5rem;
+  width: 5.3rem;
+  height: 5.3rem;
+  border-radius: 50%;
+  border: 1px solid #cdcbd0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circleInFill {
+  width: 77%;
+  height: 77%;
+  background-color: var(--dark-grey);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.textInCircle {
+  font-size: 1rem;
 }
 
 .progressBar {
@@ -513,12 +575,10 @@ textarea {
   padding: 2px;
   border: 3px solid var(--primary);
   height: 0.5rem;
-
 }
 
 .progressContainer .progressFill {
   height: 100%;
-  width: 50%;
   background-color: var(--primary);
 }
 
@@ -531,10 +591,21 @@ textarea {
   font-size: 1.2rem;
 }
 
+.classBodyRight {
+  width: 40%;
+}
+
+
+#subClassBar {
+  margin-top: 0.7rem;
+  width: 100%;
+}
+
 #classBtn {
   display: inline-block;
   padding: .75rem 1.25rem;
   border-radius: 10rem;
+  border: 1px solid black;
   color: var(--primary);
   text-transform: uppercase;
   font-size: 1rem;
@@ -548,6 +619,8 @@ textarea {
 
 #classBtn:hover {
   cursor: pointer;
+  background-color: darken((var(--footer-dark-blue), 10%));
+  
 }
 
 .classFooter {

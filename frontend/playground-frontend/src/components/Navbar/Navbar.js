@@ -20,9 +20,9 @@ const AccountButton = ({ setShowLogin }) => {
         </button>
         {showDropdown && (
           <div id="accountButtons">
-            <button className="accountButton">Dashboard</button>
+            <Link to="/dashboard"><button className="accountButton">Dashboard</button></Link>
             <button className="accountButton">Settings</button>
-            <button className="accountButton">My Learning</button>
+            <Link to ="/learningModules"><button className="accountButton">My Learning</button></Link>
             <button className="accountButton" onClick={() => auth.signOut()}>
               Log out
             </button>

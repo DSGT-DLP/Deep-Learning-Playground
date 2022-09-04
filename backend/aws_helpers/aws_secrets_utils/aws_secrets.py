@@ -47,5 +47,11 @@ def has_secret_string(secret_response):
 def get_secret_binary_decoded(secret_response):
     return base64.b64decode(secret_response['SecretBinary'])
 
+def get_secret_env(secret_response):
+    if has_secret_string(secret_response):
+        return eval(get_secret_string(secret_response))
+    else:
+        return eval(get_secret_binary_decoded(secret_response))
+
 def create_secret(name, secret, description=''):
     return client.create_secret(Name=name, SecretString=json.dumps(secret), Description=description)

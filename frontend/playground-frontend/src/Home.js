@@ -86,9 +86,14 @@ const Home = () => {
   const handleTargetChange = (e) => {
     setTargetCol(e);
     const csvColumnsCopy = JSON.parse(JSON.stringify(inputColumnOptions));
+    let featuresCopy = JSON.parse(JSON.stringify(features));
     csvColumnsCopy.splice(e.value, 1);
-    console.log(csvColumnsCopy);
-    setInputFeatureColumnOptions(csvColumnsCopy);
+    if (featuresCopy) {
+      featuresCopy = featuresCopy.filter(item => item.value != e.value);
+      setInputKey((e) => e + 1);
+      setFeatures(featuresCopy);
+    }
+    setInputFeatureColumnOptions(csvColumnsCopy); 
   };
 
   const input_queries = [

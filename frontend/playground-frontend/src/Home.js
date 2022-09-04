@@ -186,8 +186,6 @@ const Home = () => {
     },  [usingDefaultDataset]);
 
   useEffect(() => {
-    console.log(csvColumns);
-    console.log(usingDefaultDataset.value);
     setColumns(() => (usingDefaultDataset.value ? defaultColumns : csvColumns));
   }, [defaultColumns, csvColumns]);
 

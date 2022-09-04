@@ -87,6 +87,7 @@ const Home = () => {
     setTargetCol(e);
     const csvColumnsCopy = JSON.parse(JSON.stringify(inputColumnOptions));
     csvColumnsCopy.splice(e.value, 1);
+    console.log(csvColumnsCopy);
     setInputFeatureColumnOptions(csvColumnsCopy);
   };
 
@@ -174,25 +175,26 @@ const Home = () => {
   }, [problemType]);
 
   useEffect(() => {
-      if( usingDefaultDataset.columns ) {
-        setDefaultColumns(usingDefaultDataset.columns);
-      } else if ( usingDefaultDataset.value ) {
+      if (usingDefaultDataset.value) {
         socket.emit("defaultDataset", {
-          using_default_dataset: usingDefaultDataset.value
-            ? usingDefaultDataset.value
-            : null,
+          using_default_dataset: usingDefaultDataset.value,
           }
         );
+      } else {
+        setDefaultColumns([]);
       }
     },  [usingDefaultDataset]);
 
-  useEffect( () => {
-    setColumns( () => (usingDefaultDataset.value ? defaultColumns : csvColumns) );
-  }, [defaultColumns], [csvColumns]);
+  useEffect(() => {
+    console.log(csvColumns);
+    console.log(usingDefaultDataset.value);
+    setColumns(() => (usingDefaultDataset.value ? defaultColumns : csvColumns));
+  }, [defaultColumns, csvColumns]);
 
-  useEffect( () => {
+  useEffect(() => {
     setTargetCol(null);
     setFeatures(null);
+    setInputFeatureColumnOptions([]);
     setInputKey((e) => e + 1);
   }, [columns]);
 
@@ -200,7 +202,7 @@ const Home = () => {
     if (!result.success) {
       toast.error(result.message);
     } else {
-      setColumns( result.columns );
+      setDefaultColumns( result.columns );
     }
   });
   

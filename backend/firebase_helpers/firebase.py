@@ -5,9 +5,8 @@ import firebase_admin
 from backend.common.constants import AWS_REGION
 from backend.aws_helpers.aws_secrets_utils import aws_secrets
 
-
 def get_secret():
-    return aws_secrets.get_secret("DLP/Firebase/Admin_SDK")
+    return aws_secrets.get_secret_string_json(aws_secrets.get_secret_response("DLP/Firebase/Admin_SDK"))
 
 def init_firebase():
   firebase_secret = get_secret()

@@ -49,6 +49,3 @@ def get_secret_binary_decoded(secret_response):
 
 def create_secret(name, secret, description=''):
     return client.create_secret(Name=name, SecretString=json.dumps(secret), Description=description)
-
-def delete_secret(secret_id):
-    return client.delete_secret(SecretId=secret_id)

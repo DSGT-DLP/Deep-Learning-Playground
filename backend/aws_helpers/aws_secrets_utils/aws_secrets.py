@@ -2,13 +2,14 @@ import boto3
 import base64
 import json
 from botocore.exceptions import ClientError
+from typing import Union
 
 from backend.common.constants import AWS_REGION
 
 client = boto3.client('secretsmanager', region_name=AWS_REGION)
 
 
-def get_secret_response(secret_name):
+def __get_secret_response(secret_name):
     try:
         return client.get_secret_value(SecretId=secret_name)
     # In this sample we only handle the specific exceptions for the 'GetSecretValue' API.
@@ -37,20 +38,29 @@ def get_secret_response(secret_name):
             raise e
 
 
-def __get_secret_string(secret_response):
-    return secret_response["SecretString"]
+def get_secret(secret_name: str) -> Union[str, bytes]:
+    """
+    Returns the secret value from AWS based on the secret name key.
 
-
-def __get_secret_binary_decoded(secret_response):
-    return base64.b64decode(secret_response['SecretBinary'])
-
-
-def get_secret_string(secret_response):
+    :param secret_name: Secret name or key
+    :return: A string or a byte string representing the secret value; the type
+    returned depends on the actual type of the secret value
+    """
+    secret_response = __get_secret_response(secret_name)
     if 'SecretString' in secret_response:
-        return eval(__get_secret_string(secret_response))
+        return secret_response["SecretString"]
     else:
-        return eval(__get_secret_binary_decoded(secret_response))
+        return base64.b64decode(secret_response['SecretBinary'])
 
 
 def create_secret(name, secret, description=''):
-    return client.create_secret(Name=name, SecretString=json.dumps(secret), Description=description)
+    """
+    Creates a secret key and value pair in AWS
+
+    :param name: Secret name or key
+    :param secret: A dict representing the secret value
+    :param description: Optional description of secret
+    :return: a dict (JSON) containing the created secret
+    """
+    return client.create_secret(Name=name, SecretString=json.dumps(secret),
+                                Description=description)

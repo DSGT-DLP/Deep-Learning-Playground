@@ -7,6 +7,7 @@ from backend.common.constants import AWS_REGION
 
 client = boto3.client('secretsmanager', region_name=AWS_REGION)
 
+
 def get_secret_response(secret_name):
     try:
         return client.get_secret_value(SecretId=secret_name)
@@ -35,23 +36,21 @@ def get_secret_response(secret_name):
             # Deal with the exception here, and/or rethrow at your discretion.
             raise e
 
-def get_secret_string(secret_response):
+
+def __get_secret_string(secret_response):
     return secret_response["SecretString"]
 
-def get_secret_string_json(secret_response):
-    return json.loads(get_secret_string(secret_response))
 
-def has_secret_string(secret_response):
-    return 'SecretString' in secret_response
-
-def get_secret_binary_decoded(secret_response):
+def __get_secret_binary_decoded(secret_response):
     return base64.b64decode(secret_response['SecretBinary'])
 
-def get_secret_env(secret_response):
-    if has_secret_string(secret_response):
-        return eval(get_secret_string(secret_response))
+
+def get_secret_string(secret_response):
+    if 'SecretString' in secret_response:
+        return eval(__get_secret_string(secret_response))
     else:
-        return eval(get_secret_binary_decoded(secret_response))
+        return eval(__get_secret_binary_decoded(secret_response))
+
 
 def create_secret(name, secret, description=''):
     return client.create_secret(Name=name, SecretString=json.dumps(secret), Description=description)

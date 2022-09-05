@@ -13,7 +13,7 @@ from backend.aws_helpers.aws_secrets_utils import aws_secrets
 import aws_constants
 
 def get_secret():
-    create_env_file(aws_secrets.get_secret_env(aws_secrets.get_secret_response(aws_constants.SECRET_NAME)))
+    create_env_file(aws_secrets.get_secret_string(aws_secrets.get_secret_response(aws_constants.SECRET_NAME)))
 
 
 def create_env_file(env_values: Dict[str, str]):

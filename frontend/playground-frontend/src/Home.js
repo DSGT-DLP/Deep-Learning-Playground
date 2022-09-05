@@ -187,7 +187,7 @@ const Home = () => {
       } else {
         setColumns(csvColumns);
       }
-    },  [usingDefaultDataset]);
+    },  [usingDefaultDataset, csvColumns]);
 
   useEffect(() => {
     setTargetCol(null);

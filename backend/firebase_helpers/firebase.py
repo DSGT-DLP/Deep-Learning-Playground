@@ -7,7 +7,7 @@ from backend.aws_helpers.aws_secrets_utils import aws_secrets
 
 
 def get_secret():
-    return json.loads(aws_secrets.get_secret_string(aws_secrets.get_secret_response("DLP/Firebase/Admin_SDK")))
+    return json.loads(aws_secrets.get_secret("DLP/Firebase/Admin_SDK"))
 
 
 def init_firebase():

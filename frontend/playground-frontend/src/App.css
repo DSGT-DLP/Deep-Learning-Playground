@@ -27,11 +27,8 @@ Author URI:   https://datasciencegt.org/
 /*	1. General HTML
 /* -------------------------------------------------------------------------- */
 
-html,
-body,
-.wrapper,
-#root {
-  height: 100%;
+* {
+  font-family: 'Lato', 'Arial', 'Helvetica', sans-serif;
 }
 
 #app {
@@ -43,7 +40,6 @@ body {
   margin: 0;
   padding: 0;
   color: black;
-  font-family: 'Lato', 'Arial', 'Helvetica', sans-serif;
 }
 img {
   display: block;
@@ -67,6 +63,18 @@ input {
   padding: 1rem;
   text-align: justify;
   text-justify: inter-word;
+}
+
+.btn {
+  border: none;
+  cursor: pointer;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -393,11 +401,10 @@ textarea {
 
 #login-popup {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: 50vw;
+  top: 50vh;
   z-index: 50;
   transform: translate(-50%, -50%);
-
   background-color: white;
   padding: 10px;
 }

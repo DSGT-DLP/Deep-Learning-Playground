@@ -8,6 +8,7 @@ import {
   Navbar,
   ImageModels,
   Footer,
+  Dashboard
 } from "./components";
 import { ToastContainer } from "react-toastify";
 import Home from "./Home";

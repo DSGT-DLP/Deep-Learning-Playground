@@ -23,7 +23,7 @@ function App() {
       <Router>
         <Navbar setShowLogin={setShowLogin} />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Dashboard />} />
           <Route path="/img-models" element={<ImageModels />} />
           <Route path="/About" element={<About />} />
           <Route path="/Wiki" element={<Wiki />} />

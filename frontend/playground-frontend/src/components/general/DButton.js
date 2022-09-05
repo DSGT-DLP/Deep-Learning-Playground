@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const DButton = (props) => {
-  const { text, onClick, style, disabled, className } = props;
+  const { onClick, style, disabled, className, children } = props;
   return (
     <button
       className={className || "btn btn-primary"}
@@ -10,11 +10,17 @@ const DButton = (props) => {
       disabled={disabled}
       style={style}
     >
-      {text}
+      {props.children}
     </button>
   );
 };
 
-DButton.propTypes = {};
+DButton.propTypes = {
+  onClick: PropTypes.func,
+  style: PropTypes.objectOf(PropTypes.string),
+  disabled: PropTypes.bool,
+  className: PropTypes.string,
+  children: PropTypes.string,
+};
 
 export default DButton;

@@ -174,8 +174,9 @@ const TrainButton = (props) => {
         }}
         onClick={onClick}
         disabled={pendingResponse}
-        text="Train!"
-      />
+      >
+        Train!
+      </DButton>
       {pendingResponse ? (
         <div style={{ marginLeft: 5, marginTop: 10, width: 90, height: 90 }}>
           <Circle percent={progress} strokeWidth={4} />

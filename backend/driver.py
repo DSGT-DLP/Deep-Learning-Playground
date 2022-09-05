@@ -118,9 +118,6 @@ def dl_drive(
          CSV_FILE_NAME is the data csv file for the torch model. Assumed that you have one dataset file
     """
     try:
-        print("features", features)
-        print("target", target)
-
         if default and problem_type.upper() == "CLASSIFICATION":
             X, y = get_default_dataset(default.upper(), target, features)
             print(y.head())
@@ -143,8 +140,6 @@ def dl_drive(
             print(y.head())
 
         # Convert to tensor
-        print("X", X)
-        print("y", y)
         if shuffle and problem_type.upper() == "CLASSIFICATION":
             # using stratify only for classification problems to ensure correct AUC calculation
             X_train, X_test, y_train, y_test = train_test_split(
@@ -379,7 +374,6 @@ def send_email_route(request_data):
 @socket.on('defaultDataset')
 def send_columns(request_data):
     default = request_data["using_default_dataset"]
-    print("default", default)
     try:
         header = get_default_dataset_header(default.upper())
         header_list = header.tolist()

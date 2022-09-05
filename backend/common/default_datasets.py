@@ -31,7 +31,6 @@ def get_default_dataset_header(dataset):
                 columns=raw_data["feature_names"] + ["target"],
             )
             default_dataset.dropna(how="all", inplace=True)  # remove any empty lines
-            print(default_dataset.columns)
             return default_dataset.columns
     except Exception:
         raise Exception(f"Unable to load the {dataset} file into Pandas DataFrame")

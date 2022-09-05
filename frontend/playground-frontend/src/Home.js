@@ -179,15 +179,14 @@ const Home = () => {
   }, [problemType]);
 
   useEffect(() => {
-      if (usingDefaultDataset.value) {
-        socket.emit("defaultDataset", {
-          using_default_dataset: usingDefaultDataset.value,
-          }
-        );
-      } else {
-        setColumns(csvColumns);
-      }
-    },  [usingDefaultDataset, csvColumns]);
+    if (usingDefaultDataset.value) {
+      socket.emit("defaultDataset", {
+        using_default_dataset: usingDefaultDataset.value,
+      });
+    } else {
+      setColumns(csvColumns);
+    }
+  }, [usingDefaultDataset, csvColumns]);
 
   useEffect(() => {
     setTargetCol(null);

@@ -88,11 +88,11 @@ const Home = () => {
     let featuresCopy = JSON.parse(JSON.stringify(features));
     csvColumnsCopy.splice(e.value, 1);
     if (featuresCopy) {
-      featuresCopy = featuresCopy.filter(item => item.value != e.value);
+      featuresCopy = featuresCopy.filter((item) => item.value != e.value);
       setInputKey((e) => e + 1);
       setFeatures(featuresCopy);
     }
-    setInputFeatureColumnOptions(csvColumnsCopy); 
+    setInputFeatureColumnOptions(csvColumnsCopy);
   };
 
   const input_queries = [
@@ -203,7 +203,7 @@ const Home = () => {
       setColumns(result.columns);
     }
   });
-  
+
   return (
     <div style={{ padding: 20, marginBottom: 50 }}>
       <DndProvider backend={HTML5Backend}>

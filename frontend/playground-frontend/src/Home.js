@@ -89,11 +89,11 @@ const Home = () => {
     let featuresCopy = JSON.parse(JSON.stringify(features));
     csvColumnsCopy.splice(e.value, 1);
     if (featuresCopy) {
-      featuresCopy = featuresCopy.filter(item => item.value != e.value);
+      featuresCopy = featuresCopy.filter((item) => item.value != e.value);
       setInputKey((e) => e + 1);
       setFeatures(featuresCopy);
     }
-    setInputFeatureColumnOptions(csvColumnsCopy); 
+    setInputFeatureColumnOptions(csvColumnsCopy);
   };
 
   const input_queries = [
@@ -180,15 +180,14 @@ const Home = () => {
   }, [problemType]);
 
   useEffect(() => {
-      if (usingDefaultDataset.value) {
-        socket.emit("defaultDataset", {
-          using_default_dataset: usingDefaultDataset.value,
-          }
-        );
-      } else {
-        setDefaultColumns([]);
-      }
-    },  [usingDefaultDataset]);
+    if (usingDefaultDataset.value) {
+      socket.emit("defaultDataset", {
+        using_default_dataset: usingDefaultDataset.value,
+      });
+    } else {
+      setDefaultColumns([]);
+    }
+  }, [usingDefaultDataset]);
 
   useEffect(() => {
     setColumns(() => (usingDefaultDataset.value ? defaultColumns : csvColumns));
@@ -205,10 +204,10 @@ const Home = () => {
     if (!result.success) {
       toast.error(result.message);
     } else {
-      setDefaultColumns( result.columns );
+      setDefaultColumns(result.columns);
     }
   });
-  
+
   return (
     <div style={{ padding: 20, marginBottom: 50 }}>
       <DndProvider backend={HTML5Backend}>

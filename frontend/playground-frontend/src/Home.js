@@ -33,7 +33,6 @@ import { toast } from "react-toastify";
 const Home = () => {
   const [csvDataInput, setCSVDataInput] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
-  const [defaultColumns, setDefaultColumns] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [inputKey, setInputKey] = useState(0);
   // input responses
@@ -79,7 +78,7 @@ const Home = () => {
   };
 
   const inputColumnOptions = columns.map((e, i) => ({
-    label: e.name ? e.name : e,
+    label: e.name || e,
     value: i,
   }));
 
@@ -186,13 +185,9 @@ const Home = () => {
           }
         );
       } else {
-        setDefaultColumns([]);
+        setColumns(csvColumns);
       }
     },  [usingDefaultDataset]);
-
-  useEffect(() => {
-    setColumns(() => (usingDefaultDataset.value ? defaultColumns : csvColumns));
-  }, [defaultColumns, csvColumns]);
 
   useEffect(() => {
     setTargetCol(null);
@@ -205,7 +200,7 @@ const Home = () => {
     if (!result.success) {
       toast.error(result.message);
     } else {
-      setDefaultColumns( result.columns );
+      setColumns(result.columns);
     }
   });
   

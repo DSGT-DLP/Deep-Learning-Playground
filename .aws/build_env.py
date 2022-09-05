@@ -7,6 +7,8 @@ import base64
 import os
 from botocore.exceptions import ClientError
 from typing import Dict
+import sys
+sys.path.append('../')
 from backend.aws_helpers.aws_secrets_utils import aws_secrets
 import aws_constants
 

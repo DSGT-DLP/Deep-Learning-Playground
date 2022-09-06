@@ -179,15 +179,14 @@ const Home = () => {
   }, [problemType]);
 
   useEffect(() => {
-      if (usingDefaultDataset.value) {
-        socket.emit("defaultDataset", {
-          using_default_dataset: usingDefaultDataset.value,
-          }
-        );
-      } else {
-        setActiveColumns(uploadedColumns);
-      }
-    },  [usingDefaultDataset, uploadedColumns]);
+    if (usingDefaultDataset.value) {
+      socket.emit("defaultDataset", {
+        using_default_dataset: usingDefaultDataset.value,
+      });
+    } else {
+      setActiveColumns(uploadedColumns);
+    }
+  }, [usingDefaultDataset, uploadedColumns]);
 
   useEffect(() => {
     setTargetCol(null);

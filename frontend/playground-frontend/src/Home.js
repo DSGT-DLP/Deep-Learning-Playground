@@ -32,7 +32,7 @@ import { toast } from "react-toastify";
 
 const Home = () => {
   const [csvDataInput, setCSVDataInput] = useState([]);
-  const [csvColumns, setCSVColumns] = useState([]);
+  const [uploadedColumns, setUploadedColumns] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [inputKey, setInputKey] = useState(0);
   // input responses
@@ -54,12 +54,12 @@ const Home = () => {
   const [testSize, setTestSize] = useState(0.2);
   const [batchSize, setBatchSize] = useState(20);
   const [inputFeatureColumnOptions, setInputFeatureColumnOptions] = useState(
-    csvColumns.map((e, i) => ({
+    uploadedColumns.map((e, i) => ({
       label: e.name,
       value: i,
     }))
   );
-  const [columns, setColumns] = useState([]);
+  const [activeColumns, setActiveColumns] = useState([]);
 
   const input_responses = {
     addedLayers: addedLayers,
@@ -77,7 +77,7 @@ const Home = () => {
     email: email,
   };
 
-  const inputColumnOptions = columns.map((e, i) => ({
+  const inputColumnOptions = activeColumns.map((e, i) => ({
     label: e.name || e,
     value: i,
   }));
@@ -185,22 +185,22 @@ const Home = () => {
           }
         );
       } else {
-        setColumns(csvColumns);
+        setActiveColumns(uploadedColumns);
       }
-    },  [usingDefaultDataset, csvColumns]);
+    },  [usingDefaultDataset, uploadedColumns]);
 
   useEffect(() => {
     setTargetCol(null);
     setFeatures(null);
     setInputFeatureColumnOptions([]);
     setInputKey((e) => e + 1);
-  }, [columns]);
+  }, [activeColumns]);
 
   socket.on("defaultColumns", (result) => {
     if (!result.success) {
       toast.error(result.message);
     } else {
-      setColumns(result.columns);
+      setActiveColumns(result.columns);
     }
   });
 
@@ -213,12 +213,12 @@ const Home = () => {
           <RectContainer style={styles.fileInput}>
             <CSVInputFile
               setData={setCSVDataInput}
-              setColumns={setCSVColumns}
+              setColumns={setUploadedColumns}
             />
             <CSVInputURL
               fileURL={fileURL}
               setFileURL={setFileURL}
-              setCSVColumns={setCSVColumns}
+              setCSVColumns={setUploadedColumns}
               setCSVDataInput={setCSVDataInput}
             />
           </RectContainer>
@@ -284,7 +284,7 @@ const Home = () => {
       <DataTable
         pagination
         highlightOnHover
-        columns={csvColumns}
+        columns={uploadedColumns}
         data={csvDataInput}
       />
 

@@ -8,7 +8,7 @@ import {
   Navbar,
   ImageModels,
   Footer,
-  Dashboard
+  Dashboard,
 } from "./components";
 import { ToastContainer } from "react-toastify";
 import Home from "./Home";
@@ -23,7 +23,8 @@ function App() {
       <Router>
         <Navbar setShowLogin={setShowLogin} />
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/img-models" element={<ImageModels />} />
           <Route path="/About" element={<About />} />
           <Route path="/Wiki" element={<Wiki />} />

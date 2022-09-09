@@ -36,8 +36,6 @@ const AddedLayer = (props) => {
   const thisLayer = addedLayers[thisLayerIndex];
   const { display_name, parameters } = thisLayer;
 
-  styles = { ...styles, ...style };
-
   // converts the parameters object for each layer into an array of parameter objects
   const param_array = [];
   Object.keys(parameters).forEach((key) => {
@@ -54,7 +52,7 @@ const AddedLayer = (props) => {
 
   return (
     <div className="layer-input">
-      <div className="layer-container text-center d-flex justify-content-center align-items-center">
+      <div className="layer-box layer-container text-center d-flex justify-content-center align-items-center">
         <button className="delete-layer" onClick={onDelete}>
           ❌
         </button>
@@ -92,20 +90,7 @@ let styles = {
     backgroundColor: COLORS.layer,
     width: 130,
   },
-  delete_btn: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    backgroundColor: "transparent",
-    borderWidth: 0,
-  },
   text: { ...GENERAL_STYLES.p, color: "white", fontSize: 25 },
-  input_box: {
-    margin: 7.5,
-    backgroundColor: "white",
-    width: 150,
-    paddingInline: 5,
-  },
   input_prompt: {
     fontSize: 15,
     fontWeight: "bold",

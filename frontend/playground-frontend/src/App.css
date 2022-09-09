@@ -302,10 +302,14 @@ input {
   margin-right: 20px;
 }
 
+#home-page .layer-box {
+  width: 160px;
+  height: 90px;
+}
+
 #home-page .layer-input {
   margin-right: 20px;
   margin-bottom: 20px;
-  width: 160px;
 }
 
 #home-page .layer-input .layer-container {
@@ -331,6 +335,13 @@ input {
   margin-top: 10px;
   padding: 5%;
   background-color: white;
+}
+
+#home-page .add-new-layer {
+  font-weight: 1000;
+  color: white;
+  font-size: 3rem;
+  color: var(--layer);
 }
 
 #home-page input[type="file"] {

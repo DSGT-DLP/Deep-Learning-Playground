@@ -20,13 +20,14 @@ const AddNewLayer = () => {
     backgroundColor = "white";
   }
   return (
-    <RectContainer
+    <div
       ref2={drop}
+      className="text-center d-flex justify-content-center align-items-center layer-box add-new-layer"
       style={{ ...styles.container, backgroundColor }}
       dataTestid="dustbin"
     >
-      <p style={{ fontSize: 50, fontWeight: "1000", color: COLORS.layer }}>+</p>
-    </RectContainer>
+      +
+    </div>
   );
 };
 

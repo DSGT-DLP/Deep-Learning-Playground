@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { DButton } from "../index";
-import login_background from "../../images/login_bg.png";
 import DLP_logo from "../../images/logos/dlp_branding/dlp-logo.png";
 import { LAYOUT } from "../../constants";
 

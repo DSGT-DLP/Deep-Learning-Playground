@@ -7,23 +7,27 @@ import {
   TableRow,
 } from "@mui/material";
 import React from "react";
+import PropTypes from "prop-types";
+
 import { useNavigate } from "react-router-dom";
 
 const rows = [
-  // {
-  //   id: "as98dfumasdp",
-  //   type: "Tabular",
-  //   input: "my_tabular_input.csv",
-  //   status: "35%",
-  //   date: "Sep 4, 2022",
-  // },
-  // {
-  //   id: "p9umaspdf",
-  //   type: "Image Training",
-  //   input: "my_images.zip",
-  //   status: "Done",
-  //   date: "Sep 1, 2022",
-  // },
+  {
+    id: "as98dfumasdp",
+    type: "Tabular",
+    input: "my_tabular_input.csv",
+    statusType: "training",
+    status: "35%",
+    date: "Sep 4, 2022",
+  },
+  {
+    id: "p9umaspdf",
+    type: "Image Training",
+    input: "my_images.zip",
+    statusType: "finished",
+    status: "Done",
+    date: "Sep 1, 2022",
+  },
 ];
 
 const BlankGrid = () => {
@@ -43,6 +47,18 @@ const BlankGrid = () => {
   );
 };
 
+const StatusDisplay = ({ statusType, status }) => {
+  if (statusType === "queued") {
+    return <button className="grid-status-display grid-status-display-yellow">Queued: {status}</button>;
+  } else if (statusType === "training") {
+    return <button className="grid-status-display grid-status-display-yellow">Training: {status}</button>;
+  } else if (statusType === "finished") {
+    return <button className="grid-status-display grid-status-display-green">Done</button>;
+  } else {
+    return <p>Incorrect status type passed</p>;
+  }
+};
+
 const FilledGrid = () => {
   return (
     <TableContainer>
@@ -51,8 +67,8 @@ const FilledGrid = () => {
           <TableRow>
             <TableCell>Type</TableCell>
             <TableCell align="right">Input</TableCell>
-            <TableCell align="right">Status</TableCell>
             <TableCell align="right">Date</TableCell>
+            <TableCell align="right">Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -65,8 +81,13 @@ const FilledGrid = () => {
                 {row.type}
               </TableCell>
               <TableCell align="right">{row.input}</TableCell>
-              <TableCell align="right">{row.status}</TableCell>
               <TableCell align="right">{row.date}</TableCell>
+              <TableCell align="right">
+                <StatusDisplay
+                  statusType={row.statusType}
+                  status={row.status}
+                />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -85,3 +106,8 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+StatusDisplay.propTypes = {
+  statusType: PropTypes.oneOf(["queued", "training", "finished"]),
+  status: PropTypes.string,
+};

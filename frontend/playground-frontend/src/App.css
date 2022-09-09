@@ -299,6 +299,38 @@ input {
   width: 230px;
   height: 90px;
   padding: 10px;
+  margin-right: 20px;
+}
+
+#home-page .layer-input {
+  margin-right: 20px;
+  margin-bottom: 20px;
+  width: 160px;
+}
+
+#home-page .layer-input .layer-container {
+  height: 90px;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  position: relative;
+  background-color: var(--layer);
+}
+
+#home-page .layer-input .layer-container .delete-layer {
+  position: absolute;
+  top: 5%;
+  right: 2%;
+  border: none;
+  font-size: 0.75rem;
+  background-color: transparent;
+}
+
+#home-page .layer-input .input-box {
+  width: 100%;
+  margin-top: 10px;
+  padding: 5%;
+  background-color: white;
 }
 
 #home-page input[type="file"] {

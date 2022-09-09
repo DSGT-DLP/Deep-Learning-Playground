@@ -53,14 +53,16 @@ const AddedLayer = (props) => {
   });
 
   return (
-    <div style={LAYOUT.column}>
-      <RectContainer style={styles.layer_box}>
-        <button style={styles.delete_btn} onClick={onDelete}>
+    <div className="layer-input">
+      <div className="layer-container text-center d-flex justify-content-center align-items-center">
+        <button className="delete-layer" onClick={onDelete}>
           ❌
         </button>
-        <p style={styles.text}>{display_name}</p>
-      </RectContainer>
-      <div style={styles.input_box}>{param_array}</div>
+        {display_name}
+      </div>
+      {param_array.length ? (
+        <div className="input-box">{param_array}</div>
+      ) : null}
     </div>
   );
 };

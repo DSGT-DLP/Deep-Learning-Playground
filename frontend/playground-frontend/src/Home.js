@@ -169,7 +169,11 @@ const Home = () => {
   }, [problemType]);
 
   return (
-    <div id="home-page" className="container-fluid" style={{ padding: 20, marginBottom: 50 }}>
+    <div
+      id="home-page"
+      className="container-fluid"
+      style={{ padding: 20, marginBottom: 50 }}
+    >
       <DndProvider backend={HTML5Backend}>
         <ChoiceTab />
         <TitleText text="Implemented Layers" />
@@ -264,4 +268,3 @@ const Home = () => {
 export default Home;
 
 const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));
-

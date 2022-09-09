@@ -70,6 +70,7 @@ input {
 .btn {
   border: none;
   cursor: pointer;
+  border-radius: 0;
   font-size: 25px;
   font-weight: bold;
 }
@@ -342,6 +343,12 @@ input {
   color: white;
   font-size: 3rem;
   color: var(--layer);
+  margin-right: 20px;
+}
+
+#home-page #train-button {
+  width: 160px;
+  height: 90px;
 }
 
 #home-page input[type="file"] {

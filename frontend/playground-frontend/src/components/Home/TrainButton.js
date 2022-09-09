@@ -164,11 +164,10 @@ const TrainButton = (props) => {
 
   return (
     <>
-      <DButton
+      <button
+        id="train-button"
+        className="btn btn-primary"
         style={{
-          width: "160px",
-          height: "90px",
-          margin: "8px",
           backgroundColor: pendingResponse ? COLORS.disabled : null,
           cursor: pendingResponse ? "wait" : "pointer",
         }}
@@ -176,7 +175,7 @@ const TrainButton = (props) => {
         disabled={pendingResponse}
       >
         Train!
-      </DButton>
+      </button>
       {pendingResponse ? (
         <div style={{ marginLeft: 5, marginTop: 10, width: 90, height: 90 }}>
           <Circle percent={progress} strokeWidth={4} />

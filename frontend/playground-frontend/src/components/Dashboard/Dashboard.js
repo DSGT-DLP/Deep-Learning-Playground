@@ -81,8 +81,8 @@ const StatusDisplay = ({ statusType, status }) => {
 
 const FilledGrid = () => {
   return (
-    <TableContainer>
-      <Table sx={{ minWidth: 400 }}>
+    <TableContainer style={{ display: "flex", justifyContent: "center" }}>
+      <Table sx={{ minWidth: 400, maxWidth: 1400 }}>
         <TableHead>
           <TableRow>
             <TableCell>Type</TableCell>

@@ -329,6 +329,7 @@ textarea#code-snippet-text {
 /* -------------------------------------------------------------------------- */
 
 #dashboard {
+  
 }
 
 #blank-grid-wrapper {
@@ -367,8 +368,8 @@ textarea#code-snippet-text {
   border-radius: 5px;
   padding-left: 10px;
   padding-right: 10px;
-
-  height: 35px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 
   display: inline-flex;
   align-items: center;

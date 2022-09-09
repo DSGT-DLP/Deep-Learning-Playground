@@ -20,6 +20,9 @@ export { default as ChoiceTab } from "./Home/ChoiceTab";
 // About
 export { default as About } from "./About/About";
 
+// Dashboard
+export { default as Dashboard } from "./Dashboard/Dashboard";
+
 // Login
 export { default as LoginPopup } from "./LoginPopup/LoginPopup";
 

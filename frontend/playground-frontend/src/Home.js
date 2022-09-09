@@ -174,7 +174,7 @@ const Home = () => {
         <ChoiceTab />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
-          <div className="input-container d-flex flex-column justify-content-center align-items-center">
+          <div className="input-container d-flex flex-column align-items-center justify-content-center">
             <CSVInputFile
               setData={setCSVDataInput}
               setColumns={setCSVColumns}

@@ -306,7 +306,7 @@ input {
 }
 
 #home-page .custom-file-upload {
-  padding: 12px 12px;
+  padding-bottom: 12px;
   cursor: pointer;
 }
 

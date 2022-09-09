@@ -169,12 +169,12 @@ const Home = () => {
   }, [problemType]);
 
   return (
-    <div style={{ padding: 20, marginBottom: 50 }}>
+    <div id="home-page" className="container-fluid" style={{ padding: 20, marginBottom: 50 }}>
       <DndProvider backend={HTML5Backend}>
         <ChoiceTab />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
-          <RectContainer style={styles.fileInput}>
+          <div className="input-container d-flex flex-column justify-content-center align-items-center">
             <CSVInputFile
               setData={setCSVDataInput}
               setColumns={setCSVColumns}
@@ -185,7 +185,7 @@ const Home = () => {
               setCSVColumns={setCSVColumns}
               setCSVDataInput={setCSVDataInput}
             />
-          </RectContainer>
+          </div>
 
           {addedLayers.map((_, i) => (
             <AddedLayer
@@ -265,10 +265,3 @@ export default Home;
 
 const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));
 
-const styles = {
-  fileInput: {
-    ...LAYOUT.column,
-    backgroundColor: COLORS.input,
-    width: 200,
-  },
-};

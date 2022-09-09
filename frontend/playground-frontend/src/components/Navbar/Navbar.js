@@ -50,17 +50,17 @@ const Navbar = ({ setShowLogin }) => {
       <ul className="nav">
         <li id="title-name"></li>
         <li className="navElement">
-          <Link to="/">Home</Link>
+          <Link to="/home">Home</Link>
         </li>
 
         <li className="navElement">
-          <Link to="/About">About</Link>
+          <Link to="/about">About</Link>
         </li>
         <li className="navElement">
-          <Link to="/Wiki">Wiki</Link>
+          <Link to="/wiki">Wiki</Link>
         </li>
         <li className="navElement">
-          <Link to="/Feedback">Feedback</Link>
+          <Link to="/feedback">Feedback</Link>
         </li>
         <li className="navElement">
           <a

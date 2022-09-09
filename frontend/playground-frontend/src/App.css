@@ -11,7 +11,7 @@ Author URI:   https://datasciencegt.org/
 */
 
 /* -------------------------------------------------------------------------- */
-/*	1. Root
+/*	Root
 /* -------------------------------------------------------------------------- */
 
 :root {
@@ -21,14 +21,15 @@ Author URI:   https://datasciencegt.org/
   --whitehover: #f7f7f7;
   --footer-dark-blue: #00233f;
   --dark-grey: #d3d3d3;
+  --input: #E2E2E2;
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. General HTML
+/*	General HTML
 /* -------------------------------------------------------------------------- */
 
 * {
-  font-family: 'Lato', 'Arial', 'Helvetica', sans-serif;
+  font-family: "Lato", "Arial", "Helvetica", sans-serif;
 }
 
 #app {
@@ -47,13 +48,14 @@ img {
 }
 input {
   border-width: 0.5px;
+  height: 25px;
   border-color: var(--layer);
-  border-radius: 10px;
+  border-radius: 20px;
   padding: 5px;
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. General DLP Styles
+/*	General DLP Styles
 /* -------------------------------------------------------------------------- */
 
 .sections {
@@ -78,7 +80,7 @@ input {
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. Header
+/*	Navbar
 /* -------------------------------------------------------------------------- */
 
 #header-section {
@@ -206,10 +208,6 @@ input {
   color: var(--secondary);
 }
 
-/* -------------------------------------------------------------------------- */
-/*	1. Navbar
-/* -------------------------------------------------------------------------- */
-
 .header-footer {
   margin: 0;
   position: static;
@@ -293,27 +291,34 @@ input {
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. Home
+/*	Home
 /* -------------------------------------------------------------------------- */
 
-input[type="file"] {
+#home-page .input-container {
+  background-color: var(--input);
+  width: 230px;
+  height: 90px;
+  padding: 10px;
+}
+
+#home-page input[type="file"] {
   display: none;
 }
 
-.custom-file-upload {
+#home-page .custom-file-upload {
   padding: 12px 12px;
   cursor: pointer;
 }
 
-textarea#code-snippet-text {
+#home-page textarea#code-snippet-text {
   width: 100%;
 }
 
-#code-snippet-div {
+#home-page #code-snippet-div {
   position: relative;
 }
 
-#code-snippet-clipboard {
+#home-page #code-snippet-clipboard {
   background-color: #ececec;
   border-radius: 4px;
   border-style: none;
@@ -323,22 +328,18 @@ textarea#code-snippet-text {
   cursor: pointer;
 }
 
-#code-snippet-clipboard:hover,
-#code-snippet-clipboard:focus {
+#home-page #code-snippet-clipboard:hover,
+#home-page #code-snippet-clipboard:focus {
   background-color: #fcfcfc;
 }
 
-#code-snippet-clipboard:active {
+#home-page #code-snippet-clipboard:active {
   background-color: var(--layer);
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. Dashboard
+/*	Dashboard
 /* -------------------------------------------------------------------------- */
-
-#dashboard {
-  
-}
 
 #blank-grid-wrapper {
   display: flex;
@@ -352,7 +353,6 @@ textarea#code-snippet-text {
   display: flex;
   align-items: center;
   flex-direction: column;
-
   padding: 10px;
 }
 
@@ -364,9 +364,7 @@ textarea#code-snippet-text {
   border: 2px solid black;
   background-color: transparent;
   border-radius: 3px;
-
   cursor: pointer;
-
   font-size: medium;
 }
 
@@ -378,10 +376,8 @@ textarea#code-snippet-text {
   padding-right: 10px;
   padding-top: 5px;
   padding-bottom: 5px;
-
   display: inline-flex;
   align-items: center;
-
   font-size: medium;
 }
 
@@ -395,12 +391,11 @@ textarea#code-snippet-text {
 
 .grid-status-display-green {
   background-color: #7cd992;
-
   cursor: pointer;
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. About and Wiki
+/*	About and Wiki
 /* -------------------------------------------------------------------------- */
 
 #wiki p,
@@ -457,6 +452,11 @@ textarea {
   font-weight: 600;
 }
 
+/* -------------------------------------------------------------------------- */
+/*	Wiki
+/* -------------------------------------------------------------------------- */
+
+
 .wiki-content {
   font-size: medium;
   padding-top: 0;
@@ -464,8 +464,24 @@ textarea {
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. Login
+/*	Login
 /* -------------------------------------------------------------------------- */
+
+#login-page {
+  background-color: var(--primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#login-page .logo {
+  display: flex;
+  flex-direction: row;
+  height: 15vh;
+  align-items: center;
+  font-size: 1.5rem;
+  color: white;
+}
 
 #login-popup {
   position: absolute;
@@ -490,12 +506,11 @@ textarea {
   color: var(--primary);
   font-size: x-large;
   text-align: center;
-
   margin-bottom: 40px;
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. Footer
+/*	Footer
 /* -------------------------------------------------------------------------- */
 
 #footer {

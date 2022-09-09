@@ -8,10 +8,18 @@ import {
 } from "@mui/material";
 import React from "react";
 import PropTypes from "prop-types";
-
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 
 const rows = [
+  {
+    id: "123mrpij",
+    type: "Tabular",
+    input: "new_input.csv",
+    statusType: "queued",
+    status: "1 / 4",
+    date: "Sep 5, 2022",
+  },
   {
     id: "as98dfumasdp",
     type: "Tabular",
@@ -49,11 +57,23 @@ const BlankGrid = () => {
 
 const StatusDisplay = ({ statusType, status }) => {
   if (statusType === "queued") {
-    return <button className="grid-status-display grid-status-display-yellow">Queued: {status}</button>;
+    return (
+      <button className="grid-status-display grid-status-display-gray">
+        Queued: {status}
+      </button>
+    );
   } else if (statusType === "training") {
-    return <button className="grid-status-display grid-status-display-yellow">Training: {status}</button>;
+    return (
+      <button className="grid-status-display grid-status-display-yellow">
+        Training: {status}
+      </button>
+    );
   } else if (statusType === "finished") {
-    return <button className="grid-status-display grid-status-display-green">Done</button>;
+    return (
+      <button className="grid-status-display grid-status-display-green">
+        Done <ArrowForwardIcon fontSize="small" />
+      </button>
+    );
   } else {
     return <p>Incorrect status type passed</p>;
   }

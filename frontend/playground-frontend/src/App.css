@@ -365,9 +365,19 @@ textarea#code-snippet-text {
   border: 2px solid black;
   background-color: transparent;
   border-radius: 5px;
-  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  height: 35px;
+
+  display: inline-flex;
+  align-items: center;
 
   font-size: medium;
+}
+
+.grid-status-display-gray {
+  background-color: #b7b7b7;
 }
 
 .grid-status-display-yellow {

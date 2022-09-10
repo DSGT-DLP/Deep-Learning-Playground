@@ -1,6 +1,7 @@
 // General
 export { default as TitleText } from "./general/TitleText";
 export { default as DButton } from "./general/DButton";
+export { default as Spacer } from "./general/Spacer";
 
 // Home
 export { default as AddNewLayer } from "./Home/AddNewLayer";

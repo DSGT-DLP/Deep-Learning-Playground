@@ -296,6 +296,11 @@ input {
 /*	Home
 /* -------------------------------------------------------------------------- */
 
+#home-page h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
 #home-page .input-container {
   background-color: var(--input);
   width: 230px;
@@ -574,21 +579,26 @@ textarea {
 /*	Footer
 /* -------------------------------------------------------------------------- */
 
-#footer {
+#footer .copyright {
+  margin-block: auto;
+}
+
+#footer #footer-socials {
   padding: 0.75rem;
   margin: auto;
   align-items: center;
   height: 150px;
 }
 
-#footer-name {
+#footer #footer-name {
   background-color: var(--footer-dark-blue);
   text-align: center;
   color: var(--dark-grey);
   font-size: small;
+  height: 40px;
 }
 
-.foot-element {
+#footer .foot-element {
   margin-inline: 13px;
   display: flex;
   align-items: center;
@@ -599,12 +609,12 @@ textarea {
   aspect-ratio: 1;
 }
 
-.foot-element:hover,
-.foot-element:focus {
+#footer .foot-element:hover,
+#footer .foot-element:focus {
   background-color: var(--secondary);
 }
 
-.foot-element > a {
+#footer .foot-element > a {
   display: flex;
 }
 

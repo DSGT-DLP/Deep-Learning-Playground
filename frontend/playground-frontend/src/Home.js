@@ -18,7 +18,7 @@ import {
   EmailInput,
   Input,
   LayerChoice,
-  RectContainer,
+  Spacer,
   Results,
   TitleText,
   TrainButton,
@@ -213,7 +213,7 @@ const Home = () => {
           />
         </BackgroundLayout>
 
-        <div style={{ marginTop: 20 }} />
+        <Spacer height={40} />
 
         <TitleText text="Layers Inventory" />
         <BackgroundLayout>
@@ -236,7 +236,8 @@ const Home = () => {
           ))}
         </BackgroundLayout>
       </DndProvider>
-      <div style={{ marginTop: 20 }} />
+
+      <Spacer height={40} />
 
       <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
@@ -245,8 +246,12 @@ const Home = () => {
         ))}
       </BackgroundLayout>
 
+      <Spacer height={40} />
+
       <TitleText text="Email (optional)" />
       <EmailInput email={email} setEmail={setEmail} />
+
+      <Spacer height={40} />
 
       <TitleText text="CSV Input" />
       <DataTable
@@ -256,8 +261,12 @@ const Home = () => {
         data={csvDataInput}
       />
 
+      <Spacer height={40} />
+
       <TitleText text="Deep Learning Results" />
       {ResultsMemo}
+
+      <Spacer height={40} />
 
       <TitleText text="Code Snippet" />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />

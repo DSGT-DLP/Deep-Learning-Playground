@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { COLORS, GENERAL_STYLES } from "../../constants";
-import { DButton, RectContainer } from "../index";
+import { COLORS } from "../../constants";
 import {
   validateParameter,
   validateTabularInputs,

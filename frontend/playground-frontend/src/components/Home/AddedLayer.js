@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "../../constants";
 
 const _InputOutputPromptResponse = (props) => {
@@ -31,7 +30,7 @@ const _InputOutputPromptResponse = (props) => {
 };
 
 const AddedLayer = (props) => {
-  const { thisLayerIndex, addedLayers, setAddedLayers, onDelete, style } =
+  const { thisLayerIndex, addedLayers, setAddedLayers, onDelete } =
     props;
   const thisLayer = addedLayers[thisLayerIndex];
   const { display_name, parameters } = thisLayer;
@@ -80,7 +79,6 @@ AddedLayer.propTypes = {
   addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
   setAddedLayers: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  style: PropTypes.object,
 };
 
 export default AddedLayer;

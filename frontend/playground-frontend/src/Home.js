@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { COLORS, DEFAULT_ADDED_LAYERS, LAYOUT } from "./constants";
+import { DEFAULT_ADDED_LAYERS } from "./constants";
 import {
   BOOL_OPTIONS,
   CRITERIONS,

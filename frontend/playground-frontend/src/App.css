@@ -97,16 +97,12 @@ input {
   text-align: center;
   color: white;
 }
+
 #nav-bar .nav #title-name > a {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-}
-
-#nav-bar html {
-  /* box sizing border box specifies no padding, width = width etc */
-  box-sizing: border-box;
 }
 
 #nav-bar .navElement {
@@ -224,7 +220,6 @@ input {
 }
 
 #nav-bar {
-  position: sticky;
   z-index: 10;
   top: 0vmax;
   max-width: 100%;

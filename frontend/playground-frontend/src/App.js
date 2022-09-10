@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import {
   About,
   LoginPopup,
@@ -26,7 +26,7 @@ function App() {
       <BrowserRouter>
         {isOnLoginPage || <Navbar setShowLogin={setShowLogin} />}
         <Routes>
-          <Route exact path="/" element={<Navigate to="/login" />} />
+          <Route exact path="/" element={<Navigate to="/home" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />

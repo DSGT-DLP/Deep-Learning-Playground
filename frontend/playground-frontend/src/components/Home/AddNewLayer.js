@@ -1,5 +1,4 @@
 import React from "react";
-import RectContainer from "./RectContainer";
 import { COLORS, ITEM_TYPES } from "../../constants";
 import { useDrop } from "react-dnd";
 

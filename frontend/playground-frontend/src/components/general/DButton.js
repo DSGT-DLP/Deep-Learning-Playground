@@ -10,7 +10,7 @@ const DButton = (props) => {
       disabled={disabled}
       style={style}
     >
-      {props.children}
+      {children}
     </button>
   );
 };

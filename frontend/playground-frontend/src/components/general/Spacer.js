@@ -5,6 +5,9 @@ const Spacer = (props) => {
   return <div style={{ height: props.height || 1, width: props.width || 1 }} />;
 };
 
-Spacer.propTypes = {};
+Spacer.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
+};
 
 export default Spacer;

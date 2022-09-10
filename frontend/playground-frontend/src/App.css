@@ -33,6 +33,10 @@ Author URI:   https://datasciencegt.org/
   font-family: "Lato", "Arial", "Helvetica", sans-serif;
 }
 
+h2 {
+  font-size: calc(0.7rem + .9vw);
+}
+
 #app {
   height: 100%;
   position: relative;
@@ -296,8 +300,11 @@ input {
 /*	Home
 /* -------------------------------------------------------------------------- */
 
+#home-page {
+  margin: 40px 20px;
+}
+
 #home-page h2 {
-  font-size: 1.5rem;
   font-weight: bold;
 }
 
@@ -307,6 +314,7 @@ input {
   height: 90px;
   padding: 10px;
   margin-right: 20px;
+  margin-block: 10px;
 }
 
 #home-page .layer-box {
@@ -316,7 +324,7 @@ input {
 
 #home-page .layer-input {
   margin-right: 20px;
-  margin-bottom: 20px;
+  margin-block: 10px;
 }
 
 #home-page .layer-input .layer-container {
@@ -350,17 +358,19 @@ input {
   font-size: 3rem;
   color: var(--layer);
   margin-right: 20px;
+  margin-block: 10px;
 }
 
 #home-page #train-button {
   width: 160px;
   height: 90px;
+  margin-block: 10px;
 }
 
 #home-page .layer-choice {
   background-color: var(--add-layer);
   margin-right: 20px;
-  margin-bottom: 20px;
+  margin-block: 10px;
   position: relative;
   font-size: 1.5rem;
   font-weight: bold;

@@ -174,8 +174,10 @@ const Home = () => {
       className="container-fluid"
       style={{ padding: 20, marginBottom: 50 }}
     >
+      <ChoiceTab />
+      <Spacer height={40} />
+
       <DndProvider backend={HTML5Backend}>
-        <ChoiceTab />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <div className="input-container d-flex flex-column align-items-center justify-content-center">

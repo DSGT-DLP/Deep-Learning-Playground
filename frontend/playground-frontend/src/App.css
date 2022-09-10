@@ -22,6 +22,7 @@ Author URI:   https://datasciencegt.org/
   --footer-dark-blue: #00233f;
   --dark-grey: #d3d3d3;
   --input: #E2E2E2;
+  --add-layer: #F2ECFF;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -338,7 +339,7 @@ input {
   background-color: white;
 }
 
-#home-page .add-new-layer {
+#home-page .add-new-layer-bin {
   font-weight: 1000;
   color: white;
   font-size: 3rem;
@@ -349,6 +350,16 @@ input {
 #home-page #train-button {
   width: 160px;
   height: 90px;
+}
+
+#home-page .layer-choice {
+  background-color: var(--add-layer);
+  margin-right: 20px;
+  margin-bottom: 20px;
+  position: relative;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--layer);
 }
 
 #home-page input[type="file"] {

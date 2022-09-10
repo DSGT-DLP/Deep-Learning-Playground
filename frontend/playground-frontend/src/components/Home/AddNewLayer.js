@@ -21,10 +21,10 @@ const AddNewLayer = () => {
   }
   return (
     <div
-      ref2={drop}
-      className="text-center d-flex justify-content-center align-items-center layer-box add-new-layer"
+      ref={drop}
+      className="text-center d-flex justify-content-center align-items-center layer-box add-new-layer-bin"
       style={{ ...styles.container, backgroundColor }}
-      dataTestid="dustbin"
+      data-testid="dustbin"
     >
       +
     </div>

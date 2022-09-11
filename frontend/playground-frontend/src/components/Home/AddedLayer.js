@@ -30,8 +30,7 @@ const _InputOutputPromptResponse = (props) => {
 };
 
 const AddedLayer = (props) => {
-  const { thisLayerIndex, addedLayers, setAddedLayers, onDelete } =
-    props;
+  const { thisLayerIndex, addedLayers, setAddedLayers, onDelete } = props;
   const thisLayer = addedLayers[thisLayerIndex];
   const { display_name, parameters } = thisLayer;
 

@@ -169,10 +169,7 @@ const Home = () => {
   }, [problemType]);
 
   return (
-    <div
-      id="home-page"
-      className="container-fluid"
-    >
+    <div id="home-page" className="container-fluid">
       <ChoiceTab />
       <Spacer height={40} />
 

@@ -26,4 +26,3 @@ RectContainer.propTypes = {
 };
 
 export default RectContainer;
-

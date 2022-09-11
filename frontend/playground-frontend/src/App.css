@@ -17,7 +17,7 @@ Author URI:   https://datasciencegt.org/
 :root {
   --primary: #003058;
   --secondary: #b3a36a;
-  --layer: #cd7bff;
+  --tertiary: #cd7bff;
   --whitehover: #f7f7f7;
   --footer-dark-blue: #00233f;
   --dark-grey: #d3d3d3;
@@ -54,7 +54,7 @@ img {
 input {
   border-width: 0.5px;
   height: 25px;
-  border-color: var(--layer);
+  border-color: var(--tertiary);
   border-radius: 20px;
   padding: 5px;
 }
@@ -83,6 +83,10 @@ input {
 .btn-primary {
   background-color: var(--primary);
   color: white;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--secondary);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -292,18 +296,19 @@ input {
 }
 
 /* -------------------------------------------------------------------------- */
-/*	Home
+/*	Home and Image Models
 /* -------------------------------------------------------------------------- */
 
-#home-page {
+#home-page, #image-models {
   padding: 30px 20px;
 }
 
-#home-page h2 {
+#home-page h2,
+#image-models h2 {
   font-weight: bold;
 }
 
-#home-page .input-container {
+.input-container {
   background-color: var(--input);
   width: 230px;
   height: 90px;
@@ -312,26 +317,26 @@ input {
   margin-block: 10px;
 }
 
-#home-page .layer-box {
+.layer-box {
   width: 160px;
   height: 90px;
 }
 
-#home-page .layer-input {
+.layer-input {
   margin-right: 20px;
   margin-block: 10px;
 }
 
-#home-page .layer-input .layer-container {
+.layer-input .layer-container {
   height: 90px;
   color: white;
   font-weight: bold;
   font-size: 1.5rem;
   position: relative;
-  background-color: var(--layer);
+  background-color: var(--tertiary);
 }
 
-#home-page .layer-input .layer-container .delete-layer {
+.layer-input .layer-container .delete-layer {
   position: absolute;
   top: 5%;
   right: 2%;
@@ -340,56 +345,56 @@ input {
   background-color: transparent;
 }
 
-#home-page .layer-input .input-box {
+.layer-input .input-box {
   width: 100%;
   margin-top: 10px;
   padding: 5%;
   background-color: white;
 }
 
-#home-page .add-new-layer-bin {
+.add-new-layer-bin {
   font-weight: 1000;
   color: white;
   font-size: 3rem;
-  color: var(--layer);
+  color: var(--tertiary);
   margin-right: 20px;
   margin-block: 10px;
 }
 
-#home-page #train-button {
+#train-button {
   width: 160px;
   height: 90px;
   margin-block: 10px;
 }
 
-#home-page .layer-choice {
+.layer-choice {
   background-color: var(--add-layer);
   margin-right: 20px;
   margin-block: 10px;
   position: relative;
   font-size: 1.5rem;
   font-weight: bold;
-  color: var(--layer);
+  color: var(--tertiary);
 }
 
-#home-page input[type="file"] {
+#home-page input[type="file"],
+#image-models input[type="file"] {
   display: none;
 }
 
-#home-page .custom-file-upload {
-  padding-bottom: 12px;
+.custom-file-upload {
   cursor: pointer;
 }
 
-#home-page textarea#code-snippet-text {
+textarea#code-snippet-text {
   width: 100%;
 }
 
-#home-page #code-snippet-div {
+#code-snippet-div {
   position: relative;
 }
 
-#home-page #code-snippet-clipboard {
+#code-snippet-clipboard {
   background-color: #ececec;
   border-radius: 4px;
   border-style: none;
@@ -399,13 +404,13 @@ input {
   cursor: pointer;
 }
 
-#home-page #code-snippet-clipboard:hover,
-#home-page #code-snippet-clipboard:focus {
+#code-snippet-clipboard:hover,
+#code-snippet-clipboard:focus {
   background-color: #fcfcfc;
 }
 
-#home-page #code-snippet-clipboard:active {
-  background-color: var(--layer);
+#code-snippet-clipboard:active {
+  background-color: var(--tertiary);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -496,7 +501,7 @@ img.tech-img-content {
 }
 textarea {
   border-width: 0.5px;
-  border-color: var(--layer);
+  border-color: var(--tertiary);
   border-radius: 10px;
   padding: 5px;
   resize: none;

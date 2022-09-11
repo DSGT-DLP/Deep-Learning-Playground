@@ -172,7 +172,6 @@ const Home = () => {
     <div
       id="home-page"
       className="container-fluid"
-      style={{ padding: 20, marginBottom: 50 }}
     >
       <ChoiceTab />
       <Spacer height={40} />
@@ -185,6 +184,7 @@ const Home = () => {
               setData={setCSVDataInput}
               setColumns={setCSVColumns}
             />
+            <Spacer height={12} />
             <CSVInputURL
               fileURL={fileURL}
               setFileURL={setFileURL}

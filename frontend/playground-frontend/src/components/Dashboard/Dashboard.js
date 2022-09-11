@@ -18,7 +18,7 @@ const rows = [
     input: "new_input.csv",
     statusType: "queued",
     status: "1 / 4",
-    date: "Sep 5, 2022",
+    date: 1662850862,
   },
   {
     id: "as98dfumasdp",
@@ -26,7 +26,7 @@ const rows = [
     input: "my_tabular_input.csv",
     statusType: "training",
     status: "35%",
-    date: "Sep 4, 2022",
+    date: 1662750862,
   },
   {
     id: "p9umaspdf",
@@ -34,7 +34,7 @@ const rows = [
     input: "my_images.zip",
     statusType: "finished",
     status: "Done",
-    date: "Sep 1, 2022",
+    date: 1441850862,
   },
 ];
 
@@ -79,6 +79,36 @@ const StatusDisplay = ({ statusType, status }) => {
   }
 };
 
+const sameDay = (d1, d2) => {
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+  );
+};
+
+const formatDate = (unixTime) => {
+  const currDate = new Date();
+  const date = new Date(unixTime * 1000);
+
+  const time = sameDay(date, currDate)
+    ? date.toLocaleTimeString(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+      }) + ", "
+    : "";
+
+  return (
+    time +
+    date.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+      year:
+        date.getFullYear() === currDate.getFullYear() ? undefined : "numeric",
+    })
+  );
+};
+
 const FilledGrid = () => {
   return (
     <TableContainer style={{ display: "flex", justifyContent: "center" }}>
@@ -101,7 +131,7 @@ const FilledGrid = () => {
                 {row.type}
               </TableCell>
               <TableCell align="right">{row.input}</TableCell>
-              <TableCell align="right">{row.date}</TableCell>
+              <TableCell align="right">{formatDate(row.date)}</TableCell>
               <TableCell align="right">
                 <StatusDisplay
                   statusType={row.statusType}

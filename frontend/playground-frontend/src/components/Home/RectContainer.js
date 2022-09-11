@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 const RectContainer = (props) => {
   return (
     <div
-      style={{ ...styles.container, ...props.style }}
+      style={props.style}
       ref={props.ref2}
+      className={props.className}
       data-testid={props.dataTestid}
     >
       {props.children}
@@ -16,6 +17,7 @@ const RectContainer = (props) => {
 RectContainer.propTypes = {
   children: PropTypes.node,
   style: PropTypes.object,
+  className: PropTypes.string,
   ref2: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
@@ -24,17 +26,3 @@ RectContainer.propTypes = {
 };
 
 export default RectContainer;
-
-const styles = {
-  container: {
-    width: 110,
-    height: 60,
-    padding: 10,
-    margin: 7.5,
-    border: `5px solid transparent`,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-  },
-};

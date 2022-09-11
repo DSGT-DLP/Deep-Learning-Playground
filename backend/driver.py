@@ -11,6 +11,8 @@ from backend.common.dataset import loader_from_zipped, read_local_csv_file, read
 from backend.common.optimizer import get_optimizer
 from backend.dl.dl_model_parser import parse_deep_user_architecture, get_object
 from backend.dl.dl_trainer import train_deep_classification_model, train_deep_model, get_deep_predictions, train_deep_image_classification
+from backend.firebase_helpers.authenticate import authenticate
+from backend.firebase_helpers.firebase import init_firebase
 from backend.ml.ml_trainer import train_classical_ml_model
 from backend.dl.dl_model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
@@ -18,10 +20,12 @@ from sklearn.model_selection import train_test_split
 from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
-from flask import send_from_directory
+from flask import send_from_directory, request
 from flask_socketio import SocketIO
 import eventlet
 import datetime, threading
+
+init_firebase()
 
 app = Flask(
     __name__,
@@ -156,17 +160,28 @@ def dl_drive(
         # Build the Deep Learning model that the user wants
         model = DLModel(parse_deep_user_architecture(user_arch))
         print(f"model: {model}")
-        
+
         optimizer = get_optimizer(
             model, optimizer_name=optimizer_name, learning_rate=0.05
         )
         # criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
         print(f"loss criterion: {criterion}")
         train_loader, test_loader = get_dataloaders(
-            X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=batch_size
+            X_train_tensor,
+            y_train_tensor,
+            X_test_tensor,
+            y_test_tensor,
+            batch_size=batch_size,
         )
         train_loss_results = train_deep_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, send_progress
+            model,
+            train_loader,
+            test_loader,
+            optimizer,
+            criterion,
+            epochs,
+            problem_type,
+            send_progress,
         )
         pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
@@ -185,7 +200,8 @@ def root(path):
     else:
         return send_from_directory(app.static_folder, "index.html")
 
-@socket.on('frontendLog')
+
+@socket.on("frontendLog")
 def frontend_log(log):
     app.logger.info(f'"frontend: {log}"')
 
@@ -305,8 +321,9 @@ def train_and_output(request_data, socket_id):
             json_csv_data_str=csvDataStr,
             batch_size=batch_size,
         )
-            
-        socket.emit('trainingResult',
+
+        socket.emit(
+            "trainingResult",
             {
                 "success": True,
                 "message": "Dataset trained and results outputted successfully",
@@ -319,6 +336,7 @@ def train_and_output(request_data, socket_id):
 
     except Exception:
         print(traceback.format_exc())
+
         socket.emit('trainingResult',
             {
                 "success": False,
@@ -349,7 +367,8 @@ def send_email_route(request_data, socket_id):
     if "attachment_array" in request_data:
         attachment_array = request_data["attachment_array"]
         if not isinstance(attachment_array, list):
-            return socket.emit('emailResult',
+            return socket.emit(
+                "emailResult",
                 {
                     "success": False,
                     "message": "Attachment array must be a list of filepaths",
@@ -379,6 +398,12 @@ def send_email_route(request_data, socket_id):
             to=socket_id
         )
 
+@socket.on("updateUserSettings")
+def update_user_settings(request_data):
+    if not authenticate(request_data):
+        return
+    user = request.user
+
 @app.route('/upload', methods=['POST'])
 def upload():
     @copy_current_request_context
@@ -400,6 +425,7 @@ def upload():
         socket.emit('uploadComplete')
         return '200'
     return '200'
+
 
 def send_progress_helper(socket_id):
     def send_progress(progress):

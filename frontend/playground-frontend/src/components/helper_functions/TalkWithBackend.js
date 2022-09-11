@@ -1,5 +1,6 @@
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
+import { auth } from "../../firebase";
 
 const socketEventDict = {
   tabular: "runTraining",
@@ -59,10 +60,20 @@ const sendEmail = (email, problemType) => {
   );
 };
 
+const updateUserSettings = async () => {
+  if (auth.currentUser) {
+    socket.emit("updateUserSettings", {
+      authorization: await auth.currentUser.getIdToken(true),
+    });
+  } else {
+    toast.error("Not logged in");
+  }
+};
+
 socket.on("emailResult", (result) => {
   if (!result.success) {
     toast.error(result.message);
   }
 });
 
-export { socket, frontendLog, train_and_output, sendEmail };
+export { socket, frontendLog, train_and_output, sendEmail, updateUserSettings };

@@ -77,6 +77,7 @@ const styles = {
     color: "white",
     textAlign: "center",
     fontSize: 18,
+    margin: 0,
   },
   responseContainer: {
     height: 50,

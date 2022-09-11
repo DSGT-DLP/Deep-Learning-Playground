@@ -77,14 +77,16 @@ const Home = () => {
     email: email,
   };
 
-  const inputColumnOptions = activeColumns.map((e, i) => ({
+  const columnOptionsArray = activeColumns.map((e, i) => ({
     label: e.name || e,
     value: i,
   }));
 
+  const inputColumnOptions = usingDefaultDataset.value ? [{label: "target", value: 0}] : columnOptionsArray;
+
   const handleTargetChange = (e) => {
     setTargetCol(e);
-    const csvColumnsCopy = JSON.parse(JSON.stringify(inputColumnOptions));
+    const csvColumnsCopy = JSON.parse(JSON.stringify(columnOptionsArray));
     let featuresCopy = JSON.parse(JSON.stringify(features));
     csvColumnsCopy.splice(e.value, 1);
     if (featuresCopy) {
@@ -189,9 +191,13 @@ const Home = () => {
   }, [usingDefaultDataset, uploadedColumns]);
 
   useEffect(() => {
-    setTargetCol(null);
+    if (usingDefaultDataset.value) {
+      handleTargetChange(columnOptionsArray[columnOptionsArray.length - 1]);
+    } else {
+      setTargetCol(null);
+      setInputFeatureColumnOptions([]);
+    }
     setFeatures(null);
-    setInputFeatureColumnOptions([]);
     setInputKey((e) => e + 1);
   }, [activeColumns]);
 

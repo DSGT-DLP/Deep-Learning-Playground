@@ -16,8 +16,6 @@ import {
   DEFAULT_IMG_LAYERS,
   DEFAULT_TRANSFORMS,
   COLORS,
-  LAYOUT,
-  GENERAL_STYLES,
 } from "../../constants";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -234,27 +232,5 @@ const ImageModels = () => {
 };
 
 export default ImageModels;
-
-const styles = {
-  fileInput: {
-    ...LAYOUT.column,
-    backgroundColor: COLORS.input,
-    width: 155,
-  },
-  transformChoice: {
-    top_left_tooltip: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      backgroundColor: "transparent",
-      borderWidth: 0,
-    },
-    text: {
-      ...GENERAL_STYLES.p,
-      color: COLORS.layer,
-      fontSize: 16,
-    },
-  },
-};
 
 const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));

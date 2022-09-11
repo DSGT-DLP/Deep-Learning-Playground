@@ -7,7 +7,7 @@ const socketEventDict = {
   pretrained: "pretrain-run",
 };
 
-const socket = io(":8000");
+const socket = io("");
 socket.on("connect", () => {
   frontendLog(`connected to socket`);
 });

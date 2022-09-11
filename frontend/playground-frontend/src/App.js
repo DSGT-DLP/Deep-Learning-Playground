@@ -7,18 +7,20 @@ import {
   Feedback,
   Navbar,
   ImageModels,
-  Footer,
+  Footer 
 } from "./components";
 import { ToastContainer } from "react-toastify";
 import Home from "./Home";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-
+import {PopupProvider} from 'react-hook-popup';
 function App() {
   const [showLogin, setShowLogin] = useState(false);
 
   return (
+    
     <div id="app">
+       <PopupProvider>
       <Router>
         <Navbar setShowLogin={setShowLogin} />
         <Routes>
@@ -32,7 +34,9 @@ function App() {
         <Footer />
       </Router>
       {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
+      </PopupProvider>
     </div>
+
   );
 }
 export default App;

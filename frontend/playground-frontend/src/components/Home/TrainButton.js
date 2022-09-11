@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import RectContainer from "./RectContainer";
+import  LoadingScreen from './LoadingScreen';
 import { COLORS, GENERAL_STYLES } from "../../constants";
 import {
   validateTabularInputs,
@@ -15,7 +16,7 @@ import {
   sendEmail,
   train_and_output,
 } from "../helper_functions/TalkWithBackend";
-import { Circle } from "rc-progress";
+
 import { toast } from "react-toastify";
 
 const TrainButton = (props) => {
@@ -23,14 +24,21 @@ const TrainButton = (props) => {
 
   const [pendingResponse, setPendingResponse] = useState(false);
   const [progress, setProgress] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState(false);
   const [result, setResult] = useState(null);
   const [uploaded, setUploaded] = useState(false);
   const [trainParams, setTrainParams] = useState(null);
 
   useEffect(() => {
+    socket.on("uploadStatus", (upstatus) => {
+      // triggered by send_progress() function
+      setUploadStatus(upstatus);
+      
+    });
     socket.on("trainingProgress", (progressData) => {
       // triggered by send_progress() function
       setProgress(Number.parseFloat(progressData));
+      
     });
     socket.on("trainingResult", (resultData) => {
       setResult(resultData);
@@ -90,10 +98,10 @@ const TrainButton = (props) => {
   };
 
   const onClick = async () => {
+
     setPendingResponse(true);
     setDLPBackendResponse(undefined);
     setProgress(0);
-
     const user_arch = make_obj_param_list(props.addedLayers);
     let trainTransforms = 0;
     let testTransforms = 0;
@@ -124,7 +132,7 @@ const TrainButton = (props) => {
         trainParams.choice,
         functionMap[trainParams.choice][1](trainParams.paramList)
       );
-      setUploaded(false);
+        setUploaded(false);
       setTrainParams(null);
     }
   }, [uploaded, trainParams]);
@@ -135,6 +143,7 @@ const TrainButton = (props) => {
         if (props.email?.length) {
           sendEmail(props.email, props.problemType);
         }
+        
         toast.success("Training successful! Scroll to see results!");
       } else if (result.message) {
         toast.error("Training failed. Check output traceback message");
@@ -147,7 +156,9 @@ const TrainButton = (props) => {
   }, [result]);
 
   return (
+   
     <>
+  
       <RectContainer
         style={{
           ...styles.container,
@@ -167,11 +178,15 @@ const TrainButton = (props) => {
       </RectContainer>
       {pendingResponse ? (
         <div style={{ marginLeft: 5, marginTop: 10, width: 90, height: 90 }}>
-          <Circle percent={progress} strokeWidth={4} />
+          <LoadingScreen upload={uploadStatus} progress= {progress} />
         </div>
+
       ) : null}
+         
     </>
+
   );
+
 };
 
 TrainButton.propTypes = {
@@ -204,4 +219,16 @@ let styles = {
     fontSize: 25,
     color: "white",
   },
+  modal: {
+    display: "none", /* Hidden by default */
+    position: "fixed", /* Stay in place */
+    zIndex: 1, /* Sit on top */
+    left: 0,
+    top: 0,
+    width: "100%", /* Full width */
+    height: "100%", /* Full height */
+    overflow: "auto", /* Enable scroll if needed */
+    // backgroundColor: "rgb(0,0,0)",/* Fallback color */
+    backgroundColor: "rgba(0,0,0,0.4)" /* Black w/ opacity */
+  }
 };

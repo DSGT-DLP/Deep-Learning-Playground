@@ -1,3 +1,5 @@
+import { formControlClasses } from "@mui/material";
+
 // General
 export { default as TitleText } from "./general/TitleText";
 
@@ -16,7 +18,7 @@ export { default as RectContainer } from "./Home/RectContainer";
 export { default as Results } from "./Home/Results";
 export { default as TrainButton } from "./Home/TrainButton";
 export { default as ChoiceTab } from "./Home/ChoiceTab";
-
+export { default as LoadingScreen} from "./Home/LoadingScreen";
 // About
 export { default as About } from "./About/About";
 

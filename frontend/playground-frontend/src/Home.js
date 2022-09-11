@@ -22,13 +22,14 @@ import {
   Results,
   TitleText,
   TrainButton,
-  ChoiceTab,
+  ChoiceTab
 } from "./components";
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 const Home = () => {
+
   const [csvDataInput, setCSVDataInput] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
@@ -169,6 +170,8 @@ const Home = () => {
   }, [problemType]);
 
   return (
+   <>
+   
     <div style={{ padding: 20, marginBottom: 50 }}>
       <DndProvider backend={HTML5Backend}>
         <ChoiceTab />
@@ -206,6 +209,7 @@ const Home = () => {
             {...input_responses}
             csvDataInput={csvDataInput}
             setDLPBackendResponse={setDLPBackendResponse}
+  
           />
         </BackgroundLayout>
 
@@ -258,6 +262,8 @@ const Home = () => {
       <TitleText text="Code Snippet" />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
     </div>
+
+    </>
   );
 };
 

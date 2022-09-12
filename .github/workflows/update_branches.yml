@@ -10,16 +10,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
     - name: Update frontend and backend-dev
       run: |
-        git config --global user.name ${{ secrets.DLP_HELPER_USERNAME }}
-        git config --global user.email ${{ secrets.DLP_HELPER_EMAIL}}
-        git config pull.rebase true  # rebase
-        git fetch --all
+        git config user.name ${{ secrets.DLP_HELPER_USERNAME }}
+        git config user.email ${{ secrets.DLP_HELPER_EMAIL}}
         git switch frontend
-        git pull origin main
+        git pull --rebase origin main
         git push
         git switch backend-dev
-        git pull origin main
+        git pull --rebase origin main
         git push
-        

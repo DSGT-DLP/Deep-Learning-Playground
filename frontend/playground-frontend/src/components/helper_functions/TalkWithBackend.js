@@ -1,5 +1,6 @@
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
+import { auth } from "../../firebase";
 
 const socketEventDict = {
   tabular: "runTraining",
@@ -7,7 +8,7 @@ const socketEventDict = {
   pretrained: "pretrain-run",
 };
 
-const socket = io("");
+const socket = io();
 socket.on("connect", () => {
   frontendLog(`connected to socket`);
 });
@@ -21,7 +22,7 @@ const frontendLog = (log) => {
 };
 
 const train_and_output = (choice, choiceDict) => {
-  socket.emit(socketEventDict[choice], choiceDict);
+  socket.emit(socketEventDict[choice], choiceDict, socket.id);
 };
 
 const sendEmail = (email, problemType) => {
@@ -45,14 +46,28 @@ const sendEmail = (email, problemType) => {
     );
   }
 
-  socket.emit("sendEmail", {
-    email_address: email,
-    subject:
-      "Your output files and visualizations from Deep Learning Playground",
-    body_text:
-      "Attached are the output files and visualizations that you just created in Deep Learning Playground on datasciencegt-dlp.com. Please notify us if there are any problems.",
-    attachment_array: attachments,
-  });
+  socket.emit(
+    "sendEmail",
+    {
+      email_address: email,
+      subject:
+        "Your output files and visualizations from Deep Learning Playground",
+      body_text:
+        "Attached are the output files and visualizations that you just created in Deep Learning Playground on datasciencegt-dlp.com. Please notify us if there are any problems.",
+      attachment_array: attachments,
+    },
+    socket.id
+  );
+};
+
+const updateUserSettings = async () => {
+  if (auth.currentUser) {
+    socket.emit("updateUserSettings", {
+      authorization: await auth.currentUser.getIdToken(true),
+    });
+  } else {
+    toast.error("Not logged in");
+  }
 };
 
 socket.on("emailResult", (result) => {
@@ -61,4 +76,4 @@ socket.on("emailResult", (result) => {
   }
 });
 
-export { socket, frontendLog, train_and_output, sendEmail };
+export { socket, frontendLog, train_and_output, sendEmail, updateUserSettings };

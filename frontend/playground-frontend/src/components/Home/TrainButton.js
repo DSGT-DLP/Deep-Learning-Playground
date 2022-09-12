@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import RectContainer from "./RectContainer";
 import  LoadingScreen from './LoadingScreen';
 import { COLORS, GENERAL_STYLES } from "../../constants";
 import {
+  validateParameter,
   validateTabularInputs,
   sendTabularJSON,
   validateImageInputs,
@@ -20,7 +20,7 @@ import {
 import { toast } from "react-toastify";
 
 const TrainButton = (props) => {
-  const { setDLPBackendResponse, choice = "tabular", style } = props;
+  const { setDLPBackendResponse, choice = "tabular" } = props;
 
   const [pendingResponse, setPendingResponse] = useState(false);
   const [progress, setProgress] = useState(null);
@@ -54,9 +54,7 @@ const TrainButton = (props) => {
     setResult(null);
   };
 
-  styles = { ...styles, ...style }; // style would take precedence
-
-  const make_obj_param_list = (obj_list) => {
+  const make_obj_param_list = (obj_list, source) => {
     if (!obj_list) return; // ValidateInputs throw error in case of empty things. This is to prevent an unnecessary errors in case of creating a layer
 
     // making a array of relating methods (like "nn.Linear") with their parameters (in_feature, out_feature) by including all methods and their parameters to make something like:
@@ -64,13 +62,18 @@ const TrainButton = (props) => {
     // ["transforms.ToTensor()", "transforms.RandomHorizontalFlip(0.8)"]
 
     const user_arch = [];
-    obj_list.forEach((obj_list_item) => {
+    for (let i = 0; i < obj_list.length; i++) {
+      const obj_list_item = obj_list[i];
       const parameters = obj_list_item.parameters;
       let parameter_call_input = "";
       const parameters_to_be_added = Array(Object.keys(parameters).length);
-      Object.values(parameters).forEach((v) => {
+      for (const v of Object.values(parameters)) {
+        if (!validateParameter(source, i, v)) {
+          reset();
+          return false;
+        }
         parameters_to_be_added[v.index] = v.value;
-      });
+      }
       parameters_to_be_added.forEach((e) => {
         parameter_call_input += e + ",";
       });
@@ -79,7 +82,7 @@ const TrainButton = (props) => {
 
       const callback = `${obj_list_item.object_name}(${parameter_call_input})`;
       user_arch.push(callback);
-    });
+    }
     return user_arch;
   };
 
@@ -102,12 +105,25 @@ const TrainButton = (props) => {
     setPendingResponse(true);
     setDLPBackendResponse(undefined);
     setProgress(0);
-    const user_arch = make_obj_param_list(props.addedLayers);
+    const user_arch = make_obj_param_list(props.addedLayers, "Model");
+    if (user_arch === false) return;
+
+
     let trainTransforms = 0;
     let testTransforms = 0;
     if (props.trainTransforms) {
-      trainTransforms = make_obj_param_list(props.trainTransforms);
-      testTransforms = make_obj_param_list(props.testTransforms);
+      trainTransforms = make_obj_param_list(
+        props.trainTransforms,
+        "Train Transform"
+      );
+      if (trainTransforms === false) return;
+    }
+    if (props.testTransforms) {
+      testTransforms = make_obj_param_list(
+        props.testTransforms,
+        "Test Transform"
+      );
+      if (testTransforms === false) return;
     }
 
     if (!validateInputs(user_arch)) {
@@ -158,24 +174,18 @@ const TrainButton = (props) => {
   return (
    
     <>
-  
-      <RectContainer
+      <button
+        id="train-button"
+        className="btn btn-primary"
         style={{
-          ...styles.container,
-          backgroundColor: pendingResponse ? COLORS.disabled : COLORS.dark_blue,
+          backgroundColor: pendingResponse ? COLORS.disabled : null,
+          cursor: pendingResponse ? "wait" : "pointer",
         }}
+        onClick={onClick}
+        disabled={pendingResponse}
       >
-        <button
-          style={{
-            ...styles.button,
-            cursor: pendingResponse ? "wait" : "pointer",
-          }}
-          onClick={onClick}
-          disabled={pendingResponse}
-        >
-          Train!
-        </button>
-      </RectContainer>
+        Train!
+      </button>
       {pendingResponse ? (
         <div style={{ marginLeft: 5, marginTop: 10, width: 90, height: 90 }}>
           <LoadingScreen upload={uploadStatus} progress= {progress} />
@@ -202,33 +212,3 @@ TrainButton.propTypes = {
 };
 
 export default TrainButton;
-
-let styles = {
-  container: {
-    padding: 0,
-    width: 130,
-    height: 80,
-  },
-  button: {
-    backgroundColor: "transparent",
-    border: "none",
-    cursor: "pointer",
-    height: "100%",
-    width: "100%",
-    ...GENERAL_STYLES.p,
-    fontSize: 25,
-    color: "white",
-  },
-  modal: {
-    display: "none", /* Hidden by default */
-    position: "fixed", /* Stay in place */
-    zIndex: 1, /* Sit on top */
-    left: 0,
-    top: 0,
-    width: "100%", /* Full width */
-    height: "100%", /* Full height */
-    overflow: "auto", /* Enable scroll if needed */
-    // backgroundColor: "rgb(0,0,0)",/* Fallback color */
-    backgroundColor: "rgba(0,0,0,0.4)" /* Black w/ opacity */
-  }
-};

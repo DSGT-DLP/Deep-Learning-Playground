@@ -82,7 +82,9 @@ const Home = () => {
     value: i,
   }));
 
-  const inputColumnOptions = usingDefaultDataset.value ? [] : columnOptionsArray;
+  const inputColumnOptions = usingDefaultDataset.value
+    ? []
+    : columnOptionsArray;
 
   const handleTargetChange = (e) => {
     setTargetCol(e);
@@ -192,7 +194,7 @@ const Home = () => {
 
   useEffect(() => {
     if (usingDefaultDataset.value) {
-      setTargetCol({label: "target", value: 0});
+      setTargetCol({ label: "target", value: 0 });
       handleTargetChange(columnOptionsArray[columnOptionsArray.length - 1]);
     } else {
       setTargetCol(null);

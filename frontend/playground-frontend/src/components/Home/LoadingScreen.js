@@ -6,9 +6,6 @@ import wrapup from '../../assets/wrapup.gif';
 const LoadingScreen = (props) => {
     const {  upload, progress } = props;
     console.log(upload);
-    // This function is called when the "Start Searching" button gets clicked
-
-    // This function is called when the "Close" button is clicked
 
     const main = {
         width: "80%",
@@ -44,25 +41,13 @@ const LoadingScreen = (props) => {
         marginRight: 'auto'
       };
       
-      /* Style the open button */
-    //   const openButton = {
-    //     marginTop: "30px",
-    //     padding: "10px 30px",
-    //     background: "#2196f3",
-    //     color: "#fff",
-    //     cursor: "pointer",
-    //     border: "none",
-    //     borderRadius: "10px"
-    //   };
-      
-      /* Style the "Close" button */
     return (
         <>
             <>
              {/* Main content */}
              <div style={main}></div>
             <h1> {progress} </h1>
-           {/* The search overlay */}
+           {/* The training overlay */}
            <div style={overlay}>
              <div style={overlayContent}>
         {upload === false ? (

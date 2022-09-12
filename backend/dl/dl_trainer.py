@@ -1,4 +1,5 @@
 from collections import Counter
+from distutils.command.upload import upload
 from backend.common.loss_functions import compute_loss, compute_img_loss
 from backend.dl.dl_eval import compute_accuracy, compute_correct
 from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
@@ -33,7 +34,7 @@ https://towardsdatascience.com/building-rnn-lstm-and-gru-for-time-series-using-p
 
 
 def train_deep_classification_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs, send_progress
+    model, train_loader, test_loader, optimizer, criterion, epochs, send_progress, uploadStatus
 ):
     """
     Function for training pytorch model for classification. This function also times how long it takes to complete each epoch
@@ -47,6 +48,7 @@ def train_deep_classification_model(
     :return: a dictionary containing confusion matrix and AUC/ROC plot raw data
     """
     try:
+        uploadStatus(True)
         train_loss = []  # accumulate training loss over each epoch
         test_loss = []  # accumulate testing loss over each epoch
         epoch_time = []  # how much time it takes for each epoch
@@ -138,7 +140,7 @@ def train_deep_classification_model(
 
 
 def train_deep_regression_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs, send_progress
+    model, train_loader, test_loader, optimizer, criterion, epochs, send_progress, uploadStatus
 ):
     """
     Train Regression model in Pytorch. This function also times how long it takes to complete each epoch
@@ -152,7 +154,7 @@ def train_deep_regression_model(
     :return: an empty dictionary
     """
     try:
-
+        uploadStatus(True)
         train_loss = []  # accumulate training loss over each epoch
         test_loss = []  # accumulate testing loss over each epoch
         epoch_time = []  # how much time it takes for each epoch
@@ -204,7 +206,7 @@ def train_deep_regression_model(
 
 
 def train_deep_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, send_progress
+    model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, send_progress, uploadStatus
 ):
     """
     Given train loader, train torch model
@@ -219,11 +221,11 @@ def train_deep_model(
     """
     if problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION):
         return train_deep_classification_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs, send_progress
+            model, train_loader, test_loader, optimizer, criterion, epochs, send_progress, uploadStatus
         )
     elif problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION):
         return train_deep_regression_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs, send_progress
+            model, train_loader, test_loader, optimizer, criterion, epochs, send_progress, uploadStatus
         )
 
 
@@ -250,9 +252,9 @@ def get_deep_predictions(model: nn.Module, test_loader):
 
     return prediction_tensor, ground_truth_tensor
 
-def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress):
+def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress, uploadStatus):
     try:
-
+        uploadStatus(True)
         model = model.to(device)
         train_loss = []  # accumulate training loss over each epoch
         test_loss = []  # accumulate testing loss over each epoch
@@ -318,7 +320,6 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                     y_pred_last_epoch.append(pred.detach().numpy().squeeze())
                     labels_last_epoch.append(y.detach().numpy().squeeze())
 
-                test_correct += compute_accuracy(pred, y)
                 test_correct += (y_pred == y_true).type(torch.float).sum().item()
                 epoch_batch_loss += float(loss.detach())
 

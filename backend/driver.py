@@ -90,6 +90,7 @@ def dl_drive(
     optimizer_name,
     problem_type,
     send_progress,
+    uploadStatus,
     target=None,
     features=None,
     default=None,
@@ -166,7 +167,7 @@ def dl_drive(
             X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=batch_size
         )
         train_loss_results = train_deep_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, send_progress
+            model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, uploadStatus, send_progress 
         )
         pred, ground_truth = get_deep_predictions(model, test_loader)
         torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
@@ -230,7 +231,7 @@ def testing(request_data):
                 model, optimizer_name=optimizer_name, learning_rate=0.05
         )
 
-        train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress)
+        train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress, uploadStatus = uploadStatus)
 
         print("training successfully finished")
 
@@ -293,6 +294,7 @@ def train_and_output(request_data):
             criterion=criterion,
             optimizer_name=optimizer_name,
             problem_type=problem_type,
+            uploadStatus=uploadStatus,
             send_progress=send_progress,
             target=target,
             features=features,
@@ -392,6 +394,10 @@ def upload():
         socket.emit('uploadComplete')
         return '200'
     return '200'
+
+def uploadStatus(uploadState):
+    socket.emit('uploadStatus', uploadState)
+    eventlet.greenthread.sleep(0)  
 
 def send_progress(progress):
     socket.emit('trainingProgress', progress)

@@ -1,5 +1,4 @@
 import React from "react";
-import RectContainer from "./RectContainer";
 import { COLORS, ITEM_TYPES } from "../../constants";
 import { useDrop } from "react-dnd";
 
@@ -20,13 +19,14 @@ const AddNewLayer = () => {
     backgroundColor = "white";
   }
   return (
-    <RectContainer
-      ref2={drop}
+    <div
+      ref={drop}
+      className="text-center d-flex justify-content-center align-items-center layer-box add-new-layer-bin"
       style={{ ...styles.container, backgroundColor }}
-      dataTestid="dustbin"
+      data-testid="dustbin"
     >
-      <p style={{ fontSize: 50, fontWeight: "1000", color: COLORS.layer }}>+</p>
-    </RectContainer>
+      +
+    </div>
   );
 };
 

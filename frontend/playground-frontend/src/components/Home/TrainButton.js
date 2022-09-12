@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import RectContainer from "./RectContainer";
-import { COLORS, GENERAL_STYLES } from "../../constants";
+import { COLORS } from "../../constants";
 import {
   validateParameter,
   validateTabularInputs,
@@ -20,7 +19,7 @@ import { Circle } from "rc-progress";
 import { toast } from "react-toastify";
 
 const TrainButton = (props) => {
-  const { setDLPBackendResponse, choice = "tabular", style } = props;
+  const { setDLPBackendResponse, choice = "tabular" } = props;
 
   const [pendingResponse, setPendingResponse] = useState(false);
   const [progress, setProgress] = useState(null);
@@ -46,8 +45,6 @@ const TrainButton = (props) => {
     setProgress(null);
     setResult(null);
   };
-
-  styles = { ...styles, ...style }; // style would take precedence
 
   const make_obj_param_list = (obj_list, source) => {
     if (!obj_list) return; // ValidateInputs throw error in case of empty things. This is to prevent an unnecessary errors in case of creating a layer
@@ -166,23 +163,18 @@ const TrainButton = (props) => {
 
   return (
     <>
-      <RectContainer
+      <button
+        id="train-button"
+        className="btn btn-primary"
         style={{
-          ...styles.container,
-          backgroundColor: pendingResponse ? COLORS.disabled : COLORS.dark_blue,
+          backgroundColor: pendingResponse ? COLORS.disabled : null,
+          cursor: pendingResponse ? "wait" : "pointer",
         }}
+        onClick={onClick}
+        disabled={pendingResponse}
       >
-        <button
-          style={{
-            ...styles.button,
-            cursor: pendingResponse ? "wait" : "pointer",
-          }}
-          onClick={onClick}
-          disabled={pendingResponse}
-        >
-          Train!
-        </button>
-      </RectContainer>
+        Train!
+      </button>
       {pendingResponse ? (
         <div style={{ marginLeft: 5, marginTop: 10, width: 90, height: 90 }}>
           <Circle percent={progress} strokeWidth={4} />
@@ -205,21 +197,3 @@ TrainButton.propTypes = {
 };
 
 export default TrainButton;
-
-let styles = {
-  container: {
-    padding: 0,
-    width: 130,
-    height: 80,
-  },
-  button: {
-    backgroundColor: "transparent",
-    border: "none",
-    cursor: "pointer",
-    height: "100%",
-    width: "100%",
-    ...GENERAL_STYLES.p,
-    fontSize: 25,
-    color: "white",
-  },
-};

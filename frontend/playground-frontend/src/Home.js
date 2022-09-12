@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { COLORS, DEFAULT_ADDED_LAYERS, LAYOUT } from "./constants";
+import { DEFAULT_ADDED_LAYERS } from "./constants";
 import {
   BOOL_OPTIONS,
   CRITERIONS,
@@ -18,7 +18,7 @@ import {
   EmailInput,
   Input,
   LayerChoice,
-  RectContainer,
+  Spacer,
   Results,
   TitleText,
   TrainButton,
@@ -211,23 +211,26 @@ const Home = () => {
   });
 
   return (
-    <div style={{ padding: 20, marginBottom: 50 }}>
+    <div id="home-page" className="container-fluid">
+      <ChoiceTab />
+      <Spacer height={40} />
+
       <DndProvider backend={HTML5Backend}>
-        <ChoiceTab />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
-          <RectContainer style={styles.fileInput}>
+          <div className="input-container d-flex flex-column align-items-center justify-content-center">
             <CSVInputFile
               setData={setCSVDataInput}
               setColumns={setUploadedColumns}
             />
+            <Spacer height={12} />
             <CSVInputURL
               fileURL={fileURL}
               setFileURL={setFileURL}
               setCSVColumns={setUploadedColumns}
               setCSVDataInput={setCSVDataInput}
             />
-          </RectContainer>
+          </div>
 
           {addedLayers.map((_, i) => (
             <AddedLayer
@@ -251,7 +254,7 @@ const Home = () => {
           />
         </BackgroundLayout>
 
-        <div style={{ marginTop: 20 }} />
+        <Spacer height={40} />
 
         <TitleText text="Layers Inventory" />
         <BackgroundLayout>
@@ -264,7 +267,7 @@ const Home = () => {
                   const copyCurrent = [...currentAddedLayers];
                   const layerCopy = deepCopyObj(newLayer);
                   Object.values(layerCopy.parameters).forEach((val) => {
-                    val.value = "";
+                    val.value = val.default ? val.default : val.min;
                   });
                   copyCurrent.push(layerCopy);
                   return copyCurrent;
@@ -274,7 +277,8 @@ const Home = () => {
           ))}
         </BackgroundLayout>
       </DndProvider>
-      <div style={{ marginTop: 20 }} />
+
+      <Spacer height={40} />
 
       <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
@@ -283,8 +287,12 @@ const Home = () => {
         ))}
       </BackgroundLayout>
 
+      <Spacer height={40} />
+
       <TitleText text="Email (optional)" />
       <EmailInput email={email} setEmail={setEmail} />
+
+      <Spacer height={40} />
 
       <TitleText text="CSV Input" />
       <DataTable
@@ -294,8 +302,12 @@ const Home = () => {
         data={csvDataInput}
       />
 
+      <Spacer height={40} />
+
       <TitleText text="Deep Learning Results" />
       {ResultsMemo}
+
+      <Spacer height={40} />
 
       <TitleText text="Code Snippet" />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
@@ -306,11 +318,3 @@ const Home = () => {
 export default Home;
 
 const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));
-
-const styles = {
-  fileInput: {
-    ...LAYOUT.column,
-    backgroundColor: COLORS.input,
-    width: 200,
-  },
-};

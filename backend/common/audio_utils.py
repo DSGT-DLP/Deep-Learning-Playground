@@ -57,7 +57,7 @@ def pad_audio_tensor(tensor, new_len):
 #     return unique_labels
 
 if __name__=='__main__':
-    train_set = torchaudio.datasets.SPEECHCOMMANDS('./backend/audio_data_uploads', subset='training', download=False)
+    train_set = torchaudio.datasets.SPEECHCOMMANDS('./backend/audio_data_uploads', subset='training', download=True)
     if train_set[0][0].shape[0] > 1:
         raise ValueError('DLP currently supports only single channel datasets')
     train_loader = torch.utils.data.DataLoader(

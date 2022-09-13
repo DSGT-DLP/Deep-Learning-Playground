@@ -21,7 +21,6 @@ function App() {
   const isOnLoginPage = currentURL[currentURL.length - 1] === "login";
 
   return (
-    
     <div id="app">
       <BrowserRouter>
         {isOnLoginPage || <Navbar setShowLogin={setShowLogin} />}
@@ -40,7 +39,6 @@ function App() {
       </BrowserRouter>
       {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
     </div>
-
   );
 }
 export default App;

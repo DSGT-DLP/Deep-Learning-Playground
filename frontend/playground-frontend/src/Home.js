@@ -22,14 +22,13 @@ import {
   Results,
   TitleText,
   TrainButton,
-  ChoiceTab
+  ChoiceTab,
 } from "./components";
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 const Home = () => {
-
   const [csvDataInput, setCSVDataInput] = useState([]);
   const [csvColumns, setCSVColumns] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
@@ -171,109 +170,110 @@ const Home = () => {
 
   return (
     <>
-    <div id="home-page" className="container-fluid">
-      <ChoiceTab />
-      <Spacer height={40} />
+      <div id="home-page" className="container-fluid">
+        <ChoiceTab />
+        <Spacer height={40} />
 
-      <DndProvider backend={HTML5Backend}>
-        <TitleText text="Implemented Layers" />
+        <DndProvider backend={HTML5Backend}>
+          <TitleText text="Implemented Layers" />
+          <BackgroundLayout>
+            <div className="input-container d-flex flex-column align-items-center justify-content-center">
+              <CSVInputFile
+                setData={setCSVDataInput}
+                setColumns={setCSVColumns}
+              />
+              <Spacer height={12} />
+              <CSVInputURL
+                fileURL={fileURL}
+                setFileURL={setFileURL}
+                setCSVColumns={setCSVColumns}
+                setCSVDataInput={setCSVDataInput}
+              />
+            </div>
+
+            {addedLayers.map((_, i) => (
+              <AddedLayer
+                thisLayerIndex={i}
+                addedLayers={addedLayers}
+                setAddedLayers={setAddedLayers}
+                key={i}
+                onDelete={() => {
+                  const currentLayers = [...addedLayers];
+                  currentLayers.splice(i, 1);
+                  setAddedLayers(currentLayers);
+                }}
+              />
+            ))}
+            <AddNewLayer />
+
+            <TrainButton
+              {...input_responses}
+              csvDataInput={csvDataInput}
+              setDLPBackendResponse={setDLPBackendResponse}
+            />
+          </BackgroundLayout>
+
+          <Spacer height={40} />
+
+          <TitleText text="Layers Inventory" />
+          <BackgroundLayout>
+            {POSSIBLE_LAYERS.map((e) => (
+              <LayerChoice
+                layer={e}
+                key={e.display_name}
+                onDrop={(newLayer) => {
+                  setAddedLayers((currentAddedLayers) => {
+                    const copyCurrent = [...currentAddedLayers];
+                    const layerCopy = deepCopyObj(newLayer);
+                    Object.values(layerCopy.parameters).forEach((val) => {
+                      val.value = val.default ? val.default : val.min;
+                    });
+                    copyCurrent.push(layerCopy);
+                    return copyCurrent;
+                  });
+                }}
+              />
+            ))}
+          </BackgroundLayout>
+        </DndProvider>
+
+        <Spacer height={40} />
+
+        <TitleText text="Deep Learning Parameters" />
         <BackgroundLayout>
-          <div className="input-container d-flex flex-column align-items-center justify-content-center">
-            <CSVInputFile
-              setData={setCSVDataInput}
-              setColumns={setCSVColumns}
-            />
-            <Spacer height={12} />
-            <CSVInputURL
-              fileURL={fileURL}
-              setFileURL={setFileURL}
-              setCSVColumns={setCSVColumns}
-              setCSVDataInput={setCSVDataInput}
-            />
-          </div>
-
-          {addedLayers.map((_, i) => (
-            <AddedLayer
-              thisLayerIndex={i}
-              addedLayers={addedLayers}
-              setAddedLayers={setAddedLayers}
-              key={i}
-              onDelete={() => {
-                const currentLayers = [...addedLayers];
-                currentLayers.splice(i, 1);
-                setAddedLayers(currentLayers);
-              }}
-            />
+          {input_queries.map((e) => (
+            <Input {...e} key={e.queryText + inputKey} />
           ))}
-          <AddNewLayer />
-
-          <TrainButton
-            {...input_responses}
-            csvDataInput={csvDataInput}
-            setDLPBackendResponse={setDLPBackendResponse}
-  
-          />
         </BackgroundLayout>
 
         <Spacer height={40} />
 
-        <TitleText text="Layers Inventory" />
-        <BackgroundLayout>
-          {POSSIBLE_LAYERS.map((e) => (
-            <LayerChoice
-              layer={e}
-              key={e.display_name}
-              onDrop={(newLayer) => {
-                setAddedLayers((currentAddedLayers) => {
-                  const copyCurrent = [...currentAddedLayers];
-                  const layerCopy = deepCopyObj(newLayer);
-                  Object.values(layerCopy.parameters).forEach((val) => {
-                    val.value = val.default ? val.default : val.min;
-                  });
-                  copyCurrent.push(layerCopy);
-                  return copyCurrent;
-                });
-              }}
-            />
-          ))}
-        </BackgroundLayout>
-      </DndProvider>
+        <TitleText text="Email (optional)" />
+        <EmailInput email={email} setEmail={setEmail} />
 
-      <Spacer height={40} />
+        <Spacer height={40} />
 
-      <TitleText text="Deep Learning Parameters" />
-      <BackgroundLayout>
-        {input_queries.map((e) => (
-          <Input {...e} key={e.queryText + inputKey} />
-        ))}
-      </BackgroundLayout>
+        <TitleText text="CSV Input" />
+        <DataTable
+          pagination
+          highlightOnHover
+          columns={csvColumns}
+          data={csvDataInput}
+        />
 
-      <Spacer height={40} />
+        <Spacer height={40} />
 
-      <TitleText text="Email (optional)" />
-      <EmailInput email={email} setEmail={setEmail} />
+        <TitleText text="Deep Learning Results" />
+        {ResultsMemo}
 
-      <Spacer height={40} />
+        <Spacer height={40} />
 
-      <TitleText text="CSV Input" />
-      <DataTable
-        pagination
-        highlightOnHover
-        columns={csvColumns}
-        data={csvDataInput}
-      />
-
-      <Spacer height={40} />
-
-      <TitleText text="Deep Learning Results" />
-      {ResultsMemo}
-
-      <Spacer height={40} />
-
-      <TitleText text="Code Snippet" />
-      <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
-    </div>
-
+        <TitleText text="Code Snippet" />
+        <CodeSnippet
+          backendResponse={dlpBackendResponse}
+          layers={addedLayers}
+        />
+      </div>
     </>
   );
 };

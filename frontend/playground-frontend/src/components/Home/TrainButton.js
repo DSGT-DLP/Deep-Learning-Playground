@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import  LoadingScreen from './LoadingScreen';
+import LoadingScreen from "./LoadingScreen";
 import { COLORS } from "../../constants";
 import {
   validateParameter,
@@ -33,12 +33,10 @@ const TrainButton = (props) => {
     socket.on("uploadStatus", (upstatus) => {
       // triggered by send_progress() function
       setUploadStatus(upstatus);
-      
     });
     socket.on("trainingProgress", (progressData) => {
       // triggered by send_progress() function
       setProgress(Number.parseFloat(progressData));
-      
     });
     socket.on("trainingResult", (resultData) => {
       setResult(resultData);
@@ -101,7 +99,6 @@ const TrainButton = (props) => {
   };
 
   const onClick = async () => {
-
     setPendingResponse(true);
     setDLPBackendResponse(undefined);
     setProgress(0);
@@ -147,7 +144,7 @@ const TrainButton = (props) => {
         trainParams.choice,
         functionMap[trainParams.choice][1](trainParams.paramList)
       );
-        setUploaded(false);
+      setUploaded(false);
       setTrainParams(null);
     }
   }, [uploaded, trainParams]);
@@ -158,7 +155,7 @@ const TrainButton = (props) => {
         if (props.email?.length) {
           sendEmail(props.email, props.problemType);
         }
-        
+
         toast.success("Training successful! Scroll to see results!");
       } else if (result.message) {
         toast.error("Training failed. Check output traceback message");
@@ -171,7 +168,6 @@ const TrainButton = (props) => {
   }, [result]);
 
   return (
-   
     <>
       <button
         id="train-button"
@@ -187,15 +183,11 @@ const TrainButton = (props) => {
       </button>
       {pendingResponse ? (
         <div style={{ marginLeft: 5, marginTop: 10, width: 90, height: 90 }}>
-          <LoadingScreen upload={uploadStatus} progress= {progress} />
+          <LoadingScreen upload={uploadStatus} progress={progress} />
         </div>
-
       ) : null}
-         
     </>
-
   );
-
 };
 
 TrainButton.propTypes = {

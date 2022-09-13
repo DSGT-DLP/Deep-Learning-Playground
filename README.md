@@ -14,6 +14,7 @@ Have the following installed first:
 2. NPM v8
 3. [Anaconda](https://www.anaconda.com/)
 4. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). This is important in configuring your dev credentials
+5. [GitKraken](https://help.gitkraken.com/gitkraken-client/how-to-install/)
 
 ## Shortcuts:
 | Terminal   | Procedure   | Command |

@@ -13,6 +13,10 @@ from backend.common.ai_drive import dl_tabular_drive, dl_img_drive
 from backend.common.constants import UNZIPPED_DIR_NAME
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
+from backend.firebase_helpers.authenticate import authenticate
+from backend.firebase_helpers.firebase import init_firebase
+
+init_firebase()
 
 app = Flask(
     __name__,
@@ -31,12 +35,13 @@ def root(path):
     else:
         return send_from_directory(app.static_folder, "index.html")
 
-@socket.on('frontendLog')
+
+@socket.on("frontendLog")
 def frontend_log(log):
     app.logger.info(f'"frontend: {log}"')
 
 @socket.on("img-run")
-def testing(request_data):
+def testing(request_data, socket_id):
     try: 
         print("backend started")
         IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
@@ -61,15 +66,15 @@ def testing(request_data):
             batch_size,
             shuffle,
             IMAGE_UPLOAD_FOLDER,
-            send_progress
+            send_progress=send_progress_helper(socket_id)
         )
 
         print("training successfully finished")
-        send_results(train_loss_results)
+        send_results(train_loss_results, socket_id)
         
     except Exception as e:
         print(traceback.format_exc())
-        send_error()
+        send_error(socket_id)
         
     finally:
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
@@ -83,7 +88,7 @@ def testing(request_data):
             shutil.rmtree(UNZIPPED_DIR_NAME)
 
 @socket.on('tabular-run')
-def train_and_output(request_data):
+def train_and_output(request_data, socket_id):
     user_arch = request_data["user_arch"]
     criterion = request_data["criterion"]
     optimizer_name = request_data["optimizer_name"]    
@@ -104,7 +109,6 @@ def train_and_output(request_data):
             criterion,
             optimizer_name,
             problem_type,
-            send_progress,
             fileURL,
             target,
             features,
@@ -113,17 +117,18 @@ def train_and_output(request_data):
             epochs,
             shuffle,
             batch_size,
-            csvDataStr
+            csvDataStr,
+            send_progress=send_progress_helper(socket_id),
         )        
-        send_results(train_loss_results)
+        send_results(train_loss_results, socket_id)
 
     except Exception:
         print(traceback.format_exc())
-        send_error()
+        send_error(socket_id)
 
 
 @socket.on('sendEmail')
-def send_email(request_data):
+def send_email(request_data, socket_id):
     # extract data
     required_params = ["email_address", "subject", "body_text"]
     for required_param in required_params:
@@ -132,7 +137,8 @@ def send_email(request_data):
                 {
                     "success": False,
                     "message": "Missing parameter " + required_param
-                }
+                },
+                to=socket_id
             )
 
     email_address = request_data["email_address"]
@@ -141,11 +147,13 @@ def send_email(request_data):
     if "attachment_array" in request_data:
         attachment_array = request_data["attachment_array"]
         if not isinstance(attachment_array, list):
-            return socket.emit('emailResult',
+            return socket.emit(
+                "emailResult",
                 {
                     "success": False,
                     "message": "Attachment array must be a list of filepaths",
-                }
+                },
+                to=socket_id
             )
     else:
         attachment_array = []
@@ -157,7 +165,8 @@ def send_email(request_data):
             {
                 "success": True,
                 "message": "Sent email to " + email_address
-            }
+            },
+            to=socket_id
         )
     except Exception:
         print(traceback.format_exc())
@@ -165,8 +174,15 @@ def send_email(request_data):
             {
                 "success": False,
                 "message": traceback.format_exc(limit=1)
-            }
+            },
+            to=socket_id
         )
+
+@socket.on("updateUserSettings")
+def update_user_settings(request_data):
+    if not authenticate(request_data):
+        return
+    user = request.user
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -190,11 +206,7 @@ def upload():
         return '200'
     return '200'
 
-def send_progress(progress):
-    socket.emit('trainingProgress', progress)
-    eventlet.greenthread.sleep(0)                 # to prevent logs from being grouped and sent together at the end of training
-    
-def send_results(train_loss_results):
+def send_results(train_loss_results, socket_id):
     socket.emit('trainingResult',
         {
             "success": True,
@@ -202,17 +214,25 @@ def send_results(train_loss_results):
             "dl_results": csv_to_json(),
             "auxiliary_outputs": train_loss_results,
             "status": 200
-        }
+        },
+        to=socket_id
     )
 
-def send_error():
+def send_error(socket_id):
     socket.emit('trainingResult',
         {
             "success": False,
             "message": traceback.format_exc(limit=1),
             "status": 400
-        }
+        },
+        to=socket_id
     )
-    
+
+def send_progress_helper(socket_id):
+    def send_progress(progress):
+        socket.emit('trainingProgress', progress, to=socket_id)
+        eventlet.greenthread.sleep(0)                 # to prevent logs from being grouped and sent together at the end of training
+    return send_progress
+
 if __name__ == "__main__":
     socket.run(app, debug=True, host="0.0.0.0", port=8000)

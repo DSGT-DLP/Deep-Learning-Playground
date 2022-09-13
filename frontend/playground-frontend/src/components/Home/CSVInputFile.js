@@ -71,8 +71,12 @@ const CSVInputFile = (props) => {
 
   return (
     <>
-      <label htmlFor="csv-upload" className="custom-file-upload">
-        <FaCloudUploadAlt /> {fileName || "Upload CSV"}
+      <label
+        htmlFor="csv-upload"
+        className="custom-file-upload d-flex align-items-center"
+      >
+        <FaCloudUploadAlt className="me-2" />
+        {fileName || "Upload CSV"}
       </label>
       <input
         type="file"

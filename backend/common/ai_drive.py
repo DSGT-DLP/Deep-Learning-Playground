@@ -20,7 +20,6 @@ def dl_tabular_drive(
     criterion,
     optimizer_name,
     problem_type,
-    send_progress,
     fileURL,
     target=None,
     features=None,
@@ -29,7 +28,8 @@ def dl_tabular_drive(
     epochs=5,
     shuffle=True,
     batch_size=20,
-    json_csv_data_str=""
+    json_csv_data_str="",
+    send_progress=None
 ):
     """
     Driver function/entrypoint into backend for deep learning model. Onnx file is generated containing model architecture for user to visualize in netron.app

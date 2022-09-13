@@ -3,35 +3,38 @@
 Theme Name:   DSGT Deep Learning Playground
 Text Domain:  datasciencegt-dlp
 Version:      1.0
-License:      GNU General Public License v3 or later
-License URI:  https://www.gnu.org/licenses/gpl-3.0.en.html
+License:      MIT
+License URI:  https://opensource.org/licenses/MIT
 Description:  A deep learning playground to provoke appease and calamity
 Author:       See CODEOWNDERS
 Author URI:   https://datasciencegt.org/
 */
 
 /* -------------------------------------------------------------------------- */
-/*	1. Root
+/*	Root
 /* -------------------------------------------------------------------------- */
 
 :root {
   --primary: #003058;
   --secondary: #b3a36a;
-  --layer: #cd7bff;
+  --tertiary: #cd7bff;
   --whitehover: #f7f7f7;
   --footer-dark-blue: #00233f;
   --dark-grey: #d3d3d3;
+  --input: #E2E2E2;
+  --add-layer: #F2ECFF;
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. General HTML
+/*	General HTML
 /* -------------------------------------------------------------------------- */
 
-html,
-body,
-.wrapper,
-#root {
-  height: 100%;
+* {
+  font-family: "Lato", "Arial", "Helvetica", sans-serif;
+}
+
+h2 {
+  font-size: calc(0.7rem + .9vw);
 }
 
 #app {
@@ -43,7 +46,6 @@ body {
   margin: 0;
   padding: 0;
   color: black;
-  font-family: 'Lato', 'Arial', 'Helvetica', sans-serif;
 }
 img {
   display: block;
@@ -51,13 +53,14 @@ img {
 }
 input {
   border-width: 0.5px;
-  border-color: var(--layer);
-  border-radius: 10px;
+  height: 25px;
+  border-color: var(--tertiary);
+  border-radius: 20px;
   padding: 5px;
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. General DLP Styles
+/*	General DLP Styles
 /* -------------------------------------------------------------------------- */
 
 .sections {
@@ -69,8 +72,25 @@ input {
   text-justify: inter-word;
 }
 
+.btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 0;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--secondary);
+}
+
 /* -------------------------------------------------------------------------- */
-/*	1. Header
+/*	Navbar
 /* -------------------------------------------------------------------------- */
 
 #header-section {
@@ -81,16 +101,12 @@ input {
   text-align: center;
   color: white;
 }
+
 #nav-bar .nav #title-name > a {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-}
-
-#nav-bar html {
-  /* box sizing border box specifies no padding, width = width etc */
-  box-sizing: border-box;
 }
 
 #nav-bar .navElement {
@@ -143,7 +159,8 @@ input {
 }
 
 #nav-bar .navElement:hover > a,
-#nav-bar .navElement:hover > button, #nav-bar .navElement:hover > div > button {
+#nav-bar .navElement:hover > button,
+#nav-bar .navElement:hover > div > button {
   color: var(--primary);
 }
 
@@ -197,10 +214,6 @@ input {
   color: var(--secondary);
 }
 
-/* -------------------------------------------------------------------------- */
-/*	1. Navbar
-/* -------------------------------------------------------------------------- */
-
 .header-footer {
   margin: 0;
   position: static;
@@ -211,7 +224,6 @@ input {
 }
 
 #nav-bar {
-  position: sticky;
   z-index: 10;
   top: 0vmax;
   max-width: 100%;
@@ -284,15 +296,93 @@ input {
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. Home
+/*	Home and Image Models
 /* -------------------------------------------------------------------------- */
 
-input[type="file"] {
+#home-page, #image-models {
+  padding: 30px 20px;
+}
+
+#home-page h2,
+#image-models h2 {
+  font-weight: bold;
+}
+
+.input-container {
+  background-color: var(--input);
+  width: 230px;
+  height: 90px;
+  padding: 10px;
+  margin-right: 20px;
+  margin-block: 10px;
+}
+
+.layer-box {
+  width: 160px;
+  height: 90px;
+}
+
+.layer-input {
+  margin-right: 20px;
+  margin-block: 10px;
+}
+
+.layer-input .layer-container {
+  height: 90px;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  position: relative;
+  background-color: var(--tertiary);
+}
+
+.layer-input .layer-container .delete-layer {
+  position: absolute;
+  top: 5%;
+  right: 2%;
+  border: none;
+  font-size: 0.75rem;
+  background-color: transparent;
+}
+
+.layer-input .input-box {
+  width: 100%;
+  margin-top: 10px;
+  padding: 5%;
+  background-color: white;
+}
+
+.add-new-layer-bin {
+  font-weight: 1000;
+  color: white;
+  font-size: 3rem;
+  color: var(--tertiary);
+  margin-right: 20px;
+  margin-block: 10px;
+}
+
+#train-button {
+  width: 160px;
+  height: 90px;
+  margin-block: 10px;
+}
+
+.layer-choice {
+  background-color: var(--add-layer);
+  margin-right: 20px;
+  margin-block: 10px;
+  position: relative;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--tertiary);
+}
+
+#home-page input[type="file"],
+#image-models input[type="file"] {
   display: none;
 }
 
 .custom-file-upload {
-  padding: 12px 12px;
   cursor: pointer;
 }
 
@@ -320,16 +410,73 @@ textarea#code-snippet-text {
 }
 
 #code-snippet-clipboard:active {
-  background-color: var(--layer);
+  background-color: var(--tertiary);
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. About and Wiki
+/*	Dashboard
 /* -------------------------------------------------------------------------- */
 
-#wiki p, 
+#blank-grid-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#blank-grid {
+  border: 2px solid black;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+}
+
+#blank-grid p {
+  font-size: large;
+}
+
+#blank-grid-button {
+  border: 2px solid black;
+  background-color: transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: medium;
+}
+
+.grid-status-display {
+  border: 2px solid black;
+  background-color: transparent;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  display: inline-flex;
+  align-items: center;
+  font-size: medium;
+}
+
+.grid-status-display-gray {
+  background-color: #b7b7b7;
+}
+
+.grid-status-display-yellow {
+  background-color: #b3a36a;
+}
+
+.grid-status-display-green {
+  background-color: #7cd992;
+  cursor: pointer;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	About and Wiki
+/* -------------------------------------------------------------------------- */
+
+#wiki p,
 #wiki li,
-#about p, 
+#about p,
 #about li {
   font-size: 1.2rem;
 }
@@ -354,7 +501,7 @@ img.tech-img-content {
 }
 textarea {
   border-width: 0.5px;
-  border-color: var(--layer);
+  border-color: var(--tertiary);
   border-radius: 10px;
   padding: 5px;
   resize: none;
@@ -381,6 +528,11 @@ textarea {
   font-weight: 600;
 }
 
+/* -------------------------------------------------------------------------- */
+/*	Wiki
+/* -------------------------------------------------------------------------- */
+
+
 .wiki-content {
   font-size: medium;
   padding-top: 0;
@@ -388,16 +540,31 @@ textarea {
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. Login
+/*	Login
 /* -------------------------------------------------------------------------- */
+
+#login-page {
+  background-color: var(--primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#login-page .logo {
+  display: flex;
+  flex-direction: row;
+  height: 15vh;
+  align-items: center;
+  font-size: 1.5rem;
+  color: white;
+}
 
 #login-popup {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: 50vw;
+  top: 50vh;
   z-index: 50;
   transform: translate(-50%, -50%);
-
   background-color: white;
   padding: 10px;
 }
@@ -415,29 +582,33 @@ textarea {
   color: var(--primary);
   font-size: x-large;
   text-align: center;
-
   margin-bottom: 40px;
 }
 
 /* -------------------------------------------------------------------------- */
-/*	1. Footer
+/*	Footer
 /* -------------------------------------------------------------------------- */
 
-#footer {
+#footer .copyright {
+  margin-block: auto;
+}
+
+#footer #footer-socials {
   padding: 0.75rem;
   margin: auto;
   align-items: center;
   height: 150px;
 }
 
-#footer-name {
+#footer #footer-name {
   background-color: var(--footer-dark-blue);
   text-align: center;
   color: var(--dark-grey);
   font-size: small;
+  height: 40px;
 }
 
-.foot-element {
+#footer .foot-element {
   margin-inline: 13px;
   display: flex;
   align-items: center;
@@ -448,12 +619,12 @@ textarea {
   aspect-ratio: 1;
 }
 
-.foot-element:hover,
-.foot-element:focus {
+#footer .foot-element:hover,
+#footer .foot-element:focus {
   background-color: var(--secondary);
 }
 
-.foot-element > a {
+#footer .foot-element > a {
   display: flex;
 }
 

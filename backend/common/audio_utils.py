@@ -1,24 +1,41 @@
 import random
+import librosa.display
 import torchaudio.datasets
 import torchaudio.transforms as T
+import matplotlib.pyplot as plt
 import torch
 
 dataset_labels = {
-    'SPEECHCOMMANDS': {label: i for i, label in enumerate(
-        ['up', 'yes', 'learn', 'visual', 'down', 'zero', 'left', 'sheila', 'eight', 'bed', 'forward', 'three', 'wow', 'happy', 'off', 'four', 'dog', 'nine', 'tree', 'five', 'marvin', 'six', 'right', 'seven', 'on', 'backward', 'house', 'no', 'cat', 'stop', 'one', 'follow', 'bird', 'two', 'go']
-    )}
+    'SPEECHCOMMANDS': {label: i for i, label in enumerate([
+            'backward', 'bed', 'bird', 'cat', 'dog', 'down', 'eight', 'five', 'follow', 'forward', 'four', 'go',
+            'happy', 'house', 'learn', 'left', 'marvin', 'nine', 'no', 'off', 'on', 'one', 'right', 'seven', 'sheila',
+            'six', 'stop', 'three', 'tree', 'two', 'up', 'visual', 'wow', 'yes', 'zero',
+        ])
+    }
 }
 
-def make_collate_fn(dataset_name, sample_rate, max_sec):
+def make_collate_fn(dataset_name, sample_rate, max_sec, transform):
     def make_collate_fn(batch):
         max_len = int(sample_rate * max_sec)
         aud_tensors = []
         labels = []
         label_to_index = dataset_labels[dataset_name]
         
+        isFirst = True
         for aud_tensor, _, label, *_ in batch:
             transformed_aud_tensor = T.Resample(aud_tensor.shape[1], sample_rate)(aud_tensor)
             transformed_aud_tensor = equate_tensor_len(aud_tensor, max_len)
+            
+            transformed_aud_tensor = transform(transformed_aud_tensor)
+            # transformed_aud_tensor = T.MelSpectrogram()(transformed_aud_tensor)
+            # transformed_aud_tensor = T.AmplitudeToDB()(transformed_aud_tensor)
+            # transformed_aud_tensor = T.MFCC()(transformed_aud_tensor)
+            
+            if isFirst:
+                librosa.display.specshow(transformed_aud_tensor.squeeze().numpy())
+                plt.show()
+                isFirst = False
+            
             aud_tensors.append(transformed_aud_tensor)
             labels.append(label_to_index[label])
             
@@ -56,19 +73,29 @@ def pad_audio_tensor(tensor, new_len):
 #     print(unique_labels)
 #     return unique_labels
 
+def create_transform(transforms):
+    # print(transforms)
+    def transform(data):
+        transformed = data
+        for t in transforms:
+            transformed = t(transformed)
+            # print(transformed)
+        return transformed
+    return transform
+
 if __name__=='__main__':
-    train_set = torchaudio.datasets.SPEECHCOMMANDS('./backend/audio_data_uploads', subset='training', download=True)
+    train_set = torchaudio.datasets.SPEECHCOMMANDS('./backend/audio_data_uploads', subset='training', download=False)
     if train_set[0][0].shape[0] > 1:
         raise ValueError('DLP currently supports only single channel datasets')
     train_loader = torch.utils.data.DataLoader(
         train_set,
-        batch_size=41,
-        collate_fn=make_collate_fn('SPEECHCOMMANDS', 16000, 0.9),
+        batch_size=256,
+        collate_fn=make_collate_fn('SPEECHCOMMANDS', 16000, 0.9, create_transform([T.MelSpectrogram(), T.AmplitudeToDB()])),
         shuffle=False
     )
     
     batch = next(iter(train_loader))
-    print(batch)
+    # print(batch)
     # print(train_set[0][0])
     # print(train_set[0][0].unsqueeze(0))
     # print(train_set[39], train_set[39][0].shape)

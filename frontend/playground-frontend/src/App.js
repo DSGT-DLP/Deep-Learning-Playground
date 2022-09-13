@@ -15,7 +15,6 @@ import { ToastContainer } from "react-toastify";
 import Home from "./Home";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import {PopupProvider} from 'react-hook-popup';
 function App() {
   const [showLogin, setShowLogin] = useState(false);
   const currentURL = window.location.href.split("/");
@@ -40,7 +39,6 @@ function App() {
         {isOnLoginPage || <Footer />}
       </BrowserRouter>
       {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
-      </PopupProvider>
     </div>
 
   );

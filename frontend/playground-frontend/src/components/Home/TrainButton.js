@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import  LoadingScreen from './LoadingScreen';
-import { COLORS, GENERAL_STYLES } from "../../constants";
+import { COLORS } from "../../constants";
 import {
   validateParameter,
   validateTabularInputs,
@@ -107,7 +107,6 @@ const TrainButton = (props) => {
     setProgress(0);
     const user_arch = make_obj_param_list(props.addedLayers, "Model");
     if (user_arch === false) return;
-
 
     let trainTransforms = 0;
     let testTransforms = 0;

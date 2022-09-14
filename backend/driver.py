@@ -4,7 +4,6 @@ import os
 from flask import Flask, request, copy_current_request_context
 from werkzeug.utils import secure_filename
 import shutil
-
 from backend.common.utils import *
 from backend.common.constants import CSV_FILE_NAME, ONNX_MODEL, UNZIPPED_DIR_NAME
 from backend.common.dataset import loader_from_zipped, read_local_csv_file, read_dataset
@@ -17,13 +16,14 @@ from backend.ml.ml_trainer import train_classical_ml_model
 from backend.dl.dl_model import DLModel
 from sklearn.datasets import load_iris, fetch_california_housing
 from sklearn.model_selection import train_test_split
-from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders
+from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders, get_default_dataset_header
 from flask_cors import CORS
 from backend.common.email_notifier import send_email
 from flask import send_from_directory, request
 from flask_socketio import SocketIO
 import eventlet
 import datetime, threading
+import json
 
 init_firebase()
 
@@ -123,14 +123,14 @@ def dl_drive(
     """
     try:
         if default and problem_type.upper() == "CLASSIFICATION":
-            X, y = get_default_dataset(default.upper())
+            X, y = get_default_dataset(default.upper(), target, features)
             print(y.head())
         elif default and problem_type.upper() == "REGRESSION":
-            X, y = get_default_dataset(default.upper())
+            X, y = get_default_dataset(default.upper(), target, features)
         else:
             if json_csv_data_str:
                 input_df = pd.read_json(json_csv_data_str, orient="records")
-
+            
             y = input_df[target]
             X = input_df[features]
 
@@ -398,6 +398,26 @@ def send_email_route(request_data, socket_id):
             to=socket_id
         )
 
+@socket.on('defaultDataset')
+def send_columns(request_data):
+    default = request_data["using_default_dataset"]
+    try:
+        header = get_default_dataset_header(default.upper())
+        header_list = header.tolist()
+        return socket.emit('defaultColumns', 
+            {
+                "success": True,
+                "columns": header_list
+            }
+        )
+    except Exception:
+        print(traceback.format_exc())
+        return socket.emit('emailResult',
+            {
+                "success": False,
+                "message": traceback.format_exc(limit=1)
+            }
+        )
 @socket.on("updateUserSettings")
 def update_user_settings(request_data):
     if not authenticate(request_data):

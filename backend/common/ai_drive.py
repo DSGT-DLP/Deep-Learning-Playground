@@ -10,7 +10,7 @@ from backend.common.utils import *
 
 from backend.dl.dl_model import DLModel
 from backend.dl.dl_model_parser import parse_deep_user_architecture
-from backend.dl.dl_trainer import train_deep_model, train_deep_image_classification, train_deep_audio_classification
+from backend.dl.dl_trainer import train_deep_model, train_deep_image_classification
 from backend.dl.dl_model_parser import get_object
 
 from backend.ml.ml_trainer import train_classical_ml_model
@@ -194,7 +194,7 @@ def dl_audio_drive(
         model, optimizer_name=optimizer_name, learning_rate=0.05
     )
 
-    train_loss_results= train_deep_audio_classification(
+    train_loss_results= train_deep_image_classification(
         model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress
     )
     return train_loss_results

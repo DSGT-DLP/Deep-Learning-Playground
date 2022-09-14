@@ -4,13 +4,13 @@ from sklearn.datasets import load_iris, fetch_california_housing
 
 from backend.common.constants import ONNX_MODEL, CSV_FILE_NAME
 from backend.common.dataset import read_dataset, loader_from_zipped
-from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders
+from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders, get_audio_default_dataset_loaders
 from backend.common.optimizer import get_optimizer
 from backend.common.utils import *
 
 from backend.dl.dl_model import DLModel
 from backend.dl.dl_model_parser import parse_deep_user_architecture
-from backend.dl.dl_trainer import train_deep_model, train_deep_image_classification
+from backend.dl.dl_trainer import train_deep_model, train_deep_image_classification, train_deep_audio_classification
 from backend.dl.dl_model_parser import get_object
 
 from backend.ml.ml_trainer import train_classical_ml_model
@@ -137,7 +137,7 @@ def dl_img_drive(
                 break
         train_loader, test_loader = loader_from_zipped(zip_file, batch_size, shuffle, train_transform, test_transform)
     else:
-        train_loader, test_loader = get_img_default_dataset_loaders(default, test_transform, train_transform, batch_size, shuffle)
+        train_loader, test_loader = get_img_default_dataset_loaders(default, train_transform, test_transform, batch_size, shuffle)
 
     print("got data loaders")
 
@@ -148,7 +148,55 @@ def dl_img_drive(
             model, optimizer_name=optimizer_name, learning_rate=0.05
     )
 
-    train_loss_results= train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress)
+    train_loss_results= train_deep_image_classification(
+        model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress
+    )
+    return train_loss_results
+
+def dl_audio_drive(
+    train_transform,
+    test_transform,
+    user_arch,
+    criterion,
+    optimizer_name, 
+    default,
+    epochs,
+    batch_size,
+    shuffle,
+    AUDIO_UPLOAD_FOLDER,
+    sample_rate,
+    max_sec,
+    send_progress
+):    
+    print(user_arch)
+    model = DLModel(parse_deep_user_architecture(user_arch))
+
+    train_transform = parse_deep_user_architecture(train_transform)
+    test_transform = parse_deep_user_architecture(test_transform)
+
+    if not default:
+        for x in os.listdir(AUDIO_UPLOAD_FOLDER):
+            if x != ".gitkeep":
+                zip_file = os.path.join(os.path.abspath(AUDIO_UPLOAD_FOLDER), x)
+                break
+        # train_loader, test_loader = loader_from_zipped(zip_file, batch_size, shuffle, train_transform, test_transform)
+    else:
+        train_loader, test_loader = get_audio_default_dataset_loaders(
+            default, test_transform, train_transform, batch_size, shuffle, sample_rate, max_sec
+        )
+
+    print("got data loaders")
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device) # model should go to GPU before initializing optimizer  https://stackoverflow.com/questions/66091226/runtimeerror-expected-all-tensors-to-be-on-the-same-device-but-found-at-least/66096687#66096687 
+
+    optimizer = get_optimizer(
+        model, optimizer_name=optimizer_name, learning_rate=0.05
+    )
+
+    train_loss_results= train_deep_audio_classification(
+        model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress
+    )
     return train_loss_results
     
 def ml_drive(

@@ -3,8 +3,10 @@ import numpy as np
 from sklearn.datasets import *
 from enum import Enum
 from backend.common.constants import DEFAULT_DATASETS
+from backend.common.audio_utils import create_transform, make_collate_fn
 import torchvision
 import torchaudio
+import torchaudio.transforms as T
 import torch
 
 # torchvision default MNIST route causes 503 error sometimes
@@ -43,7 +45,7 @@ def get_default_dataset(dataset):
         raise Exception(f"Unable to load the {dataset} file into Pandas DataFrame")
 
 def get_img_default_dataset_loaders(
-    datasetname, test_transform, train_transform, batch_size, shuffle
+    datasetname, train_transform, test_transform, batch_size, shuffle
 ):
     """
     Returns dataloaders from default datasets
@@ -71,7 +73,7 @@ def get_img_default_dataset_loaders(
     return train_loader, test_loader
 
 def get_audio_default_dataset_loaders(
-    datasetname, test_transform, train_transform, batch_size, shuffle
+    datasetname, train_transform, test_transform, batch_size, shuffle, sample_rate, max_sec
 ):
     """
     Returns dataloaders from default datasets
@@ -81,24 +83,29 @@ def get_audio_default_dataset_loaders(
         train_transform (list) : list of transforms
         batch_size (int) : batch_size
     """
-    # train_transform = torchvision.transforms.Compose([x for x in train_transform])
-    # test_transform = torchvision.transforms.Compose([x for x in test_transform])
-
+    
     train_set = eval(f"torchaudio.datasets.{datasetname}")(root='./backend/audio_data_uploads', subset='training', download=False)
     print('train_set downloaded')
     test_set = eval(f"torchaudio.datasets.{datasetname}")(root="./backend/audio_data_uploads", subset='validation', download=False)
     print('test_set downloaded')
+    
+    train_transform = create_transform(train_transform)
+    test_transform = create_transform(test_transform)
+    
+    train_collate_fn = make_collate_fn(datasetname, sample_rate, max_sec, train_transform)
+    test_collate_fn = make_collate_fn(datasetname, sample_rate, max_sec, test_transform)
 
-    train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=shuffle)
+    train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, collate_fn=train_collate_fn, shuffle=shuffle)
     print('train_loader set')
-    test_loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size, shuffle=shuffle)
+    test_loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size, collate_fn=test_collate_fn, shuffle=shuffle)
     print('test_loader set')
     print('returning\n')
     return train_loader, test_loader
 
 
 if __name__ == '__main__':
-    train_loader, test_loader = get_audio_default_dataset_loaders('SPEECHCOMMANDS', [], [], 256, False)
+    transforms = [T.MelSpectrogram(), T.AmplitudeToDB()]
+    train_loader, test_loader = get_audio_default_dataset_loaders('SPEECHCOMMANDS', transforms, transforms, 41, False, 16000, 0.9)
     for train_batch in train_loader:
         print('random train_loader batch:', train_batch)
         break

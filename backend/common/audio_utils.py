@@ -15,7 +15,7 @@ dataset_labels = {
 }
 
 def make_collate_fn(dataset_name, sample_rate, max_sec, transform):
-    def make_collate_fn(batch):
+    def collate_fn(batch):
         max_len = int(sample_rate * max_sec)
         aud_tensors = []
         labels = []
@@ -42,7 +42,7 @@ def make_collate_fn(dataset_name, sample_rate, max_sec, transform):
         aud_tensors = torch.stack(tuple(aud_tensors))
         return (aud_tensors, labels)
     
-    return make_collate_fn
+    return collate_fn
 
 def equate_tensor_len(tensor, max_len):
     signal_len = tensor.shape[1]
@@ -74,12 +74,10 @@ def pad_audio_tensor(tensor, new_len):
 #     return unique_labels
 
 def create_transform(transforms):
-    # print(transforms)
     def transform(data):
         transformed = data
         for t in transforms:
             transformed = t(transformed)
-            # print(transformed)
         return transformed
     return transform
 

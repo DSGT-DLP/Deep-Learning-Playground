@@ -24,7 +24,7 @@ const frontendLog = (log) => {
 
 const train_and_output = (choice, choiceDict) => {
   console.log(choice, choiceDict);
-  socket.emit(socketEventDict[choice], choiceDict, socket.id);
+  socket.emit(socketEventDict[choice], choiceDict, socket.id, socket.id);
 };
 
 const sendEmail = (email, problemType) => {
@@ -64,9 +64,13 @@ const sendEmail = (email, problemType) => {
 
 const updateUserSettings = async () => {
   if (auth.currentUser) {
-    socket.emit("updateUserSettings", {
-      authorization: await auth.currentUser.getIdToken(true),
-    });
+    socket.emit(
+      "updateUserSettings",
+      {
+        authorization: await auth.currentUser.getIdToken(true),
+      },
+      socket.id
+    );
   } else {
     toast.error("Not logged in");
   }

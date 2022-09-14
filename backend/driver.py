@@ -18,8 +18,6 @@ from backend.firebase_helpers.firebase import init_firebase
 
 init_firebase()
 
-init_firebase()
-
 app = Flask(
     __name__,
     static_folder=os.path.join(

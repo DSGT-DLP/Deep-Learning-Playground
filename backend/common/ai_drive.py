@@ -149,7 +149,7 @@ def dl_img_drive(
     )
 
     train_loss_results= train_deep_image_classification(
-        model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress
+        "image", model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress
     )
     return train_loss_results
 
@@ -195,7 +195,7 @@ def dl_audio_drive(
     )
 
     train_loss_results= train_deep_image_classification(
-        model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress
+        "audio", model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress
     )
     return train_loss_results
     

@@ -31,15 +31,16 @@ def make_collate_fn(dataset_name, sample_rate, max_sec, transform):
             # transformed_aud_tensor = T.AmplitudeToDB()(transformed_aud_tensor)
             # transformed_aud_tensor = T.MFCC()(transformed_aud_tensor)
             
-            if isFirst:
-                librosa.display.specshow(transformed_aud_tensor.squeeze().numpy())
-                plt.show()
-                isFirst = False
+            # if isFirst:
+            #     librosa.display.specshow(transformed_aud_tensor.squeeze().numpy())
+            #     plt.show()
+            #     isFirst = False
             
             aud_tensors.append(transformed_aud_tensor)
             labels.append(label_to_index[label])
             
         aud_tensors = torch.stack(tuple(aud_tensors))
+        labels = torch.Tensor(labels)
         return (aud_tensors, labels)
     
     return collate_fn
@@ -87,7 +88,7 @@ if __name__=='__main__':
         raise ValueError('DLP currently supports only single channel datasets')
     train_loader = torch.utils.data.DataLoader(
         train_set,
-        batch_size=256,
+        batch_size=4,
         collate_fn=make_collate_fn('SPEECHCOMMANDS', 16000, 0.9, create_transform([T.MelSpectrogram(), T.AmplitudeToDB()])),
         shuffle=False
     )

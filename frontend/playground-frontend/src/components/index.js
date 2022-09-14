@@ -44,5 +44,8 @@ export { default as Footer } from "./Footer/Footer";
 // Image Models page
 export { default as ImageModels } from "./ImageModels/ImageModels";
 
+// Audio Models page
+export { default as AudioModels } from "./AudioModels/AudioModels";
+
 // Pretrained page
 export { default as LargeFileUpload } from "./general/LargeFileUpload";

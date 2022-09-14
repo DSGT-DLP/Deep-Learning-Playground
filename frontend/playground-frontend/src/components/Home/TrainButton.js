@@ -81,6 +81,7 @@ const TrainButton = (props) => {
   const functionMap = {
     tabular: [validateTabularInputs, sendTabularJSON],
     image: [validateImageInputs, sendImageJSON],
+    audio: [validateImageInputs, sendImageJSON],
     pretrained: [validatePretrainedInput, sendPretrainedJSON],
   };
 
@@ -125,7 +126,7 @@ const TrainButton = (props) => {
 
     const paramList = { ...props, trainTransforms, testTransforms, user_arch };
 
-    if (choice === "image" && !props.usingDefaultDataset) {
+    if (choice === "image" && choice === "audio" && !props.usingDefaultDataset) {
       setTrainParams({ choice, paramList });
       document.getElementById("fileUploadInput")?.click();
     } else {

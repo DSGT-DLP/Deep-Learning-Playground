@@ -1,5 +1,5 @@
 from collections import Counter
-from backend.common.loss_functions import compute_loss, compute_img_loss
+from backend.common.loss_functions import compute_loss, compute_img_loss, compute_audio_loss
 from backend.dl.dl_eval import compute_accuracy, compute_correct
 from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
 from backend.common.utils import ProblemType
@@ -250,7 +250,7 @@ def get_deep_predictions(model: nn.Module, test_loader):
 
     return prediction_tensor, ground_truth_tensor
 
-def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress):
+def train_deep_image_classification(data_type, model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress):
     try:
 
         model = model.to(device)
@@ -286,8 +286,14 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
 
                 x, y = x.to(device), y.to(device)
                 optimizer.zero_grad()
-                pred= model(x)
-                loss = compute_img_loss(criterion, pred, y, train_weights_count)
+                print('x shape:', x.shape)
+                pred = model(x)
+                print('pred shape:', pred.shape)
+                if data_type == "image":
+                    loss = compute_img_loss(criterion, pred, y, train_weights_count)
+                elif data_type == "audio":
+                    loss = compute_audio_loss(criterion, pred, y)
+                    
 
                 loss.backward()
                 optimizer.step()

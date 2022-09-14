@@ -5,6 +5,7 @@ import { auth } from "../../firebase";
 const socketEventDict = {
   tabular: "tabular-run",
   image: "img-run",
+  audio: "audio-run",
   pretrained: "pretrain-run",
 };
 
@@ -22,6 +23,7 @@ const frontendLog = (log) => {
 };
 
 const train_and_output = (choice, choiceDict) => {
+  console.log(choice, choiceDict);
   socket.emit(socketEventDict[choice], choiceDict, socket.id);
 };
 

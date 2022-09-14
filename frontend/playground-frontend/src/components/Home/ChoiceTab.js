@@ -30,6 +30,17 @@ const ChoiceTab = () => {
           Image Models
         </Link>
       </button>
+
+      <button
+        style={{
+          ...styles.button,
+          backgroundColor: getBackground("/audio-models"),
+        }}
+      >
+        <Link to="/audio-models" style={styles.linkelEment}>
+          Audio Models
+        </Link>
+      </button>
     </div>
   );
 };

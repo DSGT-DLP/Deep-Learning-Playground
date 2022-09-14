@@ -4,7 +4,7 @@ import DataCodeSnippet from "./DataCodeSnippet";
 import LargeFileUpload from "../general/LargeFileUpload";
 import {
   BOOL_OPTIONS,
-  IMAGE_DEFAULT_DATASETS,
+  AUDIO_DEFAULT_DATASETS,
   OPTIMIZER_NAMES,
   POSSIBLE_LAYERS,
   POSSIBLE_TRANSFORMS,
@@ -35,7 +35,7 @@ import {
   ChoiceTab,
 } from "../index";
 
-const ImageModels = () => {
+const AudioModels = () => {
   const [addedLayers, setAddedLayers] = useState(DEFAULT_IMG_LAYERS);
   const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
   const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
@@ -77,7 +77,7 @@ const ImageModels = () => {
     },
     {
       queryText: "Default",
-      options: IMAGE_DEFAULT_DATASETS,
+      options: AUDIO_DEFAULT_DATASETS,
       onChange: setUsingDefaultDataset,
       defaultValue: usingDefaultDataset,
     },
@@ -155,7 +155,7 @@ const ImageModels = () => {
           <TrainButton
             {...input_responses}
             setDLPBackendResponse={setDLPBackendResponse}
-            choice="image"
+            choice="audio"
           />
         </BackgroundLayout>
 
@@ -231,6 +231,6 @@ const ImageModels = () => {
   );
 };
 
-export default ImageModels;
+export default AudioModels;
 
 const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));

@@ -7,6 +7,7 @@ import {
   Feedback,
   Navbar,
   ImageModels,
+  AudioModels,
   Footer,
   Dashboard,
   Login,
@@ -31,6 +32,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/img-models" element={<ImageModels />} />
+          <Route path="/audio-models" element={<AudioModels />} />
           <Route path="/about" element={<About />} />
           <Route path="/wiki" element={<Wiki />} />
           <Route path="/feedback" element={<Feedback />} />

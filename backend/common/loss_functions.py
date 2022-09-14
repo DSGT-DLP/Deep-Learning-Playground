@@ -80,7 +80,7 @@ def compute_img_loss(criterion, pred, ground_truth, weights_counter):
     loss_obj = LossFunctions.get_loss_obj(LossFunctions[criterion])
 
     if criterion == LossFunctions.CELOSS.name:
-        return loss_obj(pred , ground_truth.squeeze())
+        return loss_obj(pred, ground_truth.squeeze())
     if criterion == "WCELOSS":
         weight_list = [0] * len(pred[0])
 
@@ -91,3 +91,11 @@ def compute_img_loss(criterion, pred, ground_truth, weights_counter):
 
         loss = nn.CrossEntropyLoss(weight=torch.FloatTensor(weight_list), reduction='mean')
         return loss(pred, ground_truth.squeeze())
+
+def compute_audio_loss(criterion, pred, ground_truth):
+    loss_obj = LossFunctions.get_loss_obj(LossFunctions[criterion])
+
+    if criterion == LossFunctions.CELOSS.name:
+        print(pred)
+        print(ground_truth)
+        return loss_obj(pred, ground_truth)

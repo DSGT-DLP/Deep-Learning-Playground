@@ -587,4 +587,8 @@ export const IMAGE_DEFAULT_DATASETS = [
   { label: "CIFAR10", value: "CIFAR10" },
 ];
 
+export const AUDIO_DEFAULT_DATASETS = [
+  { label: "SPEECHCOMMANDS", value: "SPEECHCOMMANDS" },
+];
+
 export const PRETRAINED_MODELS = [{ label: "RESNET18", value: "RESNET18" }];

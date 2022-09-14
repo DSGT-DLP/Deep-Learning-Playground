@@ -9,7 +9,7 @@ from flask import Flask, request, copy_current_request_context, send_from_direct
 from flask_cors import CORS
 from flask_socketio import SocketIO
 
-from backend.common.ai_drive import dl_tabular_drive, dl_img_drive
+from backend.common.ai_drive import dl_tabular_drive, dl_img_drive, dl_audio_drive
 from backend.common.constants import UNZIPPED_DIR_NAME
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
@@ -39,6 +39,45 @@ def root(path):
 @socket.on("frontendLog")
 def frontend_log(log):
     app.logger.info(f'"frontend: {log}"')
+
+@socket.on('tabular-run')
+def train_and_output(request_data, socket_id):
+    user_arch = request_data["user_arch"]
+    criterion = request_data["criterion"]
+    optimizer_name = request_data["optimizer_name"]    
+    problem_type = request_data["problem_type"]
+    target = request_data["target"]
+    features = request_data["features"]
+    default = request_data["using_default_dataset"]
+    test_size = request_data["test_size"]
+    batch_size = request_data["batch_size"]
+    epochs = request_data["epochs"]
+    shuffle = request_data["shuffle"]
+    csvDataStr = request_data["csv_data"]
+    fileURL = request_data["file_URL"]
+    
+    try:
+        train_loss_results = dl_tabular_drive(
+            user_arch,
+            criterion,
+            optimizer_name,
+            problem_type,
+            fileURL,
+            target,
+            features,
+            default,
+            test_size,
+            epochs,
+            shuffle,
+            batch_size,
+            csvDataStr,
+            send_progress=send_progress_helper(socket_id),
+        )        
+        send_results(train_loss_results, socket_id)
+
+    except Exception:
+        print(traceback.format_exc())
+        send_error(socket_id)
 
 @socket.on("img-run")
 def testing(request_data, socket_id):
@@ -86,46 +125,46 @@ def testing(request_data, socket_id):
                     os.remove(file_rem)
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
+            
+@socket.on("audio-run")
+def testing(request_data, socket_id):
+    try: 
+        print("backend started")
+        AUDIO_UPLOAD_FOLDER = "./backend/audio_data_uploads"
+        train_transform = request_data["train_transform"]
+        test_transform = request_data["test_transform"]
+        user_arch = request_data["user_arch"]
+        criterion = request_data["criterion"]
+        optimizer_name = request_data["optimizer_name"]
+        default = request_data["using_default_dataset"]
+        epochs = request_data["epochs"]
+        batch_size = request_data["batch_size"]
+        shuffle = request_data["shuffle"]
+        
+        train_transform = test_transform = []
 
-@socket.on('tabular-run')
-def train_and_output(request_data, socket_id):
-    user_arch = request_data["user_arch"]
-    criterion = request_data["criterion"]
-    optimizer_name = request_data["optimizer_name"]    
-    problem_type = request_data["problem_type"]
-    target = request_data["target"]
-    features = request_data["features"]
-    default = request_data["using_default_dataset"]
-    test_size = request_data["test_size"]
-    batch_size = request_data["batch_size"]
-    epochs = request_data["epochs"]
-    shuffle = request_data["shuffle"]
-    csvDataStr = request_data["csv_data"]
-    fileURL = request_data["file_URL"]
-    
-    try:
-        train_loss_results = dl_tabular_drive(
+        train_loss_results = dl_audio_drive(
+            train_transform,
+            test_transform,
             user_arch,
             criterion,
-            optimizer_name,
-            problem_type,
-            fileURL,
-            target,
-            features,
+            optimizer_name, 
             default,
-            test_size,
             epochs,
-            shuffle,
             batch_size,
-            csvDataStr,
-            send_progress=send_progress_helper(socket_id),
-        )        
-        send_results(train_loss_results, socket_id)
+            shuffle,
+            AUDIO_UPLOAD_FOLDER,
+            1600,
+            0.9,
+            send_progress=send_progress_helper(socket_id)
+        )
 
-    except Exception:
+        print("training successfully finished")
+        send_results(train_loss_results, socket_id)
+        
+    except Exception as e:
         print(traceback.format_exc())
         send_error(socket_id)
-
 
 @socket.on('sendEmail')
 def send_email(request_data, socket_id):

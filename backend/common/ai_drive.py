@@ -4,7 +4,7 @@ from sklearn.datasets import load_iris, fetch_california_housing
 
 from backend.common.constants import ONNX_MODEL, CSV_FILE_NAME
 from backend.common.dataset import read_dataset, loader_from_zipped
-from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders, get_audio_default_dataset_loaders
+from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders
 from backend.common.optimizer import get_optimizer
 from backend.common.utils import *
 

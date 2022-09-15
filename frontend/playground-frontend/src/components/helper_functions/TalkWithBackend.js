@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { auth } from "../../firebase";
 
 const socketEventDict = {
-  tabular: "runTraining",
+  tabular: "tabular-run",
   image: "img-run",
   pretrained: "pretrain-run",
 };

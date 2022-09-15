@@ -20,7 +20,6 @@ def dl_tabular_drive(
     criterion,
     optimizer_name,
     problem_type,
-    fileURL,
     target=None,
     features=None,
     default=None,
@@ -49,19 +48,11 @@ def dl_tabular_drive(
     NOTE:
          CSV_FILE_NAME is the data csv file for the torch model. Assumed that you have one dataset file
     """
-    if not default:
-        if fileURL:
-            read_dataset(fileURL)
-        elif json_csv_data_str:
-            pass
-        else:
-            raise ValueError("Need a file input")
-
     if default and problem_type.upper() == "CLASSIFICATION":
-        X, y = get_default_dataset(default.upper())
+        X, y = get_default_dataset(default.upper(), target, features)
         print(y.head())
     elif default and problem_type.upper() == "REGRESSION":
-        X, y = get_default_dataset(default.upper())
+        X, y = get_default_dataset(default.upper(), target, features)
     else:
         if json_csv_data_str:
             input_df = pd.read_json(json_csv_data_str, orient="records")
@@ -102,10 +93,21 @@ def dl_tabular_drive(
     # criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
     print(f"loss criterion: {criterion}")
     train_loader, test_loader = get_dataloaders(
-        X_train_tensor, y_train_tensor, X_test_tensor, y_test_tensor, batch_size=batch_size
+        X_train_tensor,
+        y_train_tensor,
+        X_test_tensor,
+        y_test_tensor,
+        batch_size=batch_size
     )
     train_loss_results = train_deep_model(
-        model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, send_progress
+        model, 
+        train_loader,
+        test_loader,
+        optimizer,
+        criterion,
+        epochs,
+        problem_type,
+        send_progress
     )
     torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
 
@@ -149,7 +151,7 @@ def dl_img_drive(
     )
 
     train_loss_results= train_deep_image_classification(
-        "image", model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress
+        model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress
     )
     return train_loss_results
     

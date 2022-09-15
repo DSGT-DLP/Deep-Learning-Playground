@@ -1,10 +1,9 @@
 import { useEffect } from "react";
-import EmailInput from "../Home/EmailInput";
+import { EmailInput, TitleText, Spacer } from "../index";
 import ReCAPTCHA from "react-google-recaptcha";
 import React, { useState } from "react";
-import TitleText from "../general/TitleText";
-import { COLORS, GENERAL_STYLES } from "../../constants";
 import { socket } from "../helper_functions/TalkWithBackend";
+import { COLORS, GENERAL_STYLES } from "../../constants";
 
 const Feedback = () => {
   const [email, setEmail] = useState("");
@@ -60,6 +59,8 @@ const Feedback = () => {
           We'll get back to as soon as we can.
         </p>
 
+        <Spacer height={20} />
+
         <form>
           <TitleText text="First Name" />
           <input
@@ -71,6 +72,8 @@ const Feedback = () => {
             <p style={GENERAL_STYLES.error_text}>First Name cannot be blank</p>
           )}
 
+          <Spacer height={20} />
+
           <TitleText text="Last name" />
           <input
             type="text"
@@ -81,17 +84,20 @@ const Feedback = () => {
             <p style={GENERAL_STYLES.error_text}>Last Name cannot be blank</p>
           )}
 
+          <Spacer height={20} />
+
           <TitleText text="Email" />
           <EmailInput setEmail={setEmail} />
           {submitted && email.trim() === "" && recaptcha !== "" && (
             <p style={GENERAL_STYLES.error_text}>Email Cannot be blank</p>
           )}
 
+          <Spacer height={20} />
+
           <TitleText text="Feedback" />
           <textarea
             placeholder="Type your feedback here"
             rows="15"
-            cols="60"
             style={styles.feedback_area}
             onChange={(e) => setFeedback(e.target.value)}
           />
@@ -143,6 +149,7 @@ const styles = {
     borderRadius: "10px",
     borderWidth: "0.5px",
     padding: "5px",
+    width: "100%",
   },
   content_section: {
     backgroundColor: COLORS.background,

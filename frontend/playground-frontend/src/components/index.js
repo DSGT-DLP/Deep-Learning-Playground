@@ -1,5 +1,7 @@
 // General
 export { default as TitleText } from "./general/TitleText";
+export { default as DButton } from "./general/DButton";
+export { default as Spacer } from "./general/Spacer";
 
 // Home
 export { default as AddNewLayer } from "./Home/AddNewLayer";
@@ -16,6 +18,10 @@ export { default as RectContainer } from "./Home/RectContainer";
 export { default as Results } from "./Home/Results";
 export { default as TrainButton } from "./Home/TrainButton";
 export { default as ChoiceTab } from "./Home/ChoiceTab";
+
+// Dashboard
+export { default as Dashboard } from "./Dashboard/Dashboard";
+export { default as Login } from "./Dashboard/Login";
 
 // About
 export { default as About } from "./About/About";

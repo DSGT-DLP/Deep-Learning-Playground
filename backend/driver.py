@@ -41,7 +41,7 @@ def frontend_log(log):
     app.logger.info(f'"frontend: {log}"')
     
 @socket.on('tabular-run')
-def train_and_output(request_data, socket_id):
+def tabular_run(request_data, socket_id):
     user_arch = request_data["user_arch"]
     criterion = request_data["criterion"]
     optimizer_name = request_data["optimizer_name"]    
@@ -62,6 +62,7 @@ def train_and_output(request_data, socket_id):
             criterion,
             optimizer_name,
             problem_type,
+            fileURL,
             target,
             features,
             default,
@@ -79,7 +80,7 @@ def train_and_output(request_data, socket_id):
         send_error(socket_id)
 
 @socket.on("img-run")
-def testing(request_data, socket_id):
+def img_run(request_data, socket_id):
     try: 
         print("backend started")
         IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"

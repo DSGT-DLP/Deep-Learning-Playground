@@ -20,6 +20,7 @@ def dl_tabular_drive(
     criterion,
     optimizer_name,
     problem_type,
+    fileURL,
     target=None,
     features=None,
     default=None,
@@ -48,6 +49,14 @@ def dl_tabular_drive(
     NOTE:
          CSV_FILE_NAME is the data csv file for the torch model. Assumed that you have one dataset file
     """
+    if not default:
+        if fileURL:
+            read_dataset(fileURL)
+        elif json_csv_data_str:
+            pass
+        else:
+            raise ValueError("Need a file input")
+
     if default and problem_type.upper() == "CLASSIFICATION":
         X, y = get_default_dataset(default.upper(), target, features)
         print(y.head())

@@ -58,21 +58,21 @@ const BlankGrid = () => {
 const StatusDisplay = ({ statusType, status }) => {
   if (statusType === "queued") {
     return (
-      <button className="grid-status-display grid-status-display-gray">
+      <p className="grid-status-display grid-status-display-gray">
         Queued: {status}
-      </button>
+      </p>
     );
   } else if (statusType === "training") {
     return (
-      <button className="grid-status-display grid-status-display-yellow">
+      <p className="grid-status-display grid-status-display-yellow">
         Training: {status}
-      </button>
+      </p>
     );
   } else if (statusType === "finished") {
     return (
-      <button className="grid-status-display grid-status-display-green">
+      <p className="grid-status-display grid-status-display-green">
         Done <ArrowForwardIcon fontSize="small" />
-      </button>
+      </p>
     );
   } else {
     return <p>Incorrect status type passed</p>;
@@ -110,6 +110,8 @@ const formatDate = (unixTime) => {
 };
 
 const FilledGrid = () => {
+  const navigate = useNavigate();
+
   return (
     <TableContainer style={{ display: "flex", justifyContent: "center" }}>
       <Table sx={{ minWidth: 400, maxWidth: 1400 }}>
@@ -125,7 +127,12 @@ const FilledGrid = () => {
           {rows.map((row) => (
             <TableRow
               key={row.id}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              sx={{
+                "&:last-child td, &:last-child th": { border: 0 },
+                cursor: "pointer",
+              }}
+              onClick={() => navigate("/home")}
+              hover
             >
               <TableCell component="th" scope="row">
                 {row.type}

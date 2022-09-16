@@ -11,6 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
+        repository: karkir0003/Deep-Learning-Playground
         fetch-depth: 0
         token: ${{ secrets.GH_PAT }}
     - name: Update frontend and backend-dev

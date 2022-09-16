@@ -11,9 +11,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        repository: karkir0003/Deep-Learning-Playground
-        fetch-depth: 0
         token: ${{ secrets.GH_PAT }}
+        fetch-depth: 0
     - name: Update frontend and backend-dev
       run: |
         git config user.name ${{ secrets.DLP_HELPER_USERNAME }}

@@ -469,7 +469,9 @@ def run_pretrain(request_data):
                     break
             train_loader, test_loader = loader_from_zipped(zip_file, batch_size, shuffle, train_transform, test_transform)
         else:
+            print("starting downloading")
             train_loader, test_loader = get_img_default_dataset_loaders(default, test_transform, train_transform, batch_size, shuffle)
+            print("ended downloading")
 
         n_classes = set()
         stop_chan_check = False

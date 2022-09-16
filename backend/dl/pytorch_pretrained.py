@@ -13,7 +13,9 @@ import torchvision.transforms as transforms
 
 def pytorch_pretrained(n_class, model_name, num_epochs, device, in_chan, loss_func, train_loader, valid_loader, optimizer_name="ADAM", send_progress= lambda x: print("send progerss", x)):
 
+    print("getting model")
     model = GetModel(model_name, n_class, in_chan)
+    print("got model")
     model.to(device)
 
     optimizer = get_optimizer(model, optimizer_name, learning_rate=0.05)

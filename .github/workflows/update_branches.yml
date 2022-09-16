@@ -13,7 +13,7 @@ jobs:
       with:
         fetch-depth: 0
         with:
-          repository: karkir0003/Deep-Learning-Playground
+          repository: Deep-Learning-Playground
           token: ${{ secrets.GH_PAT }}
     - name: Update frontend and backend-dev
       run: |

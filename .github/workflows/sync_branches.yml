@@ -19,6 +19,12 @@ jobs:
         TO_BRANCH: "frontend"
         CONTENT_COMPARISON: true
 
+    - name: Auto-Approve PR from main to frontend
+      uses: hmarr/auto-approve-action@v2
+        if: github.actor == 'github-actions'
+        with:
+          review-message: "Auto approved automated PR to update frontend branch with recent main branch" 
+
     - name: main to backend
       uses: tretuna/sync-branches@1.4.0
       with:
@@ -26,6 +32,12 @@ jobs:
         FROM_BRANCH: "main"
         TO_BRANCH: "backend"
         CONTENT_COMPARISON: true
+    
+    - name: Auto-Approve PR from main to backend
+      uses: hmarr/auto-approve-action@v2
+        if: github.actor == 'github-actions'
+        with:
+          review-message: "Auto approved automated PR to update backend branch with recent main branch" 
 
     - name: main to full-stack
       uses: tretuna/sync-branches@1.4.0
@@ -34,4 +46,10 @@ jobs:
         FROM_BRANCH: "main"
         TO_BRANCH: "full-stack"
         CONTENT_COMPARISON: true
+    
+    - name: Auto-Approve PR from main to full-stack
+      uses: hmarr/auto-approve-action@v2
+        if: github.actor == 'github-actions'
+        with:
+          review-message: "Auto approved automated PR to update full-stack branch with recent main branch" 
 

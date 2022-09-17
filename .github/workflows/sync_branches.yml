@@ -23,13 +23,13 @@ jobs:
     - name: approve frontend
       uses: hmarr/auto-approve-action@v2.4.0
       with:
-        pull-request-number: ${{ steps.frontend.PULL_REQUEST_NUMBER }}
+        pull-request-number: ${{ steps.frontend.outputs.PULL_REQUEST_NUMBER }}
 
     - name: merge frontend
       uses: pascalgn/automerge-action@v0.15.3
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        PULL_REQUEST: ${{ steps.frontend.PULL_REQUEST_NUMBER }}
+        PULL_REQUEST: ${{ steps.frontend.outputs.PULL_REQUEST_NUMBER }}
 
 
     - name: main to backend
@@ -44,13 +44,13 @@ jobs:
     - name: approve backend
       uses: hmarr/auto-approve-action@v2.4.0
       with:
-        pull-request-number: ${{ steps.backend.PULL_REQUEST_NUMBER }}
+        pull-request-number: ${{ steps.backend.outputs.PULL_REQUEST_NUMBER }}
 
     - name: merge backend
       uses: pascalgn/automerge-action@v0.15.3
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        PULL_REQUEST: ${{ steps.backend.PULL_REQUEST_NUMBER }}
+        PULL_REQUEST: ${{ steps.backend.outputs.PULL_REQUEST_NUMBER }}
 
 
     - name: main to full-stack
@@ -65,10 +65,10 @@ jobs:
     - name: approve full-stack
       uses: hmarr/auto-approve-action@v2.4.0
       with:
-        pull-request-number: ${{ steps.full_stack.PULL_REQUEST_NUMBER }}
+        pull-request-number: ${{ steps.full_stack.outputs.PULL_REQUEST_NUMBER }}
 
     - name: merge full-stack
       uses: pascalgn/automerge-action@v0.15.3
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        PULL_REQUEST: ${{ steps.full_stack.PULL_REQUEST_NUMBER }}
+        PULL_REQUEST: ${{ steps.full_stack.outputs.PULL_REQUEST_NUMBER }}

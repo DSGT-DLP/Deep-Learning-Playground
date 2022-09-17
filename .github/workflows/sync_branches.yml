@@ -31,6 +31,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PULL_REQUEST: ${{ steps.frontend.outputs.PULL_REQUEST_NUMBER }}
+        MERGE_LABELS: ""
 
 
     - name: main to backend
@@ -53,6 +54,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PULL_REQUEST: ${{ steps.backend.outputs.PULL_REQUEST_NUMBER }}
+        MERGE_LABELS: ""
 
 
     - name: main to full-stack
@@ -75,3 +77,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PULL_REQUEST: ${{ steps.full_stack.outputs.PULL_REQUEST_NUMBER }}
+        MERGE_LABELS: ""

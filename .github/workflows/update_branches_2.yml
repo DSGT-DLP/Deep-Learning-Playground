@@ -1,0 +1,37 @@
+name: Update Frontend/Backend/FullStack
+on:
+  push:
+    branches:
+      - "update-branches-workflow"
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: main to frontend
+        uses: tretuna/sync-branches@1.4.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          FROM_BRANCH: "main"
+          TO_BRANCH: "frontend"
+          CONTENT_COMPARISON: true
+
+    - name: main to backend
+        uses: tretuna/sync-branches@1.4.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          FROM_BRANCH: "main"
+          TO_BRANCH: "backend"
+          CONTENT_COMPARISON: true
+
+    - name: main to full-stack
+        uses: tretuna/sync-branches@1.4.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          FROM_BRANCH: "main"
+          TO_BRANCH: "full-stack"
+          CONTENT_COMPARISON: true
+

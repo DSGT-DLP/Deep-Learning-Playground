@@ -2,7 +2,7 @@ name: Update Frontend/Backend/FullStack
 on:
   push:
     branches:
-      - "update-branches-workflow"
+      - "main"
 
 jobs:
   build-linux:

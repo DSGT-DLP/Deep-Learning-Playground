@@ -26,6 +26,7 @@ jobs:
         FROM_BRANCH: "main"
         TO_BRANCH: "backend"
         CONTENT_COMPARISON: true
+    
 
     - name: main to full-stack
       uses: tretuna/sync-branches@1.4.0

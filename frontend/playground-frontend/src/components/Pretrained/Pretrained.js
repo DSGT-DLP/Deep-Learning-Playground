@@ -149,7 +149,7 @@ const Pretrained = () => {
       <TitleText text="Code Snippet" />
       {/* <PretrainedCodeSnippet backendResponse={dlpBackendResponse} modelName={modelName} n_epochs={epochs}/> */}
       {
-       < PytorchCodeSnippet backendResponse={dlpBackendResponse} modelName={modelName} n_epochs={epochs} />
+       < PytorchCodeSnippet backendResponse={dlpBackendResponse} modelName={modelName} />
       }
       <DataCodeSnippet
         backendResponse={dlpBackendResponse}

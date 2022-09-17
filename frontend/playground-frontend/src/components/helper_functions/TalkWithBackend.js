@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 const socketEventDict = {
   tabular: "runTraining",
   image: "img-run",
-  pretrained: "pretrain-run",
+  pretrained: "new-pretrain",
 };
 
 const socket = io(":8000");

@@ -37,6 +37,7 @@ from flask_socketio import SocketIO
 import eventlet
 import datetime
 from backend.dl.pretrained import train
+from backend.dl.pytorch_pretrained import pytorch_pretrained
 
 app = Flask(
     __name__,
@@ -425,6 +426,81 @@ def train_pretrained(request_data):
                 "status": 200,
             },
         )
+    except Exception as e:
+        print(traceback.format_exc())
+        socket.emit(
+            "trainingResult",
+            {"success": False, "message": traceback.format_exc(limit=1), "status": 400},
+        )
+    finally:
+        for x in os.listdir(IMAGE_UPLOAD_FOLDER):
+            if x != ".gitkeep":
+                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
+                if os.path.isdir(file_rem):
+                    shutil.rmtree(file_rem)
+                else:
+                    os.remove(file_rem)
+        if os.path.exists(UNZIPPED_DIR_NAME):
+            shutil.rmtree(UNZIPPED_DIR_NAME)
+
+@socket.on("new-pretrain")
+def run_pretrain(request_data):
+    try:
+        print("backend started")
+        IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
+        # request_data = json.loads(request.data)
+        train_transform = request_data["train_transform"]
+        test_transform = request_data["test_transform"]
+        criterion = request_data["criterion"]
+        optimizer_name = request_data["optimizer_name"]
+        default = request_data["using_default_dataset"]
+        epochs = request_data["epochs"]
+        batch_size = request_data["batch_size"]
+        shuffle = request_data["shuffle"]
+        model_name = request_data["model_name"]
+        train_transform = parse_deep_user_architecture(train_transform)
+        test_transform = parse_deep_user_architecture(test_transform)
+
+        zip_file = ""
+        if not default:
+            for x in os.listdir(IMAGE_UPLOAD_FOLDER):
+                if x != ".gitkeep":
+                    zip_file = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
+                    break
+            train_loader, test_loader = loader_from_zipped(zip_file, batch_size, shuffle, train_transform, test_transform)
+        else:
+            print("starting downloading")
+            train_loader, test_loader = get_img_default_dataset_loaders(default, test_transform, train_transform, batch_size, shuffle)
+            print("ended downloading")
+
+        n_classes = set()
+        stop_chan_check = False
+        in_chan = 3
+
+        for i in train_loader:
+            if (not stop_chan_check):
+                in_chan = i[0].shape[1]
+                stop_chan_check = True
+            for j in i[1]:
+                n_classes.add(j.item())
+
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        train_loss_results = pytorch_pretrained(len(n_classes), model_name, epochs, device, in_chan, criterion, train_loader, test_loader, optimizer_name, send_progress)
+
+        print("training successfully finished")
+
+        socket.emit(
+            "trainingResult",
+            {
+                "success": True,
+                "message": "Dataset trained and results outputted successfully",
+                "dl_results": csv_to_json(),
+                "auxiliary_outputs": train_loss_results,
+                "status": 200,
+            },
+        )
+
     except Exception as e:
         print(traceback.format_exc())
         socket.emit(

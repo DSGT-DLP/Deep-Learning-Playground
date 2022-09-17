@@ -18,12 +18,7 @@ const CodeSnippet = (props) => {
 
   return (
     <div id="code-snippet-div">
-      <textarea
-        id="code-snippet-text"
-        readOnly
-        rows="10"
-        value={value}
-      />
+      <textarea id="code-snippet-text" readOnly rows="10" value={value} />
       <button
         id="code-snippet-clipboard"
         onClick={() => {

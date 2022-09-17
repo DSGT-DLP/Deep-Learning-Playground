@@ -127,18 +127,18 @@ def img_run():
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
 
-@socket.on('sendEmail')
-def send_email_route(request_data, socket_id):
+@app.route("/sendEmail", methods=["POST"])
+def send_email_route():
     # extract data
+    request_data = json.loads(request.data)
     required_params = ["email_address", "subject", "body_text"]
     for required_param in required_params:
         if required_param not in request_data:
-            return socket.emit('emailResult',
-                {
+            return (json.dumps({
                     "success": False,
                     "message": "Missing parameter " + required_param
-                },
-                to=socket_id
+                }),
+                400
             )
 
     email_address = request_data["email_address"]
@@ -147,13 +147,11 @@ def send_email_route(request_data, socket_id):
     if "attachment_array" in request_data:
         attachment_array = request_data["attachment_array"]
         if not isinstance(attachment_array, list):
-            return socket.emit(
-                "emailResult",
-                {
+            return (json.dumps({
                     "success": False,
-                    "message": "Attachment array must be a list of filepaths",
-                },
-                to=socket_id
+                    "message": "Attachment array must be a list of filepaths"
+                }),
+                400
             )
     else:
         attachment_array = []
@@ -161,22 +159,15 @@ def send_email_route(request_data, socket_id):
     # try to send email
     try:
         send_email(email_address, subject, body_text, attachment_array)
-        return socket.emit('emailResult',
-            {
+        return (json.dumps({
                 "success": True,
                 "message": "Sent email to " + email_address
-            },
-            to=socket_id
+            }),
+            400
         )
     except Exception:
         print(traceback.format_exc())
-        return socket.emit('emailResult',
-            {
-                "success": False,
-                "message": traceback.format_exc(limit=1)
-            },
-            to=socket_id
-        )
+        return send_error()
 
 @socket.on('defaultDataset')
 def send_columns(request_data):

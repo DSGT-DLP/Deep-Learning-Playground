@@ -31,7 +31,7 @@ const train_and_output = async (choice, choiceDict) => {
   return trainResult;
 };
 
-const sendEmail = (email, problemType) => {
+const sendEmail = async (email, problemType) => {
   // send email if provided
   const attachments = [
     // we will not create constant values for the source files because the constants cannot be used in Home
@@ -52,18 +52,22 @@ const sendEmail = (email, problemType) => {
     );
   }
 
-  socket.emit(
-    "sendEmail",
-    {
+  const emailResult = await fetch("/sendEmail", {
+    method: "POST",
+    body: JSON.stringify({
       email_address: email,
       subject:
         "Your output files and visualizations from Deep Learning Playground",
       body_text:
         "Attached are the output files and visualizations that you just created in Deep Learning Playground on datasciencegt-dlp.com. Please notify us if there are any problems.",
       attachment_array: attachments,
-    },
-    socket.id
-  );
+    }),
+  })
+    .then((result) => result.json());
+  console.log(emailResult);
+  if (!emailResult.success) {
+    toast.error(emailResult.message);
+  }
 };
 
 const updateUserSettings = async () => {
@@ -75,11 +79,5 @@ const updateUserSettings = async () => {
     toast.error("Not logged in");
   }
 };
-
-socket.on("emailResult", (result) => {
-  if (!result.success) {
-    toast.error(result.message);
-  }
-});
 
 export { socket, frontendLog, train_and_output, sendEmail, updateUserSettings };

@@ -8,7 +8,7 @@ import {
   Navbar,
   ImageModels,
   Footer,
-  Pretrained
+  Pretrained,
 } from "./components";
 import { ToastContainer } from "react-toastify";
 import Home from "./Home";

@@ -22,7 +22,7 @@ import Results from "../Home/Results";
 import LargeFileUpload from "../general/LargeFileUpload";
 import DataCodeSnippet from "../ImageModels/DataCodeSnippet";
 // import PretrainedCodeSnippet from "./PretrainedCodeSnippet";
-import PytorchCodeSnippet from "./PytorchCodeSnippet"; 
+import PytorchCodeSnippet from "./PytorchCodeSnippet";
 
 const Pretrained = () => {
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
@@ -149,7 +149,10 @@ const Pretrained = () => {
       <TitleText text="Code Snippet" />
       {/* <PretrainedCodeSnippet backendResponse={dlpBackendResponse} modelName={modelName} n_epochs={epochs}/> */}
       {
-       < PytorchCodeSnippet backendResponse={dlpBackendResponse} modelName={modelName} />
+        <PytorchCodeSnippet
+          backendResponse={dlpBackendResponse}
+          modelName={modelName}
+        />
       }
       <DataCodeSnippet
         backendResponse={dlpBackendResponse}

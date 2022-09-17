@@ -35,28 +35,26 @@ def root(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, "index.html")
-
-@socket.on("frontendLog")
-def frontend_log(log):
-    app.logger.info(f'"frontend: {log}"')
     
-@socket.on('tabular-run')
-def tabular_run(request_data, socket_id):
-    user_arch = request_data["user_arch"]
-    criterion = request_data["criterion"]
-    optimizer_name = request_data["optimizer_name"]    
-    problem_type = request_data["problem_type"]
-    target = request_data["target"]
-    features = request_data["features"]
-    default = request_data["using_default_dataset"]
-    test_size = request_data["test_size"]
-    batch_size = request_data["batch_size"]
-    epochs = request_data["epochs"]
-    shuffle = request_data["shuffle"]
-    csvDataStr = request_data["csv_data"]
-    fileURL = request_data["file_URL"]
-    
+@app.route("/tabular-run", methods=["POST"])
+def tabular_run():    
     try:
+        request_data = json.loads(request.data)
+        
+        user_arch = request_data["user_arch"]
+        criterion = request_data["criterion"]
+        optimizer_name = request_data["optimizer_name"]    
+        problem_type = request_data["problem_type"]
+        target = request_data["target"]
+        features = request_data["features"]
+        default = request_data["using_default_dataset"]
+        test_size = request_data["test_size"]
+        batch_size = request_data["batch_size"]
+        epochs = request_data["epochs"]
+        shuffle = request_data["shuffle"]
+        csvDataStr = request_data["csv_data"]
+        fileURL = request_data["file_URL"]
+    
         train_loss_results = dl_tabular_drive(
             user_arch,
             criterion,
@@ -71,18 +69,21 @@ def tabular_run(request_data, socket_id):
             shuffle,
             batch_size,
             csvDataStr,
-            send_progress=send_progress_helper(socket_id),
-        )        
-        send_results(train_loss_results, socket_id)
+            send_progress=lambda x: print(x),
+        )
+        print(train_loss_results)
+        return send_results(train_loss_results)
 
     except Exception:
         print(traceback.format_exc())
-        send_error(socket_id)
+        return send_error()
 
-@socket.on("img-run")
-def img_run(request_data, socket_id):
+@app.route("/img-run", methods=["POST"])
+def img_run():
     try: 
         print("backend started")
+        request_data = json.loads(request.data)
+        
         IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
         train_transform = request_data["train_transform"]
         test_transform = request_data["test_transform"]
@@ -105,15 +106,15 @@ def img_run(request_data, socket_id):
             batch_size,
             shuffle,
             IMAGE_UPLOAD_FOLDER,
-            send_progress=send_progress_helper(socket_id)
+            send_progress=lambda x: print(x)
         )
 
         print("training successfully finished")
-        send_results(train_loss_results, socket_id)
+        return send_results(train_loss_results)
         
     except Exception as e:
         print(traceback.format_exc())
-        send_error(socket_id)
+        return send_error()
         
     finally:
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
@@ -226,26 +227,22 @@ def upload():
     return '200'
 
 
-def send_results(train_loss_results, socket_id):
-    socket.emit('trainingResult',
-        {
+def send_results(train_loss_results):
+    return (json.dumps({
             "success": True,
             "message": "Dataset trained and results outputted successfully",
             "dl_results": csv_to_json(),
             "auxiliary_outputs": train_loss_results,
-            "status": 200
-        },
-        to=socket_id
+        }),
+        200
     )
 
-def send_error(socket_id):
-    socket.emit('trainingResult',
-        {
+def send_error():
+    return (json.dumps({
             "success": False,
             "message": traceback.format_exc(limit=1),
-            "status": 400
-        },
-        to=socket_id
+        }),
+        400
     )
 
 def send_progress_helper(socket_id):

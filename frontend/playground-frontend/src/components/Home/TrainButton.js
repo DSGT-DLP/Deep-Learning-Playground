@@ -129,7 +129,8 @@ const TrainButton = (props) => {
       setTrainParams({ choice, paramList });
       document.getElementById("fileUploadInput")?.click();
     } else {
-      train_and_output(choice, functionMap[choice][1](paramList));
+      const trainResult = await train_and_output(choice, functionMap[choice][1](paramList));
+      setResult(trainResult);
     }
   };
 

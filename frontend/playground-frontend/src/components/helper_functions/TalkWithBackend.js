@@ -8,7 +8,7 @@ const socketEventDict = {
   pretrained: "pretrain-run",
 };
 
-const socket = io();
+const socket = io(":8000");
 socket.on("connect", () => {
   frontendLog(`connected to socket`);
 });
@@ -21,8 +21,14 @@ const frontendLog = (log) => {
   socket.emit("frontendLog", log);
 };
 
-const train_and_output = (choice, choiceDict) => {
-  socket.emit(socketEventDict[choice], choiceDict, socket.id);
+const train_and_output = async (choice, choiceDict) => {
+  const trainResult = await fetch(socketEventDict[choice], {
+    method: "POST",
+    body: JSON.stringify(choiceDict),
+  })
+    .then((result) => result.json());
+  console.log(trainResult);
+  return trainResult;
 };
 
 const sendEmail = (email, problemType) => {

@@ -14,7 +14,7 @@ jobs:
     - name: main to frontend
       uses: tretuna/sync-branches@1.4.0
       with:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         FROM_BRANCH: "main"
         TO_BRANCH: "frontend"
         CONTENT_COMPARISON: true
@@ -22,7 +22,7 @@ jobs:
     - name: main to backend
       uses: tretuna/sync-branches@1.4.0
       with:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         FROM_BRANCH: "main"
         TO_BRANCH: "backend"
         CONTENT_COMPARISON: true
@@ -30,7 +30,7 @@ jobs:
     - name: main to full-stack
       uses: tretuna/sync-branches@1.4.0
       with:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         FROM_BRANCH: "main"
         TO_BRANCH: "full-stack"
         CONTENT_COMPARISON: true

@@ -16,9 +16,10 @@ import {
 } from "../helper_functions/TalkWithBackend";
 import { Circle } from "rc-progress";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const TrainButton = (props) => {
-  const { setDLPBackendResponse, choice = "tabular" } = props;
+  const { uploadFile, setDLPBackendResponse, choice = "tabular" } = props;
 
   const [pendingResponse, setPendingResponse] = useState(false);
   const [progress, setProgress] = useState(null);
@@ -112,12 +113,12 @@ const TrainButton = (props) => {
     const paramList = { ...props, trainTransforms, testTransforms, user_arch };
 
     if (choice === "image" && !props.usingDefaultDataset) {
-      setTrainParams({ choice, paramList });
-      document.getElementById("fileUploadInput")?.click();
-    } else {
-      const trainResult = await train_and_output(choice, functionMap[choice][1](paramList));
-      setResult(trainResult);
+      const formData = new FormData();
+      formData.append("file", uploadFile);
+      await axios.post("/upload", formData);
     }
+    const trainResult = await train_and_output(choice, functionMap[choice][1](paramList));
+    setResult(trainResult);
   };
 
   useEffect(() => {
@@ -181,6 +182,7 @@ TrainButton.propTypes = {
   style: PropTypes.object,
   problemType: PropTypes.string,
   usingDefaultDataset: PropTypes.string,
+  uploadFile: PropTypes.object,
 };
 
 export default TrainButton;

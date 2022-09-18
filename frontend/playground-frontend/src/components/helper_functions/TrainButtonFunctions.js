@@ -118,7 +118,7 @@ export const validateImageInputs = (user_arch, ...args) => {
   if (!args.optimizerName)
     alertMessage += "An optimizer name must be specified. ";
   if (args.batchSize < 2) alertMessage += "Batch size cannot be less than 2";
-  if (!args.dataUploaded && !args.usingDefaultDataset)
+  if (!args.uploadFile && !args.usingDefaultDataset)
     alertMessage += "Please specify a valid data from default or upload";
   // can easily add a epoch limit
 

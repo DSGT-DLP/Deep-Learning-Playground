@@ -36,6 +36,11 @@ def root(path):
 @app.route("/tabular-run", methods=["POST"])
 def tabular_run():    
     try:
+        @copy_current_request_context
+        def trial():
+            print(request.files["file"])
+            
+        trial()
         request_data = json.loads(request.data)
         
         user_arch = request_data["user_arch"]
@@ -77,11 +82,10 @@ def tabular_run():
 
 @app.route("/img-run", methods=["POST"])
 def img_run():
-    try: 
-        print("backend started")
+    IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
+    try:
         request_data = json.loads(request.data)
         
-        IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
         train_transform = request_data["train_transform"]
         test_transform = request_data["test_transform"]
         user_arch = request_data["user_arch"]
@@ -109,7 +113,7 @@ def img_run():
         print("training successfully finished")
         return send_train_results(train_loss_results)
         
-    except Exception as e:
+    except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
         
@@ -172,25 +176,18 @@ def update_user_settings():
 
 @app.route("/upload", methods=["POST"])
 def upload():
-    @copy_current_request_context
-    def save_file(closeAfterWrite):
-        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " dropzone is working")
+    try:
+        print(datetime.datetime.now().isoformat() + " upload has started its task")
         f = request.files['file']
         basepath = os.path.dirname(__file__) 
-        upload_path = os.path.join(basepath, 'image_data_uploads',secure_filename(f.filename)) 
+        upload_path = os.path.join(basepath, 'image_data_uploads', secure_filename(f.filename)) 
         f.save(upload_path)
-        closeAfterWrite()
-        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " dropzone has finished its task")
-    def passExit():
-        pass
-    if request.method == 'POST':
-        f= request.files['file']
-        normalExit = f.stream.close
-        f.stream.close = passExit
-        save_file(normalExit)
-        # socket.emit('uploadComplete')
-        return '200'
-    return '200'
+        f.stream.close()
+        print(datetime.datetime.now().isoformat() + " upload has finished its task")
+        return send_success({"message": "upload success"})
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
 
 def send_success(results):
     return (json.dumps({"success": True, **results}), 200)

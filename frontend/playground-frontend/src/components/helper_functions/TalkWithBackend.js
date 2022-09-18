@@ -1,31 +1,26 @@
-import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 import { auth } from "../../firebase";
 
-const socketEventDict = {
+const sendToBackend = async (route, data) => {
+  const backendResult = await fetch(`/api/${route}`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  }).then((result) => result.json());
+  return backendResult;
+};
+
+const routeDict = {
   tabular: "tabular-run",
   image: "img-run",
   pretrained: "pretrain-run",
 };
 
-const socket = io();
-socket.on("connect", () => {
-  frontendLog(`connected to socket`);
-});
-socket.on("connect_error", (err) => {
-  console.log(`connection error due to: ${err.message}`);
-  socket.close();
-});
-
-const frontendLog = (log) => {
-  socket.emit("frontendLog", log);
+const train_and_output = async (choice, choiceDict) => {
+  const trainResult = await sendToBackend(routeDict[choice], choiceDict);
+  return trainResult;
 };
 
-const train_and_output = (choice, choiceDict) => {
-  socket.emit(socketEventDict[choice], choiceDict, socket.id);
-};
-
-const sendEmail = (email, problemType) => {
+const sendEmail = async (email, problemType) => {
   // send email if provided
   const attachments = [
     // we will not create constant values for the source files because the constants cannot be used in Home
@@ -46,23 +41,23 @@ const sendEmail = (email, problemType) => {
     );
   }
 
-  socket.emit(
-    "sendEmail",
-    {
-      email_address: email,
-      subject:
-        "Your output files and visualizations from Deep Learning Playground",
-      body_text:
-        "Attached are the output files and visualizations that you just created in Deep Learning Playground on datasciencegt-dlp.com. Please notify us if there are any problems.",
-      attachment_array: attachments,
-    },
-    socket.id
-  );
+  const emailResult = await sendToBackend("sendEmail", {
+    email_address: email,
+    subject:
+      "Your output files and visualizations from Deep Learning Playground",
+    body_text:
+      "Attached are the output files and visualizations that you just created in Deep Learning Playground on datasciencegt-dlp.com. Please notify us if there are any problems.",
+    attachment_array: attachments,
+  });
+
+  if (!emailResult.success) {
+    toast.error(emailResult.message);
+  }
 };
 
 const updateUserSettings = async () => {
   if (auth.currentUser) {
-    socket.emit("updateUserSettings", {
+    await sendToBackend("updateUserSettings", {
       authorization: await auth.currentUser.getIdToken(true),
     });
   } else {
@@ -70,10 +65,4 @@ const updateUserSettings = async () => {
   }
 };
 
-socket.on("emailResult", (result) => {
-  if (!result.success) {
-    toast.error(result.message);
-  }
-});
-
-export { socket, frontendLog, train_and_output, sendEmail, updateUserSettings };
+export { sendToBackend, train_and_output, sendEmail, updateUserSettings };

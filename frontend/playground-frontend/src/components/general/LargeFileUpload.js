@@ -1,16 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { PropTypes } from "prop-types";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
 const LargeFileUpload = (props) => {
-  const { setDataUploaded } = props;
-  const [fileName, setFileName] = useState();
+  const { uploadFile, setUploadFile } = props;
 
   const handleFileUpload = (e) => {
     e.preventDefault();
-    const file = e.target.files[0];
-    setFileName(file.name.substring(0, 20));
-    setDataUploaded(true);
+    setUploadFile(e.target.files[0] ? e.target.files[0] : null);
   };
 
   return (
@@ -27,7 +24,8 @@ const LargeFileUpload = (props) => {
         target="dummyframe"
       >
         <label htmlFor="file-upload" className="custom-file-upload">
-          <FaCloudUploadAlt /> {fileName || "Choose zip file"}
+          <FaCloudUploadAlt />{" "}
+          {uploadFile?.name.substring(0, 20) || "Choose zip file"}
         </label>
         <input
           type="file"
@@ -42,7 +40,6 @@ const LargeFileUpload = (props) => {
           value="Upload"
           id="fileUploadInput"
           style={{ marginLeft: "48px", marginTop: "8px" }}
-          onClick={() => setDataUploaded(true)}
           hidden
         ></input>
       </form>
@@ -51,7 +48,8 @@ const LargeFileUpload = (props) => {
 };
 
 LargeFileUpload.propTypes = {
-  setDataUploaded: PropTypes.func.isRequired,
+  uploadFile: PropTypes.object,
+  setUploadFile: PropTypes.func.isRequired,
 };
 
 export default LargeFileUpload;

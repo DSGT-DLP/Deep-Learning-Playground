@@ -19,5 +19,6 @@
   "bugs": {
     "url": "https://github.com/karkir0003/Deep-Learning-Playground/issues"
   },
-  "homepage": "https://github.com/karkir0003/Deep-Learning-Playground#readme"
+  "homepage": "https://github.com/karkir0003/Deep-Learning-Playground#readme",
+  "dependencies": {}
 }

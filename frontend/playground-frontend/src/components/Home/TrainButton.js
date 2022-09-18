@@ -112,7 +112,10 @@ const TrainButton = (props) => {
       formData.append("file", uploadFile);
       await axios.post("/api/upload", formData);
     }
-    const trainResult = await train_and_output(choice, functionMap[choice][1](paramList));
+    const trainResult = await train_and_output(
+      choice,
+      functionMap[choice][1](paramList)
+    );
     setResult(trainResult);
   };
 

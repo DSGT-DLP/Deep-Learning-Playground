@@ -22,7 +22,9 @@ const Feedback = () => {
       email.trim() &&
       feedback.trim()
     ) {
-      setSuccessful(await send_feedback_mail(firstName, lastName, email, feedback));
+      setSuccessful(
+        await send_feedback_mail(firstName, lastName, email, feedback)
+      );
     }
   };
 

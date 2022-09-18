@@ -123,7 +123,10 @@ const ImageModels = () => {
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <div className="input-container d-flex flex-column align-items-center justify-content-center">
-            <LargeFileUpload uploadFile={uploadFile} setUploadFile={setUploadFile} />
+            <LargeFileUpload
+              uploadFile={uploadFile}
+              setUploadFile={setUploadFile}
+            />
           </div>
 
           {addedLayers.map((_, i) => (

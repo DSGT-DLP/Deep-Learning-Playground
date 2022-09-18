@@ -188,7 +188,7 @@ const Home = () => {
         const datasetResult = await sendToBackend("defaultDataset", {
           using_default_dataset: usingDefaultDataset.value,
         });
-  
+
         if (!datasetResult.success) {
           toast.error(datasetResult.message);
         } else {

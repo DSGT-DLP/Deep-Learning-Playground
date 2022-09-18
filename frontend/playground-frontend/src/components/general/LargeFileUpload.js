@@ -24,7 +24,8 @@ const LargeFileUpload = (props) => {
         target="dummyframe"
       >
         <label htmlFor="file-upload" className="custom-file-upload">
-          <FaCloudUploadAlt /> {uploadFile?.name.substring(0, 20) || "Choose zip file"}
+          <FaCloudUploadAlt />{" "}
+          {uploadFile?.name.substring(0, 20) || "Choose zip file"}
         </label>
         <input
           type="file"

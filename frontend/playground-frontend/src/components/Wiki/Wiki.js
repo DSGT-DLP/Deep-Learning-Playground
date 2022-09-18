@@ -23,7 +23,10 @@ const render_layer_info = (layer_info) => {
   let body = [];
   for (let i = 0; i < layer_info.docs.length; i++) {
     body.push(
-      <li key={layer_info.docs[i].layer_name} style={{ marginBottom: "10px", display: layer_info.displayState }}>
+      <li
+        key={layer_info.docs[i].layer_name}
+        style={{ marginBottom: "10px", display: layer_info.displayState }}
+      >
         <button
           onClick={() =>
             displayChange(
@@ -66,7 +69,9 @@ const render_layer_info = (layer_info) => {
 const render_all_layer_info = (layer_wiki) => {
   const body = [];
   for (let i = 0; i < layer_wiki.length; i++) {
-    body.push(<li key={layer_wiki[i].title}>{render_layer_info(layer_wiki[i])}</li>);
+    body.push(
+      <li key={layer_wiki[i].title}>{render_layer_info(layer_wiki[i])}</li>
+    );
   }
   return body;
 };
@@ -511,28 +516,28 @@ const Wiki = () => {
                 </li>
                 <br />
                 <li>
-                  Knowing the mean and variance of each feature allows you
-                  to standardize your features (in the same way you calculate
+                  Knowing the mean and variance of each feature allows you to
+                  standardize your features (in the same way you calculate
                   what's called a "z-score"). Now, your normalized data will
                   have mean 0 and variance 1
                 </li>
                 <br />
                 <li>
-                  Scale and Shift is performed. Note that you don't
-                  necessarily specify the scale and shift parameters. Batch
-                  Norm actually can learn the optimal scale/shift parameters
-                  just like other weights in your deep learning model. This is
-                  part of the magic of Batch Norm!
+                  Scale and Shift is performed. Note that you don't necessarily
+                  specify the scale and shift parameters. Batch Norm actually
+                  can learn the optimal scale/shift parameters just like other
+                  weights in your deep learning model. This is part of the magic
+                  of Batch Norm!
                 </li>
                 <br />
                 <li>
                   Instead of storing the mean and variance for each
-                  feature/column, Batch Norm actually stores the moving
-                  average for mean and variance for efficiency. These values
-                  are generally good approximations for the real mean/variance
-                  of your features. The moving average for mean and variance
-                  allows for Batch Norm to learn the optimal scale/shift
-                  parameters during backpropagation in deep learning
+                  feature/column, Batch Norm actually stores the moving average
+                  for mean and variance for efficiency. These values are
+                  generally good approximations for the real mean/variance of
+                  your features. The moving average for mean and variance allows
+                  for Batch Norm to learn the optimal scale/shift parameters
+                  during backpropagation in deep learning
                 </li>
               </ol>
               <br />

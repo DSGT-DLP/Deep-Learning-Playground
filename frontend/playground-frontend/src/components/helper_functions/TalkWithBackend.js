@@ -4,7 +4,7 @@ import { auth } from "../../firebase";
 const sendToBackend = async (route, data) => {
   const backendResult = await fetch(`/api/${route}`, {
     method: "POST",
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   }).then((result) => result.json());
   return backendResult;
 };
@@ -42,13 +42,13 @@ const sendEmail = async (email, problemType) => {
   }
 
   const emailResult = await sendToBackend("sendEmail", {
-      email_address: email,
-      subject:
-        "Your output files and visualizations from Deep Learning Playground",
-      body_text:
-        "Attached are the output files and visualizations that you just created in Deep Learning Playground on datasciencegt-dlp.com. Please notify us if there are any problems.",
-      attachment_array: attachments,
-    });
+    email_address: email,
+    subject:
+      "Your output files and visualizations from Deep Learning Playground",
+    body_text:
+      "Attached are the output files and visualizations that you just created in Deep Learning Playground on datasciencegt-dlp.com. Please notify us if there are any problems.",
+    attachment_array: attachments,
+  });
 
   if (!emailResult.success) {
     toast.error(emailResult.message);

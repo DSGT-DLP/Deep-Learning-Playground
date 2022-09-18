@@ -1,9 +1,8 @@
-import { useEffect } from "react";
 import { EmailInput, TitleText, Spacer } from "../index";
 import ReCAPTCHA from "react-google-recaptcha";
 import React, { useState } from "react";
-import { socket } from "../helper_functions/TalkWithBackend";
 import { COLORS, GENERAL_STYLES } from "../../constants";
+import { toast } from "react-toastify";
 
 const Feedback = () => {
   const [email, setEmail] = useState("");
@@ -14,13 +13,7 @@ const Feedback = () => {
   const [submitted, setSubmitted] = useState(false);
   const [successful, setSuccessful] = useState(false);
 
-  useEffect(() => {
-    socket.on("emailResult", (result) => {
-      setSuccessful(result.success);
-    });
-  }, [socket]);
-
-  const onClickSubmit = () => {
+  const onClickSubmit = async () => {
     setSubmitted(true);
     if (
       firstName.trim() &&
@@ -28,7 +21,7 @@ const Feedback = () => {
       email.trim() &&
       feedback.trim()
     ) {
-      setSuccessful(send_feedback_mail(firstName, lastName, email, feedback));
+      setSuccessful(await send_feedback_mail(firstName, lastName, email, feedback));
     }
   };
 
@@ -124,12 +117,21 @@ const Feedback = () => {
   );
 };
 
-const send_feedback_mail = (firstName, lastName, email, feedback) => {
-  socket.emit("sendEmail", {
-    email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
-    subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
-    body_text: feedback,
-  });
+const send_feedback_mail = async (firstName, lastName, email, feedback) => {
+  const emailResult = await fetch("/sendEmail", {
+    method: "POST",
+    body: JSON.stringify({
+      email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
+      subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
+      body_text: feedback,
+    }),
+  })
+    .then((result) => result.json());
+
+  if (!emailResult.success) {
+    toast.error(emailResult.message);
+  }
+  return emailResult.success;
 };
 
 export default Feedback;

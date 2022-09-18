@@ -163,7 +163,7 @@ def send_email_route():
                 "success": True,
                 "message": "Sent email to " + email_address
             }),
-            400
+            200
         )
     except Exception:
         print(traceback.format_exc())

@@ -70,8 +70,7 @@ def tabular_run():
             epochs,
             shuffle,
             batch_size,
-            csvDataStr,
-            send_progress=lambda x: print(x),
+            csvDataStr
         )
         print(train_loss_results)
         return send_train_results(train_loss_results)
@@ -107,7 +106,6 @@ def img_run():
             batch_size,
             shuffle,
             IMAGE_UPLOAD_FOLDER,
-            send_progress=lambda x: print(x)
         )
 
         print("training successfully finished")

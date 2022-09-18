@@ -7,7 +7,7 @@ const LargeFileUpload = (props) => {
 
   const handleFileUpload = (e) => {
     e.preventDefault();
-    setUploadFile(e.target.files[0]);
+    setUploadFile(e.target.files[0] ? e.target.files[0] : null);
   };
 
   return (

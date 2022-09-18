@@ -6,14 +6,14 @@ import { IconContext } from "react-icons";
 
 const Footer = () => {
   return (
-    <>
+    <div id="footer">
       <IconContext.Provider
         value={{
           color: COLORS.dark_blue,
           size: "2.0rem",
         }}
       >
-        <div className="header-footer" id="footer">
+        <div className="header-footer" id="footer-socials">
           <a className="foot-element" href={URLs.linkedin}>
             <FaLinkedin />
           </a>
@@ -33,7 +33,7 @@ const Footer = () => {
           Deep Learning Playground © {new Date().getFullYear()}
         </p>
       </div>
-    </>
+    </div>
   );
 };
 

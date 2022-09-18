@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { COLORS, DEFAULT_ADDED_LAYERS, LAYOUT } from "./constants";
+import { DEFAULT_ADDED_LAYERS } from "./constants";
 import {
   BOOL_OPTIONS,
   CRITERIONS,
@@ -18,7 +18,7 @@ import {
   EmailInput,
   Input,
   LayerChoice,
-  RectContainer,
+  Spacer,
   Results,
   TitleText,
   TrainButton,
@@ -27,10 +27,12 @@ import {
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { socket } from "./components/helper_functions/TalkWithBackend";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const [csvDataInput, setCSVDataInput] = useState([]);
-  const [csvColumns, setCSVColumns] = useState([]);
+  const [uploadedColumns, setUploadedColumns] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [inputKey, setInputKey] = useState(0);
   // input responses
@@ -52,7 +54,7 @@ const Home = () => {
   const [testSize, setTestSize] = useState(0.2);
   const [batchSize, setBatchSize] = useState(20);
   const [inputFeatureColumnOptions, setInputFeatureColumnOptions] = useState(
-    csvColumns.map((e, i) => ({
+    uploadedColumns.map((e, i) => ({
       label: e.name,
       value: i,
     }))
@@ -76,15 +78,25 @@ const Home = () => {
     email: email,
   };
 
-  const inputColumnOptions = csvColumns.map((e, i) => ({
-    label: e.name,
+  const columnOptionsArray = activeColumns.map((e, i) => ({
+    label: e.name || e,
     value: i,
   }));
 
+  const inputColumnOptions = usingDefaultDataset.value
+    ? []
+    : columnOptionsArray;
+
   const handleTargetChange = (e) => {
     setTargetCol(e);
-    const csvColumnsCopy = JSON.parse(JSON.stringify(inputColumnOptions));
+    const csvColumnsCopy = JSON.parse(JSON.stringify(columnOptionsArray));
+    let featuresCopy = JSON.parse(JSON.stringify(features));
     csvColumnsCopy.splice(e.value, 1);
+    if (featuresCopy) {
+      featuresCopy = featuresCopy.filter((item) => item.value != e.value);
+      setInputKey((e) => e + 1);
+      setFeatures(featuresCopy);
+    }
     setInputFeatureColumnOptions(csvColumnsCopy);
   };
 
@@ -180,6 +192,36 @@ const Home = () => {
     setInputKey((e) => e + 1);
   }, [problemType]);
 
+  useEffect(() => {
+    if (usingDefaultDataset.value) {
+      socket.emit("defaultDataset", {
+        using_default_dataset: usingDefaultDataset.value,
+      });
+    } else {
+      setActiveColumns(uploadedColumns);
+    }
+  }, [usingDefaultDataset, uploadedColumns]);
+
+  useEffect(() => {
+    if (usingDefaultDataset.value) {
+      setTargetCol({ label: "target", value: 0 });
+      handleTargetChange(columnOptionsArray[columnOptionsArray.length - 1]);
+    } else {
+      setTargetCol(null);
+      setInputFeatureColumnOptions([]);
+    }
+    setFeatures(null);
+    setInputKey((e) => e + 1);
+  }, [activeColumns]);
+
+  socket.on("defaultColumns", (result) => {
+    if (!result.success) {
+      toast.error(result.message);
+    } else {
+      setActiveColumns(result.columns);
+    }
+  });
+
   return (
     <div id="home-page" className="container-fluid">
       <ChoiceTab />
@@ -196,18 +238,19 @@ const Home = () => {
 
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
-          <RectContainer style={styles.fileInput}>
+          <div className="input-container d-flex flex-column align-items-center justify-content-center">
             <CSVInputFile
               setData={setCSVDataInput}
-              setColumns={setCSVColumns}
+              setColumns={setUploadedColumns}
             />
+            <Spacer height={12} />
             <CSVInputURL
               fileURL={fileURL}
               setFileURL={setFileURL}
-              setCSVColumns={setCSVColumns}
+              setCSVColumns={setUploadedColumns}
               setCSVDataInput={setCSVDataInput}
             />
-          </RectContainer>
+          </div>
 
           {addedLayers.map((_, i) => (
             <AddedLayer
@@ -231,7 +274,7 @@ const Home = () => {
           />
         </BackgroundLayout>
 
-        <div style={{ marginTop: 20 }} />
+        <Spacer height={40} />
 
         <TitleText text="Layers Inventory" />
         <BackgroundLayout>
@@ -244,7 +287,7 @@ const Home = () => {
                   const copyCurrent = [...currentAddedLayers];
                   const layerCopy = deepCopyObj(newLayer);
                   Object.values(layerCopy.parameters).forEach((val) => {
-                    val.value = "";
+                    val.value = val.default ? val.default : val.min;
                   });
                   copyCurrent.push(layerCopy);
                   return copyCurrent;
@@ -254,7 +297,8 @@ const Home = () => {
           ))}
         </BackgroundLayout>
       </DndProvider>
-      <div style={{ marginTop: 20 }} />
+
+      <Spacer height={40} />
 
       <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
@@ -264,19 +308,27 @@ const Home = () => {
         ))}
       </BackgroundLayout>
 
+      <Spacer height={40} />
+
       <TitleText text="Email (optional)" />
       <EmailInput email={email} setEmail={setEmail} />
+
+      <Spacer height={40} />
 
       <TitleText text="CSV Input" />
       <DataTable
         pagination
         highlightOnHover
-        columns={csvColumns}
+        columns={uploadedColumns}
         data={csvDataInput}
       />
 
+      <Spacer height={40} />
+
       <TitleText text="Deep Learning Results" />
       {ResultsMemo}
+
+      <Spacer height={40} />
 
       <TitleText text="Code Snippet" />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
@@ -287,11 +339,3 @@ const Home = () => {
 export default Home;
 
 const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));
-
-const styles = {
-  fileInput: {
-    ...LAYOUT.column,
-    backgroundColor: COLORS.input,
-    width: 200,
-  },
-};

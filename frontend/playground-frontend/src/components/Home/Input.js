@@ -60,6 +60,7 @@ Input.propTypes = {
   isMultiSelect: PropTypes.bool,
   beginnerMode: PropTypes.bool,
   freeInputCustomRestrictions: PropTypes.shape({ type: PropTypes.string }),
+  styles: PropTypes.array,
 };
 
 export default Input;
@@ -67,7 +68,7 @@ export default Input;
 const styles = {
   queryContainer: {
     height: 50,
-    width: 130,
+    width: 145,
     backgroundColor: COLORS.layer,
     display: "flex",
     justifyContent: "center",
@@ -78,6 +79,7 @@ const styles = {
     color: "white",
     textAlign: "center",
     fontSize: 18,
+    margin: 0,
   },
   responseContainer: {
     height: 50,

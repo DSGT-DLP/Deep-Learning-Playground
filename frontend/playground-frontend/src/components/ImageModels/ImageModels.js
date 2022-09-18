@@ -25,8 +25,8 @@ import {
   Input,
   TitleText,
   BackgroundLayout,
-  RectContainer,
   AddedLayer,
+  Spacer,
   AddNewLayer,
   TrainButton,
   LayerChoice,
@@ -34,7 +34,7 @@ import {
   Results,
   CodeSnippet,
   ChoiceTab,
-} from "..";
+} from "../index";
 
 const ImageModels = () => {
   const [addedLayers, setAddedLayers] = useState(DEFAULT_IMG_LAYERS);
@@ -127,7 +127,7 @@ const ImageModels = () => {
   };
 
   return (
-    <div style={{ padding: 20 }}>
+    <div id="image-models">
       <DndProvider backend={HTML5Backend}>
         <ChoiceTab />
         <button
@@ -141,9 +141,9 @@ const ImageModels = () => {
         <Spacer height={40} />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
-          <RectContainer style={styles.fileInput}>
+          <div className="input-container d-flex flex-column align-items-center justify-content-center">
             <LargeFileUpload setDataUploaded={setDataUploaded} />
-          </RectContainer>
+          </div>
 
           {addedLayers.map((_, i) => (
             <AddedLayer
@@ -178,9 +178,9 @@ const ImageModels = () => {
           />
         </BackgroundLayout>
 
-        <div style={{ marginTop: 20 }} />
+        <Spacer height={40} />
 
-        <TitleText test="Layers Inventory" />
+        <TitleText text="Layers Inventory" />
         <BackgroundLayout>
           {ALL_LAYERS.map((e) => (
             <LayerChoice
@@ -191,7 +191,7 @@ const ImageModels = () => {
                   const copyCurrent = [...currentAddedLayers];
                   const layerCopy = deepCopyObj(newLayer);
                   Object.values(layerCopy.parameters).forEach((val) => {
-                    val.value = "";
+                    val.value = val.default ? val.default : val.min;
                   });
                   copyCurrent.push(layerCopy);
                   return copyCurrent;
@@ -202,7 +202,7 @@ const ImageModels = () => {
         </BackgroundLayout>
       </DndProvider>
 
-      <div style={{ marginTop: 20 }} />
+      <Spacer height={40} />
 
       <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
@@ -211,25 +211,31 @@ const ImageModels = () => {
         ))}
       </BackgroundLayout>
 
-      <div style={{ marginTop: 20 }} />
+      <Spacer height={40} />
       <TitleText text="Image Transformations" />
       <Transforms
-        queryText={"Test Transform"}
+        queryText={"Train Transform"}
         options={POSSIBLE_TRANSFORMS}
         transforms={trainTransforms}
         setTransforms={setTrainTransforms}
       />
-      <div style={{ marginTop: 10 }} />
+      <Spacer height={10} />
       <Transforms
         queryText={"Test Transform"}
         options={POSSIBLE_TRANSFORMS}
         transforms={testTransforms}
         setTransforms={setTestTransforms}
       />
+
+      <Spacer height={40} />
       <TitleText text="Email (optional)" />
       <EmailInput email={email} setEmail={setEmail} />
+
+      <Spacer height={40} />
       <TitleText text="Deep Learning Results" />
       {ResultMemo}
+
+      <Spacer height={40} />
       <TitleText text="Code Snippet" />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
       <DataCodeSnippet
@@ -245,27 +251,5 @@ const ImageModels = () => {
 };
 
 export default ImageModels;
-
-const styles = {
-  fileInput: {
-    ...LAYOUT.column,
-    backgroundColor: COLORS.input,
-    width: 155,
-  },
-  transformChoice: {
-    top_left_tooltip: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      backgroundColor: "transparent",
-      borderWidth: 0,
-    },
-    text: {
-      ...GENERAL_STYLES.p,
-      color: COLORS.layer,
-      fontSize: 16,
-    },
-  },
-};
 
 const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));

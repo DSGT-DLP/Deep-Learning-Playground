@@ -1,7 +1,8 @@
-import EmailInput from "../Home/EmailInput";
+import { useEffect } from "react";
+import { EmailInput, TitleText, Spacer } from "../index";
 import ReCAPTCHA from "react-google-recaptcha";
 import React, { useState } from "react";
-import TitleText from "../general/TitleText";
+import { socket } from "../helper_functions/TalkWithBackend";
 import { COLORS, GENERAL_STYLES } from "../../constants";
 
 const Feedback = () => {
@@ -12,6 +13,12 @@ const Feedback = () => {
   const [recaptcha, setRecaptcha] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [successful, setSuccessful] = useState(false);
+
+  useEffect(() => {
+    socket.on("emailResult", (result) => {
+      setSuccessful(result.success);
+    });
+  }, [socket]);
 
   const onClickSubmit = () => {
     setSubmitted(true);
@@ -52,6 +59,8 @@ const Feedback = () => {
           We'll get back to as soon as we can.
         </p>
 
+        <Spacer height={20} />
+
         <form>
           <TitleText text="First Name" />
           <input
@@ -63,6 +72,8 @@ const Feedback = () => {
             <p style={GENERAL_STYLES.error_text}>First Name cannot be blank</p>
           )}
 
+          <Spacer height={20} />
+
           <TitleText text="Last name" />
           <input
             type="text"
@@ -73,17 +84,20 @@ const Feedback = () => {
             <p style={GENERAL_STYLES.error_text}>Last Name cannot be blank</p>
           )}
 
+          <Spacer height={20} />
+
           <TitleText text="Email" />
           <EmailInput setEmail={setEmail} />
           {submitted && email.trim() === "" && recaptcha !== "" && (
             <p style={GENERAL_STYLES.error_text}>Email Cannot be blank</p>
           )}
 
+          <Spacer height={20} />
+
           <TitleText text="Feedback" />
           <textarea
             placeholder="Type your feedback here"
             rows="15"
-            cols="60"
             style={styles.feedback_area}
             onChange={(e) => setFeedback(e.target.value)}
           />
@@ -95,7 +109,7 @@ const Feedback = () => {
         <div style={{ marginTop: "2%" }} />
 
         <ReCAPTCHA
-          sitekey={process.env.REACT_APP_SITE_KEY}
+          sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
           onChange={(e) => setRecaptcha(e)}
         />
         {submitted && recaptcha === "" && (
@@ -110,17 +124,12 @@ const Feedback = () => {
   );
 };
 
-const send_feedback_mail = async (firstName, lastName, email, feedback) => {
-  const runResult = await fetch("/sendemail", {
-    method: "POST",
-    body: JSON.stringify({
-      email_address: process.env.REACT_APP_EMAIL,
-      subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
-      body_text: feedback,
-    }),
+const send_feedback_mail = (firstName, lastName, email, feedback) => {
+  socket.emit("sendEmail", {
+    email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
+    subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
+    body_text: feedback,
   });
-  const resultJson = await runResult.json();
-  return resultJson.success;
 };
 
 export default Feedback;
@@ -140,6 +149,7 @@ const styles = {
     borderRadius: "10px",
     borderWidth: "0.5px",
     padding: "5px",
+    width: "100%",
   },
   content_section: {
     backgroundColor: COLORS.background,

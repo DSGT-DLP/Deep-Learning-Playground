@@ -2,6 +2,14 @@ import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 import { auth } from "../../firebase";
 
+const sendToBackend = async (route, data) => {
+  const backendResult = await fetch(route, {
+    method: "POST",
+    body: JSON.stringify(data)
+  }).then((result) => result.json());
+  return backendResult;
+};
+
 const socketEventDict = {
   tabular: "tabular-run",
   image: "img-run",
@@ -22,12 +30,7 @@ const frontendLog = (log) => {
 };
 
 const train_and_output = async (choice, choiceDict) => {
-  const trainResult = await fetch(socketEventDict[choice], {
-    method: "POST",
-    body: JSON.stringify(choiceDict),
-  })
-    .then((result) => result.json());
-  console.log(trainResult);
+  const trainResult = await sendToBackend(socketEventDict[choice], choiceDict);
   return trainResult;
 };
 
@@ -52,19 +55,15 @@ const sendEmail = async (email, problemType) => {
     );
   }
 
-  const emailResult = await fetch("/sendEmail", {
-    method: "POST",
-    body: JSON.stringify({
+  const emailResult = await sendToBackend("sendEmail", {
       email_address: email,
       subject:
         "Your output files and visualizations from Deep Learning Playground",
       body_text:
         "Attached are the output files and visualizations that you just created in Deep Learning Playground on datasciencegt-dlp.com. Please notify us if there are any problems.",
       attachment_array: attachments,
-    }),
-  })
-    .then((result) => result.json());
-  console.log(emailResult);
+    });
+
   if (!emailResult.success) {
     toast.error(emailResult.message);
   }
@@ -80,4 +79,4 @@ const updateUserSettings = async () => {
   }
 };
 
-export { socket, frontendLog, train_and_output, sendEmail, updateUserSettings };
+export { socket, sendToBackend, frontendLog, train_and_output, sendEmail, updateUserSettings };

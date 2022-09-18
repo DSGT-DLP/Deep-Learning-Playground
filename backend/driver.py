@@ -72,11 +72,11 @@ def tabular_run():
             send_progress=lambda x: print(x),
         )
         print(train_loss_results)
-        return send_results(train_loss_results)
+        return send_train_results(train_loss_results)
 
     except Exception:
         print(traceback.format_exc())
-        return send_error()
+        return send_traceback_error()
 
 @app.route("/img-run", methods=["POST"])
 def img_run():
@@ -110,11 +110,11 @@ def img_run():
         )
 
         print("training successfully finished")
-        return send_results(train_loss_results)
+        return send_train_results(train_loss_results)
         
     except Exception as e:
         print(traceback.format_exc())
-        return send_error()
+        return send_traceback_error()
         
     finally:
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
@@ -167,12 +167,13 @@ def send_email_route():
         )
     except Exception:
         print(traceback.format_exc())
-        return send_error()
+        return send_traceback_error()
 
-@socket.on('defaultDataset')
-def send_columns(request_data):
-    default = request_data["using_default_dataset"]
+app.route('/defaultDataset', methods=["POST"])
+def send_columns():
     try:
+        request_data = json.loads(request.data)
+        default = request_data["using_default_dataset"]
         header = get_default_dataset_header(default.upper())
         header_list = header.tolist()
         return socket.emit('defaultColumns', 
@@ -217,24 +218,21 @@ def upload():
         return '200'
     return '200'
 
+def send_success(results):
+    return (json.dumps({ "success": True, **results }), 200)
 
-def send_results(train_loss_results):
-    return (json.dumps({
-            "success": True,
-            "message": "Dataset trained and results outputted successfully",
-            "dl_results": csv_to_json(),
-            "auxiliary_outputs": train_loss_results,
-        }),
-        200
-    )
+def send_error(message):
+    return (json.dumps({ "success": False, "message": message }), 400)
 
-def send_error():
-    return (json.dumps({
-            "success": False,
-            "message": traceback.format_exc(limit=1),
-        }),
-        400
-    )
+def send_train_results(train_loss_results):
+    return send_success({
+        "message": "Dataset trained and results outputted successfully",
+        "dl_results": csv_to_json(),
+        "auxiliary_outputs": train_loss_results,
+    })
+
+def send_traceback_error():
+    return send_error(traceback.format_exc(limit=1))
 
 def send_progress_helper(socket_id):
     def send_progress(progress):

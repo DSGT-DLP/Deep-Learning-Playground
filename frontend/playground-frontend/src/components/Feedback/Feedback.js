@@ -3,6 +3,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import React, { useState } from "react";
 import { COLORS, GENERAL_STYLES } from "../../constants";
 import { toast } from "react-toastify";
+import { sendToBackend } from "../helper_functions/TalkWithBackend";
 
 const Feedback = () => {
   const [email, setEmail] = useState("");
@@ -118,15 +119,11 @@ const Feedback = () => {
 };
 
 const send_feedback_mail = async (firstName, lastName, email, feedback) => {
-  const emailResult = await fetch("/sendEmail", {
-    method: "POST",
-    body: JSON.stringify({
-      email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
-      subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
-      body_text: feedback,
-    }),
-  })
-    .then((result) => result.json());
+  const emailResult = await sendToBackend("sendEmail", {
+    email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
+    subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
+    body_text: feedback,
+  });
 
   if (!emailResult.success) {
     toast.error(emailResult.message);

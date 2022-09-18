@@ -33,14 +33,9 @@ def root(path):
     else:
         return send_from_directory(app.static_folder, "index.html")
     
-@app.route("/tabular-run", methods=["POST"])
+@app.route("/api/tabular-run", methods=["POST"])
 def tabular_run():    
     try:
-        @copy_current_request_context
-        def trial():
-            print(request.files["file"])
-            
-        trial()
         request_data = json.loads(request.data)
         
         user_arch = request_data["user_arch"]
@@ -79,7 +74,7 @@ def tabular_run():
         print(traceback.format_exc())
         return send_traceback_error()
 
-@app.route("/img-run", methods=["POST"])
+@app.route("/api/img-run", methods=["POST"])
 def img_run():
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
@@ -126,7 +121,7 @@ def img_run():
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
 
-@app.route("/sendEmail", methods=["POST"])
+@app.route("/api/sendEmail", methods=["POST"])
 def send_email_route():
     # extract data
     request_data = json.loads(request.data)
@@ -153,7 +148,7 @@ def send_email_route():
         print(traceback.format_exc())
         return send_traceback_error()
 
-@app.route("/defaultDataset", methods=["POST"])
+@app.route("/api/defaultDataset", methods=["POST"])
 def send_columns():
     try:
         request_data = json.loads(request.data)
@@ -165,22 +160,22 @@ def send_columns():
         print(traceback.format_exc())
         return send_traceback_error()
     
-@app.route("/updateUserSettings", methods=["POST"])
+@app.route("/api/updateUserSettings", methods=["POST"])
 def update_user_settings():
     request_data = json.loads(request.data)
     if not authenticate(request_data):
         return send_success({"message": ""})
     user = request.user
 
-@app.route("/upload", methods=["POST"])
+@app.route("/api/upload", methods=["POST"])
 def upload():
     try:
         print(datetime.datetime.now().isoformat() + " upload has started its task")
-        f = request.files['file']
+        file = request.files['file']
         basepath = os.path.dirname(__file__) 
-        upload_path = os.path.join(basepath, 'image_data_uploads', secure_filename(f.filename)) 
-        f.save(upload_path)
-        f.stream.close()
+        upload_path = os.path.join(basepath, 'image_data_uploads', secure_filename(file.filename)) 
+        file.save(upload_path)
+        file.stream.close()
         print(datetime.datetime.now().isoformat() + " upload has finished its task")
         return send_success({"message": "upload success"})
     except Exception:

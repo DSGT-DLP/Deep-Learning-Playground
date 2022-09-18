@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import { auth } from "../../firebase";
 
 const sendToBackend = async (route, data) => {
-  const backendResult = await fetch(route, {
+  const backendResult = await fetch(`/api/${route}`, {
     method: "POST",
     body: JSON.stringify(data)
   }).then((result) => result.json());

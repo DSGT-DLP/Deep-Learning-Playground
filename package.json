@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/karkir0003/Deep-Learning-Playground#readme",
   "dependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "http-proxy-middleware": "^2.0.6"
   }
 }

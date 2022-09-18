@@ -250,7 +250,6 @@ def get_deep_predictions(model: nn.Module, test_loader):
 
 def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device):
     try:
-
         model = model.to(device)
         train_loss = []  # accumulate training loss over each epoch
         test_loss = []  # accumulate testing loss over each epoch

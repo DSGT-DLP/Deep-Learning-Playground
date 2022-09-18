@@ -4,7 +4,7 @@ import datetime
 from werkzeug.utils import secure_filename
 import shutil
 
-from flask import Flask, request, copy_current_request_context, send_from_directory
+from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 
 from backend.common.ai_drive import dl_tabular_drive, dl_img_drive
@@ -182,13 +182,13 @@ def upload():
         print(traceback.format_exc())
         return send_traceback_error()
 
-def send_success(results):
+def send_success(results: dict):
     return (json.dumps({"success": True, **results}), 200)
 
-def send_error(message):
+def send_error(message: str):
     return (json.dumps({"success": False, "message": message}), 400)
 
-def send_train_results(train_loss_results):
+def send_train_results(train_loss_results: dict):
     return send_success({
         "message": "Dataset trained and results outputted successfully",
         "dl_results": csv_to_json(),

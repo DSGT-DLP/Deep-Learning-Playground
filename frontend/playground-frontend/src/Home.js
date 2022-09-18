@@ -57,6 +57,9 @@ const Home = () => {
       value: i,
     }))
   );
+  const [activeColumns, setActiveColumns] = useState([]);
+  const [beginnerMode, setBeginnerMode] = useState(false);
+
   const input_responses = {
     addedLayers: addedLayers,
     targetCol: targetCol?.label,
@@ -85,6 +88,11 @@ const Home = () => {
     setInputFeatureColumnOptions(csvColumnsCopy);
   };
 
+  const onClick = () => {
+    setBeginnerMode(!beginnerMode);
+    setInputKey((e) => e + 1);
+  };
+
   const input_queries = [
     {
       queryText: "Target Column",
@@ -110,6 +118,7 @@ const Home = () => {
       options: OPTIMIZER_NAMES,
       onChange: setOptimizerName,
       defaultValue: optimizerName,
+      beginnerMode: beginnerMode,
     },
     {
       queryText: "Criterion",
@@ -118,6 +127,7 @@ const Home = () => {
       ),
       onChange: setCriterion,
       defaultValue: criterion,
+      beginnerMode: beginnerMode,
     },
     {
       queryText: "Default",
@@ -132,22 +142,24 @@ const Home = () => {
       defaultValue: epochs,
     },
     {
-      queryText: "Shuffle",
-      options: BOOL_OPTIONS,
-      onChange: setShuffle,
-      defaultValue: shuffle,
-    },
-    {
       queryText: "Test Size",
       onChange: setTestSize,
       defaultValue: testSize,
       freeInputCustomRestrictions: { type: "number", min: 0, step: 0.1 },
     },
     {
+      queryText: "Shuffle",
+      options: BOOL_OPTIONS,
+      onChange: setShuffle,
+      defaultValue: shuffle,
+      beginnerMode: beginnerMode,
+    },
+    {
       queryText: "Batch Size",
       onChange: setBatchSize,
       defaultValue: batchSize,
       freeInputCustomRestrictions: { type: "number", min: 2 },
+      beginnerMode: beginnerMode,
     },
   ];
 
@@ -169,9 +181,19 @@ const Home = () => {
   }, [problemType]);
 
   return (
-    <div style={{ padding: 20, marginBottom: 50 }}>
+    <div id="home-page" className="container-fluid">
+      <ChoiceTab />
+      <button
+              style = {{...LAYOUT.row, margin: 7.5}}
+              id="mode-button"
+              className="btn btn-primary"
+              onClick={onClick}
+            >
+            {beginnerMode ? "Beginner" : "Advanced"}
+      </button>
+      <Spacer height={40} />
       <DndProvider backend={HTML5Backend}>
-        <ChoiceTab />
+
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <RectContainer style={styles.fileInput}>
@@ -236,6 +258,7 @@ const Home = () => {
 
       <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
+
         {input_queries.map((e) => (
           <Input {...e} key={e.queryText + inputKey} />
         ))}

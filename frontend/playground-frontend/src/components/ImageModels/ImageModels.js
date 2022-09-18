@@ -17,7 +17,6 @@ import {
   DEFAULT_TRANSFORMS,
   COLORS,
   LAYOUT,
-  GENERAL_STYLES,
 } from "../../constants";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -50,6 +49,8 @@ const ImageModels = () => {
   const [email, setEmail] = useState("");
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [dataUploaded, setDataUploaded] = useState(false);
+  const [beginnerMode, setBeginnerMode] = useState(false);
+  const [inputKey, setInputKey] = useState(0);
 
   const input_responses = {
     batchSize: batchSize,
@@ -70,12 +71,14 @@ const ImageModels = () => {
       options: OPTIMIZER_NAMES,
       onChange: setOptimizerName,
       defaultValue: optimizerName,
+      beginnerMode: beginnerMode,
     },
     {
       queryText: "Criterion",
       options: IMAGE_CLASSIFICATION_CRITERION,
       onChange: setCriterion,
       defaultValue: criterion,
+      beginnerMode: beginnerMode,
     },
     {
       queryText: "Default",
@@ -94,6 +97,7 @@ const ImageModels = () => {
       options: BOOL_OPTIONS,
       onChange: setShuffle,
       defaultValue: shuffle,
+      beginnerMode: beginnerMode,
     },
 
     {
@@ -101,6 +105,7 @@ const ImageModels = () => {
       onChange: setBatchSize,
       defaultValue: batchSize,
       freeInputCustomRestrictions: { type: "number", min: 2 },
+      beginnerMode: beginnerMode,
     },
   ];
 
@@ -116,10 +121,24 @@ const ImageModels = () => {
     [dlpBackendResponse, PROBLEM_TYPES[0]]
   );
 
+  const onClick = () => {
+    setBeginnerMode(!beginnerMode);
+    setInputKey((e) => e + 1);
+  };
+
   return (
     <div style={{ padding: 20 }}>
       <DndProvider backend={HTML5Backend}>
         <ChoiceTab />
+        <button
+              style = {{...LAYOUT.row, margin: 7.5}}
+              id="mode-button"
+              className="btn btn-primary"
+              onClick={onClick}
+            >
+            {beginnerMode ? "Beginner" : "Advanced"}
+        </button>
+        <Spacer height={40} />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <RectContainer style={styles.fileInput}>
@@ -188,7 +207,7 @@ const ImageModels = () => {
       <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
         {input_queries.map((e) => (
-          <Input {...e} key={e.queryText} />
+          <Input {...e} key={e.queryText + inputKey} />
         ))}
       </BackgroundLayout>
 

@@ -11,10 +11,11 @@ const Input = (props) => {
     defaultValue,
     freeInputCustomRestrictions,
     isMultiSelect,
+    beginnerMode,
   } = props;
 
   return (
-    <div style={{ ...LAYOUT.row, margin: 7.5 }}>
+    <div style = {{ ...LAYOUT.row, margin: 7.5, visibility: beginnerMode ? "hidden" : "visible"}}>
       <div style={styles.queryContainer}>
         <p style={styles.queryText}>{queryText}</p>
       </div>
@@ -57,6 +58,7 @@ Input.propTypes = {
     PropTypes.array,
   ]),
   isMultiSelect: PropTypes.bool,
+  beginnerMode: PropTypes.bool,
   freeInputCustomRestrictions: PropTypes.shape({ type: PropTypes.string }),
 };
 

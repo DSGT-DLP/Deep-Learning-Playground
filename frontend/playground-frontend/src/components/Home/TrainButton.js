@@ -14,7 +14,6 @@ import {
   sendEmail,
   train_and_output,
 } from "../helper_functions/TalkWithBackend";
-import { Circle } from "rc-progress";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -22,14 +21,12 @@ const TrainButton = (props) => {
   const { uploadFile, setDLPBackendResponse, choice = "tabular" } = props;
 
   const [pendingResponse, setPendingResponse] = useState(false);
-  const [progress, setProgress] = useState(null);
   const [result, setResult] = useState(null);
   const [uploaded, setUploaded] = useState(false);
   const [trainParams, setTrainParams] = useState(null);
 
   const reset = () => {
     setPendingResponse(false);
-    setProgress(null);
     setResult(null);
   };
 
@@ -81,8 +78,7 @@ const TrainButton = (props) => {
 
   const onClick = async () => {
     setPendingResponse(true);
-    setDLPBackendResponse(undefined);
-    setProgress(0);
+    setDLPBackendResponse(null);
 
     const user_arch = make_obj_param_list(props.addedLayers, "Model");
     if (user_arch === false) return;
@@ -106,7 +102,6 @@ const TrainButton = (props) => {
 
     if (!validateInputs(user_arch)) {
       setPendingResponse(false);
-      setProgress(null);
       return;
     }
 
@@ -115,7 +110,7 @@ const TrainButton = (props) => {
     if (choice === "image" && !props.usingDefaultDataset) {
       const formData = new FormData();
       formData.append("file", uploadFile);
-      await axios.post("/upload", formData);
+      await axios.post("/api/upload", formData);
     }
     const trainResult = await train_and_output(choice, functionMap[choice][1](paramList));
     setResult(trainResult);
@@ -163,11 +158,7 @@ const TrainButton = (props) => {
       >
         Train!
       </button>
-      {pendingResponse ? (
-        <div style={{ marginLeft: 5, marginTop: 10, width: 90, height: 90 }}>
-          <Circle percent={progress} strokeWidth={4} />
-        </div>
-      ) : null}
+      {pendingResponse ? <div className="loader" /> : null}
     </>
   );
 };

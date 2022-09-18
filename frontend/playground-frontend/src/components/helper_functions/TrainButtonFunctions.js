@@ -68,7 +68,7 @@ export const validateTabularInputs = (user_arch, ...args) => {
       alertMessage +=
         "Must specify an input file, target, and features if not selecting default dataset. ";
     }
-    for (let i = 0; i < args.features.length; i++) {
+    for (let i = 0; i < args.features?.length; i++) {
       if (args.targetCol === args.features[i]) {
         alertMessage +=
           "A column that is selected as the target column cannot also be a feature column. ";

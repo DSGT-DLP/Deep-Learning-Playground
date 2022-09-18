@@ -1,13 +1,11 @@
 import os
 import traceback
-import eventlet
-import datetime, threading
+import datetime
 from werkzeug.utils import secure_filename
 import shutil
 
 from flask import Flask, request, copy_current_request_context, send_from_directory
 from flask_cors import CORS
-from flask_socketio import SocketIO
 
 from backend.common.ai_drive import dl_tabular_drive, dl_img_drive
 from backend.common.constants import UNZIPPED_DIR_NAME
@@ -26,7 +24,6 @@ app = Flask(
     ),
 )
 CORS(app)
-socket = SocketIO(app, cors_allowed_origins="*", ping_timeout=600, ping_interval=15)
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
@@ -134,12 +131,7 @@ def send_email_route():
     required_params = ["email_address", "subject", "body_text"]
     for required_param in required_params:
         if required_param not in request_data:
-            return (json.dumps({
-                    "success": False,
-                    "message": "Missing parameter " + required_param
-                }),
-                400
-            )
+            return send_error("Missing parameter " + required_param)
 
     email_address = request_data["email_address"]
     subject = request_data["subject"]
@@ -147,56 +139,38 @@ def send_email_route():
     if "attachment_array" in request_data:
         attachment_array = request_data["attachment_array"]
         if not isinstance(attachment_array, list):
-            return (json.dumps({
-                    "success": False,
-                    "message": "Attachment array must be a list of filepaths"
-                }),
-                400
-            )
+            return send_error("Attachment array must be a list of filepaths")
     else:
         attachment_array = []
 
     # try to send email
     try:
         send_email(email_address, subject, body_text, attachment_array)
-        return (json.dumps({
-                "success": True,
-                "message": "Sent email to " + email_address
-            }),
-            200
-        )
+        return send_success({"message": "Sent email to " + email_address})
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
 
-app.route('/defaultDataset', methods=["POST"])
+@app.route("/defaultDataset", methods=["POST"])
 def send_columns():
     try:
         request_data = json.loads(request.data)
         default = request_data["using_default_dataset"]
         header = get_default_dataset_header(default.upper())
         header_list = header.tolist()
-        return socket.emit('defaultColumns', 
-            {
-                "success": True,
-                "columns": header_list
-            }
-        )
+        return send_success({"columns": header_list})
     except Exception:
         print(traceback.format_exc())
-        return socket.emit('emailResult',
-            {
-                "success": False,
-                "message": traceback.format_exc(limit=1)
-            }
-        )
-@socket.on("updateUserSettings")
-def update_user_settings(request_data):
+        return send_traceback_error()
+    
+@app.route("/updateUserSettings", methods=["POST"])
+def update_user_settings():
+    request_data = json.loads(request.data)
     if not authenticate(request_data):
-        return
+        return send_success({"message": ""})
     user = request.user
 
-@app.route('/upload', methods=['POST'])
+@app.route("/upload", methods=["POST"])
 def upload():
     @copy_current_request_context
     def save_file(closeAfterWrite):
@@ -214,15 +188,15 @@ def upload():
         normalExit = f.stream.close
         f.stream.close = passExit
         save_file(normalExit)
-        socket.emit('uploadComplete')
+        # socket.emit('uploadComplete')
         return '200'
     return '200'
 
 def send_success(results):
-    return (json.dumps({ "success": True, **results }), 200)
+    return (json.dumps({"success": True, **results}), 200)
 
 def send_error(message):
-    return (json.dumps({ "success": False, "message": message }), 400)
+    return (json.dumps({"success": False, "message": message}), 400)
 
 def send_train_results(train_loss_results):
     return send_success({
@@ -234,11 +208,5 @@ def send_train_results(train_loss_results):
 def send_traceback_error():
     return send_error(traceback.format_exc(limit=1))
 
-def send_progress_helper(socket_id):
-    def send_progress(progress):
-        socket.emit('trainingProgress', progress, to=socket_id)
-        eventlet.greenthread.sleep(0)                 # to prevent logs from being grouped and sent together at the end of training
-    return send_progress
-
 if __name__ == "__main__":
-    socket.run(app, debug=True, host="0.0.0.0", port=8000)
+    app.run(debug=True, host="0.0.0.0", port=8000)

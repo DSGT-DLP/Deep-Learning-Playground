@@ -11,7 +11,6 @@ import {
   sendImageJSON,
 } from "../helper_functions/TrainButtonFunctions";
 import {
-  socket,
   sendEmail,
   train_and_output,
 } from "../helper_functions/TalkWithBackend";
@@ -26,19 +25,6 @@ const TrainButton = (props) => {
   const [result, setResult] = useState(null);
   const [uploaded, setUploaded] = useState(false);
   const [trainParams, setTrainParams] = useState(null);
-
-  useEffect(() => {
-    socket.on("trainingProgress", (progressData) => {
-      // triggered by send_progress() function
-      setProgress(Number.parseFloat(progressData));
-    });
-    socket.on("trainingResult", (resultData) => {
-      setResult(resultData);
-    });
-    socket.on("uploadComplete", () => {
-      setUploaded(true);
-    });
-  }, [socket]);
 
   const reset = () => {
     setPendingResponse(false);

@@ -1,4 +1,3 @@
-import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 import { auth } from "../../firebase";
 
@@ -10,27 +9,14 @@ const sendToBackend = async (route, data) => {
   return backendResult;
 };
 
-const socketEventDict = {
+const routeDict = {
   tabular: "tabular-run",
   image: "img-run",
   pretrained: "pretrain-run",
 };
 
-const socket = io(":8000");
-socket.on("connect", () => {
-  frontendLog(`connected to socket`);
-});
-socket.on("connect_error", (err) => {
-  console.log(`connection error due to: ${err.message}`);
-  socket.close();
-});
-
-const frontendLog = (log) => {
-  socket.emit("frontendLog", log);
-};
-
 const train_and_output = async (choice, choiceDict) => {
-  const trainResult = await sendToBackend(socketEventDict[choice], choiceDict);
+  const trainResult = await sendToBackend(routeDict[choice], choiceDict);
   return trainResult;
 };
 
@@ -71,7 +57,7 @@ const sendEmail = async (email, problemType) => {
 
 const updateUserSettings = async () => {
   if (auth.currentUser) {
-    socket.emit("updateUserSettings", {
+    await sendToBackend("updateUserSettings", {
       authorization: await auth.currentUser.getIdToken(true),
     });
   } else {
@@ -79,4 +65,4 @@ const updateUserSettings = async () => {
   }
 };
 
-export { socket, sendToBackend, frontendLog, train_and_output, sendEmail, updateUserSettings };
+export { sendToBackend, train_and_output, sendEmail, updateUserSettings };

@@ -53,7 +53,7 @@ const CSVInputFile = (props) => {
   // handle file upload
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    setFileName(file.name.substring(0, 20));
+    setFileName(file.name?.substring(0, 20));
     const reader = new FileReader();
     reader.onload = (evt) => {
       /* Parse data */

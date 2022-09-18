@@ -11,70 +11,71 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: main to frontend
+    - name: PR from main to frontend
       uses: tretuna/sync-branches@1.4.0
       id: frontend
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         FROM_BRANCH: "main"
         TO_BRANCH: "frontend"
-        CONTENT_COMPARISON: true
 
-    - name: approve frontend
-      uses: hmarr/auto-approve-action@v2.4.0
-      with:
-        pull-request-number: ${{ steps.frontend.outputs.PULL_REQUEST_NUMBER }}
-        github-token: ${{ secrets.GH_PAT }}
-
-    - name: merge frontend
-      uses: pascalgn/automerge-action@v0.15.3
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        PULL_REQUEST: ${{ steps.frontend.outputs.PULL_REQUEST_NUMBER }}
-        MERGE_LABELS: ""
-
-
-    - name: main to backend
+    - name: PR from main to backend
       uses: tretuna/sync-branches@1.4.0
       id: backend
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         FROM_BRANCH: "main"
         TO_BRANCH: "backend"
-        CONTENT_COMPARISON: true
-    
-    - name: approve backend
-      uses: hmarr/auto-approve-action@v2.4.0
-      with:
-        pull-request-number: ${{ steps.backend.outputs.PULL_REQUEST_NUMBER }}
-        github-token: ${{ secrets.GH_PAT }}
 
-    - name: merge backend
-      uses: pascalgn/automerge-action@v0.15.3
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        PULL_REQUEST: ${{ steps.backend.outputs.PULL_REQUEST_NUMBER }}
-        MERGE_LABELS: ""
-
-
-    - name: main to full-stack
+    - name: PR from main to full-stack
       uses: tretuna/sync-branches@1.4.0
       id: full_stack
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         FROM_BRANCH: "main"
         TO_BRANCH: "full-stack"
-        CONTENT_COMPARISON: true
 
-    - name: approve full-stack
+    - name: approve frontend PR
+      uses: hmarr/auto-approve-action@v2.4.0
+      with:
+        pull-request-number: ${{ steps.frontend.outputs.PULL_REQUEST_NUMBER }}
+        github-token: ${{ secrets.GH_PAT }}
+    
+    - name: approve backend PR
+      uses: hmarr/auto-approve-action@v2.4.0
+      with:
+        pull-request-number: ${{ steps.backend.outputs.PULL_REQUEST_NUMBER }}
+        github-token: ${{ secrets.GH_PAT }}
+
+    - name: approve full-stack PR
       uses: hmarr/auto-approve-action@v2.4.0
       with:
         pull-request-number: ${{ steps.full_stack.outputs.PULL_REQUEST_NUMBER }}
         github-token: ${{ secrets.GH_PAT }}
 
-    - name: merge full-stack
+    - name: merge frontend PR
+      uses: pascalgn/automerge-action@v0.15.3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PULL_REQUEST: ${{ steps.frontend.outputs.PULL_REQUEST_NUMBER }}
+        MERGE_LABELS: ""
+        MERGE_RETRY_SLEEP: 60000
+        MERGE_RETRIES: 15
+
+    - name: merge backend PR
+      uses: pascalgn/automerge-action@v0.15.3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PULL_REQUEST: ${{ steps.backend.outputs.PULL_REQUEST_NUMBER }}
+        MERGE_LABELS: ""
+        MERGE_RETRY_SLEEP: 60000
+        MERGE_RETRIES: 15
+
+    - name: merge full-stack PR
       uses: pascalgn/automerge-action@v0.15.3
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PULL_REQUEST: ${{ steps.full_stack.outputs.PULL_REQUEST_NUMBER }}
         MERGE_LABELS: ""
+        MERGE_RETRY_SLEEP: 60000
+        MERGE_RETRIES: 15

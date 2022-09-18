@@ -66,7 +66,6 @@ if __name__ == "__main__":
         n_class=2,
         model_name="inception_v3",
         num_epochs=2,
-        split_fraction=0.2,
         device=torch.device("cpu"),
         in_chan=3,
         loss_func="CELOSS",

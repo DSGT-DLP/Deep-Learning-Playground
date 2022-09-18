@@ -3,8 +3,9 @@ import torch.nn
 from backend.dl.pretrained import train, get_all
 import os
 import pandas as pd
-from backend.common.dataset import dataset_from_zipped
+from backend.common.dataset import dataset_from_zipped, loader_from_zipped
 from backend.common.constants import DEFAULT_TRANSFORM
+from backend.dl.pytorch_pretrained import pytorch_pretrained
 
 train_dir = "" if (os.getcwd()).split("\\")[-1].split("/")[-1] == "tests" else "tests"
 backend_dir = (
@@ -14,6 +15,8 @@ backend_dir = (
 )
 double_zipped = os.path.join(train_dir, "zip_files/better_zipped.zip")
 valid_2 = os.path.join(train_dir, "zip_files/valid_2.zip")
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075
 # torch: others
@@ -37,19 +40,10 @@ valid_2 = os.path.join(train_dir, "zip_files/valid_2.zip")
     ],
 )
 def test_train_valid_input_diff_models(path_to_file, model_name):
-    train_dataset, test_dataset = dataset_from_zipped(
-                path_to_file, test_transform=DEFAULT_TRANSFORM, train_transform=DEFAULT_TRANSFORM
-            )
+    train_loader, test_loader = loader_from_zipped(path_to_file, 2)
 
-    train(
-        train_dataset=train_dataset,
-        test_dataset=test_dataset,
-        model_name=model_name,
-        batch_size=2,
-        loss_func="CELOSS",
-        n_epochs=3,
-        n_classes=2,
-        lr=1e-2,
+    pytorch_pretrained(
+        2, model_name, 5, device, 3, "CELOSS", train_loader, test_loader
     )
 
     val = pd.read_csv(os.path.join(backend_dir, "dl_results.csv"))
@@ -69,18 +63,11 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
     ],
 )
 def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
-
-    train_dataset, test_dataset = dataset_from_zipped(path_to_file, DEFAULT_TRANSFORM, DEFAULT_TRANSFORM)
-    train(
-        train_dataset=train_dataset,
-        test_dataset=test_dataset,
-        model_name=model_name,
-        batch_size=2,
-        loss_func="CELOSS",
-        n_epochs=2,
-        lr=1e-3,
-        n_classes=n_classes,
+    train_loader, test_loader = loader_from_zipped(
+        path_to_file, 2
     )
+
+    pytorch_pretrained(n_classes, model_name, 5, device, 3, "CELOSS", train_loader, test_loader)
 
     val = pd.read_csv(os.path.join(backend_dir, "dl_results.csv"))
     if val["train_loss"].isnull().any():

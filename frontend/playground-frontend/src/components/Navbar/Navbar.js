@@ -63,6 +63,9 @@ const Navbar = ({ setShowLogin }) => {
           <Link to="/Feedback">Feedback</Link>
         </li>
         <li className="navElement">
+          <Link to="/LearnMod">Learning Modules</Link>
+        </li>
+        <li className="navElement">
           <a
             href="https://buy.stripe.com/9AQ3e4eO81X57y8aEG"
             target="_blank"

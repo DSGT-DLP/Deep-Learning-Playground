@@ -28,7 +28,7 @@ function App() {
           <Route path="/About" element={<About />} />
           <Route path="/Wiki" element={<Wiki />} />
           <Route path="/feedback" element={<Feedback />} />
-          <Route path="/learningModules" element= {<LearnMod/>} />
+          <Route path="/LearnMod" element= {<LearnMod/>} />
           <Route path="/dashboard" element= {<DashboardPage/>} />
         </Routes>
         <ToastContainer position="top-center" />

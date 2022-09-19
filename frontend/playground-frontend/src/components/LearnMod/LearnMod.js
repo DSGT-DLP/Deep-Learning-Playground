@@ -1,28 +1,20 @@
 import React from 'react';
 import ClassCard from './ClassCard';
+import getContent from './LearningModulesContent';
 
 const LearnMod = () => {
 
-    const class1 = {title:"Intro to Machine Learning",
-                    points:100,
-                    subClasses:[{title:"Regression",points:100},
-                               {title:"Classification",points:100},
-                               {title:"Modeling",points:100}]
-                    };
-    const class2 = {title:"Intro to Machine Learning",
-                    points:33,
-                    subClasses:[{title:"Regression",points:100},
-                               {title:"Classification",points:0},
-                               {title:"Modeling",points:0}]
-                    };
-    const class3 = {title:"Intro to Machine Learning",
-                    points:0,
-                    subClasses:[{title:"Regression",points:0},
-                               {title:"Classification",points:0},
-                               {title:"Modeling",points:0}]
-                    };
+    const content = getContent.modules;
+    
+    let lessons = content.map(x => (
+        {
+            title: x.title,
+            points: x.points,
+            subClasses: x.subsections
+        }
+    ));
 
-     const lessons = [class1,class1,class1,class2,class3];               
+    console.log(lessons[0]);
     
     return (
         <>
@@ -35,6 +27,7 @@ const LearnMod = () => {
             {
                 lessons.map( (lesson, index) => 
                 {
+                
                     return(
                         <ClassCard info={lesson} key={index}/>
                     );

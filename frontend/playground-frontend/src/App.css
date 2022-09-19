@@ -42,6 +42,10 @@ h2 {
   position: relative;
 }
 
+#app-router {
+  min-height: calc(100vh - 190px)
+}
+
 body {
   margin: 0;
   padding: 0;

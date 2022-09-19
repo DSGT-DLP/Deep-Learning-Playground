@@ -30,16 +30,18 @@ function App() {
   return (
     <div id="app">
       <BrowserRouter>
-        {isOnLoginPage || <Navbar setShowLogin={setShowLogin} />}
-        <Routes>
-          <Route exact path="/" element={user ? <Dashboard /> : <Login />} />
-          <Route path="/train" element={<Home />} />
-          <Route path="/img-models" element={<ImageModels />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/wiki" element={<Wiki />} />
-          <Route path="/feedback" element={<Feedback />} />
-        </Routes>
-        <ToastContainer position="top-center" />
+        <div id="app-router">
+          {isOnLoginPage || <Navbar setShowLogin={setShowLogin} />}
+          <Routes>
+            <Route exact path="/" element={user ? <Dashboard /> : <Login />} />
+            <Route path="/train" element={<Home />} />
+            <Route path="/img-models" element={<ImageModels />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/wiki" element={<Wiki />} />
+            <Route path="/feedback" element={<Feedback />} />
+          </Routes>
+          <ToastContainer position="top-center" />
+        </div>
         {isOnLoginPage || <Footer />}
       </BrowserRouter>
       {showLogin && <LoginPopup setShowLogin={setShowLogin} />}

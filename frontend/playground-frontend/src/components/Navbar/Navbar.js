@@ -41,7 +41,7 @@ const AccountButton = ({ setShowLogin }) => {
 
 const Navbar = ({ setShowLogin }) => {
   const [user] = useAuthState(auth);
-  
+
   return (
     <div className="header-footer" id="nav-bar">
       <Link to="/" className="image-title">

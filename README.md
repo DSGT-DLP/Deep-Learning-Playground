@@ -1,6 +1,6 @@
 # Deep Learning Playground
 
-Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules through a drag and drop interface.
+Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules through a drag and drop interface
 
 > **Deployed website:** https://datasciencegt-dlp.com/ </br>
  **GitHub repo:** https://github.com/karkir0003/Deep-Learning-Playground/ </br> **Owners:** See [CODEOWNERS](./CODEOWNERS)

@@ -28,8 +28,7 @@ def dl_tabular_drive(
     epochs=5,
     shuffle=True,
     batch_size=20,
-    json_csv_data_str="",
-    send_progress=None
+    json_csv_data_str=""
 ):
     """
     Driver function/entrypoint into backend for deep learning model. Onnx file is generated containing model architecture for user to visualize in netron.app
@@ -115,8 +114,7 @@ def dl_tabular_drive(
         optimizer,
         criterion,
         epochs,
-        problem_type,
-        send_progress
+        problem_type
     )
     torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
 
@@ -133,7 +131,6 @@ def dl_img_drive(
     batch_size,
     shuffle,
     IMAGE_UPLOAD_FOLDER,
-    send_progress
 ):    
     print(user_arch)
     model = DLModel(parse_deep_user_architecture(user_arch))
@@ -160,7 +157,7 @@ def dl_img_drive(
     )
 
     train_loss_results= train_deep_image_classification(
-        model, train_loader, test_loader, optimizer, criterion, epochs, device, send_progress=send_progress
+        model, train_loader, test_loader, optimizer, criterion, epochs, device
     )
     return train_loss_results
     

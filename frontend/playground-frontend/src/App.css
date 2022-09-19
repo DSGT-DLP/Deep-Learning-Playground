@@ -633,11 +633,13 @@ textarea {
 /* -------------------------------------------------------------------------- */
 
 .loader {
+  margin-left: 10px;
+  margin-top: 10px;
   border: 16px solid #f3f3f3;
   border-radius: 50%;
   border-top: 16px solid var(--primary);
-  width: 50px;
-  height: 50px;
+  width: 90px;
+  height: 90px;
   -webkit-animation: spin 2s linear infinite; /* Safari */
   animation: spin 2s linear infinite;
 }

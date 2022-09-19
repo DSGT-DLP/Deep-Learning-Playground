@@ -40,8 +40,6 @@ const AccountButton = ({ setShowLogin }) => {
 };
 
 const Navbar = ({ setShowLogin }) => {
-  const [user] = useAuthState(auth);
-  
   return (
     <div className="header-footer" id="nav-bar">
       <Link to="/" className="image-title">
@@ -51,11 +49,10 @@ const Navbar = ({ setShowLogin }) => {
       </Link>
       <ul className="nav">
         <li id="title-name"></li>
-        {user && (
-          <li className="navElement">
-            <Link to="/train">Train</Link>
-          </li>
-        )}
+
+        <li className="navElement">
+          <Link to="/train">Train</Link>
+        </li>
 
         <li className="navElement">
           <Link to="/about">About</Link>

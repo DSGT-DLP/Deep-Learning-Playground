@@ -15,9 +15,21 @@ const Input = (props) => {
   } = props;
 
   return (
-    <div style = {{ ...LAYOUT.row, margin: 7.5, visibility: beginnerMode ? "hidden" : "visible"}}>
+    <div
+      // @ts-ignore
+      style={{
+        ...LAYOUT.row,
+        margin: 7.5,
+        visibility: beginnerMode ? "hidden" : "visible",
+      }}
+    >
       <div style={styles.queryContainer}>
-        <p style={styles.queryText}>{queryText}</p>
+        <p
+          // @ts-ignore
+          style={styles.queryText}
+        >
+          {queryText}
+        </p>
       </div>
       <div style={styles.responseContainer}>
         {options ? (

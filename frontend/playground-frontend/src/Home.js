@@ -18,7 +18,6 @@ import {
   EmailInput,
   Input,
   LayerChoice,
-  Spacer,
   Results,
   TitleText,
   TrainButton,
@@ -29,6 +28,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { socket } from "./components/helper_functions/TalkWithBackend";
 import { toast } from "react-toastify";
+import Spacer from "./components/general/Spacer";
 
 const Home = () => {
   const [csvDataInput, setCSVDataInput] = useState([]);
@@ -39,7 +39,7 @@ const Home = () => {
   const [fileURL, setFileURL] = useState("");
   const [email, setEmail] = useState("");
   const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
-  const [targetCol, setTargetCol] = useState();
+  const [targetCol, setTargetCol] = useState(null);
   const [features, setFeatures] = useState([]);
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
   const [criterion, setCriterion] = useState(
@@ -60,7 +60,7 @@ const Home = () => {
     }))
   );
   const [activeColumns, setActiveColumns] = useState([]);
-  const [beginnerMode, setBeginnerMode] = useState(false);
+  const [beginnerMode, setBeginnerMode] = useState(true);
 
   const input_responses = {
     addedLayers: addedLayers,
@@ -134,8 +134,8 @@ const Home = () => {
     },
     {
       queryText: "Criterion",
-      options: CRITERIONS.filter((crit) =>
-        crit.problem_type.includes(problemType.value)
+      options: CRITERIONS.filter(
+        (crit) => crit.problem_type.indexOf(problemType.value) != -1
       ),
       onChange: setCriterion,
       defaultValue: criterion,
@@ -226,16 +226,15 @@ const Home = () => {
     <div id="home-page" className="container-fluid">
       <ChoiceTab />
       <button
-              style = {{...LAYOUT.row, margin: 7.5}}
-              id="mode-button"
-              className="btn btn-primary"
-              onClick={onClick}
-            >
-            {beginnerMode ? "Beginner" : "Advanced"}
+        style={{ ...LAYOUT.row, margin: 7.5 }}
+        id="mode-button"
+        className="btn btn-primary"
+        onClick={onClick}
+      >
+        {beginnerMode ? "Beginner" : "Advanced"}
       </button>
       <Spacer height={40} />
       <DndProvider backend={HTML5Backend}>
-
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <div className="input-container d-flex flex-column align-items-center justify-content-center">
@@ -302,7 +301,6 @@ const Home = () => {
 
       <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
-
         {input_queries.map((e) => (
           <Input {...e} key={e.queryText + inputKey} />
         ))}

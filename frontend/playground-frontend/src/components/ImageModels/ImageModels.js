@@ -26,7 +26,6 @@ import {
   TitleText,
   BackgroundLayout,
   AddedLayer,
-  Spacer,
   AddNewLayer,
   TrainButton,
   LayerChoice,
@@ -35,6 +34,7 @@ import {
   CodeSnippet,
   ChoiceTab,
 } from "../index";
+import Spacer from "../general/Spacer";
 
 const ImageModels = () => {
   const [addedLayers, setAddedLayers] = useState(DEFAULT_IMG_LAYERS);
@@ -42,14 +42,14 @@ const ImageModels = () => {
   const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
   const [criterion, setCriterion] = useState(IMAGE_CLASSIFICATION_CRITERION[0]);
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
-  const [usingDefaultDataset, setUsingDefaultDataset] = useState();
+  const [usingDefaultDataset, setUsingDefaultDataset] = useState(null);
   const [epochs, setEpochs] = useState(5);
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [batchSize, setBatchSize] = useState(20);
   const [email, setEmail] = useState("");
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [dataUploaded, setDataUploaded] = useState(false);
-  const [beginnerMode, setBeginnerMode] = useState(false);
+  const [beginnerMode, setBeginnerMode] = useState(true);
   const [inputKey, setInputKey] = useState(0);
 
   const input_responses = {
@@ -108,7 +108,6 @@ const ImageModels = () => {
       beginnerMode: beginnerMode,
     },
   ];
-
   const ALL_LAYERS = POSSIBLE_LAYERS.concat(IMAGE_LAYERS);
 
   const ResultMemo = useMemo(
@@ -131,12 +130,12 @@ const ImageModels = () => {
       <DndProvider backend={HTML5Backend}>
         <ChoiceTab />
         <button
-              style = {{...LAYOUT.row, margin: 7.5}}
-              id="mode-button"
-              className="btn btn-primary"
-              onClick={onClick}
-            >
-            {beginnerMode ? "Beginner" : "Advanced"}
+          style={{ ...LAYOUT.row, margin: 7.5 }}
+          id="mode-button"
+          className="btn btn-primary"
+          onClick={onClick}
+        >
+          {beginnerMode ? "Beginner" : "Advanced"}
         </button>
         <Spacer height={40} />
         <TitleText text="Implemented Layers" />

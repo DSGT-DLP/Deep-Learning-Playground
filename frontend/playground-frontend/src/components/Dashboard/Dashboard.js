@@ -131,7 +131,7 @@ const FilledGrid = () => {
                 "&:last-child td, &:last-child th": { border: 0 },
                 cursor: "pointer",
               }}
-              onClick={() => navigate("/home")}
+              onClick={() => navigate("/")}
               hover
             >
               <TableCell component="th" scope="row">

@@ -40,18 +40,22 @@ const AccountButton = ({ setShowLogin }) => {
 };
 
 const Navbar = ({ setShowLogin }) => {
+  const [user] = useAuthState(auth);
+  
   return (
     <div className="header-footer" id="nav-bar">
-      <a href="/" className="image-title">
+      <Link to="/" className="image-title">
         <img src={DSGTLogo} alt="DSGT Logo" width="60" height="60" />
         <div style={{ marginRight: 10 }} />
         Deep Learning Playground
-      </a>
+      </Link>
       <ul className="nav">
         <li id="title-name"></li>
-        <li className="navElement">
-          <Link to="/home">Home</Link>
-        </li>
+        {user && (
+          <li className="navElement">
+            <Link to="/train">Train</Link>
+          </li>
+        )}
 
         <li className="navElement">
           <Link to="/about">About</Link>

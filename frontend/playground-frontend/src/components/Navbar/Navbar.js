@@ -22,7 +22,7 @@ const AccountButton = ({ setShowLogin }) => {
           <div id="accountButtons">
             <button className="accountButton">Dashboard</button>
             <button className="accountButton">Settings</button>
-            <button className="accountButton">My Learning</button>
+            <button className="accountButton">Learn</button>
             <button className="accountButton" onClick={() => auth.signOut()}>
               Log out
             </button>

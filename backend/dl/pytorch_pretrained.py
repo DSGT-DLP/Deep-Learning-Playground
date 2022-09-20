@@ -19,7 +19,7 @@ def pytorch_pretrained(
     train_loader,
     valid_loader,
     optimizer_name="ADAM",
-    send_progress=lambda x: print("send progerss", x),
+    # send_progress=lambda x: print("send progerss", x),
 ):
 
     print("getting model")
@@ -37,7 +37,7 @@ def pytorch_pretrained(
         loss_func,
         num_epochs,
         device,
-        send_progress,
+        # send_progress,
     )
 
 

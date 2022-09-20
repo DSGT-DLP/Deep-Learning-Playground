@@ -12,7 +12,7 @@ const sendToBackend = async (route, data) => {
 const routeDict = {
   tabular: "tabular-run",
   image: "img-run",
-  pretrained: "new-pretrain",
+  pretrained: "new-pretrain-run",
 };
 
 const train_and_output = async (choice, choiceDict) => {

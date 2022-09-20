@@ -12,6 +12,7 @@ from backend.dl.dl_model import DLModel
 from backend.dl.dl_model_parser import parse_deep_user_architecture
 from backend.dl.dl_trainer import train_deep_model, train_deep_image_classification
 from backend.dl.dl_model_parser import get_object
+from backend.dl.pytorch_pretrained import pytorch_pretrained
 
 from backend.ml.ml_trainer import train_classical_ml_model
 
@@ -161,6 +162,30 @@ def dl_img_drive(
     )
     return train_loss_results
     
+
+def dl_pretrain_drive(train_transform, test_transform, criterion, optimizer_name, default, epochs, batch_size, shuffle, model_name):
+    print("backend started")
+    train_transform = parse_deep_user_architecture(train_transform)
+    test_transform = parse_deep_user_architecture(test_transform)
+    zip_file = ""
+    if not default:
+        for x in os.listdir(IMAGE_UPLOAD_FOLDER):
+            if x != ".gitkeep":
+                zip_file = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
+                break
+        train_loader, valid_loader = loader_from_zipped(zip_file, batch_size, shuffle, train_transform, test_transform)
+    else:
+        train_loader, valid_loader = get_img_default_dataset_loaders(default, train_transform, test_transform, batch_size, shuffle)
+
+    print("got datasets")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    train_loss_results = pytorch_pretrained(
+        10, model_name, epochs, device, 3, criterion, train_loader, valid_loader, optimizer_name
+    )
+
+    return train_loss_results
+
 def ml_drive(
     user_model,
     problem_type,

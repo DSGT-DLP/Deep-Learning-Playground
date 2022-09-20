@@ -7,7 +7,7 @@ import shutil
 from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 
-from backend.common.ai_drive import dl_tabular_drive, dl_img_drive
+from backend.common.ai_drive import dl_pretrain_drive, dl_tabular_drive, dl_img_drive
 from backend.common.constants import UNZIPPED_DIR_NAME
 from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
@@ -102,6 +102,43 @@ def img_run():
             shuffle,
             IMAGE_UPLOAD_FOLDER,
         )
+
+        print("training successfully finished")
+        return send_train_results(train_loss_results)
+        
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+        
+    finally:
+        for x in os.listdir(IMAGE_UPLOAD_FOLDER):
+            if (x != ".gitkeep"):
+                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER) , x)
+                if (os.path.isdir(file_rem)):
+                    shutil.rmtree(file_rem)
+                else:
+                    os.remove(file_rem)
+        if os.path.exists(UNZIPPED_DIR_NAME):
+            shutil.rmtree(UNZIPPED_DIR_NAME)
+
+@app.route("/api/new-pretrain-run", methods=["POST"])
+def pretrain_run():
+    IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
+
+    try:
+        request_data = json.loads(request.data)
+
+        train_transform = request_data["train_transform"]
+        test_transform = request_data["test_transform"]
+        criterion = request_data["criterion"]
+        optimizer_name = request_data["optimizer_name"]
+        default = request_data["using_default_dataset"]
+        epochs = request_data["epochs"]
+        batch_size = request_data["batch_size"]
+        shuffle = request_data["shuffle"]
+        model_name = request_data["model_name"]
+
+        train_loss_results =  dl_pretrain_drive(train_transform, test_transform, criterion, optimizer_name, default, epochs, batch_size, shuffle, model_name)
 
         print("training successfully finished")
         return send_train_results(train_loss_results)

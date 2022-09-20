@@ -1,16 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
-import RectContainer from "./RectContainer";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "../../constants";
 
 const _InputOutputPromptResponse = (props) => {
   const { param_key, allParamInputs, setAddedLayers, thisLayerIndex } = props;
-  const { parameter_name, value } = allParamInputs[param_key];
+  const { parameter_name, value, min, max } = allParamInputs[param_key];
 
   return (
     <div style={{ ...LAYOUT.row, alignItems: "center" }}>
-      <p style={styles.input_prompt}>{`${parameter_name}:`}</p>
+      <p style={styles.input_prompt}>{`${parameter_name}:`}</p>&nbsp;
       <input
+        type={parameter_name === "(H, W)" ? "" : "number"}
+        min={min}
+        max={max}
         value={value}
         onChange={(e) =>
           // updates the addedLayers state with the current user input value of parameters
@@ -28,12 +30,9 @@ const _InputOutputPromptResponse = (props) => {
 };
 
 const AddedLayer = (props) => {
-  const { thisLayerIndex, addedLayers, setAddedLayers, onDelete, style } =
-    props;
+  const { thisLayerIndex, addedLayers, setAddedLayers, onDelete } = props;
   const thisLayer = addedLayers[thisLayerIndex];
   const { display_name, parameters } = thisLayer;
-
-  styles = { ...styles, ...style };
 
   // converts the parameters object for each layer into an array of parameter objects
   const param_array = [];
@@ -50,14 +49,16 @@ const AddedLayer = (props) => {
   });
 
   return (
-    <div style={LAYOUT.column}>
-      <RectContainer style={styles.layer_box}>
-        <button style={styles.delete_btn} onClick={onDelete}>
+    <div className="layer-input">
+      <div className="layer-box layer-container text-center d-flex justify-content-center align-items-center">
+        <button className="delete-layer" onClick={onDelete}>
           ❌
         </button>
-        <p style={styles.text}>{display_name}</p>
-      </RectContainer>
-      <div style={styles.input_box}>{param_array}</div>
+        {display_name}
+      </div>
+      {param_array.length ? (
+        <div className="input-box">{param_array}</div>
+      ) : null}
     </div>
   );
 };
@@ -77,7 +78,6 @@ AddedLayer.propTypes = {
   addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
   setAddedLayers: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  style: PropTypes.object,
 };
 
 export default AddedLayer;
@@ -87,20 +87,7 @@ let styles = {
     backgroundColor: COLORS.layer,
     width: 130,
   },
-  delete_btn: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    backgroundColor: "transparent",
-    borderWidth: 0,
-  },
   text: { ...GENERAL_STYLES.p, color: "white", fontSize: 25 },
-  input_box: {
-    margin: 7.5,
-    backgroundColor: "white",
-    width: 150,
-    paddingInline: 5,
-  },
   input_prompt: {
     fontSize: 15,
     fontWeight: "bold",

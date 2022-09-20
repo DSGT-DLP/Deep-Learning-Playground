@@ -5,8 +5,18 @@ export const POSSIBLE_LAYERS = [
     display_name: "Linear",
     object_name: "nn.Linear",
     parameters: {
-      inputSize: { index: 0, parameter_name: "Input size" },
-      outputSize: { index: 1, parameter_name: "Output size" },
+      inputSize: {
+        index: 0,
+        parameter_name: "Input size",
+        min: 1,
+        max: 1600,
+      },
+      outputSize: {
+        index: 1,
+        parameter_name: "Output size",
+        min: 1,
+        max: 1600,
+      },
     },
     tooltip_info: (
       <>
@@ -69,7 +79,7 @@ export const POSSIBLE_LAYERS = [
     display_name: "Softmax",
     object_name: "nn.Softmax",
     parameters: {
-      inputSize: { index: 0, parameter_name: "dim" },
+      inputSize: { index: 0, parameter_name: "dim", min: -3, max: 2 },
     },
     tooltip_info: (
       <>
@@ -143,7 +153,7 @@ export const POSSIBLE_LAYERS = [
     display_name: "LogSoftmax",
     object_name: "nn.LogSoftmax",
     parameters: {
-      inputSize: { index: 0, parameter_name: "dim" },
+      inputSize: { index: 0, parameter_name: "dim", min: -3, max: 2 },
     },
     tooltip_info: (
       <>
@@ -178,22 +188,32 @@ export const IMAGE_LAYERS = [
       in_channels: {
         index: 0,
         parameter_name: "in channels",
+        min: 1,
+        max: 16,
       },
       out_channels: {
         index: 1,
         parameter_name: "out channels",
+        min: 1,
+        max: 16,
       },
       kernel_size: {
         index: 2,
         parameter_name: "kernel size",
+        min: 1,
+        max: 1000,
       },
       stride: {
         index: 3,
         parameter_name: "stride",
+        min: 1,
+        max: 1000,
       },
       padding: {
         index: 4,
         parameter_name: "padding",
+        min: 1,
+        max: 1000,
       },
     },
     tooltip_info: (
@@ -233,6 +253,8 @@ export const IMAGE_LAYERS = [
       num_features: {
         index: 0,
         parameter_name: "num features",
+        min: 1,
+        max: 16,
       },
     },
     tooltip_info: (
@@ -266,10 +288,17 @@ export const IMAGE_LAYERS = [
     display_name: "MaxPool2d",
     object_name: "nn.MaxPool2d",
     parameters: {
-      kernel_size: { index: 0, parameter_name: "Kernel size" },
+      kernel_size: {
+        index: 0,
+        parameter_name: "Kernel size",
+        min: 1,
+        max: 1000,
+      },
       stride: {
         index: 1,
         parameter_name: "stride",
+        min: 1,
+        max: 1000,
       },
     },
     tooltip_info: (
@@ -297,10 +326,15 @@ export const IMAGE_LAYERS = [
     ),
   },
   {
-    display_name: "AdaptiveAvgPool2d",
+    display_name: "AdaptAvgPool2d",
     object_name: "nn.AdaptiveAvgPool2d",
     parameters: {
-      output_size: { index: 0, parameter_name: "Output size" },
+      output_size: {
+        index: 0,
+        parameter_name: "Output size",
+        min: 1,
+        max: 16,
+      },
     },
     tooltip_info: (
       <>
@@ -332,7 +366,7 @@ export const IMAGE_LAYERS = [
     display_name: "Dropout",
     object_name: "nn.Dropout",
     parameters: {
-      p: { index: 0, parameter_name: "Probability" },
+      p: { index: 0, parameter_name: "Probability", min: 0, max: 1 },
     },
     tooltip_info: (
       <>
@@ -365,8 +399,8 @@ export const IMAGE_LAYERS = [
     display_name: "Flatten",
     object_name: "nn.Flatten",
     parameters: {
-      start_dim: { index: 0, parameter_name: "start dim" },
-      end_dim: { index: 1, parameter_name: "end dim" },
+      start_dim: { index: 0, parameter_name: "start dim", min: -4, max: 3 },
+      end_dim: { index: 1, parameter_name: "end dim", min: -4, max: 3 },
     },
     tooltip_info: (
       <>
@@ -398,7 +432,7 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Random Horizontal Flip",
     object_name: "transforms.RandomHorizontalFlip",
     parameters: {
-      probability: { index: 0, parameter_name: "Prob" },
+      probability: { index: 0, parameter_name: "prob", min: 0, max: 1 },
     },
     label: "Random Horizontal Flip",
     value: "RandomHorizontalFlip",
@@ -408,7 +442,7 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Random Vertical Flip",
     object_name: "transforms.RandomVerticalFlip",
     parameters: {
-      p: { index: 0, parameter_name: "probability" },
+      p: { index: 0, parameter_name: "prob", min: 0, max: 1 },
     },
     label: "Random Vertical Flip",
     value: "RandomVerticalFlip",
@@ -425,7 +459,13 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Resize",
     object_name: "transforms.Resize",
     parameters: {
-      size: { index: 0, parameter_name: "(H, W)" },
+      size: {
+        index: 0,
+        parameter_name: "(H, W)",
+        min: 1,
+        max: 1000,
+        default: "(32, 32)",
+      },
     },
     label: "Resize",
     value: "Resize",
@@ -434,7 +474,12 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Gaussian Blur",
     object_name: "transforms.GaussianBlur",
     parameters: {
-      kernel_size: { index: 0, parameter_name: "kernel size" },
+      kernel_size: {
+        index: 0,
+        parameter_name: "kernel size",
+        min: 1,
+        max: 1000,
+      },
     },
     label: "Gaussian Blur",
     value: "GaussianBlur",
@@ -450,8 +495,20 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Normalize",
     object_name: "transforms.Normalize",
     parameters: {
-      mean: { index: 0, parameter_name: "mean" },
-      std: { index: 1, parameter_name: "std" },
+      mean: {
+        index: 0,
+        parameter_name: "mean",
+        min: -1000,
+        max: 1000,
+        default: 0,
+      },
+      std: {
+        index: 1,
+        parameter_name: "std",
+        min: -1000,
+        max: 1000,
+        default: 1,
+      },
     },
     label: "Normalize",
     value: "Normalize",

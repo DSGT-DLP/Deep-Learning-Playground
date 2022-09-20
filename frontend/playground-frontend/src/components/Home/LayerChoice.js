@@ -43,8 +43,9 @@ const LayerChoice = (props) => {
   return (
     <RectContainer
       ref2={drag}
-      style={{ backgroundColor: COLORS.addLayer, width: 180 }}
-      dataTestid={`box`}
+      style={{ opacity }}
+      dataTestid="box"
+      className="d-flex justify-content-center align-items-center layer-box layer-choice"
     >
       <div>
         <HtmlTooltip
@@ -60,7 +61,7 @@ const LayerChoice = (props) => {
           </button>
         </HtmlTooltip>
       </div>
-      <p style={{ ...styles.text, opacity }}>{layer.display_name}</p>
+      {layer.display_name}
     </RectContainer>
   );
 };

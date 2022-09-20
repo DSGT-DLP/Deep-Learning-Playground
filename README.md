@@ -1,6 +1,6 @@
 # Deep Learning Playground
 
-Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules through a drag and drop interface.
+Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules through a drag and drop interface
 
 > **Deployed website:** https://datasciencegt-dlp.com/ </br>
  **GitHub repo:** https://github.com/karkir0003/Deep-Learning-Playground/ </br> **Owners:** See [CODEOWNERS](./CODEOWNERS)
@@ -13,6 +13,8 @@ Have the following installed first:
 1. [NodeJS v16](https://nodejs.org/en/download/)
 2. NPM v8
 3. [Anaconda](https://www.anaconda.com/)
+4. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). This is important in configuring your dev credentials
+5. [GitKraken](https://help.gitkraken.com/gitkraken-client/how-to-install/)
 
 ## Shortcuts:
 | Terminal   | Procedure   | Command |
@@ -31,13 +33,13 @@ npm run installf
 ```
 npm run installb
 ```
-## Running the backend
-```
-npm run startb
-```
 ## Running the frontend
 ```
 npm run startf
+```
+## Running the backend
+```
+npm run startb
 ```
 
 # Backend

@@ -121,16 +121,18 @@ class BaseDDBUtil:
         )
         self.table = table
         
-    def create_gsi(self, index_name: str, attribute_name: str, attribute_type: str, read_capacity: int, write_capacity: int,
-                        projection_type: str, nonkey_attributes: List[str] = None) -> Literal['Success']:
+    def create_gsi(self, attribute_name: str, attribute_type: str = "HASH", projection_type: str = "KEYS_ONLY", 
+                   read_capacity: int = 10, write_capacity: int = 10, nonkey_attributes: List[str] = None) -> Literal['Success']:
         """Function that adds a global secondary index to the associated table"""
         
-        if (type(index_name) != str or type(attribute_name) != str or type(attribute_type) != str or type(read_capacity) != int or 
+        if (type(attribute_name) != str or type(attribute_type) != str or type(read_capacity) != int or 
                 type(write_capacity) != int or type(projection_type) != str):
             raise ValueError("Cannot create global secondary index with invalid argument")        
         
         if attribute_name not in self.EnumClass.Attribute:
             raise ValueError(f"Attribute '{attribute_name}' not found in table {self.table_name}")
+        if attribute_type not in ['HASH', 'RANGE']:
+            raise ValueError(f"Invalid attribute_type argument")
         if projection_type not in ['ALL', 'KEYS_ONLY', 'INCLUDE']:
             raise ValueError(f"Invalid projection_type argument")
         
@@ -158,7 +160,7 @@ class BaseDDBUtil:
             GlobalSecondaryIndexUpdates=[
                 {
                     'Create': {
-                        'IndexName': index_name,
+                        'IndexName': attribute_name,
                         'KeySchema': [
                             {
                                 'AttributeName': attribute_name,

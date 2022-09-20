@@ -1,7 +1,58 @@
+import { toast } from "react-toastify";
+
 /**
  * This file's puropose is to generalise the methods of TrainButton (focusing on Tabular, Image, and Pretrained models)
  *
  */
+const numberRegex = /^-?[1-9]{1}[0-9]*$/;
+const tupleRegex = /^\(([1-9]{1}[0-9]*), ?([1-9]{1}[0-9]*)\)$/;
+
+export const validateParameter = (source, index, parameter) => {
+  const { parameter_name, min, max } = parameter;
+  let { value } = parameter;
+  if (parameter_name === "(H, W)") {
+    if (tupleRegex.test(value)) {
+      const result = value.match(tupleRegex);
+      const H = result[1].valueOf();
+      const W = result[2].valueOf();
+
+      if (H < min || H > max) {
+        toast.error(
+          `${source} Layer ${
+            index + 1
+          }: H not an integer in range [${min}, ${max}]`
+        );
+        return false;
+      } else if (W < min || W > max) {
+        toast.error(
+          `${source} Layer ${
+            index + 1
+          }: W not an integer in range [${min}, ${max}]`
+        );
+        return false;
+      }
+      return true;
+    }
+    toast.error(
+      `${source} Layer ${
+        index + 1
+      }: ${parameter_name} not of appropriate format: (H, W)`
+    );
+  } else {
+    if (numberRegex.test(value)) {
+      value = value.valueOf();
+      if (value >= min && value <= max) {
+        return true;
+      }
+    }
+    toast.error(
+      `${source} Layer ${
+        index + 1
+      }: ${parameter_name} not an integer in range [${min}, ${max}]`
+    );
+  }
+  return false;
+};
 
 // TABULAR
 export const validateTabularInputs = (user_arch, ...args) => {
@@ -17,7 +68,7 @@ export const validateTabularInputs = (user_arch, ...args) => {
       alertMessage +=
         "Must specify an input file, target, and features if not selecting default dataset. ";
     }
-    for (let i = 0; i < args.features.length; i++) {
+    for (let i = 0; i < args.features?.length; i++) {
       if (args.targetCol === args.features[i]) {
         alertMessage +=
           "A column that is selected as the target column cannot also be a feature column. ";
@@ -67,7 +118,7 @@ export const validateImageInputs = (user_arch, ...args) => {
   if (!args.optimizerName)
     alertMessage += "An optimizer name must be specified. ";
   if (args.batchSize < 2) alertMessage += "Batch size cannot be less than 2";
-  if (!args.dataUploaded && !args.usingDefaultDataset)
+  if (!args.uploadFile && !args.usingDefaultDataset)
     alertMessage += "Please specify a valid data from default or upload";
   // can easily add a epoch limit
 

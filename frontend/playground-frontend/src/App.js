@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import {
   About,
   LoginPopup,
@@ -9,6 +9,8 @@ import {
   ImageModels,
   Footer,
   Pretrained,
+  Dashboard,
+  Login,
 } from "./components";
 import { ToastContainer } from "react-toastify";
 import Home from "./Home";
@@ -17,13 +19,18 @@ import "./App.css";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
+  const currentURL = window.location.href.split("/");
+  const isOnLoginPage = currentURL[currentURL.length - 1] === "login";
 
   return (
     <div id="app">
-      <Router>
-        <Navbar setShowLogin={setShowLogin} />
+      <BrowserRouter>
+        {isOnLoginPage || <Navbar setShowLogin={setShowLogin} />}
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route exact path="/" element={<Navigate to="/home" />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/img-models" element={<ImageModels />} />
           <Route path="/About" element={<About />} />
           <Route path="/pretrained" element={<Pretrained />} />
@@ -31,8 +38,8 @@ function App() {
           <Route path="/feedback" element={<Feedback />} />
         </Routes>
         <ToastContainer position="top-center" />
-        <Footer />
-      </Router>
+        {isOnLoginPage || <Footer />}
+      </BrowserRouter>
       {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
     </div>
   );

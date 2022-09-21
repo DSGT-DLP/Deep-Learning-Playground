@@ -16,10 +16,10 @@ import {
   DEFAULT_IMG_LAYERS,
   DEFAULT_TRANSFORMS,
   COLORS,
-  LAYOUT,
 } from "../../constants";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { Switch } from "@mui/material";
 
 import {
   Input,
@@ -130,14 +130,15 @@ const ImageModels = () => {
     <div id="image-models">
       <DndProvider backend={HTML5Backend}>
         <ChoiceTab />
-        <button
-              style = {{...LAYOUT.row, margin: 7.5}}
-              id="mode-button"
-              className="btn btn-primary"
-              onClick={onClick}
-            >
-            {beginnerMode ? "Beginner" : "Advanced"}
-        </button>
+        <div>
+        {beginnerMode ? "Beginner" : "Advanced"}
+        </div>
+        <Switch
+                id="mode-button"
+                onClick={onClick}
+              >
+              
+        </Switch>
         <Spacer height={40} />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>

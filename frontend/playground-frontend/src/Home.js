@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { DEFAULT_ADDED_LAYERS, LAYOUT } from "./constants";
+import { DEFAULT_ADDED_LAYERS } from "./constants";
 import {
   BOOL_OPTIONS,
   CRITERIONS,
@@ -29,6 +29,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { socket } from "./components/helper_functions/TalkWithBackend";
 import { toast } from "react-toastify";
+import { Switch } from "@mui/material";
 
 const Home = () => {
   const [csvDataInput, setCSVDataInput] = useState([]);
@@ -225,14 +226,15 @@ const Home = () => {
   return (
     <div id="home-page" className="container-fluid">
       <ChoiceTab />
-      <button
-              style = {{...LAYOUT.row, margin: 7.5}}
+      <div>
+        {beginnerMode ? "Beginner" : "Advanced"}
+      </div>
+      <Switch
               id="mode-button"
-              className="btn btn-primary"
               onClick={onClick}
             >
-            {beginnerMode ? "Beginner" : "Advanced"}
-      </button>
+            
+      </Switch>
       <Spacer height={40} />
       <DndProvider backend={HTML5Backend}>
 

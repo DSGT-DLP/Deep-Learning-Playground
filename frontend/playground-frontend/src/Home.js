@@ -26,10 +26,10 @@ import {
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { socket } from "./components/helper_functions/TalkWithBackend";
 import { toast } from "react-toastify";
 import { Switch } from "@mui/material";
 import Spacer from "./components/general/Spacer";
+import { sendToBackend } from "./components/helper_functions/TalkWithBackend";
 
 const Home = () => {
   const [csvDataInput, setCSVDataInput] = useState([]);
@@ -194,13 +194,21 @@ const Home = () => {
   }, [problemType]);
 
   useEffect(() => {
-    if (usingDefaultDataset.value) {
-      socket.emit("defaultDataset", {
-        using_default_dataset: usingDefaultDataset.value,
-      });
-    } else {
-      setActiveColumns(uploadedColumns);
-    }
+    (async () => {
+      if (usingDefaultDataset.value) {
+        const datasetResult = await sendToBackend("defaultDataset", {
+          using_default_dataset: usingDefaultDataset.value,
+        });
+
+        if (!datasetResult.success) {
+          toast.error(datasetResult.message);
+        } else {
+          setActiveColumns(datasetResult.columns);
+        }
+      } else {
+        setActiveColumns(uploadedColumns);
+      }
+    })();
   }, [usingDefaultDataset, uploadedColumns]);
 
   useEffect(() => {
@@ -214,14 +222,6 @@ const Home = () => {
     setFeatures(null);
     setInputKey((e) => e + 1);
   }, [activeColumns]);
-
-  socket.on("defaultColumns", (result) => {
-    if (!result.success) {
-      toast.error(result.message);
-    } else {
-      setActiveColumns(result.columns);
-    }
-  });
 
   return (
     <div id="home-page" className="container-fluid">

@@ -51,6 +51,7 @@ const ImageModels = () => {
   const [dataUploaded, setDataUploaded] = useState(false);
   const [beginnerMode, setBeginnerMode] = useState(true);
   const [inputKey, setInputKey] = useState(0);
+  const [uploadFile, setUploadFile] = useState(null);
 
   const input_responses = {
     batchSize: batchSize,
@@ -62,7 +63,7 @@ const ImageModels = () => {
     usingDefaultDataset: usingDefaultDataset?.value,
     trainTransforms: trainTransforms,
     testTransforms: testTransforms,
-    dataUploaded: dataUploaded,
+    uploadFile: uploadFile,
   };
 
   const input_queries = [
@@ -142,7 +143,10 @@ const ImageModels = () => {
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <div className="input-container d-flex flex-column align-items-center justify-content-center">
-            <LargeFileUpload setDataUploaded={setDataUploaded} />
+            <LargeFileUpload
+              uploadFile={uploadFile}
+              setUploadFile={setUploadFile}
+            />
           </div>
 
           {addedLayers.map((_, i) => (

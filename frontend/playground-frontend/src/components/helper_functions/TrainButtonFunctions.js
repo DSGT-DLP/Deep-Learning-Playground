@@ -68,7 +68,7 @@ export const validateTabularInputs = (user_arch, ...args) => {
       alertMessage +=
         "Must specify an input file, target, and features if not selecting default dataset. ";
     }
-    for (let i = 0; i < args.features.length; i++) {
+    for (let i = 0; i < args.features?.length; i++) {
       if (args.targetCol === args.features[i]) {
         alertMessage +=
           "A column that is selected as the target column cannot also be a feature column. ";
@@ -118,7 +118,7 @@ export const validateImageInputs = (user_arch, ...args) => {
   if (!args.optimizerName)
     alertMessage += "An optimizer name must be specified. ";
   if (args.batchSize < 2) alertMessage += "Batch size cannot be less than 2";
-  if (!args.dataUploaded && !args.usingDefaultDataset)
+  if (!args.uploadFile && !args.usingDefaultDataset)
     alertMessage += "Please specify a valid data from default or upload";
   // can easily add a epoch limit
 

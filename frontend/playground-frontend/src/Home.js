@@ -230,7 +230,7 @@ const Home = () => {
         {beginnerMode ? "Beginner" : "Advanced"}
       </div>
       <Switch
-              id="mode-button"
+              id="mode-switch"
               onClick={onClick}
             >
             

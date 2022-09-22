@@ -48,7 +48,6 @@ const ImageModels = () => {
   const [batchSize, setBatchSize] = useState(20);
   const [email, setEmail] = useState("");
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
-  const [dataUploaded, setDataUploaded] = useState(false);
   const [beginnerMode, setBeginnerMode] = useState(true);
   const [inputKey, setInputKey] = useState(0);
   const [uploadFile, setUploadFile] = useState(null);

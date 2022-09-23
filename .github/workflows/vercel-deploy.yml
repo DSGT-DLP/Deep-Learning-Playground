@@ -1,0 +1,18 @@
+name: Deploy to Vercel
+on:
+  push:
+    branches: [main]
+  issue_comment:
+    types: [created]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      name: PR Comment
+      - steps:
+        - run: |
+          echo "GitHub ref: ${{ github.ref }} \
+          PR: ${{ github.event.issue.number }} "

@@ -6,9 +6,14 @@ on:
     types: [labeled]
 
 jobs:
+  check:
+    outputs:
+      status: ${{ github.event.label.name }} == 'backend' && 'True' || 'False'
+  
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.label.name }} == 'backend'
+    needs: check
+    if: needs.check.outputs.status == 'True'
     steps:
       - uses: actions/checkout@v3
 

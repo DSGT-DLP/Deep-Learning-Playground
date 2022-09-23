@@ -17,7 +17,7 @@ TRAIN_TIME_CSV = "epoch_times.csv"
 NETRON_URL = "https://netron.app/"
 OPEN_FILE_BUTTON = "open-file-button"
 CLASSICAL_ML_CONFUSION_MATRIX = (
-    "./frontend/playground-frontend/src/visualization_output/confusion_matrix.png"
+    "./frontend/playground-frontend/src/backend_outputs/visualization_output/confusion_matrix.png"
 )
 CLASSICAL_ML_RESULT_CSV_PATH = f"ml_results.csv"
 EPOCH = "epoch"

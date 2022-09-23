@@ -14,6 +14,7 @@ from backend.dl.dl_trainer import train_deep_model, train_deep_image_classificat
 from backend.dl.dl_model_parser import get_object
 
 from backend.ml.ml_trainer import train_classical_ml_model
+from backend.ml.ml_model_parser import get_object_ml
 
 def dl_tabular_drive(
     user_arch,
@@ -184,13 +185,13 @@ def ml_drive(
     """
     try:
         if default and problem_type.upper() == "CLASSIFICATION":
-            dataset = load_iris()
-            X, y = get_default_dataset(dataset)
+            # dataset = load_iris()
+            X, y = get_default_dataset(default.upper(), target, features)
             print(y.head())
         elif default and problem_type.upper() == "REGRESSION":
             # If the user specifies no dataset, use california housing as default regression
-            dataset = fetch_california_housing()
-            X, y = get_default_dataset(dataset)
+            # dataset = fetch_california_housing()
+            X, y = get_default_dataset(default.upper(), target, features)
         else:
             input_df = pd.read_csv(CSV_FILE_NAME)
             y = input_df[target]
@@ -205,9 +206,10 @@ def ml_drive(
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=test_size, shuffle=shuffle
             )
-        model = get_object(user_model)
-        train_classical_ml_model(
+        model = get_object_ml(user_model)
+        train_ml_results = train_classical_ml_model(
             model, X_train, X_test, y_train, y_test, problem_type=problem_type
         )
+        return train_ml_results
     except Exception as e:
         raise e

@@ -7,7 +7,7 @@ import shutil
 from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 
-from backend.common.ai_drive import dl_tabular_drive, dl_img_drive
+from backend.common.ai_drive import dl_tabular_drive, dl_img_drive, ml_drive
 from backend.common.constants import UNZIPPED_DIR_NAME
 from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email

@@ -2,11 +2,14 @@
 Trainer for classical ML models 
 """
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, roc_auc_score
 from backend.common.constants import CLASSICAL_ML_CONFUSION_MATRIX, CLASSICAL_ML_RESULT_CSV_PATH
+from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
 from backend.common.utils import ProblemType
 
+# TODO: (Idea) Option to set some hyperparemeters to Auto (for which the model will do a search and choose best train accuracy)
 
 def train_classical_ml_classification(model, X_train, X_test, y_train, y_test):
     """
@@ -20,13 +23,20 @@ def train_classical_ml_classification(model, X_train, X_test, y_train, y_test):
         y_test (pd.DataFrame): target value corresponding to each row in X_test
     """
     model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
 
+    # TODO: differentiate between type of model selected , and then decide between hard or soft label
+    y_pred = model.predict_proba(X_test)
     # confusion matrix logic. Get sense of true positives, false positives, true negatives, false negatives
-    conf_matrix = confusion_matrix(y_test, y_pred)
-    disp = ConfusionMatrixDisplay.from_predictions(y_test, y_pred)
-    disp.plot()
+    conf_matrix = generate_confusion_matrix(y_test, y_pred, model_type= "ml")
     plt.savefig(CLASSICAL_ML_CONFUSION_MATRIX)
+
+    # Collecting additional outputs to give to the frontend
+    auxiliary_outputs = {}
+    auxiliary_outputs["confusion_matrix"] = conf_matrix
+
+    # generate AUC curve (if soft labels exist)
+    # TODO: generate AUC curve
+    return auxiliary_outputs
 
 
 def train_classical_ml_regression(model, X_train, X_test, y_train, y_test):
@@ -42,6 +52,20 @@ def train_classical_ml_regression(model, X_train, X_test, y_train, y_test):
     """
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
+    y_pred_train = model.predict(X_train)
+
+    #create popular metrics
+    train_rmse = np.sum((y_pred_train - y_train) ** 2)
+    train_mape = np.sum(np.abs((y_pred_train, y_train)))
+    test_rmse = np.sum((y_pred - y_test)**2)
+    test_mape = np.sum(np.abs((y_pred, y_test)))
+    print(f"Regression Root Mean Squared Error => test: {test_rmse}\t train: {train_rmse}")
+    print(f"Regression Mean Absolute Percentage Error: {test_mape}\t train: {train_mape}")
+
+
+    # TODO: Create Scatterplots of predicted vs actuals
+
+    # TODO: Output or return these somewhere
 
 
 def train_classical_ml_model(model, X_train, X_test, y_train, y_test, problem_type):
@@ -57,6 +81,6 @@ def train_classical_ml_model(model, X_train, X_test, y_train, y_test, problem_ty
         problem_type (str): "classification" or "regression" model
     """
     if problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION):
-        train_classical_ml_classification(model, X_train, X_test, y_train, y_test)
+        return train_classical_ml_classification(model, X_train, X_test, y_train, y_test)
     elif problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION):
-        train_classical_ml_regression(model, X_train, X_test, y_train, y_test)
+        return train_classical_ml_regression(model, X_train, X_test, y_train, y_test)

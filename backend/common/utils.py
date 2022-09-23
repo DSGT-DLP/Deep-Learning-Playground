@@ -23,6 +23,7 @@ from enum import Enum
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
 from sklearn.metrics import confusion_matrix, roc_curve, roc_auc_score
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 import csv
 import os
 import json
@@ -177,7 +178,7 @@ def generate_train_time_csv(epoch_time):
     df.to_csv(TRAIN_TIME_CSV)
 
 
-def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
+def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch, model_type = 'dl'):
     """
     Given the prediction results and label, generate confusion matrix (only applicable to classification tasks)
     Args:
@@ -191,11 +192,15 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     categoryList = []
 
     label = np.array(labels_last_epoch).flatten()
+    # do Deep learning specific transformations to the data TODO: These should be moved to the run_dl_classification_model part before passing in
+    if model_type == "dl":
+        for batch in y_pred_last_epoch:
+            y_pred = np.concatenate((y_pred, np.argmax(batch, axis=1)), axis=None) #flatten and concatenate
+        categoryList = np.arange(0, len(y_pred_last_epoch[0][0])).tolist()
 
-    for batch in y_pred_last_epoch:
-        y_pred = np.concatenate((y_pred, np.argmax(batch, axis=1)), axis=None) #flatten and concatenate
-
-    categoryList = np.arange(0, len(y_pred_last_epoch[0][0])).tolist()
+    else:
+        y_pred = np.argmax(y_pred_last_epoch, axis = 1)
+        categoryList = np.arange(0, y_pred_last_epoch.shape[-1]).tolist()
 
     plt.clf()
     label_np = label

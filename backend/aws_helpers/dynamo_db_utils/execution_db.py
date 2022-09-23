@@ -7,14 +7,17 @@ class ExecutionData(BaseData):
     """Data class to hold the attribute values of a record of the execution-table DynamoDB table"""
     execution_id: str
     user_id: str
+    name: str
     timestamp: str
-    execution_source: str
-    results_uri: str
-    onnx_uri: str
-    pt_uri: str
-    metadata: str
+    data_source: str
+    status: str
+    progress: int
     
-@enumclass(DataClass=ExecutionData, execution_source=['TABULAR', 'PRETRAINED', 'IMAGE', 'AUDIO', 'TEXTUAL'])
+@enumclass(
+    DataClass=ExecutionData,
+    data_source=['TABULAR', 'PRETRAINED', 'IMAGE', 'AUDIO', 'TEXTUAL'],
+    status=['QUEUED', 'STARTING', 'UPLOADING', 'TRAINING', 'SUCCESS', 'ERROR']
+)
 class ExecutionEnums:
     """Class that holds the enums associated with the ExecutionDDBUtil class. It includes:
         ExecutionEnums.Attribute - Enum that defines the schema of the execution-table. It holds the attribute names of the table
@@ -29,4 +32,3 @@ class ExecutionDDBUtil(BaseDDBUtil):
 def get_execution_table(region:str = AWS_REGION) -> BaseDDBUtil:
     """Retrieves the execution-table of an input region as an instance of ExecutionDDBUtil"""
     return ExecutionDDBUtil(EXECUTION_TABLE_NAME, region)
-

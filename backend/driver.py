@@ -12,7 +12,6 @@ from backend.common.constants import UNZIPPED_DIR_NAME
 from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
-from backend.firebase_helpers.authenticate import authenticate
 from backend.firebase_helpers.firebase import init_firebase
 
 init_firebase()
@@ -159,13 +158,6 @@ def send_columns():
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
-    
-@app.route("/api/updateUserSettings", methods=["POST"])
-def update_user_settings():
-    request_data = json.loads(request.data)
-    if not authenticate(request_data):
-        return send_success({"message": ""})
-    user = request.user
 
 @app.route("/api/upload", methods=["POST"])
 def upload():

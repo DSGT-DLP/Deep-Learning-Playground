@@ -27,7 +27,7 @@ import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "react-toastify";
-import { Switch } from "@mui/material";
+import { FormControlLabel, Switch } from "@mui/material";
 import Spacer from "./components/general/Spacer";
 import { sendToBackend } from "./components/helper_functions/TalkWithBackend";
 
@@ -226,8 +226,10 @@ const Home = () => {
   return (
     <div id="home-page" className="container-fluid">
       <ChoiceTab />
-      <div>{beginnerMode ? "Beginner" : "Advanced"}</div>
-      <Switch id="mode-switch" onClick={onClick}></Switch>
+      <FormControlLabel
+        control={<Switch id="mode-switch" onClick={onClick}></Switch>}
+        label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
+      />
       <Spacer height={40} />
       <DndProvider backend={HTML5Backend}>
         <TitleText text="Implemented Layers" />

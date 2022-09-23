@@ -19,7 +19,7 @@ import {
 } from "../../constants";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Switch } from "@mui/material";
+import { FormControlLabel, Switch } from "@mui/material";
 
 import {
   Input,
@@ -129,8 +129,10 @@ const ImageModels = () => {
     <div id="image-models">
       <DndProvider backend={HTML5Backend}>
         <ChoiceTab />
-        <div>{beginnerMode ? "Beginner" : "Advanced"}</div>
-        <Switch id="mode-switch" onClick={onClick}></Switch>
+        <FormControlLabel
+          control={<Switch id="mode-switch" onClick={onClick}></Switch>}
+          label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
+        />
         <Spacer height={40} />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>

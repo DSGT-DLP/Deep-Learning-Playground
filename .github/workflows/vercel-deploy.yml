@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-  
+
       - name: PR Comment
       - run: |
-        echo "GitHub ref: ${{ github.ref }} \
-        PR: ${{ github.event.issue.number }} "
+          echo "\
+            GitHub ref: ${{ github.ref }} \
+            PR: ${{ github.event.issue.number }} \
+          "

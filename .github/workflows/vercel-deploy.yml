@@ -12,6 +12,8 @@ jobs:
       - name: Check label or branch
         id: checker
         run: echo ::set-ouput name=to_run::${{ ((github.event.label.name == 'backend') || (github.ref == 'refs/heads/main')) && 'True' || 'False' }}
+      - name: Check checker
+        run: echo "${{ steps.checker.outputs.to_run }}"
     outputs:
       status: ${{ steps.checker.outputs.to_run }}
   

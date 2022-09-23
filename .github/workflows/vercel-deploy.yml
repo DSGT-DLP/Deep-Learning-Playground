@@ -15,5 +15,5 @@ jobs:
         run: |
           echo "\
             GitHub ref: ${{ github.ref }} \
-            PR: ${{ github.event.pull_request.labels }} \
+            PR: ${{ github.event.label.name }} \
           "

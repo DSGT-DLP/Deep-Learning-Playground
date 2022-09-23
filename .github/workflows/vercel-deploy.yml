@@ -2,7 +2,7 @@ name: Deploy to Vercel
 on:
   push:
     branches: [main]
-  pull-request:
+  pull_request:
     branches: [full-stack]
   issue_comment:
     types: [created]

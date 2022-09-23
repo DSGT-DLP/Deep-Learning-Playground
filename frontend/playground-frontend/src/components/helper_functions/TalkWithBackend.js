@@ -56,8 +56,7 @@ const sendEmail = async (email, problemType) => {
 };
 
 const isLoggedIn = async () => {
-  return await auth.currentUser?.getIdToken(true),
-  toast.error("Not logged in");
+  return await auth.currentUser?.getIdToken(true), toast.error("Not logged in");
 };
 
 export { sendToBackend, train_and_output, sendEmail, isLoggedIn };

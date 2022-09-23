@@ -12,21 +12,18 @@ jobs:
       - name: Check label or branch
         id: checker
         run: echo ::set-output name=to_run::${{ ((github.event.label.name == 'backend') || (github.ref == 'refs/heads/main')) && 'True' || 'False' }}
-      - name: Check checker
-        run: echo "${{ steps.checker.outputs.to_run }}"
     outputs:
       status: ${{ steps.checker.outputs.to_run }}
   
   deploy:
     runs-on: ubuntu-latest
     needs: check
+    if: needs.check.outputs.status == 'True'
     steps:
       - uses: actions/checkout@v3
-
       - name: PR Comment
         run: |
           echo "\
-            output: ${{ needs.check.outputs.status }}
             GitHub ref: ${{ github.ref }} \
             PR: ${{ github.event.label.name }} \
             ${{ github.event.label.name == 'backend' && 'True' || 'False' }} \

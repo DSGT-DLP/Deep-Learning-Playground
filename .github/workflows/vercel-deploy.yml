@@ -18,13 +18,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: check
-    if: needs.check.outputs.status == 'True'
     steps:
       - uses: actions/checkout@v3
 
       - name: PR Comment
         run: |
           echo "\
+            output: ${{ needs.check.outputs.status }}
             GitHub ref: ${{ github.ref }} \
             PR: ${{ github.event.label.name }} \
             ${{ github.event.label.name == 'backend' && 'True' || 'False' }} \

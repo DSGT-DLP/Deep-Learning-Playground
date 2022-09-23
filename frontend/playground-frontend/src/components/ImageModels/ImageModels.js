@@ -129,15 +129,8 @@ const ImageModels = () => {
     <div id="image-models">
       <DndProvider backend={HTML5Backend}>
         <ChoiceTab />
-        <div>
-        {beginnerMode ? "Beginner" : "Advanced"}
-        </div>
-        <Switch
-                id="mode-switch"
-                onClick={onClick}
-              >
-              
-        </Switch>
+        <div>{beginnerMode ? "Beginner" : "Advanced"}</div>
+        <Switch id="mode-switch" onClick={onClick}></Switch>
         <Spacer height={40} />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>

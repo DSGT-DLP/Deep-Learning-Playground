@@ -226,15 +226,8 @@ const Home = () => {
   return (
     <div id="home-page" className="container-fluid">
       <ChoiceTab />
-      <div>
-        {beginnerMode ? "Beginner" : "Advanced"}
-      </div>
-      <Switch
-              id="mode-switch"
-              onClick={onClick}
-            >
-            
-      </Switch>
+      <div>{beginnerMode ? "Beginner" : "Advanced"}</div>
+      <Switch id="mode-switch" onClick={onClick}></Switch>
       <Spacer height={40} />
       <DndProvider backend={HTML5Backend}>
         <TitleText text="Implemented Layers" />

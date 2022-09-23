@@ -3,8 +3,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [full-stack]
-  issue_comment:
+    branches: [labeled]
 
 jobs:
   deploy:
@@ -16,5 +15,5 @@ jobs:
         run: |
           echo "\
             GitHub ref: ${{ github.ref }} \
-            PR: ${{ github.event.issue.number }} \
+            PR: ${{ github.event.pull_request.labels }} \
           "

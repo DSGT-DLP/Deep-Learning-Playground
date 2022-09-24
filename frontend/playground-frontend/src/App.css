@@ -18,11 +18,13 @@ Author URI:   https://datasciencegt.org/
   --primary: #003058;
   --secondary: #b3a36a;
   --tertiary: #cd7bff;
+  --half-translucent: rgba(255, 255, 255, 0.5);
+  --hi-translucent: rgba(255, 255, 255, 0.8);
   --whitehover: #f7f7f7;
   --footer-dark-blue: #00233f;
   --dark-grey: #d3d3d3;
-  --input: #E2E2E2;
-  --add-layer: #F2ECFF;
+  --input: #e2e2e2;
+  --add-layer: #f2ecff;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -34,7 +36,7 @@ Author URI:   https://datasciencegt.org/
 }
 
 h2 {
-  font-size: calc(0.7rem + .9vw);
+  font-size: calc(0.7rem + 0.9vw);
 }
 
 #app {
@@ -53,7 +55,6 @@ img {
 }
 input {
   border-width: 0.5px;
-  height: 25px;
   border-color: var(--tertiary);
   border-radius: 20px;
   padding: 5px;
@@ -85,7 +86,8 @@ input {
   color: white;
 }
 
-.btn-primary:hover, .btn-primary:focus {
+.btn-primary:hover,
+.btn-primary:focus {
   background-color: var(--secondary);
 }
 
@@ -299,7 +301,8 @@ input {
 /*	Home and Image Models
 /* -------------------------------------------------------------------------- */
 
-#home-page, #image-models {
+#home-page,
+#image-models {
   padding: 30px 20px;
 }
 
@@ -532,7 +535,6 @@ textarea {
 /*	Wiki
 /* -------------------------------------------------------------------------- */
 
-
 .wiki-content {
   font-size: medium;
   padding-top: 0;
@@ -543,11 +545,55 @@ textarea {
 /*	Login
 /* -------------------------------------------------------------------------- */
 
+/* Login */
+
 #login-page {
   background-color: var(--primary);
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: white;
+  height: 100vh;
+}
+
+#login-page .description {
+  color: darkgray;
+  font-size: larger;
+}
+
+#login-page h1.title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 3.2rem;
+  background: -webkit-linear-gradient(var(--tertiary), white);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#login-page .main-container {
+  width: min(750px, 90%);
+}
+
+#login-page .main-container .form-container {
+  color: black;
+  font-weight: bold;
+  border-radius: 0.375rem;
+  width: 60%;
+  margin-inline: auto;
+  background-color: var(--half-translucent);
+}
+
+#login-page .main-container .form-container .form-label {
+  font-size: larger;
+}
+
+#login-page #sign-up {
+  text-decoration: none;
+}
+
+#login-page input {
+  margin-inline: auto;
 }
 
 #login-page .logo {

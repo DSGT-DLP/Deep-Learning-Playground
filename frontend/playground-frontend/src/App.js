@@ -24,7 +24,7 @@ function App() {
   return (
     <div id="app">
       <BrowserRouter>
-        {isOnLoginPage || <Navbar setShowLogin={setShowLogin} />}
+        <Navbar setShowLogin={setShowLogin} />
         <Routes>
           <Route exact path="/" element={<Navigate to="/home" />} />
           <Route path="/login" element={<Login />} />

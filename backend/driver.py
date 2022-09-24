@@ -4,7 +4,7 @@ import datetime
 from werkzeug.utils import secure_filename
 import shutil
 
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, send_from_directory, jsonify
 from flask_cors import CORS
 
 from backend.common.ai_drive import dl_tabular_drive, dl_img_drive
@@ -15,6 +15,20 @@ from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 
 init_firebase()
+
+import base64
+
+
+# New libraries
+import numpy as np
+import re  
+import nltk  
+nltk.download('stopwords')
+from nltk.corpus import stopwords  
+from nltk.stem.porter import *  
+from gensim.models import word2vec, KeyedVectors
+stemmer = PorterStemmer()
+import json
 
 app = Flask(
     __name__,
@@ -158,6 +172,31 @@ def send_columns():
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
+
+@app.route('/wordVec',methods = ['POST'])
+def wordVec():
+    # Preprocessing
+    content = request.json
+    letters_only = re.sub("[^a-zA-Z]", " ", content['raw_review'])
+    words = letters_only.lower().split()
+    stops = set(stopwords.words("english"))
+    meaningful_words = [w for w in words if not w in stops]
+    singles = [stemmer.stem(word) for word in meaningful_words]
+    processedData = " ".join( singles )
+    
+    # Corpus
+    corpus = []  
+
+    word_list = processedData.split()  
+    corpus.append(word_list)   
+    
+    # Model
+    model = word2vec.Word2Vec(sentences=corpus, vector_size=int(content['vectorSize']), window=int(content['windowSize']), min_count=int(content['minCount']), workers=int(content['workers']))
+    model.save("word2vec.model")
+    with open("word2vec.model", "rb") as word2vec_file:
+        encoded_string = base64.b64encode(word2vec_file.read())
+    return jsonify({'base64Str':encoded_string.decode('utf-8'),'text_output':str([(item[0],round(item[1],2)) for item in model.wv.most_similar(content['inputWord'])])})
+
 
 @app.route("/api/upload", methods=["POST"])
 def upload():

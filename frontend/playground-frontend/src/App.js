@@ -10,6 +10,7 @@ import {
   Footer,
   Dashboard,
   Login,
+  NLP
 } from "./components";
 import { ToastContainer } from "react-toastify";
 import Home from "./Home";
@@ -34,6 +35,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/wiki" element={<Wiki />} />
           <Route path="/feedback" element={<Feedback />} />
+          <Route path="/nlp" element={<NLP/>}/>
         </Routes>
         <ToastContainer position="top-center" />
         {isOnLoginPage || <Footer />}

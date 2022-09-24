@@ -46,3 +46,5 @@ export { default as ImageModels } from "./ImageModels/ImageModels";
 
 // Pretrained page
 export { default as LargeFileUpload } from "./general/LargeFileUpload";
+
+export { default as NLP} from "./NLP/NLP";

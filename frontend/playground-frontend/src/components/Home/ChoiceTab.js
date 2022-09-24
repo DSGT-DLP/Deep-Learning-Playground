@@ -30,6 +30,17 @@ const ChoiceTab = () => {
           Image Models
         </Link>
       </button>
+
+      <button
+        style={{
+          ...styles.button,
+          backgroundColor: getBackground("/NLP"),
+        }}
+      >
+        <Link to="/NLP" style={styles.linkelEment}>
+          NLP
+        </Link>
+      </button>
     </div>
   );
 };

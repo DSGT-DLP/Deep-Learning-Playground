@@ -553,7 +553,6 @@ textarea {
   flex-direction: column;
   align-items: center;
   color: white;
-  height: 100vh;
 }
 
 #login-page .description {

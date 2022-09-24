@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import {
   About,
@@ -11,16 +11,31 @@ import {
   Dashboard,
   Login,
 } from "./components";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase";
 import { ToastContainer } from "react-toastify";
 import Home from "./Home";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "./redux/userLogin";
+
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
-  const [currentUser, setCurrentUser] = useState();
-  const currentURL = window.location.href.split("/");
-  const isOnLoginPage = currentURL[currentURL.length - 1] === "login";
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      const userDetails = {
+        email: user?.email ?? null,
+        uid: user?.uid ?? null,
+        displayName: user?.displayName ?? null,
+        emailVerified: user?.emailVerified ?? null,
+      };
+      if (user) dispatch(setCurrentUser(userDetails));
+    });
+  }, []);
 
   return (
     <div id="app">
@@ -37,7 +52,7 @@ function App() {
           <Route path="/feedback" element={<Feedback />} />
         </Routes>
         <ToastContainer position="top-center" />
-        {isOnLoginPage || <Footer />}
+        <Footer />
       </BrowserRouter>
       {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
     </div>

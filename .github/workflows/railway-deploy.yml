@@ -1,4 +1,4 @@
-name: Deploy to Vercel
+name: Deploy to Railway
 on:
   push:
     branches: [main]

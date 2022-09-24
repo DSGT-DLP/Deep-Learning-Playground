@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import shutil
 
 from flask import Flask, request, send_from_directory
+from backend.middleware import middleware
 from flask_cors import CORS
 
 from backend.common.ai_drive import dl_tabular_drive, dl_img_drive
@@ -12,7 +13,6 @@ from backend.common.constants import UNZIPPED_DIR_NAME
 from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
-from backend.firebase_helpers.authenticate import authenticate
 from backend.firebase_helpers.firebase import init_firebase
 
 init_firebase()
@@ -25,6 +25,8 @@ app = Flask(
 )
 CORS(app)
 
+app.wsgi_app = middleware(app.wsgi_app)
+
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def root(path):
@@ -34,7 +36,7 @@ def root(path):
         return send_from_directory(app.static_folder, "index.html")
     
 @app.route("/api/tabular-run", methods=["POST"])
-def tabular_run():    
+def tabular_run():   
     try:
         request_data = json.loads(request.data)
         
@@ -163,9 +165,9 @@ def send_columns():
 @app.route("/api/updateUserSettings", methods=["POST"])
 def update_user_settings():
     request_data = json.loads(request.data)
-    if not authenticate(request_data):
-        return send_success({"message": ""})
-    user = request.user
+    if request.environ['user'] is None:
+        return send_error("User is not authenticated") 
+    user = request.environ['user']
 
 @app.route("/api/upload", methods=["POST"])
 def upload():

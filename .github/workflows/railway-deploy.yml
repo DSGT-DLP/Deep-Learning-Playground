@@ -92,7 +92,7 @@ jobs:
         uses: thollander/actions-comment-pull-request@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          message: ${{ format('Deployment Live: {0}', steps.railway_config.outputs.link) }}
+          message: ${{ format('Deployment Live at {0}', steps.railway_config.outputs.link) }}
 
       - name: Update Deployment Status (failure)
         if: failure()

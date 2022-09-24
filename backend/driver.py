@@ -3,6 +3,7 @@ import traceback
 import datetime
 from werkzeug.utils import secure_filename
 import shutil
+from dotenv import load_dotenv
 
 from flask import Flask, request, send_from_directory
 from flask_cors import CORS
@@ -16,10 +17,16 @@ from backend.firebase_helpers.firebase import init_firebase
 
 init_firebase()
 
+PORT = os.getenv("PORT")
+if PORT is not None:
+    PORT = int(PORT)
+else:
+    PORT = 8000
+
 app = Flask(
     __name__,
     static_folder=os.path.join(
-        os.path.dirname(os.getcwd()), "frontend", "playground-frontend", "build"
+        os.getcwd(), "frontend", "playground-frontend", "build"
     ),
 )
 CORS(app)
@@ -191,4 +198,4 @@ def send_traceback_error():
     return send_error(traceback.format_exc(limit=1))
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8000)
+    app.run(debug=True, host="0.0.0.0", port=PORT)

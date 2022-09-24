@@ -31,10 +31,15 @@ jobs:
         with:
           remove-labels: 'deploy'
 
-      - name: PR Comment
+      - name: Create GitHub deployment
+        id: deployment
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          environment: ${{ steps.environment.outputs.environment }}
+
+      - name: Print Inputs
         run: |
           echo "\
-            Github Ref: ${{ github.ref }}  \
-            PR: ${{ github.event.label.name }}  \
-            Environment: ${{ steps.environment.outputs.environment }}  \
+            Github Ref: ${{ github.ref }} \
+            Environment: ${{ steps.environment.outputs.environment }} \
           "

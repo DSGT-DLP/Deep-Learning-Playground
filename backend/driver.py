@@ -3,6 +3,7 @@ import traceback
 import datetime
 from werkzeug.utils import secure_filename
 import shutil
+from dotenv import load_dotenv
 
 from flask import Flask, request, send_from_directory
 from flask_cors import CORS
@@ -16,20 +17,26 @@ from backend.firebase_helpers.firebase import init_firebase
 
 init_firebase()
 
+load_dotenv('.env')
+PORT = int(os.getenv("PORT"))
+
 app = Flask(
     __name__,
     static_folder=os.path.join(
-        os.path.dirname(os.getcwd()), "frontend", "playground-frontend", "build"
+        os.getcwd(), "frontend", "playground-frontend", "build"
     ),
 )
 CORS(app)
-
+print(os.path.dirname(os.getcwd()))
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def root(path):
+    print(app.static_folder)
     if path != "" and os.path.exists(app.static_folder + "/" + path):
+        print(send_from_directory(app.static_folder, path))
         return send_from_directory(app.static_folder, path)
     else:
+        print('two', send_from_directory(app.static_folder, "index.html"))
         return send_from_directory(app.static_folder, "index.html")
     
 @app.route("/api/tabular-run", methods=["POST"])
@@ -191,4 +198,4 @@ def send_traceback_error():
     return send_error(traceback.format_exc(limit=1))
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8000)
+    app.run(debug=True, host="0.0.0.0", port=PORT)

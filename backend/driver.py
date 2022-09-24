@@ -18,11 +18,10 @@ from backend.firebase_helpers.firebase import init_firebase
 init_firebase()
 
 PORT = os.getenv("PORT")
-if PORT:
+if PORT is not None:
     PORT = int(PORT)
 else:
-    load_dotenv('.env')
-    PORT = int(os.getenv("PORT"))
+    PORT = 8000
 
 app = Flask(
     __name__,

@@ -20,7 +20,7 @@ const Input = (props) => {
       style={{
         ...LAYOUT.row,
         margin: 7.5,
-        visibility: beginnerMode ? "hidden" : "visible",
+        display: beginnerMode ? "none" : "flex",
       }}
     >
       <div style={styles.queryContainer}>

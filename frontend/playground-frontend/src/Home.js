@@ -155,17 +155,17 @@ const Home = () => {
       defaultValue: epochs,
     },
     {
-      queryText: "Test Size",
-      onChange: setTestSize,
-      defaultValue: testSize,
-      freeInputCustomRestrictions: { type: "number", min: 0, step: 0.1 },
-    },
-    {
       queryText: "Shuffle",
       options: BOOL_OPTIONS,
       onChange: setShuffle,
       defaultValue: shuffle,
       beginnerMode: beginnerMode,
+    },
+    {
+      queryText: "Test Size",
+      onChange: setTestSize,
+      defaultValue: testSize,
+      freeInputCustomRestrictions: { type: "number", min: 0, step: 0.1 },
     },
     {
       queryText: "Batch Size",

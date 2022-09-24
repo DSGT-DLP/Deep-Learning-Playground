@@ -27,13 +27,7 @@ function App() {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      const userDetails = {
-        email: user?.email ?? null,
-        uid: user?.uid ?? null,
-        displayName: user?.displayName ?? null,
-        emailVerified: user?.emailVerified ?? null,
-      };
-      if (user) dispatch(setCurrentUser(userDetails));
+      if (user) dispatch(setCurrentUser(JSON.stringify(user)));
     });
   }, []);
 

@@ -547,6 +547,29 @@ textarea {
 
 /* Login */
 
+.login-button {
+  height: 50px;
+  width: 175px;
+  border-radius: 0.375rem;
+}
+
+.login-button img {
+  max-height: 70%;
+  margin-inline: auto;
+}
+
+.login-button.google {
+  background-color: white;
+}
+
+.login-button.github {
+  background-color: #171515;
+}
+
+.login-button.email {
+  background-color: var(--primary);
+}
+
 #login-page {
   background-color: var(--primary);
   display: flex;
@@ -571,7 +594,7 @@ textarea {
 }
 
 #login-page .main-container {
-  width: min(750px, 90%);
+  width: min(800px, 90%);
 }
 
 #login-page .main-container .form-container {
@@ -587,6 +610,11 @@ textarea {
   font-size: larger;
 }
 
+#login-page .main-container .form-container .email-buttons {
+  width: 50%;
+  margin-inline: auto;
+}
+
 #login-page #sign-up {
   text-decoration: none;
 }
@@ -595,14 +623,8 @@ textarea {
   margin-inline: auto;
 }
 
-#login-page .logo {
-  display: flex;
-  flex-direction: row;
-  height: 15vh;
-  align-items: center;
-  font-size: 1.5rem;
-  color: white;
-}
+
+/* Login Popup */
 
 #login-popup {
   position: absolute;

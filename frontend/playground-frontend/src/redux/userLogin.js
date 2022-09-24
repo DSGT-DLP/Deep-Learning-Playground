@@ -5,12 +5,26 @@ export const currentUserSlice = createSlice({
   initialState: {
     email: null,
     uid: null,
+    displayName: null,
+    emailVerified: null,
   },
   reducers: {
     setCurrentUser: (state, action) => {
-      state.email = action.payload.email;
-      state.uid = action.payload.uid;
-      console.log(3243, action.payload);
+      const payload = JSON.parse(action.payload);
+      if (!payload) {
+        state.email = null;
+        state.uid = null;
+        state.displayName = null;
+        state.emailVerified = null;
+        return;
+      }
+
+      const { email, uid, displayName, emailVerified } = payload;
+      state.email = email ?? null;
+      state.uid = uid ?? null;
+      state.displayName = displayName ?? null;
+      state.emailVerified = emailVerified ?? null;
+      console.log(3243, payload.email);
     },
   },
 });

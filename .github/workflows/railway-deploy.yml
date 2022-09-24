@@ -70,10 +70,8 @@ jobs:
 
       - name: Railway Deploy
         run: |
-          echo "Setting Railway Environment"
-          railway environment ${{ steps.environment.outputs.environment }}
           echo "Starting Railway Deployment"
-          railway up
+          railway up -e ${{ steps.environment.outputs.environment }}
           echo "Deployment Complete. View at ${{ steps.railway_config.outputs.link }}"
         env:
           RAILWAY_TOKEN: ${{ steps.railway_config.outputs.token }}

@@ -8,7 +8,7 @@ const firebaseConfig = {
   projectId: "deep-learning-playground-8d2ce",
   storageBucket: "deep-learning-playground-8d2ce.appspot.com",
   messagingSenderId: "771338023154",
-  appId: "1:771338023154:web:8ab6e73fc9c646426a606b"
+  appId: "1:771338023154:web:8ab6e73fc9c646426a606b",
 };
 
 // Initialize Firebase

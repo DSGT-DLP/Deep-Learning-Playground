@@ -6,19 +6,19 @@ on:
     types: [labeled]
 
 jobs:
-  check:
+  check_trigger:
     runs-on: ubuntu-latest
     steps:
       - name: Check label or branch
-        id: checker
+        id: check
         run: echo ::set-output name=to_run::${{ ((github.event.label.name == 'deploy') || (github.ref == 'refs/heads/main')) && 'True' || 'False' }}
     outputs:
-      status: ${{ steps.checker.outputs.to_run }}
+      status: ${{ steps.check.outputs.to_run }}
   
   deploy:
     runs-on: ubuntu-latest
-    needs: check
-    if: needs.check.outputs.status == 'True'
+    needs: check_trigger
+    if: needs.check_trigger.outputs.status == 'True'
     steps:
       - uses: actions/checkout@v3
 

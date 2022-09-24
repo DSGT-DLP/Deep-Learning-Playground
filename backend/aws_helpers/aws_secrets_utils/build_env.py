@@ -14,17 +14,20 @@ from backend.aws_helpers.aws_secrets_utils import aws_secrets
 from backend.aws_helpers.aws_secrets_utils import aws_constants
 
 def get_secret():
-    create_env_file(json.loads(aws_secrets.get_secret(aws_constants.SECRET_NAME)))
+    create_react_env_file(json.loads(aws_secrets.get_secret(aws_constants.SECRET_NAME)))
 
-
-def create_env_file(env_values: Dict[str, str]):
-    with open(aws_constants.FINAL_ENV_PATH, "w") as f:
+def create_react_env_file(env_values: Dict[str, str]):
+    with open(aws_constants.FINAL_REACT_ENV_PATH, "w") as f:
         for key, val in env_values.items():
             f.write(f'{key}="{val}"\n')
 
+def create_port_env_file():
+    with open(aws_constants.FINAL_PORT_ENV_PATH, "w") as f:
+        f.write(f'PORT=8000')
 
 def main():
     get_secret()
+    create_port_env_file()
 
 
 if __name__ == "__main__":

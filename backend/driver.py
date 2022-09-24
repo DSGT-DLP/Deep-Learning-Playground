@@ -27,16 +27,13 @@ app = Flask(
     ),
 )
 CORS(app)
-print(os.path.dirname(os.getcwd()))
+
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def root(path):
-    print(app.static_folder)
     if path != "" and os.path.exists(app.static_folder + "/" + path):
-        print(send_from_directory(app.static_folder, path))
         return send_from_directory(app.static_folder, path)
     else:
-        print('two', send_from_directory(app.static_folder, "index.html"))
         return send_from_directory(app.static_folder, "index.html")
     
 @app.route("/api/tabular-run", methods=["POST"])

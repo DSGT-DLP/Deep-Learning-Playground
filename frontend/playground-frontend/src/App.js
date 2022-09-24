@@ -18,6 +18,7 @@ import "./App.css";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
+  const [currentUser, setCurrentUser] = useState();
   const currentURL = window.location.href.split("/");
   const isOnLoginPage = currentURL[currentURL.length - 1] === "login";
 

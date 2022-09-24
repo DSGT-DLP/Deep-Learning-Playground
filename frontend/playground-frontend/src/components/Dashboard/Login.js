@@ -1,9 +1,23 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
+
+  const handleRegister = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        
+      })
+      .catch((error) => {
+        toast.error(error.code);
+      });
+  };
+
   return (
     <div id="login-page" className="text-center">
       <div className="main-container mt-5">

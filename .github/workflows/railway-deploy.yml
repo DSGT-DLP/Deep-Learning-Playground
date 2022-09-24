@@ -13,7 +13,6 @@ on:
         - Development
         - Preview
 
-
 jobs:
   check_trigger:
     runs-on: ubuntu-latest
@@ -50,5 +49,5 @@ jobs:
         run: |
           echo "\
             Github Ref: ${{ github.ref }} \
-            Environment: ${{ steps.environment.outputs.environment }} \
+            Environment: ${{ steps.environment.outputs.environment }}  \
           "

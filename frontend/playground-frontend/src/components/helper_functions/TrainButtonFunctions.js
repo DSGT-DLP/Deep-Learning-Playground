@@ -154,11 +154,9 @@ export const validatePretrainedInput = (user_arch, ...args) => {
   if (!args.criterion) alertMessage += "A criterion must be specified. ";
   if (!args.optimizerName)
     alertMessage += "An optimizer name must be specified. ";
-  if (!args.usingDefaultDataset) {
-    if (!args.dataInput && !args.fileURL && !args.dataUploaded) {
+  if (!args.uploadFile && !args.usingDefaultDataset) {
       alertMessage +=
         "Must specify an input file either from local storage or from an internet URL. ";
-    }
   }
 
   return alertMessage;

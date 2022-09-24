@@ -34,6 +34,7 @@ const LargeFileUpload = (props) => {
           accept=".zip"
           onChange={handleFileUpload}
           style={{ width: "100%" }}
+          hidden
         />
         <input
           type="submit"

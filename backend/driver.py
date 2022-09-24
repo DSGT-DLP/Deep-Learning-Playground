@@ -138,7 +138,7 @@ def pretrain_run():
         shuffle = request_data["shuffle"]
         model_name = request_data["model_name"]
 
-        train_loss_results =  dl_pretrain_drive(train_transform, test_transform, criterion, optimizer_name, default, epochs, batch_size, shuffle, model_name)
+        train_loss_results =  dl_pretrain_drive(train_transform, test_transform, criterion, optimizer_name, default, epochs, batch_size, shuffle, model_name, IMAGE_UPLOAD_FOLDER)
 
         print("training successfully finished")
         return send_train_results(train_loss_results)

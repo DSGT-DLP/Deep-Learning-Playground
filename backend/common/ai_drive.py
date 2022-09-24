@@ -1,3 +1,4 @@
+from typing import Counter
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris, fetch_california_housing
@@ -163,7 +164,7 @@ def dl_img_drive(
     return train_loss_results
     
 
-def dl_pretrain_drive(train_transform, test_transform, criterion, optimizer_name, default, epochs, batch_size, shuffle, model_name):
+def dl_pretrain_drive(train_transform, test_transform, criterion, optimizer_name, default, epochs, batch_size, shuffle, model_name, IMAGE_UPLOAD_FOLDER):
     print("backend started")
     train_transform = parse_deep_user_architecture(train_transform)
     test_transform = parse_deep_user_architecture(test_transform)
@@ -180,8 +181,20 @@ def dl_pretrain_drive(train_transform, test_transform, criterion, optimizer_name
     print("got datasets")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    n_classes = 0
+    count = Counter()
+
+    for i in train_loader:
+        chan_in = (i[0].shape)[1]
+        print(i[1].detach().numpy().flatten())
+        count.update(i[1].detach().numpy().flatten())
+
+    print("*********count***********")
+    print(len(count.keys()))
+    print("*********count***********")
+
     train_loss_results = pytorch_pretrained(
-        10, model_name, epochs, device, 3, criterion, train_loader, valid_loader, optimizer_name
+        len(count.keys()), model_name, epochs, device, chan_in, criterion, train_loader, valid_loader, optimizer_name
     )
 
     return train_loss_results

@@ -8,10 +8,10 @@ import {
   POSSIBLE_TRANSFORMS,
   PROBLEM_TYPES,
 } from "../../settings";
-import { COLORS, LAYOUT, DEFAULT_TRANSFORMS } from "../../constants";
+import { DEFAULT_TRANSFORMS } from "../../constants";
 
 import Input from "../Home/Input";
-import RectContainer from "../Home/RectContainer";
+// import RectContainer from "../Home/RectContainer";
 import TitleText from "../general/TitleText";
 import BackgroundLayout from "../Home/BackgroundLayout";
 import Transforms from "../ImageModels/Transforms";
@@ -35,8 +35,8 @@ const Pretrained = () => {
   const [epochs, setEpochs] = useState(5);
   const [batchSize, setBatchSize] = useState(20);
   const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
-  const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
-  const [dataUploaded, setDataUploaded] = useState(false);
+  const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);  
+  const [uploadFile, setUploadFile] = useState(null);
 
   const input_responses = {
     modelName: modelName?.value,
@@ -49,7 +49,7 @@ const Pretrained = () => {
     epochs: epochs,
     batchSize: batchSize,
     email: email,
-    dataUploaded: dataUploaded,
+    uploadFile: uploadFile
   };
 
   const input_queries = [
@@ -103,9 +103,15 @@ const Pretrained = () => {
       <TitleText text="Data & Parameters" />
       <div style={{ display: "flex" }}>
         <BackgroundLayout>
-          <RectContainer style={styles.fileInput}>
-            <LargeFileUpload setDataUploaded={setDataUploaded} />
-          </RectContainer>
+          {/* <RectContainer style={styles.fileInput}> */}
+
+          <div className="input-container d-flex flex-column align-items-center justify-content-center">
+            <LargeFileUpload 
+            uploadFile={uploadFile}
+            setUploadFile={setUploadFile} />
+          </div>
+
+          {/* </RectContainer> */}
           <TrainButton
             {...input_responses}
             setDLPBackendResponse={setDLPBackendResponse}
@@ -168,11 +174,11 @@ const Pretrained = () => {
 
 export default Pretrained;
 
-const styles = {
-  fileInput: {
-    ...LAYOUT.column,
-    backgroundColor: COLORS.input,
-    width: 155,
-    height: 75,
-  },
-};
+// const styles = {
+//   fileInput: {
+//     ...LAYOUT.column,
+//     backgroundColor: COLORS.input,
+//     width: 155,
+//     height: 75,
+//   },
+// };

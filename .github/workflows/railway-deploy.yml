@@ -40,6 +40,7 @@ jobs:
           remove-labels: 'deploy'
 
       - name: Create GitHub deployment
+        uses: chrnorm/deployment-action@releases/v1
         id: deployment
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"

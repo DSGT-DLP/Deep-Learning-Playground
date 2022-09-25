@@ -13,5 +13,6 @@ A clear and concise description of what you want to happen.
 Add any other context or screenshots about the feature request here.
 
 **Setup Instructions (what branch to work off of)**
-Add information regarding what branch you'd like the assignee to create their dev branch off of
-(eg: create branch `upload-button` from latest version of `frontend` branch)
+Create branch `<dev-branch-name>` off of `<base-branch>`. `<base-branch>` is either `backend`, `frontend`, `full-stack`
+
+Note: Tasks that are solely frontend should have dev branches created off of `frontend`. Tasks that are solely backend should have dev branches created off of `backend` and tasks that involve both backend and frontend should have dev branches created off of `full-stack`

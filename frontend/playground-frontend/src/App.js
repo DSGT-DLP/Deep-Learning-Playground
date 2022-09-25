@@ -4,7 +4,7 @@ import {
   About,
   Wiki,
   Feedback,
-  Navbar,
+  NavbarMain,
   ImageModels,
   Footer,
   Dashboard,
@@ -24,7 +24,7 @@ function App() {
     <div id="app">
       <BrowserRouter>
         <div id="app-router">
-          <Navbar />
+          <NavbarMain />
           <Routes>
             <Route
               exact

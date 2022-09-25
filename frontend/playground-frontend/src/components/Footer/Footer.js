@@ -1,5 +1,4 @@
 import React from "react";
-import "../../App.css";
 import { FaGithub, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 import { COLORS, URLs } from "../../constants";
 import { IconContext } from "react-icons";

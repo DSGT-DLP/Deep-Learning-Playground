@@ -20,10 +20,6 @@ import "./App.css";
 
 function App() {
   const userEmail = useSelector((state) => state.currentUser.email);
-  const verifyLogin = (target_screen) => {
-    if (userEmail) return target_screen;
-    else return <Navigate to="/login" />;
-  };
 
   return (
     <div id="app">

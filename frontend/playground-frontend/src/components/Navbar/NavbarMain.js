@@ -29,6 +29,7 @@ const NavbarMain = () => {
       .then(() => {
         dispatch(setCurrentUser(null));
         toast.success("Logged out successfully", { autoClose: 1000 });
+        navigate("/login");
       })
       .catch((error) => toast.error(`Error: ${error.code}`));
   };

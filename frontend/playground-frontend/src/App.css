@@ -45,7 +45,7 @@ h2 {
 }
 
 #app-router {
-  min-height: calc(100vh - 190px)
+  min-height: calc(100vh - 190px);
 }
 
 body {
@@ -123,7 +123,7 @@ input {
 }
 
 #navbar-main .logo-title {
-  color: white
+  color: white;
 }
 
 #navbar-main .logo-title:hover,
@@ -142,7 +142,6 @@ input {
   background-color: white;
   color: var(--primary);
 }
-
 
 /* -------------------------------------------------------------------------- */
 /*	Home and Image Models
@@ -505,6 +504,15 @@ textarea {
 /* -------------------------------------------------------------------------- */
 /*	Footer
 /* -------------------------------------------------------------------------- */
+
+#footer .footer-element {
+  margin: 0;
+  position: static;
+  background-color: var(--primary);
+  color: white;
+  display: flex;
+  justify-content: center;
+}
 
 #footer .copyright {
   margin-block: auto;

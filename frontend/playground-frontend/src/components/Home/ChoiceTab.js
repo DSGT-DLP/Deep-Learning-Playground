@@ -12,7 +12,9 @@ const ChoiceTab = () => {
 
   return (
     <div style={{ display: "flex", marginBottom: "0px", float: "right" }}>
-      <button style={{ ...styles.button, backgroundColor: getBackground("/train") }}>
+      <button
+        style={{ ...styles.button, backgroundColor: getBackground("/train") }}
+      >
         <Link to="/train" style={styles.linkelEment}>
           Tabular Data
         </Link>

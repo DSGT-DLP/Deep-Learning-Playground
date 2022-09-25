@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser } from "../../redux/userLogin";
 
 const AccountButton = () => {
+  const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const userEmail = useSelector((state) => state.currentUser.email);
   const dispatch = useDispatch();
@@ -53,9 +53,11 @@ const AccountButton = () => {
         </button>
         {showDropdown && (
           <div id="accountButtons">
-            <button className="accountButton">Dashboard</button>
+            <button className="accountButton" onClick={() => navigate("/")}>
+              Dashboard
+            </button>
             <button className="accountButton">Settings</button>
-            <button className="accountButton">My Learning</button>
+            <button className="accountButton">Learn</button>
             <button className="accountButton" onClick={logout}>
               Log out
             </button>
@@ -75,15 +77,16 @@ const AccountButton = () => {
 const Navbar = () => {
   return (
     <div className="header-footer" id="nav-bar">
-      <a href="/" className="image-title">
+      <Link to="/" className="image-title">
         <img src={DSGTLogo} alt="DSGT Logo" width="60" height="60" />
         <div style={{ marginRight: 10 }} />
         Deep Learning Playground
-      </a>
+      </Link>
       <ul className="nav">
         <li id="title-name"></li>
+
         <li className="navElement">
-          <Link to="/home">Home</Link>
+          <Link to="/train">Train</Link>
         </li>
 
         <li className="navElement">

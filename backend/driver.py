@@ -165,8 +165,6 @@ def send_columns():
 @app.route("/api/updateUserSettings", methods=["POST"])
 def update_user_settings():
     request_data = json.loads(request.data)
-    if request.environ['user'] is None:
-        return send_error("User is not authenticated") 
     user = request.environ['user']
 
 @app.route("/api/upload", methods=["POST"])

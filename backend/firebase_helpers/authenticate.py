@@ -25,7 +25,6 @@ def authenticate(token):
                 UserData(user["user_id"], user["email"], str(int(time.time())))
             )
         except Exception as e:
-            print(e)
             if "Could not add record." not in str(e):
                 print(e, "something went wrong in authenticate")
             return user

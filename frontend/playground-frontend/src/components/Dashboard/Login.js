@@ -82,16 +82,14 @@ const Login = () => {
         >
           <img src={GoogleLogo} />
         </Button>
-        {false && (
-          <Button
-            className="login-button github"
-            onClick={() => {
-              signInWithRedirect(auth, githubProvider);
-            }}
-          >
-            <img src={GithubLogo} />
-          </Button>
-        )}
+        <Button
+          className="login-button github"
+          onClick={() => {
+            signInWithRedirect(auth, githubProvider);
+          }}
+        >
+          <img src={GithubLogo} />
+        </Button>
       </div>
     </>
   );

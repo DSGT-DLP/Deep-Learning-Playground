@@ -1,6 +1,6 @@
 def test_all_imports():
   import backend.aws_helpers.dynamo_db_utils.base_db
-  import backend.aws_helpers.dynamo_db_utils.status_db
+  import backend.aws_helpers.dynamo_db_utils.execution_db
   import backend.common.constants
   import backend.common.dataset
   import backend.common.default_datasets

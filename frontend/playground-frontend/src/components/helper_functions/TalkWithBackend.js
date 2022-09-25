@@ -60,14 +60,8 @@ const sendEmail = async (email, problemType) => {
   }
 };
 
-const updateUserSettings = async () => {
-  if (auth.currentUser) {
-    await sendToBackend("updateUserSettings", {
-      authorization: await auth.currentUser.getIdToken(true),
-    });
-  } else {
-    toast.error("Not logged in");
-  }
+const isLoggedIn = async () => {
+  return await auth.currentUser?.getIdToken(true), toast.error("Not logged in");
 };
 
-export { sendToBackend, train_and_output, sendEmail, updateUserSettings };
+export { sendToBackend, train_and_output, sendEmail, isLoggedIn };

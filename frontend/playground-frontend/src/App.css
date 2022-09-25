@@ -615,14 +615,17 @@ textarea {
   margin-inline: auto;
 }
 
-#login-page #sign-up {
+#login-page .main-container .form-container .welcome-back {
+  font-size: large;
+}
+
+#login-page .main-container .form-container #sign-up {
   text-decoration: none;
 }
 
-#login-page input {
+#login-page .main-container .form-container input {
   margin-inline: auto;
 }
-
 
 /* Login Popup */
 

@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -11,7 +9,7 @@ import {
 import { auth, googleProvider, githubProvider } from "../../firebase";
 import { toast } from "react-toastify";
 import { setCurrentUser } from "../../redux/userLogin";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import GoogleLogo from "../../images/logos/google.png";
 import GithubLogo from "../../images/logos/github.png";
 
@@ -20,37 +18,37 @@ const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const dispatch = useDispatch();
+  const currentUserEmail = useSelector((state) => state.currentUser.email);
+
+  const updateCurrentUser = (userCredential) => {
+    const user = userCredential.user;
+    const userData = {
+      email: user.email,
+      uid: user.uid,
+      displayName: user.displayName,
+      emailVerified: user.emailVerified,
+    };
+    dispatch(setCurrentUser(userData));
+  };
 
   const signInWithPassword = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user = userCredential.user;
-        const userData = {
-          email: user.email,
-          uid: user.uid,
-          displayName: user.displayName,
-          emailVerified: user.emailVerified,
-        };
-        dispatch(setCurrentUser(userData));
-        toast.success(`Signed in with email ${user.email}`);
+        updateCurrentUser(userCredential);
+        toast.success(`Signed in with email ${userCredential.user.email}`, {
+          autoClose: 1000,
+        });
       })
-      .catch((error) => {
-        toast.error(`Error: ${error.code}`);
-      });
+      .catch((error) => toast.error(`Error: ${error.code}`));
   };
 
   const registerWithPassword = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user = userCredential.user;
-        const userData = {
-          email: user.email,
-          uid: user.uid,
-          displayName: user.displayName,
-          emailVerified: user.emailVerified,
-        };
-        dispatch(setCurrentUser(userData));
-        toast.success(`Registered with email ${user.email}`);
+        updateCurrentUser(userCredential);
+        toast.success(`Registered with email ${userCredential.user.email}`, {
+          autoClose: 1000,
+        });
       })
       .catch((error) => toast.error(`Error: ${error.code}`));
   };
@@ -135,8 +133,14 @@ const Login = () => {
         {Title}
 
         <Form className="form-container p-5">
-          {SocialLogins}
-          {EmailPasswordInput}
+          {currentUserEmail ? (
+            <p className="welcome-back">{`Welcome back, ${currentUserEmail}`}</p>
+          ) : (
+            <>
+              {SocialLogins}
+              {EmailPasswordInput}
+            </>
+          )}
         </Form>
       </div>
     </div>

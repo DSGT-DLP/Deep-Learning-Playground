@@ -26,6 +26,7 @@ import {
 } from "./components";
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
+import { useSelector, useDispatch } from 'react-redux'
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "react-toastify";
 import { sendToBackend } from "./components/helper_functions/TalkWithBackend";
@@ -60,6 +61,9 @@ const Home = () => {
     }))
   );
   const [activeColumns, setActiveColumns] = useState([]);
+
+  const count = useSelector((state) => state.currentUser);
+  console.log(count);
 
   const input_responses = {
     addedLayers: addedLayers,

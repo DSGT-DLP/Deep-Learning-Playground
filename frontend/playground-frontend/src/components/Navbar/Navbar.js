@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase";
@@ -25,17 +24,21 @@ const AccountButton = () => {
     signOut(auth)
       .then(() => {
         dispatch(setCurrentUser(null));
-        toast.success("Logged out successfully");
+        toast.success("Logged out successfully", { autoClose: 1000 });
       })
-      .catch((error) => {
-        toast.error(`Error: ${error.code}`);
-      });
+      .catch((error) => toast.error(`Error: ${error.code}`));
   };
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      console.log(435);
-      if (user) dispatch(setCurrentUser(JSON.stringify(user)));
+      if (!user) return;
+      const userData = {
+        email: user.email,
+        uid: user.uid,
+        displayName: user.displayName,
+        emailVerified: user.emailVerified,
+      };
+      dispatch(setCurrentUser(userData));
     });
   }, []);
 
@@ -108,4 +111,5 @@ const Navbar = () => {
     </div>
   );
 };
+
 export default Navbar;

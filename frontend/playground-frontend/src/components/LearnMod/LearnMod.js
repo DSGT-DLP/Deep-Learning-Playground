@@ -13,8 +13,6 @@ const LearnMod = () => {
             subClasses: x.subsections
         }
     ));
-
-    console.log(lessons[0]);
     
     return (
         <>

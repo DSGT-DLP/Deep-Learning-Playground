@@ -629,6 +629,10 @@ textarea {
   justify-content: center;
 }
 
+.learningContentDiv {
+  background-color: lightblue;
+}
+
 /* -------------------------------------------------------------------------- */
 /*	1. Loader (Animated)
 /*  Reference: https://www.w3schools.com/howto/howto_css_loader.asp

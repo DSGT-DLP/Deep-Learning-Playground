@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from 'props-type';
+import { useNavigate } from "react-router-dom";
 
 const ClassCard = (props) => 
 {
@@ -8,6 +9,9 @@ const ClassCard = (props) =>
     if (props.info.points === 100) {
         completed = true;
     }
+
+    const navigate = useNavigate();
+
     return(
             <div className="class" style={completed ? {border:"3px solid blue"} : {}} >
                 <div className="classHeader">
@@ -47,7 +51,7 @@ const ClassCard = (props) =>
                     </div>
                 </div>
                 <div className='classFooter'>
-                    <button id="classBtn" style={completed ? {border:"3px solid blue"} : {}} >{completed ? "Completed": "Start"}</button>
+                    <button id="classBtn" onClick={() => navigate("/LearnContent", {state: props.info})} style={completed ? {border:"3px solid blue"} : {}} >{completed ? "Completed": "Start"}</button>
                 </div>
             </div>
     );

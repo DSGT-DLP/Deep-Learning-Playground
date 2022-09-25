@@ -16,6 +16,8 @@ import { useSelector } from "react-redux";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./firebase";
 
 function App() {
   const userEmail = useSelector((state) => state.currentUser.email);

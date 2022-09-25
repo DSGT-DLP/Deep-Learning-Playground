@@ -46,9 +46,9 @@ function App() {
               path="/login"
               element={userEmail ? <Navigate to="/dashboard" /> : <Login />}
             />
-            <Route path="/train" element={verifyLogin(<Home />)} />
-            <Route path="/dashboard" element={verifyLogin(<Dashboard />)} />
-            <Route path="/img-models" element={verifyLogin(<ImageModels />)} />
+            <Route path="/train" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/img-models" element={<ImageModels />} />
             <Route path="/about" element={<About />} />
             <Route path="/wiki" element={<Wiki />} />
             <Route path="/feedback" element={<Feedback />} />

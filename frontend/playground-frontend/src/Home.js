@@ -26,7 +26,6 @@ import {
 } from "./components";
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
-import { useSelector } from "react-redux";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "react-toastify";
 import { sendToBackend } from "./components/helper_functions/TalkWithBackend";

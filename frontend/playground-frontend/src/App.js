@@ -15,26 +15,15 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 import { ToastContainer } from "react-toastify";
 import Home from "./Home";
-import { useDispatch } from "react-redux";
-import { setCurrentUser } from "./redux/userLogin";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 function App() {
-  const [showLogin, setShowLogin] = useState(false);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) dispatch(setCurrentUser(JSON.stringify(user)));
-    });
-  }, []);
-
   return (
     <div id="app">
       <BrowserRouter>
-        <Navbar setShowLogin={setShowLogin} />
+        <Navbar />
         <Routes>
           <Route exact path="/" element={<Navigate to="/home" />} />
           <Route path="/login" element={<Login />} />
@@ -48,7 +37,6 @@ function App() {
         <ToastContainer position="top-center" />
         <Footer />
       </BrowserRouter>
-      {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
     </div>
   );
 }

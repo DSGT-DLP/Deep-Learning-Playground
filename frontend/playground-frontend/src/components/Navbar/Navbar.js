@@ -1,15 +1,45 @@
+import React, { useState, useEffect } from "react";
 import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "../../redux/userLogin";
 
-const AccountButton = ({ setShowLogin }) => {
-  const [user] = useAuthState(auth);
+const AccountButton = () => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const userEmail = useSelector((state) => state.currentUser.email);
+  const dispatch = useDispatch();
 
-  if (user) {
+  const goToLogin = () => {
+    if (!window.location.href.match(/(\/login$|\/login#$)/g)) {
+      // Go to Login page if we aren't already there
+      window.location.href = "/login";
+    }
+  };
+
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        dispatch(setCurrentUser(null));
+        toast.success("Logged out successfully");
+      })
+      .catch((error) => {
+        toast.error(`Error: ${error.code}`);
+      });
+  };
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      console.log(435);
+      if (user) dispatch(setCurrentUser(JSON.stringify(user)));
+    });
+  }, []);
+
+  if (userEmail) {
     return (
       <div id="accountButtonWrapper">
         <button
@@ -23,7 +53,7 @@ const AccountButton = ({ setShowLogin }) => {
             <button className="accountButton">Dashboard</button>
             <button className="accountButton">Settings</button>
             <button className="accountButton">My Learning</button>
-            <button className="accountButton" onClick={() => auth.signOut()}>
+            <button className="accountButton" onClick={logout}>
               Log out
             </button>
           </div>
@@ -32,14 +62,14 @@ const AccountButton = ({ setShowLogin }) => {
     );
   } else {
     return (
-      <button className="loginButton" onClick={() => setShowLogin(true)}>
+      <button className="loginButton" onClick={goToLogin}>
         Log in
       </button>
     );
   }
 };
 
-const Navbar = ({ setShowLogin }) => {
+const Navbar = () => {
   return (
     <div className="header-footer" id="nav-bar">
       <a href="/" className="image-title">
@@ -72,18 +102,10 @@ const Navbar = ({ setShowLogin }) => {
           </a>
         </li>
         <li className="navElement">
-          <AccountButton setShowLogin={setShowLogin} />
+          <AccountButton />
         </li>
       </ul>
     </div>
   );
 };
 export default Navbar;
-
-AccountButton.propTypes = {
-  setShowLogin: PropTypes.func.isRequired,
-};
-
-Navbar.propTypes = {
-  setShowLogin: PropTypes.func.isRequired,
-};

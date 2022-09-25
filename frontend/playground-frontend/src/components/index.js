@@ -26,9 +26,6 @@ export { default as Login } from "./Dashboard/Login";
 // About
 export { default as About } from "./About/About";
 
-// Login
-export { default as LoginPopup } from "./LoginPopup/LoginPopup";
-
 // Wiki
 export { default as Wiki } from "./Wiki/Wiki";
 

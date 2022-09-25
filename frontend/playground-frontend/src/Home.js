@@ -18,6 +18,7 @@ import {
   EmailInput,
   Input,
   LayerChoice,
+  Spacer,
   Results,
   TitleText,
   TrainButton,
@@ -28,7 +29,6 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "react-toastify";
 import { FormControlLabel, Switch } from "@mui/material";
-import Spacer from "./components/general/Spacer";
 import { sendToBackend } from "./components/helper_functions/TalkWithBackend";
 
 const Home = () => {
@@ -135,8 +135,8 @@ const Home = () => {
     },
     {
       queryText: "Criterion",
-      options: CRITERIONS.filter(
-        (crit) => crit.problem_type.indexOf(problemType.value) != -1
+      options: CRITERIONS.filter((crit) =>
+        crit.problem_type.includes(problemType.value)        
       ),
       onChange: setCriterion,
       defaultValue: criterion,

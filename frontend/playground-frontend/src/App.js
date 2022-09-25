@@ -10,8 +10,9 @@ import {
   Dashboard,
   Login,
 } from "./components";
-import { ToastContainer } from "react-toastify";
 import Home from "./Home";
+import { Navigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -19,6 +20,10 @@ import "./App.css";
 
 function App() {
   const userEmail = useSelector((state) => state.currentUser.email);
+  const verifyLogin = (target_screen) => {
+    if (userEmail) return target_screen;
+    else return <Navigate to="/login" />;
+  };
 
   return (
     <div id="app">
@@ -29,11 +34,21 @@ function App() {
             <Route
               exact
               path="/"
-              element={userEmail ? <Dashboard /> : <Login />}
+              element={
+                userEmail ? (
+                  <Navigate to="/dashboard" />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
             />
-            <Route path="/train" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/img-models" element={<ImageModels />} />
+            <Route
+              path="/login"
+              element={userEmail ? <Navigate to="/dashboard" /> : <Login />}
+            />
+            <Route path="/train" element={verifyLogin(<Home />)} />
+            <Route path="/dashboard" element={verifyLogin(<Dashboard />)} />
+            <Route path="/img-models" element={verifyLogin(<ImageModels />)} />
             <Route path="/about" element={<About />} />
             <Route path="/wiki" element={<Wiki />} />
             <Route path="/feedback" element={<Feedback />} />

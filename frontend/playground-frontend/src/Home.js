@@ -35,6 +35,7 @@ const Home = () => {
   const [uploadedColumns, setUploadedColumns] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [inputKey, setInputKey] = useState(0);
+
   // input responses
   const [fileURL, setFileURL] = useState("");
   const [email, setEmail] = useState("");

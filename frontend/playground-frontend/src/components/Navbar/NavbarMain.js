@@ -60,7 +60,7 @@ const NavbarMain = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link href="/train">Train</Nav.Link>
+            {userEmail ? <Nav.Link href="/train">Train</Nav.Link> : null}
             <Nav.Link href="/about">About</Nav.Link>
             <Nav.Link href="/wiki">Wiki</Nav.Link>
             <Nav.Link href="/feedback">Feedback</Nav.Link>

@@ -9,18 +9,19 @@ import {
 import { auth, googleProvider, githubProvider } from "../../firebase";
 import { toast } from "react-toastify";
 import { setCurrentUser } from "../../redux/userLogin";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import GoogleLogo from "../../images/logos/google.png";
 import GithubLogo from "../../images/logos/github.png";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const dispatch = useDispatch();
-  const currentUserEmail = useSelector((state) => state.currentUser.email);
+  const navigate = useNavigate();
 
-  const updateCurrentUser = (userCredential) => {
+  const updateCurrentUser = async (userCredential) => {
     const user = userCredential.user;
     const userData = {
       email: user.email,
@@ -28,7 +29,8 @@ const Login = () => {
       displayName: user.displayName,
       emailVerified: user.emailVerified,
     };
-    dispatch(setCurrentUser(userData));
+    await dispatch(setCurrentUser(userData));
+    navigate("/dashboard");
   };
 
   const signInWithPassword = () => {
@@ -80,12 +82,16 @@ const Login = () => {
         >
           <img src={GoogleLogo} />
         </Button>
-        <Button
-          className="login-button github"
-          onClick={() => signInWithRedirect(auth, githubProvider)}
-        >
-          <img src={GithubLogo} />
-        </Button>
+        {false && (
+          <Button
+            className="login-button github"
+            onClick={() => {
+              signInWithRedirect(auth, githubProvider);
+            }}
+          >
+            <img src={GithubLogo} />
+          </Button>
+        )}
       </div>
     </>
   );
@@ -133,14 +139,8 @@ const Login = () => {
         {Title}
 
         <Form className="form-container p-5">
-          {currentUserEmail ? (
-            <p className="welcome-back">{`Welcome back, ${currentUserEmail}`}</p>
-          ) : (
-            <>
-              {SocialLogins}
-              {EmailPasswordInput}
-            </>
-          )}
+          {SocialLogins}
+          {EmailPasswordInput}
         </Form>
       </div>
     </div>

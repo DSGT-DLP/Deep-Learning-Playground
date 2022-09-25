@@ -13,7 +13,6 @@ const AccountButton = () => {
   const userEmail = useSelector((state) => state.currentUser.email);
   const dispatch = useDispatch();
 
-  
   const goToLogin = () => {
     if (!window.location.href.match(/(\/login$|\/login#$)/g)) {
       // Go to Login page if we aren't already there

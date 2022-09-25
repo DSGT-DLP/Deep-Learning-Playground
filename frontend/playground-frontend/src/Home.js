@@ -26,7 +26,7 @@ import {
 } from "./components";
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from "react-redux";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "react-toastify";
 import { sendToBackend } from "./components/helper_functions/TalkWithBackend";
@@ -62,9 +62,6 @@ const Home = () => {
   );
   const [activeColumns, setActiveColumns] = useState([]);
 
-  const count = useSelector((state) => state.currentUser);
-  console.log(count);
-
   const input_responses = {
     addedLayers: addedLayers,
     targetCol: targetCol?.label,
@@ -96,7 +93,7 @@ const Home = () => {
     let featuresCopy = JSON.parse(JSON.stringify(features));
     csvColumnsCopy.splice(e.value, 1);
     if (featuresCopy) {
-      featuresCopy = featuresCopy.filter((item) => item.value != e.value);
+      featuresCopy = featuresCopy.filter((item) => item.value !== e.value);
       setInputKey((e) => e + 1);
       setFeatures(featuresCopy);
     }

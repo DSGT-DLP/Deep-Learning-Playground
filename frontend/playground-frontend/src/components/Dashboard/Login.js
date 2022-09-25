@@ -4,91 +4,139 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {
+  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithRedirect,
 } from "firebase/auth";
-import { auth, googleProvider } from "../../firebase";
-import { getRedirectResult, GoogleAuthProvider } from "firebase/auth";
+import { auth, googleProvider, githubProvider } from "../../firebase";
 import { toast } from "react-toastify";
-import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../../redux/userLogin";
+import { useDispatch } from "react-redux";
 import GoogleLogo from "../../images/logos/google.png";
 import GithubLogo from "../../images/logos/github.png";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.currentUser.email);
 
-  const handleRegister = (email, password) => {
+  const signInWithPassword = () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        const userData = {
+          email: user.email,
+          uid: user.uid,
+          displayName: user.displayName,
+          emailVerified: user.emailVerified,
+        };
+        dispatch(setCurrentUser(userData));
+        toast.success(`Signed in with email ${user.email}`);
+      })
+      .catch((error) => {
+        toast.error(`Error: ${error.code}`);
+      });
+  };
+
+  const registerWithPassword = () => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {})
-      .catch((error) => toast.error(error.code));
+      .then((userCredential) => {
+        const user = userCredential.user;
+        const userData = {
+          email: user.email,
+          uid: user.uid,
+          displayName: user.displayName,
+          emailVerified: user.emailVerified,
+        };
+        dispatch(setCurrentUser(userData));
+        toast.success(`Registered with email ${user.email}`);
+      })
+      .catch((error) => toast.error(`Error: ${error.code}`));
   };
 
-  getRedirectResult(auth)
-    .then((result) => {
-      const user = result.user;
-      console.log(user);
-    })
-    .catch((error) => {
-      toast.error(error.code);
-    });
-
-  const handleGoogleSignIn = () => {
-    signInWithRedirect(auth, googleProvider);
+  const handleSignInRegister = () => {
+    if (isRegistering) registerWithPassword();
+    else signInWithPassword();
   };
+
+  const Title = (
+    <>
+      <h1 className="title mb-5">
+        No-code Solution for <br />
+        Machine Learning
+      </h1>
+      <p className="description text-center mb-4">
+        DLP is a playground where you can experiment with machine learning tools
+        by inputting a dataset and use PyTorch modules without writing any code
+      </p>
+    </>
+  );
+
+  const SocialLogins = (
+    <>
+      <div className="d-flex justify-content-evenly mb-5">
+        <Button
+          className="login-button google"
+          onClick={() => signInWithRedirect(auth, googleProvider)}
+        >
+          <img src={GoogleLogo} />
+        </Button>
+        <Button
+          className="login-button github"
+          onClick={() => signInWithRedirect(auth, githubProvider)}
+        >
+          <img src={GithubLogo} />
+        </Button>
+      </div>
+    </>
+  );
+
+  const EmailPasswordInput = (
+    <>
+      {isRegistering && (
+        <Form.Group className="mb-3" controlId="login-name">
+          <Form.Label>Name</Form.Label>
+          <Form.Control placeholder="Enter name" />
+        </Form.Group>
+      )}
+
+      <Form.Group className="mb-3" controlId="login-email">
+        <Form.Label>Email address</Form.Label>
+        <Form.Control
+          type="email"
+          placeholder="someone@example.com"
+          onBlur={(e) => setEmail(e.target.value)}
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-5" controlId="login-password">
+        <Form.Label>Password</Form.Label>
+        <Form.Control
+          type="password"
+          placeholder="Password"
+          onBlur={(e) => setPassword(e.target.value)}
+        />
+      </Form.Group>
+      <div className="email-buttons d-flex flex-column">
+        <Button id="log-in" className="mb-2" onClick={handleSignInRegister}>
+          {isRegistering ? "Register" : "Log in"}
+        </Button>
+        <a href="#" id="sign-up" onClick={() => setIsRegistering((e) => !e)}>
+          {isRegistering ? "Log in" : "Register"}
+        </a>
+      </div>
+    </>
+  );
 
   return (
     <div id="login-page" className="text-center">
       <div className="main-container mt-5 mb-5">
-        <h1 className="title mb-5">
-          No-code Solution for <br />
-          Machine Learning
-        </h1>
-        <p className="description text-center mb-4">
-          DLP is a playground where you can experiment with machine learning
-          tools by inputting a dataset and use PyTorch modules without writing
-          any code
-        </p>
+        {Title}
 
         <Form className="form-container p-5">
-          <div className="d-flex justify-content-evenly mb-5">
-            <Button className="login-button google">
-              <img src={GoogleLogo} />
-            </Button>
-            <Button className="login-button github">
-              <img src={GithubLogo} />
-            </Button>
-          </div>
-          {isRegistering && (
-            <Form.Group className="mb-3" controlId="login-name">
-              <Form.Label>Name</Form.Label>
-              <Form.Control placeholder="Enter name" />
-            </Form.Group>
-          )}
-
-          <Form.Group className="mb-3" controlId="login-email">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" placeholder="someone@example.com" />
-          </Form.Group>
-
-          <Form.Group className="mb-5" controlId="login-password">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Password" />
-          </Form.Group>
-          <div className="email-buttons d-flex flex-column">
-            <Button id="log-in" className="mb-2" onClick={handleGoogleSignIn}>
-              {isRegistering ? "Register" : "Log in"}
-            </Button>
-            <a
-              href="#"
-              id="sign-up"
-              onClick={() => setIsRegistering((e) => !e)}
-            >
-              {isRegistering ? "Log in" : "Register"}
-            </a>
-          </div>
+          {SocialLogins}
+          {EmailPasswordInput}
         </Form>
       </div>
     </div>

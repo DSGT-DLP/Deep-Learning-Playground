@@ -10,6 +10,6 @@ def authenticate(token):
         user = firebase_admin.auth.verify_id_token(authorization)
     except Exception as e:
         print(e)
-        return None ## throw some error through middleware
+        return None 
     
-    return user ## do middleware stuff instead
+    return user 

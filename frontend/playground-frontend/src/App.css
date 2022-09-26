@@ -332,6 +332,8 @@ textarea#code-snippet-text {
 .sections {
   margin-bottom: 1rem;
   margin-top: 1rem;
+  hyphens: auto;
+  word-spacing: -0.05em;
 }
 .tech-row-content {
   width: auto;
@@ -355,6 +357,14 @@ textarea {
   resize: none;
 }
 
+.collapsed-layer li {
+  list-style-type: '▶  ';
+}
+
+.expanded-layer li {
+  list-style-type: '▼  ';
+}
+
 .layer-info-button {
   border: none;
   background: none;
@@ -367,6 +377,10 @@ textarea {
   margin-bottom: 0;
 }
 
+.layer-info-button:hover {
+  color: var(--tertiary);
+}
+
 .layer-outer-button {
   border: none;
   background: none;
@@ -374,6 +388,11 @@ textarea {
   cursor: pointer;
   font-size: 18px;
   font-weight: 600;
+  text-decoration: underline;
+}
+
+.layer-outer-button:hover {
+  color: var(--tertiary);
 }
 
 /* -------------------------------------------------------------------------- */

@@ -473,6 +473,11 @@ textarea#code-snippet-text {
   background-color: #7cd992;
 }
 
+.grid-status-display-blue {
+  background-color: #2ab5f6;
+  cursor: pointer;
+}
+
 /* -------------------------------------------------------------------------- */
 /*	About and Wiki
 /* -------------------------------------------------------------------------- */

@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 const rows = [
   {
     id: "123mrpij",
+    name: "IrisDense",
     type: "Tabular",
     input: "new_input.csv",
     statusType: "queued",
@@ -22,6 +23,7 @@ const rows = [
   },
   {
     id: "as98dfumasdp",
+    name: "Penguin",
     type: "Tabular",
     input: "my_tabular_input.csv",
     statusType: "training",
@@ -30,6 +32,7 @@ const rows = [
   },
   {
     id: "p9umaspdf",
+    name: "Iris",
     type: "Image Training",
     input: "my_images.zip",
     statusType: "finished",
@@ -115,10 +118,12 @@ const FilledGrid = () => {
       <Table sx={{ minWidth: 400, maxWidth: 1400 }}>
         <TableHead>
           <TableRow>
+            <TableCell>Name</TableCell>
             <TableCell>Type</TableCell>
             <TableCell align="right">Input</TableCell>
             <TableCell align="right">Date</TableCell>
             <TableCell align="right">Status</TableCell>
+            <TableCell align="right">Result</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -127,6 +132,9 @@ const FilledGrid = () => {
               key={row.id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
+              <TableCell component="th" scope="row">
+                {row.name}
+              </TableCell>
               <TableCell component="th" scope="row">
                 {row.type}
               </TableCell>
@@ -137,6 +145,11 @@ const FilledGrid = () => {
                   statusType={row.statusType}
                   status={row.status}
                 />
+              </TableCell>
+              <TableCell align="right">
+                <button className="grid-status-display grid-status-display-blue" >
+                  RESULT
+                </button>
               </TableCell>
             </TableRow>
           ))}

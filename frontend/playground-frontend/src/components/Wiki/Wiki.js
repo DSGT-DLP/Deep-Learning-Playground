@@ -29,7 +29,6 @@ const render_layer_info = (layer_info) => {
       layer_info_button.classList.remove("expanded-layer");
       layer_info_button.classList.add("collapsed-layer");
     }
-    
   };
   let body = [];
   for (let i = 0; i < layer_info.docs.length; i++) {

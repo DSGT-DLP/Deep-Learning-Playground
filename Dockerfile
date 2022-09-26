@@ -23,9 +23,9 @@ RUN python -m pip install -r requirements.txt
 
 COPY . .
 
-RUN cd .aws && python build_env.py
+RUN npm run secrets:deploy
 
-RUN cd frontend/playground-frontend && npm install && npm run build
+RUN npm run build
 
 CMD python -m backend.driver
 

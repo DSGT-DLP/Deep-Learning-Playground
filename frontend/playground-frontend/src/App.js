@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
   About,
   LoginPopup,
@@ -16,28 +16,34 @@ import { ToastContainer } from "react-toastify";
 import Home from "./Home";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./firebase";
 
 function App() {
+  const [user, loading] = useAuthState(auth);
   const [showLogin, setShowLogin] = useState(false);
   const currentURL = window.location.href.split("/");
   const isOnLoginPage = currentURL[currentURL.length - 1] === "login";
+  if (loading) {
+    return <div id="app"></div>;
+  }
 
   return (
     <div id="app">
       <BrowserRouter>
-        {isOnLoginPage || <Navbar setShowLogin={setShowLogin} />}
-        <Routes>
-          <Route exact path="/" element={<Navigate to="/home" />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/img-models" element={<ImageModels />} />
-          <Route path="/About" element={<About />} />
-          <Route path="/pretrained" element={<Pretrained />} />
-          <Route path="/Wiki" element={<Wiki />} />
-          <Route path="/feedback" element={<Feedback />} />
-        </Routes>
-        <ToastContainer position="top-center" />
+        <div id="app-router">
+          {isOnLoginPage || <Navbar setShowLogin={setShowLogin} />}
+          <Routes>
+            <Route exact path="/" element={user ? <Dashboard /> : <Login />} />
+            <Route path="/train" element={<Home />} />
+            <Route path="/img-models" element={<ImageModels />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/wiki" element={<Wiki />} />
+            <Route path="/pretrained" element={<Pretrained />} />
+            <Route path="/feedback" element={<Feedback />} />
+          </Routes>
+          <ToastContainer position="top-center" />
+        </div>
         {isOnLoginPage || <Footer />}
       </BrowserRouter>
       {showLogin && <LoginPopup setShowLogin={setShowLogin} />}

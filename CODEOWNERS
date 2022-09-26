@@ -13,11 +13,19 @@
 /backend @karkir0003
 /backend/common/email_notifier.py @avayedawadi
 /backend/common/dataset.py @vidushiMaheshwari
-/backend/driver.py @farisdurrani @andrewpeng02 @avayedawadi @samarth52
+/backend/driver.py @farisdurrani @samarth52
+/backend/common/ai_drive.py @farisdurrani @samarth52 @vidushiMaheshwari @andrewpeng02 @avayedawadi 
 /backend/dl/pretrained.py @vidushiMaheshwari
 /backend/aws_helpers/dynamo_db_utils/base_db.py @samarth52
 /backend/aws_helpers/dynamo_db_utils/status_db.py @karkir0003 @samarth52
 
+# GitHub Workflow Files
+/.github/workflows/aws.yml @karkir0003
+/.github/workflows/node.js.yml @farisdurrani
+/.github/workflows/prettier.yml @farisdurrani
+/.github/workflows/python-package-conda.yml @karkir0003
+/.github/workflows/railway-deploy.yml @samarth52
+/.github/workflows/sync_branches.yml @samarth52
 
 # For unit tests, @LucasZhang58 and @karkir0003 will be requested in such a pull request
 /tests/test_data_processing.py @LucasZhang58 @karkir0003

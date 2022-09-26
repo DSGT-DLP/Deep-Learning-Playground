@@ -2,9 +2,14 @@ import { toast } from "react-toastify";
 import { auth } from "../../firebase";
 
 const sendToBackend = async (route, data) => {
+  let headers = auth.currentUser
+    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
+    : undefined;
+
   const backendResult = await fetch(`/api/${route}`, {
     method: "POST",
     body: JSON.stringify(data),
+    headers: headers,
   }).then((result) => result.json());
   return backendResult;
 };
@@ -55,14 +60,8 @@ const sendEmail = async (email, problemType) => {
   }
 };
 
-const updateUserSettings = async () => {
-  if (auth.currentUser) {
-    await sendToBackend("updateUserSettings", {
-      authorization: await auth.currentUser.getIdToken(true),
-    });
-  } else {
-    toast.error("Not logged in");
-  }
+const isLoggedIn = async () => {
+  return await auth.currentUser?.getIdToken(true), toast.error("Not logged in");
 };
 
-export { sendToBackend, train_and_output, sendEmail, updateUserSettings };
+export { sendToBackend, train_and_output, sendEmail, isLoggedIn };

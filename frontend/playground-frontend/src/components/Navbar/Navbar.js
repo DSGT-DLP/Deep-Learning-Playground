@@ -1,11 +1,12 @@
 import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const AccountButton = ({ setShowLogin }) => {
+  const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -20,9 +21,11 @@ const AccountButton = ({ setShowLogin }) => {
         </button>
         {showDropdown && (
           <div id="accountButtons">
-            <button className="accountButton">Dashboard</button>
+            <button className="accountButton" onClick={() => navigate("/")}>
+              Dashboard
+            </button>
             <button className="accountButton">Settings</button>
-            <button className="accountButton">My Learning</button>
+            <button className="accountButton">Learn</button>
             <button className="accountButton" onClick={() => auth.signOut()}>
               Log out
             </button>
@@ -42,15 +45,16 @@ const AccountButton = ({ setShowLogin }) => {
 const Navbar = ({ setShowLogin }) => {
   return (
     <div className="header-footer" id="nav-bar">
-      <a href="/" className="image-title">
+      <Link to="/" className="image-title">
         <img src={DSGTLogo} alt="DSGT Logo" width="60" height="60" />
         <div style={{ marginRight: 10 }} />
         Deep Learning Playground
-      </a>
+      </Link>
       <ul className="nav">
         <li id="title-name"></li>
+
         <li className="navElement">
-          <Link to="/home">Home</Link>
+          <Link to="/train">Train</Link>
         </li>
 
         <li className="navElement">

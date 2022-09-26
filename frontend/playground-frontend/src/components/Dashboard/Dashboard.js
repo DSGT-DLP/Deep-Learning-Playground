@@ -154,7 +154,7 @@ const FilledGrid = () => {
                 />
               </TableCell>
               <TableCell align="right">
-                <button className="grid-status-display grid-status-display-blue" >
+                <button className="grid-status-display grid-status-display-blue">
                   RESULT
                 </button>
               </TableCell>

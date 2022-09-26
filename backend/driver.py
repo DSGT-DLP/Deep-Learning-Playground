@@ -6,6 +6,7 @@ import shutil
 from dotenv import load_dotenv
 
 from flask import Flask, request, send_from_directory
+from backend.middleware import middleware
 from flask_cors import CORS
 
 from backend.common.ai_drive import dl_tabular_drive, dl_img_drive
@@ -31,6 +32,8 @@ app = Flask(
 )
 CORS(app)
 
+app.wsgi_app = middleware(app.wsgi_app)
+
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def root(path):
@@ -40,7 +43,7 @@ def root(path):
         return send_from_directory(app.static_folder, "index.html")
     
 @app.route("/api/tabular-run", methods=["POST"])
-def tabular_run():    
+def tabular_run():   
     try:
         request_data = json.loads(request.data)
         

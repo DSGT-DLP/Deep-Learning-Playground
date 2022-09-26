@@ -20,6 +20,17 @@ const displayChange = (display, setdisplay) => {
 };
 
 const render_layer_info = (layer_info) => {
+  const changeClassName = () => {
+    const layer_info_button = document.getElementById(layer_info.id);
+    if (layer_info_button.classList.contains("collapsed-layer")) {
+      layer_info_button.classList.remove("collapsed-layer");
+      layer_info_button.classList.add("expanded-layer");
+    } else {
+      layer_info_button.classList.remove("expanded-layer");
+      layer_info_button.classList.add("collapsed-layer");
+    }
+    
+  };
   let body = [];
   for (let i = 0; i < layer_info.docs.length; i++) {
     body.push(
@@ -51,9 +62,10 @@ const render_layer_info = (layer_info) => {
   return (
     <>
       <button
-        onClick={() =>
-          displayChange(layer_info.displayState, layer_info.setDisplayState)
-        }
+        onClick={() => {
+          changeClassName();
+          displayChange(layer_info.displayState, layer_info.setDisplayState);
+        }}
         className="layer-outer-button"
         style={{
           marginBottom: layer_info.displayState === "none" ? "10px" : 0,
@@ -68,9 +80,11 @@ const render_layer_info = (layer_info) => {
 
 const render_all_layer_info = (layer_wiki) => {
   const body = [];
-  for (let i = 0; i < layer_wiki.length; i++) {
+  for (const layer_element of layer_wiki) {
     body.push(
-      <li key={layer_wiki[i].title}>{render_layer_info(layer_wiki[i])}</li>
+      <ul className="collapsed-layer" id={layer_element.id}>
+        <li key={layer_element.title}>{render_layer_info(layer_element)}</li>
+      </ul>
     );
   }
   return body;
@@ -95,6 +109,7 @@ const Wiki = () => {
   const layer_wiki = [
     {
       title: "Common Layers",
+      id: "common-layers",
       docs: [
         {
           layer_name: "Linear Layer",
@@ -176,6 +191,7 @@ const Wiki = () => {
     },
     {
       title: "Non-linear Activations (weighted sum, nonlinearity)",
+      id: "non-linear-activations-weighted",
       docs: [
         {
           layer_name: "ReLU",
@@ -306,6 +322,7 @@ const Wiki = () => {
     },
     {
       title: "Non-Linear Activations",
+      id: "non-linear-activations",
       docs: [
         {
           layer_name: "Softmax",
@@ -360,6 +377,7 @@ const Wiki = () => {
     },
     {
       title: "Convolution Layers",
+      id: "convolution-layers",
       docs: [
         {
           layer_name: "Conv2d",

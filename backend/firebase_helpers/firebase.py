@@ -12,6 +12,8 @@ def get_secret():
 
 def init_firebase():
     firebase_secret = get_secret()
+    
+    firebase_secret['private_key'] = firebase_secret['private_key'].replace("\\n", "\n")
     firebase_secret["type"] = "service_account"
 
     creds = firebase_admin.credentials.Certificate(firebase_secret)

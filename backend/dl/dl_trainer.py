@@ -303,6 +303,8 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
             loss, test_correct = 0, 0
             print("training for this epoch finished, going to validation")
 
+            epoch_batch_loss = 0
+
             for x in test_loader:
                 y = x[1]
                 x = x[0]
@@ -313,8 +315,8 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                 y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
 
                 if(epoch == epochs - 1):
-                    y_pred_last_epoch.append(pred.detach().numpy().squeeze())
-                    labels_last_epoch.append(y.detach().numpy().squeeze())
+                    y_pred_last_epoch.append(pred.cpu().detach().numpy().squeeze())
+                    labels_last_epoch.append(y.cpu().detach().numpy().squeeze())
 
                 test_correct += (y_pred == y_true).type(torch.float).sum().item()
                 epoch_batch_loss += float(loss.detach())

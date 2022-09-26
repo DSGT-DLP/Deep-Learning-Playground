@@ -6,6 +6,7 @@ from backend.common.constants import DEFAULT_DATASETS
 import torchvision
 import torch
 import ssl
+from sklearn.model_selection import train_test_split
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -88,12 +89,12 @@ def get_img_default_dataset_loaders(
     train_transform = torchvision.transforms.Compose([x for x in train_transform])
     test_transform = torchvision.transforms.Compose([x for x in test_transform])
 
-    train_set = eval(
+    dataset = eval(
         f"torchvision.datasets.{datasetname}(root='./backend/image_data_uploads', train=True, download=True, transform=train_transform)"
     )
-    test_set = eval(
-        f'torchvision.datasets.{datasetname}(root="./backend/image_data_uploads", train=False, download=True, transform=test_transform)'
-    )
+
+    train_set, test_set = train_test_split(dataset, train_size=0.8, shuffle=False)
+
     train_loader = torch.utils.data.DataLoader(
         train_set, batch_size=batch_size, shuffle=shuffle, drop_last=True
     )

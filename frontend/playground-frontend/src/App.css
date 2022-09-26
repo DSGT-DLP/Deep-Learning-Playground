@@ -530,7 +530,7 @@ textarea {
 }
 
 .layer-info-button:hover {
-  color: rgb(205, 123, 255);
+  color: var(--tertiary);
 }
 
 .layer-outer-button {
@@ -544,7 +544,7 @@ textarea {
 }
 
 .layer-outer-button:hover {
-  color: rgb(205, 123, 255);
+  color: var(--tertiary);
 }
 
 /* -------------------------------------------------------------------------- */

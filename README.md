@@ -13,8 +13,10 @@ Have the following installed first:
 1. [NodeJS v16](https://nodejs.org/en/download/)
 2. NPM v8
 3. [Anaconda](https://www.anaconda.com/)
-4. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). This is important in configuring your dev credentials
-5. [GitKraken](https://help.gitkraken.com/gitkraken-client/how-to-install/)
+4. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). You will need to configure your AWS credentials later
+
+## Recommended
+1. [GitKraken Pro](https://help.gitkraken.com/gitkraken-client/how-to-install/)
 
 ## Shortcuts:
 | Terminal   | Procedure   | Command |
@@ -24,12 +26,12 @@ Have the following installed first:
 | Linux Terminal | Run All | `tmux new-session -d -s frontend_session 'npm run startf'; tmux new-session -d -s backend_session 'npm run startb'` |
 
 
-## Installing the frontend (one-time)
+## Installing/updating the frontend (one-time)
 In the root directory of this project (`~/Deep-Learning-Playground`), run: 
 ```
 npm run installf
 ```
-## Installing the backend (one-time)
+## Installing/updating the backend (one-time)
 ```
 npm run installb
 ```
@@ -50,11 +52,11 @@ npm run startb
 
 - Updating an environment: `conda env update -f environment.yml` in the `/conda` directory
 
-## Backend Infra
+## Backend Infrastructure
 
 `python -m backend.driver` from the `~/Deep-Learning-Playground` directory
 
-The backend supports training of a deep learning model and/or a classical ML model!
+The backend supports training of a deep learning model and/or a classical ML model
 
 ## Backend Architecture
 
@@ -68,17 +70,17 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 
 ## Startup Instructions
 
-> **Note:** You will need the `.env` file from @farisdurrani to get the `Feedback` page working, but other pages work fine without it
+> **Note:** You will need the `.env` file to get the `Feedback` page working, but other pages work fine without it. Run the [build_env.py](./backend/aws_helpers/aws_secrets_utils/build_env.py) using `python build.py`.
 
 1. For complete functionality with the backend, first, start the backend using the instructions above. The backend will be live at http://localhost:8000/
 
-2. Then in a separate terminal, start the frontend development server. After installing [nodeJS v16](https://nodejs.org/en/download/), run the following commands:
+2. Then in a separate terminal, start the frontend development server. After installing the prerequisites above, run the following commands:
 
-```
-cd frontend\playground-frontend
-npm install
-npm start
-```
+    ```
+    cd frontend\playground-frontend
+    npm install
+    npm start
+    ```
 
 3. Then, go to http://localhost:3000/
 

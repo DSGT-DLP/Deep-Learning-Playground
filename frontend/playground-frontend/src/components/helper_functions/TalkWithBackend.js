@@ -73,4 +73,10 @@ const isLoggedIn = async () => {
   return await auth.currentUser?.getIdToken(true), toast.error("Not logged in");
 };
 
-export { uploadToBackend, sendToBackend, train_and_output, sendEmail, isLoggedIn };
+export {
+  uploadToBackend,
+  sendToBackend,
+  train_and_output,
+  sendEmail,
+  isLoggedIn,
+};

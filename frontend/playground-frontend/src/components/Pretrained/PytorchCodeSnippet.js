@@ -48,7 +48,7 @@ PytorchCodeSnippet.propTypes = {
     message: PropTypes.string,
   }),
   modelName: PropTypes.any,
-  n_epochs: PropTypes.number.isRequired,
+  n_epochs: PropTypes.number,
 };
 
 export default PytorchCodeSnippet;

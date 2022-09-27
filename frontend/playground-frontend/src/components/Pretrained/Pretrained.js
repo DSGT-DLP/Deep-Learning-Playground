@@ -106,21 +106,22 @@ const Pretrained = () => {
           {/* <RectContainer style={styles.fileInput}> */}
 
           <div className="input-container d-flex flex-column align-items-center justify-content-center">
-            <LargeFileUpload 
-            uploadFile={uploadFile}
-            setUploadFile={setUploadFile} />
+            <LargeFileUpload
+              uploadFile={uploadFile}
+              setUploadFile={setUploadFile}
+            />
           </div>
 
           {/* </RectContainer> */}
           <TrainButton
             {...input_responses}
             setDLPBackendResponse={setDLPBackendResponse}
+            choice="pretrained"
             style={{
               container: {
                 width: 155,
               },
             }}
-            choice="pretrained"
           />
         </BackgroundLayout>
         <BackgroundLayout>

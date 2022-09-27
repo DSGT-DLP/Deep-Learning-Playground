@@ -80,11 +80,15 @@ const TrainButton = (props) => {
     setPendingResponse(true);
     setDLPBackendResponse(null);
 
-    const user_arch = make_obj_param_list(props.addedLayers, "Model");
-    if (user_arch === false) return;
-
+    let user_arch = 0;
     let trainTransforms = 0;
     let testTransforms = 0;
+
+    if (props.addedLayers) {
+      user_arch = make_obj_param_list(props.addedLayers, "Model");
+      if (user_arch === false) return;
+    }
+
     if (props.trainTransforms) {
       trainTransforms = make_obj_param_list(
         props.trainTransforms,
@@ -111,6 +115,7 @@ const TrainButton = (props) => {
       const formData = new FormData();
       formData.append("file", uploadFile);
       await axios.post("/api/upload", formData);
+      console.log("sent form");
     }
     const trainResult = await train_and_output(
       choice,

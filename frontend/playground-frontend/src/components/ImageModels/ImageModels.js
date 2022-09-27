@@ -32,7 +32,7 @@ import {
   Results,
   CodeSnippet,
   ChoiceTab,
-  Spacer
+  Spacer,
 } from "../index";
 
 const ImageModels = () => {

@@ -28,6 +28,7 @@ import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "react-toastify";
+import { FormControlLabel, Switch } from "@mui/material";
 import { sendToBackend } from "./components/helper_functions/TalkWithBackend";
 
 const Home = () => {
@@ -40,7 +41,7 @@ const Home = () => {
   const [fileURL, setFileURL] = useState("");
   const [email, setEmail] = useState("");
   const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
-  const [targetCol, setTargetCol] = useState();
+  const [targetCol, setTargetCol] = useState(null);
   const [features, setFeatures] = useState([]);
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
   const [criterion, setCriterion] = useState(
@@ -61,6 +62,7 @@ const Home = () => {
     }))
   );
   const [activeColumns, setActiveColumns] = useState([]);
+  const [beginnerMode, setBeginnerMode] = useState(true);
 
   const input_responses = {
     addedLayers: addedLayers,
@@ -100,6 +102,11 @@ const Home = () => {
     setInputFeatureColumnOptions(csvColumnsCopy);
   };
 
+  const onClick = () => {
+    setBeginnerMode(!beginnerMode);
+    setInputKey((e) => e + 1);
+  };
+
   const input_queries = [
     {
       queryText: "Target Column",
@@ -125,6 +132,7 @@ const Home = () => {
       options: OPTIMIZER_NAMES,
       onChange: setOptimizerName,
       defaultValue: optimizerName,
+      beginnerMode: beginnerMode,
     },
     {
       queryText: "Criterion",
@@ -133,6 +141,7 @@ const Home = () => {
       ),
       onChange: setCriterion,
       defaultValue: criterion,
+      beginnerMode: beginnerMode,
     },
     {
       queryText: "Default",
@@ -151,6 +160,7 @@ const Home = () => {
       options: BOOL_OPTIONS,
       onChange: setShuffle,
       defaultValue: shuffle,
+      beginnerMode: beginnerMode,
     },
     {
       queryText: "Test Size",
@@ -163,6 +173,7 @@ const Home = () => {
       onChange: setBatchSize,
       defaultValue: batchSize,
       freeInputCustomRestrictions: { type: "number", min: 2 },
+      beginnerMode: beginnerMode,
     },
   ];
 
@@ -216,8 +227,11 @@ const Home = () => {
   return (
     <div id="home-page" className="container-fluid">
       <ChoiceTab />
+      <FormControlLabel
+        control={<Switch id="mode-switch" onClick={onClick}></Switch>}
+        label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
+      />
       <Spacer height={40} />
-
       <DndProvider backend={HTML5Backend}>
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>

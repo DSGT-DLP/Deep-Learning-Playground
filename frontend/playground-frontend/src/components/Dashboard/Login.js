@@ -1,63 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signInWithRedirect,
-} from "firebase/auth";
-import { auth, googleProvider, githubProvider } from "../../firebase";
-import { toast } from "react-toastify";
+  signInWithPassword,
+  registerWithPassword,
+  signInWithGoogle,
+  signInWithGithub,
+} from "../../firebase";
 import { setCurrentUser } from "../../redux/userLogin";
 import { useDispatch } from "react-redux";
 import GoogleLogo from "../../images/logos/google.png";
 import GithubLogo from "../../images/logos/github.png";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
+  const [fullName, setFullName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const signedInUserEmail = useSelector((state) => state.currentUser.email);
 
-  const updateCurrentUser = async (userCredential) => {
-    const user = userCredential.user;
+  const handleSignInRegister = async () => {
+    let user;
+    if (isRegistering) {
+      user = await registerWithPassword(email, password, fullName);
+    } else {
+      user = await signInWithPassword(email, password);
+    }
+
+    if (!user) return;
     const userData = {
       email: user.email,
       uid: user.uid,
       displayName: user.displayName,
       emailVerified: user.emailVerified,
     };
-    await dispatch(setCurrentUser(userData));
+    dispatch(setCurrentUser(userData));
     navigate("/dashboard");
-  };
-
-  const signInWithPassword = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        updateCurrentUser(userCredential);
-        toast.success(`Signed in with email ${userCredential.user.email}`, {
-          autoClose: 1000,
-        });
-      })
-      .catch((error) => toast.error(`Error: ${error.code}`));
-  };
-
-  const registerWithPassword = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        updateCurrentUser(userCredential);
-        toast.success(`Registered with email ${userCredential.user.email}`, {
-          autoClose: 1000,
-        });
-      })
-      .catch((error) => toast.error(`Error: ${error.code}`));
-  };
-
-  const handleSignInRegister = () => {
-    if (isRegistering) registerWithPassword();
-    else signInWithPassword();
   };
 
   const Title = (
@@ -73,20 +55,22 @@ const Login = () => {
     </>
   );
 
+  useEffect(() => {
+    if (signedInUserEmail) navigate("/dashboard");
+  }, [signedInUserEmail]);
+
   const SocialLogins = (
     <>
       <div className="d-flex justify-content-evenly mb-5">
         <Button
           className="login-button google"
-          onClick={() => signInWithRedirect(auth, googleProvider)}
+          onClick={() => signInWithGoogle()}
         >
           <img src={GoogleLogo} />
         </Button>
         <Button
           className="login-button github"
-          onClick={() => {
-            signInWithRedirect(auth, githubProvider);
-          }}
+          onClick={() => signInWithGithub()}
         >
           <img src={GithubLogo} />
         </Button>
@@ -99,7 +83,11 @@ const Login = () => {
       {isRegistering && (
         <Form.Group className="mb-3" controlId="login-name">
           <Form.Label>Name</Form.Label>
-          <Form.Control placeholder="Enter name" />
+          <Form.Control
+            placeholder="Enter name"
+            onBlur={(e) => setFullName(e.target.value)}
+            autoComplete="name"
+          />
         </Form.Group>
       )}
 
@@ -109,6 +97,7 @@ const Login = () => {
           type="email"
           placeholder="someone@example.com"
           onBlur={(e) => setEmail(e.target.value)}
+          autoComplete="email"
         />
       </Form.Group>
 
@@ -118,6 +107,7 @@ const Login = () => {
           type="password"
           placeholder="Password"
           onBlur={(e) => setPassword(e.target.value)}
+          autoComplete="current-password"
         />
       </Form.Group>
       <div className="email-buttons d-flex flex-column">

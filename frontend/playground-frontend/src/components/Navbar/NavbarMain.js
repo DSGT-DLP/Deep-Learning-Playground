@@ -11,6 +11,7 @@ import { signOut, onAuthStateChanged } from "firebase/auth";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setCookie, deleteCookie } from "../helper_functions/Cookie";
 
 const NavbarMain = () => {
   const userEmail = useSelector((state) => state.currentUser.email);
@@ -18,7 +19,7 @@ const NavbarMain = () => {
   const navigate = useNavigate();
 
   const goToLogin = () => {
-    if (!window.location.href.match(/(\/login$|\/login#$)/g)) {
+    if (!window.location.href.match(/\/login/g)) {
       // Go to Login page if we aren't already there
       navigate("/login");
     }
@@ -29,6 +30,7 @@ const NavbarMain = () => {
       .then(() => {
         dispatch(setCurrentUser(null));
         toast.success("Logged out successfully", { autoClose: 1000 });
+        deleteCookie("userEmail");
         navigate("/login");
       })
       .catch((error) => toast.error(`Error: ${error.code}`));
@@ -37,6 +39,7 @@ const NavbarMain = () => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (!user) return;
+
       const userData = {
         email: user.email,
         uid: user.uid,
@@ -44,6 +47,7 @@ const NavbarMain = () => {
         emailVerified: user.emailVerified,
       };
       dispatch(setCurrentUser(userData));
+      setCookie("userEmail", user.email);
     });
   }, []);
 
@@ -77,7 +81,7 @@ const NavbarMain = () => {
                 </NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <Nav.Link href="/login" onClick={goToLogin}>
+              <Nav.Link href="#" onClick={goToLogin}>
                 Log in
               </Nav.Link>
             )}

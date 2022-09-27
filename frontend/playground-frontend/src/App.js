@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import {
   About,
   Wiki,
@@ -11,15 +11,15 @@ import {
   Login,
 } from "./components";
 import Home from "./Home";
-import { Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { useSelector } from "react-redux";
+import { getCookie } from "./components/helper_functions/Cookie";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 function App() {
-  const userEmail = useSelector((state) => state.currentUser.email);
+  const userEmail = getCookie("userEmail");
+  const verifyLogin = (target) => (userEmail ? target : <Login />);
 
   return (
     <div id="app">
@@ -38,13 +38,10 @@ function App() {
                 )
               }
             />
-            <Route
-              path="/login"
-              element={userEmail ? <Navigate to="/dashboard" /> : <Login />}
-            />
-            <Route path="/train" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/train" element={verifyLogin(<Home />)} />
+            <Route path="/img-models" element={verifyLogin(<ImageModels />)} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/img-models" element={<ImageModels />} />
             <Route path="/about" element={<About />} />
             <Route path="/wiki" element={<Wiki />} />
             <Route path="/feedback" element={<Feedback />} />

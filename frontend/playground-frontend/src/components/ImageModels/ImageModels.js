@@ -19,13 +19,12 @@ import {
 } from "../../constants";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-
+import { FormControlLabel, Switch } from "@mui/material";
 import {
   Input,
   TitleText,
   BackgroundLayout,
   AddedLayer,
-  Spacer,
   AddNewLayer,
   TrainButton,
   LayerChoice,
@@ -33,6 +32,7 @@ import {
   Results,
   CodeSnippet,
   ChoiceTab,
+  Spacer,
 } from "../index";
 
 const ImageModels = () => {
@@ -41,12 +41,14 @@ const ImageModels = () => {
   const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
   const [criterion, setCriterion] = useState(IMAGE_CLASSIFICATION_CRITERION[0]);
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
-  const [usingDefaultDataset, setUsingDefaultDataset] = useState();
+  const [usingDefaultDataset, setUsingDefaultDataset] = useState(null);
   const [epochs, setEpochs] = useState(5);
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [batchSize, setBatchSize] = useState(20);
   const [email, setEmail] = useState("");
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
+  const [beginnerMode, setBeginnerMode] = useState(true);
+  const [inputKey, setInputKey] = useState(0);
   const [uploadFile, setUploadFile] = useState(null);
 
   const input_responses = {
@@ -68,12 +70,14 @@ const ImageModels = () => {
       options: OPTIMIZER_NAMES,
       onChange: setOptimizerName,
       defaultValue: optimizerName,
+      beginnerMode: beginnerMode,
     },
     {
       queryText: "Criterion",
       options: IMAGE_CLASSIFICATION_CRITERION,
       onChange: setCriterion,
       defaultValue: criterion,
+      beginnerMode: beginnerMode,
     },
     {
       queryText: "Default",
@@ -92,6 +96,7 @@ const ImageModels = () => {
       options: BOOL_OPTIONS,
       onChange: setShuffle,
       defaultValue: shuffle,
+      beginnerMode: beginnerMode,
     },
 
     {
@@ -99,9 +104,9 @@ const ImageModels = () => {
       onChange: setBatchSize,
       defaultValue: batchSize,
       freeInputCustomRestrictions: { type: "number", min: 2 },
+      beginnerMode: beginnerMode,
     },
   ];
-
   const ALL_LAYERS = POSSIBLE_LAYERS.concat(IMAGE_LAYERS);
 
   const ResultMemo = useMemo(
@@ -114,11 +119,19 @@ const ImageModels = () => {
     [dlpBackendResponse, PROBLEM_TYPES[0]]
   );
 
+  const onClick = () => {
+    setBeginnerMode(!beginnerMode);
+    setInputKey((e) => e + 1);
+  };
+
   return (
     <div id="image-models">
       <DndProvider backend={HTML5Backend}>
         <ChoiceTab />
-
+        <FormControlLabel
+          control={<Switch id="mode-switch" onClick={onClick}></Switch>}
+          label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
+        />
         <Spacer height={40} />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
@@ -191,7 +204,7 @@ const ImageModels = () => {
       <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
         {input_queries.map((e) => (
-          <Input {...e} key={e.queryText} />
+          <Input {...e} key={e.queryText + inputKey} />
         ))}
       </BackgroundLayout>
 

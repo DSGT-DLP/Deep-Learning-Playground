@@ -36,6 +36,7 @@ const Home = () => {
   const [uploadedColumns, setUploadedColumns] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [inputKey, setInputKey] = useState(0);
+
   // input responses
   const [fileURL, setFileURL] = useState("");
   const [email, setEmail] = useState("");
@@ -94,7 +95,7 @@ const Home = () => {
     let featuresCopy = JSON.parse(JSON.stringify(features));
     csvColumnsCopy.splice(e.value, 1);
     if (featuresCopy) {
-      featuresCopy = featuresCopy.filter((item) => item.value != e.value);
+      featuresCopy = featuresCopy.filter((item) => item.value !== e.value);
       setInputKey((e) => e + 1);
       setFeatures(featuresCopy);
     }

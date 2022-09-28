@@ -10,11 +10,13 @@ export const COLORS = {
 };
 
 export const URLs = {
+  donate: "https://buy.stripe.com/9AQ3e4eO81X57y8aEG",
   linkedin: "https://www.linkedin.com/company/dsgt/",
   youtube: "https://www.youtube.com/channel/UC1DGL6Tb9ffwC-aHChadxMw",
   instagram: "https://www.instagram.com/datasciencegt/",
   github: "https://github.com/karkir0003/Deep-Learning-Playground",
 };
+
 export const LAYOUT = {
   row: {
     display: "flex",

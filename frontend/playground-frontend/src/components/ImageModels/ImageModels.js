@@ -20,7 +20,6 @@ import {
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { FormControlLabel, Switch } from "@mui/material";
-
 import {
   Input,
   TitleText,
@@ -33,8 +32,8 @@ import {
   Results,
   CodeSnippet,
   ChoiceTab,
+  Spacer,
 } from "../index";
-import Spacer from "../general/Spacer";
 
 const ImageModels = () => {
   const [addedLayers, setAddedLayers] = useState(DEFAULT_IMG_LAYERS);

@@ -26,9 +26,6 @@ export { default as Login } from "./Dashboard/Login";
 // About
 export { default as About } from "./About/About";
 
-// Login
-export { default as LoginPopup } from "./LoginPopup/LoginPopup";
-
 // Wiki
 export { default as Wiki } from "./Wiki/Wiki";
 
@@ -36,7 +33,7 @@ export { default as Wiki } from "./Wiki/Wiki";
 export { default as Feedback } from "./Feedback/Feedback";
 
 // Navbar
-export { default as Navbar } from "./Navbar/Navbar";
+export { default as NavbarMain } from "./Navbar/NavbarMain";
 
 // Footer
 export { default as Footer } from "./Footer/Footer";

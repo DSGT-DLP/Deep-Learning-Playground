@@ -20,6 +20,7 @@
     "no-var": "error",
     "semi": "error",
     "eol-last": "error",
+    "eqeqeq": ["error", "smart"],
     "no-multiple-empty-lines": ["error", { "max": 1, "maxBOF": 0, "maxEOF": 1 }]
   }
 }

@@ -6,10 +6,11 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const rows = [
   {
@@ -167,6 +168,12 @@ const FilledGrid = () => {
 };
 
 const Dashboard = () => {
+  const signedInUserEmail = useSelector((state) => state.currentUser.email);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (signedInUserEmail) navigate("/dashboard");
+  }, [signedInUserEmail]);
+
   return (
     <div id="dashboard">
       <FilledGrid />

@@ -1,5 +1,15 @@
-import firebase from "firebase/compat/app";
-import { getAuth } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithRedirect,
+  updateProfile,
+} from "firebase/auth";
+import { toast } from "react-toastify";
+import { setCookie } from "./components/helper_functions/Cookie";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -12,7 +22,66 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const auth = getAuth();
+export const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
 
-export { app, auth };
+// Exported functions
+
+export const updateUserProfile = async (
+  displayName = null,
+  photoURL = null
+) => {
+  const newDetails = {};
+  if (displayName != null) newDetails.displayName = displayName;
+  if (photoURL != null) newDetails.photoURL = photoURL;
+  await updateProfile(auth.currentUser, newDetails)
+    .then(() => {})
+    .catch((e) => toast.error(`Error: ${e.code}`, { autoClose: 1000 }));
+};
+
+export const registerWithPassword = async (
+  email,
+  password,
+  displayName = null
+) => {
+  return await createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      updateUserProfile(displayName);
+      setCookie("email", user.email);
+      toast.success(`Registered with email ${user.email}`, {
+        autoClose: 1000,
+      });
+      return user;
+    })
+    .catch((error) => {
+      toast.error(`Error: ${error.code}`);
+      return false;
+    });
+};
+
+export const signInWithPassword = async (email, password) => {
+  return signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      setCookie("email", user.email);
+      toast.success(`Signed in with email ${user.email}`, {
+        autoClose: 1000,
+      });
+      return user;
+    })
+    .catch((error) => {
+      toast.error(`Error: ${error.code}`);
+      return false;
+    });
+};
+
+export const signInWithGithub = async () => {
+  const githubProvider = new GithubAuthProvider();
+  signInWithRedirect(auth, githubProvider);
+};
+
+export const signInWithGoogle = async () => {
+  const googleProvider = new GoogleAuthProvider();
+  signInWithRedirect(auth, googleProvider);
+};

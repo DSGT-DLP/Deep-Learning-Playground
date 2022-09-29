@@ -1,17 +1,15 @@
 import firebase_admin
 import firebase_admin.auth
-from flask import request
-import time
 
-def authenticate(request_data):
-    authorization = request_data["authorization"]
-    if not authorization:
-        return False ## throw some error through middleware
+def authenticate(token):
+    user = None
+    if token is None or not token:
+        return False
     try:
+        authorization = token[7:]
         user = firebase_admin.auth.verify_id_token(authorization)
-        request.user = user
     except Exception as e:
         print(e)
-        return False ## throw some error through middleware
+        return None 
     
-    return True ## do middleware stuff instead
+    return user 

@@ -1,10 +1,24 @@
 import { toast } from "react-toastify";
 import { auth } from "../../firebase";
+import axios from "axios";
+
+const uploadToBackend = async (data) => {
+  let headers = auth.currentUser
+    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
+    : undefined;
+
+  await axios.post("/api/upload", data, { headers });
+};
 
 const sendToBackend = async (route, data) => {
+  let headers = auth.currentUser
+    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
+    : undefined;
+
   const backendResult = await fetch(`/api/${route}`, {
     method: "POST",
     body: JSON.stringify(data),
+    headers: headers,
   }).then((result) => result.json());
   return backendResult;
 };
@@ -59,4 +73,10 @@ const isLoggedIn = async () => {
   return await auth.currentUser?.getIdToken(true), toast.error("Not logged in");
 };
 
-export { sendToBackend, train_and_output, sendEmail, isLoggedIn };
+export {
+  uploadToBackend,
+  sendToBackend,
+  train_and_output,
+  sendEmail,
+  isLoggedIn,
+};

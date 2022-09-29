@@ -4,7 +4,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
+  TableRow
 } from "@mui/material";
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
@@ -60,23 +60,24 @@ const BlankGrid = () => {
 };
 
 const StatusDisplay = ({ statusType, status }) => {
+  const navigate = useNavigate();
   if (statusType === "queued") {
     return (
-      <p className="grid-status-display grid-status-display-gray">
+      <button className="grid-status-display grid-status-display-gray" onClick ={() => navigate("/")}>
         Queued: {status}
-      </p>
+      </button>
     );
   } else if (statusType === "training") {
     return (
-      <p className="grid-status-display grid-status-display-yellow">
+      <button className="grid-status-display grid-status-display-yellow" onClick ={() => navigate("/")}>
         Training: {status}
-      </p>
+      </button>
     );
   } else if (statusType === "finished") {
     return (
-      <p className="grid-status-display grid-status-display-green">
+      <button className="grid-status-display grid-status-display-green" onClick ={() => navigate("/")}>
         Done <ArrowForwardIcon fontSize="small" />
-      </p>
+      </button>
     );
   } else {
     return <p>Incorrect status type passed</p>;
@@ -118,15 +119,14 @@ const FilledGrid = () => {
 
   return (
     <TableContainer style={{ display: "flex", justifyContent: "center" }}>
-      <Table sx={{ minWidth: 400, maxWidth: 1400 }}>
+      <Table sx={{ minWidth: 400, m: 2}}>
         <TableHead>
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Type</TableCell>
-            <TableCell align="right">Input</TableCell>
-            <TableCell align="right">Date</TableCell>
-            <TableCell align="right">Status</TableCell>
-            <TableCell align="right">Result</TableCell>
+            <TableCell sx={{ fontWeight: 'bold'}}>Name</TableCell>
+            <TableCell sx={{ fontWeight: 'bold'}}>Type</TableCell>
+            <TableCell sx={{ fontWeight: 'bold'}} align="left">Input</TableCell>
+            <TableCell sx={{ fontWeight: 'bold'}} align="left">Date</TableCell>
+            <TableCell sx={{ fontWeight: 'bold'}} align="left">Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -146,18 +146,13 @@ const FilledGrid = () => {
               <TableCell component="th" scope="row">
                 {row.type}
               </TableCell>
-              <TableCell align="right">{row.input}</TableCell>
-              <TableCell align="right">{formatDate(row.date)}</TableCell>
-              <TableCell align="right">
+              <TableCell align="left">{row.input}</TableCell>
+              <TableCell align="left">{formatDate(row.date)}</TableCell>
+              <TableCell align="left">
                 <StatusDisplay
                   statusType={row.statusType}
                   status={row.status}
                 />
-              </TableCell>
-              <TableCell align="right">
-                <button className="grid-status-display grid-status-display-blue">
-                  RESULT
-                </button>
               </TableCell>
             </TableRow>
           ))}

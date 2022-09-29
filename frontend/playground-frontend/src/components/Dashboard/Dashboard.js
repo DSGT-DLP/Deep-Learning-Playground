@@ -4,7 +4,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
@@ -63,19 +63,28 @@ const StatusDisplay = ({ statusType, status }) => {
   const navigate = useNavigate();
   if (statusType === "queued") {
     return (
-      <button className="grid-status-display grid-status-display-gray" onClick ={() => navigate("/")}>
+      <button
+        className="grid-status-display grid-status-display-gray"
+        onClick={() => navigate("/")}
+      >
         Queued: {status}
       </button>
     );
   } else if (statusType === "training") {
     return (
-      <button className="grid-status-display grid-status-display-yellow" onClick ={() => navigate("/")}>
+      <button
+        className="grid-status-display grid-status-display-yellow"
+        onClick={() => navigate("/")}
+      >
         Training: {status}
       </button>
     );
   } else if (statusType === "finished") {
     return (
-      <button className="grid-status-display grid-status-display-green" onClick ={() => navigate("/")}>
+      <button
+        className="grid-status-display grid-status-display-green"
+        onClick={() => navigate("/")}
+      >
         Done <ArrowForwardIcon fontSize="small" />
       </button>
     );
@@ -119,14 +128,20 @@ const FilledGrid = () => {
 
   return (
     <TableContainer style={{ display: "flex", justifyContent: "center" }}>
-      <Table sx={{ minWidth: 400, m: 2}}>
+      <Table sx={{ minWidth: 400, m: 2 }}>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ fontWeight: 'bold'}}>Name</TableCell>
-            <TableCell sx={{ fontWeight: 'bold'}}>Type</TableCell>
-            <TableCell sx={{ fontWeight: 'bold'}} align="left">Input</TableCell>
-            <TableCell sx={{ fontWeight: 'bold'}} align="left">Date</TableCell>
-            <TableCell sx={{ fontWeight: 'bold'}} align="left">Status</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Type</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} align="left">
+              Input
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} align="left">
+              Date
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} align="left">
+              Status
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

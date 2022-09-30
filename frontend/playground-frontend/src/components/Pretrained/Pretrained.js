@@ -35,7 +35,7 @@ const Pretrained = () => {
   const [epochs, setEpochs] = useState(5);
   const [batchSize, setBatchSize] = useState(20);
   const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
-  const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);  
+  const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
   const [uploadFile, setUploadFile] = useState(null);
 
   const input_responses = {
@@ -49,7 +49,7 @@ const Pretrained = () => {
     epochs: epochs,
     batchSize: batchSize,
     email: email,
-    uploadFile: uploadFile
+    uploadFile: uploadFile,
   };
 
   const input_queries = [

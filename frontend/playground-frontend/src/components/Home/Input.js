@@ -11,12 +11,25 @@ const Input = (props) => {
     defaultValue,
     freeInputCustomRestrictions,
     isMultiSelect,
+    beginnerMode,
   } = props;
 
   return (
-    <div style={{ ...LAYOUT.row, margin: 7.5 }}>
+    <div
+      // @ts-ignore
+      style={{
+        ...LAYOUT.row,
+        margin: 7.5,
+        display: beginnerMode ? "none" : "flex",
+      }}
+    >
       <div style={styles.queryContainer}>
-        <p style={styles.queryText}>{queryText}</p>
+        <p
+          // @ts-ignore
+          style={styles.queryText}
+        >
+          {queryText}
+        </p>
       </div>
       <div style={styles.responseContainer}>
         {options ? (
@@ -57,6 +70,7 @@ Input.propTypes = {
     PropTypes.array,
   ]),
   isMultiSelect: PropTypes.bool,
+  beginnerMode: PropTypes.bool,
   freeInputCustomRestrictions: PropTypes.shape({ type: PropTypes.string }),
   styles: PropTypes.array,
 };

@@ -7,10 +7,9 @@ const CustomModelName = (props) => {
   const { customModelName, setCustomModelName } = props;
   return (
     <>
-      <TitleText text="Custom Model Name" />
       <Form.Control
         className="model-name-input"
-        placeholder="Give a model name"
+        placeholder="Give a custom model name"
         defaultValue={customModelName}
         onBlur={(e) => setCustomModelName(e.target.value)}
         maxLength={255}

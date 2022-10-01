@@ -156,7 +156,8 @@ export const sendImageJSON = (...args) => {
 export const validatePretrainedInput = (user_arch, ...args) => {
   args = args[0];
   let alertMessage = "";
-  // need to confirm whether modelName is supposed to be customModelName
+  if (!args.customModelName)
+    alertMessage += "Custom model name must be specified. ";
   if (!args.modelName) alertMessage += "A model name must be specified.";
   if (!args.criterion) alertMessage += "A criterion must be specified. ";
   if (!args.optimizerName)

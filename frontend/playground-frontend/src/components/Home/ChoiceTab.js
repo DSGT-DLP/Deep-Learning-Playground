@@ -11,7 +11,7 @@ const ChoiceTab = () => {
   };
 
   return (
-    <div style={{ display: "flex", marginBottom: "0px", float: "right" }}>
+    <>
       <button
         style={{ ...styles.button, backgroundColor: getBackground("/train") }}
       >
@@ -30,7 +30,7 @@ const ChoiceTab = () => {
           Image Models
         </Link>
       </button>
-    </div>
+    </>
   );
 };
 

@@ -231,17 +231,17 @@ const Home = () => {
 
   return (
     <div id="home-page" className="container-fluid">
-      <ChoiceTab />
-      <FormControlLabel
-        control={<Switch id="mode-switch" onClick={onClick}></Switch>}
-        label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
-      />
-
-      <Spacer height={40} />
-      <CustomModelName
-        customModelName={customModelName}
-        setCustomModelName={setCustomModelName}
-      />
+      <div className="d-flex flex-row justify-content-between">
+        <FormControlLabel
+          control={<Switch id="mode-switch" onClick={onClick}></Switch>}
+          label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
+        />
+        <CustomModelName
+          customModelName={customModelName}
+          setCustomModelName={setCustomModelName}
+        />
+        <ChoiceTab />
+      </div>
 
       <Spacer height={40} />
       <DndProvider backend={HTML5Backend}>

@@ -99,6 +99,10 @@ input {
   border: none;
 }
 
+input.form-control {
+  border-color: var(--tertiary);
+}
+
 /* -------------------------------------------------------------------------- */
 /*	Navbar
 /* -------------------------------------------------------------------------- */
@@ -155,10 +159,6 @@ input {
 #home-page h2,
 #image-models h2 {
   font-weight: bold;
-}
-
-#home-page input {
-  border-color: var(--tertiary);
 }
 
 .model-name-input {

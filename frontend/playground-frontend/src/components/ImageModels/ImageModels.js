@@ -33,9 +33,13 @@ import {
   CodeSnippet,
   ChoiceTab,
   Spacer,
+  CustomModelName,
 } from "../index";
 
 const ImageModels = () => {
+  const [customModelName, setCustomModelName] = useState(
+    `Model ${new Date().toLocaleString()}`
+  );
   const [addedLayers, setAddedLayers] = useState(DEFAULT_IMG_LAYERS);
   const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
   const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
@@ -62,6 +66,7 @@ const ImageModels = () => {
     trainTransforms: trainTransforms,
     testTransforms: testTransforms,
     uploadFile: uploadFile,
+    customModelName: customModelName,
   };
 
   const input_queries = [
@@ -132,6 +137,13 @@ const ImageModels = () => {
           control={<Switch id="mode-switch" onClick={onClick}></Switch>}
           label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
         />
+
+        <Spacer height={40} />
+        <CustomModelName
+          customModelName={customModelName}
+          setCustomModelName={setCustomModelName}
+        />
+
         <Spacer height={40} />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>

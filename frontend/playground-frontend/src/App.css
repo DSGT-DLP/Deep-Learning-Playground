@@ -157,6 +157,14 @@ input {
   font-weight: bold;
 }
 
+#home-page input {
+  border-color: var(--tertiary);
+}
+
+.model-name-input {
+  max-width: 400px;
+}
+
 .input-container {
   background-color: var(--input);
   width: 230px;

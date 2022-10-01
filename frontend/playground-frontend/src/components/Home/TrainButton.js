@@ -177,7 +177,7 @@ TrainButton.propTypes = {
   problemType: PropTypes.string,
   usingDefaultDataset: PropTypes.string,
   uploadFile: PropTypes.object,
-  customModelName: PropTypes.string
+  customModelName: PropTypes.string,
 };
 
 export default TrainButton;

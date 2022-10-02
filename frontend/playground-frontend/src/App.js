@@ -35,7 +35,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/wiki" element={<Wiki />} />
           <Route path="/feedback" element={<Feedback />} />
-          <Route path="/nlp" element={<NLP />} />
+          <Route path="/textual-data" element={<NLP />} />
         </Routes>
         <ToastContainer position="top-center" />
         {isOnLoginPage || <Footer />}

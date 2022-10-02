@@ -37,7 +37,7 @@ const ChoiceTab = () => {
           backgroundColor: getBackground("/NLP"),
         }}
       >
-        <Link to="/NLP" style={styles.linkelEment}>
+        <Link to="/textual-data" style={styles.linkelEment}>
           NLP
         </Link>
       </button>

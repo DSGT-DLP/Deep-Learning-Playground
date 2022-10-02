@@ -664,3 +664,11 @@ textarea {
   }
 }
 
+#download_csv_res {
+      border: "none";
+      color: "white";
+      cursor: "pointer";
+      padding: 8;
+      text-decoration: "none";
+      font-size: "medium";
+}

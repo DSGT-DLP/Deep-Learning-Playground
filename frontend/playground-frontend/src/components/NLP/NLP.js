@@ -6,7 +6,6 @@ import {
   BackgroundLayout,
   Input,
 } from "..";
-import { GENERAL_STYLES, COLORS } from "../../constants";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
 const NLP = () => {
@@ -56,33 +55,6 @@ const NLP = () => {
     setInputWord(event.target.value);
   };
 
-  let styles = {
-    container: {
-      padding: 0,
-      width: 130,
-      height: 80,
-    },
-    button: {
-      backgroundColor: "transparent",
-      border: "none",
-      cursor: "pointer",
-      height: "100%",
-      width: "100%",
-      ...GENERAL_STYLES.p,
-      fontSize: 25,
-      color: "white",
-    },
-    download_csv_res: {
-      ...GENERAL_STYLES.p,
-      backgroundColor: COLORS.layer,
-      border: "none",
-      color: "white",
-      cursor: "pointer",
-      padding: 8,
-      textDecoration: "none",
-      fontSize: "medium",
-    },
-  };
   let output;
 
   const b64toBlob = (b64Data, contentType = "", sliceSize = 512) => {
@@ -191,14 +163,11 @@ const NLP = () => {
         </BackgroundLayout>
 
         <RectContainer
-          style={{
-            ...styles.container,
-            backgroundColor: COLORS.dark_blue,
-          }}
         >
           <button
+          id="train-button"
+          className="btn btn-primary"
             style={{
-              ...styles.button,
               cursor: "pointer",
             }}
             onClick={onClick}
@@ -221,7 +190,7 @@ const NLP = () => {
             }}
             href={blobUrl}
             download="word2vec.model"
-            style={styles.download_csv_res}
+            id="download_csv_res"
           >
             📄 Download word2vec model
           </a>

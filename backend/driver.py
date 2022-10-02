@@ -14,7 +14,7 @@ from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 
-init_firebase()
+#init_firebase()
 
 import base64
 
@@ -175,23 +175,29 @@ def send_columns():
 
 @app.route('/wordVec',methods = ['POST'])
 def wordVec():
-    # Preprocessing
     content = request.json
-    letters_only = re.sub("[^a-zA-Z]", " ", content['raw_review'])
-    words = letters_only.lower().split()
-    stops = set(stopwords.words("english"))
-    meaningful_words = [w for w in words if not w in stops]
-    singles = [stemmer.stem(word) for word in meaningful_words]
-    processedData = " ".join( singles )
+    # Preprocessing
+    def preprocessing():
+        letters_only = re.sub("[^a-zA-Z]", " ", content['raw_review'])
+        words = letters_only.lower().split()
+        stops = set(stopwords.words("english"))
+        meaningful_words = [w for w in words if not w in stops]
+        singles = [stemmer.stem(word) for word in meaningful_words]
+        processedData = " ".join( singles )
+        return processedData
     
     # Corpus
-    corpus = []  
+    def corpus(processedData):
+        corpus = []  
 
-    word_list = processedData.split()  
-    corpus.append(word_list)   
+        word_list = processedData.split()  
+        corpus.append(word_list)  
+
+        return corpus 
     
+
     # Model
-    model = word2vec.Word2Vec(sentences=corpus, vector_size=int(content['vectorSize']), window=int(content['windowSize']), min_count=int(content['minCount']), workers=int(content['workers']))
+    model = word2vec.Word2Vec(sentences=corpus(preprocessing()), vector_size=int(content['vectorSize']), window=int(content['windowSize']), min_count=int(content['minCount']), workers=int(content['workers']))
     model.save("word2vec.model")
     with open("word2vec.model", "rb") as word2vec_file:
         encoded_string = base64.b64encode(word2vec_file.read())

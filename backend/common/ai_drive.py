@@ -114,8 +114,6 @@ def dl_tabular_drive(
     for category in target_categories:
         if category not in category_list:
             category_list.append(category)
-    print(pandas_data[target])
-    print("category list" + category_list)
     train_loss_results = train_deep_model(
         model, 
         train_loader,

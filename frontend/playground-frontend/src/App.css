@@ -99,6 +99,10 @@ input {
   border: none;
 }
 
+input.form-control {
+  border-color: var(--tertiary);
+}
+
 /* -------------------------------------------------------------------------- */
 /*	Navbar
 /* -------------------------------------------------------------------------- */
@@ -155,6 +159,10 @@ input {
 #home-page h2,
 #image-models h2 {
   font-weight: bold;
+}
+
+.model-name-input {
+  max-width: 400px;
 }
 
 .input-container {

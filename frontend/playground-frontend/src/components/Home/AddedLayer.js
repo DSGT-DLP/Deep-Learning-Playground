@@ -95,7 +95,7 @@ let styles = {
   input_text: {
     borderWidth: 0.5,
     borderColor: COLORS.layer,
-    borderRadius: 10,
+    borderRadius: "0.375rem",
     fontSize: 15,
     maxWidth: "45%",
     padding: 5,

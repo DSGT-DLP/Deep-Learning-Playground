@@ -59,6 +59,8 @@ export const validateTabularInputs = (user_arch, ...args) => {
   args = args[0];
   let alertMessage = "";
   if (!user_arch?.length) alertMessage += "At least one layer must be added. ";
+  if (!args.customModelName)
+    alertMessage += "Custom model name must be specified. ";
   if (!args.criterion) alertMessage += "A criterion must be specified. ";
   if (!args.optimizerName)
     alertMessage += "An optimizer name must be specified. ";
@@ -106,6 +108,7 @@ export const sendTabularJSON = (...args) => {
     csv_data: csvDataStr,
     file_URL: args.fileURL,
     email: args.email,
+    custom_model_name: args.customModelName,
   };
 };
 
@@ -114,6 +117,8 @@ export const validateImageInputs = (user_arch, ...args) => {
   args = args[0];
   let alertMessage = "";
   if (!user_arch?.length) alertMessage += "At least one layer must be added. ";
+  if (!args.customModelName)
+    alertMessage += "Custom model name must be specified. ";
   if (!args.criterion) alertMessage += "A criterion must be specified. ";
   if (!args.optimizerName)
     alertMessage += "An optimizer name must be specified. ";
@@ -142,6 +147,7 @@ export const sendImageJSON = (...args) => {
     train_transform: args.trainTransforms,
     test_transform: args.testTransforms,
     email: args.email ? args.email : null,
+    custom_model_name: args.customModelName,
   };
 };
 
@@ -150,6 +156,8 @@ export const sendImageJSON = (...args) => {
 export const validatePretrainedInput = (user_arch, ...args) => {
   args = args[0];
   let alertMessage = "";
+  if (!args.customModelName)
+    alertMessage += "Custom model name must be specified. ";
   if (!args.modelName) alertMessage += "A model name must be specified.";
   if (!args.criterion) alertMessage += "A criterion must be specified. ";
   if (!args.optimizerName)
@@ -181,5 +189,6 @@ export const sendPretrainedJSON = (...args) => {
     train_transform: args.trainTransforms,
     test_transform: args.testTransforms,
     email: args.email,
+    custom_model_name: args.customModelName,
   };
 };

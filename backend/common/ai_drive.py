@@ -107,6 +107,15 @@ def dl_tabular_drive(
         y_test_tensor,
         batch_size=batch_size
     )
+    json_data = json.loads(json_csv_data_str)
+    pandas_data = pd.DataFrame.from_dict(json_data)
+    target_categories = pandas_data[target]
+    category_list = []
+    for category in target_categories:
+        if category not in category_list:
+            category_list.append(category)
+    print(pandas_data[target])
+    print("category list" + category_list)
     train_loss_results = train_deep_model(
         model, 
         train_loader,

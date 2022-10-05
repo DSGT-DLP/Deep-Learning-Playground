@@ -1,7 +1,6 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { python } from "@codemirror/lang-python";
 import { basicSetup } from "codemirror";
-import { indentWithTab } from "@codemirror/commands";
 import React, { useState, useMemo, useEffect } from "react";
 import { DEFAULT_ADDED_LAYERS } from "./constants";
 import {

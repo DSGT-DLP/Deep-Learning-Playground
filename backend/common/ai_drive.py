@@ -170,6 +170,7 @@ def ml_drive(
     default=False,
     test_size=0.2,
     shuffle=True,
+    json_csv_data_str=""
 ):
     """
     Driver function/endpoint into backend for training a classical ML model (eg: SVC, SVR, DecisionTree, Naive Bayes, etc)
@@ -193,9 +194,11 @@ def ml_drive(
             # dataset = fetch_california_housing()
             X, y = get_default_dataset(default.upper(), target, features)
         else:
-            input_df = pd.read_csv(CSV_FILE_NAME)
-            y = input_df[target]
-            X = input_df[features]
+            if json_csv_data_str:
+                input_df = pd.read_json(json_csv_data_str, orient="records")
+
+                y = input_df[target]
+                X = input_df[features]
 
         if shuffle and problem_type.upper() == "CLASSIFICATION":
             # using stratify only for classification problems to ensure correct AUC calculation

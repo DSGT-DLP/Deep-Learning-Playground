@@ -4,7 +4,7 @@ Trainer for classical ML models
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, roc_auc_score
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, roc_auc_score, mean_absolute_percentage_error, mean_squared_error
 from backend.common.constants import CLASSICAL_ML_CONFUSION_MATRIX, CLASSICAL_ML_RESULT_CSV_PATH
 from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
 from backend.common.utils import ProblemType
@@ -55,17 +55,16 @@ def train_classical_ml_regression(model, X_train, X_test, y_train, y_test):
     y_pred_train = model.predict(X_train)
 
     #create popular metrics
-    train_rmse = np.sum((y_pred_train - y_train) ** 2)
-    train_mape = np.sum(np.abs((y_pred_train, y_train)))
-    test_rmse = np.sum((y_pred - y_test)**2)
-    test_mape = np.sum(np.abs((y_pred, y_test)))
-    print(f"Regression Root Mean Squared Error => test: {test_rmse}\t train: {train_rmse}")
-    print(f"Regression Mean Absolute Percentage Error: {test_mape}\t train: {train_mape}")
-
+    train_rmse = mean_squared_error(y_true = y_train, y_pred = y_pred_train, squared= False)
+    train_mape = mean_absolute_percentage_error(y_true = y_train, y_pred = y_pred_train)
+    test_rmse =  mean_squared_error(y_true = y_test, y_pred = y_pred, squared= False)
+    test_mape = mean_absolute_percentage_error(y_true = y_test, y_pred = y_pred)
+    print(f"Regression Root Mean Squared Error => test: {test_rmse.round(4)}\t train: {train_rmse.round(4)}")
+    print(f"Regression Mean Absolute Percentage Error:  => test: {test_mape.round(4)*100}%\t train: {train_mape.round(4)*100}%")
 
     # TODO: Create Scatterplots of predicted vs actuals
 
-    # TODO: Output or return these somewhere
+    return {}
 
 
 def train_classical_ml_model(model, X_train, X_test, y_train, y_test, problem_type):

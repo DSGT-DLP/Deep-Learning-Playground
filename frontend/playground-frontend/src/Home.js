@@ -1,3 +1,7 @@
+import CodeMirror from "@uiw/react-codemirror";
+import { python } from "@codemirror/lang-python";
+import { basicSetup } from "codemirror";
+import { indentWithTab } from "@codemirror/commands";
 import React, { useState, useMemo, useEffect } from "react";
 import { DEFAULT_ADDED_LAYERS } from "./constants";
 import {
@@ -224,6 +228,24 @@ const Home = () => {
     setInputKey((e) => e + 1);
   }, [activeColumns]);
 
+  const onChange = React.useCallback((value) => {
+    console.log("value:", value);
+  }, []);
+
+  const Preprocessing = () => {
+    return (
+      <div>
+        <TitleText text="Preprocessing" />
+        <CodeMirror
+          value="# print('hello world')"
+          height="200px"
+          extensions={[basicSetup, python()]}
+          onChange={onChange}
+        />
+      </div>
+    );
+  };
+
   return (
     <div id="home-page" className="container-fluid">
       <ChoiceTab />
@@ -233,6 +255,8 @@ const Home = () => {
       />
       <Spacer height={40} />
       <DndProvider backend={HTML5Backend}>
+        {beginnerMode ? null : <Preprocessing />}
+
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <div className="input-container d-flex flex-column align-items-center justify-content-center">

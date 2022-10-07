@@ -11,7 +11,7 @@ const ChoiceTab = () => {
   };
 
   return (
-    <div style={{ display: "flex", marginBottom: "0px", float: "right" }}>
+    <div>
       <button
         style={{ ...styles.button, backgroundColor: getBackground("/train") }}
       >

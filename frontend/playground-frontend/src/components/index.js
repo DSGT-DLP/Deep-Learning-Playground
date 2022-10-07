@@ -18,6 +18,7 @@ export { default as RectContainer } from "./Home/RectContainer";
 export { default as Results } from "./Home/Results";
 export { default as TrainButton } from "./Home/TrainButton";
 export { default as ChoiceTab } from "./Home/ChoiceTab";
+export { default as CustomModelName } from "./Home/CustomModelName";
 
 // Dashboard
 export { default as Dashboard } from "./Dashboard/Dashboard";

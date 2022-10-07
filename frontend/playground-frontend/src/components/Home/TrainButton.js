@@ -31,7 +31,7 @@ const TrainButton = (props) => {
   };
 
   const make_obj_param_list = (obj_list, source) => {
-    if (!obj_list) return; // ValidateInputs throw error in case of empty things. This is to prevent an unnecessary errors in case of creating a layer
+    if (!obj_list) return null; // ValidateInputs throw error in case of empty things. This is to prevent an unnecessary errors in case of creating a layer
 
     // making a array of relating methods (like "nn.Linear") with their parameters (in_feature, out_feature) by including all methods and their parameters to make something like:
     // ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"] OR
@@ -80,13 +80,12 @@ const TrainButton = (props) => {
     setPendingResponse(true);
     setDLPBackendResponse(null);
 
-    let user_arch = 0;
-    let trainTransforms = 0;
-    let testTransforms = 0;
+    let user_arch = null;
+    let trainTransforms = null;
+    let testTransforms = null;
 
     if (props.addedLayers) {
       user_arch = make_obj_param_list(props.addedLayers, "Model");
-      if (user_arch === false) return;
     }
 
     if (props.trainTransforms) {
@@ -112,7 +111,7 @@ const TrainButton = (props) => {
     const paramList = { ...props, trainTransforms, testTransforms, user_arch };
 
     if (
-      (choice === "image" || choice == "pretrained") &&
+      (choice === "image" || choice === "pretrained") &&
       !props.usingDefaultDataset
     ) {
       const formData = new FormData();

@@ -51,7 +51,7 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
         assert False
     elif val["test_loss"].isnull().any():
         assert False
-    assert val.shape[0] == 3
+    assert val.shape[0] == 5
     assert True
 
 @pytest.mark.parametrize(
@@ -74,7 +74,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
         assert False
     elif val["test_loss"].isnull().any():
         assert False
-    assert val.shape[0] == 2  # n_epochs
+    assert val.shape[0] == 5  # n_epochs
     assert True
 
 @pytest.mark.parametrize(

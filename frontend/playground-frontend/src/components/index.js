@@ -18,6 +18,7 @@ export { default as RectContainer } from "./Home/RectContainer";
 export { default as Results } from "./Home/Results";
 export { default as TrainButton } from "./Home/TrainButton";
 export { default as ChoiceTab } from "./Home/ChoiceTab";
+export { default as CustomModelName } from "./Home/CustomModelName";
 
 // Dashboard
 export { default as Dashboard } from "./Dashboard/Dashboard";
@@ -26,9 +27,6 @@ export { default as Login } from "./Dashboard/Login";
 // About
 export { default as About } from "./About/About";
 
-// Login
-export { default as LoginPopup } from "./LoginPopup/LoginPopup";
-
 // Wiki
 export { default as Wiki } from "./Wiki/Wiki";
 
@@ -36,7 +34,7 @@ export { default as Wiki } from "./Wiki/Wiki";
 export { default as Feedback } from "./Feedback/Feedback";
 
 // Navbar
-export { default as Navbar } from "./Navbar/Navbar";
+export { default as NavbarMain } from "./Navbar/NavbarMain";
 
 // Footer
 export { default as Footer } from "./Footer/Footer";

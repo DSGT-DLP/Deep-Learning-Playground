@@ -18,11 +18,13 @@ Author URI:   https://datasciencegt.org/
   --primary: #003058;
   --secondary: #b3a36a;
   --tertiary: #cd7bff;
+  --half-translucent: rgba(255, 255, 255, 0.5);
+  --hi-translucent: rgba(255, 255, 255, 0.8);
   --whitehover: #f7f7f7;
   --footer-dark-blue: #00233f;
   --dark-grey: #d3d3d3;
-  --input: #E2E2E2;
-  --add-layer: #F2ECFF;
+  --input: #e2e2e2;
+  --add-layer: #f2ecff;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -34,7 +36,7 @@ Author URI:   https://datasciencegt.org/
 }
 
 h2 {
-  font-size: calc(0.7rem + .9vw);
+  font-size: calc(0.7rem + 0.9vw);
 }
 
 #app {
@@ -43,7 +45,7 @@ h2 {
 }
 
 #app-router {
-  min-height: calc(100vh - 190px)
+  min-height: calc(100vh - 190px);
 }
 
 body {
@@ -57,7 +59,6 @@ img {
 }
 input {
   border-width: 0.5px;
-  height: 25px;
   border-color: var(--tertiary);
   border-radius: 20px;
   padding: 5px;
@@ -89,8 +90,17 @@ input {
   color: white;
 }
 
-.btn-primary:hover, .btn-primary:focus {
+.btn-primary:hover,
+.btn-primary:focus {
   background-color: var(--secondary);
+}
+
+.navbar-toggler.collapsed {
+  border: none;
+}
+
+input.form-control {
+  border-color: var(--tertiary);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -106,210 +116,53 @@ input {
   color: white;
 }
 
-#nav-bar .nav #title-name > a {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-
-#nav-bar .navElement {
-  display: block;
-  padding: 20px;
-  color: inherit;
-  float: right;
-  text-align: center;
-}
-
-#nav-bar .loginButton {
-  display: block;
-  color: inherit;
-  font-size: 25px;
-  background-color: transparent;
-  cursor: pointer;
-  border: 0;
-  text-align: center;
-  padding: 0;
-  margin: none;
-  height: 28px;
-}
-
-#accountButtonWrapper {
-  position: relative;
-}
-
-#accountButtons {
-  position: absolute;
+#navbar-main {
+  color: white;
   background-color: var(--primary);
-  margin-top: 5px;
-  padding: 15px;
-  width: 125px;
-  margin-left: -20px;
 }
 
-.accountButton {
-  display: block;
-  color: inherit;
-  font-size: large;
-  background-color: transparent;
-  cursor: pointer;
-  border: 0;
-  text-align: center;
-  margin-top: 15px;
+#navbar-main .logo-title .logo {
+  height: 40px;
+  aspect-ratio: 1;
 }
 
-#nav-bar .navElement:hover {
-  background-color: var(--whitehover);
-}
-
-#nav-bar .navElement:hover > a,
-#nav-bar .navElement:hover > button,
-#nav-bar .navElement:hover > div > button {
-  color: var(--primary);
-}
-
-@media screen and (max-width: 600px) {
-  #nav-bar li:not(:first-child) {
-    display: none;
-  }
-}
-
-#nav-bar .nav {
-  padding-inline: 10px;
-  max-width: 100%;
-  max-height: 100%;
-  margin: 0;
-  box-sizing: inherit;
-  width: fit-content;
-  height: inherit;
-}
-
-#nav-bar #title-name {
-  float: left;
-  font-size: large;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#nav-bar .nav li {
-  list-style: none;
-  float: left;
-}
-#nav-bar .nav li a {
-  text-decoration: none;
+#navbar-main .logo-title {
   color: white;
-  font-size: 25px;
 }
 
-#nav-bar a.image-title {
-  margin-left: 10px;
-  color: white;
-  text-decoration: none;
-  font-size: 25px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-#nav-bar a.image-title:hover,
-#nav-bar a.image-title:focus {
+#navbar-main .logo-title:hover,
+#navbar-main .logo-title:focus {
   color: var(--secondary);
 }
 
-.header-footer {
-  margin: 0;
-  position: static;
-  background-color: var(--primary);
+#navbar-main .nav-link {
   color: white;
-  display: flex;
-  justify-content: center;
-}
-
-#nav-bar {
-  z-index: 10;
-  top: 0vmax;
-  max-width: 100%;
-  width: 100vw;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.navElement {
-  display: block;
-  padding: 20px;
-  color: inherit;
-  float: right;
-  text-align: center;
-}
-
-.navElement:hover {
-  background-color: var(--whitehover);
-}
-
-.navElement:hover > a {
-  color: var(--primary);
-}
-
-@media screen and (max-width: 600px) {
-  #nav-bar li:not(:first-child) {
-    display: none;
-  }
-}
-
-.nav {
-  padding-inline: 10px;
-  max-width: 100%;
-  max-height: 100%;
-  margin: 0;
-  box-sizing: inherit;
-  width: fit-content;
-  height: inherit;
-}
-
-#title-name {
-  float: left;
   font-size: large;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 1rem;
 }
 
-.nav li {
-  list-style: none;
-  float: left;
-}
-.nav li a {
-  text-decoration: none;
-  color: white;
-  font-size: 25px;
-}
-
-.image-title {
-  margin-left: 10px;
-  color: white;
-  text-decoration: none;
-  font-size: 25px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  display: flex;
+#navbar-main .nav-link:hover,
+#navbar-main .nav-link:focus {
+  background-color: white;
+  color: var(--primary);
 }
 
 /* -------------------------------------------------------------------------- */
 /*	Home and Image Models
 /* -------------------------------------------------------------------------- */
 
-#home-page, #image-models {
+#home-page,
+#image-models {
   padding: 30px 20px;
 }
 
 #home-page h2,
 #image-models h2 {
   font-weight: bold;
+}
+
+.model-name-input {
+  max-width: 400px;
 }
 
 .input-container {
@@ -487,6 +340,8 @@ textarea#code-snippet-text {
 .sections {
   margin-bottom: 1rem;
   margin-top: 1rem;
+  hyphens: auto;
+  word-spacing: -0.05em;
 }
 .tech-row-content {
   width: auto;
@@ -510,6 +365,14 @@ textarea {
   resize: none;
 }
 
+.collapsed-layer li {
+  list-style-type: '▶  ';
+}
+
+.expanded-layer li {
+  list-style-type: '▼  ';
+}
+
 .layer-info-button {
   border: none;
   background: none;
@@ -522,6 +385,10 @@ textarea {
   margin-bottom: 0;
 }
 
+.layer-info-button:hover {
+  color: var(--tertiary);
+}
+
 .layer-outer-button {
   border: none;
   background: none;
@@ -529,12 +396,16 @@ textarea {
   cursor: pointer;
   font-size: 18px;
   font-weight: 600;
+  text-decoration: underline;
+}
+
+.layer-outer-button:hover {
+  color: var(--tertiary);
 }
 
 /* -------------------------------------------------------------------------- */
 /*	Wiki
 /* -------------------------------------------------------------------------- */
-
 
 .wiki-content {
   font-size: medium;
@@ -546,21 +417,90 @@ textarea {
 /*	Login
 /* -------------------------------------------------------------------------- */
 
+/* Login */
+
+.login-button {
+  height: 50px;
+  width: 175px;
+  border-radius: 0.375rem;
+}
+
+.login-button img {
+  max-height: 70%;
+  margin-inline: auto;
+}
+
+.login-button.google {
+  background-color: white;
+}
+
+.login-button.github {
+  background-color: #171515;
+}
+
+.login-button.email {
+  background-color: var(--primary);
+}
+
 #login-page {
   background-color: var(--primary);
+  min-height: 70vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-#login-page .logo {
-  display: flex;
-  flex-direction: row;
-  height: 15vh;
-  align-items: center;
-  font-size: 1.5rem;
   color: white;
 }
+
+#login-page .description {
+  color: darkgray;
+  font-size: larger;
+}
+
+#login-page h1.title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 3.2rem;
+  background: -webkit-linear-gradient(var(--tertiary), white);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#login-page .main-container {
+  width: min(800px, 90%);
+}
+
+#login-page .main-container .form-container {
+  color: black;
+  font-weight: bold;
+  border-radius: 0.375rem;
+  width: 60%;
+  margin-inline: auto;
+  background-color: var(--half-translucent);
+}
+
+#login-page .main-container .form-container .form-label {
+  font-size: larger;
+}
+
+#login-page .main-container .form-container .email-buttons {
+  width: 50%;
+  margin-inline: auto;
+}
+
+#login-page .main-container .form-container .welcome-back {
+  font-size: large;
+}
+
+#login-page .main-container .form-container #sign-up {
+  text-decoration: none;
+}
+
+#login-page .main-container .form-container input {
+  margin-inline: auto;
+}
+
+/* Login Popup */
 
 #login-popup {
   position: absolute;
@@ -591,6 +531,15 @@ textarea {
 /* -------------------------------------------------------------------------- */
 /*	Footer
 /* -------------------------------------------------------------------------- */
+
+#footer .footer-element {
+  margin: 0;
+  position: static;
+  background-color: var(--primary);
+  color: white;
+  display: flex;
+  justify-content: center;
+}
 
 #footer .copyright {
   margin-block: auto;

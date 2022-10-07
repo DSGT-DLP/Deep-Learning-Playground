@@ -12,10 +12,10 @@ import {
 } from "../helper_functions/TrainButtonFunctions";
 import {
   sendEmail,
+  uploadToBackend,
   train_and_output,
 } from "../helper_functions/TalkWithBackend";
 import { toast } from "react-toastify";
-import axios from "axios";
 
 const TrainButton = (props) => {
   const { uploadFile, setDLPBackendResponse, choice = "tabular" } = props;
@@ -110,7 +110,7 @@ const TrainButton = (props) => {
     if (choice === "image" && !props.usingDefaultDataset) {
       const formData = new FormData();
       formData.append("file", uploadFile);
-      await axios.post("/api/upload", formData);
+      await uploadToBackend(formData);
     }
     const trainResult = await train_and_output(
       choice,
@@ -177,6 +177,7 @@ TrainButton.propTypes = {
   problemType: PropTypes.string,
   usingDefaultDataset: PropTypes.string,
   uploadFile: PropTypes.object,
+  customModelName: PropTypes.string,
 };
 
 export default TrainButton;

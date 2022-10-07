@@ -11,9 +11,11 @@ const ChoiceTab = () => {
   };
 
   return (
-    <div style={{ display: "flex", marginBottom: "0px", float: "right" }}>
-      <button style={{ ...styles.button, backgroundColor: getBackground("/") }}>
-        <Link to="/" style={styles.linkelEment}>
+    <div>
+      <button
+        style={{ ...styles.button, backgroundColor: getBackground("/train") }}
+      >
+        <Link to="/train" style={styles.linkelEment}>
           Tabular Data
         </Link>
       </button>

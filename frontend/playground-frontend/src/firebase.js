@@ -1,18 +1,87 @@
-import firebase from "firebase/compat/app";
-import { getAuth } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithRedirect,
+  updateProfile,
+} from "firebase/auth";
+import { toast } from "react-toastify";
+import { setCookie } from "./components/helper_functions/Cookie";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCMq0RmoCB1G6JHwwAvVXdcaykAhvwfv4Q",
-  authDomain: "dsgt-authentication.firebaseapp.com",
-  projectId: "dsgt-authentication",
-  storageBucket: "dsgt-authentication.appspot.com",
-  messagingSenderId: "15938712141",
-  appId: "1:15938712141:web:0ecd946393c0584e72a204",
+  apiKey: "AIzaSyAMJgYSG_TW7CT_krdWaFUBLxU4yRINxX8",
+  authDomain: "deep-learning-playground-8d2ce.firebaseapp.com",
+  projectId: "deep-learning-playground-8d2ce",
+  storageBucket: "deep-learning-playground-8d2ce.appspot.com",
+  messagingSenderId: "771338023154",
+  appId: "1:771338023154:web:8ab6e73fc9c646426a606b",
 };
 
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const auth = getAuth();
+export const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
 
-export { app, auth };
+// Exported functions
+
+export const updateUserProfile = async (
+  displayName = null,
+  photoURL = null
+) => {
+  const newDetails = {};
+  if (displayName != null) newDetails.displayName = displayName;
+  if (photoURL != null) newDetails.photoURL = photoURL;
+  await updateProfile(auth.currentUser, newDetails)
+    .then(() => {})
+    .catch((e) => toast.error(`Error: ${e.code}`, { autoClose: 1000 }));
+};
+
+export const registerWithPassword = async (
+  email,
+  password,
+  displayName = null
+) => {
+  return await createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      updateUserProfile(displayName);
+      setCookie("email", user.email);
+      toast.success(`Registered with email ${user.email}`, {
+        autoClose: 1000,
+      });
+      return user;
+    })
+    .catch((error) => {
+      toast.error(`Error: ${error.code}`);
+      return false;
+    });
+};
+
+export const signInWithPassword = async (email, password) => {
+  return signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      setCookie("email", user.email);
+      toast.success(`Signed in with email ${user.email}`, {
+        autoClose: 1000,
+      });
+      return user;
+    })
+    .catch((error) => {
+      toast.error(`Error: ${error.code}`);
+      return false;
+    });
+};
+
+export const signInWithGithub = async () => {
+  const githubProvider = new GithubAuthProvider();
+  signInWithRedirect(auth, githubProvider);
+};
+
+export const signInWithGoogle = async () => {
+  const googleProvider = new GoogleAuthProvider();
+  signInWithRedirect(auth, googleProvider);
+};

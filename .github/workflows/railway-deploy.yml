@@ -1,0 +1,103 @@
+name: Deploy to Railway
+on:
+  pull_request:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'Development'
+        type: choice
+        options:
+        - Development
+        - Preview
+
+jobs:
+  check_trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check label or branch
+        id: check
+        run: echo ::set-output name=to_run::${{ ((github.event.label.name == 'deploy') || (github.event_name == 'workflow_dispatch')) && 'True' || 'False' }}
+    outputs:
+      status: ${{ steps.check.outputs.to_run }}
+  
+  deploy:
+    runs-on: ubuntu-latest
+    needs: check_trigger
+    if: needs.check_trigger.outputs.status == 'True'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set Environment
+        id: environment
+        run: echo ::set-output name=environment::${{ github.event.label.name == 'deploy' && 'Development' || inputs.environment }}
+
+      - name: Remove Label
+        uses: andymckay/labeler@master
+        with:
+          remove-labels: 'deploy'
+
+      - name: Set Railway Token and Link
+        id: railway_config
+        run: |
+          echo ::set-output name=token::${{ steps.environment.outputs.environment == 'Development' && secrets.RAILWAY_TOKEN_DEV || secrets.RAILWAY_TOKEN_PREV }}
+          echo ::set-output name=link::${{ steps.environment.outputs.environment == 'Development' && 'https://deep-learning-playground-development.up.railway.app/' || 'https://deep-learning-playground-preview.up.railway.app/' }}
+
+      - name: Display Inputs
+        run: |
+          echo "\
+            Github Ref: ${{ github.ref }} \
+            Github Event: ${{ github.event_name }} \
+            Environment: ${{ steps.environment.outputs.environment }} \
+          "
+
+      - name: Use Node 16
+        uses: actions/setup-node@v3.4.1
+        with:
+          node-version: 16
+
+      - name: Install Railway
+        run: npm i -g @railway/cli
+
+      - name: Create GitHub Deployment
+        uses: chrnorm/deployment-action@releases/v1
+        id: deployment
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          environment: ${{ steps.environment.outputs.environment }}
+
+      - name: Railway Deploy
+        run: |
+          echo "Starting Railway Deployment"
+          railway up -e ${{ steps.environment.outputs.environment }}
+          echo "Deployment Complete. View at ${{ steps.railway_config.outputs.link }}"
+        env:
+          RAILWAY_TOKEN: ${{ steps.railway_config.outputs.token }}
+
+      - name: Update Deployment Status (success)
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment_url: ${{ steps.railway_config.outputs.link }}
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+      
+      - name: Comment Deployment on PR
+        if: success() && (github.event_name == 'pull_request')
+        uses: thollander/actions-comment-pull-request@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          message: ${{ format('Deployment Live at {0}', steps.railway_config.outputs.link) }}
+
+      - name: Update Deployment Status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+

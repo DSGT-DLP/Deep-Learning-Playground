@@ -1,50 +1,55 @@
-import React, { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import {
   About,
-  LoginPopup,
   Wiki,
   Feedback,
-  Navbar,
+  NavbarMain,
   ImageModels,
   Footer,
   Dashboard,
   Login,
 } from "./components";
-import { ToastContainer } from "react-toastify";
 import Home from "./Home";
+import { ToastContainer } from "react-toastify";
+import { getCookie } from "./components/helper_functions/Cookie";
+
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "./firebase";
 
 function App() {
-  const [user, loading] = useAuthState(auth);
-  const [showLogin, setShowLogin] = useState(false);
-  const currentURL = window.location.href.split("/");
-  const isOnLoginPage = currentURL[currentURL.length - 1] === "login";
-  if (loading) {
-    return <div id="app"></div>;
-  }
+  const userEmail = getCookie("userEmail");
+  const verifyLogin = (target) => (userEmail ? target : <Login />);
 
   return (
     <div id="app">
       <BrowserRouter>
         <div id="app-router">
-          {isOnLoginPage || <Navbar setShowLogin={setShowLogin} />}
+          <NavbarMain />
           <Routes>
-            <Route exact path="/" element={user ? <Dashboard /> : <Login />} />
-            <Route path="/train" element={<Home />} />
-            <Route path="/img-models" element={<ImageModels />} />
+            <Route
+              exact
+              path="/"
+              element={
+                userEmail ? (
+                  <Navigate to="/dashboard" />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+            <Route path="/login" element={<Login />} />
+            <Route path="/train" element={verifyLogin(<Home />)} />
+            <Route path="/img-models" element={verifyLogin(<ImageModels />)} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/about" element={<About />} />
             <Route path="/wiki" element={<Wiki />} />
             <Route path="/feedback" element={<Feedback />} />
           </Routes>
           <ToastContainer position="top-center" />
         </div>
-        {isOnLoginPage || <Footer />}
+        <Footer />
       </BrowserRouter>
-      {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
     </div>
   );
 }

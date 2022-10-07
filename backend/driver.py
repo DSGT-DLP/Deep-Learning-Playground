@@ -3,8 +3,10 @@ import traceback
 import datetime
 from werkzeug.utils import secure_filename
 import shutil
+from dotenv import load_dotenv
 
 from flask import Flask, request, send_from_directory
+from backend.middleware import middleware
 from flask_cors import CORS
 
 from backend.common.ai_drive import dl_tabular_drive, dl_img_drive, ml_drive
@@ -12,18 +14,25 @@ from backend.common.constants import UNZIPPED_DIR_NAME
 from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
-from backend.firebase_helpers.authenticate import authenticate
 from backend.firebase_helpers.firebase import init_firebase
 
 init_firebase()
 
+PORT = os.getenv("PORT")
+if PORT is not None:
+    PORT = int(PORT)
+else:
+    PORT = 8000
+
 app = Flask(
     __name__,
     static_folder=os.path.join(
-        os.path.dirname(os.getcwd()), "frontend", "playground-frontend", "build"
+        os.getcwd(), "frontend", "playground-frontend", "build"
     ),
 )
 CORS(app)
+
+app.wsgi_app = middleware(app.wsgi_app)
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
@@ -34,7 +43,7 @@ def root(path):
         return send_from_directory(app.static_folder, "index.html")
     
 @app.route("/api/tabular-run", methods=["POST"])
-def tabular_run():    
+def tabular_run():   
     try:
         request_data = json.loads(request.data)
         
@@ -51,7 +60,8 @@ def tabular_run():
         shuffle = request_data["shuffle"]
         csvDataStr = request_data["csv_data"]
         fileURL = request_data["file_URL"]
-    
+        customModelName = request_data["custom_model_name"]
+
         train_loss_results = dl_tabular_drive(
             user_arch,
             criterion,
@@ -89,6 +99,7 @@ def img_run():
         epochs = request_data["epochs"]
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
+        customModelName = request_data["custom_model_name"]
 
         train_loss_results = dl_img_drive(
             train_transform,
@@ -159,13 +170,6 @@ def send_columns():
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
-    
-@app.route("/api/updateUserSettings", methods=["POST"])
-def update_user_settings():
-    request_data = json.loads(request.data)
-    if not authenticate(request_data):
-        return send_success({"message": ""})
-    user = request.user
 
 @app.route("/api/upload", methods=["POST"])
 def upload():
@@ -199,4 +203,4 @@ def send_traceback_error():
     return send_error(traceback.format_exc(limit=1))
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8000)
+    app.run(debug=True, host="0.0.0.0", port=PORT)

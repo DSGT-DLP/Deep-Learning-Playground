@@ -111,7 +111,10 @@ const TrainButton = (props) => {
 
     const paramList = { ...props, trainTransforms, testTransforms, user_arch };
 
-    if ((choice === "image" || choice == "pretrained") && !props.usingDefaultDataset) {
+    if (
+      (choice === "image" || choice == "pretrained") &&
+      !props.usingDefaultDataset
+    ) {
       const formData = new FormData();
       formData.append("file", uploadFile);
       await uploadToBackend(formData);

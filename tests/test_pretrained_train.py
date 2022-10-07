@@ -27,10 +27,6 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         (double_zipped, "resnet50"),
         (
             double_zipped,
-            "vit_small_r26_s32_224",
-        ),
-        (
-            double_zipped,
             "tf_mobilenetv3_small_075",
         ),
         (double_zipped, "efficientnet_b2"),

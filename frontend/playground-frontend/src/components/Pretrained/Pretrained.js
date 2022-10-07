@@ -21,25 +21,33 @@ import EmailInput from "../Home/EmailInput";
 import Results from "../Home/Results";
 import LargeFileUpload from "../general/LargeFileUpload";
 import DataCodeSnippet from "../ImageModels/DataCodeSnippet";
+import { FormControlLabel, Switch } from "@mui/material";
+import CustomModelName from "../Home/CustomModelName";
+import Spacer from "../general/Spacer";
 // import PretrainedCodeSnippet from "./PretrainedCodeSnippet";
 import PytorchCodeSnippet from "./PytorchCodeSnippet";
 
 const Pretrained = () => {
+  const [customModelName, setCustomModelName] = useState(
+    `Model ${new Date().toLocaleString()}`
+  );
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
-  const [modelName, setModelName] = useState();
+  const [modelName, setModelName] = useState("");
   const [email, setEmail] = useState("");
   const [criterion, setCriterion] = useState(IMAGE_CLASSIFICATION_CRITERION[0]);
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
-  const [usingDefaultDataset, setUsingDefaultDataset] = useState();
+  const [usingDefaultDataset, setUsingDefaultDataset] = useState("");
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [epochs, setEpochs] = useState(5);
   const [batchSize, setBatchSize] = useState(20);
+  const [beginnerMode, setBeginnerMode] = useState(true);
+  const [inputKey, setInputKey] = useState(0);
   const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
   const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
   const [uploadFile, setUploadFile] = useState(null);
 
   const input_responses = {
-    modelName: modelName?.value,
+    modelName: modelName?.valueOf,
     criterion: criterion?.value,
     optimizerName: optimizerName?.value,
     usingDefaultDataset: usingDefaultDataset?.value,
@@ -97,10 +105,34 @@ const Pretrained = () => {
     },
   ];
 
+    const onClick = () => {
+      setBeginnerMode(!beginnerMode);
+      setInputKey((e) => e + 1);
+    };
+
   return (
-    <div style={{ padding: 20 }}>
-      <ChoiceTab />
+    <div style={{ padding: 30 }}>
+      <div className="d-flex flex-row justify-content-between">
+        <FormControlLabel
+          control={<Switch id="mode-switch" onClick={onClick}></Switch>}
+          label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
+        />
+        <CustomModelName
+          customModelName={customModelName}
+          setCustomModelName={setCustomModelName}
+        />
+        <ChoiceTab />
+      </div>
+
+      <Spacer height={40} />
       <TitleText text="Data & Parameters" />
+
+      <BackgroundLayout>
+        {input_queries.map((e) => (
+          <Input {...e} key={e.queryText + inputKey} />
+        ))}
+      </BackgroundLayout>
+
       <div style={{ display: "flex" }}>
         <BackgroundLayout>
           {/* <RectContainer style={styles.fileInput}> */}
@@ -170,7 +202,7 @@ const Pretrained = () => {
         defaultData={usingDefaultDataset}
       />
     </div>
-  );
+  );  
 };
 
 export default Pretrained;

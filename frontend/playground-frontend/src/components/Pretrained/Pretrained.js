@@ -105,10 +105,10 @@ const Pretrained = () => {
     },
   ];
 
-    const onClick = () => {
-      setBeginnerMode(!beginnerMode);
-      setInputKey((e) => e + 1);
-    };
+  const onClick = () => {
+    setBeginnerMode(!beginnerMode);
+    setInputKey((e) => e + 1);
+  };
 
   return (
     <div style={{ padding: 30 }}>
@@ -202,7 +202,7 @@ const Pretrained = () => {
         defaultData={usingDefaultDataset}
       />
     </div>
-  );  
+  );
 };
 
 export default Pretrained;

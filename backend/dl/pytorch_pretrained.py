@@ -22,7 +22,6 @@ def pytorch_pretrained(
     # send_progress=lambda x: print("send progerss", x),
 ):
 
-    print("getting model")
     model = GetModel(model_name, n_class, in_chan)
     print("got model")
     model.to(device)

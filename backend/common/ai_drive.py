@@ -1,5 +1,6 @@
 from typing import Counter
 import pandas as pd
+import timm
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris, fetch_california_housing
 
@@ -166,6 +167,10 @@ def dl_img_drive(
 
 def dl_pretrain_drive(train_transform, test_transform, criterion, optimizer_name, default, epochs, batch_size, shuffle, model_name, IMAGE_UPLOAD_FOLDER):
     print("backend started")
+
+    if model_name not in timm.list_models():
+        raise Exception("${model_name} is not supported in DLP yet. Please fill in the feedback form to request the new model!")
+
     train_transform = parse_deep_user_architecture(train_transform)
     test_transform = parse_deep_user_architecture(test_transform)
     zip_file = ""
@@ -186,12 +191,7 @@ def dl_pretrain_drive(train_transform, test_transform, criterion, optimizer_name
 
     for i in train_loader:
         chan_in = (i[0].shape)[1]
-        print(i[1].detach().numpy().flatten())
         count.update(i[1].detach().numpy().flatten())
-
-    print("*********count***********")
-    print(len(count.keys()))
-    print("*********count***********")
 
     train_loss_results = pytorch_pretrained(
         len(count.keys()), model_name, epochs, device, chan_in, criterion, train_loader, valid_loader, optimizer_name

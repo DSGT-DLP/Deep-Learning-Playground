@@ -57,7 +57,8 @@ def get_tensors(X_train, X_test, y_train, y_test):
     X_train_tensor = torch.reshape(
         X_train_tensor, (X_train_tensor.size()[0], 1, X_train_tensor.size()[1])
     )
-    y_train_tensor = torch.reshape(y_train_tensor, (y_train_tensor.size()[0], 1))
+    y_train_tensor = torch.reshape(
+        y_train_tensor, (y_train_tensor.size()[0], 1))
 
     X_test_tensor = Variable(torch.Tensor(X_test.to_numpy()))
     y_test_tensor = Variable(torch.Tensor(y_test.to_numpy()))
@@ -88,11 +89,12 @@ def get_dataloaders(
     train_loader = DataLoader(
         train, batch_size=batch_size, shuffle=False, drop_last=True
     )
-    test_loader = DataLoader(test, batch_size=batch_size, shuffle=False, drop_last=True)
+    test_loader = DataLoader(test, batch_size=batch_size,
+                             shuffle=False, drop_last=True)
     return train_loader, test_loader
 
 
-def generate_loss_plot(results_path) -> dict[str : list[float]]:
+def generate_loss_plot(results_path) -> dict[str: list[float]]:
     """
     Given a training result file, plot the loss in a matplotlib plot
     Args:
@@ -130,7 +132,7 @@ def generate_loss_plot(results_path) -> dict[str : list[float]]:
     }
 
 
-def generate_acc_plot(results_path) -> dict[str : list[float]]:
+def generate_acc_plot(results_path) -> dict[str: list[float]]:
     """
     Given training result file, plot the accuracy in a matplotlib plot
     Args:
@@ -173,7 +175,8 @@ def generate_train_time_csv(epoch_time):
         epoch_time (list): array consisting of train time for each epoch
     """
     epoch = [i for i in range(1, len(epoch_time) + 1)]
-    df = pd.DataFrame({"Train Time": epoch_time}, index=epoch, columns=["Train Time"])
+    df = pd.DataFrame({"Train Time": epoch_time},
+                      index=epoch, columns=["Train Time"])
     df.to_csv(TRAIN_TIME_CSV)
 
 
@@ -193,7 +196,8 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch, category_lis
     label = np.array(labels_last_epoch).flatten()
 
     for batch in y_pred_last_epoch:
-        y_pred = np.concatenate((y_pred, np.argmax(batch, axis=1)), axis=None) #flatten and concatenate
+        # flatten and concatenate
+        y_pred = np.concatenate((y_pred, np.argmax(batch, axis=1)), axis=None)
 
     categoryList = np.arange(0, len(y_pred_last_epoch[0][0])).tolist()
 
@@ -201,11 +205,14 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch, category_lis
     label_np = label
     pred_np = y_pred
     cm = confusion_matrix(label_np, pred_np, labels=categoryList)
-    ax= plt.subplot()
-    sns.heatmap(cm, annot=True, fmt='g', ax=ax, cmap='Purples');  #annot=True to annotate cells, ftm='g' to disable scientific notation
-    ax.set_xlabel('Predicted');ax.set_ylabel('Actual'); 
-    ax.set_title('Confusion Matrix (last Epoch)'); 
-    ax.xaxis.set_ticklabels(category_list); ax.yaxis.set_ticklabels(category_list);
+    ax = plt.subplot()
+    # annot=True to annotate cells, ftm='g' to disable scientific notation
+    sns.heatmap(cm, annot=True, fmt='g', ax=ax, cmap='Purples')
+    ax.set_xlabel('Predicted')
+    ax.set_ylabel('Actual')
+    ax.set_title('Confusion Matrix (last Epoch)')
+    ax.xaxis.set_ticklabels(category_list)
+    ax.yaxis.set_ticklabels(category_list)
     make_directory(CONFUSION_VIZ)
     plt.savefig(CONFUSION_VIZ)
     return (cm.tolist(), categoryList)
@@ -214,8 +221,8 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch, category_lis
 def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch, category_list=[]):
     label_list = []
     y_preds_list = []
-    plot_data = []  
-    categoryList = [] #numerical category list 
+    plot_data = []
+    categoryList = []  # numerical category list
 
     # generating a numerical category list for confusion matrix axis labels, and setting up the y_preds_list and label_list for each category
     categoryList = np.arange(0, len(y_pred_last_epoch[0][0])).tolist()
@@ -246,11 +253,11 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch, category_list=[
             auc = roc_auc_score(y_test, pred_prob)
             # this data will be sent to frontend to make interactive plotly graph
             plot_data.append([fpr.tolist(), tpr.tolist(), auc])
-            plt.plot(fpr, tpr, linestyle='-', label=f'{category_list[i]} (AUC: {round(auc,4)})')
+            plt.plot(fpr, tpr, linestyle='-',
+                     label=f'{category_list[i]} (AUC: {round(auc,4)})')
         plt.legend()
         make_directory(AUC_ROC_VIZ)
         plt.savefig(AUC_ROC_VIZ)
-
 
     except:
         return []
@@ -291,6 +298,7 @@ def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: 
             jsonf.write(jsonString)
 
     return jsonData
+
 
 def make_directory(filepath: str):
     """

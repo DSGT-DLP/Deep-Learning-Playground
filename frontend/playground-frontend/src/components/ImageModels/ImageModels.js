@@ -33,9 +33,13 @@ import {
   CodeSnippet,
   ChoiceTab,
   Spacer,
+  CustomModelName,
 } from "../index";
 
 const ImageModels = () => {
+  const [customModelName, setCustomModelName] = useState(
+    `Model ${new Date().toLocaleString()}`
+  );
   const [addedLayers, setAddedLayers] = useState(DEFAULT_IMG_LAYERS);
   const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
   const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
@@ -62,6 +66,7 @@ const ImageModels = () => {
     trainTransforms: trainTransforms,
     testTransforms: testTransforms,
     uploadFile: uploadFile,
+    customModelName: customModelName,
   };
 
   const input_queries = [
@@ -127,11 +132,18 @@ const ImageModels = () => {
   return (
     <div id="image-models">
       <DndProvider backend={HTML5Backend}>
-        <ChoiceTab />
-        <FormControlLabel
-          control={<Switch id="mode-switch" onClick={onClick}></Switch>}
-          label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
-        />
+        <div className="d-flex flex-row justify-content-between">
+          <FormControlLabel
+            control={<Switch id="mode-switch" onClick={onClick}></Switch>}
+            label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
+          />
+          <CustomModelName
+            customModelName={customModelName}
+            setCustomModelName={setCustomModelName}
+          />
+          <ChoiceTab />
+        </div>
+
         <Spacer height={40} />
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>

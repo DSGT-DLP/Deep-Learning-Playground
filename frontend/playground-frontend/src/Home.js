@@ -23,6 +23,7 @@ import {
   TitleText,
   TrainButton,
   ChoiceTab,
+  CustomModelName,
 } from "./components";
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
@@ -38,6 +39,9 @@ const Home = () => {
   const [inputKey, setInputKey] = useState(0);
 
   // input responses
+  const [customModelName, setCustomModelName] = useState(
+    `Model ${new Date().toLocaleString()}`
+  );
   const [fileURL, setFileURL] = useState("");
   const [email, setEmail] = useState("");
   const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
@@ -78,6 +82,7 @@ const Home = () => {
     batchSize: batchSize,
     fileURL: fileURL,
     email: email,
+    customModelName: customModelName,
   };
 
   const columnOptionsArray = activeColumns.map((e, i) => ({
@@ -226,11 +231,18 @@ const Home = () => {
 
   return (
     <div id="home-page" className="container-fluid">
-      <ChoiceTab />
-      <FormControlLabel
-        control={<Switch id="mode-switch" onClick={onClick}></Switch>}
-        label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
-      />
+      <div className="d-flex flex-row justify-content-between">
+        <FormControlLabel
+          control={<Switch id="mode-switch" onClick={onClick}></Switch>}
+          label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
+        />
+        <CustomModelName
+          customModelName={customModelName}
+          setCustomModelName={setCustomModelName}
+        />
+        <ChoiceTab />
+      </div>
+
       <Spacer height={40} />
       <DndProvider backend={HTML5Backend}>
         <TitleText text="Implemented Layers" />

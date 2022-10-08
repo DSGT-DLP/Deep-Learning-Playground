@@ -60,7 +60,8 @@ def tabular_run():
         shuffle = request_data["shuffle"]
         csvDataStr = request_data["csv_data"]
         fileURL = request_data["file_URL"]
-    
+        customModelName = request_data["custom_model_name"]
+
         train_loss_results = dl_tabular_drive(
             user_arch,
             criterion,
@@ -98,6 +99,7 @@ def img_run():
         epochs = request_data["epochs"]
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
+        customModelName = request_data["custom_model_name"]
 
         train_loss_results = dl_img_drive(
             train_transform,

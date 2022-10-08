@@ -188,6 +188,7 @@ def dl_pretrain_drive(train_transform, test_transform, criterion, optimizer_name
 
     n_classes = 0
     count = Counter()
+    chan_in = 3
 
     for i in train_loader:
         chan_in = (i[0].shape)[1]

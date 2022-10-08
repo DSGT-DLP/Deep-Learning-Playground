@@ -155,10 +155,13 @@ export const sendImageJSON = (...args) => {
 
 export const validatePretrainedInput = (user_arch, ...args) => {
   args = args[0];
+  console.log(args.customModelName);
   let alertMessage = "";
+  console.log(args.beginnerMode);
   if (!args.customModelName)
     alertMessage += "Custom model name must be specified. ";
-  if (!args.modelName) alertMessage += "A model name must be specified.";
+  if (!args.modelName && !args.beginnerMode)
+    alertMessage += "A model name must be specified.";
   if (!args.criterion) alertMessage += "A criterion must be specified. ";
   if (!args.optimizerName)
     alertMessage += "An optimizer name must be specified. ";
@@ -174,7 +177,7 @@ export const sendPretrainedJSON = (...args) => {
   args = args[0];
 
   return {
-    model_name: args.modelName,
+    model_name: args.modelName ? args.modelName : "resnet18",
     criterion: args.criterion,
     optimizer_name: args.optimizerName,
     using_default_dataset: args.usingDefaultDataset

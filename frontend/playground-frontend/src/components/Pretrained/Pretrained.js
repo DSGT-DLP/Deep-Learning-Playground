@@ -7,6 +7,7 @@ import {
   PRETRAINED_MODELS,
   POSSIBLE_TRANSFORMS,
   PROBLEM_TYPES,
+  ADV_PRETRAINED_MODELS,
 } from "../../settings";
 import { DEFAULT_TRANSFORMS } from "../../constants";
 
@@ -47,7 +48,7 @@ const Pretrained = () => {
   const [uploadFile, setUploadFile] = useState(null);
 
   const input_responses = {
-    modelName: modelName?.valueOf,
+    modelName: modelName? modelName.valueOf : null,
     criterion: criterion?.value,
     optimizerName: optimizerName?.value,
     usingDefaultDataset: usingDefaultDataset?.value,
@@ -58,26 +59,31 @@ const Pretrained = () => {
     batchSize: batchSize,
     email: email,
     uploadFile: uploadFile,
+    beginnerMode: beginnerMode,
+    customModelName: customModelName,
   };
 
   const input_queries = [
     {
       queryText: "Model Name",
-      options: PRETRAINED_MODELS,
+      options: beginnerMode ? PRETRAINED_MODELS : ADV_PRETRAINED_MODELS,
       onChange: setModelName,
       defaultValue: modelName,
+      beginnerMode: beginnerMode,
     },
     {
       queryText: "Optimizer Name",
       options: OPTIMIZER_NAMES,
       onChange: setOptimizerName,
       defaultValue: optimizerName,
+      beginnerMode: beginnerMode,
     },
     {
       queryText: "Criterion",
       options: IMAGE_CLASSIFICATION_CRITERION,
       onChange: setCriterion,
       defaultValue: criterion,
+      beginnerMode: beginnerMode,
     },
     {
       queryText: "Default",
@@ -96,12 +102,14 @@ const Pretrained = () => {
       options: BOOL_OPTIONS,
       onChange: setShuffle,
       defaultValue: shuffle,
+      beginnerMode: beginnerMode,
     },
     {
       queryText: "Batch Size",
       onChange: setBatchSize,
       defaultValue: batchSize,
       freeInputCustomRestrictions: { type: "number", min: 2 },
+      beginnerMode: beginnerMode,
     },
   ];
 
@@ -127,40 +135,34 @@ const Pretrained = () => {
       <Spacer height={40} />
       <TitleText text="Data & Parameters" />
 
-      <BackgroundLayout>
-        {input_queries.map((e) => (
-          <Input {...e} key={e.queryText + inputKey} />
-        ))}
-      </BackgroundLayout>
-
-      <div style={{ display: "flex" }}>
-        <BackgroundLayout>
-          {/* <RectContainer style={styles.fileInput}> */}
-
-          <div className="input-container d-flex flex-column align-items-center justify-content-center">
-            <LargeFileUpload
-              uploadFile={uploadFile}
-              setUploadFile={setUploadFile}
+      <div>
+        <div>
+          <BackgroundLayout>
+            <div className="input-container d-flex flex-column align-items-center justify-content-center">
+              <LargeFileUpload
+                uploadFile={uploadFile}
+                setUploadFile={setUploadFile}
+              />
+            </div>
+            <TrainButton
+              {...input_responses}
+              setDLPBackendResponse={setDLPBackendResponse}
+              choice="pretrained"
+              style={{
+                container: {
+                  width: 155,
+                },
+              }}
             />
-          </div>
-
-          {/* </RectContainer> */}
-          <TrainButton
-            {...input_responses}
-            setDLPBackendResponse={setDLPBackendResponse}
-            choice="pretrained"
-            style={{
-              container: {
-                width: 155,
-              },
-            }}
-          />
-        </BackgroundLayout>
-        <BackgroundLayout>
-          {input_queries.map((e) => (
-            <Input {...e} key={e.queryText} />
-          ))}
-        </BackgroundLayout>
+          </BackgroundLayout>
+        </div>
+        <div>
+          <BackgroundLayout>
+            {input_queries.map((e) => (
+              <Input {...e} key={e.queryText + inputKey} />
+            ))}
+          </BackgroundLayout>
+        </div>
       </div>
 
       <div style={{ marginTop: 20 }} />

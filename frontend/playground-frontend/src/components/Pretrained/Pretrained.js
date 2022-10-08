@@ -48,7 +48,7 @@ const Pretrained = () => {
   const [uploadFile, setUploadFile] = useState(null);
 
   const input_responses = {
-    modelName: modelName? modelName.valueOf : null,
+    modelName: modelName ? modelName.valueOf : null,
     criterion: criterion?.value,
     optimizerName: optimizerName?.value,
     usingDefaultDataset: usingDefaultDataset?.value,

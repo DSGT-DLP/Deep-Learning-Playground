@@ -107,13 +107,17 @@ def dl_tabular_drive(
         y_test_tensor,
         batch_size=batch_size
     )
-    json_data = json.loads(json_csv_data_str)
-    pandas_data = pd.DataFrame.from_dict(json_data)
-    target_categories = pandas_data[target]
     category_list = []
-    for category in target_categories:
-        if category not in category_list:
-            category_list.append(category)
+    if problem_type.upper() == "CLASSIFICATION":
+        if default:
+            pass
+        else:
+            json_data = json.loads(json_csv_data_str)
+            pandas_data = pd.DataFrame.from_dict(json_data)
+            target_categories = pandas_data[target]
+            for category in target_categories:
+                if category not in category_list:
+                    category_list.append(category)
     train_loss_results = train_deep_model(
         model, 
         train_loader,
@@ -121,7 +125,8 @@ def dl_tabular_drive(
         optimizer,
         criterion,
         epochs,
-        problem_type
+        problem_type,
+        category_list
     )
     torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
 

@@ -177,14 +177,14 @@ def generate_train_time_csv(epoch_time):
     df.to_csv(TRAIN_TIME_CSV)
 
 
-def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
+def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch, category_list=[]):
     """
     Given the prediction results and label, generate confusion matrix (only applicable to classification tasks)
     Args:
         labels_last_epoch: array (of len batch_size) consisting of arrays of ground truth values (Tensors)
         y_pred: array consisting of predicted results (in probability form)
-        # categoryList: list of strings that represent the categories to classify into (this will be used to label the axis)
-    Returns: the confusion matrix in a 2D-array format
+        category_list: list of strings that represent the categories to classify into (this will be used to label the axis)
+    Returns: the confusion matrix in a 2D-array format, a numerical representation of the category list
     """
     label = []
     y_pred = []
@@ -205,24 +205,26 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
     sns.heatmap(cm, annot=True, fmt='g', ax=ax, cmap='Purples');  #annot=True to annotate cells, ftm='g' to disable scientific notation
     ax.set_xlabel('Predicted');ax.set_ylabel('Actual'); 
     ax.set_title('Confusion Matrix (last Epoch)'); 
-    ax.xaxis.set_ticklabels(categoryList); ax.yaxis.set_ticklabels(categoryList);
+    ax.xaxis.set_ticklabels(category_list); ax.yaxis.set_ticklabels(category_list);
     make_directory(CONFUSION_VIZ)
     plt.savefig(CONFUSION_VIZ)
-    return cm.tolist()
+    return (cm.tolist(), categoryList)
 
 
-def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
+def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch, category_list=[]):
     label_list = []
     y_preds_list = []
-    categoryList = []
     plot_data = []  
+    categoryList = [] #numerical category list 
 
-    # generating a category list for confusion matrix axis labels, and setting up the y_preds_list and label_list for each category
-
+    # generating a numerical category list for confusion matrix axis labels, and setting up the y_preds_list and label_list for each category
     categoryList = np.arange(0, len(y_pred_last_epoch[0][0])).tolist()
 
+    if category_list == []:
+        category_list = categoryList
+
     labels_last_epoch = np.array(labels_last_epoch).flatten()
-    label_list = np.zeros((len(categoryList), len(labels_last_epoch)))
+    label_list = np.zeros((len(category_list), len(labels_last_epoch)))
 
     for i in range(len(labels_last_epoch)):
         label_list[int(labels_last_epoch[i])][i] = 1
@@ -237,14 +239,14 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
         plt.xlabel('False Positive Rate')
         plt.ylabel('True Positive Rate')
         plt.plot([0, 1], [0, 1], linestyle='--', label=f'baseline')
-        for i in range(len(categoryList)):
+        for i in range(len(category_list)):
             pred_prob = np. array(y_preds_list[i])
             y_test = label_list[i]
             fpr, tpr, _ = roc_curve(y_test, pred_prob)
             auc = roc_auc_score(y_test, pred_prob)
             # this data will be sent to frontend to make interactive plotly graph
             plot_data.append([fpr.tolist(), tpr.tolist(), auc])
-            plt.plot(fpr, tpr, linestyle='-', label=f'{i} (AUC: {round(auc,4)})')
+            plt.plot(fpr, tpr, linestyle='-', label=f'{category_list[i]} (AUC: {round(auc,4)})')
         plt.legend()
         make_directory(AUC_ROC_VIZ)
         plt.savefig(AUC_ROC_VIZ)
@@ -253,7 +255,7 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
     except:
         return []
 
-    return plot_data
+    return plot_data, categoryList
 
 
 def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: str = None) -> str:

@@ -33,7 +33,7 @@ https://towardsdatascience.com/building-rnn-lstm-and-gru-for-time-series-using-p
 
 
 def train_deep_classification_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs
+    model, train_loader, test_loader, optimizer, criterion, epochs, category_list
 ):
     """
     Function for training pytorch model for classification. This function also times how long it takes to complete each epoch
@@ -116,20 +116,21 @@ def train_deep_classification_model(
             }
         )
         print(result_table.head())
-        confusion_matrix = generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch)
-
+        confusion_matrix, numerical_category_list = generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch, category_list)
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
-
         generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
         generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
-        
+
         # Collecting additional outputs to give to the frontend
         auxiliary_outputs = {}
         auxiliary_outputs["confusion_matrix"] = confusion_matrix
-        
+        auxiliary_outputs["numerical_category_list"] = numerical_category_list
+
         # Generating AUC_ROC curve data to send to frontend to make interactive plot
-        AUC_ROC_curve_data = generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch)
+        AUC_ROC_curve_data, numerical_category_list_AUC = generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch, category_list)
         auxiliary_outputs["AUC_ROC_curve_data"] = AUC_ROC_curve_data
+        auxiliary_outputs["numerical_category_list_AUC"] = numerical_category_list_AUC
+        auxiliary_outputs["category_list"] = category_list
         torch.save(model, SAVED_MODEL) # saving model into a pt file
         return auxiliary_outputs
     except Exception:
@@ -202,7 +203,7 @@ def train_deep_regression_model(
 
 
 def train_deep_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
+    model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, category_list=[]
 ):
     """
     Given train loader, train torch model
@@ -217,7 +218,7 @@ def train_deep_model(
     """
     if problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION):
         return train_deep_classification_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs
+            model, train_loader, test_loader, optimizer, criterion, epochs, category_list
         )
     elif problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION):
         return train_deep_regression_model(
@@ -248,7 +249,7 @@ def get_deep_predictions(model: nn.Module, test_loader):
 
     return prediction_tensor, ground_truth_tensor
 
-def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device):
+def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, category_list=[]):
     try:
         model = model.to(device)
         train_loss = []  # accumulate training loss over each epoch
@@ -338,8 +339,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
         )
         print(result_table)
 
-        confusion_matrix = generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch)
-
+        confusion_matrix, numerical_category_list = generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch)
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
 
         generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
@@ -347,9 +347,14 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
 
         auxiliary_outputs = {}
         auxiliary_outputs["confusion_matrix"] = confusion_matrix
-        AUC_ROC_curve_data = generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch)
+        auxiliary_outputs["numerical_category_list"] = numerical_category_list
 
+        # Generating AUC_ROC curve data to send to frontend to make interactive plot
+        AUC_ROC_curve_data, numerical_category_list_AUC = generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch, category_list)
         auxiliary_outputs["AUC_ROC_curve_data"] = AUC_ROC_curve_data
+        auxiliary_outputs["numerical_category_list_AUC"] = numerical_category_list_AUC
+        auxiliary_outputs["category_list"] = category_list
+
         torch.save(model, SAVED_MODEL) # saving model into a pt file
 
         return auxiliary_outputs

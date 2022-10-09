@@ -22,6 +22,9 @@ const Results = (props) => {
   const auc_roc_data_res =
     dlpBackendResponse?.auxiliary_outputs?.AUC_ROC_curve_data || [];
   const auc_roc_data = [];
+  const category_list_auc =
+    dlpBackendResponse?.auxiliary_outputs?.category_list;
+
   auc_roc_data.push({
     name: "baseline",
     x: [0, 1],
@@ -35,7 +38,7 @@ const Results = (props) => {
   });
   for (let i = 0; i < auc_roc_data_res.length; i++) {
     auc_roc_data.push({
-      name: `${i} (AUC: ${auc_roc_data_res[i][2]})`,
+      name: `${category_list_auc[i]} (AUC: ${auc_roc_data_res[i][2]})`,
       x: auc_roc_data_res[i][0] || [],
       y: auc_roc_data_res[i][1] || [],
       type: "line",
@@ -138,13 +141,29 @@ const Results = (props) => {
 
   const ConfusionMatrix = () => {
     const cm_data = dlpBackendResponse?.auxiliary_outputs?.confusion_matrix;
+    const category_list = dlpBackendResponse?.auxiliary_outputs?.category_list;
+    const numerical_category_list =
+      dlpBackendResponse?.auxiliary_outputs?.numerical_category_list;
+    console.log(cm_data);
+    console.log(numerical_category_list);
 
     if (!cm_data?.length) return null;
 
     const layout = {
       title: "Confusion Matrix (Last Epoch)",
-      xaxis: { title: "Predicted" },
-      yaxis: { title: "Actual", autorange: "reversed" },
+      xaxis: {
+        title: "Predicted",
+        ticktext: category_list,
+        tickvals: numerical_category_list,
+      },
+      yaxis: {
+        title: "Actual",
+        autorange: "reversed",
+        ticktext: category_list,
+        tickvals: numerical_category_list,
+        tickangle: 270,
+        showarrow: false,
+      },
       showlegend: true,
       width: FIGURE_HEIGHT,
       height: FIGURE_HEIGHT,

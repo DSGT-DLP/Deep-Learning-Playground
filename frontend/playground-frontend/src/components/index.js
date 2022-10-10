@@ -42,5 +42,8 @@ export { default as Footer } from "./Footer/Footer";
 // Image Models page
 export { default as ImageModels } from "./ImageModels/ImageModels";
 
+// Classical ML Models page
+export { default as ClassicalMLModel } from "./ClassicalMLModel/ClassicalMLModel";
+
 // Pretrained page
 export { default as LargeFileUpload } from "./general/LargeFileUpload";

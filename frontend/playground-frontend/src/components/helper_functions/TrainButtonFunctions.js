@@ -192,3 +192,14 @@ export const sendPretrainedJSON = (...args) => {
     custom_model_name: args.customModelName,
   };
 };
+
+//Classical ML
+export const validateClassicalMLInput = (user_arch, ...args) => {
+  console.log("hello world");
+  //TODO: put code to validate classical ML input here
+}
+
+export const sendClassicalMLJSON = (...args) => {
+  console.log("hello world");
+  //TODO: put code to generate arguments in JSON format
+}

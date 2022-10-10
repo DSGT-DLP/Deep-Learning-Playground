@@ -27,6 +27,7 @@ const routeDict = {
   tabular: "tabular-run",
   image: "img-run",
   pretrained: "pretrain-run",
+  //TODO: insert classical ML api route from backend here!
 };
 
 const train_and_output = async (choice, choiceDict) => {

@@ -30,6 +30,17 @@ const ChoiceTab = () => {
           Image Models
         </Link>
       </button>
+
+      <button 
+        style={{
+            ...styles.button,
+            backgroundColor: getBackground('/classical-ml'),
+        }}
+      >
+        <Link to='/classical-ml' style={styles.linkelEment}>
+            Classical ML
+        </Link>
+      </button>
     </div>
   );
 };

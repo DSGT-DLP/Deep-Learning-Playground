@@ -180,6 +180,34 @@ export const POSSIBLE_LAYERS = [
   },
 ];
 
+//TODO: Add Classical ML models and what parameters the user can tune
+export const ML_MODELS = [
+  {
+    display_name: "RandomForestClassifier",
+    object_name: "sklearn.ensemble.RandomForestClassifier",
+    parameters: {
+      n_estimators: {
+        index: 0,
+        parameter_name: "Number of Estimators",
+        min: 1,
+        max: 200
+      },
+      max_depth: {
+        index: 1,
+        parameter_name: "Max Depth",
+        min: 1,
+        max: 5
+      },
+      min_samples_split: {
+        index: 2,
+        parameter_name: "Minimum Samples Split",
+        min: 2,
+        max: 10
+      }
+    },
+  },
+];
+
 export const IMAGE_LAYERS = [
   {
     display_name: "Conv2D",

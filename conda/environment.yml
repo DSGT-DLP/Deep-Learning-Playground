@@ -27,7 +27,7 @@ dependencies:
   - flask-socketio
   - ruamel.yaml
   - eventlet
-  - python-dotenv
+  - pyjwt
   - pip:
      - torchvision
      - timm

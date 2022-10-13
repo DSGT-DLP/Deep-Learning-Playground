@@ -4,7 +4,6 @@ import traceback
 import datetime
 from werkzeug.utils import secure_filename
 import shutil
-from dotenv import load_dotenv
 
 from flask import Flask, request, send_from_directory
 from backend.middleware import middleware

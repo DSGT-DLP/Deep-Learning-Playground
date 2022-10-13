@@ -26,4 +26,4 @@ timm
 wwf
 fastai==2.7.4
 firebase_admin
-python-dotenv
+pyjwt

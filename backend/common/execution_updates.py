@@ -16,24 +16,23 @@ def regular_updates(execution_id):
             execution_db.update_record(execution_id, progress=execution_dict[execution_id])
     update()
 
-def create_execution(execution_id, user_id, name, data_source):
+def create_execution(execution_id, user_id, name, data_source, isUpload):
     execution_db = get_execution_table()
-    record = ExecutionData(execution_id, user_id, name, datetime.datetime.now().isoformat(), data_source, 'STARTING', 0)
+    status = "UPLOADING" if isUpload else "STARTING"
+    record = ExecutionData(execution_id, user_id, name, datetime.datetime.now().isoformat(), data_source, status, 0)
     execution_db.create_record(record)
 
 def initialize_training(execution_id):
     execution_db = get_execution_table()
-    execution_db.update_record(execution_id, status='TRAINING')
+    execution_db.update_record(execution_id, status="TRAINING")
     execution_dict[execution_id] = 0
 
-def end_training(execution_id, success: bool):
-    execution_db = get_execution_table()
-    status = 'SUCCESS' if success else 'ERROR'
-    execution_db.update_record(execution_id, status=status, progress=100)
-    execution_dict.pop(execution_id)
-
 def end_training_success(execution_id):
-    end_training(execution_id, True)
+    execution_db = get_execution_table()
+    execution_db.update_record(execution_id, status="SUCCESS", progress=100)
+    execution_dict.pop(execution_id)
     
 def end_training_failure(execution_id):
-    end_training(execution_id, False)
+    execution_db = get_execution_table()
+    execution_db.update_record(execution_id, status="ERROR")
+    execution_dict.pop(execution_id)

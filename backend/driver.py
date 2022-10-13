@@ -65,7 +65,8 @@ def tabular_run():
         customModelName = request_data["custom_model_name"]
         
         execution_id = str(random.random())
-        create_execution(execution_id, 'testUser', customModelName, 'TABULAR')
+        print("user:", request.environ["user"])
+        create_execution(execution_id, "testUser", customModelName, "TABULAR", False)
 
         train_loss_results = dl_tabular_drive(
             execution_id,
@@ -111,7 +112,7 @@ def img_run():
         customModelName = request_data["custom_model_name"]
         
         execution_id = str(random.random())
-        create_execution(execution_id, 'testUser', customModelName, 'IMAGE')
+        create_execution(execution_id, "testUser", customModelName, "IMAGE", False)
 
         train_loss_results = dl_img_drive(
             execution_id,
@@ -191,9 +192,9 @@ def send_columns():
 def upload():
     try:
         print(datetime.datetime.now().isoformat() + " upload has started its task")
-        file = request.files['file']
+        file = request.files["file"]
         basepath = os.path.dirname(__file__) 
-        upload_path = os.path.join(basepath, 'image_data_uploads', secure_filename(file.filename)) 
+        upload_path = os.path.join(basepath, "image_data_uploads", secure_filename(file.filename)) 
         file.save(upload_path)
         file.stream.close()
         print(datetime.datetime.now().isoformat() + " upload has finished its task")

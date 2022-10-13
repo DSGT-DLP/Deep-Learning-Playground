@@ -4,7 +4,7 @@ import axios from "axios";
 
 const uploadToBackend = async (data) => {
   let headers = auth.currentUser
-    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
+    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken()) }
     : undefined;
 
   await axios.post("/api/upload", data, { headers });
@@ -12,7 +12,7 @@ const uploadToBackend = async (data) => {
 
 const sendToBackend = async (route, data) => {
   let headers = auth.currentUser
-    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
+    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken()) }
     : undefined;
 
   const backendResult = await fetch(`/api/${route}`, {

@@ -65,8 +65,7 @@ def tabular_run():
         customModelName = request_data["custom_model_name"]
         
         execution_id = str(random.random())
-        print("user:", request.environ["user"])
-        create_execution(execution_id, "testUser", customModelName, "TABULAR", False)
+        create_execution(execution_id, request.environ["user"]["user_id"], customModelName, "TABULAR", False)
 
         train_loss_results = dl_tabular_drive(
             execution_id,
@@ -112,7 +111,7 @@ def img_run():
         customModelName = request_data["custom_model_name"]
         
         execution_id = str(random.random())
-        create_execution(execution_id, "testUser", customModelName, "IMAGE", False)
+        create_execution(execution_id, request.environ["user"]["user_id"], customModelName, "IMAGE", False)
 
         train_loss_results = dl_img_drive(
             execution_id,

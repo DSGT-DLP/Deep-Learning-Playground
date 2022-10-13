@@ -17,6 +17,7 @@ from backend.ml.ml_trainer import train_classical_ml_model
 
 
 def dl_tabular_drive(
+    execution_id,
     user_arch,
     criterion,
     optimizer_name,
@@ -118,7 +119,9 @@ def dl_tabular_drive(
         for category in target_categories:
             if category not in category_list:
                 category_list.append(category)
+                
     train_loss_results = train_deep_model(
+        execution_id,
         model,
         train_loader,
         test_loader,
@@ -134,6 +137,7 @@ def dl_tabular_drive(
 
 
 def dl_img_drive(
+    execution_id,
     train_transform,
     test_transform,
     user_arch,
@@ -173,7 +177,7 @@ def dl_img_drive(
     )
 
     train_loss_results = train_deep_image_classification(
-        model, train_loader, test_loader, optimizer, criterion, epochs, device
+        execution_id, model, train_loader, test_loader, optimizer, criterion, epochs, device
     )
     return train_loss_results
 

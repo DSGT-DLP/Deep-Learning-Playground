@@ -1,6 +1,7 @@
 from collections import Counter
 from backend.common.loss_functions import compute_loss, compute_img_loss
 from backend.dl.dl_eval import compute_accuracy, compute_correct
+from backend.common.execution_updates import initialize_training, regular_updates, get_execution_dict
 from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
 from backend.common.utils import ProblemType
 from backend.common.constants import (
@@ -33,7 +34,7 @@ https://towardsdatascience.com/building-rnn-lstm-and-gru-for-time-series-using-p
 
 
 def train_deep_classification_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs, category_list
+    execution_id, model, train_loader, test_loader, optimizer, criterion, epochs, category_list
 ):
     """
     Function for training pytorch model for classification. This function also times how long it takes to complete each epoch
@@ -47,6 +48,10 @@ def train_deep_classification_model(
     :return: a dictionary containing confusion matrix and AUC/ROC plot raw data
     """
     try:
+        initialize_training(execution_id)
+        execution_dict = get_execution_dict()
+        regular_updates(execution_id)
+        
         train_loss = []  # accumulate training loss over each epoch
         test_loss = []  # accumulate testing loss over each epoch
         epoch_time = []  # how much time it takes for each epoch
@@ -108,8 +113,10 @@ def train_deep_classification_model(
             val_acc.append(mean_test_acc)
             test_loss.append(mean_test_loss)
 
+            execution_dict[execution_id] = int((epoch + 1) / epochs * 100)  
             print(
-                f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}")
+                f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}"
+            )
         result_table = pd.DataFrame(
             {
                 EPOCH: [i for i in range(1, epochs + 1)],
@@ -145,7 +152,7 @@ def train_deep_classification_model(
 
 
 def train_deep_regression_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs
+    execution_id, model, train_loader, test_loader, optimizer, criterion, epochs
 ):
     """
     Train Regression model in Pytorch. This function also times how long it takes to complete each epoch
@@ -159,7 +166,10 @@ def train_deep_regression_model(
     :return: an empty dictionary
     """
     try:
-
+        initialize_training(execution_id)
+        execution_dict = get_execution_dict()
+        regular_updates(execution_id)
+        
         train_loss = []  # accumulate training loss over each epoch
         test_loss = []  # accumulate testing loss over each epoch
         epoch_time = []  # how much time it takes for each epoch
@@ -191,6 +201,7 @@ def train_deep_regression_model(
                 loss = compute_loss(criterion, test_pred, labels)
                 epoch_batch_loss += float(loss.detach())
             test_loss.append(epoch_batch_loss / num_test_batches)
+            execution_dict[execution_id] = int((epoch + 1) / epochs * 100)
             print(
                 f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
         result_table = pd.DataFrame(
@@ -212,7 +223,7 @@ def train_deep_regression_model(
 
 
 def train_deep_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, category_list=[]
+    execution_id, model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, category_list=[]
 ):
     """
     Given train loader, train torch model
@@ -227,11 +238,11 @@ def train_deep_model(
     """
     if problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION):
         return train_deep_classification_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs, category_list
+            execution_id, model, train_loader, test_loader, optimizer, criterion, epochs, category_list
         )
     elif problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION):
         return train_deep_regression_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs
+            execution_id, model, train_loader, test_loader, optimizer, criterion, epochs
         )
 
 
@@ -259,8 +270,12 @@ def get_deep_predictions(model: nn.Module, test_loader):
     return prediction_tensor, ground_truth_tensor
 
 
-def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, category_list=[]):
+def train_deep_image_classification(execution_id, model, train_loader, test_loader, optimizer, criterion, epochs, device, category_list=[]):
     try:
+        initialize_training(execution_id)
+        execution_dict = get_execution_dict()
+        regular_updates(execution_id)
+        
         model = model.to(device)
         train_loss = []  # accumulate training loss over each epoch
         test_loss = []  # accumulate testing loss over each epoch
@@ -339,6 +354,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
             test_loss.append(mean_test_loss)
             val_acc.append(mean_test_acc)
 
+            execution_dict[execution_id] = int((epoch + 1) / epochs * 100)
             print(
                 f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}"
             )
@@ -378,3 +394,16 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
 
     except Exception:
         raise Exception("Deep Learning classification didn't train properly")
+
+if __name__ == '__main__':
+    from backend.common.execution_updates import get_execution_dict, regular_updates, create_execution, initialize_training, end_training_success
+    import time
+    
+    create_execution("1", "1", 'sam', 'TABULAR')
+    initialize_training("1")
+    regular_updates("1")
+    get_execution_dict()["1"] = 5
+    time.sleep(35)
+    get_execution_dict()["1"] = 10
+    time.sleep(35)
+    end_training_success("1")

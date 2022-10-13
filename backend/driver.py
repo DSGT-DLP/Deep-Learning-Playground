@@ -1,4 +1,5 @@
 import os
+import random
 import traceback
 import datetime
 from werkzeug.utils import secure_filename
@@ -13,6 +14,7 @@ from backend.common.ai_drive import dl_tabular_drive, dl_img_drive
 from backend.common.constants import UNZIPPED_DIR_NAME
 from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
+from backend.common.execution_updates import create_execution, end_training_success, end_training_failure
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 
@@ -61,8 +63,12 @@ def tabular_run():
         csvDataStr = request_data["csv_data"]
         fileURL = request_data["file_URL"]
         customModelName = request_data["custom_model_name"]
+        
+        execution_id = str(random.random())
+        create_execution(execution_id, 'testUser', customModelName, 'TABULAR')
 
         train_loss_results = dl_tabular_drive(
+            execution_id,
             user_arch,
             criterion,
             optimizer_name,
@@ -77,11 +83,14 @@ def tabular_run():
             batch_size,
             csvDataStr
         )
+        end_training_success(execution_id)
         print(train_loss_results)
+        
         return send_train_results(train_loss_results)
 
     except Exception:
         print(traceback.format_exc())
+        end_training_failure(execution_id)
         return send_traceback_error()
 
 @app.route("/api/img-run", methods=["POST"])
@@ -100,8 +109,12 @@ def img_run():
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
         customModelName = request_data["custom_model_name"]
+        
+        execution_id = str(random.random())
+        create_execution(execution_id, 'testUser', customModelName, 'IMAGE')
 
         train_loss_results = dl_img_drive(
+            execution_id,
             train_transform,
             test_transform,
             user_arch,
@@ -114,11 +127,14 @@ def img_run():
             IMAGE_UPLOAD_FOLDER,
         )
 
+        end_training_success(execution_id)
         print("training successfully finished")
         return send_train_results(train_loss_results)
         
     except Exception:
         print(traceback.format_exc())
+        end_training_failure(execution_id)
+        
         return send_traceback_error()
         
     finally:

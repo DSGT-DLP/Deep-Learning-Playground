@@ -7,7 +7,8 @@ const uploadToBackend = async (data) => {
     ? { Authorization: "bearer " + (await auth.currentUser.getIdToken()) }
     : undefined;
 
-  await axios.post("/api/upload", data, { headers });
+  const uploadResult = await axios.post("/api/upload", data, { headers });
+  return uploadResult.data.execution_id;
 };
 
 const sendToBackend = async (route, data) => {

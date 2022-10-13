@@ -13,7 +13,7 @@ from backend.common.ai_drive import dl_tabular_drive, dl_img_drive
 from backend.common.constants import UNZIPPED_DIR_NAME
 from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
-from backend.common.execution_updates import create_execution, end_training_success, end_training_failure
+from backend.common.execution_updates import create_execution, end_training_success, end_training_failure, upload_to_start
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 
@@ -48,6 +48,7 @@ def tabular_run():
     try:
         request_data = json.loads(request.data)
         
+        execution_id = request_data["execution_id"]
         user_arch = request_data["user_arch"]
         criterion = request_data["criterion"]
         optimizer_name = request_data["optimizer_name"]    
@@ -61,10 +62,12 @@ def tabular_run():
         shuffle = request_data["shuffle"]
         csvDataStr = request_data["csv_data"]
         fileURL = request_data["file_URL"]
-        customModelName = request_data["custom_model_name"]
+        custom_model_name = request_data["custom_model_name"]
         
-        execution_id = str(random.random())
-        create_execution(execution_id, request.environ["user"]["user_id"], customModelName, "TABULAR", False)
+        if execution_id:
+              upload_to_start(execution_id)
+        else:
+            execution_id = create_execution(custom_model_name, "IMAGE", False)
 
         train_loss_results = dl_tabular_drive(
             execution_id,
@@ -98,6 +101,7 @@ def img_run():
     try:
         request_data = json.loads(request.data)
         
+        execution_id = request_data["execution_id"]
         train_transform = request_data["train_transform"]
         test_transform = request_data["test_transform"]
         user_arch = request_data["user_arch"]
@@ -107,10 +111,12 @@ def img_run():
         epochs = request_data["epochs"]
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
-        customModelName = request_data["custom_model_name"]
+        custom_model_name = request_data["custom_model_name"]
         
-        execution_id = str(random.random())
-        create_execution(execution_id, request.environ["user"]["user_id"], customModelName, "IMAGE", False)
+        if execution_id:
+            upload_to_start(execution_id)
+        else:
+            execution_id = create_execution(custom_model_name, "IMAGE", False)
 
         train_loss_results = dl_img_drive(
             execution_id,
@@ -189,6 +195,8 @@ def send_columns():
 @app.route("/api/upload", methods=["POST"])
 def upload():
     try:
+        execution_id = create_execution(request.form["model_name"], request.form["data_source"], True)
+        
         print(datetime.datetime.now().isoformat() + " upload has started its task")
         file = request.files["file"]
         basepath = os.path.dirname(__file__) 
@@ -196,7 +204,8 @@ def upload():
         file.save(upload_path)
         file.stream.close()
         print(datetime.datetime.now().isoformat() + " upload has finished its task")
-        return send_success({"message": "upload success"})
+        
+        return send_success({"message": "upload success", "execution_id": execution_id})
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()

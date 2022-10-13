@@ -110,7 +110,9 @@ const TrainButton = (props) => {
     if (choice === "image" && !props.usingDefaultDataset) {
       const formData = new FormData();
       formData.append("file", uploadFile);
-      await uploadToBackend(formData);
+      formData.append("model_name", paramList.customModelName);
+      formData.append("execution_source", paramList.choice.toUpperCase());
+      paramList.execution_id = await uploadToBackend(formData);
     }
     const trainResult = await train_and_output(
       choice,

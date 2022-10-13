@@ -92,6 +92,7 @@ export const sendTabularJSON = (...args) => {
   const csvDataStr = JSON.stringify(args.csvDataInput);
 
   return {
+    execution_id: args.execution_id ? args.execution_id : null,
     user_arch: args.user_arch,
     criterion: args.criterion,
     optimizer_name: args.optimizerName,
@@ -134,6 +135,7 @@ export const sendImageJSON = (...args) => {
   args = args[0];
 
   return {
+    execution_id: args.execution_id ? args.execution_id : null,
     user_arch: args.user_arch,
     criterion: args.criterion,
     optimizer_name: args.optimizerName,
@@ -176,6 +178,7 @@ export const sendPretrainedJSON = (...args) => {
   args = args[0];
 
   return {
+    execution_id: args.execution_id ? args.execution_id : null,
     model_name: args.modelName,
     criterion: args.criterion,
     optimizer_name: args.optimizerName,

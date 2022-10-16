@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithRedirect,
   updateProfile,
+  getRedirectResult,
 } from "firebase/auth";
 import { toast } from "react-toastify";
 import { setCookie } from "./components/helper_functions/Cookie";
@@ -76,12 +77,18 @@ export const signInWithPassword = async (email, password) => {
     });
 };
 
-export const signInWithGithub = async () => {
+export const signInWithGithub = async (updateAndRedirect) => {
   const githubProvider = new GithubAuthProvider();
-  signInWithRedirect(auth, githubProvider);
+  await signInWithRedirect(auth, githubProvider);
+  const authResult = await getRedirectResult();
+  setCookie(authResult.user.email);
+  updateAndRedirect();
 };
 
-export const signInWithGoogle = async () => {
+export const signInWithGoogle = async (updateAndRedirect) => {
   const googleProvider = new GoogleAuthProvider();
-  signInWithRedirect(auth, googleProvider);
+  await signInWithRedirect(auth, googleProvider);
+  const authResult = await getRedirectResult();
+  setCookie(authResult.user.email);
+  updateAndRedirect();
 };

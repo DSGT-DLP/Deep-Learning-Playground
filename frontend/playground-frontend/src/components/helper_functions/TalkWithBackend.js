@@ -72,11 +72,12 @@ const sendEmail = async (email, problemType) => {
 };
 
 const isLoggedIn = async () => {
-  return await auth.currentUser?.getIdToken(true), toast.error("Not logged in");
+  return await auth.currentUser?.getIdToken();
 };
 
 const getUserRecords = async () => {
   const authHeader = await getAuthHeader();
+  console.log('header:', authHeader);
   return await fetch(`/api/getUserRecords`, {
     method: "GET",
     headers: authHeader,

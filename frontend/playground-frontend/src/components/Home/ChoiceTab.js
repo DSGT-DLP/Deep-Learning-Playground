@@ -13,20 +13,20 @@ const ChoiceTab = () => {
   return (
     <div>
       <button
-        style={{ ...styles.button, backgroundColor: getBackground("/train") }}
+        style={{ ...styles.button, backgroundColor: getBackground("/tabular-models") }}
       >
-        <Link to="/train" style={styles.linkelEment}>
-          Tabular Data
+        <Link to="/tabular-models" style={styles.linkelEment}>
+          Tabular Models
         </Link>
       </button>
 
       <button
         style={{
           ...styles.button,
-          backgroundColor: getBackground("/img-models"),
+          backgroundColor: getBackground("/image-models"),
         }}
       >
-        <Link to="/img-models" style={styles.linkelEment}>
+        <Link to="/image-models" style={styles.linkelEment}>
           Image Models
         </Link>
       </button>

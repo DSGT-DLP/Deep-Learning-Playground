@@ -6,10 +6,11 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
+import { getUserRecords } from "../helper_functions/TalkWithBackend";
 import { useSelector } from "react-redux";
 
 const rows = [
@@ -51,7 +52,7 @@ const BlankGrid = () => {
         <p>
           You haven't trained any models yet. Create your first model below!
         </p>
-        <button id="blank-grid-button" onClick={() => navigate("/")}>
+        <button id="blank-grid-button" onClick={() => navigate("/tabular-models")}>
           Train Model
         </button>
       </div>
@@ -178,11 +179,18 @@ const FilledGrid = () => {
 };
 
 const Dashboard = () => {
-  const signedInUserEmail = useSelector((state) => state.currentUser.email);
-  const navigate = useNavigate();
+  const [userRecords, setUserRecords] = useState([]);
+  const userEmail = useSelector((state) => state.currentUser.email);
+
   useEffect(() => {
-    if (signedInUserEmail) navigate("/dashboard");
-  }, [signedInUserEmail]);
+    if (userEmail) {
+      (async function() {
+        setUserRecords(await getUserRecords());
+      })();
+    } 
+  }, [userEmail]);
+
+  console.log(userRecords);
 
   return (
     <div id="dashboard">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import {
@@ -11,7 +11,7 @@ import { setCurrentUser } from "../../redux/userLogin";
 import { useDispatch } from "react-redux";
 import GoogleLogo from "../../images/logos/google.png";
 import GithubLogo from "../../images/logos/github.png";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -21,16 +21,8 @@ const Login = () => {
   const [password, setPassword] = useState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const signedInUserEmail = useSelector((state) => state.currentUser.email);
 
-  const handleSignInRegister = async () => {
-    let user;
-    if (isRegistering) {
-      user = await registerWithPassword(email, password, fullName);
-    } else {
-      user = await signInWithPassword(email, password);
-    }
-
+  const updateAndRedirect = (user) => {
     if (!user) return;
     const userData = {
       email: user.email,
@@ -40,6 +32,16 @@ const Login = () => {
     };
     dispatch(setCurrentUser(userData));
     navigate("/dashboard");
+  };
+
+  const handleSignInRegister = async () => {
+    let user;
+    if (isRegistering) {
+      user = await registerWithPassword(email, password, fullName);
+    } else {
+      user = await signInWithPassword(email, password);
+    }
+    updateAndRedirect(user);    
   };
 
   const Title = (
@@ -55,22 +57,18 @@ const Login = () => {
     </>
   );
 
-  useEffect(() => {
-    if (signedInUserEmail) navigate("/dashboard");
-  }, [signedInUserEmail]);
-
   const SocialLogins = (
     <>
       <div className="d-flex justify-content-evenly mb-5">
         <Button
           className="login-button google"
-          onClick={() => signInWithGoogle()}
+          onClick={() => signInWithGoogle(updateAndRedirect)}
         >
           <img src={GoogleLogo} />
         </Button>
         <Button
           className="login-button github"
-          onClick={() => signInWithGithub()}
+          onClick={() => signInWithGithub(updateAndRedirect)}
         >
           <img src={GithubLogo} />
         </Button>

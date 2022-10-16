@@ -1,4 +1,3 @@
-from flask import request
 import datetime
 import threading
 import jwt
@@ -14,28 +13,25 @@ encryption_key = json.loads(get_secret("all/encryption"))["execution_id_encrypti
 def get_execution_dict():
     return execution_dict
 
-def create_execution_id(user_id):
-    return jwt.encode({"user_id": user_id, "timestamp": datetime.datetime.now().isoformat()}, encryption_key)
+def create_execution_id(user_id, timestamp):
+    return jwt.encode({"user_id": user_id, "timestamp": timestamp}, encryption_key)
 
-def get_records():
-    return execution_db.get_user_records()
+def get_user_records(user_id):
+    return execution_db.get_user_records(user_id)
 
 def regular_updates(execution_id):
     def update():
         if execution_id in execution_dict and execution_dict[execution_id] != 100:
-            threading.Timer(30, update).start()
+            threading.Timer(2, update).start()
             execution_db.update_record(execution_id, progress=execution_dict[execution_id])
     update()
 
-def create_execution(name, file_name, data_source, isUpload):
-    user_id = request.environ["user"]["user_id"]
-    execution_id = create_execution_id(user_id)
-    
+def create_execution(user_id, name, file_name, data_source, isUpload):
+    timestamp = datetime.datetime.now().isoformat()
+    execution_id = create_execution_id(user_id, timestamp)
     status = "UPLOADING" if isUpload else "STARTING"
-    record = ExecutionData(execution_id, user_id, name, file_name, datetime.datetime.now().isoformat(), data_source, status, 0)
+    record = ExecutionData(execution_id, user_id, name, file_name, timestamp, data_source, status, 0)
     execution_db.create_record(record)
-    
-    
     return execution_id
 
 def upload_to_start(execution_id):

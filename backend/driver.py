@@ -13,7 +13,7 @@ from backend.common.ai_drive import dl_tabular_drive, dl_img_drive
 from backend.common.constants import UNZIPPED_DIR_NAME
 from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
-from backend.common.execution_updates import create_execution, end_training_success, end_training_failure, upload_to_start
+from backend.common.execution_updates import create_execution, end_training_success, end_training_failure, get_user_records, upload_to_start
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 
@@ -47,6 +47,7 @@ def root(path):
 def tabular_run():   
     try:
         request_data = json.loads(request.data)
+        user_id = request.environ["user"]["user_id"]
         
         execution_id = request_data["execution_id"]
         user_arch = request_data["user_arch"]
@@ -67,7 +68,7 @@ def tabular_run():
         if execution_id:
               upload_to_start(execution_id)
         else:
-            execution_id = create_execution(custom_model_name, "temp", "TABULAR", False)
+            execution_id = create_execution(user_id, custom_model_name, "temp", "TABULAR", False)
 
         train_loss_results = dl_tabular_drive(
             execution_id,
@@ -100,6 +101,7 @@ def img_run():
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
         request_data = json.loads(request.data)
+        user_id = request.environ["user"]["user_id"]
         
         execution_id = request_data["execution_id"]
         train_transform = request_data["train_transform"]
@@ -116,7 +118,7 @@ def img_run():
         if execution_id:
             upload_to_start(execution_id)
         else:
-            execution_id = create_execution(custom_model_name, "temp", "IMAGE", False)
+            execution_id = create_execution(user_id, custom_model_name, "temp", "IMAGE", False)
 
         train_loss_results = dl_img_drive(
             execution_id,
@@ -195,7 +197,12 @@ def send_columns():
 @app.route("/api/upload", methods=["POST"])
 def upload():
     try:
-        execution_id = create_execution(request.form["model_name"], "temp", request.form["data_source"], True)
+        execution_id = create_execution(
+            request.environ["user"]["user_id"],
+            request.form["model_name"], "temp",
+            request.form["data_source"],
+            True
+        )
         
         print(datetime.datetime.now().isoformat() + " upload has started its task")
         file = request.files["file"]
@@ -210,10 +217,11 @@ def upload():
         print(traceback.format_exc())
         return send_traceback_error()
     
-@app.route("/api/getRecords", methods=["GET"])
+@app.route("/api/getUserRecords", methods=["GET"])
 def getRecords():
     try:
-        pass
+        records = get_user_records(request.environ["user"]["user_id"])
+        return send_success({"records": records})
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()

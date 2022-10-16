@@ -2,24 +2,25 @@ import { toast } from "react-toastify";
 import { auth } from "../../firebase";
 import axios from "axios";
 
-const uploadToBackend = async (data) => {
-  let headers = auth.currentUser
+const getAuthHeader = async () => {
+  const header = auth.currentUser
     ? { Authorization: "bearer " + (await auth.currentUser.getIdToken()) }
     : undefined;
+  return header;
+};
 
-  const uploadResult = await axios.post("/api/upload", data, { headers });
+const uploadToBackend = async (data) => {
+  const authHeader = await getAuthHeader();
+  const uploadResult = await axios.post("/api/upload", data, { headers: authHeader });
   return uploadResult.data.execution_id;
 };
 
 const sendToBackend = async (route, data) => {
-  let headers = auth.currentUser
-    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken()) }
-    : undefined;
-
+  const authHeader = await getAuthHeader();
   const backendResult = await fetch(`/api/${route}`, {
     method: "POST",
     body: JSON.stringify(data),
-    headers: headers,
+    headers: authHeader,
   }).then((result) => result.json());
   return backendResult;
 };
@@ -74,10 +75,19 @@ const isLoggedIn = async () => {
   return await auth.currentUser?.getIdToken(true), toast.error("Not logged in");
 };
 
+const getUserRecords = async () => {
+  const authHeader = await getAuthHeader();
+  return await fetch(`/api/getUserRecords`, {
+    method: "GET",
+    headers: authHeader,
+  }).then((result) => result.json());
+};
+
 export {
   uploadToBackend,
   sendToBackend,
   train_and_output,
   sendEmail,
   isLoggedIn,
+  getUserRecords,
 };

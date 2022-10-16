@@ -1,9 +1,10 @@
-from decimal import Decimal
-from enum import Enum, EnumMeta
-from dataclasses import asdict
-from typing import Any, List, Dict, Literal
 import boto3
 from botocore.exceptions import ClientError
+
+from decimal import Decimal
+from dataclasses import asdict
+from enum import Enum, EnumMeta
+from typing import Any, List, Dict, Literal
 
 class _BaseEnumMeta(EnumMeta):
     """Defines a custom EnumMeta for _BaseEnum that supports the expression: '<attribute>' in _BaseEnum"""
@@ -77,7 +78,7 @@ def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass = None, part
         raise Exception("Please provide the corresponding arguments")
     return process
 
-_type_mapper = {int: 'N', Decimal: 'N', str: 'S'}
+__type_mapper = {int: 'N', Decimal: 'N', str: 'S'}
 
 class BaseDDBUtil:
     """Base class that interacts with AWS DynamoDB to manipulate information stored in the DynamoDB tables.
@@ -110,7 +111,7 @@ class BaseDDBUtil:
                 {
                     'AttributeName': self.partition_key,
                     # AttributeType defines the data type. 'S' is string type and 'N' is number type
-                    'AttributeType': _type_mapper[self.DataClass.__dataclass_fields__[self.partition_key].type]
+                    'AttributeType': __type_mapper[self.DataClass.__dataclass_fields__[self.partition_key].type]
                 }
             ],
             ProvisionedThroughput={
@@ -121,7 +122,7 @@ class BaseDDBUtil:
         )
         self.table = table
         
-    def create_gsi(self, attribute_name: str, attribute_type: str = "HASH", projection_type: str = "KEYS_ONLY", 
+    def create_gsi(self, attribute_name: str, attribute_type: str = "HASH", projection_type: str = "ALL", 
                    read_capacity: int = 10, write_capacity: int = 10, nonkey_attributes: List[str] = None) -> Literal['Success']:
         """Function that adds a global secondary index to the associated table"""
         
@@ -154,7 +155,7 @@ class BaseDDBUtil:
             AttributeDefinitions=[
                 {
                     'AttributeName': attribute_name,
-                    'AttributeType': _type_mapper[self.DataClass.__dataclass_fields__[attribute_name].type]
+                    'AttributeType': __type_mapper[self.DataClass.__dataclass_fields__[attribute_name].type]
                 }
             ],
             GlobalSecondaryIndexUpdates=[
@@ -182,7 +183,7 @@ class BaseDDBUtil:
         """Function to create a record in the associated DynamoDB table with the data corresponding to the input parameters.
         Either takes a BaseData input, or the attribute values as keyword arguments"""
         
-        self.__param_checker("create", record_data=record_data, **kwargs)
+        self.param_checker("create", record_data=record_data, **kwargs)
         partition_key_name = self.partition_key
         
         if record_data is not None:
@@ -208,7 +209,7 @@ class BaseDDBUtil:
         """Function to retrieve a record with the partition_key values as attribute 'partition_id' from 
             the associated DynamoDB table"""
         
-        self.__param_checker("get", partition_id=partition_id)
+        self.param_checker("get", partition_id=partition_id)
         
         response = self.table.get_item(Key={self.partition_key: partition_id})
         if 'Item' not in response:
@@ -218,8 +219,8 @@ class BaseDDBUtil:
         if len(item) != len(self.EnumClass.Attribute):
             raise ValueError(f"Could not approve record with missing/extra attributes")
         
-        item = self.__number_decoder(item)        
-        self.__param_checker("approve", **item)
+        item = self.number_decoder(item)        
+        self.param_checker("approve", **item)
         return self.DataClass(**item)
     
     def update_record(self, partition_id: Any, **kwargs) -> Literal['Success']:
@@ -228,7 +229,7 @@ class BaseDDBUtil:
         if len(kwargs) == 0:
             raise ValueError("Cannot update record without any changes")
         
-        self.__param_checker("update", partition_id=partition_id, **kwargs)
+        self.param_checker("update", partition_id=partition_id, **kwargs)
         partition_key_name = self.partition_key
         
         expression = []
@@ -261,7 +262,7 @@ class BaseDDBUtil:
         """Function to delete a record with the partition_key values as attribute 'partition_id' from 
             the associated DynamoDB table"""
             
-        self.__param_checker("delete", partition_id=partition_id)
+        self.param_checker("delete", partition_id=partition_id)
         partition_key_name = self.partition_key
         
         try:
@@ -278,7 +279,7 @@ class BaseDDBUtil:
             else:
                 raise e
         
-    def __param_checker(self, operation: str, **kwargs):
+    def param_checker(self, operation: str, **kwargs):
         """Helper function to perform a validity check on the parameters of the BaseDDBUtil functions"""
         
         kwargs_items = kwargs.items()
@@ -289,7 +290,7 @@ class BaseDDBUtil:
                         raise ValueError(f"Could not {operation} record with {attribute} not of correct type")
                     if len(kwargs) > 1:
                         raise ValueError(f"Cannot provide other attributes if {attribute} is provided")
-                    self.__param_checker(operation, **asdict(value))
+                    self.param_checker(operation, **asdict(value))
                 elif len(kwargs) == 1:
                     raise ValueError(f"Could not {operation} record with missing attributes")
                 continue
@@ -308,7 +309,7 @@ class BaseDDBUtil:
             elif getattr(self.EnumClass, attribute.capitalize(), None) is not None and value not in getattr(self.EnumClass, attribute.capitalize()):
                 raise ValueError(f"Could not {operation} record with invalid {attribute}: {value}")
             
-    def __number_decoder(self, item: Dict[str, Any]) -> Dict[str, Any]:
+    def number_decoder(self, item: Dict[str, Any]) -> Dict[str, Any]:
         """Helper function that converts any Decimal attributes into their associated types according to BaseData schema. 
             To be used on records retrieved from DynamoDB tables."""
             

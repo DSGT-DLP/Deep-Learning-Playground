@@ -1,5 +1,5 @@
 from backend.aws_helpers.dynamo_db_utils.base_db import BaseData, BaseDDBUtil, enumclass, changevar
-from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION
+from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, MONTHS
 from boto3.dynamodb.conditions import Key
 from dataclasses import dataclass
 from typing import List
@@ -10,6 +10,7 @@ class ExecutionData(BaseData):
     execution_id: str
     user_id: str
     name: str
+    file_name: str
     timestamp: str
     data_source: str
     status: str
@@ -39,10 +40,21 @@ class ExecutionDDBUtil(BaseDDBUtil):
         
         user_records = []
         for record in query:
-            user_records.append(ExecutionData(**self.number_decoder(record)))
+            record = self.number_decoder(record)
             
+            record.pop("user_id")
+            record["status"] = record["status"].capitalize()
+            record["data_source"] = record["data_source"].capitalize()
+            
+            date = record["timestamp"][:10].split("-")
+            record["timestamp"] = f"{MONTHS[date[1]]} {date[2]}, {date[0]}"
+            
+            user_records.append(record)
         return user_records
 
 def get_execution_table(region:str = AWS_REGION) -> BaseDDBUtil:
     """Retrieves the execution-table of an input region as an instance of ExecutionDDBUtil"""
     return ExecutionDDBUtil(EXECUTION_TABLE_NAME, region)
+
+if __name__ == "__main__":
+    print(get_execution_table().get_user_records(""))

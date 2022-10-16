@@ -67,7 +67,7 @@ def tabular_run():
         if execution_id:
               upload_to_start(execution_id)
         else:
-            execution_id = create_execution(custom_model_name, "IMAGE", False)
+            execution_id = create_execution(custom_model_name, "temp", "TABULAR", False)
 
         train_loss_results = dl_tabular_drive(
             execution_id,
@@ -116,7 +116,7 @@ def img_run():
         if execution_id:
             upload_to_start(execution_id)
         else:
-            execution_id = create_execution(custom_model_name, "IMAGE", False)
+            execution_id = create_execution(custom_model_name, "temp", "IMAGE", False)
 
         train_loss_results = dl_img_drive(
             execution_id,
@@ -195,7 +195,7 @@ def send_columns():
 @app.route("/api/upload", methods=["POST"])
 def upload():
     try:
-        execution_id = create_execution(request.form["model_name"], request.form["data_source"], True)
+        execution_id = create_execution(request.form["model_name"], "temp", request.form["data_source"], True)
         
         print(datetime.datetime.now().isoformat() + " upload has started its task")
         file = request.files["file"]
@@ -206,6 +206,14 @@ def upload():
         print(datetime.datetime.now().isoformat() + " upload has finished its task")
         
         return send_success({"message": "upload success", "execution_id": execution_id})
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+    
+@app.route("/api/getRecords", methods=["GET"])
+def getRecords():
+    try:
+        pass
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()

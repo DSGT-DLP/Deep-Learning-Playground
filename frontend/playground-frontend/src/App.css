@@ -319,7 +319,7 @@ textarea#code-snippet-text {
 }
 
 .grid-status-display-yellow {
-  background-color: #b3a36a;
+  background-color: #e7c342;
 }
 
 .grid-status-display-green {
@@ -328,6 +328,11 @@ textarea#code-snippet-text {
 
 .grid-status-display-blue {
   background-color: #2ab5f6;
+  cursor: pointer;
+}
+
+.grid-status-display-red {
+  background-color: #fe1f1c;
   cursor: pointer;
 }
 

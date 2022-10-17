@@ -26,7 +26,7 @@ class ExecutionEnums:
         ExecutionEnums.Attribute - Enum that defines the schema of the execution-table. It holds the attribute names of the table
         ExecutionEnums.Execution_Source - Enum that defines the categorical values associated with the 'execution_source' attribute"""
 
-@changevar(DataClass=ExecutionData, EnumClass=ExecutionEnums, partition_key='execution_id')
+@changevar(DataClass=ExecutionData, EnumClass=ExecutionEnums, partition_key="execution_id")
 class ExecutionDDBUtil(BaseDDBUtil):
     """Class that interacts with AWS DynamoDB to manipulate information stored in the execution-table DynamoDB table"""
     
@@ -38,18 +38,16 @@ class ExecutionDDBUtil(BaseDDBUtil):
             KeyConditionExpression=Key("user_id").eq(user_id)
         )["Items"]
         
-        user_records = []
+        query.sort(key=lambda record: record["timestamp"])
         for record in query:
-            record = self.number_decoder(record)
+            self.number_decoder(record)
             record.pop("user_id")
             record["status"] = record["status"].capitalize()
-            record["data_source"] = record["data_source"].capitalize()
-            
+            record["data_source"] = record["data_source"].capitalize()            
             date = record["timestamp"][:10].split("-")
             record["timestamp"] = f"{MONTHS[date[1]]} {date[2]}, {date[0]}"
-            user_records.append(record)
             
-        return user_records
+        return query
 
 def get_execution_table(region:str = AWS_REGION) -> BaseDDBUtil:
     """Retrieves the execution-table of an input region as an instance of ExecutionDDBUtil"""

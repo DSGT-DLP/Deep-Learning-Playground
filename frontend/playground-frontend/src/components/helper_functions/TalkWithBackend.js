@@ -77,7 +77,6 @@ const isLoggedIn = async () => {
 
 const getUserRecords = async () => {
   const authHeader = await getAuthHeader();
-  console.log('header:', authHeader);
   return await fetch(`/api/getUserRecords`, {
     method: "GET",
     headers: authHeader,

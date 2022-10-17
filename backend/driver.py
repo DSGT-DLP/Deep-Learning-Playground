@@ -68,7 +68,7 @@ def tabular_run():
         if execution_id:
               upload_to_start(execution_id)
         else:
-            execution_id = create_execution(user_id, custom_model_name, "temp", "TABULAR", False)
+            execution_id = create_execution(user_id, custom_model_name, "temp.csv", "TABULAR", False)
 
         train_loss_results = dl_tabular_drive(
             execution_id,
@@ -118,7 +118,7 @@ def img_run():
         if execution_id:
             upload_to_start(execution_id)
         else:
-            execution_id = create_execution(user_id, custom_model_name, "temp", "IMAGE", False)
+            execution_id = create_execution(user_id, custom_model_name, "temp.csv", "IMAGE", False)
 
         train_loss_results = dl_img_drive(
             execution_id,
@@ -199,7 +199,8 @@ def upload():
     try:
         execution_id = create_execution(
             request.environ["user"]["user_id"],
-            request.form["model_name"], "temp",
+            request.form["model_name"],
+            "temp.csv",
             request.form["data_source"],
             True
         )

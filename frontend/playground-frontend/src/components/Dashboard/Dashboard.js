@@ -13,36 +13,6 @@ import { useNavigate } from "react-router-dom";
 import { getUserRecords } from "../helper_functions/TalkWithBackend";
 import { useSelector } from "react-redux";
 
-const rows = [
-  {
-    id: "123mrpij",
-    name: "IrisDense",
-    type: "Tabular",
-    input: "new_input.csv",
-    statusType: "queued",
-    status: "1 / 4",
-    date: 1662850862,
-  },
-  {
-    id: "as98dfumasdp",
-    name: "Penguin",
-    type: "Tabular",
-    input: "my_tabular_input.csv",
-    statusType: "training",
-    status: "35%",
-    date: 1662750862,
-  },
-  {
-    id: "p9umaspdf",
-    name: "Iris",
-    type: "Image Training",
-    input: "my_images.zip",
-    statusType: "finished",
-    status: "Done",
-    date: 1441850862,
-  },
-];
-
 const BlankGrid = () => {
   const navigate = useNavigate();
 
@@ -60,33 +30,35 @@ const BlankGrid = () => {
   );
 };
 
-const StatusDisplay = ({ statusType, status }) => {
-  const navigate = useNavigate();
-  if (statusType === "queued") {
+const StatusDisplay = ({ status, progress }) => {
+  if (status === "Queued") {
     return (
-      <button
-        className="grid-status-display grid-status-display-gray"
-        onClick={() => navigate("/")}
-      >
-        Queued: {status}
+      <button className="grid-status-display grid-status-display-gray">
+        Queued: {progress}
       </button>
     );
-  } else if (statusType === "training") {
+  } else if (status === "Uploading" || status === "Starting") {
     return (
-      <button
-        className="grid-status-display grid-status-display-yellow"
-        onClick={() => navigate("/")}
-      >
-        Training: {status}
+      <button className="grid-status-display grid-status-display-blue">
+        {status}
       </button>
     );
-  } else if (statusType === "finished") {
+  } else if (status === "Training") {
     return (
-      <button
-        className="grid-status-display grid-status-display-green"
-        onClick={() => navigate("/")}
-      >
-        Done <ArrowForwardIcon fontSize="small" />
+      <button className="grid-status-display grid-status-display-yellow">
+        Training: {progress}%
+      </button>
+    );
+  } else if (status === "Success") {
+    return (
+      <button className="grid-status-display grid-status-display-green">
+        Success <ArrowForwardIcon fontSize="small" />
+      </button>
+    );
+  } else if (status === "Error") {
+    return (
+      <button className="grid-status-display grid-status-display-red">
+        Error <ArrowForwardIcon fontSize="small" />
       </button>
     );
   } else {
@@ -94,37 +66,7 @@ const StatusDisplay = ({ statusType, status }) => {
   }
 };
 
-const sameDay = (d1, d2) => {
-  return (
-    d1.getFullYear() === d2.getFullYear() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate()
-  );
-};
-
-const formatDate = (unixTime) => {
-  const currDate = new Date();
-  const date = new Date(unixTime * 1000);
-
-  const time = sameDay(date, currDate)
-    ? date.toLocaleTimeString(undefined, {
-        hour: "2-digit",
-        minute: "2-digit",
-      }) + ", "
-    : "";
-
-  return (
-    time +
-    date.toLocaleDateString(undefined, {
-      month: "short",
-      day: "numeric",
-      year:
-        date.getFullYear() === currDate.getFullYear() ? undefined : "numeric",
-    })
-  );
-};
-
-const FilledGrid = () => {
+const FilledGrid = ({ userRecords }) => {
   const navigate = useNavigate();
 
   return (
@@ -135,7 +77,7 @@ const FilledGrid = () => {
             <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
             <TableCell sx={{ fontWeight: "bold" }}>Type</TableCell>
             <TableCell sx={{ fontWeight: "bold" }} align="left">
-              Input
+              Input File
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} align="left">
               Date
@@ -146,28 +88,28 @@ const FilledGrid = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {userRecords.map((row) => (
             <TableRow
-              key={row.id}
+              key={row.execution_id}
               sx={{
                 "&:last-child td, &:last-child th": { border: 0 },
                 cursor: "pointer",
               }}
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/tabular-models")}
               hover
             >
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>
               <TableCell component="th" scope="row">
-                {row.type}
+                {row.data_source}
               </TableCell>
-              <TableCell align="left">{row.input}</TableCell>
-              <TableCell align="left">{formatDate(row.date)}</TableCell>
+              <TableCell align="left">{row.file_name}</TableCell>
+              <TableCell align="left">{row.timestamp}</TableCell>
               <TableCell align="left">
                 <StatusDisplay
-                  statusType={row.statusType}
                   status={row.status}
+                  progress={row.progress}
                 />
               </TableCell>
             </TableRow>
@@ -185,17 +127,15 @@ const Dashboard = () => {
   useEffect(() => {
     if (userEmail) {
       (async function() {
-        setUserRecords(await getUserRecords());
+        setUserRecords((await getUserRecords()).records);
       })();
-    } 
+    }
   }, [userEmail]);
-
-  console.log(userRecords);
 
   return (
     <div id="dashboard">
-      <FilledGrid />
-      {rows.length === 0 && <BlankGrid />}
+      <FilledGrid userRecords={userRecords} />
+      {userRecords.length === 0 && <BlankGrid />}
     </div>
   );
 };
@@ -203,6 +143,10 @@ const Dashboard = () => {
 export default Dashboard;
 
 StatusDisplay.propTypes = {
-  statusType: PropTypes.oneOf(["queued", "training", "finished"]),
-  status: PropTypes.string,
+  status: PropTypes.oneOf(["Queued", "Uploading", "Starting", "Training", "Success", "Error"]),
+  progress: PropTypes.number,
+};
+
+FilledGrid.propTypes = {
+  userRecords: PropTypes.array,
 };

@@ -51,7 +51,7 @@ def enumclass(cls=None, /, *, DataClass: BaseData = None, **kwargs):
         raise Exception("Please provide a corresponding dataclass")
     return process
 
-def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass = None, partition_key: str = None):
+def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass = None, partition_key: str = None, sort_key: str = None):
     """Decorator function used to assign static variables to subclasses of BaseDDBUtil that are also utilized
     in BaseDDBUtil function implementations. It is sort of analogous to how instance variables of a class are used in instance methods, 
     but the instances of the class can assign various different values to the instance variables.
@@ -67,6 +67,11 @@ def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass = None, part
         else:
             raise ValueError(f"{partition_key} is not an attribute of the table")
         
+        if sort_key is None or sort_key in EnumClass.Attribute:
+            cls.sort_key = sort_key
+        else:
+            raise ValueError(f"{sort_key} is not an attribute of the table")
+        
         if not issubclass(DataClass, BaseData):
             raise ValueError("DataClass provided is not a subclass of type: BaseData")
         
@@ -78,7 +83,7 @@ def changevar(cls=None, /, *, DataClass: BaseData = None, EnumClass = None, part
         raise Exception("Please provide the corresponding arguments")
     return process
 
-__type_mapper = {int: 'N', Decimal: 'N', str: 'S'}
+_type_mapper = {int: 'N', Decimal: 'N', str: 'S'}
 
 class BaseDDBUtil:
     """Base class that interacts with AWS DynamoDB to manipulate information stored in the DynamoDB tables.
@@ -99,21 +104,36 @@ class BaseDDBUtil:
     def create_table(self, read_capacity_units: int = 10, write_capacity_units: int = 10) -> None:
         """Function to create a DynamoDB table based on instance fields if it does not exist in AWS"""
         
+        keySchema = [
+            {
+                'AttributeName': self.partition_key,
+                'KeyType': 'HASH'  # Partition key
+            }
+        ]
+        
+        attributeDefinitions = [
+            {
+                'AttributeName': self.partition_key,
+                # AttributeType defines the data type. 'S' is string type and 'N' is number type
+                'AttributeType': _type_mapper[self.DataClass.__dataclass_fields__[self.partition_key].type]
+            }
+        ]
+        
+        if self.sort_key is not None:
+            keySchema.append({
+                'AttributeName': self.sort_key,
+                'KeyType': 'RANGE'  # Sort key
+            })
+            
+            attributeDefinitions.append({
+                'AttributeName': self.sort_key,
+                'AttributeType': _type_mapper[self.DataClass.__dataclass_fields__[self.sort_key].type]
+            })        
+        
         table = self.dynamodb.create_table(
             TableName=self.table_name,
-            KeySchema=[
-                {
-                    'AttributeName': self.partition_key,
-                    'KeyType': 'HASH'  # Partition key
-                },
-            ],
-            AttributeDefinitions=[
-                {
-                    'AttributeName': self.partition_key,
-                    # AttributeType defines the data type. 'S' is string type and 'N' is number type
-                    'AttributeType': __type_mapper[self.DataClass.__dataclass_fields__[self.partition_key].type]
-                }
-            ],
+            KeySchema=keySchema,
+            AttributeDefinitions=attributeDefinitions,
             ProvisionedThroughput={
                 # ReadCapacityUnits set to 10 strongly consistent reads per second
                 'ReadCapacityUnits': read_capacity_units,
@@ -155,7 +175,7 @@ class BaseDDBUtil:
             AttributeDefinitions=[
                 {
                     'AttributeName': attribute_name,
-                    'AttributeType': __type_mapper[self.DataClass.__dataclass_fields__[attribute_name].type]
+                    'AttributeType': _type_mapper[self.DataClass.__dataclass_fields__[attribute_name].type]
                 }
             ],
             GlobalSecondaryIndexUpdates=[

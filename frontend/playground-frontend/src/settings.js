@@ -192,18 +192,18 @@ export const ML_MODELS = [
         min: 1,
         max: 200
       },
-      max_depth: {
-        index: 1,
-        parameter_name: "Max Depth",
-        min: 1,
-        max: 5
-      },
-      min_samples_split: {
-        index: 2,
-        parameter_name: "Minimum Samples Split",
-        min: 2,
-        max: 10
-      }
+      // max_depth: {
+      //   index: 1,
+      //   parameter_name: "Max Depth",
+      //   min: 1,
+      //   max: 5
+      // },
+      // min_samples_split: {
+      //   index: 2,
+      //   parameter_name: "Minimum Samples Split",
+      //   min: 2,
+      //   max: 10
+      // }
     },
   },
   {

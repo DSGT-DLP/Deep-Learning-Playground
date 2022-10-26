@@ -1,7 +1,4 @@
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import LinearRegression
+import sklearn
 
 def get_object_ml(element):
     """
@@ -15,6 +12,6 @@ def get_object_ml(element):
         Instantiated object behind with the parameters passed in
     """
     return eval(
-        element
+        element[0]
     )  # takes in the string representation and returns the "instantiated object"
 

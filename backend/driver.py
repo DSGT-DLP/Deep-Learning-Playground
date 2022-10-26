@@ -95,26 +95,27 @@ def ml_run():
         request_data = json.loads(request.data)
         print(request_data)
 
-        user_model = request_data["model_type"]
+        user_model = request_data["user_arch"]
         problem_type = request_data["problem_type"]
         target = request_data["target"]
         features = request_data["features"]
         default = request_data["using_default_dataset"]
-        test_size = request_data["test_size"]
+        # test_size = request_data["test_size"]
         shuffle = request_data["shuffle"]
-        csvDataStr = request_data["csv_data"]
-        fileURL = request_data["file_URL"]
+        # csvDataStr = request_data["csv_data"]
+        # fileURL = request_data["file_URL"]
 
         train_loss_results = ml_drive(
-            user_model,
-            problem_type,
-            target,
-            features,
-            default,
-            test_size,
-            shuffle,
-            csvDataStr,
-            fileURL)
+            user_model =  user_model,
+            problem_type = problem_type,
+            target = target,
+            features = features,
+            default = default,
+            # test_size,
+            shuffle = shuffle
+            # csvDataStr,
+            # fileURL
+            )
         print(train_loss_results)
         return send_train_results(train_loss_results)
 

@@ -225,7 +225,7 @@ export const sendClassicalMLJSON = (...args) => {
   const csvDataStr = JSON.stringify(args.csvDataInput);
 
   return {
-    model_type: args.model_type,
+    user_arch: args.user_arch,
     problem_type: args.problemType,
     target: args.targetCol != null ? args.targetCol : null,
     features: args.features ? args.features : null,

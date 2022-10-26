@@ -45,6 +45,8 @@ function App() {
             <Route path="/classical-ml" element={verifyLogin(<ClassicalMLModel/>)}/>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/about" element={<About />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/wiki" element={<Wiki />} />
             <Route path="/feedback" element={<Feedback />} />
           </Routes>

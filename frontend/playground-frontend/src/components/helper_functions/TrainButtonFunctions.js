@@ -196,10 +196,46 @@ export const sendPretrainedJSON = (...args) => {
 //Classical ML
 export const validateClassicalMLInput = (user_arch, ...args) => {
   console.log("hello world");
-  //TODO: put code to validate classical ML input here
-}
+  args = args[0];
+  let alertMessage = "";
+  if (!args.problemType) alertMessage += "A problem type must be specified. ";
+  if (!args.usingDefaultDataset) {
+    if (!args.targetCol || !args.features?.length) {
+      alertMessage +=
+        "Must specify an input file, target, and features if not selecting default dataset. ";
+    }
+    for (let i = 0; i < args.features?.length; i++) {
+      if (args.targetCol === args.features[i]) {
+        alertMessage +=
+          "A column that is selected as the target column cannot also be a feature column. ";
+        break;
+      }
+    }
+    if (!args.csvDataInput && !args.fileURL) {
+      alertMessage +=
+        "Must specify an input file either from local storage or from an internet URL. ";
+    }
+  }
+  return alertMessage;
+};
 
 export const sendClassicalMLJSON = (...args) => {
-  console.log("hello world");
-  //TODO: put code to generate arguments in JSON format
-}
+  args = args[0];
+
+  const csvDataStr = JSON.stringify(args.csvDataInput);
+
+  return {
+    model_type: args.model_type,
+    problem_type: args.problemType,
+    target: args.targetCol != null ? args.targetCol : null,
+    features: args.features ? args.features : null,
+    using_default_dataset: args.usingDefaultDataset
+      ? args.usingDefaultDataset
+      : null,
+    test_size: args.testSize,
+    shuffle: args.shuffle,
+    csv_data: csvDataStr,
+    file_URL: args.fileURL,
+    email: args.email,
+  };
+};

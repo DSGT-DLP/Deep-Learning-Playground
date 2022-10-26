@@ -4,12 +4,10 @@ import React, { useState, useMemo } from "react";
 //import LargeFileUpload from "../general/LargeFileUpload";
 import {
   BOOL_OPTIONS,
-  IMAGE_DEFAULT_DATASETS,
-  OPTIMIZER_NAMES,
+  DEFAULT_DATASETS,
   //POSSIBLE_LAYERS,
   //POSSIBLE_TRANSFORMS,
   //IMAGE_LAYERS,
-  IMAGE_CLASSIFICATION_CRITERION,
   PROBLEM_TYPES,
   ML_MODELS,
 } from "../../settings";
@@ -46,73 +44,50 @@ const ClassicalMLModel = () => {
   const [addedLayers, setAddedLayers] = useState([]);
   //const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
   //const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
-  const [criterion, setCriterion] = useState(IMAGE_CLASSIFICATION_CRITERION[0]);
-  const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
   const [usingDefaultDataset, setUsingDefaultDataset] = useState(null);
-  const [epochs, setEpochs] = useState(5);
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
-  const [batchSize, setBatchSize] = useState(20);
   const [email, setEmail] = useState("");
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [beginnerMode, setBeginnerMode] = useState(true);
   const [inputKey, setInputKey] = useState(0);
+  const [testSize, setTestSize] = useState(0.2);
+  const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
+
   //const [uploadFile, setUploadFile] = useState(null);
 
   const input_responses = {
-    batchSize: batchSize,
-    criterion: criterion?.value,
     shuffle: shuffle?.value,
-    epochs: epochs,
-    optimizerName: optimizerName?.value,
+    problemType: problemType?.value,
     addedLayers: addedLayers,
     usingDefaultDataset: usingDefaultDataset?.value,
-    //trainTransforms: trainTransforms,
-    //testTransforms: testTransforms,
-    //uploadFile: uploadFile,
     customModelName: customModelName,
   };
 
   //TODO: modify this list accordingly to capture inputs for Classical ML
   const input_queries = [
     {
-      queryText: "Optimizer Name",
-      options: OPTIMIZER_NAMES,
-      onChange: setOptimizerName,
-      defaultValue: optimizerName,
-      beginnerMode: beginnerMode,
-    },
-    {
-      queryText: "Criterion",
-      options: IMAGE_CLASSIFICATION_CRITERION,
-      onChange: setCriterion,
-      defaultValue: criterion,
-      beginnerMode: beginnerMode,
-    },
-    {
       queryText: "Default",
-      options: IMAGE_DEFAULT_DATASETS,
+      options: DEFAULT_DATASETS,
       onChange: setUsingDefaultDataset,
       defaultValue: usingDefaultDataset,
     },
     {
-      queryText: "Epochs",
+      queryText: "TestSize",
       freeInputCustomRestrictions: { type: "number", min: 0 },
-      onChange: setEpochs,
-      defaultValue: epochs,
+      onChange: setTestSize,
+      defaultValue: testSize,
+    },
+    {
+      queryText: "ProblemType",
+      options: PROBLEM_TYPES,
+      onChange: setProblemType,
+      defaultValue: problemType,
     },
     {
       queryText: "Shuffle",
       options: BOOL_OPTIONS,
       onChange: setShuffle,
       defaultValue: shuffle,
-      beginnerMode: beginnerMode,
-    },
-
-    {
-      queryText: "Batch Size",
-      onChange: setBatchSize,
-      defaultValue: batchSize,
-      freeInputCustomRestrictions: { type: "number", min: 2 },
       beginnerMode: beginnerMode,
     },
   ];
@@ -132,9 +107,9 @@ const ClassicalMLModel = () => {
     setBeginnerMode(!beginnerMode);
     setInputKey((e) => e + 1);
   };
-
+//whats this
   return (
-    <div id="image-models">
+    <div id="ml-models"> 
       <DndProvider backend={HTML5Backend}>
         <div className="d-flex flex-row justify-content-between">
           <FormControlLabel
@@ -189,7 +164,7 @@ const ClassicalMLModel = () => {
           <TrainButton
             {...input_responses}
             setDLPBackendResponse={setDLPBackendResponse}
-            choice="image"
+            choice="classicalml"
           />
         </BackgroundLayout>
 
@@ -227,7 +202,7 @@ const ClassicalMLModel = () => {
       </BackgroundLayout>
 
       <Spacer height={40} />
-      <TitleText text="Image Transformations" />
+      <TitleText text="Data Transformations" />
       {/* <Transforms
         queryText={"Train Transform"}
         options={POSSIBLE_TRANSFORMS}

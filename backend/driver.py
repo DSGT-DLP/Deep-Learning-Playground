@@ -3,7 +3,8 @@ import traceback
 import datetime
 from werkzeug.utils import secure_filename
 import shutil
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 from flask import Flask, request, send_from_directory
 from backend.middleware import middleware
@@ -34,6 +35,7 @@ CORS(app)
 
 app.wsgi_app = middleware(app.wsgi_app)
 
+
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def root(path):
@@ -41,15 +43,16 @@ def root(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, "index.html")
-    
+
+
 @app.route("/api/tabular-run", methods=["POST"])
-def tabular_run():   
+def tabular_run():
     try:
         request_data = json.loads(request.data)
-        
+
         user_arch = request_data["user_arch"]
         criterion = request_data["criterion"]
-        optimizer_name = request_data["optimizer_name"]    
+        optimizer_name = request_data["optimizer_name"]
         problem_type = request_data["problem_type"]
         target = request_data["target"]
         features = request_data["features"]
@@ -77,6 +80,7 @@ def tabular_run():
             batch_size,
             csvDataStr
         )
+
         print(train_loss_results)
         return send_train_results(train_loss_results)
 
@@ -84,12 +88,47 @@ def tabular_run():
         print(traceback.format_exc())
         return send_traceback_error()
 
+
+@app.route("/api/ml-run", methods=["POST"])
+def ml_run():
+    try:
+        request_data = json.loads(request.data)
+        print(request_data)
+
+        user_model = request_data["model_type"]
+        problem_type = request_data["problem_type"]
+        target = request_data["target"]
+        features = request_data["features"]
+        default = request_data["using_default_dataset"]
+        test_size = request_data["test_size"]
+        shuffle = request_data["shuffle"]
+        csvDataStr = request_data["csv_data"]
+        fileURL = request_data["file_URL"]
+
+        train_loss_results = ml_drive(
+            user_model,
+            problem_type,
+            target,
+            features,
+            default,
+            test_size,
+            shuffle,
+            csvDataStr,
+            fileURL)
+        print(train_loss_results)
+        return send_train_results(train_loss_results)
+
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+
+
 @app.route("/api/img-run", methods=["POST"])
 def img_run():
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
         request_data = json.loads(request.data)
-        
+
         train_transform = request_data["train_transform"]
         test_transform = request_data["test_transform"]
         user_arch = request_data["user_arch"]
@@ -106,7 +145,7 @@ def img_run():
             test_transform,
             user_arch,
             criterion,
-            optimizer_name, 
+            optimizer_name,
             default,
             epochs,
             batch_size,
@@ -116,21 +155,22 @@ def img_run():
 
         print("training successfully finished")
         return send_train_results(train_loss_results)
-        
+
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
-        
+
     finally:
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
             if (x != ".gitkeep"):
-                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER) , x)
+                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
                 if (os.path.isdir(file_rem)):
                     shutil.rmtree(file_rem)
                 else:
                     os.remove(file_rem)
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
+
 
 @app.route("/api/sendEmail", methods=["POST"])
 def send_email_route():
@@ -159,6 +199,7 @@ def send_email_route():
         print(traceback.format_exc())
         return send_traceback_error()
 
+
 @app.route("/api/defaultDataset", methods=["POST"])
 def send_columns():
     try:
@@ -166,31 +207,37 @@ def send_columns():
         default = request_data["using_default_dataset"]
         header = get_default_dataset_header(default.upper())
         header_list = header.tolist()
+        print(request.authorization)
         return send_success({"columns": header_list})
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
+
 
 @app.route("/api/upload", methods=["POST"])
 def upload():
     try:
         print(datetime.datetime.now().isoformat() + " upload has started its task")
         file = request.files['file']
-        basepath = os.path.dirname(__file__) 
-        upload_path = os.path.join(basepath, 'image_data_uploads', secure_filename(file.filename)) 
+        basepath = os.path.dirname(__file__)
+        upload_path = os.path.join(basepath, 'image_data_uploads', secure_filename(file.filename))
         file.save(upload_path)
         file.stream.close()
+        print(request.authorization)
         print(datetime.datetime.now().isoformat() + " upload has finished its task")
         return send_success({"message": "upload success"})
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
 
+
 def send_success(results: dict):
     return (json.dumps({"success": True, **results}), 200)
 
+
 def send_error(message: str):
     return (json.dumps({"success": False, "message": message}), 400)
+
 
 def send_train_results(train_loss_results: dict):
     return send_success({
@@ -199,8 +246,10 @@ def send_train_results(train_loss_results: dict):
         "auxiliary_outputs": train_loss_results,
     })
 
+
 def send_traceback_error():
     return send_error(traceback.format_exc(limit=1))
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=PORT)

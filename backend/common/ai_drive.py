@@ -170,7 +170,8 @@ def ml_drive(
     default=False,
     test_size=0.2,
     shuffle=True,
-    json_csv_data_str=""
+    json_csv_data_str="",
+    fileURL = ""
 ):
     """
     Driver function/endpoint into backend for training a classical ML model (eg: SVC, SVR, DecisionTree, Naive Bayes, etc)
@@ -185,6 +186,14 @@ def ml_drive(
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
     """
     try:
+        if not default:
+            if fileURL:
+                read_dataset(fileURL)
+            elif json_csv_data_str:
+                pass
+            else:
+                raise ValueError("Need a file input")
+
         if default and problem_type.upper() == "CLASSIFICATION":
             # dataset = load_iris()
             X, y = get_default_dataset(default.upper(), target, features)

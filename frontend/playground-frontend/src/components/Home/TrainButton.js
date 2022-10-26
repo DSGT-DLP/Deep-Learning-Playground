@@ -50,7 +50,7 @@ const TrainButton = (props) => {
           reset();
           return false;
         }
-        parameters_to_be_added[v.index] = v.value;
+        parameters_to_be_added[v.index] = `${v.kwarg ?? ""}${v.value}`;
       }
       parameters_to_be_added.forEach((e) => {
         parameter_call_input += e + ",";

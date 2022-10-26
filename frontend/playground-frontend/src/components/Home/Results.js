@@ -8,7 +8,7 @@ import { CSVLink } from "react-csv";
 import { GENERAL_STYLES, COLORS } from "../../constants";
 
 const Results = (props) => {
-  const { dlpBackendResponse, problemType } = props;
+  const { dlpBackendResponse, problemType, choice } = props;
   const dl_results_data = dlpBackendResponse?.dl_results || [];
 
   if (!dlpBackendResponse?.success) {
@@ -56,71 +56,81 @@ const Results = (props) => {
   const FIGURE_HEIGHT = 500;
   const FIGURE_WIDTH = 750;
 
-  const TrainVTestAccuracy = () => (
-    <Plot
-      data={[
-        {
-          name: "Train accuracy",
-          x: mapResponses("epoch"),
-          y: mapResponses("train_acc"),
-          type: "scatter",
-          mode: "markers",
-          marker: { color: "red", size: 10 },
-          config: { responsive: true },
-        },
-        {
-          name: "Test accuracy",
-          x: mapResponses("epoch"),
-          y: mapResponses("val/test acc"),
-          type: "scatter",
-          mode: "markers",
-          marker: { color: "blue", size: 10 },
-          config: { responsive: true },
-        },
-      ]}
-      layout={{
-        width: FIGURE_WIDTH,
-        height: FIGURE_HEIGHT,
-        xaxis: { title: "Epoch Number" },
-        yaxis: { title: "Accuracy" },
-        title: "Train vs. Test Accuracy for your Deep Learning Model",
-        showlegend: true,
-      }}
-    />
-  );
+  const TrainVTestAccuracy = () => {
+    if (choice === "classicalml") { return null }
+    else if (problemType.value === "classification") { return null; }
+    else {
+      return <Plot
+        data={[
+          {
+            name: "Train accuracy",
+            x: mapResponses("epoch"),
+            y: mapResponses("train_acc"),
+            type: "scatter",
+            mode: "markers",
+            marker: { color: "red", size: 10 },
+            config: { responsive: true },
+          },
+          {
+            name: "Test accuracy",
+            x: mapResponses("epoch"),
+            y: mapResponses("val/test acc"),
+            type: "scatter",
+            mode: "markers",
+            marker: { color: "blue", size: 10 },
+            config: { responsive: true },
+          },
+        ]}
+        layout={{
+          width: FIGURE_WIDTH,
+          height: FIGURE_HEIGHT,
+          xaxis: { title: "Epoch Number" },
+          yaxis: { title: "Accuracy" },
+          title: "Train vs. Test Accuracy for your Deep Learning Model",
+          showlegend: true,
+        }}
+      />
+    }
+  }
 
-  const TrainVTestLoss = () => (
-    <Plot
-      data={[
-        {
-          name: "Train loss",
-          x: mapResponses("epoch"),
-          y: mapResponses("train_loss"),
-          type: "scatter",
-          mode: "markers",
-          marker: { color: "red", size: 10 },
-          config: { responsive: true },
-        },
-        {
-          name: "Test loss",
-          x: mapResponses("epoch"),
-          y: mapResponses("test_loss"),
-          type: "scatter",
-          mode: "markers",
-          marker: { color: "blue", size: 10 },
-          config: { responsive: true },
-        },
-      ]}
-      layout={{
-        width: FIGURE_WIDTH,
-        height: FIGURE_HEIGHT,
-        xaxis: { title: "Epoch Number" },
-        yaxis: { title: "Loss" },
-        title: "Train vs. Test Loss for your Deep Learning Model",
-        showlegend: true,
-      }}
-    />
-  );
+
+  const TrainVTestLoss = () => {
+    if (choice === "classicalml") {
+      return null
+    }
+    else {
+      return <Plot
+        data={[
+          {
+            name: "Train loss",
+            x: mapResponses("epoch"),
+            y: mapResponses("train_loss"),
+            type: "scatter",
+            mode: "markers",
+            marker: { color: "red", size: 10 },
+            config: { responsive: true },
+          },
+          {
+            name: "Test loss",
+            x: mapResponses("epoch"),
+            y: mapResponses("test_loss"),
+            type: "scatter",
+            mode: "markers",
+            marker: { color: "blue", size: 10 },
+            config: { responsive: true },
+          },
+        ]}
+        layout={{
+          width: FIGURE_WIDTH,
+          height: FIGURE_HEIGHT,
+          xaxis: { title: "Epoch Number" },
+          yaxis: { title: "Loss" },
+          title: "Train vs. Test Loss for your Deep Learning Model",
+          showlegend: true,
+        }}
+      />
+    }
+  };
 
   const AUC_ROC_curves = () => (
     <Plot
@@ -218,14 +228,14 @@ const Results = (props) => {
       />
 
       <div style={{ marginTop: 8 }}>
-        {problemType.value === "classification" ? <TrainVTestAccuracy /> : null}
+        <TrainVTestAccuracy />
         <TrainVTestLoss />
         {problemType.value === "classification" &&
-        auc_roc_data_res.length !== 0 ? (
+          auc_roc_data_res.length !== 0 ? (
           <AUC_ROC_curves />
         ) : null}
         {problemType.value === "classification" &&
-        auc_roc_data_res.length === 0 ? (
+          auc_roc_data_res.length === 0 ? (
           <p style={{ textAlign: "center" }}>
             No AUC/ROC curve could be generated. If this is not intended, check
             that shuffle is set to true to produce a more balanced train/test

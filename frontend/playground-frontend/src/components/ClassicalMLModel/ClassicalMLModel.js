@@ -98,6 +98,7 @@ const ClassicalMLModel = () => {
       <Results
         dlpBackendResponse={dlpBackendResponse}
         problemType={PROBLEM_TYPES[0]}
+        choice="classicalml"
       />
     ),
     [dlpBackendResponse, PROBLEM_TYPES[0]]

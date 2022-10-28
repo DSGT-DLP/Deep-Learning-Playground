@@ -6,6 +6,7 @@ import {
   Feedback,
   NavbarMain,
   ImageModels,
+  ImageDetection,
   Footer,
   Pretrained,
   Dashboard,
@@ -46,6 +47,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/wiki" element={<Wiki />} />
             <Route path="/pretrained" element={<Pretrained />} />
+            <Route path="/img-detection" element={<ImageDetection />} />
             <Route path="/feedback" element={<Feedback />} />
           </Routes>
           <ToastContainer position="top-center" />

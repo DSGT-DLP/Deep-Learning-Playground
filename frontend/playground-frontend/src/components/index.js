@@ -44,5 +44,7 @@ export { default as ImageModels } from "./ImageModels/ImageModels";
 
 export { default as Pretrained } from "./Pretrained/Pretrained";
 
+export { default as ImageDetection } from "./ImageDetection/ImageDetection";
+
 // Pretrained page
 export { default as LargeFileUpload } from "./general/LargeFileUpload";

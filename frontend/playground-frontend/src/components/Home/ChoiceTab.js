@@ -41,6 +41,17 @@ const ChoiceTab = () => {
           Pretrained
         </Link>
       </button>
+
+      <button
+        style={{
+          ...styles.button,
+          backgroundColor: getBackground("/img-detection"),
+        }}
+      >
+        <Link to="/img-detection" style={styles.linkelEment}>
+          Image Detection
+        </Link>
+      </button>
     </div>
   );
 };

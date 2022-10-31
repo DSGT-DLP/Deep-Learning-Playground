@@ -1,52 +1,40 @@
-import { io } from "socket.io-client";
 import { toast } from "react-toastify";
+import { auth } from "../../firebase";
+import axios from "axios";
 
-const socket = io(":8000");
-socket.on("connect", () => {
-  frontendLog(`connected to socket`);
-});
-socket.on("connect_error", (err) => {
-  console.log(`connection error due to: ${err.message}`);
-  socket.close();
-});
+const uploadToBackend = async (data) => {
+  let headers = auth.currentUser
+    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
+    : undefined;
 
-const frontendLog = (log) => {
-  socket.emit("frontendLog", log);
+  await axios.post("/api/upload", data, { headers });
 };
 
-const train_and_output = (
-  user_arch,
-  criterion,
-  optimizerName,
-  problemType,
-  targetCol = null,
-  features = null,
-  usingDefaultDataset = null,
-  testSize,
-  epochs,
-  batchSize,
-  shuffle,
-  csvData = null,
-  fileURL = null
-) => {
-  socket.emit("runTraining", {
-    user_arch: user_arch,
-    criterion: criterion,
-    optimizer_name: optimizerName,
-    problem_type: problemType,
-    target: targetCol,
-    features: features,
-    default: usingDefaultDataset,
-    test_size: testSize,
-    epochs: epochs,
-    batch_size: batchSize,
-    shuffle: shuffle,
-    csvData: csvData,
-    fileURL: fileURL,
-  });
+const sendToBackend = async (route, data) => {
+  let headers = auth.currentUser
+    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
+    : undefined;
+
+  const backendResult = await fetch(`/api/${route}`, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: headers,
+  }).then((result) => result.json());
+  return backendResult;
 };
 
-const sendEmail = (email, problemType) => {
+const routeDict = {
+  tabular: "tabular-run",
+  image: "img-run",
+  pretrained: "pretrain-run",
+};
+
+const train_and_output = async (choice, choiceDict) => {
+  const trainResult = await sendToBackend(routeDict[choice], choiceDict);
+  return trainResult;
+};
+
+const sendEmail = async (email, problemType) => {
   // send email if provided
   const attachments = [
     // we will not create constant values for the source files because the constants cannot be used in Home
@@ -67,7 +55,7 @@ const sendEmail = (email, problemType) => {
     );
   }
 
-  socket.emit("sendEmail", {
+  const emailResult = await sendToBackend("sendEmail", {
     email_address: email,
     subject:
       "Your output files and visualizations from Deep Learning Playground",
@@ -75,12 +63,20 @@ const sendEmail = (email, problemType) => {
       "Attached are the output files and visualizations that you just created in Deep Learning Playground on datasciencegt-dlp.com. Please notify us if there are any problems.",
     attachment_array: attachments,
   });
+
+  if (!emailResult.success) {
+    toast.error(emailResult.message);
+  }
 };
 
-socket.on("emailResult", (result) => {
-  if (!result.success) {
-    toast.error(result.message);
-  }
-});
+const isLoggedIn = async () => {
+  return await auth.currentUser?.getIdToken(true), toast.error("Not logged in");
+};
 
-export { socket, frontendLog, train_and_output, sendEmail };
+export {
+  uploadToBackend,
+  sendToBackend,
+  train_and_output,
+  sendEmail,
+  isLoggedIn,
+};

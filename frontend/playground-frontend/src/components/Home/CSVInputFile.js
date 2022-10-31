@@ -53,7 +53,7 @@ const CSVInputFile = (props) => {
   // handle file upload
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    setFileName(file.name.substring(0, 20));
+    setFileName(file.name?.substring(0, 20));
     const reader = new FileReader();
     reader.onload = (evt) => {
       /* Parse data */
@@ -71,8 +71,12 @@ const CSVInputFile = (props) => {
 
   return (
     <>
-      <label htmlFor="csv-upload" className="custom-file-upload">
-        <FaCloudUploadAlt /> {fileName || "Upload CSV"}
+      <label
+        htmlFor="csv-upload"
+        className="custom-file-upload d-flex align-items-center"
+      >
+        <FaCloudUploadAlt className="me-2" />
+        {fileName || "Upload CSV"}
       </label>
       <input
         type="file"

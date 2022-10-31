@@ -87,7 +87,6 @@ def get_unzipped(zipped_file):
             name = name.split("\\")[-1]
             train_dir = os.path.join(UNZIPPED_DIR_NAME, "input", name, "train")
             test_dir = os.path.join(UNZIPPED_DIR_NAME, "input", name, "test")
-            print(train_dir)
         
         if (not os.path.exists(train_dir) or not os.path.exists(test_dir)):
             raise ValueError(errorMessage.CHECK_FILE_STRUCTURE.value)
@@ -152,7 +151,7 @@ def loader_from_zipped(
         )
         test_loader = DataLoader(
             test_dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True
-        )
+        ) ### DROP LAST drops the last non full batch. 97 data points and batchsize = 10 would lead to creation of only 9 datasets, 7 extra data points will be lost 
 
         return train_loader, test_loader
     except Exception as e:

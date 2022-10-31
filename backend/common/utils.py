@@ -57,7 +57,8 @@ def get_tensors(X_train, X_test, y_train, y_test):
     X_train_tensor = torch.reshape(
         X_train_tensor, (X_train_tensor.size()[0], 1, X_train_tensor.size()[1])
     )
-    y_train_tensor = torch.reshape(y_train_tensor, (y_train_tensor.size()[0], 1))
+    y_train_tensor = torch.reshape(
+        y_train_tensor, (y_train_tensor.size()[0], 1))
 
     X_test_tensor = Variable(torch.Tensor(X_test.to_numpy()))
     y_test_tensor = Variable(torch.Tensor(y_test.to_numpy()))
@@ -88,11 +89,12 @@ def get_dataloaders(
     train_loader = DataLoader(
         train, batch_size=batch_size, shuffle=False, drop_last=True
     )
-    test_loader = DataLoader(test, batch_size=batch_size, shuffle=False, drop_last=True)
+    test_loader = DataLoader(test, batch_size=batch_size,
+                             shuffle=False, drop_last=True)
     return train_loader, test_loader
 
 
-def generate_loss_plot(results_path) -> dict[str : list[float]]:
+def generate_loss_plot(results_path) -> dict[str: list[float]]:
     """
     Given a training result file, plot the loss in a matplotlib plot
     Args:
@@ -130,7 +132,7 @@ def generate_loss_plot(results_path) -> dict[str : list[float]]:
     }
 
 
-def generate_acc_plot(results_path) -> dict[str : list[float]]:
+def generate_acc_plot(results_path) -> dict[str: list[float]]:
     """
     Given training result file, plot the accuracy in a matplotlib plot
     Args:
@@ -173,78 +175,69 @@ def generate_train_time_csv(epoch_time):
         epoch_time (list): array consisting of train time for each epoch
     """
     epoch = [i for i in range(1, len(epoch_time) + 1)]
-    df = pd.DataFrame({"Train Time": epoch_time}, index=epoch, columns=["Train Time"])
+    df = pd.DataFrame({"Train Time": epoch_time},
+                      index=epoch, columns=["Train Time"])
     df.to_csv(TRAIN_TIME_CSV)
 
 
-def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch):
+def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch, category_list=[]):
     """
     Given the prediction results and label, generate confusion matrix (only applicable to classification tasks)
     Args:
-        label: array consisting of ground truth values
-        y_pred: array consisting of predicted results
-        categoryList: list of strings that represent the categories to classify into (this will be used to label the axis)
-    Returns: the confusion matrix in a 2D-array format
+        labels_last_epoch: array (of len batch_size) consisting of arrays of ground truth values (Tensors)
+        y_pred: array consisting of predicted results (in probability form)
+        category_list: list of strings that represent the categories to classify into (this will be used to label the axis)
+    Returns: the confusion matrix in a 2D-array format, a numerical representation of the category list
     """
     label = []
     y_pred = []
     categoryList = []
 
-    for l in labels_last_epoch.tolist():
-        label.append(l[0])
+    label = np.array(labels_last_epoch).flatten()
 
-    predictions = torch.argmax(
-        y_pred_last_epoch, dim=-1
-    )
-    for prediction in predictions.tolist():
-        y_pred.append(prediction[0])
+    for batch in y_pred_last_epoch:
+        # flatten and concatenate
+        y_pred = np.concatenate((y_pred, np.argmax(batch, axis=1)), axis=None)
 
-    # generating a category list for confusion matrix axis labels
-    if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):
-        for i, x in enumerate(y_pred_last_epoch[0][0]):
-            categoryList.append(i)
+    categoryList = np.arange(0, len(y_pred_last_epoch[0][0])).tolist()
 
     plt.clf()
-    label_np = np.array(label)
-    pred_np = np.array(y_pred)
+    label_np = label
+    pred_np = y_pred
     cm = confusion_matrix(label_np, pred_np, labels=categoryList)
-    ax= plt.subplot()
-    sns.heatmap(cm, annot=True, fmt='g', ax=ax, cmap='Purples');  #annot=True to annotate cells, ftm='g' to disable scientific notation
-    ax.set_xlabel('Predicted');ax.set_ylabel('Actual'); 
-    ax.set_title('Confusion Matrix (last Epoch)'); 
-    ax.xaxis.set_ticklabels(categoryList); ax.yaxis.set_ticklabels(categoryList);
+    ax = plt.subplot()
+    # annot=True to annotate cells, ftm='g' to disable scientific notation
+    sns.heatmap(cm, annot=True, fmt='g', ax=ax, cmap='Purples')
+    ax.set_xlabel('Predicted')
+    ax.set_ylabel('Actual')
+    ax.set_title('Confusion Matrix (last Epoch)')
+    ax.xaxis.set_ticklabels(category_list)
+    ax.yaxis.set_ticklabels(category_list)
     make_directory(CONFUSION_VIZ)
     plt.savefig(CONFUSION_VIZ)
-    return cm.tolist()
+    return (cm.tolist(), categoryList)
 
 
-def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
+def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch, category_list=[]):
     label_list = []
     y_preds_list = []
-    categoryList = []
-    plot_data = []  
+    plot_data = []
+    categoryList = []  # numerical category list
 
-    # generating a category list for confusion matrix axis labels, and setting up the y_preds_list and label_list for each category
-    if (len(y_pred_last_epoch) > 0 and len(y_pred_last_epoch[0]) > 0):
-        for i, x in enumerate(y_pred_last_epoch[0][0]):
-            categoryList.append(i)
-            y_preds_list.append([])
-            label_list.append([])
+    # generating a numerical category list for confusion matrix axis labels, and setting up the y_preds_list and label_list for each category
+    categoryList = np.arange(0, len(y_pred_last_epoch[0][0])).tolist()
 
-    for label in labels_last_epoch:
-        ground_truth = label.item();
-        for x in range(len(label_list)):
-            # toggle on a 1 for the category that corresponds to the ground truth, this is to produce the 1-vs-all system for multiclass classification
-            if x == ground_truth:
-                label_list[x].append(1)
-            else:
-                label_list[x].append(0)
+    if category_list == []:
+        category_list = categoryList
 
-    for row in y_pred_last_epoch:
-        for i, tensor in enumerate(row[0]):
-            # appending tensor values to each category's probability predicitons in y_preds_list
-            y_preds_list[i].append(tensor.item())
-    
+    labels_last_epoch = np.array(labels_last_epoch).flatten()
+    label_list = np.zeros((len(category_list), len(labels_last_epoch)))
+
+    for i in range(len(labels_last_epoch)):
+        label_list[int(labels_last_epoch[i])][i] = 1
+
+    y_preds_list = np.transpose(np.concatenate(np.array(y_pred_last_epoch)))
+
     # making a AUC/ROC graph for each category's probability predicitons
     try:
         # using matplotlib in addition to plotly so that we can generate graph image in backend and email this to user
@@ -253,23 +246,23 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch):
         plt.xlabel('False Positive Rate')
         plt.ylabel('True Positive Rate')
         plt.plot([0, 1], [0, 1], linestyle='--', label=f'baseline')
-        for i in range(len(categoryList)):
+        for i in range(len(category_list)):
             pred_prob = np. array(y_preds_list[i])
-            y_test = np. array(label_list[i])
+            y_test = label_list[i]
             fpr, tpr, _ = roc_curve(y_test, pred_prob)
             auc = roc_auc_score(y_test, pred_prob)
             # this data will be sent to frontend to make interactive plotly graph
             plot_data.append([fpr.tolist(), tpr.tolist(), auc])
-            plt.plot(fpr, tpr, linestyle='-', label=f'{i} (AUC: {round(auc,4)})')
+            plt.plot(fpr, tpr, linestyle='-',
+                     label=f'{category_list[i]} (AUC: {round(auc,4)})')
         plt.legend()
         make_directory(AUC_ROC_VIZ)
         plt.savefig(AUC_ROC_VIZ)
 
-
     except:
         return []
 
-    return plot_data
+    return plot_data, categoryList
 
 
 def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: str = None) -> str:
@@ -305,6 +298,7 @@ def csv_to_json(csvFilePath: str = DEEP_LEARNING_RESULT_CSV_PATH, jsonFilePath: 
             jsonf.write(jsonString)
 
     return jsonData
+
 
 def make_directory(filepath: str):
     """

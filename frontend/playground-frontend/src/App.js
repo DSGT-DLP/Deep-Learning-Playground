@@ -1,42 +1,55 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import {
   About,
-  LoginPopup,
   Wiki,
   Feedback,
-  Navbar,
+  NavbarMain,
+  ImageModels,
   Footer,
-  LearnMod,
-  LearnContent
+  Dashboard,
+  Login,
 } from "./components";
-import { ToastContainer } from "react-toastify";
 import Home from "./Home";
+import { ToastContainer } from "react-toastify";
+import { getCookie } from "./components/helper_functions/Cookie";
+
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import DashboardPage from "./components/Dashboard/DashboardPage";
 
 function App() {
-  const [showLogin, setShowLogin] = useState(false);
+  const userEmail = getCookie("userEmail");
+  const verifyLogin = (target) => (userEmail ? target : <Login />);
 
   return (
-
     <div id="app">
-      <Router>
-        <Navbar setShowLogin={setShowLogin} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/About" element={<About />} />
-          <Route path="/Wiki" element={<Wiki />} />
-          <Route path="/feedback" element={<Feedback />} />
-          <Route path="/LearnMod" element= {<LearnMod/>} />
-          <Route path="/LearnContent" element={<LearnContent/>} />
-          <Route path="/dashboard" element= {<DashboardPage/>} />
-        </Routes>
-        <ToastContainer position="top-center" />
+      <BrowserRouter>
+        <div id="app-router">
+          <NavbarMain />
+          <Routes>
+            <Route
+              exact
+              path="/"
+              element={
+                userEmail ? (
+                  <Navigate to="/dashboard" />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+            <Route path="/login" element={<Login />} />
+            <Route path="/train" element={verifyLogin(<Home />)} />
+            <Route path="/img-models" element={verifyLogin(<ImageModels />)} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/wiki" element={<Wiki />} />
+            <Route path="/feedback" element={<Feedback />} />
+          </Routes>
+          <ToastContainer position="top-center" />
+        </div>
         <Footer />
-      </Router>
-      {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
+      </BrowserRouter>
     </div>
   );
 }

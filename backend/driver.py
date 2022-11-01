@@ -15,6 +15,8 @@ from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
+from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
+from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION
 
 init_firebase()
 
@@ -185,6 +187,16 @@ def upload():
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
+
+@app.route("/api/getUserProgressData", methods=["POST"])
+def getUserProgressData():
+    dynamoTable = UserProgressDDBUtil("userprogress_table", AWS_REGION)
+    try:
+        return dynamoTable.get_record(str(request.data)).progressData
+    except ValueError:
+        newRecord = UserProgressData(str(request.data), "{}")
+        dynamoTable.create_record(newRecord)
+        return "{}"
 
 def send_success(results: dict):
     return (json.dumps({"success": True, **results}), 200)

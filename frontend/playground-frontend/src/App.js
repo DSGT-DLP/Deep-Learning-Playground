@@ -9,6 +9,8 @@ import {
   Footer,
   Dashboard,
   Login,
+  LearnMod,
+  LearnContent
 } from "./components";
 import Home from "./Home";
 import { ToastContainer } from "react-toastify";
@@ -45,6 +47,9 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/wiki" element={<Wiki />} />
             <Route path="/feedback" element={<Feedback />} />
+            <Route path="/LearnMod" element={<LearnMod />} />
+            <Route path="/LearnContent" element={<LearnContent />} />
+
           </Routes>
           <ToastContainer position="top-center" />
         </div>

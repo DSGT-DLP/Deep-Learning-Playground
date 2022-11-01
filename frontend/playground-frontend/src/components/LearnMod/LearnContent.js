@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import MCQuestion from './MCQuestion';
 import { useLocation } from 'react-router-dom';
 
 const LearnContent = () => {
@@ -7,7 +8,27 @@ const LearnContent = () => {
     
     let moduleContent = location.state;
     
-    const [subSection] = useState(0);
+    const [subSection, setSubSection] = useState(0);
+
+    const onPreviousClick = () => {
+
+      if (subSection !== 0) {
+
+        setSubSection(subSection - 1);
+
+      }
+
+    };
+    
+    const onNextClick = () => {
+
+      if (subSection !== moduleContent.subClasses.length - 1) {
+
+        setSubSection(subSection + 1);
+
+      }
+
+    };
 
     return (
         <>
@@ -15,6 +36,7 @@ const LearnContent = () => {
             <h1 className="headers">{moduleContent.title}</h1>
       </div>
       <div id="learningContentDiv">
+          <h1>{moduleContent.subClasses[subSection].title}</h1>
           {
             moduleContent.subClasses[subSection].content.map((contentComponent, index) => {
 
@@ -26,9 +48,20 @@ const LearnContent = () => {
 
               }
 
+              if (contentComponent.sectionType === "mcQuestion") {
+
+                return (
+                  <MCQuestion/>
+                );
+
+              }
+
             })
           }
-      </div>   
+
+      </div>
+      <button onClick={onPreviousClick}>Previous</button>
+      <button onClick={onNextClick}>Next</button>
         </>
     );
 

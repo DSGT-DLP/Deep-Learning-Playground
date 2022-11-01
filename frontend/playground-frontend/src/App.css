@@ -419,6 +419,143 @@ textarea {
 }
 
 /* -------------------------------------------------------------------------- */
+/*	Learning Modules
+/* -------------------------------------------------------------------------- */
+
+.classes {
+  width: 55%;
+}
+
+#learningBody {
+  display: flex;
+  justify-content: space-around;
+}
+
+.class {
+  border-radius: 1rem;
+  border: 1px solid black;
+  background-color: var(--whitehover);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.classHeader {
+  margin: 0;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+}
+
+#classBar {
+  margin-left: 3rem;
+}
+
+#classTitle {
+  margin-left: 3.3rem;
+  font-size: 1.4rem;
+}
+
+.circleWrap {
+  width: 45%;
+  display: flex;
+  justify-content: end;
+}
+
+.circleFill {
+  margin-top: 0.3rem;
+  margin-right: 2.5rem;
+  width: 5.3rem;
+  height: 5.3rem;
+  border-radius: 50%;
+  border: 1px solid #cdcbd0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circleInFill {
+  width: 77%;
+  height: 77%;
+  background-color: var(--dark-grey);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.textInCircle {
+  font-size: 1rem;
+}
+
+.progressBar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.progressContainer {
+  margin-top: 1.2rem;
+  margin-right: 0.5rem;
+  padding: 2px;
+  border: 3px solid var(--primary);
+  height: 0.5rem;
+}
+
+.progressContainer .progressFill {
+  height: 100%;
+  background-color: var(--primary);
+}
+
+.classBody {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#classBodyText {
+  font-size: 1.2rem;
+}
+
+.classBodyRight {
+  width: 40%;
+}
+
+#subClassBar {
+  margin-top: 0.7rem;
+  width: 100%;
+}
+
+#classBtn {
+  display: inline-block;
+  padding: .75rem 1.25rem;
+  border-radius: 10rem;
+  border: 1px solid black;
+  color: var(--primary);
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: .15rem;
+  transition: all .3s;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  margin-bottom: 1rem;
+}
+
+#classBtn:hover {
+  cursor: pointer;
+  background-color: darken((var(--footer-dark-blue), 10%));
+  
+}
+
+.classFooter {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.learningContentDiv {
+  background-color: lightblue;
+}
+
+/* -------------------------------------------------------------------------- */
 /*	Login
 /* -------------------------------------------------------------------------- */
 

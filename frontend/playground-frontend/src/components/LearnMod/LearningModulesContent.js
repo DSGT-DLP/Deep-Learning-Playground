@@ -36,6 +36,7 @@ let content = {
                             sectionType: "mcQuestion",
                             question: "A model that attempted to guess the price of a used car given its make, model, and mileage would be solving what kind of machine learning problem?",
                             correctAnswer: 0,
+                            questionID: 0,
                             answerChoices: [
                                 "Regression",
                                 "Classification"
@@ -55,6 +56,7 @@ let content = {
                             sectionType: "mcQuestion",
                             question: "One machine learning model for classification problems is called k-nearest neighbors. It works by locating k inputs it has previously recieved, determining how it classified the majority of those inputs, and then classifying the new input with the same classification. Is this an example of supervised or unsupervised learning?",
                             correctAnswer: 1,
+                            questionID: 0,
                             answerChoices: [
                                 "Supervised Learning",
                                 "Unsupervised Learning"
@@ -106,6 +108,7 @@ let content = {
                         {
                             sectionType: "frQuestion",
                             question: "Dave built a neural network that attempts to classify a picture as a dog, cat, or chicken. How many nodes will the last layer of his neural network have?",
+                            questionID: 0,
                             answer: 3
         
                         },

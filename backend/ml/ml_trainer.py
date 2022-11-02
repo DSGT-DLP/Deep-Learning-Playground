@@ -27,7 +27,7 @@ def train_classical_ml_classification(model, X_train, X_test, y_train, y_test):
     # TODO: differentiate between type of model selected , and then decide between hard or soft label
     y_pred = model.predict_proba(X_test)
     # confusion matrix logic. Get sense of true positives, false positives, true negatives, false negatives
-    conf_matrix = generate_confusion_matrix(y_test, y_pred, model_type= "ml")
+    conf_matrix, numerical_category_list = generate_confusion_matrix(y_test, y_pred, model_type= "ml")
     plt.savefig(CLASSICAL_ML_CONFUSION_MATRIX)
 
     # Collecting additional outputs to give to the frontend

@@ -10,7 +10,7 @@ import {
   validatePretrainedInput,
   sendImageJSON,
   validateClassicalMLInput,
-  sendClassicalMLJSON
+  sendClassicalMLJSON,
 } from "../helper_functions/TrainButtonFunctions";
 import {
   sendEmail,
@@ -68,7 +68,7 @@ const TrainButton = (props) => {
     tabular: [validateTabularInputs, sendTabularJSON],
     image: [validateImageInputs, sendImageJSON],
     pretrained: [validatePretrainedInput, sendPretrainedJSON],
-    classicalml: [validateClassicalMLInput, sendClassicalMLJSON]
+    classicalml: [validateClassicalMLInput, sendClassicalMLJSON],
   };
 
   const validateInputs = (user_arch) => {

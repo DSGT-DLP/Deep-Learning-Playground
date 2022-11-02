@@ -42,7 +42,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/train" element={verifyLogin(<Home />)} />
             <Route path="/img-models" element={verifyLogin(<ImageModels />)} />
-            <Route path="/classical-ml" element={verifyLogin(<ClassicalMLModel/>)}/>
+            <Route
+              path="/classical-ml"
+              element={verifyLogin(<ClassicalMLModel />)}
+            />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login />} />

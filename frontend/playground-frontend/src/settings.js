@@ -189,9 +189,9 @@ export const ML_MODELS = [
       n_estimators: {
         index: 0,
         parameter_name: "Number of Estimators",
-        kwarg:"n_estimators = ",
+        kwarg: "n_estimators = ",
         min: 1,
-        max: 200
+        max: 200,
       },
       // max_depth: {
       //   index: 1,
@@ -215,20 +215,20 @@ export const ML_MODELS = [
         index: 0,
         parameter_name: "Number of Estimators",
         min: 1,
-        max: 200
+        max: 200,
       },
       max_depth: {
         index: 1,
         parameter_name: "Max Depth",
         min: 1,
-        max: 5
+        max: 5,
       },
       min_samples_split: {
         index: 2,
         parameter_name: "Minimum Samples Split",
         min: 2,
-        max: 10
-      }
+        max: 10,
+      },
     },
   },
   {
@@ -239,22 +239,22 @@ export const ML_MODELS = [
         index: 0,
         parameter_name: "Number of Estimators",
         min: 1,
-        max: 200
+        max: 200,
       },
       max_depth: {
         index: 1,
         parameter_name: "Max Depth",
         min: 1,
-        max: 5
+        max: 5,
       },
       min_samples_split: {
         index: 2,
         parameter_name: "Minimum Samples Split",
         min: 2,
-        max: 10
-      }
+        max: 10,
+      },
     },
-  }
+  },
 ];
 
 export const IMAGE_LAYERS = [

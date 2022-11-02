@@ -31,14 +31,14 @@ const ChoiceTab = () => {
         </Link>
       </button>
 
-      <button 
+      <button
         style={{
-            ...styles.button,
-            backgroundColor: getBackground('/classical-ml'),
+          ...styles.button,
+          backgroundColor: getBackground("/classical-ml"),
         }}
       >
-        <Link to='/classical-ml' style={styles.linkelEment}>
-            Classical ML
+        <Link to="/classical-ml" style={styles.linkelEment}>
+          Classical ML
         </Link>
       </button>
     </div>

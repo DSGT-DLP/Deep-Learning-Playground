@@ -108,9 +108,9 @@ const ClassicalMLModel = () => {
     setBeginnerMode(!beginnerMode);
     setInputKey((e) => e + 1);
   };
-//whats this
+  //whats this
   return (
-    <div id="ml-models"> 
+    <div id="ml-models">
       <DndProvider backend={HTML5Backend}>
         <div className="d-flex flex-row justify-content-between">
           <FormControlLabel
@@ -132,8 +132,8 @@ const ClassicalMLModel = () => {
               uploadFile={uploadFile}
               setUploadFile={setUploadFile}
             /> */}
-            <CSVInputFile/>
-            <CSVInputURL/>
+            <CSVInputFile />
+            <CSVInputURL />
           </div>
 
           {addedLayers.map((_, i) => (

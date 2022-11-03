@@ -241,7 +241,8 @@ const Home = () => {
       <div>
         <TitleText text="Preprocessing" />
         <CodeMirror
-          value="# print('hello world')"
+          value="def preprocess(df): 
+          <br/># put your preprocessing code here!"
           height="200px"
           extensions={[basicSetup, python()]}
           onChange={onChange}

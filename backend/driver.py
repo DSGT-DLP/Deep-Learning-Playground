@@ -3,8 +3,6 @@ import traceback
 import datetime
 from werkzeug.utils import secure_filename
 import shutil
-# from dotenv import load_dotenv
-# from dotenv import load_dotenv
 
 from flask import Flask, request, send_from_directory
 from backend.middleware import middleware
@@ -100,10 +98,7 @@ def ml_run():
         target = request_data["target"]
         features = request_data["features"]
         default = request_data["using_default_dataset"]
-        # test_size = request_data["test_size"]
         shuffle = request_data["shuffle"]
-        # csvDataStr = request_data["csv_data"]
-        # fileURL = request_data["file_URL"]
 
         train_loss_results = ml_drive(
             user_model =  user_model,
@@ -111,10 +106,7 @@ def ml_run():
             target = target,
             features = features,
             default = default,
-            # test_size,
             shuffle = shuffle
-            # csvDataStr,
-            # fileURL
             )
         print(train_loss_results)
         return send_train_results(train_loss_results)

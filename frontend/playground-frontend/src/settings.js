@@ -180,7 +180,6 @@ export const POSSIBLE_LAYERS = [
   },
 ];
 
-//TODO: Add Classical ML models and what parameters the user can tune
 export const ML_MODELS = [
   {
     display_name: "RF Classifier",
@@ -193,39 +192,17 @@ export const ML_MODELS = [
         min: 1,
         max: 200,
       },
-      // max_depth: {
-      //   index: 1,
-      //   parameter_name: "Max Depth",
-      //   min: 1,
-      //   max: 5
-      // },
-      // min_samples_split: {
-      //   index: 2,
-      //   parameter_name: "Minimum Samples Split",
-      //   min: 2,
-      //   max: 10
-      // }
-    },
-  },
-  {
-    display_name: "RF Regressor",
-    object_name: "sklearn.ensemble.RandomForestRegressor",
-    parameters: {
-      n_estimators: {
-        index: 0,
-        parameter_name: "Number of Estimators",
-        min: 1,
-        max: 200,
-      },
       max_depth: {
         index: 1,
         parameter_name: "Max Depth",
+        kwarg: "max_depth = ",
         min: 1,
         max: 5,
       },
       min_samples_split: {
         index: 2,
         parameter_name: "Minimum Samples Split",
+        kwarg: "min_samples_split = ",
         min: 2,
         max: 10,
       },
@@ -238,23 +215,59 @@ export const ML_MODELS = [
       n_estimators: {
         index: 0,
         parameter_name: "Number of Estimators",
+        kwarg: "n_estimators = ",
         min: 1,
         max: 200,
       },
       max_depth: {
         index: 1,
         parameter_name: "Max Depth",
+        kwarg: "max_depth = ",
         min: 1,
         max: 5,
       },
       min_samples_split: {
         index: 2,
         parameter_name: "Minimum Samples Split",
+        kwarg: "min_samples_split = ",
         min: 2,
         max: 10,
       },
     },
   },
+  {
+    display_name: "Logistic Regression",
+    object_name: "sklearn.linear_model.LogisticRegression",
+    parameters: {
+      C: {
+        index: 0,
+        parameter_name: "Regularization Strength (C)",
+        kwargs: "C = ",
+        min: 0,
+        max: 1
+      },
+      fit_intercept: {
+        index: 1,
+        parameter_name: "Intercept",
+        kwargs: "fit_intercept = ",
+        min: 0,
+        max: 1
+      },
+    },
+  },
+  {
+    display_name: "Linear  Regression",
+    object_name: "sklearn.linear_model.LinearRegression",
+    parameters: {
+      fit_intercept: {
+        index: 1,
+        parameter_name: "Intercept",
+        kwargs: "fit_intercept = ",
+        min: 0,
+        max: 1
+      },
+    },
+  }
 ];
 
 export const IMAGE_LAYERS = [

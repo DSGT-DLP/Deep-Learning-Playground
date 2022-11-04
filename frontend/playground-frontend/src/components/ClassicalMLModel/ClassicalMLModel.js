@@ -1,19 +1,11 @@
 import React, { useState, useMemo } from "react";
-//import Transforms from "./Transforms";
-//import DataCodeSnippet from "./DataCodeSnippet";
-//import LargeFileUpload from "../general/LargeFileUpload";
 import {
   BOOL_OPTIONS,
   DEFAULT_DATASETS,
-  //POSSIBLE_LAYERS,
-  //POSSIBLE_TRANSFORMS,
-  //IMAGE_LAYERS,
   PROBLEM_TYPES,
   ML_MODELS,
 } from "../../settings";
 import {
-  //DEFAULT_IMG_LAYERS,
-  //DEFAULT_TRANSFORMS,
   COLORS,
 } from "../../constants";
 import { DndProvider } from "react-dnd";
@@ -42,8 +34,6 @@ const ClassicalMLModel = () => {
     `Model ${new Date().toLocaleString()}`
   );
   const [addedLayers, setAddedLayers] = useState([]);
-  //const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
-  //const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
   const [usingDefaultDataset, setUsingDefaultDataset] = useState(null);
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [email, setEmail] = useState("");
@@ -53,8 +43,6 @@ const ClassicalMLModel = () => {
   const [testSize, setTestSize] = useState(0.2);
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
 
-  //const [uploadFile, setUploadFile] = useState(null);
-
   const input_responses = {
     shuffle: shuffle?.value,
     problemType: problemType?.value,
@@ -63,7 +51,6 @@ const ClassicalMLModel = () => {
     customModelName: customModelName,
   };
 
-  //TODO: modify this list accordingly to capture inputs for Classical ML
   const input_queries = [
     {
       queryText: "Default",
@@ -128,10 +115,6 @@ const ClassicalMLModel = () => {
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <div className="input-container d-flex flex-column align-items-center justify-content-center">
-            {/* <LargeFileUpload
-              uploadFile={uploadFile}
-              setUploadFile={setUploadFile}
-            /> */}
             <CSVInputFile />
             <CSVInputURL />
           </div>
@@ -204,19 +187,7 @@ const ClassicalMLModel = () => {
 
       <Spacer height={40} />
       <TitleText text="Data Transformations" />
-      {/* <Transforms
-        queryText={"Train Transform"}
-        options={POSSIBLE_TRANSFORMS}
-        transforms={trainTransforms}
-        setTransforms={setTrainTransforms}
-      /> */}
       <Spacer height={10} />
-      {/* <Transforms
-        queryText={"Test Transform"}
-        options={POSSIBLE_TRANSFORMS}
-        transforms={testTransforms}
-        setTransforms={setTestTransforms}
-      /> */}
 
       <Spacer height={40} />
       <TitleText text="Email (optional)" />
@@ -229,14 +200,6 @@ const ClassicalMLModel = () => {
       <Spacer height={40} />
       <TitleText text="Code Snippet" />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
-      {/* <DataCodeSnippet
-        backendResponse={dlpBackendResponse}
-        trainTransforms={trainTransforms}
-        testTransforms={testTransforms}
-        batchSize={batchSize}
-        shuffle={shuffle}
-        defaultData={usingDefaultDataset}
-      /> */}
     </div>
   );
 };

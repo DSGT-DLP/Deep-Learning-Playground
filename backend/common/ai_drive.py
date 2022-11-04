@@ -102,7 +102,7 @@ def dl_tabular_drive(
     optimizer = get_optimizer(
         model, optimizer_name=optimizer_name, learning_rate=0.05
     )
-    # criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
+
     print(f"loss criterion: {criterion}")
     train_loader, test_loader = get_dataloaders(
         X_train_tensor,
@@ -212,12 +212,9 @@ def ml_drive(
                 raise ValueError("Need a file input")
 
         if default and problem_type.upper() == "CLASSIFICATION":
-            # dataset = load_iris()
             X, y, target_names = get_default_dataset(default.upper(), target, features)
             print(y.head())
         elif default and problem_type.upper() == "REGRESSION":
-            # If the user specifies no dataset, use california housing as default regression
-            # dataset = fetch_california_housing()
             X, y, target_names = get_default_dataset(default.upper(), target, features)
         else:
             if json_csv_data_str:
@@ -227,7 +224,6 @@ def ml_drive(
                 X = input_df[features]
 
         if shuffle and problem_type.upper() == "CLASSIFICATION":
-            # using stratify only for classification problems to ensure correct AUC calculation
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=test_size, shuffle=True, stratify=y
             )

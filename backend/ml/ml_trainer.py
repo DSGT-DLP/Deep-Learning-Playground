@@ -24,7 +24,6 @@ def train_classical_ml_classification(model, X_train, X_test, y_train, y_test):
     """
     model.fit(X_train, y_train)
 
-    # TODO: differentiate between type of model selected , and then decide between hard or soft label
     y_pred = model.predict_proba(X_test)
     # confusion matrix logic. Get sense of true positives, false positives, true negatives, false negatives
     conf_matrix, numerical_category_list = generate_confusion_matrix(y_test, y_pred, model_type= "ml")
@@ -33,9 +32,9 @@ def train_classical_ml_classification(model, X_train, X_test, y_train, y_test):
     # Collecting additional outputs to give to the frontend
     auxiliary_outputs = {}
     auxiliary_outputs["confusion_matrix"] = conf_matrix
+    auxiliary_outputs["numerical_category_list"] = numerical_category_list
 
     # generate AUC curve (if soft labels exist)
-    # TODO: generate AUC curve
     return auxiliary_outputs
 
 
@@ -61,8 +60,6 @@ def train_classical_ml_regression(model, X_train, X_test, y_train, y_test):
     test_mape = mean_absolute_percentage_error(y_true = y_test, y_pred = y_pred)
     print(f"Regression Root Mean Squared Error => test: {test_rmse.round(4)}\t train: {train_rmse.round(4)}")
     print(f"Regression Mean Absolute Percentage Error:  => test: {test_mape.round(4)*100}%\t train: {train_mape.round(4)*100}%")
-
-    # TODO: Create Scatterplots of predicted vs actuals
 
     return {}
 

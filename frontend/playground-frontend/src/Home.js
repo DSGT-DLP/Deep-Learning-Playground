@@ -237,12 +237,13 @@ const Home = () => {
   }, []);
 
   const Preprocessing = () => {
+    const startingCode =
+      "def preprocess(df): \n # put your preprocessing code here!";
     return (
       <div>
         <TitleText text="Preprocessing" />
         <CodeMirror
-          value="def preprocess(df): 
-          <br/># put your preprocessing code here!"
+          value={startingCode}
           height="200px"
           extensions={[basicSetup, python()]}
           onChange={onChange}

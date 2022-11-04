@@ -5,9 +5,7 @@ import {
   PROBLEM_TYPES,
   ML_MODELS,
 } from "../../settings";
-import {
-  COLORS,
-} from "../../constants";
+import { COLORS } from "../../constants";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { FormControlLabel, Switch } from "@mui/material";

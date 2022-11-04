@@ -244,14 +244,14 @@ export const ML_MODELS = [
         parameter_name: "Regularization Strength (C)",
         kwargs: "C = ",
         min: 0,
-        max: 1
+        max: 1,
       },
       fit_intercept: {
         index: 1,
         parameter_name: "Intercept",
         kwargs: "fit_intercept = ",
         min: 0,
-        max: 1
+        max: 1,
       },
     },
   },
@@ -264,10 +264,10 @@ export const ML_MODELS = [
         parameter_name: "Intercept",
         kwargs: "fit_intercept = ",
         min: 0,
-        max: 1
+        max: 1,
       },
     },
-  }
+  },
 ];
 
 export const IMAGE_LAYERS = [

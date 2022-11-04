@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import { useNavigate } from "react-router-dom";
 
 const ClassCard = (props) => 
 {
+
+    const [pointsEarned, setPointsEarned] = useState(0);
+    
     const points = props.info.points;
-    let pointsEarned = 0;
-    if (props.moduleProgress != null) {
-        pointsEarned = props.moduleProgress[props.moduleID].modulePoints;
-    }
+
+    // get updated user progress
+    useEffect(() => {
+
+        if (props.moduleProgress != null) {
+            setPointsEarned(props.moduleProgress.modulePoints);
+        }
+
+    });
 
     let completed = false;
     if (pointsEarned === points) {
@@ -24,7 +32,7 @@ const ClassCard = (props) =>
                     <div className="circleWrap">
                         <div className="circleFill" style={completed ? {background:` conic-gradient(green ${360*pointsEarned/(points)}deg, #ededed 0deg)`}: {background:` conic-gradient(var(--primary) ${360*pointsEarned/(points)}deg, #ededed 0deg)`}}>
                             <div className="circleInFill"> 
-                            <span className="textInCircle">{pointsEarned/points}%</span>
+                            <span className="textInCircle">{(pointsEarned/points) * 100}%</span>
                             </div>
                         </div>
                     </div>
@@ -62,7 +70,7 @@ const ClassCard = (props) =>
     );
 };
 
-const propTypes = {info:PropTypes.object, moduleProgress:PropTypes.object, moduleID: PropTypes.string};
+const propTypes = {info:PropTypes.object, user:PropTypes.object, moduleProgress:PropTypes.object};
 ClassCard.propTypes = propTypes;
 
 export default ClassCard;

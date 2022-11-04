@@ -58,7 +58,8 @@ const LearnMod = () => {
         {
             title: x.title,
             points: x.points,
-            subClasses: x.subsections
+            subClasses: x.subsections,
+            moduleID: x.moduleID.toString()
         }
     ));
     
@@ -66,7 +67,7 @@ const LearnMod = () => {
         return (
             <>
         <div id="header-section">
-                <h1 className="headers">Your learning modules, {user.email}</h1>
+                <h1 className="headers">Your learning modules, {user.displayName}</h1>
         </div>
 
         <div id="learningBody">
@@ -79,12 +80,12 @@ const LearnMod = () => {
 
                         if (userProgressData != null) {
 
-                            moduleProgress = userProgressData.moduleID;
+                            moduleProgress = userProgressData[lesson.moduleID];
 
                         }
                         
                         return(
-                            <ClassCard info={lesson} key={index} moduleID={"module" + index} moduleProgress={moduleProgress}/>
+                            <ClassCard user={user} info={lesson} key={index} moduleProgress={moduleProgress}/>
                         );
                     }
                     )

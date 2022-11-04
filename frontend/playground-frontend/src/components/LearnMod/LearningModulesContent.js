@@ -1,9 +1,11 @@
 let content = {
     modules: [
         {
+            moduleID: 0,
             title: "What is Machine Learning?",
             subsections: [
                 {
+                    sectionID: 0,
                     title: "So what is Machine Learning?",
                     content: [
                         {
@@ -26,6 +28,7 @@ let content = {
                     points: 0
                 },
                 {
+                    sectionID: 1,
                     title: "What problems can Machine Learning solve?",
                     content: [
                         {
@@ -46,6 +49,7 @@ let content = {
                     points: 10
                 },
                 {
+                    sectionID: 2,
                     title: "Types of Learning",
                     content: [
                         {
@@ -74,9 +78,11 @@ let content = {
             points: 20
         },
         {
+            moduleID: 1,
             title: "Introduction to Neural Networks",
             subsections: [
                 {
+                    sectionID: 0,
                     title: "Structure of a Neural Network",
                     content: [
                         {
@@ -116,6 +122,7 @@ let content = {
                     points: 10
                 },
                 {
+                    sectionID: 1,
                     title: "Linear Layers (Perceptrons)",
                     content: [
                         {
@@ -133,7 +140,7 @@ let content = {
                         },
                         {
                             sectionType: "text",
-                            content: "The beauty of neural networks comes in their flexibility. If you imagine just how many ways you can manipulate one node to turn any input into the output you want, and then you remember that it is just one node of many, you can begin to see how powerful neural networks can be. However, the next obvious question that arises is how exactly do we choose the right weights and biases to get the output that we want? That's where the learning part of machine learning comes in. Neural Network learning involves a very mathematical process called gradient descent. Before we can learn about that, we must understand how to measure how good our neural network is."
+                            content: "The beauty of neural networks comes in their flexibility. If you imagine just how many ways you can manipulate one node to turn any input into the output you want, and then you remember that it is just one node of many, you can begin to see how powerful neural networks can be. However, the next obvious question that arises is how exactly do we choose the right weights and biases to get the output that we want? That's where the learning part of machine learning comes in. Neural Network learning involves a very mathematical process called gradient descent. Before we can learn about that, we must understand how to measure the performance of our neural network."
                         }
                     ],
                     points: 0
@@ -142,9 +149,11 @@ let content = {
             points: 10
         },
         {
+            moduleID: 2,
             title: "Loss",
             subsections: [
                 {
+                    sectionID: 0,
                     title: "What is Loss?",
                     content: [
                         {
@@ -155,6 +164,7 @@ let content = {
                     points: 0
                 },
                 {
+                    sectionID: 1,
                     title: "Mean Squared Error",
                     content: [
                         {

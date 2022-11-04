@@ -192,11 +192,49 @@ def upload():
 def getUserProgressData():
     dynamoTable = UserProgressDDBUtil("userprogress_table", AWS_REGION)
     try:
-        return dynamoTable.get_record(str(request.data)).progressData
+        return dynamoTable.get_record(json.loads(request.data)).progressData
     except ValueError:
-        newRecord = UserProgressData(str(request.data), "{}")
+        newRecord = UserProgressData(json.loads(request.data), "{}")
         dynamoTable.create_record(newRecord)
         return "{}"
+
+@app.route("/api/updateUserProgressData", methods=["POST"])
+def updateUserProgressData():
+    requestData = json.loads(request.data)
+    uid = requestData['uid']
+    moduleID = str(requestData["moduleID"])
+    sectionID = str(requestData["sectionID"])
+    questionID = str(requestData["questionID"])
+    dynamoTable = UserProgressDDBUtil("userprogress_table", AWS_REGION)
+
+    # get most recent user progress data
+    updatedRecord = json.loads(dynamoTable.get_record(uid).progressData)
+
+    if moduleID not in updatedRecord:
+        updatedRecord[moduleID] = {
+            "modulePoints": 10,
+            sectionID: {
+                "sectionPoints": 10,
+                questionID: 10
+            }  
+        }
+    else:
+        if sectionID not in updatedRecord[moduleID]:
+            updatedRecord[moduleID][sectionID] = {
+                "sectionPoints": 10,
+                questionID: 10
+            }
+            updatedRecord[moduleID]["modulePoints"] += 10
+        else:
+            if questionID not in updatedRecord[moduleID][sectionID]:
+                updatedRecord[moduleID]["modulePoints"] += 10
+                updatedRecord[moduleID][sectionID][questionID] = 10
+                updatedRecord[moduleID][sectionID]["sectionPoints"] += 10
+
+    updatedRecordAsString = json.dumps(updatedRecord)
+    
+    dynamoTable.update_record(uid, progressData=updatedRecordAsString)
+    return "{\"status\": \"success\"}"
 
 def send_success(results: dict):
     return (json.dumps({"success": True, **results}), 200)

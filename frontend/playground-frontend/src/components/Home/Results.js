@@ -279,6 +279,7 @@ Results.propTypes = {
     success: PropTypes.bool.isRequired,
   }),
   problemType: PropTypes.objectOf(PropTypes.string).isRequired,
+  choice: PropTypes.string,
 };
 
 export default Results;

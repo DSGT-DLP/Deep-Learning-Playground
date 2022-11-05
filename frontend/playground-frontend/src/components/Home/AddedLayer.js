@@ -1,14 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { COLORS, GENERAL_STYLES, LAYOUT } from "../../constants";
 
 const _InputOutputPromptResponse = (props) => {
   const { param_key, allParamInputs, setAddedLayers, thisLayerIndex } = props;
   const { parameter_name, value, min, max } = allParamInputs[param_key];
 
   return (
-    <div style={{ ...LAYOUT.row, alignItems: "center" }}>
-      <p style={styles.input_prompt}>{`${parameter_name}:`}</p>&nbsp;
+    <div className="layer-param-container d-flex justify-content-between align-items-center">
+      <p className="param_name">{parameter_name}</p>
       <input
         type={parameter_name === "(H, W)" ? "" : "number"}
         min={min}
@@ -23,7 +22,7 @@ const _InputOutputPromptResponse = (props) => {
             return copyCurrent;
           })
         }
-        style={styles.input_text}
+        className="layer-param-input-box"
       />
     </div>
   );
@@ -49,7 +48,7 @@ const AddedLayer = (props) => {
   });
 
   return (
-    <div className="layer-input">
+    <div className="added-layer-container">
       <div className="layer-box layer-container text-center d-flex justify-content-center align-items-center">
         <button className="delete-layer" onClick={onDelete}>
           ❌
@@ -81,23 +80,3 @@ AddedLayer.propTypes = {
 };
 
 export default AddedLayer;
-
-let styles = {
-  layer_box: {
-    backgroundColor: COLORS.layer,
-    width: 130,
-  },
-  text: { ...GENERAL_STYLES.p, color: "white", fontSize: 25 },
-  input_prompt: {
-    fontSize: 15,
-    fontWeight: "bold",
-  },
-  input_text: {
-    borderWidth: 0.5,
-    borderColor: COLORS.layer,
-    borderRadius: "0.375rem",
-    fontSize: 15,
-    maxWidth: "45%",
-    padding: 5,
-  },
-};

@@ -416,7 +416,7 @@ export const IMAGE_LAYERS = [
     ),
   },
   {
-    display_name: "AdaptAvgPool2d",
+    display_name: "AdaptAvg Pool2d",
     object_name: "nn.AdaptiveAvgPool2d",
     parameters: {
       output_size: {

@@ -1,6 +1,6 @@
 # Deep Learning Playground
 
-Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules through a drag and drop interface
+Web Application where people new to Machine Learning can input a dataset and experiment around with basic Pytorch modules through a drag and drop interface
 
 > **Deployed website:** https://datasciencegt-dlp.com/ </br>
  **GitHub repo:** https://github.com/karkir0003/Deep-Learning-Playground/ </br> **Owners:** See [CODEOWNERS](./CODEOWNERS)
@@ -10,10 +10,9 @@ Web Application where people new to Deep Learning can input a dataset and toy ar
 ## Prerequisites
 Have the following installed first:
 
-1. [NodeJS v16](https://nodejs.org/en/download/)
-2. NPM v8
-3. [Anaconda](https://www.anaconda.com/)
-4. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). You will need to configure your AWS credentials later
+1. [NodeJS v16](https://nodejs.org/en/download/) (should come with NPM v8)
+1. [Anaconda](https://www.anaconda.com/)
+1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). After installing, type `aws configure` in your terminal and type in the credentials given in [Secrets](https://docs.google.com/spreadsheets/d/1fRndo-7u0MXghiZoMp3uBepDBW9EghcJ9IL4yS0TdD8/edit?usp=sharing)
 
 ## Recommended
 1. [GitKraken Pro](https://help.gitkraken.com/gitkraken-client/how-to-install/)
@@ -44,7 +43,7 @@ npm run startf
 npm run startb
 ```
 
-# Backend
+# Furter Details: Backend
 
 ## Conda Env Setup
 
@@ -66,7 +65,7 @@ See [Architecture.md](./.github/Architecture.md)
 
 To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Examples.md)
 
-# Frontend
+# Furter Details: Frontend
 
 ## Startup Instructions
 

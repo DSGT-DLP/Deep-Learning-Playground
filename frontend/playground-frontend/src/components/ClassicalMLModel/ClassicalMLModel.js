@@ -5,7 +5,6 @@ import {
   PROBLEM_TYPES,
   ML_MODELS,
 } from "../../settings";
-import { COLORS } from "../../constants";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { FormControlLabel, Switch } from "@mui/material";
@@ -93,7 +92,7 @@ const ClassicalMLModel = () => {
     setBeginnerMode(!beginnerMode);
     setInputKey((e) => e + 1);
   };
-  //whats this
+
   return (
     <div id="ml-models">
       <DndProvider backend={HTML5Backend}>
@@ -128,21 +127,9 @@ const ClassicalMLModel = () => {
                 currentLayers.splice(i, 1);
                 setAddedLayers(currentLayers);
               }}
-              style={{
-                input_box: {
-                  margin: 7.5,
-                  backgroundColor: "white",
-                  width: 170,
-                  paddingInline: 5,
-                },
-                layer_box: {
-                  width: 150,
-                  backgroundColor: COLORS.layer,
-                },
-              }}
             />
           ))}
-          <AddNewLayer />
+          {addedLayers.length >= 1 ? null : <AddNewLayer />}
           <TrainButton
             {...input_responses}
             setDLPBackendResponse={setDLPBackendResponse}

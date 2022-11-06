@@ -200,7 +200,6 @@ def send_columns():
         default = request_data["using_default_dataset"]
         header = get_default_dataset_header(default.upper())
         header_list = header.tolist()
-        print(request.authorization)
         return send_success({"columns": header_list})
     except Exception:
         print(traceback.format_exc())

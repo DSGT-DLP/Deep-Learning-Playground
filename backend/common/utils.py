@@ -194,7 +194,7 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch, categoryList
     y_pred = []
 
     label = np.array(labels_last_epoch).flatten()
-    # do Deep learning specific transformations to the data TODO: These should be moved to the run_dl_classification_model part before passing in
+
     if model_type == "dl":
         for batch in y_pred_last_epoch:
             y_pred = np.concatenate((y_pred, np.argmax(batch, axis=1)), axis=None) #flatten and concatenate

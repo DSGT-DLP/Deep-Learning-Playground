@@ -24,8 +24,8 @@ const MCQuestion = (props) => {
     
     // run when submit button on question is pressed
     const questionSubmit = () => {
-
-        if (document.querySelector('input[name="' + props.questionObject.questionID + '"]:checked') == null) {
+        
+        if (document.getElementById('frInput').value === "") {
 
             setUnanswered(true);
             setAnsweredCorrect(false);
@@ -33,12 +33,13 @@ const MCQuestion = (props) => {
 
         } else {
             
-            let answer = parseInt(document.querySelector('input[name="' + props.questionObject.questionID + '"]:checked').value);
+            let answer = parseInt(document.getElementById("frInput").value);
 
-            if (answer === props.questionObject.correctAnswer) {
+            if (answer === props.questionObject.answer) {
 
                 setAnsweredCorrect(true);
                 setAnsweredIncorrect(false);
+                setUnanswered(false);
 
                 updateUserProgress();
 
@@ -46,6 +47,7 @@ const MCQuestion = (props) => {
 
                 setAnsweredCorrect(false);
                 setAnsweredIncorrect(true);
+                setUnanswered(false);
 
             }
 
@@ -66,31 +68,17 @@ const MCQuestion = (props) => {
         <div className="class">
             <h3 id="classTitle">Question</h3>
             <h6>{props.questionObject.question}</h6>
-            {
-
-                props.questionObject.answerChoices.map((answer, index) => {
-
-                    return (
-                        <div key={index}>
-                            <input type="radio" value={index} name={props.questionObject.questionID}/>
-                            {answer}
-                        </div>
-                    );
-
-                })
-
-            }
+            <input id="frInput" type="number"></input>
             <button onClick={questionSubmit}>Submit Answer</button>
             {answeredCorrect ? <h6 style={{color: "green"}}>That is correct!</h6> : null }
             {answeredIncorrect ? <h6 style={{color: "red"}}>Sorry, that is incorrect</h6> : null }
-            {unanswered ? <h6 style={{color: "orange"}}>Please select an answer</h6> : null }
-
+            {unanswered ? <h6 style={{color: "orange"}}>Please type an answer</h6> : null }
         </div>
     );
 
 };
 
-const propTypes = {user: PropTypes.object, questionObject: PropTypes.object, moduleID: PropTypes.number, sectionID: PropTypes.number};
+const propTypes = {user: PropTypes.object, questionObject: PropTypes.object, moduleID: PropTypes.string, sectionID: PropTypes.number};
 MCQuestion.propTypes = propTypes;
 
 export default MCQuestion;

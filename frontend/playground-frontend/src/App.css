@@ -566,6 +566,21 @@ textarea {
   margin-right: 1%;
 }
 
+.learnImg {
+  width: 100%;
+  height: auto;
+}
+
+.captionText {
+  font-size: 8pt;
+  margin: 0px;
+}
+
+.attributionLink {
+  font-size: 8pt;
+  margin: 0px;
+}
+
 /* -------------------------------------------------------------------------- */
 /*	Login
 /* -------------------------------------------------------------------------- */

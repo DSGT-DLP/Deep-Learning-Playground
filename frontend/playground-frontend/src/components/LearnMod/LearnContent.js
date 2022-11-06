@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MCQuestion from './MCQuestion';
+import FRQuestion from './FRQuestion';
+import ImageComponent from './ImageComponent';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
@@ -78,10 +80,30 @@ const LearnContent = () => {
 
                 }
 
+                if (contentComponent.sectionType === "image") {
+
+                  return (
+                    <ImageComponent key={index} imageData={contentComponent}/>
+                  );
+
+                }
+
                 if (contentComponent.sectionType === "mcQuestion") {
 
                   return (
                     <MCQuestion key={index} 
+                    user={user}
+                    questionObject={contentComponent} 
+                    moduleID={moduleContent.moduleID} 
+                    sectionID={moduleContent.subClasses[subSection].sectionID}/>
+                  );
+
+                }
+
+                if (contentComponent.sectionType === "frQuestion") {
+
+                  return (
+                    <FRQuestion key={index} 
                     user={user}
                     questionObject={contentComponent} 
                     moduleID={moduleContent.moduleID} 

@@ -1,3 +1,5 @@
+import neuralnet from "../../images/learn_mod_images/neuralnet.png";
+
 let content = {
     modules: [
         {
@@ -100,8 +102,10 @@ let content = {
                         },
                         {
                             sectionType: "image",
-                            path: "Diagram of Neural Network",
+                            path: neuralnet,
                             caption: "An example of the structure of a neural network",
+                            attribution: "Creative Commons Attribution-Share Alike 3.0 Unported",
+                            licenseLink: "https://commons.wikimedia.org/wiki/File:Multi-Layer_Neural_Network-Vector-Blank.svg"
                         },
                         {
                             sectionType: "text",

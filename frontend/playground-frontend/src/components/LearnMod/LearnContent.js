@@ -117,8 +117,10 @@ const LearnContent = () => {
 
         </div>
       </div>
-      <button onClick={onPreviousClick}>Previous</button>
-      <button onClick={onNextClick}>Next</button>
+      <div id="subsectionChangeContainer">
+        <button className='class' onClick={onPreviousClick}>Previous</button>
+        <button className='class' onClick={onNextClick}>Next</button>
+      </div>
         </>
     );
 

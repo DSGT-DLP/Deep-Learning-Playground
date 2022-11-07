@@ -69,7 +69,7 @@ const MCQuestion = (props) => {
             <h3 id="classTitle">Question</h3>
             <h6>{props.questionObject.question}</h6>
             <input id="frInput" type="number"></input>
-            <button onClick={questionSubmit}>Submit Answer</button>
+            <button className="submitButton" onClick={questionSubmit}>Submit Answer</button>
             {answeredCorrect ? <h6 style={{color: "green"}}>That is correct!</h6> : null }
             {answeredIncorrect ? <h6 style={{color: "red"}}>Sorry, that is incorrect</h6> : null }
             {unanswered ? <h6 style={{color: "orange"}}>Please type an answer</h6> : null }

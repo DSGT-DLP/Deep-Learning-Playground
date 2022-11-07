@@ -437,6 +437,7 @@ textarea {
   background-color: var(--whitehover);
   margin-top: 2rem;
   margin-bottom: 2rem;
+  padding: 5px;
 }
 
 .classHeader {
@@ -566,6 +567,10 @@ textarea {
   margin-right: 1%;
 }
 
+.submitButton {
+  margin: 5px;
+}
+
 .learnImg {
   width: 100%;
   height: auto;
@@ -579,6 +584,15 @@ textarea {
 .attributionLink {
   font-size: 8pt;
   margin: 0px;
+}
+
+#subsectionChangeContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left :20px;
+  padding-right: 20px;
 }
 
 /* -------------------------------------------------------------------------- */

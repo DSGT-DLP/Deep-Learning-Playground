@@ -151,13 +151,13 @@ input.form-control {
 /*	Home and Image Models
 /* -------------------------------------------------------------------------- */
 
-#home-page,
+#train-tabular-data,
 #image-models,
 #ml-models {
   padding: 30px 20px;
 }
 
-#home-page h2,
+#train-tabular-data h2,
 #image-models h2,
 #ml-models h2 {
   font-weight: bold;
@@ -206,7 +206,7 @@ input.form-control {
   color: var(--tertiary);
 }
 
-#home-page input[type="file"],
+#train-tabular-data input[type="file"],
 #image-models input[type="file"],
 #ml-models input[type="file"] {
   display: none;
@@ -258,12 +258,15 @@ textarea#code-snippet-text {
 }
 
 .added-layer-container .layer-param-container .layer-param-input-box {
-  border-width: 0.5;
   border-color: var(--tertiary);
   border-radius: 0.375rem;
-  font-size: 15;
+  border: 0.5px solid var(--tertiary);
+}
+
+.added-layer-container
+  .layer-param-container
+  .layer-param-input-box.free-response {
   width: 35%;
-  padding: 5;
 }
 
 .added-layer-container .layer-param-container .param_name {

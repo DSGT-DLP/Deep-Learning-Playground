@@ -62,7 +62,10 @@ const SettingsBlock = () => {
           size="lg"
         />
       </Form.Group>
-      <div className="email-buttons d-flex flex-column" onClick={handleUpdateUser}>
+      <div
+        className="email-buttons d-flex flex-column"
+        onClick={handleUpdateUser}
+      >
         <Button id="log-in" className="mb-2">
           Update Profile
         </Button>

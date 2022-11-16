@@ -9,7 +9,7 @@ import {
   Footer,
   Dashboard,
   Login,
-  AccountSettings
+  AccountSettings,
 } from "./components";
 import Home from "./Home";
 import { ToastContainer } from "react-toastify";

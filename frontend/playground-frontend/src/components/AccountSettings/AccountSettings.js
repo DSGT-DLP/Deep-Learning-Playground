@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-
+import {
+  updateUserSettings,
+} from "../../firebase";
 // import PropTypes from "prop-types";
 // import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -10,13 +12,21 @@ const SettingsBlock = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [checkPassword, setCheckedPassword] = useState("");
   const signedInUserEmail = useSelector((state) => state.currentUser.email);
   const signedInUserName = useSelector(
     (state) => state.currentUser.displayName
   );
 
-  const handleUpdateUser = () => {
-    console.log(fullName + email + password);
+  const handleUpdateUser = async () => {
+    let user;
+    if(password !== checkPassword) {
+      alert("Passwords don't Match");
+      // e.preventDefault
+    } else {
+      user = await updateUserSettings(fullName, email, password); 
+    }
+    if (!user) return;
   };
   return (
     <Form>
@@ -48,17 +58,13 @@ const SettingsBlock = () => {
           aria-describedby="passwordHelpBlock"
           size="lg"
         />
-        <Form.Text id="passwordHelpBlock" muted>
-          Your password must be 8-20 characters long, contain letters and
-          numbers, and must not contain spaces, special characters, or emoji.
-        </Form.Text>
       </Form.Group>
       <Form.Group className="mb-3" controlId="update-check-password">
         <Form.Label>Re-Type Password</Form.Label>
         <Form.Control
           type="password"
           placeholder={"New Password"}
-          onBlur={(e) => setPassword(e.target.value)}
+          onBlur={(e) => setCheckedPassword(e.target.value)}
           size="lg"
         />
       </Form.Group>

@@ -4,8 +4,6 @@ import Form from "react-bootstrap/Form";
 import {
   updateUserSettings,
 } from "../../firebase";
-// import PropTypes from "prop-types";
-// import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const SettingsBlock = () => {
@@ -22,7 +20,6 @@ const SettingsBlock = () => {
     let user;
     if(password !== checkPassword) {
       alert("Passwords don't Match");
-      // e.preventDefault
     } else {
       user = await updateUserSettings(fullName, email, password); 
     }
@@ -72,7 +69,7 @@ const SettingsBlock = () => {
         className="email-buttons d-flex flex-column"
         onClick={handleUpdateUser}
       >
-        <Button id="log-in" className="mb-2">
+        <Button id="update-profile" className="mb-2">
           Update Profile
         </Button>
       </div>

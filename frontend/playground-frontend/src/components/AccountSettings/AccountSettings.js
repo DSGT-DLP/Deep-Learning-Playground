@@ -76,8 +76,6 @@ const SettingsBlock = () => {
 };
 
 const AccountSettings = () => {
-  // const signedInUserEmail = useSelector((state) => state.currentUser.email);
-  // const navigate = useNavigate();
   return (
     <div id="accountSettings">
       <div id="header-section">

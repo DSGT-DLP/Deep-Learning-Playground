@@ -18,10 +18,10 @@ const SettingsBlock = () => {
 
   const handleUpdateUser = async () => {
     let user;
-    if(password !== checkPassword) {
+    if (password !== checkPassword) {
       alert("Passwords don't Match");
     } else {
-      user = await updateUserSettings(fullName, email, password); 
+      user = await updateUserSettings(fullName, email, password);
     }
     if (!user) return;
   };

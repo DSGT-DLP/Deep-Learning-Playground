@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import {
-  updateUserSettings,
-} from "../../firebase";
+import { updateUserSettings } from "../../firebase";
 import { useSelector } from "react-redux";
 
 const SettingsBlock = () => {

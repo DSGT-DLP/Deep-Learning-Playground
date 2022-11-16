@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import {
-  updateUserSettings,
-} from "../../firebase";
+import { updateUserSettings } from "../../firebase";
 // import PropTypes from "prop-types";
 // import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -20,11 +18,11 @@ const SettingsBlock = () => {
 
   const handleUpdateUser = async () => {
     let user;
-    if(password !== checkPassword) {
+    if (password !== checkPassword) {
       alert("Passwords don't Match");
       // e.preventDefault
     } else {
-      user = await updateUserSettings(fullName, email, password); 
+      user = await updateUserSettings(fullName, email, password);
     }
     if (!user) return;
   };

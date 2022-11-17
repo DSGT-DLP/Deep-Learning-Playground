@@ -1,29 +1,40 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Form from "react-bootstrap/Form";
 
 const _InputOutputPromptResponse = (props) => {
   const { param_key, allParamInputs, setAddedLayers, thisLayerIndex } = props;
-  const { parameter_name, value, min, max } = allParamInputs[param_key];
+  const { parameter_name, value, min, max, parameter_type } =
+    allParamInputs[param_key];
 
   return (
     <div className="layer-param-container d-flex justify-content-between align-items-center">
       <p className="param_name">{parameter_name}</p>
-      <input
-        type={parameter_name === "(H, W)" ? "" : "number"}
-        min={min}
-        max={max}
-        value={value}
-        onChange={(e) =>
-          // updates the addedLayers state with the current user input value of parameters
-          setAddedLayers((currentAddedLayers) => {
-            const copyCurrent = [...currentAddedLayers];
-            const parameters = copyCurrent[thisLayerIndex].parameters;
-            parameters[param_key].value = e.target.value;
-            return copyCurrent;
-          })
-        }
-        className="layer-param-input-box"
-      />
+      {parameter_type === "boolean" ? (
+        <Form>
+          <Form.Select className="layer-param-input-box">
+            <option>True</option>
+            <option>False</option>
+          </Form.Select>
+        </Form>
+      ) : (
+        <input
+          type={parameter_type}
+          min={min}
+          max={max}
+          value={value}
+          onChange={(e) =>
+            // updates the addedLayers state with the current user input value of parameters
+            setAddedLayers((currentAddedLayers) => {
+              const copyCurrent = [...currentAddedLayers];
+              const parameters = copyCurrent[thisLayerIndex].parameters;
+              parameters[param_key].value = e.target.value;
+              return copyCurrent;
+            })
+          }
+          className="layer-param-input-box free-response"
+        />
+      )}
     </div>
   );
 };

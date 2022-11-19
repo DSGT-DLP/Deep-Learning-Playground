@@ -1,8 +1,6 @@
-import CodeMirror from "@uiw/react-codemirror";
-import { python } from "@codemirror/lang-python";
-import { basicSetup } from "codemirror";
 import React, { useState, useMemo, useEffect } from "react";
 import { DEFAULT_ADDED_LAYERS } from "./constants";
+
 import {
   BOOL_OPTIONS,
   CRITERIONS,
@@ -27,6 +25,7 @@ import {
   TrainButton,
   ChoiceTab,
   CustomModelName,
+  Preprocessing,
 } from "./components";
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
@@ -231,26 +230,6 @@ const Home = () => {
     setFeatures(null);
     setInputKey((e) => e + 1);
   }, [activeColumns]);
-
-  const onChange = React.useCallback((value) => {
-    console.log("value:", value);
-  }, []);
-
-  const Preprocessing = () => {
-    const startingCode =
-      "def preprocess(df): \n # put your preprocessing code here!";
-    return (
-      <div>
-        <TitleText text="Preprocessing" />
-        <CodeMirror
-          value={startingCode}
-          height="200px"
-          extensions={[basicSetup, python()]}
-          onChange={onChange}
-        />
-      </div>
-    );
-  };
 
   return (
     <div id="home-page" className="container-fluid">

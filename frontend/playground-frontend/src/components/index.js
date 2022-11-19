@@ -19,6 +19,7 @@ export { default as Results } from "./Home/Results";
 export { default as TrainButton } from "./Home/TrainButton";
 export { default as ChoiceTab } from "./Home/ChoiceTab";
 export { default as CustomModelName } from "./Home/CustomModelName";
+export { default as Preprocessing } from "./Home/Preprocessing";
 
 // Dashboard
 export { default as Dashboard } from "./Dashboard/Dashboard";

@@ -10,6 +10,15 @@ const uploadToBackend = async (data) => {
   await axios.post("/api/upload", data, { headers });
 };
 
+const userCodeEval = async (file, snippet) => {
+  console.log("Reaching function");
+  const codeEval = await sendToBackend("sendUserCodeEval", {
+    codeSnippet: snippet,
+    file: file,
+  });
+  return codeEval;
+};
+
 const sendToBackend = async (route, data) => {
   let headers = auth.currentUser
     ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
@@ -79,4 +88,5 @@ export {
   train_and_output,
   sendEmail,
   isLoggedIn,
+  userCodeEval,
 };

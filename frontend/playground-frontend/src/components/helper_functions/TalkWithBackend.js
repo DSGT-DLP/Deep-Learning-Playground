@@ -11,7 +11,6 @@ const uploadToBackend = async (data) => {
 };
 
 const userCodeEval = async (file, snippet) => {
-  console.log("Reaching function");
   const codeEval = await sendToBackend("sendUserCodeEval", {
     codeSnippet: snippet,
     file: file,
@@ -23,7 +22,6 @@ const sendToBackend = async (route, data) => {
   let headers = auth.currentUser
     ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
     : undefined;
-
   const backendResult = await fetch(`/api/${route}`, {
     method: "POST",
     body: JSON.stringify(data),

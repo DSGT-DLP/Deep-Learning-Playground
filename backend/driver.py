@@ -159,6 +159,17 @@ def send_email_route():
         print(traceback.format_exc())
         return send_traceback_error()
 
+@app.route("/api/sendUserCodeEval", methods=["POST"])
+def send_user_code_eval():
+    try:
+        request_data = json.loads(request.data)
+        file = request_data["file"]
+        codeSnippet = request_data["codeSnippet"]
+        return send_success({"message": "Preprocessing successful"})
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+
 @app.route("/api/defaultDataset", methods=["POST"])
 def send_columns():
     try:

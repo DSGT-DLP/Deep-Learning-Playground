@@ -73,7 +73,9 @@ const NavbarMain = () => {
             {userEmail ? (
               <NavDropdown title="Account" id="basic-nav-dropdown">
                 <NavDropdown.Item href="/">Dashboard</NavDropdown.Item>
-                <NavDropdown.Item href="#">Settings</NavDropdown.Item>
+                <NavDropdown.Item href="/account-settings">
+                  Settings
+                </NavDropdown.Item>
                 <NavDropdown.Item href="#">Learn</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#" onClick={logout}>

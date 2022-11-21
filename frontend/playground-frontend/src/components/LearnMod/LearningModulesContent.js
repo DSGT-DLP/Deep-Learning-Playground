@@ -1,4 +1,5 @@
 import neuralnet from "../../images/learn_mod_images/neuralnet.png";
+import robot from "../../images/learn_mod_images/robotImage.jpg";
 
 let content = {
     modules: [
@@ -11,23 +12,42 @@ let content = {
                     title: "So what is Machine Learning?",
                     content: [
                         {
+                            sectionType: "image",
+                            path: robot,
+                            caption: "Robots like this one use machine learning to understand how to react to its environment",
+                            attribution: "Creative Commons Attribution-Share Alike 4.0 Unported",
+                            licenseLink: "https://commons.wikimedia.org/wiki/File:TIAGo%2B%2B_side.jpg"
+                        },
+                        {
                             sectionType: "text",
                             content: "Machine Learning is perhaps the most talked-about field in Computer Science right now. It is an incredibly versatile tool that sees applications in a variety of industries and other fields of Computer Science. Yet, it can also be difficult to understand and even intimidating to those who lack experience with it. The heavy amount of math and complicated programming often scares away many of those interested in it. However, it doesn't have to be that way. Through these modules, DLP hopes to provide a thorough introduction to Machine Learning that will give you the ability to use our platform to practice building ML models and learn more about this exciting field."
                         },
                         {
                             sectionType: "text",
-                            content: "Machine Learning refers to a set of models that solve problems by \"learning\" the optimal parameters of the model, rather than those parameters being hardcoded. In other words, instead of every step and parameter of the model being harcoded by a human programmer, the model adjusts its own parameters based on data input in order to maximize the accuracy of the model. There is a large variety of machine learning algorithms out there, ranging from simple Decision Trees to very complex Neural Networks. They can be roughly divided by the types of problem they solve and the way they learn."
+                            content: "Machine Learning refers to a set of models that solve problems by \"learning\" the optimal parameters of the model, rather than those parameters being hardcoded. In other words, instead of every step and parameter of the model being harcoded by a human programmer, the model adjusts its own parameters based on data input in order to maximize the accuracy of the model."
                         },
                         {
                             sectionType: "text",
-                            content: "One thing all machine learning models have in common is that in a simple sense, they are all just functions whose exact specifications have been finetuned by a learning process. Since they are all functions, they all take in some input and give some output. In machine learning, this comes in the form of a series of inputs, called \"features\", and one output, \"called a label\"."
+                            content: "One thing all machine learning models have in common is that in a simple sense, they are all just functions whose exact specifications have been finetuned by a learning process. Since they are all functions, they all take in some input and give some output. In machine learning, this comes in the form of a series of inputs, called \"features\", and one output, called a \"label\"."
                         },
                         {
                             sectionType: "text",
                             content: "There is a large variety of machine learning algorithms out there, ranging from simple Decision Trees to very complex Neural Networks. They can be roughly divided by the types of problem they solve and the way they learn."
+                        },
+                        {
+                            sectionType: "mcQuestion",
+                            question: "Say we have a model that predicts the expected traffic on a road based on the time of day, weather, and day of the week. In this model, the weather would be a _______ and the amount of traffic would be the _________.",
+                            correctAnswer: 1,
+                            questionID: 0,
+                            answerChoices: [
+                                "label, feature",
+                                "feature, label",
+                                "label, label",
+                                "feature, feature"
+                            ]
                         }
                     ],
-                    points: 0
+                    points: 10
                 },
                 {
                     sectionID: 1,
@@ -77,7 +97,7 @@ let content = {
                 }
                 
             ],
-            points: 20
+            points: 30
         },
         {
             moduleID: 1,

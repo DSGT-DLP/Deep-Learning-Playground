@@ -30,9 +30,9 @@ const ClassCard = (props) =>
                 <div className="classHeader">
                     <h3 id="classTitle"> {props.info.title} </h3>
                     <div className="circleWrap">
-                        <div className="circleFill" style={completed ? {background:` conic-gradient(green ${360*pointsEarned/(points)}deg, #ededed 0deg)`}: {background:` conic-gradient(var(--primary) ${360*pointsEarned/(points)}deg, #ededed 0deg)`}}>
+                        <div className="circleFill" style={completed ? {background:` conic-gradient(green ${(360*pointsEarned/(points))}deg, #ededed 0deg)`}: {background:` conic-gradient(var(--primary) ${360*pointsEarned/(points)}deg, #ededed 0deg)`}}>
                             <div className="circleInFill"> 
-                            <span className="textInCircle">{(pointsEarned/points) * 100}%</span>
+                            <span className="textInCircle">{Math.floor((pointsEarned/points) * 100)}%</span>
                             </div>
                         </div>
                     </div>
@@ -40,7 +40,7 @@ const ClassCard = (props) =>
                 <div className="classBody">
                     <div className='classBodyLeft'>
                         {
-                            props.info.subClasses.map( (subClass,index) => 
+                            props.info.subClasses.map((subClass,index) => 
                                 {
                                     return(
                                             <p id="classBodyText" key={index}>{subClass.title}</p>
@@ -55,7 +55,7 @@ const ClassCard = (props) =>
                                     return(
                                         <div className='progressBar' key={index} id="subClassBar" >
                                             <div className="progressContainer" id="subClassBar" style={completed ? {border:"3px solid green"} : {}}> 
-                                                <div className="progressFill" style={completed ? {backgroundColor:"green", width:`${subClass.points}%`} : {width:`${subClass.points}%`} }></div>
+                                                <div className="progressFill" style={completed ? {backgroundColor:"green", width:`${pointsEarned}%`} : {width:`${pointsEarned}%`} }></div>
                                             </div>
                                         </div>
                                            );

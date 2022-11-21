@@ -47,3 +47,6 @@ export { default as ClassicalMLModel } from "./ClassicalMLModel/ClassicalMLModel
 
 // Pretrained page
 export { default as LargeFileUpload } from "./general/LargeFileUpload";
+
+//Account Settings Page
+export { default as AccountSettings } from "./AccountSettings/AccountSettings";

@@ -9,8 +9,6 @@ from backend.common.constants import CLASSICAL_ML_CONFUSION_MATRIX, CLASSICAL_ML
 from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
 from backend.common.utils import ProblemType
 
-# TODO: (Idea) Option to set some hyperparemeters to Auto (for which the model will do a search and choose best train accuracy)
-
 def train_classical_ml_classification(model, X_train, X_test, y_train, y_test):
     """
     Train classical ML Classification model

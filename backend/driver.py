@@ -165,8 +165,12 @@ def send_user_code_eval():
         request_data = json.loads(request.data)
         file = request_data["file"]
         codeSnippet = request_data["codeSnippet"]
-        exec(codeSnippet, globals())
-        preprocess(file)
+        exec_namespace = {}
+        allowed_funcs = {} #this still allows inline importing (ex: numpy = __import__('numpy')) in the input for some reason
+        exec(codeSnippet, allowed_funcs, exec_namespace)
+        print(exec_namespace)
+        exec_namespace['preprocess'](file)
+        print(file)
         return send_success({"message": "Preprocessing successful"})
     except Exception:
         print(traceback.format_exc())

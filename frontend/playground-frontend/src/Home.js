@@ -247,7 +247,7 @@ const Home = () => {
 
       <Spacer height={40} />
       <DndProvider backend={HTML5Backend}>
-        {beginnerMode ? null : <Preprocessing />}
+        {beginnerMode ? null : <Preprocessing csvDataInput={csvDataInput} />}
 
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>

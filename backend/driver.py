@@ -165,6 +165,8 @@ def send_user_code_eval():
         request_data = json.loads(request.data)
         file = request_data["file"]
         codeSnippet = request_data["codeSnippet"]
+        exec(codeSnippet, globals())
+        preprocess(file)
         return send_success({"message": "Preprocessing successful"})
     except Exception:
         print(traceback.format_exc())

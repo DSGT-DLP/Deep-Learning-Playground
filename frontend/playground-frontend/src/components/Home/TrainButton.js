@@ -115,7 +115,7 @@ const TrainButton = (props) => {
     }
 
     const csvDataStr = JSON.stringify(csvDataInput);
-
+    console.log(testSize);
     train_and_output(
       user_arch,
       criterion,

@@ -132,9 +132,9 @@ const Home = () => {
     },
     {
       queryText: "Test Size",
+      range: true,
       onChange: setTestSize,
       defaultValue: testSize,
-      freeInputCustomRestrictions: { type: "number", min: 0, step: 0.1 },
     },
     {
       queryText: "Batch Size",
@@ -176,9 +176,10 @@ const Home = () => {
             />
           ))}
           <AddNewLayer />
-
+      
           <TrainButton
             {...input_responses}
+          
             csvDataInput={csvDataInput}
             setDLPBackendResponse={setDLPBackendResponse}
           />
@@ -212,7 +213,9 @@ const Home = () => {
       <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
         {input_queries.map((e) => (
+        
           <Input {...e} key={e.queryText} />
+        
         ))}
       </BackgroundLayout>
 

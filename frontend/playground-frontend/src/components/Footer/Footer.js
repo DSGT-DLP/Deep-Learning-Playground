@@ -1,19 +1,18 @@
 import React from "react";
-import "../../App.css";
 import { FaGithub, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 import { COLORS, URLs } from "../../constants";
 import { IconContext } from "react-icons";
 
 const Footer = () => {
   return (
-    <>
+    <div id="footer">
       <IconContext.Provider
         value={{
           color: COLORS.dark_blue,
           size: "2.0rem",
         }}
       >
-        <div className="header-footer" id="footer">
+        <div className="footer-element" id="footer-socials">
           <a className="foot-element" href={URLs.linkedin}>
             <FaLinkedin />
           </a>
@@ -28,12 +27,12 @@ const Footer = () => {
           </a>
         </div>
       </IconContext.Provider>
-      <div className="header-footer" id="footer-name">
+      <div className="footer-element" id="footer-name">
         <p className="copyright">
           Deep Learning Playground © {new Date().getFullYear()}
         </p>
       </div>
-    </>
+    </div>
   );
 };
 

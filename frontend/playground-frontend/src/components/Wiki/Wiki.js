@@ -20,10 +20,23 @@ const displayChange = (display, setdisplay) => {
 };
 
 const render_layer_info = (layer_info) => {
+  const changeClassName = () => {
+    const layer_info_button = document.getElementById(layer_info.id);
+    if (layer_info_button.classList.contains("collapsed-layer")) {
+      layer_info_button.classList.remove("collapsed-layer");
+      layer_info_button.classList.add("expanded-layer");
+    } else {
+      layer_info_button.classList.remove("expanded-layer");
+      layer_info_button.classList.add("collapsed-layer");
+    }
+  };
   let body = [];
   for (let i = 0; i < layer_info.docs.length; i++) {
     body.push(
-      <li style={{ marginBottom: "10px", display: layer_info.displayState }}>
+      <li
+        key={layer_info.docs[i].layer_name}
+        style={{ marginBottom: "10px", display: layer_info.displayState }}
+      >
         <button
           onClick={() =>
             displayChange(
@@ -48,9 +61,10 @@ const render_layer_info = (layer_info) => {
   return (
     <>
       <button
-        onClick={() =>
-          displayChange(layer_info.displayState, layer_info.setDisplayState)
-        }
+        onClick={() => {
+          changeClassName();
+          displayChange(layer_info.displayState, layer_info.setDisplayState);
+        }}
         className="layer-outer-button"
         style={{
           marginBottom: layer_info.displayState === "none" ? "10px" : 0,
@@ -65,8 +79,12 @@ const render_layer_info = (layer_info) => {
 
 const render_all_layer_info = (layer_wiki) => {
   const body = [];
-  for (let i = 0; i < layer_wiki.length; i++) {
-    body.push(<li>{render_layer_info(layer_wiki[i])}</li>);
+  for (const layer_element of layer_wiki) {
+    body.push(
+      <ul className="collapsed-layer" id={layer_element.id}>
+        <li key={layer_element.title}>{render_layer_info(layer_element)}</li>
+      </ul>
+    );
   }
   return body;
 };
@@ -90,6 +108,7 @@ const Wiki = () => {
   const layer_wiki = [
     {
       title: "Common Layers",
+      id: "common-layers",
       docs: [
         {
           layer_name: "Linear Layer",
@@ -171,6 +190,7 @@ const Wiki = () => {
     },
     {
       title: "Non-linear Activations (weighted sum, nonlinearity)",
+      id: "non-linear-activations-weighted",
       docs: [
         {
           layer_name: "ReLU",
@@ -301,6 +321,7 @@ const Wiki = () => {
     },
     {
       title: "Non-Linear Activations",
+      id: "non-linear-activations",
       docs: [
         {
           layer_name: "Softmax",
@@ -355,6 +376,7 @@ const Wiki = () => {
     },
     {
       title: "Convolution Layers",
+      id: "convolution-layers",
       docs: [
         {
           layer_name: "Conv2d",
@@ -503,41 +525,39 @@ const Wiki = () => {
                 following: So, you have input data coming in from the previous
                 layer in your model (since deep learning involves layers of
                 computations). Batch norm is doing the following:
-                <ol>
-                  <br />
-                  <item>
-                    1. Calculate the mean and variance for each feature/column.{" "}
-                  </item>
-                  <br />
-                  <br />
-                  <item>
-                    2. Knowing the mean and variance of each feature allows you
-                    to standardize your features (in the same way you calculate
-                    what's called a "z-score"). Now, your normalized data will
-                    have mean 0 and variance 1
-                  </item>
-                  <br />
-                  <br />
-                  <item>
-                    3. Scale and Shift is performed. Note that you don't
-                    necessarily specify the scale and shift parameters. Batch
-                    Norm actually can learn the optimal scale/shift parameters
-                    just like other weights in your deep learning model. This is
-                    part of the magic of Batch Norm!
-                  </item>
-                  <br />
-                  <br />
-                  <item>
-                    4. Instead of storing the mean and variance for each
-                    feature/column, Batch Norm actually stores the moving
-                    average for mean and variance for efficiency. These values
-                    are generally good approximations for the real mean/variance
-                    of your features. The moving average for mean and variance
-                    allows for Batch Norm to learn the optimal scale/shift
-                    parameters during backpropagation in deep learning
-                  </item>
-                </ol>
               </p>
+              <ol>
+                <br />
+                <li>
+                  Calculate the mean and variance for each feature/column.{" "}
+                </li>
+                <br />
+                <li>
+                  Knowing the mean and variance of each feature allows you to
+                  standardize your features (in the same way you calculate
+                  what's called a "z-score"). Now, your normalized data will
+                  have mean 0 and variance 1
+                </li>
+                <br />
+                <li>
+                  Scale and Shift is performed. Note that you don't necessarily
+                  specify the scale and shift parameters. Batch Norm actually
+                  can learn the optimal scale/shift parameters just like other
+                  weights in your deep learning model. This is part of the magic
+                  of Batch Norm!
+                </li>
+                <br />
+                <li>
+                  Instead of storing the mean and variance for each
+                  feature/column, Batch Norm actually stores the moving average
+                  for mean and variance for efficiency. These values are
+                  generally good approximations for the real mean/variance of
+                  your features. The moving average for mean and variance allows
+                  for Batch Norm to learn the optimal scale/shift parameters
+                  during backpropagation in deep learning
+                </li>
+              </ol>
+              <br />
 
               <h5>Documentation</h5>
               <a href="https://towardsdatascience.com/batch-norm-explained-visually-how-it-works-and-why-neural-networks-need-it-b18919692739">
@@ -562,12 +582,12 @@ const Wiki = () => {
   ];
 
   return (
-    <>
+    <div id="wiki">
       <div id="header-section">
         <h1 className="header">Deep Learning Playground Wiki</h1>
       </div>
 
-      <div className="sections" id="basics">
+      <div className="sections">
         <h2>Live Demo</h2>
         <img
           src={DEMO_VIDEO}
@@ -655,7 +675,7 @@ const Wiki = () => {
           </li>
         </ul>
       </div>
-    </>
+    </div>
   );
 };
 

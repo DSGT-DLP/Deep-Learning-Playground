@@ -1,5 +1,7 @@
 // General
 export { default as TitleText } from "./general/TitleText";
+export { default as DButton } from "./general/DButton";
+export { default as Spacer } from "./general/Spacer";
 
 // Home
 export { default as AddNewLayer } from "./Home/AddNewLayer";
@@ -15,6 +17,12 @@ export { default as LayerChoice } from "./Home/LayerChoice";
 export { default as RectContainer } from "./Home/RectContainer";
 export { default as Results } from "./Home/Results";
 export { default as TrainButton } from "./Home/TrainButton";
+export { default as ChoiceTab } from "./Home/ChoiceTab";
+export { default as CustomModelName } from "./Home/CustomModelName";
+
+// Dashboard
+export { default as Dashboard } from "./Dashboard/Dashboard";
+export { default as Login } from "./Dashboard/Login";
 
 // About
 export { default as About } from "./About/About";
@@ -26,7 +34,16 @@ export { default as Wiki } from "./Wiki/Wiki";
 export { default as Feedback } from "./Feedback/Feedback";
 
 // Navbar
-export { default as Navbar } from "./Navbar/Navbar";
+export { default as NavbarMain } from "./Navbar/NavbarMain";
 
 // Footer
 export { default as Footer } from "./Footer/Footer";
+
+// Image Models page
+export { default as ImageModels } from "./ImageModels/ImageModels";
+
+// Pretrained page
+export { default as LargeFileUpload } from "./general/LargeFileUpload";
+
+//Account Settings Page
+export { default as AccountSettings } from "./AccountSettings/AccountSettings";

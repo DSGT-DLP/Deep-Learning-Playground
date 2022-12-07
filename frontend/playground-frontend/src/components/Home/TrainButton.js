@@ -1,143 +1,140 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import RectContainer from "./RectContainer";
-import { COLORS, GENERAL_STYLES } from "../../constants";
+import { COLORS } from "../../constants";
 import {
-  socket,
+  validateParameter,
+  validateTabularInputs,
+  sendTabularJSON,
+  validateImageInputs,
+  sendPretrainedJSON,
+  validatePretrainedInput,
+  sendImageJSON,
+} from "../helper_functions/TrainButtonFunctions";
+import {
   sendEmail,
+  uploadToBackend,
   train_and_output,
 } from "../helper_functions/TalkWithBackend";
-import { Circle } from "rc-progress";
 import { toast } from "react-toastify";
 
 const TrainButton = (props) => {
-  const {
-    addedLayers,
-    targetCol = null,
-    features = null,
-    problemType,
-    criterion,
-    optimizerName,
-    usingDefaultDataset = null,
-    shuffle,
-    epochs,
-    testSize,
-    batchSize,
-    setDLPBackendResponse,
-    csvDataInput = null,
-    fileURL = null,
-    email,
-  } = props;
+  const { uploadFile, setDLPBackendResponse, choice = "tabular" } = props;
 
   const [pendingResponse, setPendingResponse] = useState(false);
-  const [progress, setProgress] = useState(null);
   const [result, setResult] = useState(null);
-
-  useEffect(() => {
-    socket.on("trainingProgress", (progressData) => {
-      setProgress(Number.parseFloat(progressData));
-    });
-    socket.on("trainingResult", (resultData) => {
-      setResult(resultData);
-    });
-  }, [socket]);
+  const [uploaded, setUploaded] = useState(false);
+  const [trainParams, setTrainParams] = useState(null);
 
   const reset = () => {
     setPendingResponse(false);
-    setProgress(null);
     setResult(null);
   };
 
-  const make_user_arch = () => {
-    // making a user_arch array by including all added layers and their parameters to make something like:
-    // ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"]
+  const make_obj_param_list = (obj_list, source) => {
+    if (!obj_list) return; // ValidateInputs throw error in case of empty things. This is to prevent an unnecessary errors in case of creating a layer
+
+    // making a array of relating methods (like "nn.Linear") with their parameters (in_feature, out_feature) by including all methods and their parameters to make something like:
+    // ["nn.Linear(4, 10)", "nn.ReLU()", "nn.Linear(10, 3)", "nn.Softmax()"] OR
+    // ["transforms.ToTensor()", "transforms.RandomHorizontalFlip(0.8)"]
+
     const user_arch = [];
-    addedLayers.forEach((addedLayer) => {
-      const parameters = addedLayer.parameters;
+    for (let i = 0; i < obj_list.length; i++) {
+      const obj_list_item = obj_list[i];
+      const parameters = obj_list_item.parameters;
       let parameter_call_input = "";
       const parameters_to_be_added = Array(Object.keys(parameters).length);
-      Object.values(parameters).forEach((v) => {
+      for (const v of Object.values(parameters)) {
+        if (!validateParameter(source, i, v)) {
+          reset();
+          return false;
+        }
         parameters_to_be_added[v.index] = v.value;
-      });
+      }
       parameters_to_be_added.forEach((e) => {
         parameter_call_input += e + ",";
       });
       // removing the last ','
       parameter_call_input = parameter_call_input.slice(0, -1);
 
-      const callback = `${addedLayer.object_name}(${parameter_call_input})`;
+      const callback = `${obj_list_item.object_name}(${parameter_call_input})`;
       user_arch.push(callback);
-    });
+    }
     return user_arch;
+  };
+
+  const functionMap = {
+    tabular: [validateTabularInputs, sendTabularJSON],
+    image: [validateImageInputs, sendImageJSON],
+    pretrained: [validatePretrainedInput, sendPretrainedJSON],
   };
 
   const validateInputs = (user_arch) => {
     let alertMessage = "";
-    if (!user_arch?.length)
-      alertMessage += "At least one layer must be added. ";
-    if (!criterion) alertMessage += "A criterion must be specified. ";
-    if (!optimizerName) alertMessage += "An optimizer name must be specified. ";
-    if (!problemType) alertMessage += "A problem type must be specified. ";
-    if (!usingDefaultDataset) {
-      if (!targetCol || !features?.length) {
-        alertMessage +=
-          "Must specify an input file, target, and features if not selecting default dataset. ";
-      }
-      for (let i = 0; i < features.length; i++) {
-        if (targetCol === features[i]) {
-          alertMessage +=
-            "A column that is selected as the target column cannot also be a feature column. ";
-          break;
-        }
-      }
-      if (!csvDataInput && !fileURL) {
-        alertMessage +=
-          "Must specify an input file either from local storage or from an internet URL. ";
-      }
-    }
-
+    alertMessage = functionMap[choice][0](user_arch, props);
     if (alertMessage.length === 0) return true;
-
     toast.error(alertMessage);
     return false;
   };
 
   const onClick = async () => {
     setPendingResponse(true);
-    setDLPBackendResponse(undefined);
-    setProgress(0);
+    setDLPBackendResponse(null);
 
-    const user_arch = make_user_arch();
+    const user_arch = make_obj_param_list(props.addedLayers, "Model");
+    if (user_arch === false) return;
+
+    let trainTransforms = 0;
+    let testTransforms = 0;
+    if (props.trainTransforms) {
+      trainTransforms = make_obj_param_list(
+        props.trainTransforms,
+        "Train Transform"
+      );
+      if (trainTransforms === false) return;
+    }
+    if (props.testTransforms) {
+      testTransforms = make_obj_param_list(
+        props.testTransforms,
+        "Test Transform"
+      );
+      if (testTransforms === false) return;
+    }
+
     if (!validateInputs(user_arch)) {
       setPendingResponse(false);
-      setProgress(null);
       return;
     }
 
-    const csvDataStr = JSON.stringify(csvDataInput);
-    console.log(testSize);
-    train_and_output(
-      user_arch,
-      criterion,
-      optimizerName,
-      problemType,
-      targetCol,
-      features,
-      usingDefaultDataset,
-      testSize,
-      epochs,
-      batchSize,
-      shuffle,
-      csvDataStr,
-      fileURL
+    const paramList = { ...props, trainTransforms, testTransforms, user_arch };
+
+    if (choice === "image" && !props.usingDefaultDataset) {
+      const formData = new FormData();
+      formData.append("file", uploadFile);
+      await uploadToBackend(formData);
+    }
+    const trainResult = await train_and_output(
+      choice,
+      functionMap[choice][1](paramList)
     );
+    setResult(trainResult);
   };
+
+  useEffect(() => {
+    if (uploaded && trainParams) {
+      train_and_output(
+        trainParams.choice,
+        functionMap[trainParams.choice][1](trainParams.paramList)
+      );
+      setUploaded(false);
+      setTrainParams(null);
+    }
+  }, [uploaded, trainParams]);
 
   useEffect(() => {
     if (result) {
       if (result.success) {
-        if (email?.length) {
-          sendEmail(email, problemType);
+        if (props.email?.length) {
+          sendEmail(props.email, props.problemType);
         }
         toast.success("Training successful! Scroll to see results!");
       } else if (result.message) {
@@ -152,66 +149,35 @@ const TrainButton = (props) => {
 
   return (
     <>
-      <RectContainer
+      <button
+        id="train-button"
+        className="btn btn-primary"
         style={{
-          ...styles.container,
-          backgroundColor: pendingResponse ? COLORS.disabled : COLORS.dark_blue,
+          backgroundColor: pendingResponse ? COLORS.disabled : null,
+          cursor: pendingResponse ? "wait" : "pointer",
         }}
+        onClick={onClick}
+        disabled={pendingResponse}
       >
-        <button
-          style={{
-            ...styles.button,
-            cursor: pendingResponse ? "wait" : "pointer",
-          }}
-          onClick={onClick}
-          disabled={pendingResponse}
-        >
-          Train!
-        </button>
-      </RectContainer>
-      {pendingResponse ? (
-        <div style={{ marginLeft: 5, marginTop: 10, width: 90, height: 90 }}>
-          <Circle percent={progress} strokeWidth={4} />
-        </div>
-      ) : null}
+        Train!
+      </button>
+      {pendingResponse ? <div className="loader" /> : null}
     </>
   );
 };
 
 TrainButton.propTypes = {
-  addedLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  batchSize: PropTypes.number.isRequired,
-  criterion: PropTypes.string.isRequired,
-  csvDataInput: PropTypes.array,
+  addedLayers: PropTypes.array,
   email: PropTypes.string,
-  epochs: PropTypes.number.isRequired,
-  features: PropTypes.arrayOf(PropTypes.string),
-  fileURL: PropTypes.string,
-  optimizerName: PropTypes.string.isRequired,
-  problemType: PropTypes.string.isRequired,
+  trainTransforms: PropTypes.array,
+  testTransforms: PropTypes.array,
   setDLPBackendResponse: PropTypes.func.isRequired,
-  shuffle: PropTypes.bool.isRequired,
-  targetCol: PropTypes.string,
-  testSize: PropTypes.number.isRequired,
+  choice: PropTypes.string,
+  style: PropTypes.object,
+  problemType: PropTypes.string,
   usingDefaultDataset: PropTypes.string,
+  uploadFile: PropTypes.object,
+  customModelName: PropTypes.string,
 };
 
 export default TrainButton;
-
-const styles = {
-  container: {
-    padding: 0,
-    width: 130,
-    height: 80,
-  },
-  button: {
-    backgroundColor: "transparent",
-    border: "none",
-    cursor: "pointer",
-    height: "100%",
-    width: "100%",
-    ...GENERAL_STYLES.p,
-    fontSize: 25,
-    color: "white",
-  },
-};

@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
+import { Form } from "react-bootstrap";
 
 const HomeCSVInputURL = (props) => {
   const { fileURL, setFileURL, setCSVColumns, setCSVDataInput } = props;
@@ -50,13 +52,13 @@ const HomeCSVInputURL = (props) => {
         setFileURL(url);
       }
     } catch (e) {
-      console.log("Incorrect URL");
+      toast.error("Incorrect URL");
     }
   }
   return (
-    <input
-      style={{ width: "100%" }}
+    <Form.Control
       placeholder="Or type in URL..."
+      size="sm"
       value={fileURL}
       onChange={(e) => setFileURL(e.target.value)}
       onBlur={(e) => handleURL(e.target.value)}

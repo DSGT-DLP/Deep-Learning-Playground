@@ -27,8 +27,11 @@ dependencies:
   - flask-socketio
   - ruamel.yaml
   - eventlet
+  - python-dotenv
   - pip:
      - torchvision
      - timm
      - wwf
      - fastai==2.7.4
+     - firebase_admin
+     - pyrebase4

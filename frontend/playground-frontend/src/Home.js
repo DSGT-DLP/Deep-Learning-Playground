@@ -275,10 +275,9 @@ const Home = () => {
             />
           ))}
           <AddNewLayer />
-      
+
           <TrainButton
             {...input_responses}
-          
             csvDataInput={csvDataInput}
             setDLPBackendResponse={setDLPBackendResponse}
           />

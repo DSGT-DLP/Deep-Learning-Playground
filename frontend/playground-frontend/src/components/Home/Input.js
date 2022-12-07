@@ -1,4 +1,4 @@
-import { React, useState} from "react";
+import { React, useState } from "react";
 import PropTypes from "prop-types";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "../../constants";
 import { DropDown } from "..";
@@ -15,20 +15,20 @@ const Input = (props) => {
     beginnerMode,
   } = props;
 
-  const[numberinput, setNumberInput] = useState(0.2);
-  const[rangeinput, setRangeInput] = useState(20);
+  const [numberinput, setNumberInput] = useState(0.2);
+  const [rangeinput, setRangeInput] = useState(20);
 
   const changeNumber = (userinput) => {
-  setNumberInput(Number((userinput.target.value)/100)*20/20);
-  setRangeInput(userinput.target.value);
-  onChange(Number(userinput.target.value)/100);
+    setNumberInput((Number(userinput.target.value / 100) * 20) / 20);
+    setRangeInput(userinput.target.value);
+    onChange(Number(userinput.target.value) / 100);
   };
   const changeRange = (userinput) => {
-  setNumberInput(Number(userinput.target.value));
-  setRangeInput(Number(userinput.target.value)*100);
-  onChange(Number(userinput.target.value));
+    setNumberInput(Number(userinput.target.value));
+    setRangeInput(Number(userinput.target.value) * 100);
+    onChange(Number(userinput.target.value));
   };
-    
+
   return (
     <div
       // @ts-ignore
@@ -56,28 +56,36 @@ const Input = (props) => {
           />
         ) : (
           <>
-          {range ? (
-            <>
-            <input placeholder="Type..." style={styles.inputText} type="number" value = {Number(numberinput)} onChange = {changeRange}/>
-            <input style={styles.inputText} type= "range" value= {Number(rangeinput)} onChange = {changeNumber}/>
-            </>
-            
-          ):(
-          
-            <input
-            style={styles.inputText}
-            placeholder="Type..."
-            maxLength={64}
-            {...freeInputCustomRestrictions}
-            defaultValue={defaultValue}
-            onChange={(e) => {
-              if (freeInputCustomRestrictions?.type === "number")
-                onChange(Number(e.target.value));
-              else onChange(e.target.value);
-            }}
-            /> 
-          
-          )}  
+            {range ? (
+              <>
+                <input
+                  placeholder="Type..."
+                  style={styles.inputText}
+                  type="number"
+                  value={Number(numberinput)}
+                  onChange={changeRange}
+                />
+                <input
+                  style={styles.inputText}
+                  type="range"
+                  value={Number(rangeinput)}
+                  onChange={changeNumber}
+                />
+              </>
+            ) : (
+              <input
+                style={styles.inputText}
+                placeholder="Type..."
+                maxLength={64}
+                {...freeInputCustomRestrictions}
+                defaultValue={defaultValue}
+                onChange={(e) => {
+                  if (freeInputCustomRestrictions?.type === "number")
+                    onChange(Number(e.target.value));
+                  else onChange(e.target.value);
+                }}
+              />
+            )}
           </>
         )}
       </div>

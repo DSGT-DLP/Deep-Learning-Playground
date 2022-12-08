@@ -40,7 +40,6 @@ const CodeSnippetML = (props) => {
  * @returns string with correct python syntax to 'train' data
  */
 function codeSnippetFormat(layers) {
-  console.log(layers);
   const codeSnippet =
     "import sklearn\n" +
     "# import pickle\n\n" +

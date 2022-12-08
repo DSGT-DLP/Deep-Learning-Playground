@@ -183,7 +183,10 @@ const ClassicalMLModel = () => {
 
       <Spacer height={40} />
       <TitleText text="Code Snippet" />
-      <CodeSnippetML backendResponse={dlpBackendResponse} layers={addedLayers} />
+      <CodeSnippetML
+        backendResponse={dlpBackendResponse}
+        layers={addedLayers}
+      />
     </div>
   );
 };

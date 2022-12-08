@@ -44,10 +44,12 @@ function codeSnippetFormat(layers) {
   const codeSnippet =
     create_import_statement(layers[0])+"\n" +
     "# import pickle\n\n" +
-    "model = " + layerToString(layers[0]) + "\n\n" +
+    "model = " +
+    layerToString(layers[0]) +
+    "\n\n" +
     "## un-comment below code if loading model from a .pkl file, replace PATH with the location path of the .pkl file \n" +
     "# with open(PATH, 'rb') as f: \n" +
-    "#\t model = pickle.load(f)\n\n"+
+    "#\t model = pickle.load(f)\n\n" +
     "model.predict(x)\n \n";
   return codeSnippet;
 }

@@ -5,9 +5,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, roc_auc_score, mean_absolute_percentage_error, mean_squared_error
-from backend.common.constants import CLASSICAL_ML_CONFUSION_MATRIX, CLASSICAL_ML_RESULT_CSV_PATH
+from backend.common.constants import CLASSICAL_ML_CONFUSION_MATRIX, CLASSICAL_ML_RESULT_CSV_PATH, SAVED_MODEL_ML
 from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
 from backend.common.utils import ProblemType
+import pickle
 
 def train_classical_ml_classification(model, X_train, X_test, y_train, y_test):
     """
@@ -74,7 +75,13 @@ def train_classical_ml_model(model, X_train, X_test, y_train, y_test, problem_ty
         y_test (pd.DataFrame): target value corresponding to each row in X_test
         problem_type (str): "classification" or "regression" model
     """
+    outputs = None
     if problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION):
-        return train_classical_ml_classification(model, X_train, X_test, y_train, y_test)
+        outputs = train_classical_ml_classification(model, X_train, X_test, y_train, y_test)
     elif problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION):
-        return train_classical_ml_regression(model, X_train, X_test, y_train, y_test)
+        outputs = train_classical_ml_regression(model, X_train, X_test, y_train, y_test)
+    # save model
+    with open(SAVED_MODEL_ML, 'wb') as files:
+        pickle.dump(model, files)
+
+    return outputs

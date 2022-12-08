@@ -238,7 +238,7 @@ const Results = (props) => {
       </span>
       <span style={{ marginLeft: 8 }}>
         <a href={PT_PATH} download style={styles.download_csv_res}>
-          📄 Download model.pt File
+          📄 Download model File
         </a>
       </span>
       {

@@ -169,9 +169,9 @@ const Home = () => {
     },
     {
       queryText: "Test Size",
+      range: true,
       onChange: setTestSize,
       defaultValue: testSize,
-      freeInputCustomRestrictions: { type: "number", min: 0, step: 0.1 },
     },
     {
       queryText: "Batch Size",

@@ -223,14 +223,15 @@ const Results = (props) => {
   };
 
   return (
-    <>{
-      (choice === "classicalml") ? null : <CSVLink data={dl_results_data} headers={dl_results_columns_react_csv}>
-      <button style={{ ...styles.download_csv_res, padding: 5.5 }}>
-        📄 Download Results (CSV)
-      </button>
-    </CSVLink>
-    }
-      
+    <>
+      {choice === "classicalml" ? null : (
+        <CSVLink data={dl_results_data} headers={dl_results_columns_react_csv}>
+          <button style={{ ...styles.download_csv_res, padding: 5.5 }}>
+            📄 Download Results (CSV)
+          </button>
+        </CSVLink>
+      )}
+
       <span style={{ marginLeft: 8 }}>
         <a href={ONNX_OUTPUT_PATH} download style={styles.download_csv_res}>
           📄 Download ONNX Output File
@@ -241,18 +242,17 @@ const Results = (props) => {
           📄 Download model File
         </a>
       </span>
-      {
-      (choice === "classicalml") ? null :
-      <DataTable
-        pagination
-        highlightOnHover
-        columns={Object.keys(dl_results_data[0]).map((c) => ({
-          name: c,
-          selector: (row) => row[c],
-        }))}
-        data={dl_results_data}
-      />
-}
+      {choice === "classicalml" ? null : (
+        <DataTable
+          pagination
+          highlightOnHover
+          columns={Object.keys(dl_results_data[0]).map((c) => ({
+            name: c,
+            selector: (row) => row[c],
+          }))}
+          data={dl_results_data}
+        />
+      )}
 
       <div style={{ marginTop: 8 }}>
         <TrainVTestAccuracy />

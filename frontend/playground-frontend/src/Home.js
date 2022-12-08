@@ -362,7 +362,7 @@ const Home = () => {
       {ResultsMemo}
 
       <Spacer height={40} />
-    
+
       <TitleText text="Code Snippet" />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
     </div>

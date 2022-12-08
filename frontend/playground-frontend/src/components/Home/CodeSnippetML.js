@@ -43,10 +43,12 @@ function codeSnippetFormat(layers) {
   const codeSnippet =
     "import sklearn\n" +
     "# import pickle\n\n" +
-    "model = " + layerToString(layers[0]) + "\n\n" +
+    "model = " +
+    layerToString(layers[0]) +
+    "\n\n" +
     "## un-comment below code if loading model from a .pkl file, replace PATH with the location path of the .pkl file \n" +
     "# with open(PATH, 'rb') as f: \n" +
-    "#\t model = pickle.load(f)\n\n"+
+    "#\t model = pickle.load(f)\n\n" +
     "model.predict(x)\n \n";
   return codeSnippet;
 }
@@ -56,7 +58,7 @@ function codeSnippetFormat(layers) {
  * @param {layers} layer
  * @returns string in form of <layer name>(<parameters>)
  */
- export function layerToString(layer) {
+export function layerToString(layer) {
   let layerToString = layer.object_name + "(";
 
   if (layer.parameters !== undefined && layer.parameters !== null) {
@@ -72,7 +74,7 @@ function codeSnippetFormat(layers) {
 
         if (typeof layer.parameters[param] !== "undefined") {
           paramList[layer.parameters[param].index] =
-          layer.parameters[param].kwarg +layer.parameters[param].value;
+            layer.parameters[param].kwarg + layer.parameters[param].value;
         }
       }
       for (let i = 0; i < paramList.length; i++) {

@@ -1,6 +1,7 @@
 import DataTable from "react-data-table-component";
 import ONNX_OUTPUT_PATH from "../../backend_outputs/my_deep_learning_model.onnx";
 import PT_PATH from "../../backend_outputs/model.pt";
+import PKL_PATH from "../../backend_outputs/model.pkl";
 import Plot from "react-plotly.js";
 import PropTypes from "prop-types";
 import React from "react";
@@ -224,24 +225,30 @@ const Results = (props) => {
 
   return (
     <>
-      {choice === "classicalml" ? null : (
+      {choice === "classicalml" ? (
+        <span style={{ marginLeft: 8 }}>
+          <a href={PKL_PATH} download style={styles.download_csv_res}>
+            📄 Download model.pkl File
+          </a>
+        </span>
+      ) : (
         <CSVLink data={dl_results_data} headers={dl_results_columns_react_csv}>
           <button style={{ ...styles.download_csv_res, padding: 5.5 }}>
             📄 Download Results (CSV)
           </button>
+          <span style={{ marginLeft: 8 }}>
+            <a href={ONNX_OUTPUT_PATH} download style={styles.download_csv_res}>
+              📄 Download ONNX Output File
+            </a>
+          </span>
+          <span style={{ marginLeft: 8 }}>
+            <a href={PT_PATH} download style={styles.download_csv_res}>
+              📄 Download model.pt File
+            </a>
+          </span>
         </CSVLink>
       )}
 
-      <span style={{ marginLeft: 8 }}>
-        <a href={ONNX_OUTPUT_PATH} download style={styles.download_csv_res}>
-          📄 Download ONNX Output File
-        </a>
-      </span>
-      <span style={{ marginLeft: 8 }}>
-        <a href={PT_PATH} download style={styles.download_csv_res}>
-          📄 Download model File
-        </a>
-      </span>
       {choice === "classicalml" ? null : (
         <DataTable
           pagination

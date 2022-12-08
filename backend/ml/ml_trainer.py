@@ -80,6 +80,7 @@ def train_classical_ml_model(model, X_train, X_test, y_train, y_test, problem_ty
         outputs = train_classical_ml_classification(model, X_train, X_test, y_train, y_test)
     elif problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION):
         outputs = train_classical_ml_regression(model, X_train, X_test, y_train, y_test)
+    
     # save model
     with open(SAVED_MODEL_ML, 'wb') as files:
         pickle.dump(model, files)

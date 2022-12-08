@@ -18,7 +18,7 @@ import {
   LayerChoice,
   EmailInput,
   Results,
-  CodeSnippet,
+  CodeSnippetML,
   ChoiceTab,
   Spacer,
   CustomModelName,
@@ -39,7 +39,6 @@ const ClassicalMLModel = () => {
   const [inputKey, setInputKey] = useState(0);
   const [testSize, setTestSize] = useState(0.2);
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
-
   const input_responses = {
     shuffle: shuffle?.value,
     problemType: problemType?.value,
@@ -184,7 +183,7 @@ const ClassicalMLModel = () => {
 
       <Spacer height={40} />
       <TitleText text="Code Snippet" />
-      <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
+      <CodeSnippetML backendResponse={dlpBackendResponse} layers={addedLayers} />
     </div>
   );
 };

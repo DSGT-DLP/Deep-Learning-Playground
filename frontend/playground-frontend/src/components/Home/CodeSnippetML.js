@@ -40,8 +40,9 @@ const CodeSnippetML = (props) => {
  * @returns string with correct python syntax to 'train' data
  */
 function codeSnippetFormat(layers) {
+  console.log(layers);
   const codeSnippet =
-    "import sklearn\n" +
+    create_import_statement(layers[0])+"\n" +
     "# import pickle\n\n" +
     "model = " + layerToString(layers[0]) + "\n\n" +
     "## un-comment below code if loading model from a .pkl file, replace PATH with the location path of the .pkl file \n" +
@@ -51,13 +52,22 @@ function codeSnippetFormat(layers) {
   return codeSnippet;
 }
 
+export function create_import_statement(layer){
+  const full_model_name = layer.object_name;
+  const components = full_model_name.split(".");
+  const model_name = components[components.length-1];
+  
+  const import_statement = "from " + components.slice(0,components.length-1).join(".") + " import " + model_name;
+  return import_statement;
+}
 /**
  * Depending on layer passed in, this function builds a string with layer's name, and parameters associated to it (if any)
  * @param {layers} layer
  * @returns string in form of <layer name>(<parameters>)
  */
  export function layerToString(layer) {
-  let layerToString = layer.object_name + "(";
+  const components = layer.object_name.split(".");
+  let layerToString = components[components.length-1] + "(";
 
   if (layer.parameters !== undefined && layer.parameters !== null) {
     const params = Object.keys(layer.parameters);
@@ -71,8 +81,14 @@ function codeSnippetFormat(layers) {
         // param: "inputSize"
 
         if (typeof layer.parameters[param] !== "undefined") {
-          paramList[layer.parameters[param].index] =
-          layer.parameters[param].kwarg +layer.parameters[param].value;
+          console.log(layer.parameters[param].parameter_type);
+          if (layer.parameters[param].parameter_type === "text"){
+            paramList[layer.parameters[param].index] =
+            layer.parameters[param].kwarg + "\""+ layer.parameters[param].value + "\"";
+          }else{
+            paramList[layer.parameters[param].index] =
+            layer.parameters[param].kwarg +layer.parameters[param].value;
+          }
         }
       }
       for (let i = 0; i < paramList.length; i++) {

@@ -29,7 +29,6 @@ dependencies:
   - eventlet
   - python-dotenv
   - pip:
-     - pickle
      - torchvision
      - timm
      - wwf

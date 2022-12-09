@@ -43,7 +43,7 @@ npm run startf
 npm run startb
 ```
 
-# Furter Details: Backend
+# Further Details: Backend
 
 ## Conda Env Setup
 
@@ -65,7 +65,7 @@ See [Architecture.md](./.github/Architecture.md)
 
 To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Examples.md)
 
-# Furter Details: Frontend
+# Further Details: Frontend
 
 ## Startup Instructions
 

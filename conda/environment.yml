@@ -28,6 +28,7 @@ dependencies:
   - ruamel.yaml
   - eventlet
   - python-dotenv
+  - pickle
   - pip:
      - torchvision
      - timm

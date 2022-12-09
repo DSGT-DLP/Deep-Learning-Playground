@@ -28,8 +28,8 @@ dependencies:
   - ruamel.yaml
   - eventlet
   - python-dotenv
-  - pickle
   - pip:
+     - pickle
      - torchvision
      - timm
      - wwf

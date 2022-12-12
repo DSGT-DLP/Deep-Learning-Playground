@@ -10,8 +10,8 @@ import {
   Dashboard,
   Login,
   LearnMod,
-  LearnContent
-  AccountSettings,
+  LearnContent,
+  AccountSettings
 } from "./components";
 import Home from "./Home";
 import { ToastContainer } from "react-toastify";

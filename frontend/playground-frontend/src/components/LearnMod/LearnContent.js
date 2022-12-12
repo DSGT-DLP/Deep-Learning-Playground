@@ -46,6 +46,10 @@ const LearnContent = () => {
 
         setSubSection(subSection - 1);
 
+      } else {
+
+        navigate("/learnMod");
+
       }
 
     };
@@ -56,6 +60,10 @@ const LearnContent = () => {
       if (subSection !== moduleContent.subClasses.length - 1) {
 
         setSubSection(subSection + 1);
+
+      } else {
+
+        navigate("/learnMod");
 
       }
 

@@ -2,6 +2,8 @@ import neuralnet from "../../images/learn_mod_images/neuralnet.png";
 import robot from "../../images/learn_mod_images/robotImage.jpg";
 import nueron from "../../images/learn_mod_images/neuron.png";
 import nueronWithEquation from "../../images/learn_mod_images/neuronWithEquation.png";
+import lossExample from "../../images/learn_mod_images/lossExample.png";
+import lossExampleTable from "../../images/learn_mod_images/lossExampleTable.png";
 
 let content = {
     modules: [
@@ -181,6 +183,13 @@ let content = {
                         }
                     ],
                     points: 0
+                },
+                {
+                    sectionID: 2,
+                    title: "Activation Functions",
+                    content: [
+                    ],
+                    points: 0
                 }
             ],
             points: 10
@@ -199,6 +208,10 @@ let content = {
                         },
                         {
                             sectionType: "text",
+                            content: "Loss is usually calculated based on data that we know the expected output for. This means that we need datapoints that have correct values for both features and labels in order to calculate loss."
+                        },
+                        {
+                            sectionType: "text",
                             content: "The most common type of loss is MSELoss, or Mean Squared Error loss. We will take a look at this in the next section."
                         }
                     ],
@@ -211,12 +224,60 @@ let content = {
                         {
                             sectionType: "heading1",
                             text: "Mean Squared Error"
+                        },
+                        {
+                            sectionType: "text",
+                            content: "Mean Squared Error is quite simple. Given a prediction from a model and the expected value from the model at some input, the squared error is simply the squared difference between the predicted value and the expected value. Mean Squared Error is the average squared error of predictions based on multiple different datapoints. Let us take a look at an example."
+                        },
+                        {
+                            sectionType: "image",
+                            path: lossExample,
+                            caption: "Predicted and Expected Values",
+                            attribution: "",
+                            licenseLink: ""
+                        },
+                        {
+                            sectionType: "text",
+                            content: "The above chart shows a neural network model given six different inputs. For each input the chart shows the value the model predicted in blue and the value that was expected in orange. For each datapoint, let's calculate the error and the squared error."
+                        },
+                        {
+                            sectionType: "image",
+                            path: lossExampleTable,
+                            caption: "Calculated Error and Squared Error",
+                            attribution: "",
+                            licenseLink: ""
+                        },
+                        {
+                            sectionType: "text",
+                            content: "You may wonder why we don't just use error, but instead use squared error. This is because we want predictions that are more \"incorrect\", or further away from their expected value, to influence loss more than predictions that are just slightly off. For example, one datapoint with an error of 6 is more of a problem then six datapoints with an error of 1."
+                        },
+                        {
+                            sectionType: "text",
+                            content: "Now that we have calculated all the squared errors, we can just average them to find the MSE of our model."
+                        },
+                        {
+                            sectionType: "frQuestion",
+                            question: "What is the MSE of the model, rounded to the nearest whole number?",
+                            questionID: 0,
+                            answer: 19
+        
+                        }
+                    ],
+                    points: 10
+                },
+                {
+                    sectionID: 2,
+                    title: "Some Last Remarks",
+                    content: [
+                        {
+                            sectionType: "text",
+                            content: "One last important note to make is that loss is not unique to neural networks. Many other machine learning models use loss as a way to compute their accuracy as well. It is an extremely important part of machine learning, yet luckily fairly easy to understand."
                         }
                     ],
                     points: 0
                 }
             ],
-            points: 0
+            points: 10
         }
     ]
 };

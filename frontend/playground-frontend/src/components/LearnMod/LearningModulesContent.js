@@ -1,5 +1,7 @@
 import neuralnet from "../../images/learn_mod_images/neuralnet.png";
 import robot from "../../images/learn_mod_images/robotImage.jpg";
+import nueron from "../../images/learn_mod_images/neuron.png";
+import nueronWithEquation from "../../images/learn_mod_images/neuronWithEquation.png";
 
 let content = {
     modules: [
@@ -9,7 +11,7 @@ let content = {
             subsections: [
                 {
                     sectionID: 0,
-                    title: "So what is Machine Learning?",
+                    title: "Introduction",
                     content: [
                         {
                             sectionType: "image",
@@ -20,8 +22,15 @@ let content = {
                         },
                         {
                             sectionType: "text",
-                            content: "Machine Learning is perhaps the most talked-about field in Computer Science right now. It is an incredibly versatile tool that sees applications in a variety of industries and other fields of Computer Science. Yet, it can also be difficult to understand and even intimidating to those who lack experience with it. The heavy amount of math and complicated programming often scares away many of those interested in it. However, it doesn't have to be that way. Through these modules, DLP hopes to provide a thorough introduction to Machine Learning that will give you the ability to use our platform to practice building ML models and learn more about this exciting field."
-                        },
+                            content: "Machine Learning is perhaps the most talked-about field in Computer Science right now. It is an incredibly versatile tool that sees applications in a variety of industries and other fields of Computer Science. Yet, it can also be difficult to understand and even intimidating to those who lack experience with it. The heavy amount of math and complicated programming often scares away many of those interested in it. However, it doesn't have to be that way. Through these modules, DLP hopes to provide a thorough introduction to Machine Learning that will give you the ability to use our platform to practice building ML models and learn more about this exciting field!"
+                        }
+                    ],
+                    points: 10
+                },
+                {
+                    sectionID: 1,
+                    title: "So what is Machine Learning?",
+                    content: [
                         {
                             sectionType: "text",
                             content: "Machine Learning refers to a set of models that solve problems by \"learning\" the optimal parameters of the model, rather than those parameters being hardcoded. In other words, instead of every step and parameter of the model being harcoded by a human programmer, the model adjusts its own parameters based on data input in order to maximize the accuracy of the model."
@@ -47,10 +56,10 @@ let content = {
                             ]
                         }
                     ],
-                    points: 10
+                    points: 0
                 },
                 {
-                    sectionID: 1,
+                    sectionID: 2,
                     title: "What problems can Machine Learning solve?",
                     content: [
                         {
@@ -71,7 +80,7 @@ let content = {
                     points: 10
                 },
                 {
-                    sectionID: 2,
+                    sectionID: 3,
                     title: "Types of Learning",
                     content: [
                         {
@@ -109,12 +118,14 @@ let content = {
                     content: [
                         {
                             sectionType: "text",
-                            content: "A Neural Network is a type of machine learning algorithm that is based on the architecture of the human brain. The study and development of neural networks, sometimes called ANNs(Artifical Neural Networks) is one of the most active fields of machine learning, and is usually referred to as Deep Learning. Just like a human brain, a neural network is comprised of a network of neurons that fire, or activate, based on its inputs. Lets take a look at a neuron in a human brain."
+                            content: "A Neural Network is a type of machine learning algorithm that is based on the architecture of the human brain. The study and development of neural networks, sometimes called ANNs(Artifical Neural Networks) is one of the most active fields of machine learning, and is usually referred to as Deep Learning. Just like a human brain, a neural network is comprised of a network of neurons that fire, or activate, based on its inputs. Lets take a look at one of these neurons."
                         },
                         {
                             sectionType: "image",
-                            path: "Diagram of Neuron",
-                            caption: ""
+                            path: nueron,
+                            caption: "A typical neuron in a neural network",
+                            attribution: "Creative Commons Attribution-Share Alike 3.0 Unported",
+                            licenseLink: "https://commons.wikimedia.org/wiki/File:Multi-Layer_Neural_Network-Vector-Blank.svg"
                         },
                         {
                             sectionType: "text",
@@ -151,7 +162,7 @@ let content = {
                     content: [
                         {
                             sectionType: "text",
-                            content: "Now we know what a neural network looks like generally. But how does it take an input and create an output that makes sense. That magic happens in the layers, of which there are many different types. However, the most common type is a linear layer, also called a perceptron. In fact, a perceptron is sometimes used as a machine learning model on its own, not as part of a neural network."
+                            content: "Now we know what a neural network looks like generally. But how does it take an input and create an output that makes sense? That magic happens in the layers, of which there are many different types. However, the most common type is a linear layer, also called a perceptron. In fact, a perceptron is sometimes used as a machine learning model on its own, not as part of a neural network."
                         },
                         {
                             sectionType: "text",
@@ -159,12 +170,14 @@ let content = {
                         },
                         {
                             sectionType: "image",
-                            path: "image-of-equation",
-                            caption: "The equation for the output from one node"
+                            path: nueronWithEquation,
+                            caption: "The equation for the output Y from one node given inputs X",
+                            attribution: "Creative Commons Attribution-Share Alike 3.0 Unported",
+                            licenseLink: "https://commons.wikimedia.org/wiki/File:Multi-Layer_Neural_Network-Vector-Blank.svg"
                         },
                         {
                             sectionType: "text",
-                            content: "The beauty of neural networks comes in their flexibility. If you imagine just how many ways you can manipulate one node to turn any input into the output you want, and then you remember that it is just one node of many, you can begin to see how powerful neural networks can be. However, the next obvious question that arises is how exactly do we choose the right weights and biases to get the output that we want? That's where the learning part of machine learning comes in. Neural Network learning involves a very mathematical process called gradient descent. Before we can learn about that, we must understand how to measure the performance of our neural network."
+                            content: "The beauty of neural networks comes in their flexibility. If you imagine just how many ways you can manipulate one node to turn any input into the output you want, and then you remember that it is just one node of many, you can begin to see how powerful neural networks can be. However, the next obvious question that arises is how exactly do we choose the right weights and biases to get the output that we want? That's where the learning part of machine learning comes in. Neural Network learning involves a very mathematical process called gradient descent. Before we can learn about learning, we must understand how to measure the performance of our neural network."
                         }
                     ],
                     points: 0
@@ -182,8 +195,12 @@ let content = {
                     content: [
                         {
                             sectionType: "text",
-                            content: "Now that we have built a neural network, we need to find a way to measure how well it performs. That is, how often does it make the right prediction and how close are the predictions to the expected value. This measure is called loss, with there existing many different types. The most common type of loss is MSELoss, or Mean Squared Error loss."
+                            content: "Now that we have built a neural network, we need to find a way to measure how well it performs. That is, how often does it make the right prediction and how close are the predictions to the expected value? This measure is called loss, with there existing many different types. Loss is very important, as it provides a measure of how the model performs as it is being trained. It allows to see if the model is actually learning in the direction we want it to. This would be represented by loss decreasing as the model is trained."
                         },
+                        {
+                            sectionType: "text",
+                            content: "The most common type of loss is MSELoss, or Mean Squared Error loss. We will take a look at this in the next section."
+                        }
                     ],
                     points: 0
                 },

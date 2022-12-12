@@ -48,3 +48,6 @@ export { default as ImageModels } from "./ImageModels/ImageModels";
 
 // Pretrained page
 export { default as LargeFileUpload } from "./general/LargeFileUpload";
+
+//Account Settings Page
+export { default as AccountSettings } from "./AccountSettings/AccountSettings";

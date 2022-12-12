@@ -7,6 +7,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithRedirect,
   updateProfile,
+  updateEmail,
+  updatePassword,
 } from "firebase/auth";
 import { toast } from "react-toastify";
 import { setCookie } from "./components/helper_functions/Cookie";
@@ -36,6 +38,31 @@ export const updateUserProfile = async (
   if (photoURL != null) newDetails.photoURL = photoURL;
   await updateProfile(auth.currentUser, newDetails)
     .then(() => {})
+    .catch((e) => toast.error(`Error: ${e.code}`, { autoClose: 1000 }));
+};
+
+export const updateUserSettings = async (
+  displayName = null,
+  email,
+  password
+) => {
+  updateEmail(auth.currentUser, email)
+    .then(() => {
+      const user = auth.currentUser;
+      updateUserProfile(displayName);
+      setCookie("email", user.email);
+      toast.success(`Updated email to ${user.email}`, {
+        autoClose: 1000,
+      });
+      updatePassword(user, password)
+        .then(() => {
+          toast.success(`Updated Password`, {
+            autoClose: 1000,
+          });
+        })
+        .catch((e) => toast.error(`Error: ${e.code}`, { autoClose: 1000 }));
+      return user;
+    })
     .catch((e) => toast.error(`Error: ${e.code}`, { autoClose: 1000 }));
 };
 

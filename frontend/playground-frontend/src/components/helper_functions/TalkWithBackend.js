@@ -27,6 +27,7 @@ const routeDict = {
   tabular: "tabular-run",
   image: "img-run",
   pretrained: "pretrain-run",
+  classicalml: "ml-run",
 };
 
 const train_and_output = async (choice, choiceDict) => {

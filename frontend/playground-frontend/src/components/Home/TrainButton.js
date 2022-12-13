@@ -9,6 +9,8 @@ import {
   sendPretrainedJSON,
   validatePretrainedInput,
   sendImageJSON,
+  validateClassicalMLInput,
+  sendClassicalMLJSON,
 } from "../helper_functions/TrainButtonFunctions";
 import {
   sendEmail,
@@ -48,7 +50,9 @@ const TrainButton = (props) => {
           reset();
           return false;
         }
-        parameters_to_be_added[v.index] = v.value;
+        const parameter_value =
+          v.parameter_type === "number" ? v.value : `'${v.value}'`;
+        parameters_to_be_added[v.index] = `${v.kwarg ?? ""}${parameter_value}`;
       }
       parameters_to_be_added.forEach((e) => {
         parameter_call_input += e + ",";
@@ -66,6 +70,7 @@ const TrainButton = (props) => {
     tabular: [validateTabularInputs, sendTabularJSON],
     image: [validateImageInputs, sendImageJSON],
     pretrained: [validatePretrainedInput, sendPretrainedJSON],
+    classicalml: [validateClassicalMLInput, sendClassicalMLJSON],
   };
 
   const validateInputs = (user_arch) => {

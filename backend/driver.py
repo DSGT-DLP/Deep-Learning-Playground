@@ -215,7 +215,6 @@ def upload():
         upload_path = os.path.join(basepath, 'image_data_uploads', secure_filename(file.filename))
         file.save(upload_path)
         file.stream.close()
-        print(request.authorization)
         print(datetime.datetime.now().isoformat() + " upload has finished its task")
         return send_success({"message": "upload success"})
     except Exception:

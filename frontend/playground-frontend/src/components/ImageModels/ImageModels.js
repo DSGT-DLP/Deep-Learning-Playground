@@ -38,7 +38,7 @@ import {
 
 const ImageModels = () => {
   const [customModelName, setCustomModelName] = useState(
-    `Model ${new Date().toLocaleString()}`
+    `Model ${new Date().toUTCString()}`
   );
   const [addedLayers, setAddedLayers] = useState(DEFAULT_IMG_LAYERS);
   const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);

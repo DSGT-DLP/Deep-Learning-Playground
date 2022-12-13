@@ -40,7 +40,7 @@ const Home = () => {
 
   // input responses
   const [customModelName, setCustomModelName] = useState(
-    `Model ${new Date().toLocaleString()}`
+    `Model ${new Date().toUTCString()}`
   );
   const [fileURL, setFileURL] = useState("");
   const [email, setEmail] = useState("");

@@ -28,7 +28,7 @@ import {
 
 const ClassicalMLModel = () => {
   const [customModelName, setCustomModelName] = useState(
-    `Model ${new Date().toLocaleString()}`
+    `Model ${new Date().toUTCString()}`
   );
   const [addedLayers, setAddedLayers] = useState([]);
   const [usingDefaultDataset, setUsingDefaultDataset] = useState(null);

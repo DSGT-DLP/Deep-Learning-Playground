@@ -14,6 +14,7 @@ from backend.dl.dl_trainer import train_deep_model, train_deep_image_classificat
 from backend.dl.dl_model_parser import get_object
 
 from backend.ml.ml_trainer import train_classical_ml_model
+from backend.ml.ml_model_parser import get_object_ml
 
 
 def dl_tabular_drive(
@@ -101,7 +102,7 @@ def dl_tabular_drive(
     optimizer = get_optimizer(
         model, optimizer_name=optimizer_name, learning_rate=0.05
     )
-    # criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
+
     print(f"loss criterion: {criterion}")
     train_loader, test_loader = get_dataloaders(
         X_train_tensor,
@@ -186,6 +187,8 @@ def ml_drive(
     default=False,
     test_size=0.2,
     shuffle=True,
+    json_csv_data_str="",
+    fileURL = ""
 ):
     """
     Driver function/endpoint into backend for training a classical ML model (eg: SVC, SVR, DecisionTree, Naive Bayes, etc)
@@ -200,21 +203,27 @@ def ml_drive(
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
     """
     try:
+        if not default:
+            if fileURL:
+                read_dataset(fileURL)
+            elif json_csv_data_str:
+                pass
+            else:
+                raise ValueError("Need a file input")
+
         if default and problem_type.upper() == "CLASSIFICATION":
-            dataset = load_iris()
-            X, y, target_names = get_default_dataset(dataset)
+            X, y, target_names = get_default_dataset(default.upper(), target, features)
             print(y.head())
         elif default and problem_type.upper() == "REGRESSION":
-            # If the user specifies no dataset, use california housing as default regression
-            dataset = fetch_california_housing()
-            X, y, target_names = get_default_dataset(dataset)
+            X, y, target_names = get_default_dataset(default.upper(), target, features)
         else:
-            input_df = pd.read_csv(CSV_FILE_NAME)
-            y = input_df[target]
-            X = input_df[features]
+            if json_csv_data_str:
+                input_df = pd.read_json(json_csv_data_str, orient="records")
+
+                y = input_df[target]
+                X = input_df[features]
 
         if shuffle and problem_type.upper() == "CLASSIFICATION":
-            # using stratify only for classification problems to ensure correct AUC calculation
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=test_size, shuffle=True, stratify=y
             )
@@ -222,9 +231,10 @@ def ml_drive(
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=test_size, shuffle=shuffle
             )
-        model = get_object(user_model)
-        train_classical_ml_model(
+        model = get_object_ml(user_model)
+        train_ml_results = train_classical_ml_model(
             model, X_train, X_test, y_train, y_test, problem_type=problem_type
         )
+        return train_ml_results
     except Exception as e:
         raise e

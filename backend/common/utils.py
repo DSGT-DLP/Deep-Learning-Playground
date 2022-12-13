@@ -23,6 +23,7 @@ from enum import Enum
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
 from sklearn.metrics import confusion_matrix, roc_curve, roc_auc_score
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 import csv
 import os
 import json
@@ -180,7 +181,7 @@ def generate_train_time_csv(epoch_time):
     df.to_csv(TRAIN_TIME_CSV)
 
 
-def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch, category_list=[]):
+def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch, categoryList = [],model_type = 'dl'):
     """
     Given the prediction results and label, generate confusion matrix (only applicable to classification tasks)
     Args:
@@ -191,15 +192,17 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch, category_lis
     """
     label = []
     y_pred = []
-    categoryList = []
 
     label = np.array(labels_last_epoch).flatten()
 
-    for batch in y_pred_last_epoch:
-        # flatten and concatenate
-        y_pred = np.concatenate((y_pred, np.argmax(batch, axis=1)), axis=None)
+    if model_type == "dl":
+        for batch in y_pred_last_epoch:
+            y_pred = np.concatenate((y_pred, np.argmax(batch, axis=1)), axis=None) #flatten and concatenate
+        categoryList = np.arange(0, len(y_pred_last_epoch[0][0])).tolist()
 
-    categoryList = np.arange(0, len(y_pred_last_epoch[0][0])).tolist()
+    else:
+        y_pred = np.argmax(y_pred_last_epoch, axis = 1)
+        categoryList = np.arange(0, y_pred_last_epoch.shape[-1]).tolist()
 
     plt.clf()
     label_np = label
@@ -211,8 +214,8 @@ def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch, category_lis
     ax.set_xlabel('Predicted')
     ax.set_ylabel('Actual')
     ax.set_title('Confusion Matrix (last Epoch)')
-    ax.xaxis.set_ticklabels(category_list)
-    ax.yaxis.set_ticklabels(category_list)
+    ax.xaxis.set_ticklabels(categoryList)
+    ax.yaxis.set_ticklabels(categoryList)
     make_directory(CONFUSION_VIZ)
     plt.savefig(CONFUSION_VIZ)
     return (cm.tolist(), categoryList)

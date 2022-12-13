@@ -12,7 +12,7 @@ from backend.common.constants import (
     TRAIN_ACC,
     TEST,
     VAL_TEST_ACC,
-    SAVED_MODEL,
+    SAVED_MODEL_DL,
 )
 import torch  # pytorch
 import torch.nn as nn
@@ -138,7 +138,7 @@ def train_deep_classification_model(
         auxiliary_outputs["AUC_ROC_curve_data"] = AUC_ROC_curve_data
         auxiliary_outputs["numerical_category_list_AUC"] = numerical_category_list_AUC
         auxiliary_outputs["category_list"] = category_list
-        torch.save(model, SAVED_MODEL)  # saving model into a pt file
+        torch.save(model, SAVED_MODEL_DL)  # saving model into a pt file
         return auxiliary_outputs
     except Exception:
         raise Exception("Deep Learning classification didn't train properly")
@@ -203,7 +203,7 @@ def train_deep_regression_model(
         )
         print(result_table.head())
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
-        torch.save(model, SAVED_MODEL)  # saving model into a pt file
+        torch.save(model, SAVED_MODEL_DL)  # saving model into a pt file
         generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
         return {}
 
@@ -372,7 +372,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
         auxiliary_outputs["numerical_category_list_AUC"] = numerical_category_list_AUC
         auxiliary_outputs["category_list"] = category_list
 
-        torch.save(model, SAVED_MODEL)  # saving model into a pt file
+        torch.save(model, SAVED_MODEL_DL)  # saving model into a pt file
 
         return auxiliary_outputs
 

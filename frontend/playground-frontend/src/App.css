@@ -151,13 +151,15 @@ input.form-control {
 /*	Home and Image Models
 /* -------------------------------------------------------------------------- */
 
-#home-page,
-#image-models {
+#train-tabular-data,
+#image-models,
+#ml-models {
   padding: 30px 20px;
 }
 
-#home-page h2,
-#image-models h2 {
+#train-tabular-data h2,
+#image-models h2,
+#ml-models h2 {
   font-weight: bold;
 }
 
@@ -177,36 +179,6 @@ input.form-control {
 .layer-box {
   width: 160px;
   height: 90px;
-}
-
-.layer-input {
-  margin-right: 20px;
-  margin-block: 10px;
-}
-
-.layer-input .layer-container {
-  height: 90px;
-  color: white;
-  font-weight: bold;
-  font-size: 1.5rem;
-  position: relative;
-  background-color: var(--tertiary);
-}
-
-.layer-input .layer-container .delete-layer {
-  position: absolute;
-  top: 5%;
-  right: 2%;
-  border: none;
-  font-size: 0.75rem;
-  background-color: transparent;
-}
-
-.layer-input .input-box {
-  width: 100%;
-  margin-top: 10px;
-  padding: 5%;
-  background-color: white;
 }
 
 .add-new-layer-bin {
@@ -234,8 +206,9 @@ input.form-control {
   color: var(--tertiary);
 }
 
-#home-page input[type="file"],
-#image-models input[type="file"] {
+#train-tabular-data input[type="file"],
+#image-models input[type="file"],
+#ml-models input[type="file"] {
   display: none;
 }
 
@@ -246,6 +219,64 @@ input.form-control {
 textarea#code-snippet-text {
   width: 100%;
 }
+
+/* Added Layer */
+
+.added-layer-container {
+  margin-right: 20px;
+  margin-block: 10px;
+  width: 160px;
+}
+
+.added-layer-container .layer-container {
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  position: relative;
+  background-color: var(--tertiary);
+}
+
+.added-layer-container .layer-container .delete-layer {
+  position: absolute;
+  top: 5%;
+  right: 2%;
+  border: none;
+  font-size: 0.75rem;
+  background-color: transparent;
+}
+
+.added-layer-container .input-box {
+  width: 100%;
+  margin-top: 10px;
+  padding: 5%;
+  background-color: white;
+}
+
+.added-layer-container .layer-param-container {
+  padding-block: 7px;
+  border-bottom: 0.5px solid lightgrey;
+}
+
+.added-layer-container .layer-param-container .layer-param-input-box {
+  border-color: var(--tertiary);
+  border-radius: 0.375rem;
+  border: 0.5px solid var(--tertiary);
+}
+
+.added-layer-container
+  .layer-param-container
+  .layer-param-input-box.free-response {
+  width: 35%;
+}
+
+.added-layer-container .layer-param-container .param_name {
+  width: 60%;
+  margin-block: auto;
+  font-size: 15;
+  font-weight: bold;
+}
+
+/* Code Snippet */
 
 #code-snippet-div {
   position: relative;
@@ -371,11 +402,11 @@ textarea {
 }
 
 .collapsed-layer li {
-  list-style-type: '▶  ';
+  list-style-type: "▶  ";
 }
 
 .expanded-layer li {
-  list-style-type: '▼  ';
+  list-style-type: "▼  ";
 }
 
 .layer-info-button {

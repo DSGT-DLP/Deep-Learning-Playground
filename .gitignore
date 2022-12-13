@@ -189,4 +189,5 @@ yarn-error.log*
 # Results / output files
 frontend/playground-frontend/src/backend_outputs/*
 !frontend/playground-frontend/src/backend_outputs/model.pt
+!frontend/playground-frontend/src/backend_outputs/model.pkl
 !frontend/playground-frontend/src/backend_outputs/my_deep_learning_model.onnx

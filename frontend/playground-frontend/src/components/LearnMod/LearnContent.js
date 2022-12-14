@@ -88,6 +88,14 @@ const LearnContent = () => {
 
                 }
 
+                if (contentComponent.sectionType === "heading1") {
+
+                  return (
+                    <h5 className="heading1" key={index}>{contentComponent.content}</h5>
+                  );
+
+                }
+
                 if (contentComponent.sectionType === "image") {
 
                   return (

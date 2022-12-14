@@ -4,6 +4,12 @@ import nueron from "../../images/learn_mod_images/neuron.png";
 import nueronWithEquation from "../../images/learn_mod_images/neuronWithEquation.png";
 import lossExample from "../../images/learn_mod_images/lossExample.png";
 import lossExampleTable from "../../images/learn_mod_images/lossExampleTable.png";
+import leakyReLUactivation from "../../images/learn_mod_images/LeakyReLUactivation.png";
+import ReLUactivation from "../../images/learn_mod_images/ReLUactivation.png";
+import binarystepactivation from "../../images/learn_mod_images/binarystepactivation.png";
+import sigmoidactivation from "../../images/learn_mod_images/sigmoidactivation.png";
+import tanhactivation from "../../images/learn_mod_images/tanhactivation.png";
+import sigmoidfunction from "../../images/learn_mod_images/sigmoidfunction.png";
 
 let content = {
     modules: [
@@ -179,7 +185,7 @@ let content = {
                         },
                         {
                             sectionType: "text",
-                            content: "The beauty of neural networks comes in their flexibility. If you imagine just how many ways you can manipulate one node to turn any input into the output you want, and then you remember that it is just one node of many, you can begin to see how powerful neural networks can be. However, the next obvious question that arises is how exactly do we choose the right weights and biases to get the output that we want? That's where the learning part of machine learning comes in. Neural Network learning involves a very mathematical process called gradient descent. Before we can learn about learning, we must understand how to measure the performance of our neural network."
+                            content: "The beauty of neural networks comes in their flexibility. If you imagine just how many ways you can manipulate one node to turn any input into the output you want, and then you remember that it is just one node of many, you can begin to see how powerful neural networks can be. However, the next obvious question that arises is how exactly do we choose the right weights and biases to get the output that we want? That's where the learning part of machine learning comes in. Neural Network learning involves a very mathematical process called gradient descent. This is an advanced topic that will be covered in later modules."
                         }
                     ],
                     points: 0
@@ -188,6 +194,108 @@ let content = {
                     sectionID: 2,
                     title: "Activation Functions",
                     content: [
+                        {
+                            sectionType: "text",
+                            content: "Now that we understand how a linear layer works, we can begin to put together a neural network. As you can imagine, there are many ways that linear layers can be combined with other types of layers to create a neural network. Often, the exact design of a neural network involves a lot of experimentation: seeing what works and what doesn't. In that way, machine learning is actually a highly non-deterministic field of computer science!"
+                        },
+                        {
+                            sectionType: "text",
+                            content: "However, besides layers, there is another important component of neural networks that we have not yet covered: activation functions. To understand the necessity of an activation function, let us consider the range of a linear layer output. Since it is linear, there is no bounds on what values the layer can output. Sometimes however, we need the values of the output to conform to a certain range. This is often the case with classification models where we want the output to represent probabilities that an input is classified as a certain label correctly. In this case, we would want values between 0 and 1."
+                        },
+                        {
+                            sectionType: "text",
+                            content: "This is where activation functions come in. There are many different types, but each type takes in an input and applies a mathematical function to it that constricts its range in some way. Below, we will take a look at some common activation functions."
+                        },
+                        {
+                            sectionType: "heading1",
+                            content: "Binary Step"
+                        },
+                        {
+                            sectionType: "image",
+                            path: binarystepactivation,
+                            caption: "The Binary Step Activation Function",
+                            attribution: "Creative Commons Attribution-Share Alike 3.0 Unported",
+                            licenseLink: "https://en.wikipedia.org/wiki/Activation_function#/media/File:Activation_binary_step.svg"
+                        },
+                        {
+                            sectionType: "text",
+                            content: "The Binary Step activation is perhaps the most simple. For any input, if the input is positive, it will output 1, while if the input is negative, it will output 0."
+                        },
+                        {
+                            sectionType: "heading1",
+                            content: "ReLU"
+                        },
+                        {
+                            sectionType: "image",
+                            path: ReLUactivation,
+                            caption: "The ReLU Activation Function",
+                            attribution: "Creative Commons Attribution-Share Alike 3.0 Unported",
+                            licenseLink: "https://en.wikipedia.org/wiki/Activation_function#/media/File:Activation_rectified_linear.svg"
+                        },
+                        {
+                            sectionType: "text",
+                            content: "ReLU, or Rectified Linear Unit, is emerging to be one of the most popular activation functions, and it is also fairly simple. If an input is negative, the output will be zero. If input is positive, then the output will just be the input."
+                        },
+                        {
+                            sectionType: "heading1",
+                            content: "Sigmoid"
+                        },
+                        {
+                            sectionType: "image",
+                            path: sigmoidactivation,
+                            caption: "The Sigmoid Activation Function",
+                            attribution: "Creative Commons Attribution-Share Alike 3.0 Unported",
+                            licenseLink: "https://en.wikipedia.org/wiki/Activation_function#/media/File:Activation_logistic.svg"
+                        },
+                        {
+                            sectionType: "text",
+                            content: "Sigmoid is a little more complicated than the previous activation functions. It applies a logistic curve to the input, effectively compressing the input to the range between 0 and 1. The equation is pictured below."
+                        },
+                        {
+                            sectionType: "image",
+                            path: sigmoidfunction,
+                            caption: "The equation for the sigmoid function",
+                            attribution: "Creative Commons Attribution-Share Alike 3.0 Unported",
+                            licenseLink: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Activation_tanh.svg/180px-Activation_tanh.svg.png"
+                        },
+                        {
+                            sectionType: "heading1",
+                            content: "Hyperbolic Tangent"
+                        },
+                        {
+                            sectionType: "image",
+                            path: tanhactivation,
+                            caption: "The Hyperbolic Tangent Activation Function",
+                            attribution: "Creative Commons Attribution-Share Alike 3.0 Unported",
+                            licenseLink: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Activation_tanh.svg/180px-Activation_tanh.svg.png"
+                        },
+                        {
+                            sectionType: "text",
+                            content: "Hyperbolic tangent is similar to sigmoid, however it compresses the range of an input to between -1 and 1. As the name suggests, it applies the hyperbolic tangent function in the form f(x) = tanh(x)"
+                        },
+                        {
+                            sectionType: "heading1",
+                            content: "LeakyReLU"
+                        },
+                        {
+                            sectionType: "image",
+                            path: leakyReLUactivation,
+                            caption: "The Leaky ReLU Activation Function",
+                            attribution: "Creative Commons Attribution-Share Alike 3.0 Unported",
+                            licenseLink: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Activation_prelu.svg/180px-Activation_prelu.svg.png"
+                        },
+                        {
+                            sectionType: "text",
+                            content: "Finally, Leaky ReLU is a special variation of ReLU aimed at solving a common problem with ReLU. It is similar to regular ReLU, however, on negative inputs, instead of outputting zero it outputs the input multiplied by a very small number, such as 0.001. This means that the output there is \"close enough\" to zero, at least relative to the output from positive inputs. If you don't know calculus, then the rest of this section might be a little hard to understand, however it is enough to say that using Leaky ReLU often means better model performance than regular ReLU. For those of you who do know calculus, then you might see that the derivative of the negative domain of the function is zero. This is problematic, as part of the process of gradient descent which occurs when training the model involves taking derivatives, and then the weights and biases of the model are adjusted based on that derivative. If the derivative is zero, then the weights and biases won't be adjusted. Therefore, instead of 0, the output is made to be a very small number close to 0, which ensures that the model training goes smoothly."
+                        },
+                        {
+                            sectionType: "text",
+                            content: "Activation functions play an important role in neural networks. They are combined with layers to create a trainable function that works well for the problem it needs to solve. Oftentimes, they are found just before the output layer so that the output conforms to the expected range, however they can be found anywhere throughout the network."
+                        },
+                        {
+                            sectionType: "text",
+                            content: "Now that we have covered most of the structure of the neural network, we need a way to evaluate our neural network! This will be covered in the next module where we talk about loss."
+                        }
                     ],
                     points: 0
                 }
@@ -221,10 +329,6 @@ let content = {
                     sectionID: 1,
                     title: "Mean Squared Error",
                     content: [
-                        {
-                            sectionType: "heading1",
-                            text: "Mean Squared Error"
-                        },
                         {
                             sectionType: "text",
                             content: "Mean Squared Error is quite simple. Given a prediction from a model and the expected value from the model at some input, the squared error is simply the squared difference between the predicted value and the expected value. Mean Squared Error is the average squared error of predictions based on multiple different datapoints. Let us take a look at an example."

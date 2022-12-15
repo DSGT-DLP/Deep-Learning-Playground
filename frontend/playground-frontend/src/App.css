@@ -429,6 +429,7 @@ textarea {
 #learningBody {
   display: flex;
   justify-content: space-around;
+  position: relative;
 }
 
 .class {
@@ -558,6 +559,7 @@ textarea {
   padding: 1rem;
   text-align: justify;
   text-justify: inter-word;
+  margin-right: auto;
 }
 
 .contentParagraph {
@@ -601,6 +603,31 @@ textarea {
   justify-content: space-between;
   padding-left :20px;
   padding-right: 20px;
+  background-color: #b3a36a;
+}
+
+.sideBar {
+  background-color: #003058;
+  margin-right: auto;
+  padding: 10px;
+}
+
+.sideBarModule {
+  background-color: #b7b7b7;
+  list-style: none;
+  padding: 5px;
+}
+
+.sideBarSubsection {
+  border: #00233f;
+  border-style: solid;
+  border-width: 1px;
+  list-style: none;
+  padding: 5px;
+}
+
+.sideBarSubsection:hover {
+  background-color: #2ab5f6;
 }
 
 /* -------------------------------------------------------------------------- */

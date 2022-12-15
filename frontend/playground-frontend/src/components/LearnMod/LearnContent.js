@@ -5,6 +5,7 @@ import ImageComponent from './ImageComponent';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
+import ModulesSideBar from './ModulesSideBar';
 
 const LearnContent = () => {
 
@@ -75,6 +76,9 @@ const LearnContent = () => {
             <h1 className="headers">{moduleContent.title}</h1>
       </div>
       <div id='learningBody'>
+        <div className="sideBar">
+          <ModulesSideBar/>
+        </div>
         <div className="learningContentDiv">
             <h2>{moduleContent.subClasses[subSection].title}</h2>
             {

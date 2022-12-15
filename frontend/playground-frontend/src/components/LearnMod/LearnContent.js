@@ -13,13 +13,16 @@ const LearnContent = () => {
   
     const location = useLocation();
     
-    let moduleContent = location.state;
+    const [moduleContent, setModuleContent] = useState(location.state.moduleContent);
+    const [subSection, setSubSection] = useState(location.state.subsection);
+
+    useEffect(() => {setSubSection(location.state.subsection);setModuleContent(location.state.moduleContent);}, [location.state]);
+
+    console.log(subSection);
+    console.log(location.state.subsection);
     
     //current user logged in
     const [user, setUser] = useState(null);
-
-    //current subsection being displayed
-    const [subSection, setSubSection] = useState(0);
 
     // check if logged in
     useEffect(() => {

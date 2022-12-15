@@ -25,6 +25,11 @@ const ClassCard = (props) =>
 
     const navigate = useNavigate();
 
+    const sectionSpec = {
+        moduleContent: props.info,
+        subsection: 0
+    };
+
     return(
             <div className="class" style={completed ? {border:"3px solid green"} : {}} >
                 <div className="classHeader">
@@ -64,7 +69,7 @@ const ClassCard = (props) =>
                     </div>
                 </div>
                 <div className='classFooter'>
-                    <button id="classBtn" onClick={() => navigate("/LearnContent", {state: props.info})} style={completed ? {border:"3px solid green"} : {}} >{completed ? "Completed": "Start"}</button>
+                    <button id="classBtn" onClick={() => navigate("/LearnContent", {state: sectionSpec})} style={completed ? {border:"3px solid green"} : {}} >{completed ? "Completed": "Start"}</button>
                 </div>
             </div>
     );

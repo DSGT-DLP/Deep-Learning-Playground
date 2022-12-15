@@ -59,7 +59,7 @@ const LearnMod = () => {
             title: x.title,
             points: x.points,
             subClasses: x.subsections,
-            moduleID: x.moduleID.toString()
+            moduleID: x.moduleID
         }
     ));
     

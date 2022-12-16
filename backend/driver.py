@@ -16,7 +16,7 @@ from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
-from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION
+from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME
 
 init_firebase()
 
@@ -190,7 +190,7 @@ def upload():
 
 @app.route("/api/getUserProgressData", methods=["POST"])
 def getUserProgressData():
-    dynamoTable = UserProgressDDBUtil("userprogress_table", AWS_REGION)
+    dynamoTable = UserProgressDDBUtil(USERPROGRESS_TABLE_NAME, AWS_REGION)
     try:
         return dynamoTable.get_record(json.loads(request.data)).progressData
     except ValueError:

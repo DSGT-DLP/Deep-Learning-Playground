@@ -12,7 +12,7 @@ import {
   Login,
   LearnMod,
   LearnContent,
-  AccountSettings
+  AccountSettings,
 } from "./components";
 import Home from "./Home";
 import { ToastContainer } from "react-toastify";
@@ -61,7 +61,6 @@ function App() {
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/LearnMod" element={<LearnMod />} />
             <Route path="/LearnContent" element={<LearnContent />} />
-
           </Routes>
           <ToastContainer position="top-center" />
         </div>

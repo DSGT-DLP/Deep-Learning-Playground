@@ -22,9 +22,6 @@ const LearnContent = () => {
     setModuleContent(location.state.moduleContent);
   }, [location.state]);
 
-  console.log(subSection);
-  console.log(location.state.subsection);
-
   //current user logged in
   const [user, setUser] = useState(null);
 

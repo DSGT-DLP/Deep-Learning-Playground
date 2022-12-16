@@ -240,7 +240,7 @@ def updateUserProgressData():
     moduleID = str(requestData["moduleID"])
     sectionID = str(requestData["sectionID"])
     questionID = str(requestData["questionID"])
-    dynamoTable = UserProgressDDBUtil("userprogress_table", AWS_REGION)
+    dynamoTable = UserProgressDDBUtil(USERPROGRESS_TABLE_NAME, AWS_REGION)
 
     # get most recent user progress data
     updatedRecord = json.loads(dynamoTable.get_record(uid).progressData)

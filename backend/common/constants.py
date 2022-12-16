@@ -12,12 +12,13 @@ LOSS_VIZ = "./frontend/playground-frontend/src/backend_outputs/visualization_out
 ACC_VIZ = "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_accuracy_plot.png"
 CONFUSION_VIZ = "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_confusion_matrix.png"
 AUC_ROC_VIZ = "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_AUC_ROC_Curve.png"
-SAVED_MODEL = "./frontend/playground-frontend/src/backend_outputs/model.pt"
+SAVED_MODEL_DL = "./frontend/playground-frontend/src/backend_outputs/model.pt"
+SAVED_MODEL_ML = "./frontend/playground-frontend/src/backend_outputs/model.pkl"
 TRAIN_TIME_CSV = "epoch_times.csv"
 NETRON_URL = "https://netron.app/"
 OPEN_FILE_BUTTON = "open-file-button"
 CLASSICAL_ML_CONFUSION_MATRIX = (
-    "./frontend/playground-frontend/src/visualization_output/confusion_matrix.png"
+    "./frontend/playground-frontend/src/backend_outputs/visualization_output/confusion_matrix.png"
 )
 CLASSICAL_ML_RESULT_CSV_PATH = f"ml_results.csv"
 EPOCH = "epoch"

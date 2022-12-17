@@ -1,8 +1,12 @@
+from collections import Counter
 import torch
 import torch.nn as nn
+import os
 
 from typing import Union
 from enum import Enum
+
+from backend.common.constants import UNZIPPED_DIR_NAME
 
 
 class LossFunctions(Enum):
@@ -12,6 +16,7 @@ class LossFunctions(Enum):
     BCELOSS = nn.BCELoss()
     BCEWITHLOGITSLOSS = nn.BCEWithLogitsLoss()
     CELOSS = nn.CrossEntropyLoss(reduction="mean")
+    WCELOSS = nn.CrossEntropyLoss(reduction="mean") # Will not use this, just to prevent errors
 
     def get_loss_obj(self):
         return self.value
@@ -66,3 +71,23 @@ def compute_loss(loss_function_name, output, labels):
     raise Exception(
         "Invalid loss function name provided. Please contact admin to request addition of it. Provide documentation of this loss function"
     )
+
+
+def compute_img_loss(criterion, pred, ground_truth, weights_counter):
+    '''
+    Computes CE and WCE loss. pred and y are processed to different shapes supported by the corresponding functions.
+    '''
+    loss_obj = LossFunctions.get_loss_obj(LossFunctions[criterion])
+
+    if criterion == LossFunctions.CELOSS.name:
+        return loss_obj(pred , ground_truth.squeeze())
+    if criterion == "WCELOSS":
+        weight_list = [0] * len(pred[0])
+
+        for i in range(len(weight_list)):
+            if (weights_counter[i] != 0):
+                weight_list[i] = 1/weights_counter[i]
+        # Weighting the class with least representation in dataset with maximum weight
+
+        loss = nn.CrossEntropyLoss(weight=torch.FloatTensor(weight_list), reduction='mean')
+        return loss(pred, ground_truth.squeeze())

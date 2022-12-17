@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { GENERAL_STYLES } from "../../constants";
+import { Form } from "react-bootstrap";
 
 const EmailInput = (props) => {
   const { setEmail } = props;
@@ -21,9 +22,10 @@ const EmailInput = (props) => {
   }
 
   return (
-    <>
-      <input
+    <Form>
+      <Form.Control
         style={{ width: "25%" }}
+        maxLength={255}
         placeholder="someone@example.com"
         onChange={(e) => updateEmailInput(e.target.value)}
         onBlur={(e) => validateEmail(e.target.value)}
@@ -31,7 +33,7 @@ const EmailInput = (props) => {
       {emailNotValid && (
         <p style={GENERAL_STYLES.error_text}>Please enter a valid email</p>
       )}
-    </>
+    </Form>
   );
 };
 

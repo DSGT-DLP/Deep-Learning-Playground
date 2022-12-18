@@ -25,6 +25,8 @@ const Results = (props) => {
   const auc_roc_data = [];
   const category_list_auc =
     dlpBackendResponse?.auxiliary_outputs?.category_list;
+  const image_data = 
+    dlpBackendResponse?.auxiliary_outputs?.image_data;
 
   auc_roc_data.push({
     name: "baseline",
@@ -225,6 +227,10 @@ const Results = (props) => {
 
   return (
     <>
+      {choice === "objectdetection" ? (
+        <img src={`data:image/jpeg;base64,${image_data}`}/>
+      ) : null}
+
       {choice === "classicalml" ? (
         <span style={{ marginLeft: 8 }}>
           <a href={PKL_PATH} download style={styles.download_csv_res}>

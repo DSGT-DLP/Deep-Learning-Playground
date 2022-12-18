@@ -71,6 +71,7 @@ const TrainButton = (props) => {
     image: [validateImageInputs, sendImageJSON],
     pretrained: [validatePretrainedInput, sendPretrainedJSON],
     classicalml: [validateClassicalMLInput, sendClassicalMLJSON],
+    objectdetection: [validateClassicalMLInput, sendClassicalMLJSON],
   };
 
   const validateInputs = (user_arch) => {
@@ -112,7 +113,8 @@ const TrainButton = (props) => {
 
     const paramList = { ...props, trainTransforms, testTransforms, user_arch };
 
-    if (choice === "image" && !props.usingDefaultDataset) {
+    if ((choice === "image" && !props.usingDefaultDataset) || choice === "objectdetection") {
+      console.log(uploadFile);
       const formData = new FormData();
       formData.append("file", uploadFile);
       await uploadToBackend(formData);

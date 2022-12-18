@@ -14,6 +14,7 @@ from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
+from backend.aws_helpers.aws_rekognition_utils.rekognition_client import demo, rekognition_img_drive
 
 init_firebase()
 
@@ -46,6 +47,7 @@ def root(path):
 @app.route("/api/tabular-run", methods=["POST"])
 def tabular_run():
     try:
+        demo()
         request_data = json.loads(request.data)
 
         user_arch = request_data["user_arch"]
@@ -164,6 +166,28 @@ def img_run():
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
 
+@app.route("/api/object-detection", methods=["POST"])
+def object_detection_run():
+    print("hi")
+    IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
+    try:
+        image = rekognition_img_drive(IMAGE_UPLOAD_FOLDER)
+        return send_detection_results(image)
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+    finally:
+        for x in os.listdir(IMAGE_UPLOAD_FOLDER):
+            if (x != ".gitkeep"):
+                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
+                if (os.path.isdir(file_rem)):
+                    shutil.rmtree(file_rem)
+                else:
+                    os.remove(file_rem)
+        if os.path.exists(UNZIPPED_DIR_NAME):
+            shutil.rmtree(UNZIPPED_DIR_NAME)
+
+
 
 @app.route("/api/sendEmail", methods=["POST"])
 def send_email_route():
@@ -211,6 +235,7 @@ def upload():
     try:
         print(datetime.datetime.now().isoformat() + " upload has started its task")
         file = request.files['file']
+        print(file)
         basepath = os.path.dirname(__file__)
         upload_path = os.path.join(basepath, 'image_data_uploads', secure_filename(file.filename))
         file.save(upload_path)
@@ -237,6 +262,11 @@ def send_train_results(train_loss_results: dict):
         "auxiliary_outputs": train_loss_results,
     })
 
+def send_detection_results(object_detection_results: dict):
+    return send_success({
+        "message": "Detection worked successfully",
+        "auxiliary_outputs": object_detection_results,
+    })
 
 def send_traceback_error():
     return send_error(traceback.format_exc(limit=1))

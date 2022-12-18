@@ -51,3 +51,6 @@ export { default as LargeFileUpload } from "./general/LargeFileUpload";
 
 //Account Settings Page
 export { default as AccountSettings } from "./AccountSettings/AccountSettings";
+
+//Object Detection Page
+export { default as ObjectDetection } from "./ObjectDetection/ObjectDetection";  

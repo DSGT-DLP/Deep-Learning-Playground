@@ -11,6 +11,7 @@ import {
   Dashboard,
   Login,
   AccountSettings,
+  ObjectDetection,
 } from "./components";
 import Home from "./Home";
 import { ToastContainer } from "react-toastify";
@@ -43,6 +44,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/train" element={verifyLogin(<Home />)} />
             <Route path="/img-models" element={verifyLogin(<ImageModels />)} />
+            <Route path="/object-detection" element={verifyLogin(<ObjectDetection />)} />
             <Route
               path="/classical-ml"
               element={verifyLogin(<ClassicalMLModel />)}

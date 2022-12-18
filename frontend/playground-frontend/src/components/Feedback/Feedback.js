@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { COLORS, GENERAL_STYLES } from "../../constants";
 import { toast } from "react-toastify";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
+import { InlineWidget } from "react-calendly";
 
 const Feedback = () => {
   const [email, setEmail] = useState("");
@@ -38,9 +39,21 @@ const Feedback = () => {
         <div className="sections" style={styles.content_section}>
           <p>Feedback submitted!</p>
         </div>
+        <div className="sections" style={styles.content_section}>
+          <p>
+            If you would like to discuss your feedback, feel free to schedule a
+            15-20 minute meeting over calendly
+          </p>
+        </div>
+        <div>
+          <div>
+            <InlineWidget url="https://calendly.com/dlptest" />
+          </div>
+        </div>
       </>
     );
   }
+  //embed calendly link here
 
   return (
     <>

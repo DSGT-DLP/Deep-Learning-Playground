@@ -3,6 +3,7 @@ import boto3
 from botocore.exceptions import ClientError
 from PIL import Image, ImageDraw
 import io
+import base64
 
 class RekognitionImage():
     def __init__ (self, image, image_name, rekognition_client):
@@ -35,7 +36,10 @@ def show_bounding_boxes(image_bytes, box_sets, colors):
             bottom = (image.height * box['Height']) + top
             draw.rectangle([left, top, right, bottom], outline=color, width=3)
     image.show()
-    im_b64 = base64.b64encode(image_bytes)
+    im_file = io.BytesIO()
+    image.save(im_file, format="JPEG")
+    im_bytes = im_file.getvalue()
+    im_b64 = base64.b64encode(im_bytes)
     return im_b64
 
 def detect_labels_from_file(file_name):
@@ -68,5 +72,5 @@ def rekognition_img_drive(IMAGE_UPLOAD_FOLDER):
                 os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
             break
     im_b64 = detect_labels_from_file(img_file)
-    return {"image_data" : im_b64 }
+    return {"image_data" : im_b64.decode('ascii') }
 

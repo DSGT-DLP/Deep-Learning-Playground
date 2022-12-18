@@ -19,7 +19,6 @@ import {
   LayerChoice,
   EmailInput,
   Results,
-  CodeSnippetML,
   ChoiceTab,
   Spacer,
   CustomModelName,
@@ -187,10 +186,6 @@ const ObjectDetection = () => {
 
       <Spacer height={40} />
       <TitleText text="Code Snippet" />
-      <CodeSnippetML
-        backendResponse={dlpBackendResponse}
-        layers={addedLayers}
-      />
     </div>
   );
 };

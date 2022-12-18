@@ -49,7 +49,7 @@ const Results = (props) => {
     });
   }
 
-  const dl_results_columns_react_csv = Object.keys(dl_results_data[0]).map(
+  const dl_results_columns_react_csv = Object.keys(dl_results_data[0] || []).map(
     (c) => ({
       label: c,
       key: c,
@@ -57,7 +57,7 @@ const Results = (props) => {
   );
 
   const mapResponses = (key) =>
-    dlpBackendResponse?.dl_results.map((e) => e[key]) || [];
+    dlpBackendResponse?.dl_results?.map((e) => e[key]) || [];
 
   const FIGURE_HEIGHT = 500;
   const FIGURE_WIDTH = 750;
@@ -259,7 +259,7 @@ const Results = (props) => {
         <DataTable
           pagination
           highlightOnHover
-          columns={Object.keys(dl_results_data[0]).map((c) => ({
+          columns={Object.keys(dl_results_data[0] || []).map((c) => ({
             name: c,
             selector: (row) => row[c],
           }))}

@@ -242,3 +242,18 @@ export const sendClassicalMLJSON = (...args) => {
     email: args.email,
   };
 };
+
+export const validateObjectDetectionInput = (user_arch, ...args) => {
+  args = args[0];
+  let alertMessage = "";
+  if (!args.uploadFile) alertMessage += "Must specify an input file from local storage. ";
+
+  return alertMessage;
+};
+
+export const sendObjectDetectionJSON = (...args) => {
+  args = args[0];
+  return {
+    problem_type: args.problemType,
+  };
+};

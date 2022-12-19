@@ -11,6 +11,8 @@ import {
   sendImageJSON,
   validateClassicalMLInput,
   sendClassicalMLJSON,
+  validateObjectDetectionInput,
+  sendObjectDetectionJSON,
 } from "../helper_functions/TrainButtonFunctions";
 import {
   sendEmail,
@@ -71,7 +73,7 @@ const TrainButton = (props) => {
     image: [validateImageInputs, sendImageJSON],
     pretrained: [validatePretrainedInput, sendPretrainedJSON],
     classicalml: [validateClassicalMLInput, sendClassicalMLJSON],
-    objectdetection: [validateClassicalMLInput, sendClassicalMLJSON],
+    objectdetection: [validateObjectDetectionInput, sendObjectDetectionJSON],
   };
 
   const validateInputs = (user_arch) => {

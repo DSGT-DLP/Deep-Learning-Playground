@@ -231,31 +231,35 @@ const Results = (props) => {
         <img src={`data:image/jpeg;base64,${image_data}`}/>
       ) : null}
 
-      {choice === "classicalml" ? (
-        <span style={{ marginLeft: 8 }}>
-          <a href={PKL_PATH} download style={styles.download_csv_res}>
-            📄 Download model.pkl File
-          </a>
-        </span>
-      ) : (
-        <CSVLink data={dl_results_data} headers={dl_results_columns_react_csv}>
-          <button style={{ ...styles.download_csv_res, padding: 5.5 }}>
-            📄 Download Results (CSV)
-          </button>
+      {choice === "objectdetection" ? null : (
+        <div>
+        {choice === "classicalml" ? (
           <span style={{ marginLeft: 8 }}>
-            <a href={ONNX_OUTPUT_PATH} download style={styles.download_csv_res}>
-              📄 Download ONNX Output File
+            <a href={PKL_PATH} download style={styles.download_csv_res}>
+              📄 Download model.pkl File
             </a>
           </span>
-          <span style={{ marginLeft: 8 }}>
-            <a href={PT_PATH} download style={styles.download_csv_res}>
-              📄 Download model.pt File
-            </a>
-          </span>
-        </CSVLink>
+        ) : (
+          <CSVLink data={dl_results_data} headers={dl_results_columns_react_csv}>
+            <button style={{ ...styles.download_csv_res, padding: 5.5 }}>
+              📄 Download Results (CSV)
+            </button>
+            <span style={{ marginLeft: 8 }}>
+              <a href={ONNX_OUTPUT_PATH} download style={styles.download_csv_res}>
+                📄 Download ONNX Output File
+              </a>
+            </span>
+            <span style={{ marginLeft: 8 }}>
+              <a href={PT_PATH} download style={styles.download_csv_res}>
+                📄 Download model.pt File
+              </a>
+            </span>
+          </CSVLink>
+        )}
+        </div>
       )}
 
-      {choice === "classicalml" ? null : (
+      {(choice === "classicalml" || choice === "objectdetection") ? null : (
         <DataTable
           pagination
           highlightOnHover
@@ -267,24 +271,27 @@ const Results = (props) => {
         />
       )}
 
-      <div style={{ marginTop: 8 }}>
-        <TrainVTestAccuracy />
-        <TrainVTestLoss />
-        {problemType.value === "classification" &&
-        auc_roc_data_res.length !== 0 ? (
-          <AUC_ROC_curves />
-        ) : null}
-        {problemType.value === "classification" &&
-        auc_roc_data_res.length === 0 ? (
-          <p style={{ textAlign: "center" }}>
-            No AUC/ROC curve could be generated. If this is not intended, check
-            that shuffle is set to true to produce a more balanced train/test
-            split which would enable correct AUC score calculation
-          </p>
-        ) : null}
-        {problemType.value === "classification" ? <ConfusionMatrix /> : null}
-      </div>
+      {choice === "objectdetection" ? null : (
+        <div style={{ marginTop: 8 }}>
+          <TrainVTestAccuracy />
+          <TrainVTestLoss />
+          {problemType.value === "classification" &&
+          auc_roc_data_res.length !== 0 ? (
+            <AUC_ROC_curves />
+          ) : null}
+          {problemType.value === "classification" &&
+          auc_roc_data_res.length === 0 ? (
+            <p style={{ textAlign: "center" }}>
+              No AUC/ROC curve could be generated. If this is not intended, check
+              that shuffle is set to true to produce a more balanced train/test
+              split which would enable correct AUC score calculation
+            </p>
+          ) : null}
+          {problemType.value === "classification" ? <ConfusionMatrix /> : null}
+        </div>
+      )}
     </>
+
   );
 };
 

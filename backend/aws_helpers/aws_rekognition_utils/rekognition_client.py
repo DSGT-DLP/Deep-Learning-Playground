@@ -36,7 +36,6 @@ def show_bounding_boxes(image_bytes, box_sets, names, colors):
             bottom = (image.height * box['Height']) + top
             draw.rectangle([left, top, right, bottom], outline=color, width=3)
             draw.text((left, top), name, fill = "black")
-    image.show()
     im_file = io.BytesIO()
     image.save(im_file, format="JPEG")
     im_bytes = im_file.getvalue()

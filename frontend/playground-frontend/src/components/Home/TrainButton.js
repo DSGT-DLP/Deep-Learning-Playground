@@ -168,7 +168,7 @@ const TrainButton = (props) => {
         onClick={onClick}
         disabled={pendingResponse}
       >
-        Train!
+        { choice === "objectdetection" ? "Run!" : "Train!" }
       </button>
       {pendingResponse ? <div className="loader" /> : null}
     </>

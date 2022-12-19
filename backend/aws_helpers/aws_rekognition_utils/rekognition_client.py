@@ -25,16 +25,17 @@ class RekognitionImage():
         else:
             return response['Labels']
 
-def show_bounding_boxes(image_bytes, box_sets, colors):
+def show_bounding_boxes(image_bytes, box_sets, names, colors):
     image = Image.open(io.BytesIO(image_bytes))
     draw = ImageDraw.Draw(image)
-    for boxes, color in zip(box_sets, colors):
+    for boxes, color, name in zip(box_sets, colors, names):
         for box in boxes:
             left = image.width * box['Left']
             top = image.height * box['Top']
             right = (image.width * box['Width']) + left
             bottom = (image.height * box['Height']) + top
             draw.rectangle([left, top, right, bottom], outline=color, width=3)
+            draw.text((left, top), name, fill = "black")
     image.show()
     im_file = io.BytesIO()
     image.save(im_file, format="JPEG")
@@ -54,7 +55,7 @@ def detect_labels_from_file(file_name):
             names.append(label.get('Name'))
             box_sets.append([inst['BoundingBox'] for inst in label.get('Instances')])
     colors = ['aqua', 'red', 'white', 'blue', 'yellow', 'green']
-    im_b64 = show_bounding_boxes(image.image['Bytes'], box_sets, colors[:len(names)])
+    im_b64 = show_bounding_boxes(image.image['Bytes'], box_sets, names, colors[:len(names)])
     return im_b64
 
 

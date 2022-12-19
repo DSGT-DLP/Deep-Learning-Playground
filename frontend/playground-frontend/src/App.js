@@ -10,6 +10,7 @@ import {
   Footer,
   Dashboard,
   Login,
+  Forgot,
   AccountSettings,
 } from "./components";
 import Home from "./Home";
@@ -54,6 +55,7 @@ function App() {
             />
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot" element={<Forgot />} />
             <Route path="/home" element={<Home />} />
             <Route path="/wiki" element={<Wiki />} />
             <Route path="/feedback" element={<Feedback />} />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+// import Link from "react-csv/components/Link";
 import {
   signInWithPassword,
   registerWithPassword,
@@ -12,7 +13,8 @@ import { useDispatch } from "react-redux";
 import GoogleLogo from "../../images/logos/google.png";
 import GithubLogo from "../../images/logos/github.png";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+// import { FloatingLabel } from "react-bootstrap";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -59,7 +61,7 @@ const Login = () => {
     if (signedInUserEmail) navigate("/dashboard");
   }, [signedInUserEmail]);
 
-  const SocialLogins = (
+  const Socials = (
     <>
       <div className="d-flex justify-content-evenly mb-5">
         <Button
@@ -78,9 +80,16 @@ const Login = () => {
     </>
   );
 
-  const EmailPasswordInput = (
+  const EmailPasswords = (
     <>
       {isRegistering && (
+        // <FloatingLabel controlId="login-name" label="Name" className="mb-3">
+        //   <Form.Control
+        //     placeholder="Enter name"
+        //     onBlur={(e) => setFullName(e.target.value)}
+        //     autoComplete="name"
+        //   />
+        // </FloatingLabel>  //might be a good design choice idk ask.
         <Form.Group className="mb-3" controlId="login-name">
           <Form.Label>Name</Form.Label>
           <Form.Control
@@ -109,7 +118,9 @@ const Login = () => {
           onBlur={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
         />
+        <Link to="/forgot">Forgot Password?</Link>
       </Form.Group>
+      
       <div className="email-buttons d-flex flex-column">
         <Button id="log-in" className="mb-2" onClick={handleSignInRegister}>
           {isRegistering ? "Register" : "Log in"}
@@ -127,8 +138,8 @@ const Login = () => {
         {Title}
 
         <Form className="form-container p-5">
-          {SocialLogins}
-          {EmailPasswordInput}
+          {Socials}
+          {EmailPasswords}
         </Form>
       </div>
     </div>

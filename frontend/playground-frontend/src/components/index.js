@@ -25,6 +25,9 @@ export { default as CustomModelName } from "./Home/CustomModelName";
 export { default as Dashboard } from "./Dashboard/Dashboard";
 export { default as Login } from "./Dashboard/Login";
 
+//Forgot
+export { default as Forgot } from "./Forgot/Forgot";
+
 // About
 export { default as About } from "./About/About";
 

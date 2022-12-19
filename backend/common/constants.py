@@ -52,3 +52,5 @@ TENSOR_ONLY_TRANSFORMS = [
 DEFAULT_TRANSFORM = [transforms.Resize((256, 256)), transforms.ToTensor()]
 
 PIL_ONLY_TRANSFORMS = [transforms.RandomChoice, transforms.RandomOrder]
+
+POINTS_PER_QUESTION = 10

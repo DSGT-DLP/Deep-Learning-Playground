@@ -15,7 +15,7 @@ from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
-from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME
+from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 
 init_firebase()
 
@@ -247,24 +247,24 @@ def updateUserProgressData():
 
     if moduleID not in updatedRecord:
         updatedRecord[moduleID] = {
-            "modulePoints": 10,
+            "modulePoints": POINTS_PER_QUESTION,
             sectionID: {
-                "sectionPoints": 10,
-                questionID: 10
+                "sectionPoints": POINTS_PER_QUESTION,
+                questionID: POINTS_PER_QUESTION
             }  
         }
     else:
         if sectionID not in updatedRecord[moduleID]:
             updatedRecord[moduleID][sectionID] = {
-                "sectionPoints": 10,
-                questionID: 10
+                "sectionPoints": POINTS_PER_QUESTION,
+                questionID: POINTS_PER_QUESTION
             }
-            updatedRecord[moduleID]["modulePoints"] += 10
+            updatedRecord[moduleID]["modulePoints"] += POINTS_PER_QUESTION
         else:
             if questionID not in updatedRecord[moduleID][sectionID]:
-                updatedRecord[moduleID]["modulePoints"] += 10
-                updatedRecord[moduleID][sectionID][questionID] = 10
-                updatedRecord[moduleID][sectionID]["sectionPoints"] += 10
+                updatedRecord[moduleID]["modulePoints"] += POINTS_PER_QUESTION
+                updatedRecord[moduleID][sectionID][questionID] = POINTS_PER_QUESTION
+                updatedRecord[moduleID][sectionID]["sectionPoints"] += POINTS_PER_QUESTION
 
     updatedRecordAsString = json.dumps(updatedRecord)
     

@@ -259,3 +259,5 @@ export const DEFAULT_IMG_LAYERS = [
     parameters: {},
   },
 ];
+
+const POINTS_PER_QUESTION = 10;

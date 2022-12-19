@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import ImageFileUpload from "../general/ImageFileUpload";
 import {
-  PROBLEM_TYPES,
+  OBJECT_DETECTION_PROBLEM_TYPES,
 } from "../../settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -37,7 +37,7 @@ const ObjectDetection = () => {
   const input_queries = [
     {
       queryText: "ProblemType",
-      options: PROBLEM_TYPES,
+      options: OBJECT_DETECTION_PROBLEM_TYPES,
       onChange: setProblemType,
       defaultValue: problemType,
     },
@@ -47,11 +47,11 @@ const ObjectDetection = () => {
     () => (
       <Results
         dlpBackendResponse={dlpBackendResponse}
-        problemType={PROBLEM_TYPES[0]}
+        problemType={OBJECT_DETECTION_PROBLEM_TYPES[0]}
         choice="objectdetection"
       />
     ),
-    [dlpBackendResponse, PROBLEM_TYPES[0]]
+    [dlpBackendResponse, OBJECT_DETECTION_PROBLEM_TYPES[0]]
   );
 
   const onClick = () => {

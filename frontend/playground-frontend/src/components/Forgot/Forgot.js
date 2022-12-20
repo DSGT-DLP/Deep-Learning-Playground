@@ -4,7 +4,6 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import {getAuth, sendPasswordResetEmail} from 'firebase/auth';
 import {toast} from 'react-toastify';
-// impor../../firebaseponent as ArrowRightIcon} from '../assets/svg'
 
 function Forgot() {
   const [email, setEmail] = useState('');
@@ -21,10 +20,6 @@ function Forgot() {
       toast.error('Could not send reset email');
     }
   };
-
-  // const Title = (
-  //   <h2 className="title">Forgot Password</h2>
-  // );
 
   const EmailNewPassword = (
     <>

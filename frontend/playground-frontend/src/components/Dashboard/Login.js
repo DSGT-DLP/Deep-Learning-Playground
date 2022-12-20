@@ -110,7 +110,7 @@ const Login = () => {
           autoComplete="current-password"
         />
         <div className="link">
-        <Link to="/forgot">Forgot Password?</Link>
+          <Link to="/forgot">Forgot Password?</Link>
         </div>
       </Form.Group>
 

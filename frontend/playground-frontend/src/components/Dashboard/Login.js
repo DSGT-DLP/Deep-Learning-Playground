@@ -113,7 +113,7 @@ const Login = () => {
         <Link to="/forgot">Forgot Password?</Link>
         </div>
       </Form.Group>
-      
+
       <div className="email-buttons d-flex flex-column">
         <Button id="log-in" className="mb-2" onClick={handleSignInRegister}>
           {isRegistering ? "Register" : "Log in"}

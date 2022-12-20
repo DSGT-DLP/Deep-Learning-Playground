@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import {getAuth, sendPasswordResetEmail} from 'firebase/auth';
+import {getAuth, sendPasswordResetEmail} from "firebase/auth";
 import {toast} from 'react-toastify';
 
 function Forgot() {
   const [email, setEmail] = useState("");
 
   const onChange = (e) => setEmail(e.target.value);
-
+  
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -52,8 +52,6 @@ function Forgot() {
   return (
     <div id="forgot-page" className="text-center">
       <div className="main-container mt-5 mb-5">
-        {/* {Title} */}
-
         <Form className="form-container p-5">{EmailNewPassword}</Form>
       </div>
     </div>

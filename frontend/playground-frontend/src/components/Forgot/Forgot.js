@@ -9,7 +9,7 @@ function Forgot() {
   const [email, setEmail] = useState("");
 
   const onChange = (e) => setEmail(e.target.value);
-  
+
   const onSubmit = async (e) => {
     e.preventDefault();
     try {

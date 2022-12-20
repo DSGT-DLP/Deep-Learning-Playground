@@ -11,7 +11,6 @@ import {
   TitleText,
   BackgroundLayout,
   TrainButton,
-  EmailInput,
   Results,
   ChoiceTab,
   Spacer,
@@ -22,7 +21,6 @@ const ObjectDetection = () => {
   const [customModelName, setCustomModelName] = useState(
     `Model ${new Date().toLocaleString()}`
   );
-  const [email, setEmail] = useState("");
   const [problemType, setProblemType] = useState("");
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [beginnerMode, setBeginnerMode] = useState(true);
@@ -98,9 +96,6 @@ const ObjectDetection = () => {
           <Input {...e} key={e.queryText + inputKey} />
         ))}
       </BackgroundLayout>
-      <Spacer height={40} />
-      <TitleText text="Email (optional)" />
-      <EmailInput email={email} setEmail={setEmail} />
 
       <Spacer height={40} />
       <TitleText text="Machine Learning Results" />

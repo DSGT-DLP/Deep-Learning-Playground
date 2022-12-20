@@ -40,7 +40,7 @@ def show_bounding_boxes(image_bytes, box_sets, names, colors):
     image.save(im_file, format="JPEG")
     im_bytes = im_file.getvalue()
     im_b64 = base64.b64encode(im_bytes)
-    return im_b64
+    return im_b64 
 
 def detect_labels_from_file(file_name):
     rekognition_client = boto3.client('rekognition')
@@ -48,15 +48,17 @@ def detect_labels_from_file(file_name):
     labels = image.detect_labels(100)
     names = []
     box_sets = []
+    label_set = []
     for label in labels:
         print("Label" + label.get('Name'))
         if(label.get('Instances')):
-            names.append(label.get('Name'))
+            name = label.get('Name')
+            names.append(name)
+            label_set.append({"name" : name, "confidence" : label.get('Confidence')})
             box_sets.append([inst['BoundingBox'] for inst in label.get('Instances')])
     colors = ['aqua', 'red', 'white', 'blue', 'yellow', 'green']
     im_b64 = show_bounding_boxes(image.image['Bytes'], box_sets, names, colors[:len(names)])
-    return im_b64
-
+    return im_b64, label_set
 
 
 def demo():
@@ -71,6 +73,6 @@ def rekognition_img_drive(IMAGE_UPLOAD_FOLDER):
             img_file = os.path.join(
                 os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
             break
-    im_b64 = detect_labels_from_file(img_file)
-    return {"image_data" : im_b64.decode('ascii') }
+    im_b64, label_set = detect_labels_from_file(img_file)
+    return { "image_data" : im_b64.decode('ascii'), "labels" : label_set }
 

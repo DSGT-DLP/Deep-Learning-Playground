@@ -26,7 +26,9 @@ const Results = (props) => {
   const category_list_auc =
     dlpBackendResponse?.auxiliary_outputs?.category_list;
   const image_data = 
-    dlpBackendResponse?.auxiliary_outputs?.image_data;
+    dlpBackendResponse?.auxiliary_outputs?.image_data || "";
+  const labels =
+    dlpBackendResponse?.auxiliary_outputs?.labels || [];
 
   auc_roc_data.push({
     name: "baseline",
@@ -228,7 +230,14 @@ const Results = (props) => {
   return (
     <>
       {choice === "objectdetection" ? (
+        <div>
         <img src={`data:image/jpeg;base64,${image_data}`}/>
+        <DataTable
+            columns = {[ {name: 'Object', selector: row => row.name },
+            { name: 'Confidence', selector: row => row.confidence },]}
+            data = {labels}
+        />
+        </div>
       ) : null}
 
       {choice === "objectdetection" ? null : (

@@ -1,8 +1,6 @@
 import React, { useState, useMemo } from "react";
 import ImageFileUpload from "../general/ImageFileUpload";
-import {
-  OBJECT_DETECTION_PROBLEM_TYPES,
-} from "../../settings";
+import { OBJECT_DETECTION_PROBLEM_TYPES } from "../../settings";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { FormControlLabel, Switch } from "@mui/material";
@@ -76,7 +74,7 @@ const ObjectDetection = () => {
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <div className="input-container d-flex flex-column align-items-center justify-content-center">
-          <ImageFileUpload
+            <ImageFileUpload
               uploadFile={uploadFile}
               setUploadFile={setUploadFile}
             />
@@ -105,4 +103,3 @@ const ObjectDetection = () => {
 };
 
 export default ObjectDetection;
-

@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import GoogleLogo from "../../images/logos/google.png";
 import GithubLogo from "../../images/logos/github.png";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -109,7 +109,11 @@ const Login = () => {
           onBlur={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
         />
+        <div className="link">
+          <Link to="/forgot">Forgot Password?</Link>
+        </div>
       </Form.Group>
+
       <div className="email-buttons d-flex flex-column">
         <Button id="log-in" className="mb-2" onClick={handleSignInRegister}>
           {isRegistering ? "Register" : "Log in"}

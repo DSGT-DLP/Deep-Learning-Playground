@@ -168,7 +168,6 @@ def img_run():
 
 @app.route("/api/object-detection", methods=["POST"])
 def object_detection_run():
-    print("hi")
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
         request_data = json.loads(request.data)

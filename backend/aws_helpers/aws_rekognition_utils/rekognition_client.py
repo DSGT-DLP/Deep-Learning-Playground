@@ -21,7 +21,7 @@ class RekognitionImage():
             response = self.rekognition_client.detect_labels(
                 Image=self.image, MaxLabels=max_labels)
         except ClientError:
-            print("AWS client error")
+            raise Exception("AWS client error")
         else:
             return response['Labels']
 
@@ -32,7 +32,7 @@ class RekognitionImage():
             celebrities = response['CelebrityFaces']
             other_faces = response['UnrecognizedFaces']
         except ClientError:
-            print("AWS client error")
+            raise Exception("AWS client error")
         else:
             return celebrities, other_faces
 
@@ -45,7 +45,7 @@ class RekognitionImage():
             matches = response['FaceMatches']
             unmatches = response['UnmatchedFaces']
         except ClientError:
-            print("AWS client error")
+             raise Exception("AWS client error")
         else:
             return matches, unmatches
 
@@ -77,25 +77,21 @@ def detect_labels_from_file(file_name, problem_type):
     if problem_type == "labels":
         labels = image.detect_labels(100)
         for label in labels:
-            print("Label" + label.get('Name'))
             if(label.get('Instances')):
                 name = label.get('Name')
                 names.append(name)
                 label_set.append({"name" : name, "confidence" : label.get('Confidence')})
                 box_sets.append([inst['BoundingBox'] for inst in label.get('Instances')])
         colors = ['aqua', 'red', 'white', 'blue', 'yellow', 'green']
-        print(box_sets)
         im_b64 = show_bounding_boxes(image.image['Bytes'], box_sets, names, colors[:len(names)])
         return im_b64, label_set
     elif problem_type == "celebrities":
         labels, _ = image.recognize_celebrities()
         for label in labels:
-            print("Label" + label.get('Name'))
             name = label.get('Name')
             names.append(name)
             label_set.append({"name" : name, "confidence" : label.get('Face').get('Confidence')})
             box_sets.append([label.get('Face').get('BoundingBox')])
-            print(box_sets)
         im_b64 = show_bounding_boxes(image.image['Bytes'], box_sets, names, ['aqua'])
         return im_b64, label_set
 
@@ -106,7 +102,6 @@ def demo():
 
 def rekognition_img_drive(IMAGE_UPLOAD_FOLDER, problem_type):
     for x in os.listdir(IMAGE_UPLOAD_FOLDER):
-        print("hello")
         if x != ".gitkeep":
             img_file = os.path.join(
                 os.path.abspath(IMAGE_UPLOAD_FOLDER), x)

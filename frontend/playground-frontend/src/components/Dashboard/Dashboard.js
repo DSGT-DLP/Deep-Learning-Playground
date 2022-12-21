@@ -127,7 +127,7 @@ const FilledGrid = () => {
   const navigate = useNavigate();
 
   return (
-    <TableContainer style={{ display: "flex", justifyContent: "center" }}>
+    <TableContainer style={{ display: "flex", justifyContent: "center", color: "blue" }}>
       <Table sx={{ minWidth: 400, m: 2 }}>
         <TableHead>
           <TableRow>

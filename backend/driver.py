@@ -171,7 +171,9 @@ def object_detection_run():
     print("hi")
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
-        image = rekognition_img_drive(IMAGE_UPLOAD_FOLDER)
+        request_data = json.loads(request.data)
+        problem_type = request_data["problem_type"]
+        image = rekognition_img_drive(IMAGE_UPLOAD_FOLDER, problem_type)
         return send_detection_results(image)
     except Exception:
         print(traceback.format_exc())

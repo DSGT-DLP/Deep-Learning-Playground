@@ -90,7 +90,7 @@ const ObjectDetection = () => {
       </DndProvider>
       <Spacer height={40} />
 
-      <TitleText text="Machine Learning Parameters" />
+      <TitleText text="Detection Parameters" />
       <BackgroundLayout>
         {input_queries.map((e) => (
           <Input {...e} key={e.queryText + inputKey} />
@@ -98,7 +98,7 @@ const ObjectDetection = () => {
       </BackgroundLayout>
 
       <Spacer height={40} />
-      <TitleText text="Machine Learning Results" />
+      <TitleText text="Detection Results" />
       {ResultMemo}
     </div>
   );

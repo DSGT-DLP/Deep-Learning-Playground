@@ -52,9 +52,7 @@ const ChoiceTab = () => {
           Object Detection
         </Link>
       </button>
-
     </div>
-    
   );
 };
 

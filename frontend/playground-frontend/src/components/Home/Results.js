@@ -25,10 +25,8 @@ const Results = (props) => {
   const auc_roc_data = [];
   const category_list_auc =
     dlpBackendResponse?.auxiliary_outputs?.category_list;
-  const image_data = 
-    dlpBackendResponse?.auxiliary_outputs?.image_data || "";
-  const labels =
-    dlpBackendResponse?.auxiliary_outputs?.labels || [];
+  const image_data = dlpBackendResponse?.auxiliary_outputs?.image_data || "";
+  const labels = dlpBackendResponse?.auxiliary_outputs?.labels || [];
 
   auc_roc_data.push({
     name: "baseline",
@@ -51,12 +49,12 @@ const Results = (props) => {
     });
   }
 
-  const dl_results_columns_react_csv = Object.keys(dl_results_data[0] || []).map(
-    (c) => ({
-      label: c,
-      key: c,
-    })
-  );
+  const dl_results_columns_react_csv = Object.keys(
+    dl_results_data[0] || []
+  ).map((c) => ({
+    label: c,
+    key: c,
+  }));
 
   const mapResponses = (key) =>
     dlpBackendResponse?.dl_results?.map((e) => e[key]) || [];
@@ -231,44 +229,53 @@ const Results = (props) => {
     <>
       {choice === "objectdetection" ? (
         <div>
-        <img src={`data:image/jpeg;base64,${image_data}`}/>
-        <DataTable
-            columns = {[ {name: 'Object', selector: row => row.name },
-            { name: 'Confidence', selector: row => row.confidence },]}
-            data = {labels}
-        />
+          <img src={`data:image/jpeg;base64,${image_data}`} />
+          <DataTable
+            columns={[
+              { name: "Object", selector: (row) => row.name },
+              { name: "Confidence", selector: (row) => row.confidence },
+            ]}
+            data={labels}
+          />
         </div>
       ) : null}
 
       {choice === "objectdetection" ? null : (
         <div>
-        {choice === "classicalml" ? (
-          <span style={{ marginLeft: 8 }}>
-            <a href={PKL_PATH} download style={styles.download_csv_res}>
-              📄 Download model.pkl File
-            </a>
-          </span>
-        ) : (
-          <CSVLink data={dl_results_data} headers={dl_results_columns_react_csv}>
-            <button style={{ ...styles.download_csv_res, padding: 5.5 }}>
-              📄 Download Results (CSV)
-            </button>
+          {choice === "classicalml" ? (
             <span style={{ marginLeft: 8 }}>
-              <a href={ONNX_OUTPUT_PATH} download style={styles.download_csv_res}>
-                📄 Download ONNX Output File
+              <a href={PKL_PATH} download style={styles.download_csv_res}>
+                📄 Download model.pkl File
               </a>
             </span>
-            <span style={{ marginLeft: 8 }}>
-              <a href={PT_PATH} download style={styles.download_csv_res}>
-                📄 Download model.pt File
-              </a>
-            </span>
-          </CSVLink>
-        )}
+          ) : (
+            <CSVLink
+              data={dl_results_data}
+              headers={dl_results_columns_react_csv}
+            >
+              <button style={{ ...styles.download_csv_res, padding: 5.5 }}>
+                📄 Download Results (CSV)
+              </button>
+              <span style={{ marginLeft: 8 }}>
+                <a
+                  href={ONNX_OUTPUT_PATH}
+                  download
+                  style={styles.download_csv_res}
+                >
+                  📄 Download ONNX Output File
+                </a>
+              </span>
+              <span style={{ marginLeft: 8 }}>
+                <a href={PT_PATH} download style={styles.download_csv_res}>
+                  📄 Download model.pt File
+                </a>
+              </span>
+            </CSVLink>
+          )}
         </div>
       )}
 
-      {(choice === "classicalml" || choice === "objectdetection") ? null : (
+      {choice === "classicalml" || choice === "objectdetection" ? null : (
         <DataTable
           pagination
           highlightOnHover
@@ -291,16 +298,15 @@ const Results = (props) => {
           {problemType.value === "classification" &&
           auc_roc_data_res.length === 0 ? (
             <p style={{ textAlign: "center" }}>
-              No AUC/ROC curve could be generated. If this is not intended, check
-              that shuffle is set to true to produce a more balanced train/test
-              split which would enable correct AUC score calculation
+              No AUC/ROC curve could be generated. If this is not intended,
+              check that shuffle is set to true to produce a more balanced
+              train/test split which would enable correct AUC score calculation
             </p>
           ) : null}
           {problemType.value === "classification" ? <ConfusionMatrix /> : null}
         </div>
       )}
     </>
-
   );
 };
 

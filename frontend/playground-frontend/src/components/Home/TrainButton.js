@@ -115,7 +115,10 @@ const TrainButton = (props) => {
 
     const paramList = { ...props, trainTransforms, testTransforms, user_arch };
 
-    if ((choice === "image" && !props.usingDefaultDataset) || choice === "objectdetection") {
+    if (
+      (choice === "image" && !props.usingDefaultDataset) ||
+      choice === "objectdetection"
+    ) {
       const formData = new FormData();
       formData.append("file", uploadFile);
       await uploadToBackend(formData);
@@ -167,7 +170,7 @@ const TrainButton = (props) => {
         onClick={onClick}
         disabled={pendingResponse}
       >
-        { choice === "objectdetection" ? "Run!" : "Train!" }
+        {choice === "objectdetection" ? "Run!" : "Train!"}
       </button>
       {pendingResponse ? <div className="loader" /> : null}
     </>

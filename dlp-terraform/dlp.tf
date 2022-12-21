@@ -76,6 +76,70 @@ resource "aws_dynamodb_table" "execution-table" {
   point_in_time_recovery { enabled = true }
   server_side_encryption { enabled = true }
 }
+resource "aws_dynamodb_table" "userprogress_table" {
+  name           = "userprogress_table"
+  hash_key       = "uid"
+  billing_mode   = "PROVISIONED"
+  write_capacity = 1
+  read_capacity  = 1
+  lifecycle {
+    ignore_changes = [read_capacity, write_capacity]
+  }
+  attribute {
+    name = "uid"
+    type = "S"
+  }
+  ttl {
+    enabled        = true
+    attribute_name = "expiryPeriod"
+  }
+  point_in_time_recovery { enabled = true }
+  server_side_encryption { enabled = true }
+}
+resource "aws_appautoscaling_target" "dynamodb_table_userprogress_read_target" {
+  max_capacity       = 10
+  min_capacity       = 1
+  resource_id        = "table/${aws_dynamodb_table.userprogress_table.name}"
+  scalable_dimension = "dynamodb:table:ReadCapacityUnits"
+  service_namespace  = "dynamodb"
+}
+resource "aws_appautoscaling_policy" "dynamodb_table_userprogress_read_policy" {
+  name               = "DynamoDBReadCapacityUtilization:${aws_appautoscaling_target.dynamodb_table_userprogress_read_target.resource_id}"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.dynamodb_table_userprogress_read_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.dynamodb_table_userprogress_read_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.dynamodb_table_userprogress_read_target.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "DynamoDBReadCapacityUtilization"
+    }
+
+    target_value = 70
+  }
+}
+resource "aws_appautoscaling_target" "dynamodb_table_userprogress_write_target" {
+  max_capacity       = 10
+  min_capacity       = 1
+  resource_id        = "table/${aws_dynamodb_table.userprogress_table.name}"
+  scalable_dimension = "dynamodb:table:WriteCapacityUnits"
+  service_namespace  = "dynamodb"
+}
+resource "aws_appautoscaling_policy" "dynamodb_table_userprogress_write_policy" {
+  name               = "DynamoDBWriteCapacityUtilization:${aws_appautoscaling_target.dynamodb_table_userprogress_write_target.resource_id}"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.dynamodb_table_userprogress_write_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.dynamodb_table_userprogress_write_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.dynamodb_table_userprogress_write_target.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "DynamoDBWriteCapacityUtilization"
+    }
+
+    target_value = 70
+  }
+}
 
 
 resource "aws_s3_bucket_public_access_block" "access_block_executions" {

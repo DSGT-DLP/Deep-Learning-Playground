@@ -47,9 +47,7 @@ def root(path):
 @app.route("/api/tabular-run", methods=["POST"])
 def tabular_run():
     try:
-        demo()
         request_data = json.loads(request.data)
-
         user_arch = request_data["user_arch"]
         criterion = request_data["criterion"]
         optimizer_name = request_data["optimizer_name"]
@@ -236,7 +234,6 @@ def upload():
     try:
         print(datetime.datetime.now().isoformat() + " upload has started its task")
         file = request.files['file']
-        print(file)
         basepath = os.path.dirname(__file__)
         upload_path = os.path.join(basepath, 'image_data_uploads', secure_filename(file.filename))
         file.save(upload_path)

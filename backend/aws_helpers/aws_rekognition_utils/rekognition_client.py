@@ -4,6 +4,8 @@ from botocore.exceptions import ClientError
 from PIL import Image, ImageDraw
 import io
 import base64
+# AWS Rekognition example code
+# https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/python/example_code/rekognition
 
 class RekognitionImage():
     def __init__ (self, image, image_name, rekognition_client):

@@ -25,6 +25,7 @@ const Results = (props) => {
   const auc_roc_data = [];
   const category_list_auc =
     dlpBackendResponse?.auxiliary_outputs?.category_list;
+  const image_data = dlpBackendResponse?.auxiliary_outputs?.image_data || "";
 
   auc_roc_data.push({
     name: "baseline",
@@ -47,15 +48,15 @@ const Results = (props) => {
     });
   }
 
-  const dl_results_columns_react_csv = Object.keys(dl_results_data[0]).map(
-    (c) => ({
-      label: c,
-      key: c,
-    })
-  );
+  const dl_results_columns_react_csv = Object.keys(
+    dl_results_data[0] || []
+  ).map((c) => ({
+    label: c,
+    key: c,
+  }));
 
   const mapResponses = (key) =>
-    dlpBackendResponse?.dl_results.map((e) => e[key]) || [];
+    dlpBackendResponse?.dl_results?.map((e) => e[key]) || [];
 
   const FIGURE_HEIGHT = 500;
   const FIGURE_WIDTH = 750;
@@ -225,6 +226,10 @@ const Results = (props) => {
 
   return (
     <>
+      {choice === "objectdetection" ? (
+        <img src={`data:image/jpeg;base64,${image_data}`} />
+      ) : null}
+
       {choice === "classicalml" ? (
         <span style={{ marginLeft: 8 }}>
           <a href={PKL_PATH} download style={styles.download_csv_res}>
@@ -236,16 +241,24 @@ const Results = (props) => {
           <button style={{ ...styles.download_csv_res, padding: 5.5 }}>
             📄 Download Results (CSV)
           </button>
-          <span style={{ marginLeft: 8 }}>
-            <a href={ONNX_OUTPUT_PATH} download style={styles.download_csv_res}>
-              📄 Download ONNX Output File
-            </a>
-          </span>
-          <span style={{ marginLeft: 8 }}>
-            <a href={PT_PATH} download style={styles.download_csv_res}>
-              📄 Download model.pt File
-            </a>
-          </span>
+          {choice === "objectdetection" ? null : (
+            <div>
+              <span style={{ marginLeft: 8 }}>
+                <a
+                  href={ONNX_OUTPUT_PATH}
+                  download
+                  style={styles.download_csv_res}
+                >
+                  📄 Download ONNX Output File
+                </a>
+              </span>
+              <span style={{ marginLeft: 8 }}>
+                <a href={PT_PATH} download style={styles.download_csv_res}>
+                  📄 Download model.pt File
+                </a>
+              </span>
+            </div>
+          )}
         </CSVLink>
       )}
 
@@ -253,7 +266,7 @@ const Results = (props) => {
         <DataTable
           pagination
           highlightOnHover
-          columns={Object.keys(dl_results_data[0]).map((c) => ({
+          columns={Object.keys(dl_results_data[0] || []).map((c) => ({
             name: c,
             selector: (row) => row[c],
           }))}
@@ -261,23 +274,25 @@ const Results = (props) => {
         />
       )}
 
-      <div style={{ marginTop: 8 }}>
-        <TrainVTestAccuracy />
-        <TrainVTestLoss />
-        {problemType.value === "classification" &&
-        auc_roc_data_res.length !== 0 ? (
-          <AUC_ROC_curves />
-        ) : null}
-        {problemType.value === "classification" &&
-        auc_roc_data_res.length === 0 ? (
-          <p style={{ textAlign: "center" }}>
-            No AUC/ROC curve could be generated. If this is not intended, check
-            that shuffle is set to true to produce a more balanced train/test
-            split which would enable correct AUC score calculation
-          </p>
-        ) : null}
-        {problemType.value === "classification" ? <ConfusionMatrix /> : null}
-      </div>
+      {choice === "objectdetection" ? null : (
+        <div style={{ marginTop: 8 }}>
+          <TrainVTestAccuracy />
+          <TrainVTestLoss />
+          {problemType.value === "classification" &&
+          auc_roc_data_res.length !== 0 ? (
+            <AUC_ROC_curves />
+          ) : null}
+          {problemType.value === "classification" &&
+          auc_roc_data_res.length === 0 ? (
+            <p style={{ textAlign: "center" }}>
+              No AUC/ROC curve could be generated. If this is not intended,
+              check that shuffle is set to true to produce a more balanced
+              train/test split which would enable correct AUC score calculation
+            </p>
+          ) : null}
+          {problemType.value === "classification" ? <ConfusionMatrix /> : null}
+        </div>
+      )}
     </>
   );
 };

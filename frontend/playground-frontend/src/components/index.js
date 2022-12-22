@@ -25,6 +25,9 @@ export { default as CustomModelName } from "./Home/CustomModelName";
 export { default as Dashboard } from "./Dashboard/Dashboard";
 export { default as Login } from "./Dashboard/Login";
 
+//Forgot
+export { default as Forgot } from "./Forgot/Forgot";
+
 // About
 export { default as About } from "./About/About";
 
@@ -55,3 +58,6 @@ export { default as LargeFileUpload } from "./general/LargeFileUpload";
 
 //Account Settings Page
 export { default as AccountSettings } from "./AccountSettings/AccountSettings";
+
+//Object Detection Page
+export { default as ObjectDetection } from "./ObjectDetection/ObjectDetection";

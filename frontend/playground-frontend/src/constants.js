@@ -1,3 +1,5 @@
+import { createGlobalStyle } from "styled-components";
+
 export const COLORS = {
   input: "#E2E2E2",
   layer: "#CD7BFF",
@@ -8,6 +10,10 @@ export const COLORS = {
   gold: "#B3A36A", // secondary
   visited: "#808080",
 };
+
+export const FONT = createGlobalStyle` {
+  color: white;
+}`;
 
 export const URLs = {
   donate: "https://buy.stripe.com/9AQ3e4eO81X57y8aEG",

@@ -18,6 +18,13 @@ const userCodeEval = async (file, snippet) => {
   return codeEval;
 };
 
+const getSignedUploadUrl = async (version, filename) => {
+  return await sendToBackend("getSignedUploadUrl", {
+    filename,
+    version,
+  });
+};
+
 const sendToBackend = async (route, data) => {
   let headers = auth.currentUser
     ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
@@ -87,4 +94,5 @@ export {
   sendEmail,
   isLoggedIn,
   userCodeEval,
+  getSignedUploadUrl,
 };

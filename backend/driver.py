@@ -3,6 +3,7 @@ import traceback
 import datetime
 from werkzeug.utils import secure_filename
 import shutil
+import requests
 from dotenv import load_dotenv
 
 from flask import Flask, request, send_from_directory
@@ -15,6 +16,8 @@ from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
+
+import boto3
 
 init_firebase()
 
@@ -48,6 +51,7 @@ def tabular_run():
         request_data = json.loads(request.data)
         
         user_arch = request_data["user_arch"]
+        print(request_data)
         criterion = request_data["criterion"]
         optimizer_name = request_data["optimizer_name"]    
         problem_type = request_data["problem_type"]
@@ -163,15 +167,29 @@ def send_email_route():
 def send_user_code_eval():
     try:
         request_data = json.loads(request.data)
-        file = request_data["file"]
+        file = request_data["file"] # convert to dataframes so user can use pandas
         codeSnippet = request_data["codeSnippet"]
         exec_namespace = {}
         allowed_funcs = {} #this still allows inline importing (ex: numpy = __import__('numpy')) in the input for some reason
         exec(codeSnippet, allowed_funcs, exec_namespace)
-        print(exec_namespace)
+        print(file)
         exec_namespace['preprocess'](file)
         print(file)
         return send_success({"message": "Preprocessing successful"})
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+
+@app.route("/api/getSignedUploadUrl", methods=["POST"])
+def get_signed_upload_url():
+    try:
+        request_data = json.loads(request.data)
+        version = request_data["version"]
+        filename = request_data["filename"]
+        s3_client = boto3.client('s3')
+        response = s3_client.generate_presigned_post("dlp-upload-bucket", "v" + str(version) + "/" + filename)
+        print(requests.put(response['url'], data=response['fields']))
+        return response
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import * as XLSX from "xlsx";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import { getSignedUploadUrl } from "../helper_functions/TalkWithBackend";
+//import axios from "axios";
 
 // src: https://www.cluemediator.com/read-csv-file-in-react
 const CSVInputFile = (props) => {
@@ -51,22 +53,50 @@ const CSVInputFile = (props) => {
   };
 
   // handle file upload
-  const handleFileUpload = (e) => {
+  const handleFileUpload = async (e) => {
+    /*const endpoint =
+      "https://dbe58pj6fk.execute-api.us-west-2.amazonaws.com/prod";*/
     const file = e.target.files[0];
     setFileName(file.name?.substring(0, 20));
+    console.log(file);
     const reader = new FileReader();
     reader.onload = (evt) => {
       /* Parse data */
       const bstr = evt.target.result;
+      console.log(evt);
       const wb = XLSX.read(bstr, { type: "binary" });
       /* Get first worksheet */
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       /* Convert array of arrays */
       const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
+      //console.log(data);
       processData(data);
     };
     reader.readAsBinaryString(file);
+    /*
+    const response = await fetch(`${endpoint}`);
+    //?version=1&filename=${new URLSearchParams({version: 1}).toString()}
+    const resJson = await response.json();
+    console.log(response);
+    console.log(resJson);*/
+    const response = await getSignedUploadUrl(1, file.name);
+    console.log(response);
+    const url = new URL(response["url"] + response["fields"]["key"]);
+    url.searchParams.append(
+      "AWSAccessKeyId",
+      response["fields"]["AWSAccessKeyId"]
+    );
+    url.searchParams.append("policy", response["fields"]["policy"]);
+    url.searchParams.append("signature", response["fields"]["signature"]);
+
+    console.log(
+      await fetch(url, {
+        method: "PUT",
+        headers: new Headers({ "Content-Type": "application/json" }),
+        body: file,
+      })
+    );
   };
 
   return (

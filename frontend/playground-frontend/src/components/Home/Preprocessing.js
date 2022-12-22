@@ -24,7 +24,12 @@ const Preprocessing = (props) => {
         extensions={[basicSetup, python()]}
         onBlur={onChange}
       />
-      <Button onClick={() => userCodeEval(csvDataInput, userCode)}>
+      <Button
+        onClick={() => {
+          console.log(csvDataInput);
+          userCodeEval(csvDataInput, userCode);
+        }}
+      >
         Preprocess
       </Button>
     </div>

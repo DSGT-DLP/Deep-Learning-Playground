@@ -69,6 +69,7 @@ const NavbarMain = () => {
             <Nav.Link href="/about">About</Nav.Link>
             <Nav.Link href="/wiki">Wiki</Nav.Link>
             <Nav.Link href="/feedback">Feedback</Nav.Link>
+            {userEmail ? <Nav.Link href="/discussion">Discussion</Nav.Link>: null}
             <Nav.Link href={URLs.donate}>Donate</Nav.Link>
             {userEmail ? (
               <NavDropdown title="Account" id="basic-nav-dropdown">

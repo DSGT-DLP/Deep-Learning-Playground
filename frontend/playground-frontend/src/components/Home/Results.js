@@ -227,42 +227,40 @@ const Results = (props) => {
   return (
     <>
       {choice === "objectdetection" ? (
-          <img src={`data:image/jpeg;base64,${image_data}`} />
+        <img src={`data:image/jpeg;base64,${image_data}`} />
       ) : null}
 
-          {choice === "classicalml" ? (
-            <span style={{ marginLeft: 8 }}>
-              <a href={PKL_PATH} download style={styles.download_csv_res}>
-                📄 Download model.pkl File
-              </a>
-            </span>
-          ) : (
-            <CSVLink
-              data={dl_results_data}
-              headers={dl_results_columns_react_csv}
-            >
-              <button style={{ ...styles.download_csv_res, padding: 5.5 }}>
-                📄 Download Results (CSV)
-              </button>
-              {choice === "objectdetection" ? null : (
-                <div>
-                <span style={{ marginLeft: 8 }}>
-                  <a
-                    href={ONNX_OUTPUT_PATH}
-                    download
-                    style={styles.download_csv_res}
-                  >
-                    📄 Download ONNX Output File
-                  </a>
-                </span>
-                <span style={{ marginLeft: 8 }}>
-                  <a href={PT_PATH} download style={styles.download_csv_res}>
-                    📄 Download model.pt File
-                  </a>
-                </span>
-              </div> )}
-            </CSVLink>
+      {choice === "classicalml" ? (
+        <span style={{ marginLeft: 8 }}>
+          <a href={PKL_PATH} download style={styles.download_csv_res}>
+            📄 Download model.pkl File
+          </a>
+        </span>
+      ) : (
+        <CSVLink data={dl_results_data} headers={dl_results_columns_react_csv}>
+          <button style={{ ...styles.download_csv_res, padding: 5.5 }}>
+            📄 Download Results (CSV)
+          </button>
+          {choice === "objectdetection" ? null : (
+            <div>
+              <span style={{ marginLeft: 8 }}>
+                <a
+                  href={ONNX_OUTPUT_PATH}
+                  download
+                  style={styles.download_csv_res}
+                >
+                  📄 Download ONNX Output File
+                </a>
+              </span>
+              <span style={{ marginLeft: 8 }}>
+                <a href={PT_PATH} download style={styles.download_csv_res}>
+                  📄 Download model.pt File
+                </a>
+              </span>
+            </div>
           )}
+        </CSVLink>
+      )}
 
       {choice === "classicalml" ? null : (
         <DataTable

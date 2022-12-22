@@ -60,9 +60,7 @@ const LearnContent = () => {
         <h1 className="headers">{moduleContent.title}</h1>
       </div>
       <div id="learningBody">
-        <div className="sideBar">
-          <ModulesSideBar />
-        </div>
+        <ModulesSideBar/>
         <div className="learningContentDiv">
           <h2>{moduleContent.subClasses[subSection].title}</h2>
           {moduleContent.subClasses[subSection].content.map(

@@ -92,15 +92,10 @@ def detect_labels_from_file(file_name, problem_type):
         for label in labels:
             name = label.get('Name')
             names.append(name)
-            label_set.append({"name" : name, "confidence" : label.get('Face').get('Confidence')})
+            label_set.append({"Object" : name, "Confidence" : label.get('Face').get('Confidence')})
             box_sets.append([label.get('Face').get('BoundingBox')])
         im_b64 = show_bounding_boxes(image.image['Bytes'], box_sets, names, ['aqua'])
         return im_b64, label_set
-
-def demo():
-    file_name = "C:/Users/austi/Downloads/download.jpg"
-    detect_labels_from_file(file_name)
-
 
 def rekognition_img_drive(IMAGE_UPLOAD_FOLDER, problem_type):
     for x in os.listdir(IMAGE_UPLOAD_FOLDER):
@@ -109,5 +104,5 @@ def rekognition_img_drive(IMAGE_UPLOAD_FOLDER, problem_type):
                 os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
             break
     im_b64, label_set = detect_labels_from_file(img_file, problem_type)
-    return { "image_data" : im_b64.decode('ascii'), "labels" : label_set }
+    return { "auxiliary_outputs" : { "image_data" : im_b64.decode('ascii') }, "dl_results" : label_set }
 

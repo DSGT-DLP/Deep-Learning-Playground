@@ -263,7 +263,8 @@ def send_train_results(train_loss_results: dict):
 def send_detection_results(object_detection_results: dict):
     return send_success({
         "message": "Detection worked successfully",
-        "auxiliary_outputs": object_detection_results,
+        "dl_results": object_detection_results["dl_results"],
+        "auxiliary_outputs": object_detection_results["auxiliary_outputs"],
     })
 
 def send_traceback_error():

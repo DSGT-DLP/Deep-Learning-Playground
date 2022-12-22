@@ -26,7 +26,6 @@ const Results = (props) => {
   const category_list_auc =
     dlpBackendResponse?.auxiliary_outputs?.category_list;
   const image_data = dlpBackendResponse?.auxiliary_outputs?.image_data || "";
-  const labels = dlpBackendResponse?.auxiliary_outputs?.labels || [];
 
   auc_roc_data.push({
     name: "baseline",
@@ -228,20 +227,9 @@ const Results = (props) => {
   return (
     <>
       {choice === "objectdetection" ? (
-        <div>
           <img src={`data:image/jpeg;base64,${image_data}`} />
-          <DataTable
-            columns={[
-              { name: "Object", selector: (row) => row.name },
-              { name: "Confidence", selector: (row) => row.confidence },
-            ]}
-            data={labels}
-          />
-        </div>
       ) : null}
 
-      {choice === "objectdetection" ? null : (
-        <div>
           {choice === "classicalml" ? (
             <span style={{ marginLeft: 8 }}>
               <a href={PKL_PATH} download style={styles.download_csv_res}>
@@ -256,26 +244,27 @@ const Results = (props) => {
               <button style={{ ...styles.download_csv_res, padding: 5.5 }}>
                 📄 Download Results (CSV)
               </button>
-              <span style={{ marginLeft: 8 }}>
-                <a
-                  href={ONNX_OUTPUT_PATH}
-                  download
-                  style={styles.download_csv_res}
-                >
-                  📄 Download ONNX Output File
-                </a>
-              </span>
-              <span style={{ marginLeft: 8 }}>
-                <a href={PT_PATH} download style={styles.download_csv_res}>
-                  📄 Download model.pt File
-                </a>
-              </span>
+              {choice === "objectdetection" ? null : (
+                <div>
+                <span style={{ marginLeft: 8 }}>
+                  <a
+                    href={ONNX_OUTPUT_PATH}
+                    download
+                    style={styles.download_csv_res}
+                  >
+                    📄 Download ONNX Output File
+                  </a>
+                </span>
+                <span style={{ marginLeft: 8 }}>
+                  <a href={PT_PATH} download style={styles.download_csv_res}>
+                    📄 Download model.pt File
+                  </a>
+                </span>
+              </div> )}
             </CSVLink>
           )}
-        </div>
-      )}
 
-      {choice === "classicalml" || choice === "objectdetection" ? null : (
+      {choice === "classicalml" ? null : (
         <DataTable
           pagination
           highlightOnHover

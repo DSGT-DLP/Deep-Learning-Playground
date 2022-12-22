@@ -69,9 +69,6 @@ const ObjectDetection = () => {
           />
           <ChoiceTab />
         </div>
-
-        <Spacer height={40} />
-        <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <div className="input-container d-flex flex-column align-items-center justify-content-center">
             <ImageFileUpload

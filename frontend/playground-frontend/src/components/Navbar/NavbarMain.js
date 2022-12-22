@@ -67,6 +67,9 @@ const NavbarMain = () => {
           <Nav className="ms-auto">
             {userEmail ? <Nav.Link href="/train">Train</Nav.Link> : null}
             <Nav.Link href="/about">About</Nav.Link>
+            {userEmail ? (
+              <Nav.Link href="/learnMod">Learning Modules</Nav.Link>
+            ) : null}
             <Nav.Link href="/wiki">Wiki</Nav.Link>
             <Nav.Link href="/feedback">Feedback</Nav.Link>
             <Nav.Link href={URLs.donate}>Donate</Nav.Link>
@@ -76,7 +79,6 @@ const NavbarMain = () => {
                 <NavDropdown.Item href="/account-settings">
                   Settings
                 </NavDropdown.Item>
-                <NavDropdown.Item href="#">Learn</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#" onClick={logout}>
                   Log out

@@ -37,6 +37,10 @@ export { default as Wiki } from "./Wiki/Wiki";
 // Feedback
 export { default as Feedback } from "./Feedback/Feedback";
 
+// Learning Modules
+export { default as LearnMod } from "./LearnMod/LearnMod";
+export { default as LearnContent } from "./LearnMod/LearnContent";
+
 // Navbar
 export { default as NavbarMain } from "./Navbar/NavbarMain";
 

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import * as XLSX from "xlsx";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { getSignedUploadUrl } from "../helper_functions/TalkWithBackend";
-//import axios from "axios";
+// import axios from "axios";
 
 // src: https://www.cluemediator.com/read-csv-file-in-react
 const CSVInputFile = (props) => {
@@ -80,23 +80,17 @@ const CSVInputFile = (props) => {
     const resJson = await response.json();
     console.log(response);
     console.log(resJson);*/
-    const response = await getSignedUploadUrl(1, file.name);
-    console.log(response);
-    const url = new URL(response["url"] + response["fields"]["key"]);
-    url.searchParams.append(
-      "AWSAccessKeyId",
-      response["fields"]["AWSAccessKeyId"]
-    );
-    url.searchParams.append("policy", response["fields"]["policy"]);
-    url.searchParams.append("signature", response["fields"]["signature"]);
+    const urlResponse = await getSignedUploadUrl(1, file.name);
+    const formData = new FormData();
+    for (const key in urlResponse.fields) {
+      formData.append(key, urlResponse.fields[key]);
+    }
+    formData.append('file', file);
 
-    console.log(
-      await fetch(url, {
-        method: "PUT",
-        headers: new Headers({ "Content-Type": "application/json" }),
-        body: file,
-      })
-    );
+    await fetch(urlResponse.url, {
+      method: "POST",
+      body: formData
+    }).catch((err) => console.log(err));
   };
 
   return (

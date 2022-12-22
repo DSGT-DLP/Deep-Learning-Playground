@@ -11,13 +11,12 @@ from backend.middleware import middleware
 from flask_cors import CORS
 
 from backend.common.ai_drive import dl_tabular_drive, dl_img_drive
+from backend.aws_helpers.s3_utils.s3_client import generate_presigned_post
 from backend.common.constants import UNZIPPED_DIR_NAME
 from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
-
-import boto3
 
 init_firebase()
 
@@ -186,9 +185,8 @@ def get_signed_upload_url():
         request_data = json.loads(request.data)
         version = request_data["version"]
         filename = request_data["filename"]
-        s3_client = boto3.client('s3')
-        response = s3_client.generate_presigned_post("dlp-upload-bucket", "v" + str(version) + "/" + filename)
-        print(requests.put(response['url'], data=response['fields']))
+        response = generate_presigned_post("dlp-upload-bucket", "v" + str(version) + "/" + filename)
+        # print(requests.put(response['url'], data=response['fields']))
         return response
     except Exception:
         print(traceback.format_exc())

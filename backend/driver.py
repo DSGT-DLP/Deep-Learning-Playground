@@ -14,7 +14,7 @@ from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
-from backend.aws_helpers.aws_rekognition_utils.rekognition_client import demo, rekognition_img_drive
+from backend.aws_helpers.aws_rekognition_utils.rekognition_client import rekognition_img_drive
 
 init_firebase()
 

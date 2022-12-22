@@ -28,6 +28,7 @@ const routeDict = {
   image: "img-run",
   pretrained: "pretrain-run",
   classicalml: "ml-run",
+  objectdetection: "object-detection",
 };
 
 const train_and_output = async (choice, choiceDict) => {

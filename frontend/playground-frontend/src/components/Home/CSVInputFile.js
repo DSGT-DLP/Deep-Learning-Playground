@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import * as XLSX from "xlsx";
 import { FaCloudUploadAlt } from "react-icons/fa";
+//import { getSignedUploadUrl } from "../helper_functions/TalkWithBackend";
+//import axios from "axios";
 
 // src: https://www.cluemediator.com/read-csv-file-in-react
 const CSVInputFile = (props) => {
-  const { setData, setColumns } = props;
-  const [fileName, setFileName] = useState();
+  const { setData, setColumns, fileName, setFileName } = props;
 
   // process CSV data
-  const processData = (dataString) => {
+  const csvToJson = (dataString) => {
     const dataStringLines = dataString.split(/\r\n|\n/);
     const headers = dataStringLines[0].split(
       /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
@@ -45,17 +46,21 @@ const CSVInputFile = (props) => {
       name: c,
       selector: (row) => row[c],
     }));
-
-    setData(list);
-    setColumns(columns);
+    return [list, columns];
   };
 
   // handle file upload
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    setFileName(file.name?.substring(0, 20));
+    setFileName(
+      file.name == null
+        ? null
+        : file.name.replace(/\.[^/.]+$/, "").substring(0, 20) +
+            "." +
+            file.name.split(".").pop()
+    );
     const reader = new FileReader();
-    reader.onload = (evt) => {
+    reader.onload = async (evt) => {
       /* Parse data */
       const bstr = evt.target.result;
       const wb = XLSX.read(bstr, { type: "binary" });
@@ -63,10 +68,44 @@ const CSVInputFile = (props) => {
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       /* Convert array of arrays */
-      const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
-      processData(data);
+      const data = XLSX.utils.sheet_to_csv(ws);
+      const [list, columns] = csvToJson(data);
+      setData(list);
+      setColumns(columns);
     };
     reader.readAsBinaryString(file);
+    /*
+    const reader2 = new FileReader();
+    reader2.readAsDataURL(file);
+    reader2.onload = async (evt) => {
+      const buffer = evt.target.result;
+      console.log(buffer);
+    };*/
+    /* let form = new FormData();
+    form.append("file", file);
+    const response = await getSignedUploadUrl(1, file.name, file);
+    console.log(response);
+    const url = new URL(response["url"] + response["fields"]["key"]);
+    url.searchParams.append(
+      "AWSAccessKeyId",
+      response["fields"]["AWSAccessKeyId"]
+    );
+    url.searchParams.append("policy", response["fields"]["policy"]);
+    url.searchParams.append("signature", response["fields"]["signature"]);
+
+    console.log(
+      await fetch(url, {
+        method: "PUT",
+        //headers: new Headers({ "Content-Type": "application/json" }),
+        body: form,
+      })
+    ); */
+    /*
+    const response = await fetch(`${endpoint}`);
+    //?version=1&filename=${new URLSearchParams({version: 1}).toString()}
+    const resJson = await response.json();
+    console.log(response);
+    console.log(resJson);*/
   };
 
   return (
@@ -92,6 +131,8 @@ const CSVInputFile = (props) => {
 CSVInputFile.propTypes = {
   setData: PropTypes.func.isRequired,
   setColumns: PropTypes.func.isRequired,
+  fileName: PropTypes.any,
+  setFileName: PropTypes.func.isRequired,
 };
 
 export default CSVInputFile;

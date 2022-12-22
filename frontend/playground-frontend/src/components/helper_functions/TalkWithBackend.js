@@ -10,12 +10,30 @@ const uploadToBackend = async (data) => {
   await axios.post("/api/upload", data, { headers });
 };
 
-const userCodeEval = async (file, snippet) => {
+const userCodeEval = async (data, columns, snippet, fileName) => {
+  console.log(snippet);
   const codeEval = await sendToBackend("sendUserCodeEval", {
+    data: data,
+    columns: columns,
     codeSnippet: snippet,
-    file: file,
+    fileName: fileName,
   });
   return codeEval;
+};
+
+const getSignedUploadUrl = async (version, filename, file) => {
+  let headers = auth.currentUser
+    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
+    : undefined;
+  let data = new FormData();
+  data.append("version", version);
+  data.append("filename", filename);
+  data.append("file", file);
+  return await fetch("/api/getSignedUploadUrl", {
+    method: "POST",
+    body: data,
+    headers: headers,
+  });
 };
 
 const sendToBackend = async (route, data) => {
@@ -87,4 +105,5 @@ export {
   sendEmail,
   isLoggedIn,
   userCodeEval,
+  getSignedUploadUrl,
 };

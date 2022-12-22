@@ -15,6 +15,7 @@ from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
+import pandas
 
 init_firebase()
 
@@ -163,15 +164,34 @@ def send_email_route():
 def send_user_code_eval():
     try:
         request_data = json.loads(request.data)
-        file = request_data["file"]
+        data = request_data["data"] # convert to dataframes so user can use pandas
+        columns = request_data["columns"]
         codeSnippet = request_data["codeSnippet"]
+        fileName = request_data["fileName"]
+        df = pandas.DataFrame.from_records(data)
         exec_namespace = {}
         allowed_funcs = {} #this still allows inline importing (ex: numpy = __import__('numpy')) in the input for some reason
         exec(codeSnippet, allowed_funcs, exec_namespace)
-        print(exec_namespace)
-        exec_namespace['preprocess'](file)
-        print(file)
-        return send_success({"message": "Preprocessing successful"})
+        print(codeSnippet)
+        df = exec_namespace['preprocess'](df)
+        return send_success({"message": "Preprocessing successful",
+        "data": df.to_dict('records')})
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+
+@app.route("/api/getSignedUploadUrl", methods=["POST"])
+def get_signed_upload_url():
+    try:
+        version = request.form.get("version")
+        filename = request.form.get("filename")
+        file = request.files.get("file")
+        """ s3_client = boto3.client('s3')
+        response = s3_client.generate_presigned_post("dlp-upload-bucket", "v" + str(version) + "/" + filename)
+        print(requests.put(response['url'], data=response['fields'], files={'file': file.read()})) """
+        s3 = boto3.client('s3')
+        s3.upload_fileobj(file, "dlp-upload-bucket", "v" + str(version) + "/" + filename)
+        return send_success({"message": "Upload successful"})
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()

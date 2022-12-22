@@ -35,6 +35,7 @@ import { FormControlLabel, Switch } from "@mui/material";
 import { sendToBackend } from "./components/helper_functions/TalkWithBackend";
 
 const Home = () => {
+  const [fileName, setFileName] = useState(null);
   const [csvDataInput, setCSVDataInput] = useState([]);
   const [uploadedColumns, setUploadedColumns] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
@@ -247,7 +248,13 @@ const Home = () => {
 
       <Spacer height={40} />
       <DndProvider backend={HTML5Backend}>
-        {beginnerMode ? null : <Preprocessing csvDataInput={csvDataInput} />}
+        {beginnerMode ? null : (
+          <Preprocessing
+            data={csvDataInput}
+            columns={uploadedColumns}
+            fileName={fileName}
+          />
+        )}
 
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
@@ -255,6 +262,8 @@ const Home = () => {
             <CSVInputFile
               setData={setCSVDataInput}
               setColumns={setUploadedColumns}
+              fileName={fileName}
+              setFileName={setFileName}
             />
             <Spacer height={12} />
             <CSVInputURL

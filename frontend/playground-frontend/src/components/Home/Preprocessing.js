@@ -8,10 +8,10 @@ import { userCodeEval } from "../helper_functions/TalkWithBackend";
 import PropTypes from "prop-types";
 
 const Preprocessing = (props) => {
-  const { csvDataInput } = props;
+  const { data, columns, fileName } = props;
   const startingCode =
-    "def preprocess(df): \n # put your preprocessing code here!";
-  const [userCode, setUserCode] = useState("");
+    "import pandas as pd\n\ndef preprocess(df): \n  # put your preprocessing code here!\n  return df";
+  const [userCode, setUserCode] = useState(startingCode);
   const onChange = (value) => {
     setUserCode(value.target.innerText);
   };
@@ -24,14 +24,20 @@ const Preprocessing = (props) => {
         extensions={[basicSetup, python()]}
         onBlur={onChange}
       />
-      <Button onClick={() => userCodeEval(csvDataInput, userCode)}>
+      <Button
+        onClick={async () => {
+          console.log(await userCodeEval(data, columns, userCode, fileName));
+        }}
+      >
         Preprocess
       </Button>
     </div>
   );
 };
 Preprocessing.propTypes = {
-  csvDataInput: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired,
+  columns: PropTypes.array.isRequired,
+  fileName: PropTypes.any,
 };
 
 export default Preprocessing;

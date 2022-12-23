@@ -1,5 +1,6 @@
 import TitleText from "../general/TitleText";
 import CodeMirror from "@uiw/react-codemirror";
+import { toast } from "react-toastify";
 import { python } from "@codemirror/lang-python";
 import { basicSetup } from "codemirror";
 import Button from "react-bootstrap/Button";
@@ -27,8 +28,12 @@ const Preprocessing = (props) => {
       <Button
         onClick={async () => {
           const response = await userCodeEval(data, userCode, fileName);
-          setData(response["data"]);
-          setColumns(response["columns"]);
+          if (!response.success) {
+            toast.error(response.message);
+          } else {
+            setData(response["data"]);
+            setColumns(response["columns"]);
+          }
         }}
       >
         Preprocess

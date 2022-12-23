@@ -177,6 +177,8 @@ def send_user_code_eval():
         "columns": pandas.Index.tolist(df.columns)})
     except Exception:
         print(traceback.format_exc())
+        print("error")
+        print("Last element: ", send_traceback_error()[0])
         return send_traceback_error()
 
 @app.route("/api/getSignedUploadUrl", methods=["POST"])
@@ -236,7 +238,7 @@ def send_train_results(train_loss_results: dict):
     })
 
 def send_traceback_error():
-    return send_error(traceback.format_exc(limit=1))
+    return send_error(traceback.format_exc().splitlines()[-1])
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=PORT)

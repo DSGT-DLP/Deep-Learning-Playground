@@ -38,6 +38,7 @@ const Home = () => {
   const [fileName, setFileName] = useState(null);
   const [csvDataInput, setCSVDataInput] = useState([]);
   const [uploadedColumns, setUploadedColumns] = useState([]);
+  const [oldCsvDataInput, setOldCSVDataInput] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [inputKey, setInputKey] = useState(0);
 
@@ -250,8 +251,9 @@ const Home = () => {
       <DndProvider backend={HTML5Backend}>
         {beginnerMode ? null : (
           <Preprocessing
-            data={csvDataInput}
-            columns={uploadedColumns}
+            data={oldCsvDataInput}
+            setData={setCSVDataInput}
+            setColumns={setUploadedColumns}
             fileName={fileName}
           />
         )}
@@ -262,6 +264,7 @@ const Home = () => {
             <CSVInputFile
               setData={setCSVDataInput}
               setColumns={setUploadedColumns}
+              setOldData={setOldCSVDataInput}
               fileName={fileName}
               setFileName={setFileName}
             />

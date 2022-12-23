@@ -165,17 +165,16 @@ def send_user_code_eval():
     try:
         request_data = json.loads(request.data)
         data = request_data["data"] # convert to dataframes so user can use pandas
-        columns = request_data["columns"]
         codeSnippet = request_data["codeSnippet"]
         fileName = request_data["fileName"]
         df = pandas.DataFrame.from_records(data)
         exec_namespace = {}
         allowed_funcs = {} #this still allows inline importing (ex: numpy = __import__('numpy')) in the input for some reason
         exec(codeSnippet, allowed_funcs, exec_namespace)
-        print(codeSnippet)
         df = exec_namespace['preprocess'](df)
         return send_success({"message": "Preprocessing successful",
-        "data": df.to_dict('records')})
+        "data": df.to_dict('records'),
+        "columns": pandas.Index.tolist(df.columns)})
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()

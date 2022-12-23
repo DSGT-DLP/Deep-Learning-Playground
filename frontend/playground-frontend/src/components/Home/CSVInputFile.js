@@ -7,7 +7,7 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 
 // src: https://www.cluemediator.com/read-csv-file-in-react
 const CSVInputFile = (props) => {
-  const { setData, setColumns, fileName, setFileName } = props;
+  const { setData, setColumns, setOldData, fileName, setFileName } = props;
 
   // process CSV data
   const csvToJson = (dataString) => {
@@ -72,6 +72,7 @@ const CSVInputFile = (props) => {
       const [list, columns] = csvToJson(data);
       setData(list);
       setColumns(columns);
+      setOldData(list);
     };
     reader.readAsBinaryString(file);
     /*
@@ -131,6 +132,7 @@ const CSVInputFile = (props) => {
 CSVInputFile.propTypes = {
   setData: PropTypes.func.isRequired,
   setColumns: PropTypes.func.isRequired,
+  setOldData: PropTypes.func.isRequired,
   fileName: PropTypes.any,
   setFileName: PropTypes.func.isRequired,
 };

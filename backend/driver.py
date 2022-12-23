@@ -169,7 +169,7 @@ def send_user_code_eval():
         fileName = request_data["fileName"]
         df = pandas.DataFrame.from_records(data)
         exec_namespace = {}
-        allowed_funcs = {} #this still allows inline importing (ex: numpy = __import__('numpy')) in the input for some reason
+        allowed_funcs = {"pandas": pandas, "pd": pd} #this still allows inline importing (ex: numpy = __import__('numpy')) in the input for some reason
         exec(codeSnippet, allowed_funcs, exec_namespace)
         df = exec_namespace['preprocess'](df)
         return send_success({"message": "Preprocessing successful",

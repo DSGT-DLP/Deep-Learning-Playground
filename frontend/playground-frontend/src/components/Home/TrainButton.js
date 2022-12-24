@@ -11,6 +11,8 @@ import {
   sendImageJSON,
   validateClassicalMLInput,
   sendClassicalMLJSON,
+  validateObjectDetectionInput,
+  sendObjectDetectionJSON,
 } from "../helper_functions/TrainButtonFunctions";
 import {
   sendEmail,
@@ -71,6 +73,7 @@ const TrainButton = (props) => {
     image: [validateImageInputs, sendImageJSON],
     pretrained: [validatePretrainedInput, sendPretrainedJSON],
     classicalml: [validateClassicalMLInput, sendClassicalMLJSON],
+    objectdetection: [validateObjectDetectionInput, sendObjectDetectionJSON],
   };
 
   const validateInputs = (user_arch) => {
@@ -112,7 +115,10 @@ const TrainButton = (props) => {
 
     const paramList = { ...props, trainTransforms, testTransforms, user_arch };
 
-    if (choice === "image" && !props.usingDefaultDataset) {
+    if (
+      (choice === "image" && !props.usingDefaultDataset) ||
+      choice === "objectdetection"
+    ) {
       const formData = new FormData();
       formData.append("file", uploadFile);
       await uploadToBackend(formData);
@@ -164,7 +170,7 @@ const TrainButton = (props) => {
         onClick={onClick}
         disabled={pendingResponse}
       >
-        Train!
+        {choice === "objectdetection" ? "Run!" : "Train!"}
       </button>
       {pendingResponse ? <div className="loader" /> : null}
     </>

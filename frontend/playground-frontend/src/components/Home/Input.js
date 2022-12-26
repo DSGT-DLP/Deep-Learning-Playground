@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import PropTypes from "prop-types";
 import { COLORS, GENERAL_STYLES, LAYOUT } from "../../constants";
 import { DropDown } from "..";
+import storage from 'local-storage-fallback';
 
 const Input = (props) => {
   const {
@@ -46,7 +47,7 @@ const Input = (props) => {
           {queryText}
         </p>
       </div>
-      <div style={styles.responseContainer}>
+      <div style={responseContainer()}>
         {options ? (
           <DropDown
             options={options}
@@ -129,14 +130,6 @@ const styles = {
     fontSize: 18,
     margin: 0,
   },
-  responseContainer: {
-    height: 50,
-    width: 170,
-    backgroundColor: COLORS.addLayer,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   responseText: {
     ...GENERAL_STYLES.p,
     color: "black",
@@ -153,3 +146,22 @@ const styles = {
     fontSize: 18,
   },
 };
+
+function getInitialTheme () {
+  const savedTheme = storage.getItem('theme');
+  return savedTheme ? JSON.parse(savedTheme) : {mode: 'light'};
+}
+
+const theme = getInitialTheme();
+const color = theme.mode === 'dark' ? "#27222e" : COLORS.addLayer;
+
+function responseContainer () {
+  return {
+    height: 50,
+    width: 170,
+    backgroundColor: color,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  };
+}

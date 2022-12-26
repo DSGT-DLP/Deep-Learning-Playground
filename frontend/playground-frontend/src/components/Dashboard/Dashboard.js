@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import storage from 'local-storage-fallback';
 
 const rows = [
   {
@@ -123,23 +124,45 @@ const formatDate = (unixTime) => {
   );
 };
 
+function getInitialTheme () {
+  const savedTheme = storage.getItem('theme');
+  return savedTheme ? JSON.parse(savedTheme) : {mode: 'light'};
+}
+
+const theme = getInitialTheme();
+const color = theme.mode === 'dark' ? "white" : "black";
+
+function header () {
+  return {
+    fontWeight: "bold",
+    color: color
+  };
+}
+
+function rowStyle () {
+  return {
+    fontWeight: "normal",
+    color: color
+  };
+}
+
 const FilledGrid = () => {
   const navigate = useNavigate();
 
   return (
-    <TableContainer style={{ display: "flex", justifyContent: "center", color: "blue" }}>
+    <TableContainer style={{ display: "flex", justifyContent: "center"}}>
       <Table sx={{ minWidth: 400, m: 2 }}>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-            <TableCell sx={{ fontWeight: "bold" }}>Type</TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} align="left">
+            <TableCell sx={header()}>Name</TableCell>
+            <TableCell sx={header()}>Type</TableCell>
+            <TableCell sx={header()} align="left">
               Input
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} align="left">
+            <TableCell sx={header()} align="left">
               Date
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} align="left">
+            <TableCell sx={header()} align="left">
               Status
             </TableCell>
           </TableRow>
@@ -155,14 +178,14 @@ const FilledGrid = () => {
               onClick={() => navigate("/")}
               hover
             >
-              <TableCell component="th" scope="row">
+              <TableCell component="th" scope="row" sx={header()}>
                 {row.name}
               </TableCell>
-              <TableCell component="th" scope="row">
+              <TableCell component="th" scope="row" sx={rowStyle()}>
                 {row.type}
               </TableCell>
-              <TableCell align="left">{row.input}</TableCell>
-              <TableCell align="left">{formatDate(row.date)}</TableCell>
+              <TableCell align="left" sx={rowStyle()}>{row.input}</TableCell>
+              <TableCell align="left" sx={rowStyle()}>{formatDate(row.date)}</TableCell>
               <TableCell align="left">
                 <StatusDisplay
                   statusType={row.statusType}

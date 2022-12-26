@@ -20,7 +20,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .input-container {
-    background-color: ${props => props.theme.mode === 'dark' ? '#27222e' : '#var(--input)'};
+    background-color: ${props => props.theme.mode === 'dark' ? '#5A5A5A' : '#var(--input)'};
   }
 
   .added-layer-container .input-box {
@@ -37,6 +37,14 @@ const GlobalStyle = createGlobalStyle`
     border: ${props => props.theme.mode === 'dark' ? '2px solid white' : '2px solid black'};
   }
 
+  .layer-outer-button, .layer-info-button {
+    color: ${props => props.theme.mode === 'dark' ? '#f6f6ff' : '#121212'};
+  }
+
+  .layer-choice {
+    background-color: ${props => props.theme.mode === 'dark' ? '#27222e' : 'var(--add-layer)'};
+    color: ${props => props.theme.mode === 'dark' ? 'var(--add-layer)' : 'var(--tertiary)'};
+  }
 `;
 
 export default GlobalStyle;

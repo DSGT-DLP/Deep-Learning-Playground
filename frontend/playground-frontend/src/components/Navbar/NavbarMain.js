@@ -24,7 +24,7 @@ const NavbarMain = () => {
 
   function getInitialTheme () {
     const savedTheme = storage.getItem('theme');
-    return savedTheme ? JSON.parse(savedTheme) : {mode: 'light'};
+    return savedTheme ? JSON.parse(savedTheme) : {mode: 'light', checked: false};
   }
   
   const [theme, setTheme] = useState(getInitialTheme);
@@ -37,10 +37,11 @@ const NavbarMain = () => {
 
   const toggleTheme = () => {
     if (theme.mode === 'light') {
-      setTheme({mode: 'dark'});
+      setTheme({mode: 'dark', checked: true});
     } else {
-      setTheme({mode: 'light'});
+      setTheme({mode: 'light', checked: false});
     }
+    window.location.reload();
   };
 
   const goToLogin = () => {
@@ -118,7 +119,7 @@ const NavbarMain = () => {
             </Navbar.Collapse>
           </Container>
           <FormControlLabel
-            control={<Switch id="mode-switch" onClick={toggleTheme}></Switch>}
+            control={<Switch id="mode-switch" onChange={toggleTheme} checked={theme.checked}></Switch>}
             label={`${theme.mode === 'dark' ? "🌙" : "☀️"}`}
           />
         </Navbar>

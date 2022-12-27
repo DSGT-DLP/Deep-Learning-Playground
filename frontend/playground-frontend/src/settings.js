@@ -192,6 +192,116 @@ export const POSSIBLE_LAYERS = [
       </>
     ),
   },
+  {
+    display_name: "LSTM",
+    object_name: "nn.LSTM",
+    parameters: {
+      inputSize: {
+        index: 0,
+        parameter_name: "input_size",
+        min: 1,
+        max: 100,
+        parameter_type: "number",
+      },
+      hiddenSize: {
+        index: 1,
+        parameter_name: "hidden_size",
+        min: 1,
+        max: 100,
+        parameter_type: "number",
+      },
+      numLayers: {
+        index: 2,
+        parameter_name: "num_layers",
+        min: 1,
+        max: 20,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p>
+          <strong>
+            Applies a multi-layerlong short-term memory (LSTM) RNN to an
+            n-dimensional Tensor.
+          </strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>input_size (int)</em> - Dimension of the features in the input.
+          </li>
+          <li>
+            <em>hidden_size (int)</em> - Dimension of the hidden states in the
+            layers.
+          </li>
+          <li>
+            <em>num_layers (int)</em> - Number of layers the LSTM will have.
+          </li>
+        </ul>
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html">
+          More info
+        </a>
+      </>
+    ),
+  },
+  {
+    display_name: "RNN",
+    object_name: "nn.RNN",
+    parameters: {
+      inputSize: {
+        index: 0,
+        parameter_name: "input_size",
+        min: 1,
+        max: 100,
+        parameter_type: "number",
+      },
+      hiddenSize: {
+        index: 1,
+        parameter_name: "hidden_size",
+        min: 1,
+        max: 100,
+        parameter_type: "number",
+      },
+      numLayers: {
+        index: 2,
+        parameter_name: "num_layers",
+        min: 1,
+        max: 20,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p>
+          <strong>
+            Applies a multi-layer Recurrent Neural Network (RNN) to an
+            n-dimensional Tensor.
+          </strong>
+        </p>
+        <p>
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>input_size (int)</em> - Dimension of the features in the input.
+          </li>
+          <li>
+            <em>hidden_size (int)</em> - Dimension of the hidden states in the
+            layers.
+          </li>
+          <li>
+            <em>num_layers (int)</em> - Number of layers the LSTM will have.
+          </li>
+        </ul>
+        <a href="https://pytorch.org/docs/stable/generated/torch.nn.RNN.html">
+          More info
+        </a>
+      </>
+    ),
+  },
 ];
 
 export const ML_MODELS = [

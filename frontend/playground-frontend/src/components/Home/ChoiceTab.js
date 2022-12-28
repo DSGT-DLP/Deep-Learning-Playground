@@ -41,6 +41,17 @@ const ChoiceTab = () => {
           Classical ML
         </Link>
       </button>
+
+      <button
+        style={{
+          ...styles.button,
+          backgroundColor: getBackground("/object-detection"),
+        }}
+      >
+        <Link to="/object-detection" style={styles.linkelEment}>
+          Object Detection
+        </Link>
+      </button>
     </div>
   );
 };

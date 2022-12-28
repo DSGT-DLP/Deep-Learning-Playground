@@ -748,6 +748,11 @@ export const PROBLEM_TYPES = [
   { label: "Regression", value: REGRESSION },
 ];
 
+export const OBJECT_DETECTION_PROBLEM_TYPES = [
+  { label: "Labels", value: "labels" },
+  { label: "Celebrities", value: "celebrities" },
+];
+
 export const BOOL_OPTIONS = [
   { label: "False", value: false },
   { label: "True", value: true },

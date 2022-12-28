@@ -14,6 +14,9 @@ from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
+from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
+from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
+from backend.aws_helpers.aws_rekognition_utils.rekognition_client import rekognition_img_drive
 
 init_firebase()
 
@@ -47,7 +50,6 @@ def root(path):
 def tabular_run():
     try:
         request_data = json.loads(request.data)
-
         user_arch = request_data["user_arch"]
         criterion = request_data["criterion"]
         optimizer_name = request_data["optimizer_name"]
@@ -164,6 +166,29 @@ def img_run():
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
 
+@app.route("/api/object-detection", methods=["POST"])
+def object_detection_run():
+    IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
+    try:
+        request_data = json.loads(request.data)
+        problem_type = request_data["problem_type"]
+        image = rekognition_img_drive(IMAGE_UPLOAD_FOLDER, problem_type)
+        return send_detection_results(image)
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+    finally:
+        for x in os.listdir(IMAGE_UPLOAD_FOLDER):
+            if (x != ".gitkeep"):
+                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
+                if (os.path.isdir(file_rem)):
+                    shutil.rmtree(file_rem)
+                else:
+                    os.remove(file_rem)
+        if os.path.exists(UNZIPPED_DIR_NAME):
+            shutil.rmtree(UNZIPPED_DIR_NAME)
+
+
 
 @app.route("/api/sendEmail", methods=["POST"])
 def send_email_route():
@@ -221,6 +246,53 @@ def upload():
         print(traceback.format_exc())
         return send_traceback_error()
 
+@app.route("/api/getUserProgressData", methods=["POST"])
+def getUserProgressData():
+    dynamoTable = UserProgressDDBUtil(USERPROGRESS_TABLE_NAME, AWS_REGION)
+    try:
+        return dynamoTable.get_record(json.loads(request.data)).progressData
+    except ValueError:
+        newRecord = UserProgressData(json.loads(request.data), "{}")
+        dynamoTable.create_record(newRecord)
+        return "{}"
+
+@app.route("/api/updateUserProgressData", methods=["POST"])
+def updateUserProgressData():
+    requestData = json.loads(request.data)
+    uid = requestData['uid']
+    moduleID = str(requestData["moduleID"])
+    sectionID = str(requestData["sectionID"])
+    questionID = str(requestData["questionID"])
+    dynamoTable = UserProgressDDBUtil(USERPROGRESS_TABLE_NAME, AWS_REGION)
+
+    # get most recent user progress data
+    updatedRecord = json.loads(dynamoTable.get_record(uid).progressData)
+
+    if moduleID not in updatedRecord:
+        updatedRecord[moduleID] = {
+            "modulePoints": POINTS_PER_QUESTION,
+            sectionID: {
+                "sectionPoints": POINTS_PER_QUESTION,
+                questionID: POINTS_PER_QUESTION
+            }  
+        }
+    else:
+        if sectionID not in updatedRecord[moduleID]:
+            updatedRecord[moduleID][sectionID] = {
+                "sectionPoints": POINTS_PER_QUESTION,
+                questionID: POINTS_PER_QUESTION
+            }
+            updatedRecord[moduleID]["modulePoints"] += POINTS_PER_QUESTION
+        else:
+            if questionID not in updatedRecord[moduleID][sectionID]:
+                updatedRecord[moduleID]["modulePoints"] += POINTS_PER_QUESTION
+                updatedRecord[moduleID][sectionID][questionID] = POINTS_PER_QUESTION
+                updatedRecord[moduleID][sectionID]["sectionPoints"] += POINTS_PER_QUESTION
+
+    updatedRecordAsString = json.dumps(updatedRecord)
+    
+    dynamoTable.update_record(uid, progressData=updatedRecordAsString)
+    return "{\"status\": \"success\"}"
 
 def send_success(results: dict):
     return (json.dumps({"success": True, **results}), 200)
@@ -237,6 +309,12 @@ def send_train_results(train_loss_results: dict):
         "auxiliary_outputs": train_loss_results,
     })
 
+def send_detection_results(object_detection_results: dict):
+    return send_success({
+        "message": "Detection worked successfully",
+        "dl_results": object_detection_results["dl_results"],
+        "auxiliary_outputs": object_detection_results["auxiliary_outputs"],
+    })
 
 def send_traceback_error():
     return send_error(traceback.format_exc(limit=1))

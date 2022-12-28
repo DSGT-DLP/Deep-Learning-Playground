@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import './../../App.css';
+import "./../../App.css";
 
 const rows = [
   {
@@ -128,7 +128,7 @@ const FilledGrid = () => {
   const navigate = useNavigate();
 
   return (
-    <TableContainer style={{ display: "flex", justifyContent: "center"}}>
+    <TableContainer style={{ display: "flex", justifyContent: "center" }}>
       <Table sx={{ minWidth: 400, m: 2 }}>
         <TableHead>
           <TableRow>
@@ -156,14 +156,22 @@ const FilledGrid = () => {
               onClick={() => navigate("/")}
               hover
             >
-              <TableCell component="th" scope="row" className="dashboard-header">
+              <TableCell
+                component="th"
+                scope="row"
+                className="dashboard-header"
+              >
                 {row.name}
               </TableCell>
               <TableCell component="th" scope="row" className="row-style">
                 {row.type}
               </TableCell>
-              <TableCell align="left" className="row-style">{row.input}</TableCell>
-              <TableCell align="left" className="row-style">{formatDate(row.date)}</TableCell>
+              <TableCell align="left" className="row-style">
+                {row.input}
+              </TableCell>
+              <TableCell align="left" className="row-style">
+                {formatDate(row.date)}
+              </TableCell>
               <TableCell align="left">
                 <StatusDisplay
                   statusType={row.statusType}

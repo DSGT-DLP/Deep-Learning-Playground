@@ -12,6 +12,7 @@
     "bootstrap": "^5.2.1",
     "firebase": "^9.9.3",
     "http-proxy-middleware": "^2.0.6",
+    "local-storage-fallback": "^4.1.2",
     "plotly.js": "^2.12.1",
     "prop-types": "^15.8.1",
     "rc-progress": "^3.4.0",

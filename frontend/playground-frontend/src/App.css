@@ -22,6 +22,7 @@ Author URI:   https://datasciencegt.org/
   --hi-translucent: rgba(255, 255, 255, 0.8);
   --whitehover: #f7f7f7;
   --footer-dark-blue: #00233f;
+  --layer: #CD7BFF;
   --dark-grey: #d3d3d3;
   --input: #e2e2e2;
   --add-layer: #f2ecff;
@@ -206,6 +207,15 @@ input.form-control {
   color: var(--tertiary);
 }
 
+.layer-info {
+  font-size: 18;
+}
+
+.info {
+  color: black;
+}
+
+
 #train-tabular-data input[type="file"],
 #image-models input[type="file"],
 #ml-models input[type="file"] {
@@ -218,6 +228,46 @@ input.form-control {
 
 textarea#code-snippet-text {
   width: 100%;
+}
+
+/* Deep Learning Parameters */
+
+.response-container {
+  height: 50;
+  width: 170;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: content-box;
+}
+
+.inputText {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+  text-align: center;
+  font-size: 18;
+  font-weight: bold;
+}
+
+.queryText {
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  font-size: 18;
+  margin: 0;
+}
+
+.responseText {
+  color: black;
+  text-align: center;
+  font-size: 18;
+}
+
+.responseDropDownButton { 
+  border: none;
+  font-size: 18;
+  cursor: pointer;
 }
 
 /* Added Layer */
@@ -362,6 +412,13 @@ textarea#code-snippet-text {
   cursor: pointer;
 }
 
+.dashboard-header {
+  font-weight: bold !important;
+}
+
+.row-style {
+  font-weight: normal !important;
+}
 /* -------------------------------------------------------------------------- */
 /*	About and Wiki
 /* -------------------------------------------------------------------------- */
@@ -833,6 +890,7 @@ textarea {
 
 #footer .copyright {
   margin-block: auto;
+  color: white;
 }
 
 #footer #footer-socials {

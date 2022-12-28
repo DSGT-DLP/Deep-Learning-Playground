@@ -14,6 +14,7 @@ export default BackgroundLayout;
 
 const styles = {
   layoutBackground: {
+    color: 'black',
     backgroundColor: COLORS,
     padding: 10,
     marginVertical: 10,

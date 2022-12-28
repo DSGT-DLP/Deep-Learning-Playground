@@ -57,7 +57,7 @@ const LayerChoice = (props) => {
           }
         >
           <button style={styles.top_left_tooltip}>
-            <Info className = "layer-info" />
+            <Info className="layer-info" />
           </button>
         </HtmlTooltip>
       </div>

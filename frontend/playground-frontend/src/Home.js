@@ -319,7 +319,7 @@ const Home = () => {
         highlightOnHover
         columns={uploadedColumns}
         data={csvDataInput}
-        className = "dataTable"
+        className="dataTable"
       />
     </>
   );

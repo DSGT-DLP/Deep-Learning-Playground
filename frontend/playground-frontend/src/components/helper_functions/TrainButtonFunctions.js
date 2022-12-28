@@ -199,7 +199,6 @@ export const sendPretrainedJSON = (...args) => {
 
 //Classical ML
 export const validateClassicalMLInput = (user_arch, ...args) => {
-
   args = args[0];
   let alertMessage = "";
   if (!args.problemType) alertMessage += "A problem type must be specified. ";

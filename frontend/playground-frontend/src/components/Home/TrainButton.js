@@ -55,7 +55,9 @@ const TrainButton = (props) => {
           return false;
         }
         const parameter_value =
-          (v.parameter_type === "number" || choice === "pretrained") ? v.value : `'${v.value}'`;
+          v.parameter_type === "number" || choice === "pretrained"
+            ? v.value
+            : `'${v.value}'`;
         parameters_to_be_added[v.index] = `${v.kwarg ?? ""}${parameter_value}`;
       }
       parameters_to_be_added.forEach((e) => {
@@ -122,7 +124,8 @@ const TrainButton = (props) => {
     const paramList = { ...props, trainTransforms, testTransforms, user_arch };
 
     if (
-      ((choice === "image" || choice === "pretrained") && !props.usingDefaultDataset) ||
+      ((choice === "image" || choice === "pretrained") &&
+        !props.usingDefaultDataset) ||
       choice === "objectdetection"
     ) {
       const formData = new FormData();

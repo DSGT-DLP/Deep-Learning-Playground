@@ -1,6 +1,5 @@
 import pytest
 import torch.nn
-from backend.dl.pretrained import train, get_all
 import os
 import pandas as pd
 from backend.common.dataset import dataset_from_zipped, loader_from_zipped

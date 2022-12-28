@@ -11,10 +11,12 @@ import PropTypes from "prop-types";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import "./../../App.css";
 
 const rows = [
   {
     id: "123mrpij",
+    name: "IrisDense",
     type: "Tabular",
     input: "new_input.csv",
     statusType: "queued",
@@ -23,6 +25,7 @@ const rows = [
   },
   {
     id: "as98dfumasdp",
+    name: "Penguin",
     type: "Tabular",
     input: "my_tabular_input.csv",
     statusType: "training",
@@ -31,6 +34,7 @@ const rows = [
   },
   {
     id: "p9umaspdf",
+    name: "Iris",
     type: "Image Training",
     input: "my_images.zip",
     statusType: "finished",
@@ -57,23 +61,33 @@ const BlankGrid = () => {
 };
 
 const StatusDisplay = ({ statusType, status }) => {
+  const navigate = useNavigate();
   if (statusType === "queued") {
     return (
-      <p className="grid-status-display grid-status-display-gray">
+      <button
+        className="grid-status-display grid-status-display-gray"
+        onClick={() => navigate("/")}
+      >
         Queued: {status}
-      </p>
+      </button>
     );
   } else if (statusType === "training") {
     return (
-      <p className="grid-status-display grid-status-display-yellow">
+      <button
+        className="grid-status-display grid-status-display-yellow"
+        onClick={() => navigate("/")}
+      >
         Training: {status}
-      </p>
+      </button>
     );
   } else if (statusType === "finished") {
     return (
-      <p className="grid-status-display grid-status-display-green">
+      <button
+        className="grid-status-display grid-status-display-green"
+        onClick={() => navigate("/")}
+      >
         Done <ArrowForwardIcon fontSize="small" />
-      </p>
+      </button>
     );
   } else {
     return <p>Incorrect status type passed</p>;
@@ -115,13 +129,20 @@ const FilledGrid = () => {
 
   return (
     <TableContainer style={{ display: "flex", justifyContent: "center" }}>
-      <Table sx={{ minWidth: 400, maxWidth: 1400 }}>
+      <Table sx={{ minWidth: 400, m: 2 }}>
         <TableHead>
           <TableRow>
-            <TableCell>Type</TableCell>
-            <TableCell align="right">Input</TableCell>
-            <TableCell align="right">Date</TableCell>
-            <TableCell align="right">Status</TableCell>
+            <TableCell className="dashboard-header">Name</TableCell>
+            <TableCell className="dashboard-header">Type</TableCell>
+            <TableCell className="dashboard-header" align="left">
+              Input
+            </TableCell>
+            <TableCell className="dashboard-header" align="left">
+              Date
+            </TableCell>
+            <TableCell className="dashboard-header" align="left">
+              Status
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -135,12 +156,23 @@ const FilledGrid = () => {
               onClick={() => navigate("/")}
               hover
             >
-              <TableCell component="th" scope="row">
+              <TableCell
+                component="th"
+                scope="row"
+                className="dashboard-header"
+              >
+                {row.name}
+              </TableCell>
+              <TableCell component="th" scope="row" className="row-style">
                 {row.type}
               </TableCell>
-              <TableCell align="right">{row.input}</TableCell>
-              <TableCell align="right">{formatDate(row.date)}</TableCell>
-              <TableCell align="right">
+              <TableCell align="left" className="row-style">
+                {row.input}
+              </TableCell>
+              <TableCell align="left" className="row-style">
+                {formatDate(row.date)}
+              </TableCell>
+              <TableCell align="left">
                 <StatusDisplay
                   statusType={row.statusType}
                   status={row.status}

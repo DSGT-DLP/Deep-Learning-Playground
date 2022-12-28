@@ -9,6 +9,10 @@ import {
   sendPretrainedJSON,
   validatePretrainedInput,
   sendImageJSON,
+  validateClassicalMLInput,
+  sendClassicalMLJSON,
+  validateObjectDetectionInput,
+  sendObjectDetectionJSON,
 } from "../helper_functions/TrainButtonFunctions";
 import {
   sendEmail,
@@ -30,6 +34,8 @@ const TrainButton = (props) => {
     setResult(null);
   };
 
+  // console.log(choice);
+
   const make_obj_param_list = (obj_list, source) => {
     if (!obj_list) return null; // ValidateInputs throw error in case of empty things. This is to prevent an unnecessary errors in case of creating a layer
 
@@ -48,7 +54,9 @@ const TrainButton = (props) => {
           reset();
           return false;
         }
-        parameters_to_be_added[v.index] = v.value;
+        const parameter_value =
+          (v.parameter_type === "number" || choice === "pretrained") ? v.value : `'${v.value}'`;
+        parameters_to_be_added[v.index] = `${v.kwarg ?? ""}${parameter_value}`;
       }
       parameters_to_be_added.forEach((e) => {
         parameter_call_input += e + ",";
@@ -66,6 +74,8 @@ const TrainButton = (props) => {
     tabular: [validateTabularInputs, sendTabularJSON],
     image: [validateImageInputs, sendImageJSON],
     pretrained: [validatePretrainedInput, sendPretrainedJSON],
+    classicalml: [validateClassicalMLInput, sendClassicalMLJSON],
+    objectdetection: [validateObjectDetectionInput, sendObjectDetectionJSON],
   };
 
   const validateInputs = (user_arch) => {
@@ -93,6 +103,7 @@ const TrainButton = (props) => {
         props.trainTransforms,
         "Train Transform"
       );
+      console.log(trainTransforms);
       if (trainTransforms === false) return;
     }
     if (props.testTransforms) {
@@ -111,8 +122,8 @@ const TrainButton = (props) => {
     const paramList = { ...props, trainTransforms, testTransforms, user_arch };
 
     if (
-      (choice === "image" || choice === "pretrained") &&
-      !props.usingDefaultDataset
+      ((choice === "image" || choice === "pretrained") && !props.usingDefaultDataset) ||
+      choice === "objectdetection"
     ) {
       const formData = new FormData();
       formData.append("file", uploadFile);
@@ -165,7 +176,7 @@ const TrainButton = (props) => {
         onClick={onClick}
         disabled={pendingResponse}
       >
-        Train!
+        {choice === "objectdetection" ? "Run!" : "Train!"}
       </button>
       {pendingResponse ? <div className="loader" /> : null}
     </>

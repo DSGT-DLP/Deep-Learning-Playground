@@ -28,6 +28,8 @@ def pytorch_pretrained(
 
     optimizer = get_optimizer(model, optimizer_name, learning_rate=0.05)
 
+    print("optimizer")
+
     return train_deep_image_classification(
         model,
         train_loader,

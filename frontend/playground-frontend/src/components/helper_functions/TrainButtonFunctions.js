@@ -4,11 +4,10 @@ import { toast } from "react-toastify";
  * This file's puropose is to generalise the methods of TrainButton (focusing on Tabular, Image, and Pretrained models)
  *
  */
-const numberRegex = /^-?[1-9]{1}[0-9]*$/;
 const tupleRegex = /^\(([1-9]{1}[0-9]*), ?([1-9]{1}[0-9]*)\)$/;
 
 export const validateParameter = (source, index, parameter) => {
-  const { parameter_name, min, max } = parameter;
+  const { parameter_name, min, max, parameter_type } = parameter;
   let { value } = parameter;
   if (parameter_name === "(H, W)") {
     if (tupleRegex.test(value)) {
@@ -39,12 +38,16 @@ export const validateParameter = (source, index, parameter) => {
       }: ${parameter_name} not of appropriate format: (H, W)`
     );
   } else {
-    if (numberRegex.test(value)) {
-      value = value.valueOf();
-      if (value >= min && value <= max) {
-        return true;
-      }
-    }
+    if (parameter_type !== "number") return true;
+
+    if (min == null && max == null) return true;
+
+    if (min == null && value <= max) return true;
+
+    if (value >= min && max == null) return true;
+
+    if (value >= min && value <= max) return true;
+
     toast.error(
       `${source} Layer ${
         index + 1
@@ -155,7 +158,7 @@ export const sendImageJSON = (...args) => {
 
 export const validatePretrainedInput = (user_arch, ...args) => {
   args = args[0];
-  console.log(args.customModelName);
+
   let alertMessage = "";
   console.log(args.beginnerMode);
   if (!args.customModelName)
@@ -191,5 +194,68 @@ export const sendPretrainedJSON = (...args) => {
     test_transform: args.testTransforms,
     email: args.email,
     custom_model_name: args.customModelName,
+  };
+};
+
+//Classical ML
+export const validateClassicalMLInput = (user_arch, ...args) => {
+
+  args = args[0];
+  let alertMessage = "";
+  if (!args.problemType) alertMessage += "A problem type must be specified. ";
+  if (!args.usingDefaultDataset) {
+    if (!args.targetCol || !args.features?.length) {
+      alertMessage +=
+        "Must specify an input file, target, and features if not selecting default dataset. ";
+    }
+    for (let i = 0; i < args.features?.length; i++) {
+      if (args.targetCol === args.features[i]) {
+        alertMessage +=
+          "A column that is selected as the target column cannot also be a feature column. ";
+        break;
+      }
+    }
+    if (!args.csvDataInput && !args.fileURL) {
+      alertMessage +=
+        "Must specify an input file either from local storage or from an internet URL. ";
+    }
+  }
+  return alertMessage;
+};
+
+export const sendClassicalMLJSON = (...args) => {
+  args = args[0];
+
+  const csvDataStr = JSON.stringify(args.csvDataInput);
+
+  return {
+    user_arch: args.user_arch,
+    problem_type: args.problemType,
+    target: args.targetCol != null ? args.targetCol : null,
+    features: args.features ? args.features : null,
+    using_default_dataset: args.usingDefaultDataset
+      ? args.usingDefaultDataset
+      : null,
+    test_size: args.testSize,
+    shuffle: args.shuffle,
+    csv_data: csvDataStr,
+    file_URL: args.fileURL,
+    email: args.email,
+  };
+};
+
+export const validateObjectDetectionInput = (user_arch, ...args) => {
+  args = args[0];
+  let alertMessage = "";
+  if (!args.uploadFile)
+    alertMessage += "Must specify an input file from local storage. ";
+  if (!args.problemType) alertMessage += "A problem type must be specified. ";
+  return alertMessage;
+};
+
+export const sendObjectDetectionJSON = (...args) => {
+  args = args[0];
+  return {
+    problem_type: args.problemType,
   };
 };

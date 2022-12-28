@@ -12,7 +12,7 @@ from backend.common.constants import (
     TRAIN_ACC,
     TEST,
     VAL_TEST_ACC,
-    SAVED_MODEL,
+    SAVED_MODEL_DL,
     ONNX_MODEL
 )
 import torch  # pytorch
@@ -34,7 +34,7 @@ https://towardsdatascience.com/building-rnn-lstm-and-gru-for-time-series-using-p
 
 
 def train_deep_classification_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs
+    model, train_loader, test_loader, optimizer, criterion, epochs, category_list
 ):
     """
     Function for training pytorch model for classification. This function also times how long it takes to complete each epoch
@@ -57,9 +57,11 @@ def train_deep_classification_model(
         y_pred_last_epoch = []
 
         num_train_batches = len(train_loader)
-        epoch_train_size = train_loader.batch_size * num_train_batches  # total number of data points used for training per epoch
+        # total number of data points used for training per epoch
+        epoch_train_size = train_loader.batch_size * num_train_batches
         num_test_batches = len(test_loader)
-        epoch_test_size = test_loader.batch_size * num_test_batches  # total number of data points used for testing per epoch
+        # total number of data points used for testing per epoch
+        epoch_test_size = test_loader.batch_size * num_test_batches
 
         for epoch in range(epochs):
             train_correct = 0  # number of correct predictions in training set in current epoch
@@ -74,7 +76,8 @@ def train_deep_classification_model(
                 optimizer.zero_grad()  # zero out gradient for each batch
                 output = model(input)  # make prediction on input
                 train_correct += compute_correct(output, labels)
-                loss = compute_loss(criterion, output, labels)  # compute the loss
+                # compute the loss
+                loss = compute_loss(criterion, output, labels)
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
                 epoch_batch_loss += float(loss.detach())
@@ -92,8 +95,9 @@ def train_deep_classification_model(
                 test_pred = model(input)
                 # currently only preserving the prediction array and label array for the last epoch for
                 # confusion matrix calculation
-                if(epoch == epochs - 1):
-                    y_pred_last_epoch.append(test_pred.detach().numpy().squeeze())
+                if (epoch == epochs - 1):
+                    y_pred_last_epoch.append(
+                        test_pred.detach().numpy().squeeze())
 
                     labels_last_epoch.append(labels.detach().numpy().squeeze())
 
@@ -105,7 +109,8 @@ def train_deep_classification_model(
             val_acc.append(mean_test_acc)
             test_loss.append(mean_test_loss)
 
-            print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}")
+            print(
+                f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss: {test_loss[-1]}, train_acc: {mean_train_acc}, val_acc: {mean_test_acc}")
         result_table = pd.DataFrame(
             {
                 EPOCH: [i for i in range(1, epochs + 1)],
@@ -117,21 +122,24 @@ def train_deep_classification_model(
             }
         )
         print(result_table.head())
-        confusion_matrix = generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch)
-
+        confusion_matrix, numerical_category_list = generate_confusion_matrix(
+            labels_last_epoch, y_pred_last_epoch, category_list)
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
-
         generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
         generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
-        
+
         # Collecting additional outputs to give to the frontend
         auxiliary_outputs = {}
         auxiliary_outputs["confusion_matrix"] = confusion_matrix
-        
+        auxiliary_outputs["numerical_category_list"] = numerical_category_list
+
         # Generating AUC_ROC curve data to send to frontend to make interactive plot
-        AUC_ROC_curve_data = generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch)
+        AUC_ROC_curve_data, numerical_category_list_AUC = generate_AUC_ROC_CURVE(
+            labels_last_epoch, y_pred_last_epoch, category_list)
         auxiliary_outputs["AUC_ROC_curve_data"] = AUC_ROC_curve_data
-        torch.save(model, SAVED_MODEL) # saving model into a pt file
+        auxiliary_outputs["numerical_category_list_AUC"] = numerical_category_list_AUC
+        auxiliary_outputs["category_list"] = category_list
+        torch.save(model, SAVED_MODEL_DL)  # saving model into a pt file
         return auxiliary_outputs
     except Exception:
         raise Exception("Deep Learning classification didn't train properly")
@@ -168,7 +176,8 @@ def train_deep_regression_model(
                 input, labels = data
                 optimizer.zero_grad()  # zero out gradient for each batch
                 output = model(input)  # make prediction on input
-                loss = compute_loss(criterion, output, labels)  # compute the loss
+                # compute the loss
+                loss = compute_loss(criterion, output, labels)
                 loss.backward()  # backpropagation
                 optimizer.step()  # adjust optimizer weights
                 epoch_batch_loss += float(loss.detach())
@@ -183,7 +192,8 @@ def train_deep_regression_model(
                 loss = compute_loss(criterion, test_pred, labels)
                 epoch_batch_loss += float(loss.detach())
             test_loss.append(epoch_batch_loss / num_test_batches)
-            print(f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
+            print(
+                f"epoch: {epoch}, train loss: {train_loss[-1]}, test loss = {test_loss[-1]}")
         result_table = pd.DataFrame(
             {
                 EPOCH: [i for i in range(1, epochs + 1)],
@@ -194,7 +204,7 @@ def train_deep_regression_model(
         )
         print(result_table.head())
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
-        torch.save(model, SAVED_MODEL) # saving model into a pt file
+        torch.save(model, SAVED_MODEL_DL)  # saving model into a pt file
         generate_loss_plot(DEEP_LEARNING_RESULT_CSV_PATH)
         return {}
 
@@ -203,7 +213,7 @@ def train_deep_regression_model(
 
 
 def train_deep_model(
-    model, train_loader, test_loader, optimizer, criterion, epochs, problem_type
+    model, train_loader, test_loader, optimizer, criterion, epochs, problem_type, category_list=[]
 ):
     """
     Given train loader, train torch model
@@ -218,7 +228,7 @@ def train_deep_model(
     """
     if problem_type.upper() == ProblemType.get_problem_obj(ProblemType.CLASSIFICATION):
         return train_deep_classification_model(
-            model, train_loader, test_loader, optimizer, criterion, epochs
+            model, train_loader, test_loader, optimizer, criterion, epochs, category_list
         )
     elif problem_type.upper() == ProblemType.get_problem_obj(ProblemType.REGRESSION):
         return train_deep_regression_model(
@@ -249,7 +259,8 @@ def get_deep_predictions(model: nn.Module, test_loader):
 
     return prediction_tensor, ground_truth_tensor
 
-def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device):
+
+def train_deep_image_classification(model, train_loader, test_loader, optimizer, criterion, epochs, device, category_list=[]):
     try:
         model = model.to(device)
         train_loss = []  # accumulate training loss over each epoch
@@ -261,14 +272,17 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
         y_pred_last_epoch = []
 
         num_train_batches = len(train_loader)
-        epoch_train_size = train_loader.batch_size * num_train_batches  # total number of data points used for training per epoch
+        # total number of data points used for training per epoch
+        epoch_train_size = train_loader.batch_size * num_train_batches
         num_test_batches = len(test_loader)
-        epoch_test_size = test_loader.batch_size * num_test_batches  # total number of data points used for testing per epoch
+        # total number of data points used for testing per epoch
+        epoch_test_size = test_loader.batch_size * num_test_batches
         train_weights_count = Counter()
         test_weights_count = Counter()
 
         for epoch in range(epochs):
             model.train(True)
+            print("epoch started")
 
             if epoch == 0 and criterion == "WCELOSS":
                 for i, j in train_loader:
@@ -279,19 +293,21 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
             loss, train_correct, epoch_batch_loss = 0, 0, 0
             start_time = time.time()
             for x in train_loader:
-                y = x[1] ## label for all images in the batch
-                x = x[0] ## (C, H, W) image
+                y = x[1]  # label for all images in the batch
+                x = x[0]  # (C, H, W) image
 
                 x, y = x.to(device), y.to(device)
                 optimizer.zero_grad()
-                pred= model(x)
-                loss = compute_img_loss(criterion, pred, y, train_weights_count)
+                pred = model(x)
+                loss = compute_img_loss(
+                    criterion, pred, y, train_weights_count)
 
                 loss.backward()
                 optimizer.step()
                 y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
-                train_correct += (y_pred == y_true).type(torch.float).sum().item()
-                epoch_batch_loss += float(loss.detach())           
+                train_correct += (y_pred ==
+                                  y_true).type(torch.float).sum().item()
+                epoch_batch_loss += float(loss.detach())
             epoch_time.append(time.time() - start_time)
             mean_train_loss = epoch_batch_loss / num_train_batches
             mean_train_acc = train_correct / epoch_train_size
@@ -318,7 +334,8 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                     y_pred_last_epoch.append(pred.cpu().detach().numpy().squeeze())
                     labels_last_epoch.append(y.cpu().detach().numpy().squeeze())
 
-                test_correct += (y_pred == y_true).type(torch.float).sum().item()
+                test_correct += (y_pred ==
+                                 y_true).type(torch.float).sum().item()
                 epoch_batch_loss += float(loss.detach())
 
             mean_test_loss = epoch_batch_loss / num_test_batches
@@ -341,8 +358,8 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
         )
         print(result_table)
 
-        confusion_matrix = generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch)
-
+        confusion_matrix, numerical_category_list = generate_confusion_matrix(
+            labels_last_epoch, y_pred_last_epoch)
         result_table.to_csv(DEEP_LEARNING_RESULT_CSV_PATH, index=False)
 
         generate_acc_plot(DEEP_LEARNING_RESULT_CSV_PATH)
@@ -350,16 +367,16 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
 
         auxiliary_outputs = {}
         auxiliary_outputs["confusion_matrix"] = confusion_matrix
-        AUC_ROC_curve_data = generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch)
+        auxiliary_outputs["numerical_category_list"] = numerical_category_list
 
+        # Generating AUC_ROC curve data to send to frontend to make interactive plot
+        AUC_ROC_curve_data, numerical_category_list_AUC = generate_AUC_ROC_CURVE(
+            labels_last_epoch, y_pred_last_epoch, category_list)
         auxiliary_outputs["AUC_ROC_curve_data"] = AUC_ROC_curve_data
-        torch.save(model, SAVED_MODEL) # saving model into a pt file
-        example_data = 0
-        for i in train_loader:
-            example_data = i[0]
-            break
+        auxiliary_outputs["numerical_category_list_AUC"] = numerical_category_list_AUC
+        auxiliary_outputs["category_list"] = category_list
 
-        torch.onnx.export(model, example_data, ONNX_MODEL)
+        torch.save(model, SAVED_MODEL_DL)  # saving model into a pt file
 
         return auxiliary_outputs
 

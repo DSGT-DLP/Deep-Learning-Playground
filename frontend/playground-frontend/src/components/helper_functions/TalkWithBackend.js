@@ -26,7 +26,9 @@ const sendToBackend = async (route, data) => {
 const routeDict = {
   tabular: "tabular-run",
   image: "img-run",
-  pretrained: "new-pretrain-run",
+  pretrained: "pretrain-run",
+  classicalml: "ml-run",
+  objectdetection: "object-detection",
 };
 
 const train_and_output = async (choice, choiceDict) => {

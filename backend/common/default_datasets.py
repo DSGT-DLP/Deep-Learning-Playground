@@ -1,3 +1,4 @@
+from unicodedata import category
 import pandas as pd
 import numpy as np
 from sklearn.datasets import *
@@ -10,7 +11,9 @@ from sklearn.model_selection import train_test_split
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
-torchvision.datasets.MNIST.mirrors = [torchvision.datasets.MNIST.mirrors[1]]   ## torchvision default MNIST route causes 503 error sometimes
+# torchvision default MNIST route causes 503 error sometimes
+torchvision.datasets.MNIST.mirrors = [torchvision.datasets.MNIST.mirrors[1]]
+
 
 def get_default_dataset_header(dataset):
     """
@@ -34,12 +37,15 @@ def get_default_dataset_header(dataset):
                 data=np.c_[raw_data["data"], raw_data["target"]],
                 columns=raw_data["feature_names"] + ["target"],
             )
-            default_dataset.dropna(how="all", inplace=True)  # remove any empty lines
+            # remove any empty lines
+            default_dataset.dropna(how="all", inplace=True)
             return default_dataset.columns
     except Exception:
-        raise Exception(f"Unable to load the {dataset} file into Pandas DataFrame")
+        raise Exception(
+            f"Unable to load the {dataset} file into Pandas DataFrame")
 
-def get_default_dataset(dataset, target = None, features = None):
+
+def get_default_dataset(dataset, target=None, features=None):
     """
     If user doesn't specify dataset
     Args:
@@ -47,6 +53,7 @@ def get_default_dataset(dataset, target = None, features = None):
     Returns:
         X: input (default dataset)
         y: target (default dataset)
+        target_names: a list of strings representing category names (default dataset)
     """
     try:
         if dataset not in DEFAULT_DATASETS:
@@ -57,22 +64,29 @@ def get_default_dataset(dataset, target = None, features = None):
             raw_data = eval(
                 DEFAULT_DATASETS[dataset]
             )  # get raw data from sklearn.datasets
+            target_names = []
+            try:
+                target_names = list(raw_data["target_names"])
+            except:
+                pass
             default_dataset = pd.DataFrame(
                 data=np.c_[raw_data["data"], raw_data["target"]],
                 columns=raw_data["feature_names"] + ["target"],
             )
-            default_dataset.dropna(how="all", inplace=True)  # remove any empty lines
-            if(features and target):
+            # remove any empty lines
+            default_dataset.dropna(how="all", inplace=True)
+            if (features and target):
                 y = default_dataset[target]
                 X = default_dataset[features]
             else:
                 y = default_dataset["target"]
                 X = default_dataset.drop("target", axis=1)
             print(default_dataset.head())
-            return X, y
+            return X, y, target_names
 
     except Exception:
-        raise Exception(f"Unable to load the {dataset} file into Pandas DataFrame")
+        raise Exception(
+            f"Unable to load the {dataset} file into Pandas DataFrame")
 
 
 def get_img_default_dataset_loaders(
@@ -86,8 +100,10 @@ def get_img_default_dataset_loaders(
         train_transform (list) : list of transforms
         batch_size (int) : batch_size
     """
-    train_transform = torchvision.transforms.Compose([x for x in train_transform])
-    test_transform = torchvision.transforms.Compose([x for x in test_transform])
+    train_transform = torchvision.transforms.Compose(
+        [x for x in train_transform])
+    test_transform = torchvision.transforms.Compose(
+        [x for x in test_transform])
 
     dataset = eval(
         f"torchvision.datasets.{datasetname}(root='./backend/image_data_uploads', train=True, download=True, transform=train_transform)"

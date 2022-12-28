@@ -48,7 +48,7 @@ const Pretrained = () => {
   const [uploadFile, setUploadFile] = useState(null);
 
   const input_responses = {
-    modelName: modelName? modelName.valueOf : null,
+    modelName: modelName? modelName.value : null,
     criterion: criterion?.value,
     optimizerName: optimizerName?.value,
     usingDefaultDataset: usingDefaultDataset?.value,
@@ -69,7 +69,6 @@ const Pretrained = () => {
       options: beginnerMode ? PRETRAINED_MODELS : ADV_PRETRAINED_MODELS,
       onChange: setModelName,
       defaultValue: modelName,
-      beginnerMode: beginnerMode,
     },
     {
       queryText: "Optimizer Name",

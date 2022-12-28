@@ -45,8 +45,8 @@ const CSVInputFile = (props) => {
       name: c,
       selector: (row) => row[c],
     }));
-
-    setData(list);
+    
+    setData(list.slice(0,5));
     setColumns(columns);
   };
 

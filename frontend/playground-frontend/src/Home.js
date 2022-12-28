@@ -325,7 +325,6 @@ const Home = () => {
 
       <TitleText text="CSV Input" />
       <DataTable
-        pagination
         highlightOnHover
         columns={uploadedColumns}
         data={csvDataInput}

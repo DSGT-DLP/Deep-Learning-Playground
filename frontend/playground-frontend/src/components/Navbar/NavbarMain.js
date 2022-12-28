@@ -41,7 +41,6 @@ const NavbarMain = () => {
     } else {
       setTheme({mode: 'light', checked: false});
     }
-    window.location.reload();
   };
 
   const goToLogin = () => {

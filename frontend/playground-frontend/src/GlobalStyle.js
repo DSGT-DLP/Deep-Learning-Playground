@@ -11,7 +11,7 @@ const GlobalStyle = createGlobalStyle`
     background-color: ${props => props.theme.mode === 'dark' ? '#121212' : '#f6f6ff'};
   }
 
-  p {
+  p, .inputText {
     color: ${props => props.theme.mode === 'dark' ? '#f6f6ff' : '#121212'};
   }
 
@@ -41,9 +41,17 @@ const GlobalStyle = createGlobalStyle`
     color: ${props => props.theme.mode === 'dark' ? '#f6f6ff' : '#121212'};
   }
 
-  .layer-choice {
-    background-color: ${props => props.theme.mode === 'dark' ? '#27222e' : 'var(--add-layer)'};
+  .layer-choice, .layer-info {
+    background-color: ${props => props.theme.mode === 'dark' ? 'var(--tertiary)' : 'var(--add-layer)'};
     color: ${props => props.theme.mode === 'dark' ? 'var(--add-layer)' : 'var(--tertiary)'};
+  }
+
+  .response-container {
+    background-color: ${props => props.theme.mode === 'dark' ? '#1e1e1e' : 'var(--add-layer)'};
+  }
+
+  .dashboard-header, .row-style {
+    color: ${props => props.theme.mode === 'dark' ? '#f6f6ff' : '#121212'} !important;
   }
 `;
 

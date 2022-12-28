@@ -13,4 +13,10 @@ A clear and concise description of what you want to happen.
 Add any other context or screenshots about the feature request here.
 
 **Setup Instructions (what branch to work off of)**
-Create branch `<dev-branch-name>` off of `dev`.
+Run the following commands
+```
+git checkout dev
+git pull origin dev
+git checkout -b <dev-branch-name-here>
+```
+FYI: If you are not able to immediately run `git checkout dev`, make sure you commit your changes in the current branch or run `git stash` and then 

@@ -6,6 +6,8 @@ from backend.common.constants import AWS_REGION
 
 """
 Wrapper to interface with AWS SQS (Simple Queue Service)
+
+Helpful Resource: https://www.learnaws.org/2020/12/17/aws-sqs-boto3-guide/
 """
 
 sqs_client = boto3.client("sqs", region_name=AWS_REGION)

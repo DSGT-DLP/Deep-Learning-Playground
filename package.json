@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/karkir0003/Deep-Learning-Playground#readme",
   "dependencies": {
-    "dotenv": "^16.0.3",
-    "local-storage-fallback": "^4.1.2"
+    "dotenv": "^16.0.3"
   }
 }

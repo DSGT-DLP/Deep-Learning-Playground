@@ -14,10 +14,6 @@ import Home from "./Home";
 import { ToastContainer } from "react-toastify";
 import { getCookie } from "./components/helper_functions/Cookie";
 
-//Test CSV
-import TestCSV from "./components/TestCSV/TestCSV";
-//Testing
-
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
@@ -49,7 +45,6 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/wiki" element={<Wiki />} />
             <Route path="/feedback" element={<Feedback />} />
-            <Route path="/test" element={<TestCSV />} />
           </Routes>
           <ToastContainer position="top-center" />
         </div>

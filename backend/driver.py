@@ -14,7 +14,7 @@ from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
-from backend.aws_helpers.aws_rekognition_utils.rekognition_client import rekognition_img_drive
+from backend.dl.detection import detection_img_drive
 
 init_firebase()
 
@@ -170,7 +170,8 @@ def object_detection_run():
     try:
         request_data = json.loads(request.data)
         problem_type = request_data["problem_type"]
-        image = rekognition_img_drive(IMAGE_UPLOAD_FOLDER, problem_type)
+        detection_type = request_data["detection_type"]
+        image = detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type)
         return send_detection_results(image)
     except Exception:
         print(traceback.format_exc())

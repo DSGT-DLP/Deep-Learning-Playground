@@ -753,6 +753,11 @@ export const OBJECT_DETECTION_PROBLEM_TYPES = [
   { label: "Celebrities", value: "celebrities" },
 ];
 
+export const DETECTION_TYPES = [
+  { label: "Rekognition", value: "rekognition" },
+  { label: "YOLO", value: "yolo" },
+];
+
 export const BOOL_OPTIONS = [
   { label: "False", value: false },
   { label: "True", value: true },

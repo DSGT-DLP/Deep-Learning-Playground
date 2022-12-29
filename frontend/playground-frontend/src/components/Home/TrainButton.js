@@ -147,7 +147,7 @@ const TrainButton = (props) => {
         if (props.email?.length) {
           sendEmail(props.email, props.problemType);
         }
-        toast.success("Training successful! Scroll to see results!");
+        toast.success(choice === "objectdetection" ? "Detection successful! Scroll to see results!" : "Training successful! Scroll to see results!");
       } else if (result.message) {
         toast.error("Training failed. Check output traceback message");
       } else {

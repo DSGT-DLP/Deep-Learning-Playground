@@ -12,5 +12,5 @@ def test_all_imports():
   import backend.dl.dl_model
   import backend.dl.dl_model_parser
   import backend.dl.dl_trainer
-  import backend.dl.pretrained
+  import backend.dl.pytorch_pretrained
   import backend.ml.ml_trainer

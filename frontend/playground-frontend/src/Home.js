@@ -344,7 +344,7 @@ const Home = () => {
         pagination
         highlightOnHover
         columns={uploadedColumns}
-        data={csvDataInput}
+        data={csvDataInput.slice(0, 5)}
       />
 
       <Spacer height={40} />

@@ -9,7 +9,7 @@ import { userCodeEval } from "../helper_functions/TalkWithBackend";
 import PropTypes from "prop-types";
 
 const Preprocessing = (props) => {
-  const { data, setData, setColumns, fileName } = props;
+  const { data, setData, setColumns } = props;
   const startingCode =
     "import pandas as pd\n\ndef preprocess(df): \n  # put your preprocessing code here!\n  return df";
   const [userCode, setUserCode] = useState(startingCode);
@@ -27,10 +27,12 @@ const Preprocessing = (props) => {
       />
       <Button
         onClick={async () => {
-          const response = await userCodeEval(data, userCode, fileName);
-          if (!response.success) {
+          const response = await userCodeEval(data, userCode);
+          if (response["statusCode"] !== 200) {
             toast.error(response.message);
           } else {
+            console.log(response["data"]);
+            console.log(response["columns"]);
             setData(response["data"]);
             setColumns(response["columns"]);
           }
@@ -45,7 +47,6 @@ Preprocessing.propTypes = {
   data: PropTypes.array.isRequired,
   setData: PropTypes.func.isRequired,
   setColumns: PropTypes.func.isRequired,
-  fileName: PropTypes.any,
 };
 
 export default Preprocessing;

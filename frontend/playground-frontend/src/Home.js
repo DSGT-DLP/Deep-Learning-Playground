@@ -254,7 +254,6 @@ const Home = () => {
             data={oldCsvDataInput}
             setData={setCSVDataInput}
             setColumns={setUploadedColumns}
-            fileName={fileName}
           />
         )}
 
@@ -274,6 +273,7 @@ const Home = () => {
               setFileURL={setFileURL}
               setCSVColumns={setUploadedColumns}
               setCSVDataInput={setCSVDataInput}
+              setOldCSVDataInput={setOldCSVDataInput}
             />
           </div>
 

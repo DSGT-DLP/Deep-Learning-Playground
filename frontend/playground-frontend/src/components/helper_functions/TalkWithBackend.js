@@ -10,11 +10,10 @@ const uploadToBackend = async (data) => {
   await axios.post("/api/upload", data, { headers });
 };
 
-const userCodeEval = async (data, snippet, fileName) => {
+const userCodeEval = async (data, snippet) => {
   const codeEval = await sendToBackend("sendUserCodeEval", {
     data: data,
     codeSnippet: snippet,
-    fileName: fileName,
   });
   return codeEval;
 };

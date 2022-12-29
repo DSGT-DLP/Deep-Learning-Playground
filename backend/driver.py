@@ -15,7 +15,8 @@ from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
-import pandas
+
+from backend.aws_helpers.lambda_utils.lambda_client import invoke
 
 init_firebase()
 
@@ -164,17 +165,19 @@ def send_email_route():
 def send_user_code_eval():
     try:
         request_data = json.loads(request.data)
-        data = request_data["data"] # convert to dataframes so user can use pandas
+        data = request_data["data"]
         codeSnippet = request_data["codeSnippet"]
-        fileName = request_data["fileName"]
-        df = pandas.DataFrame.from_records(data)
-        exec_namespace = {}
-        allowed_funcs = {"pandas": pandas, "pd": pd} #this still allows inline importing (ex: numpy = __import__('numpy')) in the input for some reason
-        exec(codeSnippet, allowed_funcs, exec_namespace)
-        df = exec_namespace['preprocess'](df)
-        return send_success({"message": "Preprocessing successful",
-        "data": df.to_dict('records'),
-        "columns": pandas.Index.tolist(df.columns)})
+        payload = json.dumps({
+            "data": data,
+            "code": codeSnippet
+        })
+        resJson = invoke('preprocess_data', payload)
+        if (resJson['statusCode'] == 200):
+            send_success({"message": "Preprocessed data", "data": resJson['data'], "columns": resJson['columns']})
+        else:
+            print(resJson['message'])
+            send_error(resJson['message'])
+        return resJson
     except Exception:
         print(traceback.format_exc())
         print("error")

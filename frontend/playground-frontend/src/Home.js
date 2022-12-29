@@ -324,6 +324,7 @@ const Home = () => {
       <Spacer height={40} />
 
       <TitleText text="CSV Input" />
+      <p id="csvRender_caption">Only first 5 rows</p>
       <DataTable
         highlightOnHover
         columns={uploadedColumns}

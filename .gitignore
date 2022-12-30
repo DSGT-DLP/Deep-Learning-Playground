@@ -193,9 +193,7 @@ frontend/playground-frontend/src/backend_outputs/*
 
 # Audio Dataset Upload
 backend/audio_data_uploads/*
-<<<<<<< HEAD
 !backend/image_data_uploads/.gitkeep
-=======
 !backend/audio_data_uploads/.gitkeep
 
 # Results / output files

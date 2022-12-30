@@ -187,13 +187,10 @@ const Pretrained = () => {
         problemType={PROBLEM_TYPES[0]}
       />
       <TitleText text="Code Snippet" />
-      {/* <PretrainedCodeSnippet backendResponse={dlpBackendResponse} modelName={modelName} n_epochs={epochs}/> */}
-      {
         <PytorchCodeSnippet
           backendResponse={dlpBackendResponse}
           modelName={modelName}
         />
-      }
       <DataCodeSnippet
         backendResponse={dlpBackendResponse}
         trainTransforms={trainTransforms}
@@ -207,12 +204,3 @@ const Pretrained = () => {
 };
 
 export default Pretrained;
-
-// const styles = {
-//   fileInput: {
-//     ...LAYOUT.column,
-//     backgroundColor: COLORS.input,
-//     width: 155,
-//     height: 75,
-//   },
-// };

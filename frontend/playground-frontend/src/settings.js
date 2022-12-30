@@ -780,7 +780,6 @@ export const IMAGE_DEFAULT_DATASETS = [
 export const PRETRAINED_MODELS = [
   { label: "RESNET18", value: "resnet18", module: "pytorch" },
   { label: "INCEPTION V3", value: "inception_v3", module: "pytorch" },
-  { label: "ALEXNET", value: "alexnet", module: "pytorch" },
   { label: "RESNET34", value: "resnet34", module: "pytorch" },
   { label: "RESNET50", value: "resnet50", module: "pytorch" },
   { label: "VGG16", value: "vgg16", module: "pytorch" },
@@ -789,7 +788,6 @@ export const PRETRAINED_MODELS = [
 export const ADV_PRETRAINED_MODELS = [
   { label: "RESNET18", value: "resnet18", module: "pytorch" },
   { label: "INCEPTION V3", value: "inception_v3", module: "pytorch" },
-  { label: "ALEXNET", value: "alexnet", module: "pytorch" },
   { label: "RESNET34", value: "resnet34", module: "pytorch" },
   { label: "RESNET50", value: "resnet50", module: "pytorch" },
   { label: "VGG16", value: "vgg16", module: "pytorch" },

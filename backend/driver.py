@@ -194,9 +194,17 @@ def pretrain_run():
         return send_traceback_error()
         
     finally:
+        files = []
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
-            if (x != ".gitkeep"):
-                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER) , x)
+           if (x != ".gitkeep"):
+                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
+                if (os.path.isdir(file_rem)):
+                    shutil.rmtree(file_rem)
+                else:
+                    os.remove(file_rem)
+        if os.path.exists(UNZIPPED_DIR_NAME):
+            shutil.rmtree(UNZIPPED_DIR_NAME)
+
 @app.route("/api/object-detection", methods=["POST"])
 def object_detection_run():
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"

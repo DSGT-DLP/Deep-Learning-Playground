@@ -14,7 +14,7 @@ from backend.dl.dl_model import DLModel
 from backend.dl.dl_model_parser import parse_deep_user_architecture
 from backend.dl.dl_trainer import train_deep_model, train_deep_image_classification
 from backend.dl.dl_model_parser import get_object
-from backend.dl.pytorch_pretrained import pytorch_pretrained
+from backend.dl.pretrained import pytorch_pretrained
 
 from backend.ml.ml_trainer import train_classical_ml_model
 from backend.ml.ml_model_parser import get_object_ml
@@ -186,7 +186,7 @@ def dl_pretrain_drive(train_transform, test_transform, criterion, optimizer_name
     print("backend started")
 
     if model_name not in timm.list_models():
-        raise Exception("${model_name} is not supported in DLP yet. Please fill in the feedback form to request the new model!")
+        raise Exception(f"{model_name} is not supported in DLP yet. Please fill in the feedback form to request the new model!")
 
     train_transform = parse_deep_user_architecture(train_transform)
     test_transform = parse_deep_user_architecture(test_transform)

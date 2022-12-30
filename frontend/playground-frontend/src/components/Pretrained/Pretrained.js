@@ -187,10 +187,10 @@ const Pretrained = () => {
         problemType={PROBLEM_TYPES[0]}
       />
       <TitleText text="Code Snippet" />
-        <PytorchCodeSnippet
-          backendResponse={dlpBackendResponse}
-          modelName={modelName}
-        />
+      <PytorchCodeSnippet
+        backendResponse={dlpBackendResponse}
+        modelName={modelName}
+      />
       <DataCodeSnippet
         backendResponse={dlpBackendResponse}
         trainTransforms={trainTransforms}

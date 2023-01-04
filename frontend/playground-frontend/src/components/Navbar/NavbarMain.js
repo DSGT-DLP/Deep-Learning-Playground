@@ -106,7 +106,7 @@ const NavbarMain = () => {
                   <NavDropdown.Item href="/account-settings">
                     Settings
                   </NavDropdown.Item>
-                  <NavDropdown.Item href="#">Learn</NavDropdown.Item>
+                  <NavDropdown.Item href="learn-mod">Learn</NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item href="#" onClick={logout}>
                     Log out

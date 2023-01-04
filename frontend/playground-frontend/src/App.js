@@ -66,7 +66,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/wiki" element={<Wiki />} />
             <Route path="/feedback" element={<Feedback />} />
-            <Route path="/LearnMod" element={verifyLogin(<LearnMod />)} />
+            <Route path="/learn-mod" element={verifyLogin(<LearnMod />)} />
             <Route
               path="/LearnContent"
               element={verifyLogin(<LearnContent />)}

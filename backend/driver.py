@@ -15,6 +15,7 @@ from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 from backend.aws_helpers.aws_rekognition_utils.rekognition_client import rekognition_img_drive
 
@@ -44,6 +45,10 @@ def root(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, "index.html")
+
+@app.route("/test")
+def verify_backend_alive():
+    return {"Status": "Backend is alive"}
 
 
 @app.route("/api/tabular-run", methods=["POST"])
@@ -245,6 +250,20 @@ def upload():
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
+
+@app.route("/api/getUserExecutionsData", methods=["POST"])
+def getUserExecutionsData():
+    dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
+    try:
+        record = dynamoTable.get_record(json.loads(request.data))
+        return json.dumps(record.__dict__)
+    except ValueError:
+        data = json.loads(request.data)
+        newRecord = ExecutionData(**data)
+        dynamoTable.create_record(newRecord)
+        return "{}"
+    except ZeroDivisionError:
+        pass
 
 @app.route("/api/getUserProgressData", methods=["POST"])
 def getUserProgressData():

@@ -21,26 +21,22 @@ from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, E
 
 
 def dl_tabular_drive(
-    user_arch,
-    fileURL,
-    uid,
-    params,
-    json_csv_data_str="",
-    customModelName=None,
+    user_arch: list,
+    fileURL: str,
+    uid: str,
+    params: dict,
+    json_csv_data_str: str = "",
+    customModelName: str = None,
 ):
     """
     Driver function/entrypoint into backend for deep learning model. Onnx file is generated containing model architecture for user to visualize in netron.app
     Args:
         user_arch (list): list that contains user defined deep learning architecture
-        criterion (str): What loss function to use
-        optimizer (str): What optimizer does the user wants to use (Adam or SGD for now, but more support in later iterations)
-        problem type (str): "classification" or "regression" problem
-        target (str): name of target column
-        features (list): list of columns in dataframe for the feature based on user selection
-        default (str, optional): the default dataset chosen by the user. Defaults to None.
-        test_size (float, optional): size of test set in train/test split (percentage). Defaults to 0.2.
-        epochs (int, optional): number of epochs/rounds to run model on
-        shuffle (bool, optional): should the dataset be shuffled prior to train/test split
+        fileURL (str): URL of the dataset file, if provided by user
+        uid (str): user id
+        params (dict): dictionary containing all the parameters for the model, e.g. criterion and problem type
+        json_csv_data_str (str, optional): json string of the dataset, if provided by user. Defaults to "".
+        customModelName (str, optional): name of the custom model. Defaults to None.
     :return: a dictionary containing the epochs, train and test accuracy and loss results, each in a list
 
     NOTE:
@@ -58,6 +54,18 @@ def dl_tabular_drive(
         "user_id": uid,
     })
 
+    """
+    Params:
+        criterion (str): What loss function to use
+        optimizer (str): What optimizer does the user wants to use (Adam or SGD for now, but more support in later iterations)
+        problem type (str): "classification" or "regression" problem
+        target (str): name of target column
+        features (list): list of columns in dataframe for the feature based on user selection
+        default (str, optional): the default dataset chosen by the user. Defaults to None.
+        test_size (float, optional): size of test set in train/test split (percentage). Defaults to 0.2.
+        epochs (int, optional): number of epochs/rounds to run model on
+        shuffle (bool, optional): should the dataset be shuffled prior to train/test split
+    """
     target = params.get("target", None)
     features = params.get("features", None)
     problem_type = params["problem_type"]

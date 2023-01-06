@@ -15,7 +15,7 @@ from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
-from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, getUserExecutionsData_, updateUserExecutionsData_
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 from backend.aws_helpers.aws_rekognition_utils.rekognition_client import rekognition_img_drive
 
@@ -55,36 +55,25 @@ def verify_backend_alive():
 def tabular_run():
     try:
         request_data = json.loads(request.data)
-        user_arch = request_data["user_arch"]
-        criterion = request_data["criterion"]
-        optimizer_name = request_data["optimizer_name"]
-        problem_type = request_data["problem_type"]
-        target = request_data["target"]
-        features = request_data["features"]
-        default = request_data["using_default_dataset"]
-        test_size = request_data["test_size"]
-        batch_size = request_data["batch_size"]
-        epochs = request_data["epochs"]
-        shuffle = request_data["shuffle"]
-        csvDataStr = request_data["csv_data"]
-        fileURL = request_data["file_URL"]
+
+        input_data = {
+            user_arch: request_data["user_arch"],
+            criterion: request_data["criterion"],
+            optimizer_name: request_data["optimizer_name"],
+            problem_type: request_data["problem_type"],
+            fileURL: request_data["file_URL"],
+            target: request_data["target"],
+            features: request_data["features"],
+            default: request_data["using_default_dataset"],
+            test_size: request_data["test_size"],
+            epochs: request_data["epochs"],
+            shuffle: request_data["shuffle"],
+            batch_size: request_data["batch_size"],
+            csvDataStr: request_data["csv_data"],
+        }
         customModelName = request_data["custom_model_name"]
 
-        train_loss_results = dl_tabular_drive(
-            user_arch,
-            criterion,
-            optimizer_name,
-            problem_type,
-            fileURL,
-            target,
-            features,
-            default,
-            test_size,
-            epochs,
-            shuffle,
-            batch_size,
-            csvDataStr
-        )
+        train_loss_results = dl_tabular_drive(**input_data)
 
         print(train_loss_results)
         return send_train_results(train_loss_results)
@@ -259,44 +248,27 @@ def getUserExecutionsData() -> str:
     E.g.
     POST request to http://localhost:8000/api/getUserExecutionsData with body
     {"execution_id": "fsdh", "user_id": "fweadshas"}
-    will return the execution_id = "fsdh" entry if it exists, else create a new entry with the given execution_id and user_id. user_id cannot be null.
+    will return the execution_id = "fsdh" entry if it exists, else create a new entry with the given execution_id and other attributes present e.g. user_id (user_id must be present upon creating a new entry)
+
+    @return: A JSON string of the entry retrieved or created from the table
     """
-    dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
-    execution_id = json.loads(request.data)["execution_id"]
-    try:
-        record = dynamoTable.get_record(execution_id)
-        return json.dumps(record.__dict__)
-    except ValueError:
-        data = json.loads(request.data)
-        newRecord = ExecutionData(**data)
-        dynamoTable.create_record(newRecord)
-        return "{}"
+    data = json.loads(request.data)
+    return getUserExecutionsData_(**data)
 
 @app.route("/api/updateUserExecutionsData", methods=["POST"])
 def updateUserExecutionsData() -> str:
     """
-    Updates an entry on the `execution-table` DynamoDB table given an execution_id.
+    Updates an entry on the `execution-table` DynamoDB table given an `execution_id`.
 
     E.g.,
     POST request to localhost:8000/api/updateUserExecutionsData with body
     {"execution_id": "fsdh", "user_id": "fweadshas2"}
     updates the execution_id = "fsdh" entry with the new user_id
+
+    @return a success status message if the update is successful
     """
     requestData = json.loads(request.data)
-    execution_id = requestData["execution_id"]
-
-    dataInput = {
-        "data_source": requestData.get("data_source", None),
-        "name": requestData.get("name", None),
-        "progress": requestData.get("progress", None),
-        "status": requestData.get("status", None),
-        "timestamp": requestData.get("timestamp", None),
-        "user_id": requestData["user_id"]
-    }
-
-    dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
-    dynamoTable.update_record(execution_id, **dataInput)
-    return "{\"status\": \"success\"}"
+    return updateUserExecutionsData_(requestData)
 
 
 @app.route("/api/getUserProgressData", methods=["POST"])

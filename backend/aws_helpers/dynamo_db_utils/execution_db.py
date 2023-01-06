@@ -1,6 +1,9 @@
+import json
+
 from dataclasses import dataclass
 from backend.aws_helpers.dynamo_db_utils.base_db import BaseData, BaseDDBUtil, enumclass, changevar
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION
+from typing import Union
 
 @dataclass
 class ExecutionData(BaseData):
@@ -32,3 +35,42 @@ class ExecutionDDBUtil(BaseDDBUtil):
 def get_execution_table(region:str = AWS_REGION) -> BaseDDBUtil:
     """Retrieves the execution-table of an input region as an instance of ExecutionDDBUtil"""
     return ExecutionDDBUtil(EXECUTION_TABLE_NAME, region)
+
+def getUserExecutionsData_(**kwargs) -> str:
+    """
+    Retrieves an entry from the `execution-table` DynamoDB table given an `execution_id`. If does not exist, create a new entry corresponding to the given user_id.
+
+    @param **kwargs: execution_id and other table attributes to be created to the new entry e.g. user_id, if does not exist
+    @return: A JSON string of the entry retrieved or created from the table
+    """
+    dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
+    try:
+        execution_id = kwargs['execution_id']
+        record = dynamoTable.get_record(execution_id)
+        return json.dumps(record.__dict__)
+    except ValueError:
+        newRecord = ExecutionData(**kwargs)
+        dynamoTable.create_record(newRecord)
+        return json.dumps(newRecord.__dict__)
+
+def updateUserExecutionsData_(requestData) -> str:
+    """
+    Updates an entry from the `execution-table` DynamoDB table given an `execution_id`.
+
+    @param requestData: A dictionary containing the execution_id and other table attributes to be updated, with user_id as a required field
+    @return a success status message if the update is successful
+    """
+    execution_id = requestData["execution_id"]
+
+    dataInput = {
+        "data_source": requestData.get("data_source", None),
+        "name": requestData.get("name", None),
+        "progress": requestData.get("progress", None),
+        "status": requestData.get("status", None),
+        "timestamp": requestData.get("timestamp", None),
+        "user_id": requestData["user_id"]
+    }
+
+    dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
+    dynamoTable.update_record(execution_id, **dataInput)
+    return "{\"status\": \"success\"}"

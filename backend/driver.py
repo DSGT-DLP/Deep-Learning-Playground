@@ -252,18 +252,52 @@ def upload():
         return send_traceback_error()
 
 @app.route("/api/getUserExecutionsData", methods=["POST"])
-def getUserExecutionsData():
+def getUserExecutionsData() -> str:
+    """
+    Retrieves an entry from the `execution-table` DynamoDB table given an `execution_id`. If does not exist, create a new entry corresponding to the given user_id.
+
+    E.g.
+    POST request to http://localhost:8000/api/getUserExecutionsData with body
+    {"execution_id": "fsdh", "user_id": "fweadshas"}
+    will return the execution_id = "fsdh" entry if it exists, else create a new entry with the given execution_id and user_id. user_id cannot be null.
+    """
     dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
+    execution_id = json.loads(request.data)["execution_id"]
     try:
-        record = dynamoTable.get_record(json.loads(request.data))
+        record = dynamoTable.get_record(execution_id)
         return json.dumps(record.__dict__)
     except ValueError:
         data = json.loads(request.data)
         newRecord = ExecutionData(**data)
         dynamoTable.create_record(newRecord)
         return "{}"
-    except ZeroDivisionError:
-        pass
+
+@app.route("/api/updateUserExecutionsData", methods=["POST"])
+def updateUserExecutionsData() -> str:
+    """
+    Updates an entry on the `execution-table` DynamoDB table given an execution_id.
+
+    E.g.,
+    POST request to localhost:8000/api/updateUserExecutionsData with body
+    {"execution_id": "fsdh", "user_id": "fweadshas2"}
+    updates the execution_id = "fsdh" entry with the new user_id
+    """
+    requestData = json.loads(request.data)
+    execution_id = requestData["execution_id"]
+
+    dataInput = {
+        "data_source": requestData.get("data_source", None),
+        "name": requestData.get("name", None),
+        "progress": requestData.get("progress", None),
+        "status": requestData.get("status", None),
+        "timestamp": requestData.get("timestamp", None),
+        "user_id": requestData["user_id"]
+    }
+
+    dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
+    dynamoTable.update_record(execution_id, **dataInput)
+    return "{\"status\": \"success\"}"
+
 
 @app.route("/api/getUserProgressData", methods=["POST"])
 def getUserProgressData():
@@ -274,6 +308,7 @@ def getUserProgressData():
         newRecord = UserProgressData(json.loads(request.data), "{}")
         dynamoTable.create_record(newRecord)
         return "{}"
+
 
 @app.route("/api/updateUserProgressData", methods=["POST"])
 def updateUserProgressData():

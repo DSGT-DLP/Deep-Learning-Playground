@@ -15,7 +15,7 @@ from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
-from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, getUserExecutionsData_, updateUserExecutionsData_
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, getOrCreateUserExecutionsData_, updateUserExecutionsData_
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 from backend.aws_helpers.aws_rekognition_utils.rekognition_client import rekognition_img_drive
 
@@ -56,24 +56,27 @@ def tabular_run():
     try:
         request_data = json.loads(request.data)
 
-        input_data = {
-            user_arch: request_data["user_arch"],
-            criterion: request_data["criterion"],
-            optimizer_name: request_data["optimizer_name"],
-            problem_type: request_data["problem_type"],
-            fileURL: request_data["file_URL"],
-            target: request_data["target"],
-            features: request_data["features"],
-            default: request_data["using_default_dataset"],
-            test_size: request_data["test_size"],
-            epochs: request_data["epochs"],
-            shuffle: request_data["shuffle"],
-            batch_size: request_data["batch_size"],
-            csvDataStr: request_data["csv_data"],
-        }
+        user_arch = request_data["user_arch"]
+        fileURL = request_data["file_URL"]
+        uid = request.headers["uid"]
+        json_csv_data_str = request_data["csv_data"]
         customModelName = request_data["custom_model_name"]
 
-        train_loss_results = dl_tabular_drive(**input_data)
+        params = {
+            "target": request_data["target"],
+            "features": request_data["features"],
+            "problem_type": request_data["problem_type"],
+            "optimizer_name": request_data["optimizer_name"],
+            "criterion": request_data["criterion"],
+            "default": request_data["using_default_dataset"],
+            "epochs": request_data["epochs"],
+            "shuffle": request_data["shuffle"],
+            "test_size": request_data["test_size"],
+            "batch_size": request_data["batch_size"],
+        }
+
+        train_loss_results = dl_tabular_drive(user_arch, fileURL, uid, params,
+            json_csv_data_str, customModelName)
 
         print(train_loss_results)
         return send_train_results(train_loss_results)
@@ -253,7 +256,7 @@ def getUserExecutionsData() -> str:
     @return: A JSON string of the entry retrieved or created from the table
     """
     entryData = json.loads(request.data)
-    return getUserExecutionsData_(entryData)
+    return getOrCreateUserExecutionsData_(entryData)
 
 @app.route("/api/updateUserExecutionsData", methods=["POST"])
 def updateUserExecutionsData() -> str:

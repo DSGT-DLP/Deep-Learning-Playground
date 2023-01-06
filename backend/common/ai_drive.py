@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris, fetch_california_housing
 
@@ -16,21 +17,16 @@ from backend.dl.dl_model_parser import get_object
 from backend.ml.ml_trainer import train_classical_ml_model
 from backend.ml.ml_model_parser import get_object_ml
 
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, getOrCreateUserExecutionsData_, updateUserExecutionsData_, createExecutionID
+
 
 def dl_tabular_drive(
     user_arch,
-    criterion,
-    optimizer_name,
-    problem_type,
     fileURL,
-    target=None,
-    features=None,
-    default=None,
-    test_size=0.2,
-    epochs=5,
-    shuffle=True,
-    batch_size=20,
-    json_csv_data_str=""
+    uid,
+    params,
+    json_csv_data_str="",
+    customModelName=None,
 ):
     """
     Driver function/entrypoint into backend for deep learning model. Onnx file is generated containing model architecture for user to visualize in netron.app
@@ -50,6 +46,28 @@ def dl_tabular_drive(
     NOTE:
          CSV_FILE_NAME is the data csv file for the torch model. Assumed that you have one dataset file
     """
+
+    timestamp = datetime.datetime.utcnow()
+    execution_id = createExecutionID(timestamp, uid)
+    getOrCreateUserExecutionsData_({
+        "execution_id": execution_id,
+        "data_source": "TABULAR",
+        "name": customModelName,
+        "status": "STARTING",
+        "timestamp": timestamp.replace(tzinfo=datetime.timezone.utc).isoformat(),
+        "user_id": uid,
+    })
+
+    target = params.get("target", None)
+    features = params.get("features", None)
+    problem_type = params["problem_type"]
+    optimizer_name = params["optimizer_name"]
+    criterion = params["criterion"]
+    default = params.get("default", None)
+    epochs = params.get("epochs", 5)
+    shuffle = params.get("shuffle", True)
+    test_size = params.get("test_size", 0.2)
+    batch_size = params.get("batch_size", 20)
 
     category_list = []
     if not default:

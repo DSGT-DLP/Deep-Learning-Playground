@@ -1,6 +1,8 @@
 import json
 
 from dataclasses import dataclass
+from datetime import datetime
+
 from backend.aws_helpers.dynamo_db_utils.base_db import BaseData, BaseDDBUtil, enumclass, changevar
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION
 from typing import Union
@@ -36,7 +38,7 @@ def get_execution_table(region:str = AWS_REGION) -> BaseDDBUtil:
     """Retrieves the execution-table of an input region as an instance of ExecutionDDBUtil"""
     return ExecutionDDBUtil(EXECUTION_TABLE_NAME, region)
 
-def getUserExecutionsData_(entryData: dict) -> str:
+def getOrCreateUserExecutionsData_(entryData: dict) -> str:
     """
     Retrieves an entry from the `execution-table` DynamoDB table given an `execution_id`. If does not exist, create a new entry corresponding to the given user_id.
 
@@ -74,3 +76,13 @@ def updateUserExecutionsData_(requestData: dict) -> str:
     dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
     dynamoTable.update_record(execution_id, **dataInput)
     return "{\"status\": \"success\"}"
+
+def createExecutionID(timestamp: datetime, userID: str) -> str:
+    """
+    Creates an execution ID given the Train button timestamp and user ID.
+
+    @param timestamp: The UTC timestamp of the Train button click
+    @param userID: The user ID of the user who clicked the Train button
+    @return: The execution ID
+    """
+    return "ex" + str(hash(str(timestamp) + userID))

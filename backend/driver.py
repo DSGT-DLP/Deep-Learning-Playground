@@ -252,8 +252,8 @@ def getUserExecutionsData() -> str:
 
     @return: A JSON string of the entry retrieved or created from the table
     """
-    data = json.loads(request.data)
-    return getUserExecutionsData_(**data)
+    entryData = json.loads(request.data)
+    return getUserExecutionsData_(entryData)
 
 @app.route("/api/updateUserExecutionsData", methods=["POST"])
 def updateUserExecutionsData() -> str:

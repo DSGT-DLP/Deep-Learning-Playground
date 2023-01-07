@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import "./../../App.css";
 
 const rows = [
   {
@@ -131,15 +132,15 @@ const FilledGrid = () => {
       <Table sx={{ minWidth: 400, m: 2 }}>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-            <TableCell sx={{ fontWeight: "bold" }}>Type</TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} align="left">
+            <TableCell className="dashboard-header">Name</TableCell>
+            <TableCell className="dashboard-header">Type</TableCell>
+            <TableCell className="dashboard-header" align="left">
               Input
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} align="left">
+            <TableCell className="dashboard-header" align="left">
               Date
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} align="left">
+            <TableCell className="dashboard-header" align="left">
               Status
             </TableCell>
           </TableRow>
@@ -155,14 +156,22 @@ const FilledGrid = () => {
               onClick={() => navigate("/")}
               hover
             >
-              <TableCell component="th" scope="row">
+              <TableCell
+                component="th"
+                scope="row"
+                className="dashboard-header"
+              >
                 {row.name}
               </TableCell>
-              <TableCell component="th" scope="row">
+              <TableCell component="th" scope="row" className="row-style">
                 {row.type}
               </TableCell>
-              <TableCell align="left">{row.input}</TableCell>
-              <TableCell align="left">{formatDate(row.date)}</TableCell>
+              <TableCell align="left" className="row-style">
+                {row.input}
+              </TableCell>
+              <TableCell align="left" className="row-style">
+                {formatDate(row.date)}
+              </TableCell>
               <TableCell align="left">
                 <StatusDisplay
                   statusType={row.statusType}

@@ -11,7 +11,7 @@ Web Application where people new to Machine Learning can input a dataset and exp
 ## Prerequisites
 Have the following installed first:
 
-1. [NodeJS v18](https://nodejs.org/en/download/) (should come with NPM v8)
+1. [NodeJS v18](https://nodejs.org/en/download/) (should come with NPM v9)
 1. [Anaconda](https://www.anaconda.com/)
 1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). After installing, type `aws configure` in your terminal and type in the credentials given in [Secrets](https://docs.google.com/spreadsheets/d/1fRndo-7u0MXghiZoMp3uBepDBW9EghcJ9IL4yS0TdD8/edit?usp=sharing)
 

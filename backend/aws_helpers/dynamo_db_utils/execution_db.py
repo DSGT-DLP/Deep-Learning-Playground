@@ -11,7 +11,7 @@ from typing import Union
 class ExecutionData(BaseData):
     """Data class to hold the attribute values of a record of the execution-table DynamoDB table"""
     execution_id: str
-    user_id: str
+    user_id: str = None
     name: str = None
     timestamp: str = None
     data_source: str = None

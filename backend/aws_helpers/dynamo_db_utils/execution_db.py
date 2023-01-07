@@ -12,10 +12,10 @@ class ExecutionData(BaseData):
     """Data class to hold the attribute values of a record of the execution-table DynamoDB table"""
     execution_id: str
     user_id: str
-    name: str
-    timestamp: str
-    data_source: str
-    status: str
+    name: str = None
+    timestamp: str = None
+    data_source: str = None
+    status: str = None
     progress: int = None
     
 @enumclass(

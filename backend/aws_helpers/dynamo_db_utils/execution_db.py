@@ -12,10 +12,10 @@ class ExecutionData(BaseData):
     """Data class to hold the attribute values of a record of the execution-table DynamoDB table"""
     execution_id: str
     user_id: str
-    name: str = None
-    timestamp: str = None
-    data_source: str = None
-    status: str = None
+    name: str
+    timestamp: str
+    data_source: str
+    status: str
     progress: int = None
     
 @enumclass(
@@ -33,10 +33,6 @@ class ExecutionEnums:
 class ExecutionDDBUtil(BaseDDBUtil):
     """Class that interacts with AWS DynamoDB to manipulate information stored in the execution-table DynamoDB table"""
     pass
-
-def get_execution_table(region:str = AWS_REGION) -> BaseDDBUtil:
-    """Retrieves the execution-table of an input region as an instance of ExecutionDDBUtil"""
-    return ExecutionDDBUtil(EXECUTION_TABLE_NAME, region)
 
 def getOrCreateUserExecutionsData_(entryData: dict) -> str:
     """

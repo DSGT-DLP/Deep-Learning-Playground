@@ -16,6 +16,14 @@ class RekognitionImage():
     def from_file(cls, file_name, rekognition_client):
         image = {'Bytes': open(file_name, 'rb').read()}
         return cls(image, file_name, rekognition_client)
+    
+    @classmethod
+    def from_image(cls, image, rekognition_client):
+        buf = io.BytesIO()
+        image.save(buf, format='JPEG')
+        img_bytes = buf.getvalue()
+        image = {'Bytes': img_bytes}
+        return cls(image, "None", rekognition_client)
 
     def detect_labels(self, max_labels):
         try:
@@ -67,9 +75,9 @@ def show_bounding_boxes(image_bytes, box_sets, names, colors):
     im_b64 = base64.b64encode(im_bytes)
     return im_b64 
 
-def rekognition_detection(file_name, problem_type):
+def rekognition_detection(image, problem_type):
     rekognition_client = boto3.client('rekognition')
-    image = RekognitionImage.from_file(file_name, rekognition_client)
+    image = RekognitionImage.from_image(image, rekognition_client)
     
     names = []
     box_sets = []

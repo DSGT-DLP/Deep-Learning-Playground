@@ -6,15 +6,15 @@ from PIL import Image, ImageDraw
 from backend.aws_helpers.aws_rekognition_utils.rekognition_client import rekognition_detection
 import os
 from itertools import cycle
+from backend.dl.detection_transforms import transform_image
 
 
 
-def yolo_detection(img_file):
-    image = Image.open(img_file)
+def yolo_detection(image):
     feature_extractor = YolosFeatureExtractor.from_pretrained('hustvl/yolos-base')
     model = YolosForObjectDetection.from_pretrained('hustvl/yolos-base')
 
-    inputs = feature_extractor(images=image, return_tensors="pt")
+    inputs = feature_extractor(images=image.convert("RGB"), return_tensors="pt")
     outputs = model(**inputs)
     target_sizes = torch.tensor([image.size[::-1]])
     results = feature_extractor.post_process_object_detection(outputs, threshold=0.9, target_sizes=target_sizes)[0]
@@ -27,11 +27,10 @@ def yolo_detection(img_file):
         name = model.config.id2label[label.item()]
         names.append(name)
         label_set.append({"name" : name, "confidence" : score.item()})
-    im_b64 = show_bounding_boxes(open(img_file, 'rb').read(), box_sets, names, colors)
+    im_b64 = show_bounding_boxes(image, box_sets, names, colors)
     return im_b64, label_set
 
-def show_bounding_boxes(image_bytes, box_sets, names, colors):
-    image = Image.open(io.BytesIO(image_bytes))
+def show_bounding_boxes(image, box_sets, names, colors):
     draw = ImageDraw.Draw(image)
     for box, color, name in zip(box_sets, cycle(colors), names):
         box = box.tolist()
@@ -47,14 +46,15 @@ def show_bounding_boxes(image_bytes, box_sets, names, colors):
     im_b64 = base64.b64encode(im_bytes)
     return im_b64 
 
-def detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type):   
+def detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type, transforms):   
     for x in os.listdir(IMAGE_UPLOAD_FOLDER):
         if x != ".gitkeep":
             img_file = os.path.join(
                 os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
             break
+    image = transform_image(img_file, transforms)
     if (detection_type == "rekognition"):
-        im_b64, label_set = rekognition_detection(img_file, problem_type)
+        im_b64, label_set = rekognition_detection(image, problem_type)
     elif (detection_type == "yolo"):
-        im_b64, label_set = yolo_detection(img_file)
+        im_b64, label_set = yolo_detection(image)
     return { "auxiliary_outputs" : { "image_data" : im_b64.decode('ascii') }, "dl_results" : label_set }

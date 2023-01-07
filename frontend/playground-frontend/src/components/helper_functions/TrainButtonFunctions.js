@@ -258,5 +258,6 @@ export const sendObjectDetectionJSON = (...args) => {
   return {
     problem_type: args.problemType != null ? args.problemType : null,
     detection_type: args.detectionType,
+    transforms: args.transforms,
   };
 };

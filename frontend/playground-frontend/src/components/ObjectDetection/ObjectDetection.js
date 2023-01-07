@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from "react";
+import Transforms from "../ImageModels/Transforms";
 import ImageFileUpload from "../general/ImageFileUpload";
-import { OBJECT_DETECTION_PROBLEM_TYPES, DETECTION_TYPES } from "../../settings";
+import { OBJECT_DETECTION_PROBLEM_TYPES, DETECTION_TYPES, DETECTION_TRANSFORMS } from "../../settings";
+import { DEFAULT_DETECTION_TRANSFORMS } from "../../constants";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { FormControlLabel, Switch } from "@mui/material";
@@ -25,10 +27,12 @@ const ObjectDetection = () => {
   const [beginnerMode, setBeginnerMode] = useState(true);
   const [inputKey, setInputKey] = useState(0);
   const [uploadFile, setUploadFile] = useState(null);
+  const [imageTransforms, setImageTransforms] = useState(DEFAULT_DETECTION_TRANSFORMS);
 
   const input_responses = {
     problemType: problemType?.value,
     detectionType: detectionType?.value,
+    transforms: imageTransforms,
     uploadFile: uploadFile,
   };
 
@@ -101,6 +105,15 @@ const ObjectDetection = () => {
           <Input {...e} key={e.queryText + inputKey} />
         ))}
       </BackgroundLayout>
+
+      <Spacer height={40} />
+      <TitleText text="Image Transformations" />
+      <Transforms
+        queryText={"Image Transforms"}
+        options={DETECTION_TRANSFORMS}
+        transforms={imageTransforms}
+        setTransforms={setImageTransforms}
+      />
 
       <Spacer height={40} />
       <TitleText text="Detection Results" />

@@ -171,7 +171,8 @@ def object_detection_run():
         request_data = json.loads(request.data)
         problem_type = request_data["problem_type"]
         detection_type = request_data["detection_type"]
-        image = detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type)
+        transforms = request_data["transforms"]
+        image = detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type, transforms)
         return send_detection_results(image)
     except Exception:
         print(traceback.format_exc())

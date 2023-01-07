@@ -24,7 +24,7 @@ Have the following installed first:
 | Install / Update Frontend Packages (one-time)            | `npm run installf`     |
 | Install / Update Backend Packages (one-time) | `npm run installb` |
 | Running the Frontend                                     | `npm run startf`       |
-| Running the Backend                         | `npm run startb-mac`   |
+| Running the Backend                         | `npm run startb`   |
 
 
 

@@ -61,9 +61,9 @@ data "archive_file" "preprocess_data_files" {
   source_file = "lambda/preprocess_lambda_function.py"
 }
 
-resource "aws_lambda_function" "preprocess_data_test" {
+resource "aws_lambda_function" "preprocess_data" {
   filename      = "outputs/preprocess_data.zip"
-  function_name = "preprocess_data_test"
+  function_name = "preprocess_data"
   role          = "arn:aws:iam::521654603461:role/service-role/preprocess_data-role-9328ks4z"
   handler       = "preprocess_lambda_function.lambda_handler"
   layers = ["arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:2", "arn:aws:lambda:us-west-2:770693421928:layer:Klayers-p39-numpy:9"]

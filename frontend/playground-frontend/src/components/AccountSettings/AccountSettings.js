@@ -5,6 +5,13 @@ import { useSelector } from "react-redux";
 import GoogleLogo from "../../images/logos/google.png";
 import GithubLogo from "../../images/logos/github.png";
 import { ImCross, ImCheckmark } from "react-icons/im";
+import {
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  linkWithRedirect,
+} from "firebase/auth";
+import { auth } from "../../firebase";
+import { toast } from "react-toastify";
 
 const SettingsBlock = () => {
   const [fullName, setFullName] = useState("");
@@ -77,15 +84,37 @@ const SettingsBlock = () => {
         id: "Google",
         cssClass: "google",
         logo: GoogleLogo,
-        status: "Unlinked",
+        linked: true,
+        provider: new GoogleAuthProvider(),
       },
       {
         id: "GitHub",
         cssClass: "github",
         logo: GithubLogo,
-        status: "Linked",
+        linked: false,
+        provider: new GithubAuthProvider(),
       },
     ];
+
+    /**
+     * Redirects user to link account if not already linked.
+     * @param {Boolean} linked
+     * @param {any} provider
+     */
+    function handleLinking(linked, provider) {
+      if (linked) {
+        toast.info("Account already linked");
+        return;
+      }
+
+      linkWithRedirect(auth.currentUser, provider)
+        .then(() => {
+          toast.success("Success linked!");
+        })
+        .catch(() => {
+          toast.error("Link failed");
+        });
+    }
     return (
       <>
         <h2>Link Accounts</h2>
@@ -93,12 +122,17 @@ const SettingsBlock = () => {
           {accountsInfo.map((account) => (
             <Row key={account.id} className="mt-2 mb-2">
               <Col md={3}>
-                <Button className={`login-button ${account.cssClass}`}>
+                <Button
+                  className={`login-button ${account.cssClass}`}
+                  onClick={() =>
+                    handleLinking(account.linked, account.provider)
+                  }
+                >
                   <img src={account.logo} />
                 </Button>
               </Col>
               <Col className="d-flex align-items-center">
-                {account.status === "Linked" ? (
+                {account.linked ? (
                   <div className="d-flex align-items-center linked-acct">
                     <ImCheckmark className="me-2" />
                     Linked

@@ -1,14 +1,23 @@
 from transformers import YolosFeatureExtractor, YolosForObjectDetection
 import torch
+import torchvision
 import io
 import base64
 from PIL import Image, ImageDraw
 from backend.aws_helpers.aws_rekognition_utils.rekognition_client import rekognition_detection
 import os
 from itertools import cycle
-from backend.dl.detection_transforms import transform_image
+from backend.dl.dl_model_parser import parse_deep_user_architecture
 
-
+def transform_image(img_file, transforms):
+    img = Image.open(img_file)
+    for x in transforms:
+        print(x)
+    transforms = parse_deep_user_architecture(transforms)
+    transforms = torchvision.transforms.Compose(
+        [x for x in transforms])
+    img = transforms(img)
+    return torchvision.transforms.ToPILImage()(img) if isinstance(img, torch.Tensor) else img
 
 def yolo_detection(image):
     feature_extractor = YolosFeatureExtractor.from_pretrained('hustvl/yolos-base')

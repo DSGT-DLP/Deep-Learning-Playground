@@ -46,7 +46,9 @@ const TrainButton = (props) => {
       const obj_list_item = obj_list[i];
       const parameters = obj_list_item.parameters;
       let parameter_call_input = "";
-      let transform_type = obj_list_item.transform_type && obj_list_item.transform_type === "functional";
+      let transform_type =
+        obj_list_item.transform_type &&
+        obj_list_item.transform_type === "functional";
       const parameters_to_be_added = Array(Object.keys(parameters).length);
       for (const v of Object.values(parameters)) {
         if (!validateParameter(source, i, v)) {
@@ -54,7 +56,9 @@ const TrainButton = (props) => {
           return false;
         }
         const parameter_value =
-          v.parameter_type === "number" || v.parameter_type === "tuple" ? v.value : `'${v.value}'`;
+          v.parameter_type === "number" || v.parameter_type === "tuple"
+            ? v.value
+            : `'${v.value}'`;
         parameters_to_be_added[v.index] = `${v.kwarg ?? ""}${parameter_value}`;
       }
       if (transform_type) {
@@ -116,10 +120,7 @@ const TrainButton = (props) => {
       if (testTransforms === false) return;
     }
     if (props.transforms) {
-      transforms = make_obj_param_list(
-        props.transforms,
-        "Transforms"
-      );
+      transforms = make_obj_param_list(props.transforms, "Transforms");
       if (transforms === false) return;
     }
 
@@ -128,7 +129,13 @@ const TrainButton = (props) => {
       return;
     }
 
-    const paramList = { ...props, trainTransforms, testTransforms, transforms, user_arch };
+    const paramList = {
+      ...props,
+      trainTransforms,
+      testTransforms,
+      transforms,
+      user_arch,
+    };
 
     if (
       (choice === "image" && !props.usingDefaultDataset) ||
@@ -162,7 +169,11 @@ const TrainButton = (props) => {
         if (props.email?.length) {
           sendEmail(props.email, props.problemType);
         }
-        toast.success(choice === "objectdetection" ? "Detection successful! Scroll to see results!" : "Training successful! Scroll to see results!");
+        toast.success(
+          choice === "objectdetection"
+            ? "Detection successful! Scroll to see results!"
+            : "Training successful! Scroll to see results!"
+        );
       } else if (result.message) {
         toast.error("Training failed. Check output traceback message");
       } else {

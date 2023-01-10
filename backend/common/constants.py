@@ -40,6 +40,7 @@ UNZIPPED_DIR_NAME = "unzipped_data"
 SENDER = "DSGT Playground <dsgtplayground@gmail.com>"
 AWS_REGION = "us-west-2"
 EXECUTION_TABLE_NAME = "execution-table"
+USERPROGRESS_TABLE_NAME = "userprogress_table"
 CHARSET = "utf-8"
 TENSOR_ONLY_TRANSFORMS = [
     transforms.LinearTransformation,
@@ -51,3 +52,5 @@ TENSOR_ONLY_TRANSFORMS = [
 DEFAULT_TRANSFORM = [transforms.Resize((256, 256)), transforms.ToTensor()]
 
 PIL_ONLY_TRANSFORMS = [transforms.RandomChoice, transforms.RandomOrder]
+
+POINTS_PER_QUESTION = 10

@@ -10,6 +10,9 @@ import {
   Footer,
   Dashboard,
   Login,
+  LearnMod,
+  LearnContent,
+  Forgot,
   AccountSettings,
   ObjectDetection,
 } from "./components";
@@ -59,9 +62,15 @@ function App() {
             />
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot" element={<Forgot />} />
             <Route path="/home" element={<Home />} />
             <Route path="/wiki" element={<Wiki />} />
             <Route path="/feedback" element={<Feedback />} />
+            <Route path="/learn-mod" element={verifyLogin(<LearnMod />)} />
+            <Route
+              path="/LearnContent"
+              element={verifyLogin(<LearnContent />)}
+            />
           </Routes>
           <ToastContainer position="top-center" />
         </div>

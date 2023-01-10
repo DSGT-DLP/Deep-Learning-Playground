@@ -2,17 +2,20 @@ import { toast } from "react-toastify";
 import { auth } from "../../firebase";
 import axios from "axios";
 
-const uploadToBackend = async (data) => {
+async function uploadToBackend(data) {
   let headers = auth.currentUser
     ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
     : undefined;
 
   await axios.post("/api/upload", data, { headers });
-};
+}
 
-const sendToBackend = async (route, data) => {
+async function sendToBackend(route, data) {
   let headers = auth.currentUser
-    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
+    ? {
+        Authorization: "bearer " + (await auth.currentUser.getIdToken(true)),
+        uid: auth.currentUser.uid,
+      }
     : undefined;
 
   const backendResult = await fetch(`/api/${route}`, {
@@ -21,7 +24,7 @@ const sendToBackend = async (route, data) => {
     headers: headers,
   }).then((result) => result.json());
   return backendResult;
-};
+}
 
 const routeDict = {
   tabular: "tabular-run",
@@ -31,12 +34,12 @@ const routeDict = {
   objectdetection: "object-detection",
 };
 
-const train_and_output = async (choice, choiceDict) => {
+async function train_and_output(choice, choiceDict) {
   const trainResult = await sendToBackend(routeDict[choice], choiceDict);
   return trainResult;
-};
+}
 
-const sendEmail = async (email, problemType) => {
+async function sendEmail(email, problemType) {
   // send email if provided
   const attachments = [
     // we will not create constant values for the source files because the constants cannot be used in Home
@@ -69,11 +72,11 @@ const sendEmail = async (email, problemType) => {
   if (!emailResult.success) {
     toast.error(emailResult.message);
   }
-};
+}
 
-const isLoggedIn = async () => {
+async function isLoggedIn() {
   return await auth.currentUser?.getIdToken(true), toast.error("Not logged in");
-};
+}
 
 export {
   uploadToBackend,

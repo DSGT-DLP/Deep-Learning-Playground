@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
  * This file's puropose is to generalise the methods of TrainButton (focusing on Tabular, Image, and Pretrained models)
  *
  */
-const tupleRegex = /^\(([1-9]{1}[0-9]*), ?([1-9]{1}[0-9]*)\)$/;
+const tupleRegex = /^\(([0-9]{1}[0-9]*), ?([0-9]{1}[0-9]*)\)$/;
 
 export const validateParameter = (source, index, parameter) => {
   const { parameter_name, min, max, parameter_type } = parameter;

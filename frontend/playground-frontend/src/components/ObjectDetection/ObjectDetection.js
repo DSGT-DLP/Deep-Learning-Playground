@@ -1,7 +1,11 @@
 import React, { useState, useMemo } from "react";
 import Transforms from "../ImageModels/Transforms";
 import ImageFileUpload from "../general/ImageFileUpload";
-import { OBJECT_DETECTION_PROBLEM_TYPES, DETECTION_TYPES, DETECTION_TRANSFORMS } from "../../settings";
+import {
+  OBJECT_DETECTION_PROBLEM_TYPES,
+  DETECTION_TYPES,
+  DETECTION_TRANSFORMS,
+} from "../../settings";
 import { DEFAULT_DETECTION_TRANSFORMS } from "../../constants";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -27,7 +31,9 @@ const ObjectDetection = () => {
   const [beginnerMode, setBeginnerMode] = useState(true);
   const [inputKey, setInputKey] = useState(0);
   const [uploadFile, setUploadFile] = useState(null);
-  const [imageTransforms, setImageTransforms] = useState(DEFAULT_DETECTION_TRANSFORMS);
+  const [imageTransforms, setImageTransforms] = useState(
+    DEFAULT_DETECTION_TRANSFORMS
+  );
 
   const input_responses = {
     problemType: problemType?.value,
@@ -49,7 +55,6 @@ const ObjectDetection = () => {
       options: DETECTION_TYPES,
       onChange: setDetectionType,
       defaultValue: detectionType,
-      
     },
   ];
 

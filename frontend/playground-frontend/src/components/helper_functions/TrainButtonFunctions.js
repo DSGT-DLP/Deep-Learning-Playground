@@ -248,8 +248,10 @@ export const validateObjectDetectionInput = (user_arch, ...args) => {
   let alertMessage = "";
   if (!args.uploadFile)
     alertMessage += "Must specify an input file from local storage. ";
-  if (args.detectionType === "rekognition" && !args.problemType) alertMessage += "A problem type must be specified. ";
-  if (!args.detectionType) alertMessage += "A detection type must be specified. ";
+  if (args.detectionType === "rekognition" && !args.problemType)
+    alertMessage += "A problem type must be specified. ";
+  if (!args.detectionType)
+    alertMessage += "A detection type must be specified. ";
   return alertMessage;
 };
 

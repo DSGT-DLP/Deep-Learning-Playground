@@ -2,6 +2,7 @@ import pytest
 from backend.common import email_notifier as em
 import json
 
+SUCCESS_EMAIL = "Email sent! Message ID:"
 
 @pytest.mark.parametrize(
     "email,subject,body_text",
@@ -11,13 +12,8 @@ import json
     ],
 )
 def test_send_email_fail(email, subject, body_text):
-    # {"message":"Internal Server Error"}
-    # ["Email sent! Message ID:"]
     with pytest.raises(ValueError):
         response = em.send_email(email, subject, body_text)
-    # print(response)
-    # print(response.text)
-    # assert json.loads(response.text)["message"] == "Internal Server Error"
 
 
 @pytest.mark.parametrize(
@@ -26,7 +22,7 @@ def test_send_email_fail(email, subject, body_text):
 )
 def test_send_email_success(email, subject, body_text):
     response = em.send_email(email, subject, body_text)
-    assert json.loads(response.text)[0] == "Email sent! Message ID:"
+    assert response.text == SUCCESS_EMAIL
 
 
 @pytest.mark.parametrize(
@@ -42,4 +38,4 @@ def test_send_email_success(email, subject, body_text):
 )
 def test_send_email_attachment(email, subject, body_text, attachment_array):
     response = em.send_email(email, subject, body_text, attachment_array)
-    assert json.loads(response.text)[0] == "Email sent! Message ID:"
+    assert response.text == SUCCESS_EMAIL

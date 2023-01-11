@@ -4,12 +4,12 @@ import { toast } from "react-toastify";
  * This file's puropose is to generalise the methods of TrainButton (focusing on Tabular, Image, and Pretrained models)
  *
  */
-const tupleRegex = /^\(([1-9]{1}[0-9]*), ?([1-9]{1}[0-9]*)\)$/;
+const tupleRegex = /^\(([0-9]{1}[0-9]*), ?([0-9]{1}[0-9]*)\)$/;
 
 export const validateParameter = (source, index, parameter) => {
   const { parameter_name, min, max, parameter_type } = parameter;
   let { value } = parameter;
-  if (parameter_name === "(H, W)") {
+  if (parameter_type === "tuple") {
     if (tupleRegex.test(value)) {
       const result = value.match(tupleRegex);
       const H = result[1].valueOf();
@@ -19,14 +19,14 @@ export const validateParameter = (source, index, parameter) => {
         toast.error(
           `${source} Layer ${
             index + 1
-          }: H not an integer in range [${min}, ${max}]`
+          }: X not an integer in range [${min}, ${max}]`
         );
         return false;
       } else if (W < min || W > max) {
         toast.error(
           `${source} Layer ${
             index + 1
-          }: W not an integer in range [${min}, ${max}]`
+          }: Y not an integer in range [${min}, ${max}]`
         );
         return false;
       }
@@ -35,7 +35,7 @@ export const validateParameter = (source, index, parameter) => {
     toast.error(
       `${source} Layer ${
         index + 1
-      }: ${parameter_name} not of appropriate format: (H, W)`
+      }: ${parameter_name} not of appropriate format: (X, Y)`
     );
   } else {
     if (parameter_type !== "number") return true;
@@ -248,13 +248,18 @@ export const validateObjectDetectionInput = (user_arch, ...args) => {
   let alertMessage = "";
   if (!args.uploadFile)
     alertMessage += "Must specify an input file from local storage. ";
-  if (!args.problemType) alertMessage += "A problem type must be specified. ";
+  if (args.detectionType === "rekognition" && !args.problemType)
+    alertMessage += "A problem type must be specified. ";
+  if (!args.detectionType)
+    alertMessage += "A detection type must be specified. ";
   return alertMessage;
 };
 
 export const sendObjectDetectionJSON = (...args) => {
   args = args[0];
   return {
-    problem_type: args.problemType,
+    problem_type: args.problemType != null ? args.problemType : null,
+    detection_type: args.detectionType,
+    transforms: args.transforms,
   };
 };

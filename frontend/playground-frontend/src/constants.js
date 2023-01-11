@@ -259,3 +259,36 @@ export const DEFAULT_IMG_LAYERS = [
     parameters: {},
   },
 ];
+
+export const DEFAULT_DETECTION_TRANSFORMS = [
+  {
+    display_name: "Grayscale",
+    object_name: "transforms.Grayscale",
+    parameters: {},
+    label: "Grayscale",
+    value: "Grayscale",
+  },
+  {
+    display_name: "To Tensor",
+    object_name: "transforms.ToTensor",
+    parameters: {},
+    label: "To Tensor",
+    value: "TT",
+  },
+  {
+    display_name: "Resize",
+    object_name: "transforms.Resize",
+    parameters: {
+      size: {
+        index: 0,
+        parameter_name: "(H, W)",
+        value: "(32, 32)",
+        min: 1,
+        max: 1000,
+        parameter_type: "tuple",
+      },
+    },
+    label: "Resize",
+    value: "R",
+  },
+];

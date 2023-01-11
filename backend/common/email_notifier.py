@@ -30,6 +30,5 @@ def send_email(email_address, subject="", body_text="", attachment_array=[]):
     url = "https://6amfyprxh9.execute-api.us-west-2.amazonaws.com/default/send_email"
     params = {"recipient": email_address, "subject": subject, "body_text": body_text}
     body = {"attachment_array": base64Array, "file_names": fileNames}
-
     post = requests.post(url, params=params, json=body)
     return post

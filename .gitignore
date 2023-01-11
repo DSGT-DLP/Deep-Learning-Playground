@@ -191,3 +191,10 @@ frontend/playground-frontend/src/backend_outputs/*
 !frontend/playground-frontend/src/backend_outputs/model.pt
 !frontend/playground-frontend/src/backend_outputs/model.pkl
 !frontend/playground-frontend/src/backend_outputs/my_deep_learning_model.onnx
+
+# Terraform Files
+dlp-terraform/.terraform
+dlp-terraform/outputs
+dlp-terraform/.terraform.lock.hcl
+dlp-terraform/terraform.tfstate
+dlp-terraform/terraform.tfstate.backup

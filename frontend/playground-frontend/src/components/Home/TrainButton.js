@@ -46,7 +46,7 @@ const TrainButton = (props) => {
       const obj_list_item = obj_list[i];
       const parameters = obj_list_item.parameters;
       let parameter_call_input = "";
-      let transform_type =
+      let is_transform_type =
         obj_list_item.transform_type &&
         obj_list_item.transform_type === "functional";
       const parameters_to_be_added = Array(Object.keys(parameters).length);
@@ -61,7 +61,7 @@ const TrainButton = (props) => {
             : `'${v.value}'`;
         parameters_to_be_added[v.index] = `${v.kwarg ?? ""}${parameter_value}`;
       }
-      if (transform_type) {
+      if (is_transform_type) {
         parameter_call_input += "img, ";
       }
       parameters_to_be_added.forEach((e) => {
@@ -71,7 +71,7 @@ const TrainButton = (props) => {
       parameter_call_input = parameter_call_input.slice(0, -1);
 
       let callback = `${obj_list_item.object_name}(${parameter_call_input})`;
-      if (transform_type) {
+      if (is_transform_type) {
         callback = "transforms.Lambda(lambda img: " + callback + ")";
       }
       user_arch.push(callback);

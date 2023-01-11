@@ -22,7 +22,7 @@ export const POSSIBLE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies a linear transformation to the incoming data:{" "}
             <i>
@@ -32,7 +32,7 @@ export const POSSIBLE_LAYERS = [
             .
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -56,7 +56,7 @@ export const POSSIBLE_LAYERS = [
     parameters: {},
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies the rectified linear unit function element-wise: ReLU
             <i>
@@ -65,10 +65,10 @@ export const POSSIBLE_LAYERS = [
             max(0, <i>x)</i>.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
-        <p>
+        <p className="info">
           <i>None</i>
         </p>
         <a href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html">
@@ -91,14 +91,14 @@ export const POSSIBLE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies the Softmax function to an <i>n</i>-dimensional input Tensor
             rescaling them so that the elements of the <i>n</i>-dimensional
             output Tensor lie in the range [0,1] and sum to 1.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -119,14 +119,14 @@ export const POSSIBLE_LAYERS = [
     parameters: {},
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>Applies the Sigmoid function.</strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
-        <p>
-          <i>None</i>
+        <p className="info">
+          <i className="info">None</i>
         </p>
         <a href="https://pytorch.org/docs/stable/generated/torch.nn.Sigmoid.html">
           More info
@@ -140,15 +140,15 @@ export const POSSIBLE_LAYERS = [
     parameters: {},
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies the Hyperbolic Tangent (Tanh) function element-wise.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
-        <p>
+        <p className="info">
           <i>None</i>
         </p>
         <a href="https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html">
@@ -171,13 +171,13 @@ export const POSSIBLE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies the log(Softmax(<i>x</i>)) function to an <i>n</i>
             -dimensional input Tensor.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -365,13 +365,13 @@ export const IMAGE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies a 2D convolution over an input signal composed of several
             input planes.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -407,7 +407,7 @@ export const IMAGE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies Batch Normalization over a 4D input (a mini-batch of 2D
             inputs with additional channel dimension) as described in the paper{" "}
@@ -417,7 +417,7 @@ export const IMAGE_LAYERS = [
             </a>
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -453,13 +453,13 @@ export const IMAGE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies a 2D max pooling over an input signal composed of several
             input planes.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -489,13 +489,13 @@ export const IMAGE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies a 2D adaptive average pooling over an input signal composed
             of several input planes.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -527,7 +527,7 @@ export const IMAGE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             During training, randomly zeroes some of the elements of the input
             tensor with probability p using samples from a Bernoulli
@@ -535,7 +535,7 @@ export const IMAGE_LAYERS = [
             forward call.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -573,10 +573,10 @@ export const IMAGE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>Flattens a contiguous range of dims into a tensor.</strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>

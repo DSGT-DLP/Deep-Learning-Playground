@@ -302,7 +302,7 @@ class BaseDDBUtil:
             if attribute not in self.EnumClass.Attribute:
                 raise ValueError(f"Attribute '{attribute}' not found in table {self.table_name}")
             elif value is None:
-                raise ValueError(f"Could not {operation} record with {attribute}: None")
+                pass
             elif type(value) is not self.DataClass.__dataclass_fields__[attribute].type:
                 raise ValueError(f"Could not {operation} record with {attribute} not of correct type")
             elif getattr(self.EnumClass, attribute.capitalize(), None) is not None and value not in getattr(self.EnumClass, attribute.capitalize()):

@@ -72,13 +72,11 @@ def send_email(email_address,subject="",body_text="",attachment_array=[],fileNam
     except ClientError as e:
         return(e.response["Error"]["Message"])
     else:
-        return("Email sent! Message ID:"),
-        return(response["MessageId"])
+        return("Email sent! Message ID:")
 
 def lambda_handler(event, context):
     print(event)
     myDict = json.loads(event['body'])
-    print(event)
     return send_email(event['queryStringParameters']['recipient'],
                       event['queryStringParameters']['subject'],
                       event['queryStringParameters']['body_text'],

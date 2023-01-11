@@ -6,19 +6,19 @@ data "archive_file" "send_email_files" {
 }
 
 resource "aws_lambda_function" "send_email" {
-  # If the file is not in the current working directory you will need to include a
-  # path.module in the filename.
   filename      = "outputs/send_email.zip"
   function_name = "send_email"
   role          = "arn:aws:iam::521654603461:role/send_email"
   handler       = "lambda_function.lambda_handler"
 
-  # The filebase64sha256() function is available in Terraform 0.11.12 and later
-  # For Terraform 0.11.11 and earlier, use the base64sha256() function and the file() function:
-  # source_code_hash = "${base64sha256(file("lambda_function_payload.zip"))}"
   source_code_hash = filebase64sha256("outputs/send_email.zip")
 
   runtime = "python3.9"
+}
+
+resource "aws_lambda_function_url" "send_email_url" {
+  function_name      = aws_lambda_function.send_email.function_name
+  authorization_type = "AWS_IAM"
 }
 
 resource "aws_apigatewayv2_api" "send_email" {
@@ -37,6 +37,7 @@ resource "aws_apigatewayv2_integration" "send_email_integration" {
   integration_uri = aws_lambda_function.send_email.invoke_arn
   integration_type = "AWS_PROXY"
   integration_method = "POST"
+  payload_format_version = "2.0"
 }
 
 resource "aws_apigatewayv2_route" "set_send_email" {
@@ -52,9 +53,8 @@ resource "aws_lambda_permission" "api_gw_send_email" {
   function_name = aws_lambda_function.send_email.function_name
   principal = "apigateway.amazonaws.com"
   
-  source_arn = "${aws_apigatewayv2_api.send_email.execution_arn}/*/*"
+  source_arn = "${aws_apigatewayv2_api.send_email.execution_arn}/*/*/send_email"
 }
-
 data "archive_file" "preprocess_data_files" {
   type        = "zip"
   output_path = "outputs/preprocess_data.zip"
@@ -70,4 +70,9 @@ resource "aws_lambda_function" "preprocess_data" {
 
   source_code_hash = filebase64sha256("outputs/preprocess_data.zip")
   runtime = "python3.9"
+}
+
+resource "aws_lambda_function_url" "preprocess_data_url" {
+  function_name      = aws_lambda_function.preprocess_data.function_name
+  authorization_type = "AWS_IAM"
 }

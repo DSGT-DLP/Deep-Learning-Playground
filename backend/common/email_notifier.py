@@ -17,6 +17,7 @@ def send_email(email_address, subject="", body_text="", attachment_array=[]):
     regex = re.compile(
         r"([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+"
     )
+    print("I'm before full match")
     if not re.fullmatch(regex, email_address):
         raise ValueError("Please enter a valid email to the send_email function")
     fileNames = [fileName.split("/")[-1] for fileName in attachment_array]
@@ -27,9 +28,9 @@ def send_email(email_address, subject="", body_text="", attachment_array=[]):
             my_string = my_string.decode("utf-8")
         base64Array.append(my_string)
 
-    url = "https://kwado68i00.execute-api.us-west-2.amazonaws.com/send_email"
+    url = "https://6amfyprxh9.execute-api.us-west-2.amazonaws.com/default/send_email"
     params = {"recipient": email_address, "subject": subject, "body_text": body_text}
     body = {"attachment_array": base64Array, "file_names": fileNames}
-
+    print("Before post")
     post = requests.post(url, params=params, json=body)
     return post

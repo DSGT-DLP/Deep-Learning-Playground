@@ -33,6 +33,10 @@
 /tests/test_pretrained_train.py @andrewpeng02
 /tests/expected/unzipped/double_zipped @vidushiMaheshwari
 
+# Terraform Files
+/dlp-terraform/lambda/source-files/lambda_function.py @thomaschin35 @avayedawadi
+/dlp-terraform/lambda/preprocess_lambda_function.py @thomaschin35
+
 #
 # Frontend
 #

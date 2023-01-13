@@ -18,7 +18,7 @@ from torchvision import models
 from fastai.callback.hook import num_features_model
 
 from backend.common.dataset import dataset_from_zipped
-from backend.common.constants import DEFAULT_TRANSFORM, SAVED_MODEL
+from backend.common.constants import DEFAULT_TRANSFORM, SAVED_MODEL_DL
 
 
 def train(
@@ -97,12 +97,12 @@ def train(
         else "../backend"
     )
 
-    saved_model = SAVED_MODEL if not "frontend" in os.listdir(os.getcwd()) else "/".join(SAVED_MODEL.split("/")[1:])
+    SAVED_MODEL = SAVED_MODEL_DL if not "frontend" in os.listdir(os.getcwd()) else "/".join(SAVED_MODEL_DL.split("/")[1:])
 
     learner.fit(
         n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv"))]
     )
-    save_model(saved_model, learner.model, getattr(learner, 'opt', None))
+    save_model(SAVED_MODEL, learner.model, getattr(learner, 'opt', None))
     return learner
 
 

@@ -284,7 +284,8 @@ const Home = () => {
 
         <TrainButton
           {...input_responses}
-          //csvDataInput={csvDataInput}
+          // @ts-ignore
+          csvDataInput={csvDataInput}
           setDLPBackendResponse={setDLPBackendResponse}
         />
       </BackgroundLayout>

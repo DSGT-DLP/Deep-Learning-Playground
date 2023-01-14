@@ -2,10 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import * as XLSX from "xlsx";
 import { FaCloudUploadAlt } from "react-icons/fa";
-//import { getSignedUploadUrl } from "../helper_functions/TalkWithBackend";
-//import axios from "axios";
 
-// src: https://www.cluemediator.com/read-csv-file-in-react
 const CSVInputFile = (props) => {
   const { setData, setColumns, setOldData, fileName, setFileName } = props;
 
@@ -75,38 +72,6 @@ const CSVInputFile = (props) => {
       setOldData(list);
     };
     reader.readAsBinaryString(file);
-    /*
-    const reader2 = new FileReader();
-    reader2.readAsDataURL(file);
-    reader2.onload = async (evt) => {
-      const buffer = evt.target.result;
-      console.log(buffer);
-    };*/
-    /* let form = new FormData();
-    form.append("file", file);
-    const response = await getSignedUploadUrl(1, file.name, file);
-    console.log(response);
-    const url = new URL(response["url"] + response["fields"]["key"]);
-    url.searchParams.append(
-      "AWSAccessKeyId",
-      response["fields"]["AWSAccessKeyId"]
-    );
-    url.searchParams.append("policy", response["fields"]["policy"]);
-    url.searchParams.append("signature", response["fields"]["signature"]);
-
-    console.log(
-      await fetch(url, {
-        method: "PUT",
-        //headers: new Headers({ "Content-Type": "application/json" }),
-        body: form,
-      })
-    ); */
-    /*
-    const response = await fetch(`${endpoint}`);
-    //?version=1&filename=${new URLSearchParams({version: 1}).toString()}
-    const resJson = await response.json();
-    console.log(response);
-    console.log(resJson);*/
   };
 
   return (
@@ -133,7 +98,7 @@ CSVInputFile.propTypes = {
   setData: PropTypes.func.isRequired,
   setColumns: PropTypes.func.isRequired,
   setOldData: PropTypes.func.isRequired,
-  fileName: PropTypes.any,
+  fileName: PropTypes.string,
   setFileName: PropTypes.func.isRequired,
 };
 

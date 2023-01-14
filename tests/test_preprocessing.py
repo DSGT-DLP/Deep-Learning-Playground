@@ -49,7 +49,7 @@ def invoke_preprocess_lambda(payload):
         Code={'ZipFile': open("dlp-terraform/lambda/preprocess_lambda_function.py", "rb").read()}
     )
     response = client.invoke(FunctionName="preprocess_data", Payload=payload)
-    resJson = json.loads(response["Payload"].read())
+    resJson = response["Payload"].read()
     print(resJson)
     return resJson
     

@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { DEFAULT_ADDED_LAYERS } from "./constants";
+
 import {
   BOOL_OPTIONS,
   CRITERIONS,
@@ -24,6 +25,7 @@ import {
   TrainButton,
   ChoiceTab,
   CustomModelName,
+  Preprocessing,
 } from "./components";
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
@@ -33,8 +35,10 @@ import { FormControlLabel, Switch } from "@mui/material";
 import { sendToBackend } from "./components/helper_functions/TalkWithBackend";
 
 const Home = () => {
+  const [fileName, setFileName] = useState(null);
   const [csvDataInput, setCSVDataInput] = useState([]);
   const [uploadedColumns, setUploadedColumns] = useState([]);
+  const [oldCsvDataInput, setOldCSVDataInput] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [inputKey, setInputKey] = useState(0);
 
@@ -235,12 +239,23 @@ const Home = () => {
 
   const ImplementedLayers = (
     <>
+      {beginnerMode ? null : (
+        <Preprocessing
+          data={oldCsvDataInput}
+          setData={setCSVDataInput}
+          setColumns={setUploadedColumns}
+        />
+      )}
+
       <TitleText text="Implemented Layers" />
       <BackgroundLayout>
         <div className="input-container d-flex flex-column align-items-center justify-content-center">
           <CSVInputFile
             setData={setCSVDataInput}
             setColumns={setUploadedColumns}
+            setOldData={setOldCSVDataInput}
+            fileName={fileName}
+            setFileName={setFileName}
           />
           <Spacer height={12} />
           <CSVInputURL
@@ -248,6 +263,7 @@ const Home = () => {
             setFileURL={setFileURL}
             setCSVColumns={setUploadedColumns}
             setCSVDataInput={setCSVDataInput}
+            setOldCSVDataInput={setOldCSVDataInput}
           />
         </div>
 
@@ -268,6 +284,7 @@ const Home = () => {
 
         <TrainButton
           {...input_responses}
+          // @ts-ignore
           csvDataInput={csvDataInput}
           setDLPBackendResponse={setDLPBackendResponse}
         />

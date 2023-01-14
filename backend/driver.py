@@ -19,6 +19,8 @@ from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, E
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 from backend.dl.detection import detection_img_drive
 
+from backend.aws_helpers.lambda_utils.lambda_client import invoke
+
 init_firebase()
 
 PORT = os.getenv("PORT")
@@ -216,6 +218,44 @@ def send_email_route():
         print(traceback.format_exc())
         return send_traceback_error()
 
+@app.route("/api/sendUserCodeEval", methods=["POST"])
+def send_user_code_eval():
+    try:
+        request_data = json.loads(request.data)
+        data = request_data["data"]
+        codeSnippet = request_data["codeSnippet"]
+        payload = json.dumps({
+            "data": data,
+            "code": codeSnippet
+        })
+        resJson = invoke('preprocess_data', payload)
+        if (resJson['statusCode'] == 200):
+            send_success({"message": "Preprocessed data", "data": resJson['data'], "columns": resJson['columns']})
+        else:
+            print(resJson['message'])
+            send_error(resJson['message'])
+        return resJson
+    except Exception:
+        print(traceback.format_exc())
+        print("error")
+        print("Last element: ", send_traceback_error()[0])
+        return send_traceback_error()
+
+@app.route("/api/getSignedUploadUrl", methods=["POST"])
+def get_signed_upload_url():
+    try:
+        version = request.form.get("version")
+        filename = request.form.get("filename")
+        file = request.files.get("file")
+        """ s3_client = boto3.client('s3')
+        response = s3_client.generate_presigned_post("dlp-upload-bucket", "v" + str(version) + "/" + filename)
+        print(requests.put(response['url'], data=response['fields'], files={'file': file.read()})) """
+        s3 = boto3.client('s3')
+        s3.upload_fileobj(file, "dlp-upload-bucket", "v" + str(version) + "/" + filename)
+        return send_success({"message": "Upload successful"})
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
 
 @app.route("/api/defaultDataset", methods=["POST"])
 def send_columns():

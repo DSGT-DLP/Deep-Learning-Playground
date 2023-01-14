@@ -35,6 +35,7 @@ const Preprocessing = (props) => {
             console.log(response["columns"]);
             setData(response["data"]);
             setColumns(response["columns"]);
+            toast.success("Preprocessing successful!");
           }
         }}
       >

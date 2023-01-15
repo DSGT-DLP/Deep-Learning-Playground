@@ -12,35 +12,26 @@ import {
   AddNewLayer,
   AddedLayer,
   BackgroundLayout,
-  CSVInputFile,
-  CSVInputURL,
   Input,
   LayerChoice,
   Spacer,
   Results,
   TitleText,
   TrainButton,
-  ChoiceTab,
-  CustomModelName,
 } from "../../components";
-import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "react-toastify";
-import { FormControlLabel, Switch } from "@mui/material";
 import { sendToBackend } from "../../components/helper_functions/TalkWithBackend";
 
 const Home = () => {
-  const [csvDataInput, setCSVDataInput] = useState([]);
-  const [uploadedColumns, setUploadedColumns] = useState([]);
+  const csvDataInput = [];
+  const uploadedColumns = [];
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [inputKey, setInputKey] = useState(0);
 
   // input responses
-  const [customModelName, setCustomModelName] = useState(
-    `Model ${new Date().toLocaleString()}`
-  );
-  const [fileURL, setFileURL] = useState("");
+  const fileURL = "";
   const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
   const [targetCol, setTargetCol] = useState(null);
   const [features, setFeatures] = useState([]);
@@ -63,7 +54,6 @@ const Home = () => {
     }))
   );
   const [activeColumns, setActiveColumns] = useState([]);
-  const [beginnerMode, setBeginnerMode] = useState(true);
 
   const input_responses = {
     addedLayers: addedLayers,
@@ -78,7 +68,7 @@ const Home = () => {
     testSize: testSize,
     batchSize: batchSize,
     fileURL: fileURL,
-    customModelName: customModelName,
+    customModelName: `Model ${new Date().toLocaleString()}`,
   };
 
   const columnOptionsArray = activeColumns.map((e, i) => ({
@@ -101,11 +91,6 @@ const Home = () => {
       setFeatures(featuresCopy);
     }
     setInputFeatureColumnOptions(csvColumnsCopy);
-  };
-
-  const onClick = () => {
-    setBeginnerMode(!beginnerMode);
-    setInputKey((e) => e + 1);
   };
 
   const input_queries = [
@@ -133,7 +118,7 @@ const Home = () => {
       options: OPTIMIZER_NAMES,
       onChange: setOptimizerName,
       defaultValue: optimizerName,
-      beginnerMode: beginnerMode,
+      beginnerMode: true,
     },
     {
       queryText: "Criterion",
@@ -142,7 +127,7 @@ const Home = () => {
       ),
       onChange: setCriterion,
       defaultValue: criterion,
-      beginnerMode: beginnerMode,
+      beginnerMode: true,
     },
     {
       queryText: "Default",
@@ -161,7 +146,7 @@ const Home = () => {
       options: BOOL_OPTIONS,
       onChange: setShuffle,
       defaultValue: shuffle,
-      beginnerMode: beginnerMode,
+      beginnerMode: true,
     },
     {
       queryText: "Test Size",
@@ -174,7 +159,7 @@ const Home = () => {
       onChange: setBatchSize,
       defaultValue: batchSize,
       freeInputCustomRestrictions: { type: "number", min: 2 },
-      beginnerMode: beginnerMode,
+      beginnerMode: true,
     },
   ];
 
@@ -201,7 +186,7 @@ const Home = () => {
         setActiveColumns(uploadedColumns);
       }
     })();
-  }, [usingDefaultDataset, uploadedColumns]);
+  }, [usingDefaultDataset]);
 
   useEffect(() => {
     if (usingDefaultDataset.value) {
@@ -215,38 +200,10 @@ const Home = () => {
     setInputKey((e) => e + 1);
   }, [activeColumns]);
 
-  const Heading = (
-    <div className="d-flex flex-row justify-content-between">
-      <FormControlLabel
-        control={<Switch id="mode-switch" onClick={onClick}></Switch>}
-        label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
-      />
-      <CustomModelName
-        customModelName={customModelName}
-        setCustomModelName={setCustomModelName}
-      />
-      <ChoiceTab />
-    </div>
-  );
-
   const ImplementedLayers = (
     <>
       <TitleText text="Implemented Layers" />
       <BackgroundLayout>
-        <div className="input-container d-flex flex-column align-items-center justify-content-center">
-          <CSVInputFile
-            setData={setCSVDataInput}
-            setColumns={setUploadedColumns}
-          />
-          <Spacer height={12} />
-          <CSVInputURL
-            fileURL={fileURL}
-            setFileURL={setFileURL}
-            setCSVColumns={setUploadedColumns}
-            setCSVDataInput={setCSVDataInput}
-          />
-        </div>
-
         {addedLayers.map((_, i) => (
           <AddedLayer
             thisLayerIndex={i}
@@ -307,19 +264,6 @@ const Home = () => {
     </>
   );
 
-  const InputCSVDisplay = (
-    <>
-      <TitleText text="CSV Input" />
-      <DataTable
-        pagination
-        highlightOnHover
-        columns={uploadedColumns}
-        data={csvDataInput}
-        className="dataTable"
-      />
-    </>
-  );
-
   const ResultsMemo = useMemo(
     () => (
       <Results
@@ -332,7 +276,6 @@ const Home = () => {
 
   return (
     <div id="train-tabular-data" className="container-fluid">
-      {Heading}
 
       <Spacer height={40} />
 
@@ -344,9 +287,6 @@ const Home = () => {
 
       <Spacer height={40} />
       {InputParameters}
-
-      <Spacer height={40} />
-      {InputCSVDisplay}
 
       <Spacer height={40} />
 

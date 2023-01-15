@@ -339,8 +339,22 @@ let content = {
                 "Now that we have covered most of the structure of the neural network, we need a way to evaluate our neural network! This will be covered in the next module where we talk about loss.",
             },
           ],
-          points: 0,
+          points: 0
         },
+        {
+          sectionID: 3,
+          title: "A First Attempt",
+          content: [
+            {
+              sectionType: "text",
+              content: "You are now ready to build a very basic neural network. Try it out below."
+            },
+            {
+              sectionType: "exercise"
+            }
+          ],
+          points: 0
+        }
       ],
       points: 10,
     },

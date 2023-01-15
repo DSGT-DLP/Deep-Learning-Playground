@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import ModulesSideBar from "./ModulesSideBar";
+import Exercise from "./Exercise";
 
 const LearnContent = () => {
   const navigate = useNavigate();
@@ -110,6 +111,13 @@ const LearnContent = () => {
                   />
                 );
               }
+
+              if (contentComponent.sectionType === "exercise") {
+                return (
+                  <Exercise/>
+                );
+              }
+
             }
           )}
         </div>

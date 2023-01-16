@@ -40,6 +40,7 @@ async function sendToBackend(route, data) {
         uid: auth.currentUser.uid,
       }
     : undefined;
+  data['route'] = route;
   const backendResult = await fetch(`/api/${route}`, {
     method: "POST",
     body: JSON.stringify(data),
@@ -57,6 +58,7 @@ const routeDict = {
 };
 
 async function train_and_output(choice, choiceDict) {
+  console.log(choiceDict);
   const trainResult = await sendToBackend(routeDict[choice], choiceDict);
   return trainResult;
 }

@@ -57,7 +57,6 @@ const routeDict = {
 };
 
 async function train_and_output(choice, choiceDict) {
-  console.log("Initializing training in backend, mode:", process.env.MODE);
   if (process.env.MODE === "dev") {
     const trainResult = await sendToBackend(routeDict[choice], choiceDict);
     return trainResult;

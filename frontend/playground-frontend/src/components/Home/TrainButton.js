@@ -144,7 +144,7 @@ const TrainButton = (props) => {
       const formData = new FormData();
       formData.append("file", uploadFile);
       await uploadToBackend(formData);
-    }    
+    }
     const trainResult = await train_and_output(
       choice,
       functionMap[choice][1](paramList)

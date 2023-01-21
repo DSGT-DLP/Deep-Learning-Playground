@@ -61,8 +61,10 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 2. Then in a separate terminal, start the frontend development server. After installing the prerequisites above, run the following commands:
 
     ```
-    npm run dev:variable
-    npm run startf
+    cd frontend\playground-frontend
+    dotenv set MODE dev
+    npm install
+    npm start
     ```
 
 3. Then, go to http://localhost:3000/

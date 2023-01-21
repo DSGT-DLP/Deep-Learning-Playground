@@ -11,7 +11,9 @@
     "startb": "conda activate dlplayground && python -m backend.driver",
     "secrets": "conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env",
     "secrets:deploy": "python -m backend.aws_helpers.aws_secrets_utils.build_env",
-    "docker:build": "docker build -t dlp ."
+    "docker:build": "docker build -t dlp .",
+    "dev:variable": "cd frontend/playground-frontend && dotenv set MODE dev",
+    "prod:variable": "cd frontend/playground-frontend && dotenv set MODE prod"
   },
   "repository": {
     "type": "git",

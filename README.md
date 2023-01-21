@@ -54,7 +54,7 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 
 ## Startup Instructions
 
-> **Note:** You will need the `.env` file to get the `Feedback` page working, but other pages work fine without it. Run the [build_env.py](./backend/aws_helpers/aws_secrets_utils/build_env.py) using `python build.py` in the `backend/aws_helpers/aws_secrets_utils` directory.
+> **Note:** You will need the `.env` file to get the `Feedback` page working, but other pages work fine without it. Run the [build_env.py](./backend/aws_helpers/aws_secrets_utils/build_env.py) using `python build_env.py` in the `backend/aws_helpers/aws_secrets_utils` directory. Alternatively, you can simply run `npm run secrets` while at the root of the project
 
 1. For complete functionality with the backend, first, start the backend using the instructions above. The backend will be live at http://localhost:8000/
 
@@ -62,6 +62,7 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 
     ```
     cd frontend\playground-frontend
+    dotenv set MODE dev
     npm install
     npm start
     ```

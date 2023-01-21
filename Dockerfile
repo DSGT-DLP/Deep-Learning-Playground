@@ -25,6 +25,8 @@ COPY . .
 
 RUN npm run secrets:deploy
 
+RUN npm run prod:variable
+
 RUN npm run build
 
 CMD python -m backend.driver

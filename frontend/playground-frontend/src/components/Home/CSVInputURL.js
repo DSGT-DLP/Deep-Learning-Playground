@@ -4,7 +4,13 @@ import { toast } from "react-toastify";
 import { Form } from "react-bootstrap";
 
 const HomeCSVInputURL = (props) => {
-  const { fileURL, setFileURL, setCSVColumns, setCSVDataInput } = props;
+  const {
+    fileURL,
+    setFileURL,
+    setCSVColumns,
+    setCSVDataInput,
+    setOldCSVDataInput,
+  } = props;
 
   async function handleURL(url) {
     try {
@@ -49,6 +55,7 @@ const HomeCSVInputURL = (props) => {
 
         setCSVDataInput(list);
         setCSVColumns(columns);
+        setOldCSVDataInput(list);
         setFileURL(url);
       }
     } catch (e) {
@@ -71,6 +78,7 @@ HomeCSVInputURL.propTypes = {
   setFileURL: PropTypes.func.isRequired,
   setCSVColumns: PropTypes.func.isRequired,
   setCSVDataInput: PropTypes.func.isRequired,
+  setOldCSVDataInput: PropTypes.func.isRequired,
 };
 
 export default HomeCSVInputURL;

@@ -10,6 +10,29 @@ async function uploadToBackend(data) {
   await axios.post("/api/upload", data, { headers });
 }
 
+const userCodeEval = async (data, snippet) => {
+  const codeEval = await sendToBackend("sendUserCodeEval", {
+    data: data,
+    codeSnippet: snippet,
+  });
+  return codeEval;
+};
+
+const getSignedUploadUrl = async (version, filename, file) => {
+  let headers = auth.currentUser
+    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
+    : undefined;
+  let data = new FormData();
+  data.append("version", version);
+  data.append("filename", filename);
+  data.append("file", file);
+  return await fetch("/api/getSignedUploadUrl", {
+    method: "POST",
+    body: data,
+    headers: headers,
+  });
+};
+
 async function sendToBackend(route, data) {
   let headers = auth.currentUser
     ? {
@@ -17,7 +40,6 @@ async function sendToBackend(route, data) {
         uid: auth.currentUser.uid,
       }
     : undefined;
-
   const backendResult = await fetch(`/api/${route}`, {
     method: "POST",
     body: JSON.stringify(data),
@@ -35,8 +57,14 @@ const routeDict = {
 };
 
 async function train_and_output(choice, choiceDict) {
-  const trainResult = await sendToBackend(routeDict[choice], choiceDict);
-  return trainResult;
+  if (process.env.MODE === "dev") {
+    const trainResult = await sendToBackend(routeDict[choice], choiceDict);
+    return trainResult;
+  } else {
+    //TODO: submit request to sqs. return success or fail message!
+    const trainResult = await sendToBackend(routeDict[choice], choiceDict);
+    return trainResult;
+  }
 }
 
 async function sendEmail(email, problemType) {
@@ -84,4 +112,6 @@ export {
   train_and_output,
   sendEmail,
   isLoggedIn,
+  userCodeEval,
+  getSignedUploadUrl,
 };

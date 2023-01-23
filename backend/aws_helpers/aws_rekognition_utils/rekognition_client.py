@@ -77,7 +77,6 @@ def show_bounding_boxes(image_bytes, box_sets, names, colors):
 
 def rekognition_detection(image, problem_type):
     rekognition_client = boto3.client('rekognition')
-    print("client started")
     image = RekognitionImage.from_image(image, rekognition_client)
     
     names = []

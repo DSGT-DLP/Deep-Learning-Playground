@@ -76,7 +76,7 @@ const ObjectDetection = () => {
     setBeginnerMode(!beginnerMode);
     setInputKey((e) => e + 1);
   };
-
+  //https://stackoverflow.com/questions/35940290/how-to-convert-base64-string-to-javascript-file-object-like-as-from-file-input-f
   const dataURLtoFile = (dataurl, filename) => {
     const arr = dataurl.split(",");
     const mime = arr[0].match(/:(.*?);/)[1];
@@ -104,16 +104,15 @@ const ObjectDetection = () => {
           />
           <ChoiceTab />
         </div>
-        <BackgroundLayout>
-          <TrainButton
-            {...input_responses}
-            setDLPBackendResponse={setDLPBackendResponse}
-            choice="objectdetection"
-          />
-        </BackgroundLayout>
       </DndProvider>
+      <BackgroundLayout>
+        <TrainButton
+          {...input_responses}
+          setDLPBackendResponse={setDLPBackendResponse}
+          choice="objectdetection"
+        />
+      </BackgroundLayout>
       <Spacer height={40} />
-
       <TitleText text="Detection Parameters" />
       <BackgroundLayout>
         {input_queries.map((e) => (
@@ -141,13 +140,11 @@ const ObjectDetection = () => {
               titleKey: "classicTv",
               descriptionKey: "4:3",
               ratio: 4 / 3,
-              // icon: CropClassicTv, // optional, CropClassicTv is a React Function component. Possible (React Function component, string or HTML Element)
             },
             {
               titleKey: "cinemascope",
               descriptionKey: "21:9",
               ratio: 21 / 9,
-              // icon: CropCinemaScope, // optional, CropCinemaScope is a React Function component.  Possible (React Function component, string or HTML Element)
             },
           ],
           presetsFolders: [
@@ -188,7 +185,6 @@ const ObjectDetection = () => {
         transforms={imageTransforms}
         setTransforms={setImageTransforms}
       />
-
       <Spacer height={40} />
       <TitleText text="Detection Results" />
       {ResultMemo}

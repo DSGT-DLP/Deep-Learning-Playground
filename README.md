@@ -62,7 +62,7 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 
     ```
     cd frontend\playground-frontend
-    dotenv set MODE dev
+    dotenv set MODE=dev
     npm install
     npm start
     ```

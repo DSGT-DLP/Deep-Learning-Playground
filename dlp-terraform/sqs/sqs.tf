@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 resource "aws_sqs_queue" "dlp_training_queue" {
-  name                      = "dlp-training-queue-ter"
+  name                      = "dlp-training-queue"
   delay_seconds             = 0
   max_message_size          = 262144
   message_retention_seconds = 345600
@@ -80,7 +80,7 @@ POLICY
 }
 
 resource "aws_sqs_queue" "dlp_dead_letter_queue" {
-  name = "dlp-deadletter-queue-ter"
+  name = "dlp-deadletter-queue"
   message_retention_seconds = 345600
   visibility_timeout_seconds = 30
   receive_wait_time_seconds = 10

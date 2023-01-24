@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from "react";
 import Transforms from "../ImageModels/Transforms";
-import ImageFileUpload from "../general/ImageFileUpload";
 import {
   OBJECT_DETECTION_PROBLEM_TYPES,
   DETECTION_TYPES,
@@ -20,6 +19,10 @@ import {
   Spacer,
   CustomModelName,
 } from "../index";
+import FilerobotImageEditor, {
+  TABS,
+  TOOLS,
+} from "react-filerobot-image-editor";
 
 const ObjectDetection = () => {
   const [customModelName, setCustomModelName] = useState(
@@ -73,6 +76,19 @@ const ObjectDetection = () => {
     setBeginnerMode(!beginnerMode);
     setInputKey((e) => e + 1);
   };
+  //https://stackoverflow.com/questions/35940290/how-to-convert-base64-string-to-javascript-file-object-like-as-from-file-input-f
+  const dataURLtoFile = (dataurl, filename) => {
+    const arr = dataurl.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n) {
+      u8arr[n - 1] = bstr.charCodeAt(n - 1);
+      n -= 1; // to make eslint happy
+    }
+    return new File([u8arr], filename, { type: mime });
+  };
 
   return (
     <div id="ml-models">
@@ -88,29 +104,79 @@ const ObjectDetection = () => {
           />
           <ChoiceTab />
         </div>
-        <BackgroundLayout>
-          <div className="input-container d-flex flex-column align-items-center justify-content-center">
-            <ImageFileUpload
-              uploadFile={uploadFile}
-              setUploadFile={setUploadFile}
-            />
-          </div>
-          <TrainButton
-            {...input_responses}
-            setDLPBackendResponse={setDLPBackendResponse}
-            choice="objectdetection"
-          />
-        </BackgroundLayout>
       </DndProvider>
+      <BackgroundLayout>
+        <TrainButton
+          {...input_responses}
+          setDLPBackendResponse={setDLPBackendResponse}
+          choice="objectdetection"
+        />
+      </BackgroundLayout>
       <Spacer height={40} />
-
       <TitleText text="Detection Parameters" />
       <BackgroundLayout>
         {input_queries.map((e) => (
           <Input {...e} key={e.queryText + inputKey} />
         ))}
       </BackgroundLayout>
-
+      <FilerobotImageEditor
+        source="https://scaleflex.airstore.io/demo/stephen-walker-unsplash.jpg"
+        onSave={(editedImageObject, designState) => {
+          console.log("saved", editedImageObject, designState);
+          const file = dataURLtoFile(
+            editedImageObject.imageBase64,
+            editedImageObject.fullName
+          );
+          setUploadFile(file);
+        }}
+        annotationsCommon={{
+          fill: "#ff0000",
+        }}
+        Text={{ text: "Filerobot..." }}
+        Rotate={{ angle: 90, componentType: "slider" }}
+        Crop={{
+          presetsItems: [
+            {
+              titleKey: "classicTv",
+              descriptionKey: "4:3",
+              ratio: 4 / 3,
+            },
+            {
+              titleKey: "cinemascope",
+              descriptionKey: "21:9",
+              ratio: 21 / 9,
+            },
+          ],
+          presetsFolders: [
+            {
+              titleKey: "socialMedia", // will be translated into Social Media as backend contains this translation key
+              // icon: Social, // optional, Social is a React Function component. Possible (React Function component, string or HTML Element)
+              groups: [
+                {
+                  titleKey: "facebook",
+                  items: [
+                    {
+                      titleKey: "profile",
+                      width: 180,
+                      height: 180,
+                      descriptionKey: "fbProfileSize",
+                    },
+                    {
+                      titleKey: "coverPhoto",
+                      width: 820,
+                      height: 312,
+                      descriptionKey: "fbCoverPhotoSize",
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        }}
+        tabsIds={[TABS.ADJUST, TABS.ANNOTATE, TABS.WATERMARK]} // or {['Adjust', 'Annotate', 'Watermark']}
+        defaultTabId={TABS.ANNOTATE} // or 'Annotate'
+        defaultToolId={TOOLS.TEXT} // or 'Text'
+      />
       <Spacer height={40} />
       <TitleText text="Image Transformations" />
       <Transforms
@@ -119,7 +185,6 @@ const ObjectDetection = () => {
         transforms={imageTransforms}
         setTransforms={setImageTransforms}
       />
-
       <Spacer height={40} />
       <TitleText text="Detection Results" />
       {ResultMemo}

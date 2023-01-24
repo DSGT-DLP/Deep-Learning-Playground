@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { DEFAULT_ADDED_LAYERS } from "./constants";
+
 import {
   BOOL_OPTIONS,
   CRITERIONS,
@@ -24,6 +25,7 @@ import {
   TrainButton,
   ChoiceTab,
   CustomModelName,
+  Preprocessing,
 } from "./components";
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
@@ -33,8 +35,10 @@ import { FormControlLabel, Switch } from "@mui/material";
 import { sendToBackend } from "./components/helper_functions/TalkWithBackend";
 
 const Home = () => {
+  const [fileName, setFileName] = useState(null);
   const [csvDataInput, setCSVDataInput] = useState([]);
   const [uploadedColumns, setUploadedColumns] = useState([]);
+  const [oldCsvDataInput, setOldCSVDataInput] = useState([]);
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
   const [inputKey, setInputKey] = useState(0);
 
@@ -169,9 +173,9 @@ const Home = () => {
     },
     {
       queryText: "Test Size",
+      range: true,
       onChange: setTestSize,
       defaultValue: testSize,
-      freeInputCustomRestrictions: { type: "number", min: 0, step: 0.1 },
     },
     {
       queryText: "Batch Size",
@@ -181,16 +185,6 @@ const Home = () => {
       beginnerMode: beginnerMode,
     },
   ];
-
-  const ResultsMemo = useMemo(
-    () => (
-      <Results
-        dlpBackendResponse={dlpBackendResponse}
-        problemType={problemType}
-      />
-    ),
-    [dlpBackendResponse, problemType]
-  );
 
   useEffect(() => {
     setCriterion(
@@ -229,107 +223,156 @@ const Home = () => {
     setInputKey((e) => e + 1);
   }, [activeColumns]);
 
-  return (
-    <div id="home-page" className="container-fluid">
-      <div className="d-flex flex-row justify-content-between">
-        <FormControlLabel
-          control={<Switch id="mode-switch" onClick={onClick}></Switch>}
-          label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
+  const Heading = (
+    <div className="d-flex flex-row justify-content-between">
+      <FormControlLabel
+        control={<Switch id="mode-switch" onClick={onClick}></Switch>}
+        label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
+      />
+      <CustomModelName
+        customModelName={customModelName}
+        setCustomModelName={setCustomModelName}
+      />
+      <ChoiceTab />
+    </div>
+  );
+
+  const ImplementedLayers = (
+    <>
+      {beginnerMode ? null : (
+        <Preprocessing
+          data={oldCsvDataInput}
+          setData={setCSVDataInput}
+          setColumns={setUploadedColumns}
         />
-        <CustomModelName
-          customModelName={customModelName}
-          setCustomModelName={setCustomModelName}
-        />
-        <ChoiceTab />
-      </div>
+      )}
 
-      <Spacer height={40} />
-      <DndProvider backend={HTML5Backend}>
-        <TitleText text="Implemented Layers" />
-        <BackgroundLayout>
-          <div className="input-container d-flex flex-column align-items-center justify-content-center">
-            <CSVInputFile
-              setData={setCSVDataInput}
-              setColumns={setUploadedColumns}
-            />
-            <Spacer height={12} />
-            <CSVInputURL
-              fileURL={fileURL}
-              setFileURL={setFileURL}
-              setCSVColumns={setUploadedColumns}
-              setCSVDataInput={setCSVDataInput}
-            />
-          </div>
-
-          {addedLayers.map((_, i) => (
-            <AddedLayer
-              thisLayerIndex={i}
-              addedLayers={addedLayers}
-              setAddedLayers={setAddedLayers}
-              key={i}
-              onDelete={() => {
-                const currentLayers = [...addedLayers];
-                currentLayers.splice(i, 1);
-                setAddedLayers(currentLayers);
-              }}
-            />
-          ))}
-          <AddNewLayer />
-
-          <TrainButton
-            {...input_responses}
-            csvDataInput={csvDataInput}
-            setDLPBackendResponse={setDLPBackendResponse}
+      <TitleText text="Implemented Layers" />
+      <BackgroundLayout>
+        <div className="input-container d-flex flex-column align-items-center justify-content-center">
+          <CSVInputFile
+            setData={setCSVDataInput}
+            setColumns={setUploadedColumns}
+            setOldData={setOldCSVDataInput}
+            fileName={fileName}
+            setFileName={setFileName}
           />
-        </BackgroundLayout>
+          <Spacer height={12} />
+          <CSVInputURL
+            fileURL={fileURL}
+            setFileURL={setFileURL}
+            setCSVColumns={setUploadedColumns}
+            setCSVDataInput={setCSVDataInput}
+            setOldCSVDataInput={setOldCSVDataInput}
+          />
+        </div>
 
-        <Spacer height={40} />
+        {addedLayers.map((_, i) => (
+          <AddedLayer
+            thisLayerIndex={i}
+            addedLayers={addedLayers}
+            setAddedLayers={setAddedLayers}
+            key={i}
+            onDelete={() => {
+              const currentLayers = [...addedLayers];
+              currentLayers.splice(i, 1);
+              setAddedLayers(currentLayers);
+            }}
+          />
+        ))}
+        <AddNewLayer />
 
-        <TitleText text="Layers Inventory" />
-        <BackgroundLayout>
-          {POSSIBLE_LAYERS.map((e) => (
-            <LayerChoice
-              layer={e}
-              key={e.display_name}
-              onDrop={(newLayer) => {
-                setAddedLayers((currentAddedLayers) => {
-                  const copyCurrent = [...currentAddedLayers];
-                  const layerCopy = deepCopyObj(newLayer);
-                  Object.values(layerCopy.parameters).forEach((val) => {
-                    val.value = val.default ? val.default : val.min;
-                  });
-                  copyCurrent.push(layerCopy);
-                  return copyCurrent;
+        <TrainButton
+          {...input_responses}
+          // @ts-ignore
+          csvDataInput={csvDataInput}
+          setDLPBackendResponse={setDLPBackendResponse}
+        />
+      </BackgroundLayout>
+    </>
+  );
+
+  const LayersInventory = (
+    <>
+      <TitleText text="Layers Inventory" />
+      <BackgroundLayout>
+        {POSSIBLE_LAYERS.map((e) => (
+          <LayerChoice
+            layer={e}
+            key={e.display_name}
+            onDrop={(newLayer) => {
+              setAddedLayers((currentAddedLayers) => {
+                const copyCurrent = [...currentAddedLayers];
+                const layerCopy = deepCopyObj(newLayer);
+                Object.values(layerCopy.parameters).forEach((val) => {
+                  val.value = val.default ? val.default : val.min;
                 });
-              }}
-            />
-          ))}
-        </BackgroundLayout>
-      </DndProvider>
+                copyCurrent.push(layerCopy);
+                return copyCurrent;
+              });
+            }}
+          />
+        ))}
+      </BackgroundLayout>
+    </>
+  );
 
-      <Spacer height={40} />
-
+  const InputParameters = (
+    <>
       <TitleText text="Deep Learning Parameters" />
       <BackgroundLayout>
         {input_queries.map((e) => (
           <Input {...e} key={e.queryText + inputKey} />
         ))}
       </BackgroundLayout>
+    </>
+  );
 
-      <Spacer height={40} />
-
-      <TitleText text="Email (optional)" />
-      <EmailInput email={email} setEmail={setEmail} />
-
-      <Spacer height={40} />
-
+  const InputCSVDisplay = (
+    <>
       <TitleText text="CSV Input" />
       <DataTable
         pagination
         highlightOnHover
         columns={uploadedColumns}
         data={csvDataInput}
+        className="dataTable"
       />
+    </>
+  );
+
+  const ResultsMemo = useMemo(
+    () => (
+      <Results
+        dlpBackendResponse={dlpBackendResponse}
+        problemType={problemType}
+      />
+    ),
+    [dlpBackendResponse, problemType]
+  );
+
+  return (
+    <div id="train-tabular-data" className="container-fluid">
+      {Heading}
+
+      <Spacer height={40} />
+
+      <DndProvider backend={HTML5Backend}>
+        {ImplementedLayers}
+        <Spacer height={40} />
+        {LayersInventory}
+      </DndProvider>
+
+      <Spacer height={40} />
+      {InputParameters}
+
+      <Spacer height={40} />
+
+      <TitleText text="Email (optional)" />
+      <EmailInput setEmail={setEmail} />
+
+      <Spacer height={40} />
+      {InputCSVDisplay}
 
       <Spacer height={40} />
 

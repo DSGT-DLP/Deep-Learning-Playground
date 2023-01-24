@@ -28,10 +28,13 @@ dependencies:
   - ruamel.yaml
   - eventlet
   - python-dotenv
+  - transformers
   - pip:
-     - torchvision
-     - timm
-     - wwf
-     - fastai==2.7.4
-     - firebase_admin
-     - pyrebase4
+      - torchvision
+      - timm
+      - wwf
+      - fastai==2.7.4
+      - firebase_admin
+      - pyrebase4
+      - moto
+      - docker

@@ -10,17 +10,19 @@ export const POSSIBLE_LAYERS = [
         parameter_name: "Input size",
         min: 1,
         max: 1600,
+        parameter_type: "number",
       },
       outputSize: {
         index: 1,
         parameter_name: "Output size",
         min: 1,
         max: 1600,
+        parameter_type: "number",
       },
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies a linear transformation to the incoming data:{" "}
             <i>
@@ -30,7 +32,7 @@ export const POSSIBLE_LAYERS = [
             .
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -54,7 +56,7 @@ export const POSSIBLE_LAYERS = [
     parameters: {},
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies the rectified linear unit function element-wise: ReLU
             <i>
@@ -63,10 +65,10 @@ export const POSSIBLE_LAYERS = [
             max(0, <i>x)</i>.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
-        <p>
+        <p className="info">
           <i>None</i>
         </p>
         <a href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html">
@@ -79,18 +81,24 @@ export const POSSIBLE_LAYERS = [
     display_name: "Softmax",
     object_name: "nn.Softmax",
     parameters: {
-      inputSize: { index: 0, parameter_name: "dim", min: -3, max: 2 },
+      inputSize: {
+        index: 0,
+        parameter_name: "dim",
+        min: -3,
+        max: 2,
+        parameter_type: "number",
+      },
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies the Softmax function to an <i>n</i>-dimensional input Tensor
             rescaling them so that the elements of the <i>n</i>-dimensional
             output Tensor lie in the range [0,1] and sum to 1.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -111,14 +119,14 @@ export const POSSIBLE_LAYERS = [
     parameters: {},
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>Applies the Sigmoid function.</strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
-        <p>
-          <i>None</i>
+        <p className="info">
+          <i className="info">None</i>
         </p>
         <a href="https://pytorch.org/docs/stable/generated/torch.nn.Sigmoid.html">
           More info
@@ -132,15 +140,15 @@ export const POSSIBLE_LAYERS = [
     parameters: {},
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies the Hyperbolic Tangent (Tanh) function element-wise.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
-        <p>
+        <p className="info">
           <i>None</i>
         </p>
         <a href="https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html">
@@ -153,17 +161,23 @@ export const POSSIBLE_LAYERS = [
     display_name: "LogSoftmax",
     object_name: "nn.LogSoftmax",
     parameters: {
-      inputSize: { index: 0, parameter_name: "dim", min: -3, max: 2 },
+      inputSize: {
+        index: 0,
+        parameter_name: "dim",
+        min: -3,
+        max: 2,
+        parameter_type: "number",
+      },
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies the log(Softmax(<i>x</i>)) function to an <i>n</i>
             -dimensional input Tensor.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -180,6 +194,134 @@ export const POSSIBLE_LAYERS = [
   },
 ];
 
+export const ML_MODELS = [
+  {
+    display_name: "RF Classifier",
+    object_name: "sklearn.ensemble.RandomForestClassifier",
+    parameters: {
+      n_estimators: {
+        index: 0,
+        parameter_name: "Number of Estimators",
+        kwarg: "n_estimators = ",
+        default: 100,
+        min: 1,
+        max: 200,
+        parameter_type: "number",
+      },
+      max_depth: {
+        index: 1,
+        parameter_name: "Max Depth",
+        kwarg: "max_depth = ",
+        default: 5,
+        min: 1,
+        max: 100,
+        parameter_type: "number",
+      },
+      min_samples_split: {
+        index: 2,
+        parameter_name: "Minimum Samples Split",
+        kwarg: "min_samples_split = ",
+        default: 2,
+        min: 1,
+        max: 10,
+        parameter_type: "number",
+      },
+      max_features: {
+        index: 3,
+        parameter_name: "Max Features",
+        kwarg: "max_features = ",
+        default: "sqrt",
+        parameter_type: "text",
+      },
+    },
+  },
+  {
+    display_name: "RF Regressor",
+    object_name: "sklearn.ensemble.RandomForestRegressor",
+    parameters: {
+      n_estimators: {
+        index: 0,
+        parameter_name: "Number of Estimators",
+        kwarg: "n_estimators = ",
+        default: 100,
+        min: 1,
+        max: 200,
+        parameter_type: "number",
+      },
+      max_depth: {
+        index: 1,
+        parameter_name: "Max Depth",
+        kwarg: "max_depth = ",
+        default: 5,
+        min: 1,
+        max: 5,
+        parameter_type: "number",
+      },
+      min_samples_split: {
+        index: 2,
+        parameter_name: "Minimum Samples Split",
+        kwarg: "min_samples_split = ",
+        default: 2,
+        min: 2,
+        max: 10,
+        parameter_type: "number",
+      },
+      max_features: {
+        index: 3,
+        parameter_name: "Max Features",
+        kwarg: "max_features = ",
+        default: "sqrt",
+        parameter_type: "text",
+      },
+    },
+  },
+  {
+    display_name: "Logistic Regression",
+    object_name: "sklearn.linear_model.LogisticRegression",
+    parameters: {
+      fit_intercept: {
+        index: 0,
+        parameter_name: "Intercept",
+        kwarg: "fit_intercept = ",
+        default: 1,
+        min: 0,
+        max: 1,
+        parameter_type: "number",
+      },
+      C: {
+        index: 1,
+        parameter_name: "Regularization Strength (C)",
+        kwarg: "C = ",
+        default: 1,
+        min: 0,
+        max: 10,
+        parameter_type: "number",
+      },
+      penslty: {
+        index: 2,
+        parameter_name: "Penalty",
+        default: "l2",
+        kwarg: "penalty = ",
+        parameter_type: "text",
+      },
+    },
+  },
+  {
+    display_name: "Linear  Regression",
+    object_name: "sklearn.linear_model.LinearRegression",
+    parameters: {
+      fit_intercept: {
+        index: 0,
+        parameter_name: "Intercept",
+        kwarg: "fit_intercept = ",
+        min: 0,
+        max: 1,
+        parameter_type: "number",
+      },
+    },
+  },
+];
+
 export const IMAGE_LAYERS = [
   {
     display_name: "Conv2D",
@@ -190,41 +332,46 @@ export const IMAGE_LAYERS = [
         parameter_name: "in channels",
         min: 1,
         max: 16,
+        parameter_type: "number",
       },
       out_channels: {
         index: 1,
         parameter_name: "out channels",
         min: 1,
         max: 16,
+        parameter_type: "number",
       },
       kernel_size: {
         index: 2,
         parameter_name: "kernel size",
         min: 1,
         max: 1000,
+        parameter_type: "number",
       },
       stride: {
         index: 3,
         parameter_name: "stride",
         min: 1,
         max: 1000,
+        parameter_type: "number",
       },
       padding: {
         index: 4,
         parameter_name: "padding",
         min: 1,
         max: 1000,
+        parameter_type: "number",
       },
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies a 2D convolution over an input signal composed of several
             input planes.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -255,11 +402,12 @@ export const IMAGE_LAYERS = [
         parameter_name: "num features",
         min: 1,
         max: 16,
+        parameter_type: "number",
       },
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies Batch Normalization over a 4D input (a mini-batch of 2D
             inputs with additional channel dimension) as described in the paper{" "}
@@ -269,7 +417,7 @@ export const IMAGE_LAYERS = [
             </a>
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -293,23 +441,25 @@ export const IMAGE_LAYERS = [
         parameter_name: "Kernel size",
         min: 1,
         max: 1000,
+        parameter_type: "number",
       },
       stride: {
         index: 1,
         parameter_name: "stride",
         min: 1,
         max: 1000,
+        parameter_type: "number",
       },
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies a 2D max pooling over an input signal composed of several
             input planes.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -326,7 +476,7 @@ export const IMAGE_LAYERS = [
     ),
   },
   {
-    display_name: "AdaptAvgPool2d",
+    display_name: "AdaptAvg Pool2d",
     object_name: "nn.AdaptiveAvgPool2d",
     parameters: {
       output_size: {
@@ -334,17 +484,18 @@ export const IMAGE_LAYERS = [
         parameter_name: "Output size",
         min: 1,
         max: 16,
+        parameter_type: "number",
       },
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies a 2D adaptive average pooling over an input signal composed
             of several input planes.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -366,11 +517,17 @@ export const IMAGE_LAYERS = [
     display_name: "Dropout",
     object_name: "nn.Dropout",
     parameters: {
-      p: { index: 0, parameter_name: "Probability", min: 0, max: 1 },
+      p: {
+        index: 0,
+        parameter_name: "Probability",
+        min: 0,
+        max: 1,
+        parameter_type: "number",
+      },
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             During training, randomly zeroes some of the elements of the input
             tensor with probability p using samples from a Bernoulli
@@ -378,7 +535,7 @@ export const IMAGE_LAYERS = [
             forward call.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -399,15 +556,27 @@ export const IMAGE_LAYERS = [
     display_name: "Flatten",
     object_name: "nn.Flatten",
     parameters: {
-      start_dim: { index: 0, parameter_name: "start dim", min: -4, max: 3 },
-      end_dim: { index: 1, parameter_name: "end dim", min: -4, max: 3 },
+      start_dim: {
+        index: 0,
+        parameter_name: "start dim",
+        min: -4,
+        max: 3,
+        parameter_type: "number",
+      },
+      end_dim: {
+        index: 1,
+        parameter_name: "end dim",
+        min: -4,
+        max: 3,
+        parameter_type: "number",
+      },
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>Flattens a contiguous range of dims into a tensor.</strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -432,7 +601,13 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Random Horizontal Flip",
     object_name: "transforms.RandomHorizontalFlip",
     parameters: {
-      probability: { index: 0, parameter_name: "prob", min: 0, max: 1 },
+      probability: {
+        index: 0,
+        parameter_name: "prob",
+        min: 0,
+        max: 1,
+        parameter_type: "number",
+      },
     },
     label: "Random Horizontal Flip",
     value: "RandomHorizontalFlip",
@@ -442,7 +617,13 @@ export const POSSIBLE_TRANSFORMS = [
     display_name: "Random Vertical Flip",
     object_name: "transforms.RandomVerticalFlip",
     parameters: {
-      p: { index: 0, parameter_name: "prob", min: 0, max: 1 },
+      p: {
+        index: 0,
+        parameter_name: "prob",
+        min: 0,
+        max: 1,
+        parameter_type: "number",
+      },
     },
     label: "Random Vertical Flip",
     value: "RandomVerticalFlip",
@@ -465,6 +646,7 @@ export const POSSIBLE_TRANSFORMS = [
         min: 1,
         max: 1000,
         default: "(32, 32)",
+        parameter_type: "tuple",
       },
     },
     label: "Resize",
@@ -479,6 +661,7 @@ export const POSSIBLE_TRANSFORMS = [
         parameter_name: "kernel size",
         min: 1,
         max: 1000,
+        parameter_type: "number",
       },
     },
     label: "Gaussian Blur",
@@ -501,6 +684,7 @@ export const POSSIBLE_TRANSFORMS = [
         min: -1000,
         max: 1000,
         default: 0,
+        parameter_type: "number",
       },
       std: {
         index: 1,
@@ -508,10 +692,190 @@ export const POSSIBLE_TRANSFORMS = [
         min: -1000,
         max: 1000,
         default: 1,
+        parameter_type: "number",
       },
     },
     label: "Normalize",
     value: "Normalize",
+  },
+];
+
+export const DETECTION_TRANSFORMS = [
+  {
+    display_name: "Random Horizontal Flip",
+    object_name: "transforms.RandomHorizontalFlip",
+    parameters: {
+      probability: {
+        index: 0,
+        parameter_name: "prob",
+        min: 0,
+        max: 1,
+        parameter_type: "number",
+      },
+    },
+    label: "Random Horizontal Flip",
+    value: "RandomHorizontalFlip",
+  },
+
+  {
+    display_name: "Random Vertical Flip",
+    object_name: "transforms.RandomVerticalFlip",
+    parameters: {
+      p: {
+        index: 0,
+        parameter_name: "prob",
+        min: 0,
+        max: 1,
+        parameter_type: "number",
+      },
+    },
+    label: "Random Vertical Flip",
+    value: "RandomVerticalFlip",
+  },
+
+  {
+    display_name: "To Tensor",
+    object_name: "transforms.ToTensor",
+    parameters: {},
+    label: "To Tensor",
+    value: "ToTensor",
+  },
+  {
+    display_name: "Resize",
+    object_name: "transforms.Resize",
+    parameters: {
+      size: {
+        index: 0,
+        parameter_name: "(H, W)",
+        min: 1,
+        max: 1000,
+        default: "(32, 32)",
+        parameter_type: "tuple",
+      },
+    },
+    label: "Resize",
+    value: "Resize",
+  },
+  {
+    display_name: "Gaussian Blur",
+    object_name: "transforms.GaussianBlur",
+    parameters: {
+      kernel_size: {
+        index: 0,
+        parameter_name: "kernel size",
+        min: 1,
+        max: 1000,
+        parameter_type: "number",
+      },
+    },
+    label: "Gaussian Blur",
+    value: "GaussianBlur",
+  },
+  {
+    display_name: "Grayscale",
+    object_name: "transforms.Grayscale",
+    parameters: {},
+    label: "Grayscale",
+    value: "Grayscale",
+  },
+  {
+    display_name: "Normalize",
+    object_name: "transforms.Normalize",
+    parameters: {
+      mean: {
+        index: 0,
+        parameter_name: "mean",
+        min: -1000,
+        max: 1000,
+        default: 0,
+        parameter_type: "number",
+      },
+      std: {
+        index: 1,
+        parameter_name: "std",
+        min: -1000,
+        max: 1000,
+        default: 1,
+        parameter_type: "number",
+      },
+    },
+    label: "Normalize",
+    value: "Normalize",
+  },
+  {
+    display_name: "AdjustContrast",
+    object_name: "transforms.functional.adjust_contrast",
+    transform_type: "functional",
+    parameters: {
+      contrast_factor: {
+        index: 0,
+        parameter_name: "contrast_factor",
+        min: 0,
+        max: 10000,
+        default: 0,
+        parameter_type: "number",
+      },
+    },
+    label: "AdjustContrast",
+    value: "AdjustContrast",
+  },
+  {
+    display_name: "AdjustBrightness",
+    object_name: "transforms.functional.adjust_brightness",
+    transform_type: "functional",
+    parameters: {
+      brightness_factor: {
+        index: 0,
+        parameter_name: "brightness_factor",
+        min: 0,
+        max: 10000,
+        default: 0,
+        parameter_type: "number",
+      },
+    },
+    label: "AdjustBrightness",
+    value: "AdjustBrightness",
+  },
+  {
+    display_name: "Affine",
+    object_name: "transforms.functional.affine",
+    transform_type: "functional",
+    parameters: {
+      angle: {
+        index: 0,
+        parameter_name: "angle",
+        min: -180,
+        max: 180,
+        default: 0,
+        parameter_type: "number",
+      },
+      translate: {
+        index: 1,
+        parameter_name: "translate",
+        min: -1000,
+        max: 1000,
+        default: "(0, 0)",
+        parameter_type: "tuple",
+      },
+      scale: {
+        index: 2,
+        parameter_name: "scale",
+        min: 0,
+        max: 1000,
+        default: 1,
+        parameter_type: "number",
+      },
+      shear: {
+        index: 3,
+        parameter_name: "shear",
+        min: -180,
+        max: 180,
+        default: "(0, 0)",
+        parameter_type: "tuple",
+      },
+    },
+    label: "Affine",
+    value: "Affine",
   },
 ];
 
@@ -561,6 +925,16 @@ export const IMAGE_CLASSIFICATION_CRITERION = [
 export const PROBLEM_TYPES = [
   { label: "Classification", value: CLASSIFICATION },
   { label: "Regression", value: REGRESSION },
+];
+
+export const OBJECT_DETECTION_PROBLEM_TYPES = [
+  { label: "Labels", value: "labels" },
+  { label: "Celebrities", value: "celebrities" },
+];
+
+export const DETECTION_TYPES = [
+  { label: "Rekognition", value: "rekognition" },
+  { label: "YOLO", value: "yolo" },
 ];
 
 export const BOOL_OPTIONS = [

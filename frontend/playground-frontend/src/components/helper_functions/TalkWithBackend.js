@@ -2,39 +2,72 @@ import { toast } from "react-toastify";
 import { auth } from "../../firebase";
 import axios from "axios";
 
-const uploadToBackend = async (data) => {
+async function uploadToBackend(data) {
   let headers = auth.currentUser
     ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
     : undefined;
 
   await axios.post("/api/upload", data, { headers });
+}
+
+const userCodeEval = async (data, snippet) => {
+  const codeEval = await sendToBackend("sendUserCodeEval", {
+    data: data,
+    codeSnippet: snippet,
+  });
+  return codeEval;
 };
 
-const sendToBackend = async (route, data) => {
+const getSignedUploadUrl = async (version, filename, file) => {
   let headers = auth.currentUser
     ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
     : undefined;
+  let data = new FormData();
+  data.append("version", version);
+  data.append("filename", filename);
+  data.append("file", file);
+  return await fetch("/api/getSignedUploadUrl", {
+    method: "POST",
+    body: data,
+    headers: headers,
+  });
+};
 
+async function sendToBackend(route, data) {
+  let headers = auth.currentUser
+    ? {
+        Authorization: "bearer " + (await auth.currentUser.getIdToken(true)),
+        uid: auth.currentUser.uid,
+      }
+    : undefined;
   const backendResult = await fetch(`/api/${route}`, {
     method: "POST",
     body: JSON.stringify(data),
     headers: headers,
   }).then((result) => result.json());
   return backendResult;
-};
+}
 
 const routeDict = {
   tabular: "tabular-run",
   image: "img-run",
   pretrained: "pretrain-run",
+  classicalml: "ml-run",
+  objectdetection: "object-detection",
 };
 
-const train_and_output = async (choice, choiceDict) => {
-  const trainResult = await sendToBackend(routeDict[choice], choiceDict);
-  return trainResult;
-};
+async function train_and_output(choice, choiceDict) {
+  if (process.env.MODE === "dev") {
+    const trainResult = await sendToBackend(routeDict[choice], choiceDict);
+    return trainResult;
+  } else {
+    //TODO: submit request to sqs. return success or fail message!
+    const trainResult = await sendToBackend(routeDict[choice], choiceDict);
+    return trainResult;
+  }
+}
 
-const sendEmail = async (email, problemType) => {
+async function sendEmail(email, problemType) {
   // send email if provided
   const attachments = [
     // we will not create constant values for the source files because the constants cannot be used in Home
@@ -67,11 +100,11 @@ const sendEmail = async (email, problemType) => {
   if (!emailResult.success) {
     toast.error(emailResult.message);
   }
-};
+}
 
-const isLoggedIn = async () => {
+async function isLoggedIn() {
   return await auth.currentUser?.getIdToken(true), toast.error("Not logged in");
-};
+}
 
 export {
   uploadToBackend,
@@ -79,4 +112,6 @@ export {
   train_and_output,
   sendEmail,
   isLoggedIn,
+  userCodeEval,
+  getSignedUploadUrl,
 };

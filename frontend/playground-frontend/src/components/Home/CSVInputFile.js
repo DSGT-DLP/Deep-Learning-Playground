@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import * as XLSX from "xlsx";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
-// src: https://www.cluemediator.com/read-csv-file-in-react
 const CSVInputFile = (props) => {
-  const { setData, setColumns } = props;
-  const [fileName, setFileName] = useState();
+  const { setData, setColumns, setOldData, fileName, setFileName } = props;
 
   // process CSV data
-  const processData = (dataString) => {
+  const csvToJson = (dataString) => {
     const dataStringLines = dataString.split(/\r\n|\n/);
     const headers = dataStringLines[0].split(
       /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
@@ -45,17 +43,21 @@ const CSVInputFile = (props) => {
       name: c,
       selector: (row) => row[c],
     }));
-
-    setData(list);
-    setColumns(columns);
+    return [list, columns];
   };
 
   // handle file upload
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    setFileName(file.name?.substring(0, 20));
+    setFileName(
+      file.name == null
+        ? null
+        : file.name.replace(/\.[^/.]+$/, "").substring(0, 20) +
+            "." +
+            file.name.split(".").pop()
+    );
     const reader = new FileReader();
-    reader.onload = (evt) => {
+    reader.onload = async (evt) => {
       /* Parse data */
       const bstr = evt.target.result;
       const wb = XLSX.read(bstr, { type: "binary" });
@@ -63,8 +65,11 @@ const CSVInputFile = (props) => {
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       /* Convert array of arrays */
-      const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
-      processData(data);
+      const data = XLSX.utils.sheet_to_csv(ws);
+      const [list, columns] = csvToJson(data);
+      setData(list);
+      setColumns(columns);
+      setOldData(list);
     };
     reader.readAsBinaryString(file);
   };
@@ -92,6 +97,9 @@ const CSVInputFile = (props) => {
 CSVInputFile.propTypes = {
   setData: PropTypes.func.isRequired,
   setColumns: PropTypes.func.isRequired,
+  setOldData: PropTypes.func.isRequired,
+  fileName: PropTypes.string,
+  setFileName: PropTypes.func.isRequired,
 };
 
 export default CSVInputFile;

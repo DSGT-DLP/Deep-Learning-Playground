@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "build": "cd frontend/playground-frontend && npm install && npm run build",
-    "installf": "cd frontend/playground-frontend && npm install",
+    "installf": "cd frontend/playground-frontend && npm install && npm install -g dotenv-cli",
     "installb": "conda --version && cd conda && conda env create -f environment.yml & conda env update -f environment.yml",
-    "startf": "cd frontend/playground-frontend && npm start",
+    "startf": "cd frontend/playground-frontend && dotenv set MODE=dev && npm start",
     "startb": "conda activate dlplayground && python -m backend.driver",
     "secrets": "conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env",
     "secrets:deploy": "python -m backend.aws_helpers.aws_secrets_utils.build_env",
-    "docker:build": "docker build -t dlp ."
+    "docker:build": "docker build -t dlp .",
+    "prod:variable": "cd frontend/playground-frontend && dotenv set MODE prod"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
   },
   "homepage": "https://github.com/karkir0003/Deep-Learning-Playground#readme",
   "dependencies": {
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "local-storage-fallback": "^4.1.2"
   }
 }

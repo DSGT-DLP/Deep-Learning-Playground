@@ -9,6 +9,10 @@ import {
   sendPretrainedJSON,
   validatePretrainedInput,
   sendImageJSON,
+  validateClassicalMLInput,
+  sendClassicalMLJSON,
+  validateObjectDetectionInput,
+  sendObjectDetectionJSON,
 } from "../helper_functions/TrainButtonFunctions";
 import {
   sendEmail,
@@ -42,13 +46,23 @@ const TrainButton = (props) => {
       const obj_list_item = obj_list[i];
       const parameters = obj_list_item.parameters;
       let parameter_call_input = "";
+      let is_transform_type =
+        obj_list_item.transform_type &&
+        obj_list_item.transform_type === "functional";
       const parameters_to_be_added = Array(Object.keys(parameters).length);
       for (const v of Object.values(parameters)) {
         if (!validateParameter(source, i, v)) {
           reset();
           return false;
         }
-        parameters_to_be_added[v.index] = v.value;
+        const parameter_value =
+          v.parameter_type === "number" || v.parameter_type === "tuple"
+            ? v.value
+            : `'${v.value}'`;
+        parameters_to_be_added[v.index] = `${v.kwarg ?? ""}${parameter_value}`;
+      }
+      if (is_transform_type) {
+        parameter_call_input += "img, ";
       }
       parameters_to_be_added.forEach((e) => {
         parameter_call_input += e + ",";
@@ -56,7 +70,10 @@ const TrainButton = (props) => {
       // removing the last ','
       parameter_call_input = parameter_call_input.slice(0, -1);
 
-      const callback = `${obj_list_item.object_name}(${parameter_call_input})`;
+      let callback = `${obj_list_item.object_name}(${parameter_call_input})`;
+      if (is_transform_type) {
+        callback = "transforms.Lambda(lambda img: " + callback + ")";
+      }
       user_arch.push(callback);
     }
     return user_arch;
@@ -66,6 +83,8 @@ const TrainButton = (props) => {
     tabular: [validateTabularInputs, sendTabularJSON],
     image: [validateImageInputs, sendImageJSON],
     pretrained: [validatePretrainedInput, sendPretrainedJSON],
+    classicalml: [validateClassicalMLInput, sendClassicalMLJSON],
+    objectdetection: [validateObjectDetectionInput, sendObjectDetectionJSON],
   };
 
   const validateInputs = (user_arch) => {
@@ -85,6 +104,7 @@ const TrainButton = (props) => {
 
     let trainTransforms = 0;
     let testTransforms = 0;
+    let transforms = 0;
     if (props.trainTransforms) {
       trainTransforms = make_obj_param_list(
         props.trainTransforms,
@@ -99,15 +119,28 @@ const TrainButton = (props) => {
       );
       if (testTransforms === false) return;
     }
+    if (props.transforms) {
+      transforms = make_obj_param_list(props.transforms, "Transforms");
+      if (transforms === false) return;
+    }
 
     if (!validateInputs(user_arch)) {
       setPendingResponse(false);
       return;
     }
 
-    const paramList = { ...props, trainTransforms, testTransforms, user_arch };
+    const paramList = {
+      ...props,
+      trainTransforms,
+      testTransforms,
+      transforms,
+      user_arch,
+    };
 
-    if (choice === "image" && !props.usingDefaultDataset) {
+    if (
+      (choice === "image" && !props.usingDefaultDataset) ||
+      choice === "objectdetection"
+    ) {
       const formData = new FormData();
       formData.append("file", uploadFile);
       await uploadToBackend(formData);
@@ -136,7 +169,11 @@ const TrainButton = (props) => {
         if (props.email?.length) {
           sendEmail(props.email, props.problemType);
         }
-        toast.success("Training successful! Scroll to see results!");
+        toast.success(
+          choice === "objectdetection"
+            ? "Detection successful! Scroll to see results!"
+            : "Training successful! Scroll to see results!"
+        );
       } else if (result.message) {
         toast.error("Training failed. Check output traceback message");
       } else {
@@ -159,7 +196,7 @@ const TrainButton = (props) => {
         onClick={onClick}
         disabled={pendingResponse}
       >
-        Train!
+        {choice === "objectdetection" ? "Run!" : "Train!"}
       </button>
       {pendingResponse ? <div className="loader" /> : null}
     </>
@@ -171,6 +208,7 @@ TrainButton.propTypes = {
   email: PropTypes.string,
   trainTransforms: PropTypes.array,
   testTransforms: PropTypes.array,
+  transforms: PropTypes.array,
   setDLPBackendResponse: PropTypes.func.isRequired,
   choice: PropTypes.string,
   style: PropTypes.object,

@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris, fetch_california_housing
 
@@ -14,27 +15,47 @@ from backend.dl.dl_trainer import train_deep_model, train_deep_image_classificat
 from backend.dl.dl_model_parser import get_object
 
 from backend.ml.ml_trainer import train_classical_ml_model
+from backend.ml.ml_model_parser import get_object_ml
+
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, getOrCreateUserExecutionsData_, updateUserExecutionsData_, createExecutionID
 
 
 def dl_tabular_drive(
-    user_arch,
-    criterion,
-    optimizer_name,
-    problem_type,
-    fileURL,
-    target=None,
-    features=None,
-    default=None,
-    test_size=0.2,
-    epochs=5,
-    shuffle=True,
-    batch_size=20,
-    json_csv_data_str=""
+    user_arch: list,
+    fileURL: str,
+    uid: str,
+    params: dict,
+    json_csv_data_str: str = "",
+    customModelName: str = None,
 ):
     """
     Driver function/entrypoint into backend for deep learning model. Onnx file is generated containing model architecture for user to visualize in netron.app
     Args:
         user_arch (list): list that contains user defined deep learning architecture
+        fileURL (str): URL of the dataset file, if provided by user
+        uid (str): user id
+        params (dict): dictionary containing all the parameters for the model, e.g. criterion and problem type
+        json_csv_data_str (str, optional): json string of the dataset, if provided by user. Defaults to "".
+        customModelName (str, optional): name of the custom model. Defaults to None.
+    :return: a dictionary containing the epochs, train and test accuracy and loss results, each in a list
+
+    NOTE:
+         CSV_FILE_NAME is the data csv file for the torch model. Assumed that you have one dataset file
+    """
+
+    timestamp = datetime.datetime.utcnow()
+    execution_id = createExecutionID(timestamp, uid)
+    getOrCreateUserExecutionsData_({
+        "execution_id": execution_id,
+        "data_source": "TABULAR",
+        "name": customModelName,
+        "status": "STARTING",
+        "timestamp": timestamp.replace(tzinfo=datetime.timezone.utc).isoformat(),
+        "user_id": uid,
+    })
+
+    """
+    Params:
         criterion (str): What loss function to use
         optimizer (str): What optimizer does the user wants to use (Adam or SGD for now, but more support in later iterations)
         problem type (str): "classification" or "regression" problem
@@ -44,11 +65,17 @@ def dl_tabular_drive(
         test_size (float, optional): size of test set in train/test split (percentage). Defaults to 0.2.
         epochs (int, optional): number of epochs/rounds to run model on
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
-    :return: a dictionary containing the epochs, train and test accuracy and loss results, each in a list
-
-    NOTE:
-         CSV_FILE_NAME is the data csv file for the torch model. Assumed that you have one dataset file
     """
+    target = params.get("target", None)
+    features = params.get("features", None)
+    problem_type = params["problem_type"]
+    optimizer_name = params["optimizer_name"]
+    criterion = params["criterion"]
+    default = params.get("default", None)
+    epochs = params.get("epochs", 5)
+    shuffle = params.get("shuffle", True)
+    test_size = params.get("test_size", 0.2)
+    batch_size = params.get("batch_size", 20)
 
     category_list = []
     if not default:
@@ -101,7 +128,7 @@ def dl_tabular_drive(
     optimizer = get_optimizer(
         model, optimizer_name=optimizer_name, learning_rate=0.05
     )
-    # criterion = LossFunctions.get_loss_obj(LossFunctions[criterion])
+
     print(f"loss criterion: {criterion}")
     train_loader, test_loader = get_dataloaders(
         X_train_tensor,
@@ -186,6 +213,8 @@ def ml_drive(
     default=False,
     test_size=0.2,
     shuffle=True,
+    json_csv_data_str="",
+    fileURL = ""
 ):
     """
     Driver function/endpoint into backend for training a classical ML model (eg: SVC, SVR, DecisionTree, Naive Bayes, etc)
@@ -200,21 +229,27 @@ def ml_drive(
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
     """
     try:
+        if not default:
+            if fileURL:
+                read_dataset(fileURL)
+            elif json_csv_data_str:
+                pass
+            else:
+                raise ValueError("Need a file input")
+
         if default and problem_type.upper() == "CLASSIFICATION":
-            dataset = load_iris()
-            X, y, target_names = get_default_dataset(dataset)
+            X, y, target_names = get_default_dataset(default.upper(), target, features)
             print(y.head())
         elif default and problem_type.upper() == "REGRESSION":
-            # If the user specifies no dataset, use california housing as default regression
-            dataset = fetch_california_housing()
-            X, y, target_names = get_default_dataset(dataset)
+            X, y, target_names = get_default_dataset(default.upper(), target, features)
         else:
-            input_df = pd.read_csv(CSV_FILE_NAME)
-            y = input_df[target]
-            X = input_df[features]
+            if json_csv_data_str:
+                input_df = pd.read_json(json_csv_data_str, orient="records")
+
+                y = input_df[target]
+                X = input_df[features]
 
         if shuffle and problem_type.upper() == "CLASSIFICATION":
-            # using stratify only for classification problems to ensure correct AUC calculation
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=test_size, shuffle=True, stratify=y
             )
@@ -222,9 +257,10 @@ def ml_drive(
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=test_size, shuffle=shuffle
             )
-        model = get_object(user_model)
-        train_classical_ml_model(
+        model = get_object_ml(user_model)
+        train_ml_results = train_classical_ml_model(
             model, X_train, X_test, y_train, y_test, problem_type=problem_type
         )
+        return train_ml_results
     except Exception as e:
         raise e

@@ -194,7 +194,6 @@ frontend/playground-frontend/src/backend_outputs/*
 
 # Terraform Files
 dlp-terraform/.terraform
-dlp-terraform/outputs
 dlp-terraform/.terraform.lock.hcl
 dlp-terraform/terraform.tfstate
 dlp-terraform/terraform.tfstate.backup

@@ -57,11 +57,11 @@ const routeDict = {
 };
 
 async function train_and_output(choice, choiceDict) {
-  if (process.env.MODE === "dev") {
+  if (process.env.MODE === "prod") {
+    //TODO: submit request to sqs. return success or fail message!
     const trainResult = await sendToBackend(routeDict[choice], choiceDict);
     return trainResult;
   } else {
-    //TODO: submit request to sqs. return success or fail message!
     const trainResult = await sendToBackend(routeDict[choice], choiceDict);
     return trainResult;
   }

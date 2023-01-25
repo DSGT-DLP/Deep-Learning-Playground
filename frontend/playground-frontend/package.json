@@ -13,7 +13,6 @@
     "@uiw/react-codemirror": "^4.12.3",
     "axios": "^0.27.2",
     "bootstrap": "^5.2.1",
-    "dotenv-cli": "^7.0.0",
     "firebase": "^9.9.3",
     "http-proxy-middleware": "^2.0.6",
     "local-storage-fallback": "^4.1.2",

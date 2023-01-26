@@ -29,7 +29,6 @@ dependencies:
   - eventlet
   - python-dotenv
   - transformers
-  - ggshield
   - pre-commit
   - pip:
       - torchvision
@@ -40,3 +39,4 @@ dependencies:
       - pyrebase4
       - moto
       - docker
+      - ggshield

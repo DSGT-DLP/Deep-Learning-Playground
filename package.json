@@ -6,7 +6,7 @@
   "scripts": {
     "build:prod": "cd frontend/playground-frontend && npm install && REACT_APP_MODE=prod npm run build",
     "installf": "cd frontend/playground-frontend && npm install",
-    "installb": "conda --version && cd conda && conda env create -f environment.yml & conda env update -f environment.yml",
+    "installb": "conda --version && cd conda && conda env create -f environment.yml && pre-commit install",
     "startf": "cd frontend/playground-frontend && npm start",
     "startb": "conda activate dlplayground && python -m backend.driver",
     "secrets": "conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env",

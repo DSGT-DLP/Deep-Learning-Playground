@@ -29,6 +29,8 @@ dependencies:
   - eventlet
   - python-dotenv
   - transformers
+  - ggshield
+  - pre-commit
   - pip:
       - torchvision
       - timm

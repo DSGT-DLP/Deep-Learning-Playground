@@ -26,7 +26,9 @@ Have the following installed first:
 | Running the Frontend                                     | `npm run startf`       |
 | Running the Backend                         | `npm run startb`   |
 
-
+# Development Practices
+## GitGuardian Pre-commit Check
+To protect our secrets, we use the GitGuardian ggshield pre-commit check to ensure no keys are being committed. After installing the backend, every day or so, login to GitGuardian to activate the pre-commit hook using `ggshield auth login`.
 
 # Further Details: Backend
 
@@ -62,7 +64,6 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 
     ```
     cd frontend\playground-frontend
-    dotenv set MODE=dev
     npm install
     npm start
     ```

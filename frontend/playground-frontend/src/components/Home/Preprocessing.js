@@ -31,8 +31,6 @@ const Preprocessing = (props) => {
           if (response["statusCode"] !== 200) {
             toast.error(response.message);
           } else {
-            console.log(response["data"]);
-            console.log(response["columns"]);
             setData(response["data"]);
             setColumns(response["columns"]);
             toast.success("Preprocessing successful!");

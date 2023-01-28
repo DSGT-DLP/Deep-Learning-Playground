@@ -57,14 +57,14 @@ const routeDict = {
 };
 
 async function train_and_output(choice, choiceDict) {
-  if (process.env.REACT_APP_MODE === "prod") {
-    //TODO: submit request to sqs. return success or fail message!
+
+  if (process.env.MODE === 'dev') {
     const trainResult = await sendToBackend(routeDict[choice], choiceDict);
     return trainResult;
   } else {
-    const trainResult = await sendToBackend(routeDict[choice], choiceDict);
-    return trainResult;
+    //TODO: submit request to sqs. return success or fail message!
   }
+  
 }
 
 async function sendEmail(email, problemType) {

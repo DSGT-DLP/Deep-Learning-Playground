@@ -328,18 +328,35 @@ const Home = () => {
     </>
   );
 
-  const InputCSVDisplay = (
-    <>
-      <TitleText text="CSV Input" />
-      <DataTable
-        pagination
-        highlightOnHover
-        columns={uploadedColumns}
-        data={csvDataInput}
-        className="dataTable"
-      />
-    </>
+  const InputCSVDisplay = useMemo(
+    () => (
+      <>
+        <TitleText text="CSV Input" />
+        <DataTable 
+          pagination 
+          highlightOnHover
+          columns={uploadedColumns}
+          data={csvDataInput}
+          className="dataTable"
+          noDataComponent="No entries to display"
+        />
+      </>
+    ), 
+    [csvDataInput]
   );
+
+  // const InputCSVDisplay = (
+  //   <>
+  //     <TitleText text="CSV Input" />
+  //     <DataTable
+  //       pagination
+  //       highlightOnHover
+  //       columns={uploadedColumns}
+  //       data={csvDataInput}
+  //       className="dataTable"
+  //     />
+  //   </>
+  // );
 
   const ResultsMemo = useMemo(
     () => (
@@ -372,6 +389,8 @@ const Home = () => {
       <EmailInput setEmail={setEmail} />
 
       <Spacer height={40} />
+      {console.log(csvDataInput)}
+      {console.log(uploadedColumns)}
       {InputCSVDisplay}
 
       <Spacer height={40} />

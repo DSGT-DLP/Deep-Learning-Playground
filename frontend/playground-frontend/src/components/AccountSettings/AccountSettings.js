@@ -1,8 +1,17 @@
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+import { Button, Form, Row, Col, Container } from "react-bootstrap";
 import { updateUserSettings } from "../../firebase";
 import { useSelector } from "react-redux";
+import GoogleLogo from "../../images/logos/google.png";
+import GithubLogo from "../../images/logos/github.png";
+import { ImCross, ImCheckmark } from "react-icons/im";
+import {
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  linkWithRedirect,
+} from "firebase/auth";
+import { auth } from "../../firebase";
+import { toast } from "react-toastify";
 
 const SettingsBlock = () => {
   const [fullName, setFullName] = useState("");
@@ -23,9 +32,10 @@ const SettingsBlock = () => {
     }
     if (!user) return;
   };
-  return (
-    <Form>
-      <h2>View or Change your Account Settings </h2>
+
+  const UpdatePassword = (
+    <>
+      <h2>View or Change your Account Settings</h2>
       <Form.Group className="mb-3" controlId="update-name">
         <Form.Label>Full Name</Form.Label>
         <Form.Control
@@ -48,6 +58,7 @@ const SettingsBlock = () => {
         <Form.Label>Password</Form.Label>
         <Form.Control
           type="password"
+          autoComplete="new-password"
           placeholder={"New Password"}
           onBlur={(e) => setPassword(e.target.value)}
           aria-describedby="passwordHelpBlock"
@@ -58,16 +69,94 @@ const SettingsBlock = () => {
         <Form.Label>Re-Type Password</Form.Label>
         <Form.Control
           type="password"
+          autoComplete="new-password"
           placeholder={"New Password"}
           onBlur={(e) => setCheckedPassword(e.target.value)}
           size="lg"
         />
       </Form.Group>
-      <div
-        className="email-buttons d-flex flex-column"
-        onClick={handleUpdateUser}
-      >
-        <Button id="update-profile" className="mb-2">
+    </>
+  );
+
+  const LinkAccounts = () => {
+    const accountsInfo = [
+      {
+        id: "Google",
+        cssClass: "google",
+        logo: GoogleLogo,
+        linked: true,
+        provider: new GoogleAuthProvider(),
+      },
+      {
+        id: "GitHub",
+        cssClass: "github",
+        logo: GithubLogo,
+        linked: false,
+        provider: new GithubAuthProvider(),
+      },
+    ];
+
+    /**
+     * Redirects user to link account if not already linked.
+     * @param {Boolean} linked
+     * @param {any} provider
+     */
+    function handleLinking(linked, provider) {
+      if (linked) {
+        toast.info("Account already linked");
+        return;
+      }
+
+      linkWithRedirect(auth.currentUser, provider)
+        .then(() => {
+          toast.success("Success linked!");
+        })
+        .catch(() => {
+          toast.error("Link failed");
+        });
+    }
+    return (
+      <>
+        <h2>Link Accounts</h2>
+        <Container className="mt-3 mb-5">
+          {accountsInfo.map((account) => (
+            <Row key={account.id} className="mt-2 mb-2">
+              <Col md={3}>
+                <Button
+                  className={`login-button ${account.cssClass}`}
+                  onClick={() =>
+                    handleLinking(account.linked, account.provider)
+                  }
+                >
+                  <img src={account.logo} />
+                </Button>
+              </Col>
+              <Col className="d-flex align-items-center">
+                {account.linked ? (
+                  <div className="d-flex align-items-center linked-acct">
+                    <ImCheckmark className="me-2" />
+                    Linked
+                  </div>
+                ) : (
+                  <div className="d-flex align-items-center unlinked-acct">
+                    <ImCross className="me-2" />
+                    Unlinked
+                  </div>
+                )}
+              </Col>
+            </Row>
+          ))}
+        </Container>
+      </>
+    );
+  };
+
+  return (
+    <Form>
+      <LinkAccounts />
+      <div className="email-buttons d-flex flex-column">
+        {UpdatePassword}
+        <Button id="update-profile" className="mb-2" onClick={handleUpdateUser}>
           Update Profile
         </Button>
       </div>

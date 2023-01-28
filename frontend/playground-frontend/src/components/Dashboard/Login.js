@@ -126,7 +126,7 @@ const Login = () => {
   );
 
   return (
-    <div id="login-page" className="text-center">
+    <div id="login-page" className="text-center d-flex justify-content-center">
       <div className="main-container mt-5 mb-5">
         {Title}
 

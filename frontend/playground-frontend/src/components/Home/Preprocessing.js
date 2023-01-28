@@ -34,8 +34,8 @@ const Preprocessing = (props) => {
             setData(response["data"]);
 
             const newColumns = response["columns"].map((c) => ({
-              "name": c,
-              "selector": (row) => row[c],
+              name: c,
+              selector: (row) => row[c],
             }));
 
             setColumns(newColumns);

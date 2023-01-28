@@ -328,12 +328,13 @@ const Home = () => {
     </>
   );
 
-  const InputCSVDisplay = useMemo(
-    () => (
+  const InputCSVDisplay = useMemo(() => {
+    console.log("new csvDataInput", csvDataInput);
+    return (
       <>
         <TitleText text="CSV Input" />
-        <DataTable 
-          pagination 
+        <DataTable
+          pagination
           highlightOnHover
           columns={uploadedColumns}
           data={csvDataInput}
@@ -341,9 +342,8 @@ const Home = () => {
           noDataComponent="No entries to display"
         />
       </>
-    ), 
-    [csvDataInput]
-  );
+    );
+  }, [csvDataInput]);
 
   // const InputCSVDisplay = (
   //   <>

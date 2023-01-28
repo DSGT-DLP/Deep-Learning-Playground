@@ -105,14 +105,14 @@ export const signInWithPassword = async (email, password) => {
 
 export const signInWithGithub = async () => {
   const githubProvider = new GithubAuthProvider();
-  githubProvider.addScope('profile');
-  githubProvider.addScope('email');
+  githubProvider.addScope("profile");
+  githubProvider.addScope("email");
   signInWithRedirect(auth, githubProvider);
 };
 
 export const signInWithGoogle = async () => {
   const googleProvider = new GoogleAuthProvider();
-  googleProvider.addScope('profile');
-  googleProvider.addScope('email');
+  googleProvider.addScope("profile");
+  googleProvider.addScope("email");
   signInWithRedirect(auth, googleProvider);
 };

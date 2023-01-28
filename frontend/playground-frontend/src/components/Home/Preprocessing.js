@@ -32,7 +32,13 @@ const Preprocessing = (props) => {
             toast.error(response.message);
           } else {
             setData(response["data"]);
-            setColumns(response["columns"]);
+
+            const newColumns = response["columns"].map((c) => ({
+              "name": c,
+              "selector": (row) => row[c],
+            }));
+
+            setColumns(newColumns);
             toast.success("Preprocessing successful!");
           }
         }}

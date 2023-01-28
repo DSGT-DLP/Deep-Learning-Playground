@@ -329,7 +329,6 @@ const Home = () => {
   );
 
   const InputCSVDisplay = useMemo(() => {
-    console.log("new csvDataInput", csvDataInput);
     return (
       <>
         <TitleText text="CSV Input" />
@@ -344,19 +343,6 @@ const Home = () => {
       </>
     );
   }, [csvDataInput]);
-
-  // const InputCSVDisplay = (
-  //   <>
-  //     <TitleText text="CSV Input" />
-  //     <DataTable
-  //       pagination
-  //       highlightOnHover
-  //       columns={uploadedColumns}
-  //       data={csvDataInput}
-  //       className="dataTable"
-  //     />
-  //   </>
-  // );
 
   const ResultsMemo = useMemo(
     () => (
@@ -389,8 +375,6 @@ const Home = () => {
       <EmailInput setEmail={setEmail} />
 
       <Spacer height={40} />
-      {console.log(csvDataInput)}
-      {console.log(uploadedColumns)}
       {InputCSVDisplay}
 
       <Spacer height={40} />

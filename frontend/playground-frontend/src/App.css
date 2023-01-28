@@ -230,6 +230,11 @@ textarea#code-snippet-text {
   width: 100%;
 }
 
+#csvRender_caption {
+  font-size: 12px;
+  font-style: italic;
+}
+
 /* Deep Learning Parameters */
 
 .response-container {

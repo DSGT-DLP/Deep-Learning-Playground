@@ -196,6 +196,12 @@ export const POSSIBLE_LAYERS = [
 
 export const ML_MODELS = [
   {
+    display_name: "Gaussian Naive Bayes",
+    object_name: "sklearn.naive_bayes.GaussianNB",
+    parameters:{
+    }
+  },
+  {
     display_name: "RF Classifier",
     object_name: "sklearn.ensemble.RandomForestClassifier",
     parameters: {

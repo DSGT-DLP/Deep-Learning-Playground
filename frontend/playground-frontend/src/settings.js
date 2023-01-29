@@ -198,8 +198,7 @@ export const ML_MODELS = [
   {
     display_name: "Gaussian Naive Bayes",
     object_name: "sklearn.naive_bayes.GaussianNB",
-    parameters:{
-    }
+    parameters: {},
   },
   {
     display_name: "RF Classifier",

@@ -4,15 +4,14 @@
   "description": "Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules through a drag and drop interface.",
   "main": "index.js",
   "scripts": {
-    "build": "cd frontend/playground-frontend && npm install && npm run build",
-    "installf": "cd frontend/playground-frontend && npm install && npm install -g dotenv-cli",
-    "installb": "conda --version && cd conda && conda env create -f environment.yml & conda env update -f environment.yml",
-    "startf": "cd frontend/playground-frontend && dotenv set MODE=dev && npm start",
+    "build:prod": "cd frontend/playground-frontend && npm install && REACT_APP_MODE=prod npm run build",
+    "installf": "cd frontend/playground-frontend && npm install",
+    "installb": "conda --version && cd conda && conda env create -f environment.yml && pre-commit install",
+    "startf": "cd frontend/playground-frontend && npm start",
     "startb": "conda activate dlplayground && python -m backend.driver",
     "secrets": "conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env",
     "secrets:deploy": "python -m backend.aws_helpers.aws_secrets_utils.build_env",
-    "docker:build": "docker build -t dlp .",
-    "prod:variable": "cd frontend/playground-frontend && dotenv set MODE prod"
+    "docker:build": "docker build -t dlp ."
   },
   "repository": {
     "type": "git",

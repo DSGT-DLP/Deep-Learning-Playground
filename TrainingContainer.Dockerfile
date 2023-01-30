@@ -3,7 +3,7 @@ FROM python:3.9-slim
 WORKDIR /
 
 COPY requirements.txt .
-RUN apt-get update -y && apt-get install -y gcc
+RUN apt-get update -y && apt-get install -y gcc && apt-get install -y curl && apt-get install -y unzip
 RUN pip install -r requirements.txt
 COPY . .
 
@@ -12,8 +12,8 @@ RUN unzip awscliv2.zip
 RUN ./aws/install
 
 ARG AWS_REGION
-ARG AWS_DEPLOY_SECRET_ACCESS_KEY
 ARG AWS_DEPLOY_ACCESS_KEY_ID
+ARG AWS_DEPLOY_SECRET_ACCESS_KEY
 
 RUN aws configure set region $AWS_REGION
 RUN aws configure set aws_access_key_id $AWS_DEPLOY_ACCESS_KEY_ID

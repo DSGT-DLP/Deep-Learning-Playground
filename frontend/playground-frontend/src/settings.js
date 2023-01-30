@@ -325,6 +325,68 @@ export const ML_MODELS = [
       },
     },
   },
+  {
+    display_name: "Decision Tree Classifier",
+    object_name: "sklearn.tree.DecisionTreeClassifier",
+    parameters: {
+      max_depth: {
+        index: 0,
+        parameter_name: "Max Depth",
+        kwarg: "max_depth = ",
+        default: 5,
+        min: 1,
+        max: 100,
+        parameter_type: "number",
+      },
+      min_samples_split: {
+        index: 1,
+        parameter_name: "Minimum Sample Splits",
+        kwarg: "min_samples_split = ",
+        default: 2,
+        min: 2,
+        max: 10,
+        parameter_type: "number",
+      },
+      max_features: {
+        index: 2,
+        parameter_name: "Max Features",
+        kwarg: "max_features = ",
+        default: "sqrt",
+        parameter_type: "text",
+      },
+    },
+  },
+  {
+    display_name: "Decision Tree Regressor",
+    object_name: "sklearn.tree.DecisionTreeRegressor",
+    parameters: {
+      max_depth: {
+        index: 0,
+        parameter_name: "Max Depth",
+        kwarg: "max_depth = ",
+        default: 5,
+        min: 1,
+        max: 5,
+        parameter_type: "number",
+      },
+      min_samples_split: {
+        index: 1,
+        parameter_name: "Minimum Sample Splits",
+        kwarg: "min_samples_split = ",
+        default: 2,
+        min: 1,
+        max: 10,
+        parameter_type: "number",
+      },
+      max_features: {
+        index: 2,
+        parameter_name: "Max Features",
+        kwarg: "max_features = ",
+        default: "sqrt",
+        parameter_type: "text",
+      },
+    },
+  },
 ];
 
 export const IMAGE_LAYERS = [

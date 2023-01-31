@@ -63,10 +63,10 @@ def delete_message(queue_name, receipt_handle):
         ReceiptHandle= receipt_handle
     )
     status_code = response['ResponseMetadata']['HTTPStatusCode']
-    return json.loads({"status_code": status_code})
+    return json.loads(json.dumps({"status_code": status_code}))
     
 
-def receive_message(queue_name):
+def receive_message(queue_name=TRAINING_QUEUE):
     """
     Utility function to receive message from SQS queue in order to process
 
@@ -84,7 +84,7 @@ def receive_message(queue_name):
     
     messages = response.get("Messages", [])
     if (len(messages) == 0):
-        return json.loads({}) #no messages received
+        return json.loads("{}") #no messages received
     
     message_body = json.loads(messages[0]["Body"])
     receipt_handle = messages[0]["ReceiptHandle"]
@@ -92,8 +92,8 @@ def receive_message(queue_name):
     #delete received message for safety purposes
     delete_result = delete_message(queue_name, receipt_handle)
     if (delete_result["status_code"] == 200):
-        return json.loads(messages[0]["Body"])
-    return json.loads({})
+        return message_body
+    return json.loads("{}")
 
 def receive_training_queue_message():
     """

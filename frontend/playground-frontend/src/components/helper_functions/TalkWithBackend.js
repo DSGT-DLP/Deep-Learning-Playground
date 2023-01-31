@@ -40,7 +40,7 @@ async function sendToBackend(route, data) {
         uid: auth.currentUser.uid,
       }
     : undefined;
-  data['route'] = route;
+  data["route"] = route;
   const backendResult = await fetch(`/api/${route}`, {
     method: "POST",
     body: JSON.stringify(data),

@@ -17,7 +17,7 @@ import {
 import {
   sendEmail,
   uploadToBackend,
-  train_and_output,
+  train_and_output
 } from "../helper_functions/TalkWithBackend";
 import { toast } from "react-toastify";
 

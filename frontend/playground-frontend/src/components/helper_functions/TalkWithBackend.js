@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { auth } from "../../firebase";
+import sha256 from 'crypto-js/sha256';
 import axios from "axios";
 
 async function uploadToBackend(data) {
@@ -33,6 +34,16 @@ const getSignedUploadUrl = async (version, filename, file) => {
   });
 };
 
+/**
+ * Given timestamp and unique user id, generate an execution id
+ * @param {*} uid 
+ * @returns execution id
+ */
+function createExecutionId(timestamp, uid) {
+  const hash = sha256(timestamp + uid);
+  return "ex" + hash;
+}
+
 async function sendToBackend(route, data) {
   let headers = auth.currentUser
     ? {
@@ -41,12 +52,19 @@ async function sendToBackend(route, data) {
       }
     : undefined;
   data["route"] = route;
-  const backendResult = await fetch(`/api/${route}`, {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: headers,
-  }).then((result) => result.json());
-  return backendResult;
+  const timestamp = Date.now();
+  data["execution_id"] = createExecutionId(timestamp, headers.uid);
+  if (process.env.REACT_APP_MODE === "prod") {
+    //write request data to SQS here! If success, create entry in dynamo db and give success toast notification! if fail, throw error toast notification
+  }
+  else {
+    const backendResult = await fetch(`/api/${route}`, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: headers,
+    }).then((result) => result.json());
+    return backendResult;
+  }
 }
 
 const routeDict = {

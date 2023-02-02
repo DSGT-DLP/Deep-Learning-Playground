@@ -151,7 +151,11 @@ const TrainButton = (props) => {
       choice,
       functionMap[choice][1](paramList)
     );
-    setResult(trainResult);
+    if (process.env.REACT_APP_MODE === "prod") {
+      navigate("/dashboard");
+    } else {
+      setResult(trainResult);
+    }
   };
 
   useEffect(() => {
@@ -183,10 +187,6 @@ const TrainButton = (props) => {
       }
       setDLPBackendResponse(result);
       reset();
-
-      if (process.env.REACT_APP_MODE === "prod") {
-        navigate("/dashboard");
-      }
     }
   }, [result]);
 

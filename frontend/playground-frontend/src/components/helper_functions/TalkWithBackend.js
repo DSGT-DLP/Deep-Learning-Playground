@@ -54,6 +54,7 @@ async function sendToBackend(route, data) {
   data["route"] = route;
   const timestamp = Date.now();
   data["execution_id"] = createExecutionId(timestamp, headers.uid);
+  data["user_id"] = headers.uid === null? headers.uid: null;
   if (process.env.REACT_APP_MODE === "prod") {
     //write request data to SQS here! If success, create entry in dynamo db and give success toast notification! if fail, throw error toast notification
     const queueResult = await fetch(`/api/writeToQueue`, {
@@ -69,6 +70,7 @@ async function sendToBackend(route, data) {
     }
     //logic to redirect user to user dashboard page
     return null; //don't display training results right now!
+
   } else {
     const backendResult = await fetch(`/api/${route}`, {
       method: "POST",

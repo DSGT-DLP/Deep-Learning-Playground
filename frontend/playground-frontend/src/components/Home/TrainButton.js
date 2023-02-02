@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import { COLORS } from "../../constants";
 import {
   validateParameter,
@@ -28,6 +29,7 @@ const TrainButton = (props) => {
   const [result, setResult] = useState(null);
   const [uploaded, setUploaded] = useState(false);
   const [trainParams, setTrainParams] = useState(null);
+  const navigate = useNavigate();
 
   const reset = () => {
     setPendingResponse(false);
@@ -149,9 +151,6 @@ const TrainButton = (props) => {
       choice,
       functionMap[choice][1](paramList)
     );
-    if (process.env.REACT_APP_MODE === "prod") {
-      //redirect user to dashboard page!
-    }
     setResult(trainResult);
   };
 
@@ -184,6 +183,10 @@ const TrainButton = (props) => {
       }
       setDLPBackendResponse(result);
       reset();
+
+      if (process.env.REACT_APP_MODE === "prod") {
+        navigate("/dashboard");
+      }
     }
   }, [result]);
 

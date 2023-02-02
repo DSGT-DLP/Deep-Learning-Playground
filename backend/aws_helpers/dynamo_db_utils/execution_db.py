@@ -72,13 +72,3 @@ def updateUserExecutionsData_(requestData: dict) -> str:
     dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
     dynamoTable.update_record(execution_id, **dataInput)
     return "{\"status\": \"success\"}"
-
-def createExecutionID(timestamp: datetime, userID: str) -> str:
-    """
-    Creates an execution ID given the Train button timestamp and user ID.
-
-    @param timestamp: The UTC timestamp of the Train button click
-    @param userID: The user ID of the user who clicked the Train button
-    @return: The execution ID
-    """
-    return "ex" + str(hash(str(timestamp) + userID))

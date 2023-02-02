@@ -16,19 +16,20 @@ def router(msg):
     '''
     Routes the message to the appropriate training function.
     '''
+    execution_id = msg['execution_id']
     if msg['route'] == 'tabular-run':
         tabular_run_route(msg)
-        s3_helper.write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, "test")
-        s3_helper.write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, "test")
-        s3_helper.write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, "test")
+        s3_helper.write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_DL)}")
+        s3_helper.write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(ONNX_MODEL)}")
+        s3_helper.write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}")
     elif msg['route'] == 'ml-run':
         ml_run_route(msg)
-        s3_helper.write_to_bucket(SAVED_MODEL_ML, EXECUTION_BUCKET_NAME, "test")
+        s3_helper.write_to_bucket(SAVED_MODEL_ML, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_ML)}")
     elif msg['route'] == 'img-run':
         img_run_route(msg)
-        s3_helper.write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, "test")
-        s3_helper.write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, "test")
-        s3_helper.write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, "test")
+        s3_helper.write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_DL)}")
+        s3_helper.write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(ONNX_MODEL)}")
+        s3_helper.write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}")
     elif msg['route'] == 'object-detection':
         object_detection_route(msg)
         #s3_helper.write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, "./test/")

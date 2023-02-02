@@ -69,7 +69,6 @@ async function sendToBackend(route, data) {
     }
     //logic to redirect user to user dashboard page
     return null; //don't display training results right now!
-
   } else {
     const backendResult = await fetch(`/api/${route}`, {
       method: "POST",

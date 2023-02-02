@@ -16,6 +16,7 @@ from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
 from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, getOrCreateUserExecutionsData_, updateUserExecutionsData_
+from backend.aws_helpers.sqs_utils.sqs_client import add_to_training_queue
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 from backend.dl.detection import detection_img_drive
 
@@ -284,6 +285,25 @@ def upload():
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
+    
+@app.route("/api/writeToQueue", methods=["POST"])
+def writeToQueue() -> str:
+    """
+    API Endpoint to write training request to SQS queue to be serviced by 
+    ECS Fargate training cluster
+    
+    """
+    try:
+        queue_data = json.loads(request.data)
+        queue_send_outcome = add_to_training_queue(queue_data)
+        status_code = queue_send_outcome["ResponseMetadata"]["HTTPStatusCode"]
+        if (status_code != 200):
+            return send_error("Your training request couldn't be added to the queue")
+        else:
+            return send_success({"messsage": "Successfully added your training request to the queue"})
+    except Exception:
+        return send_error("Failed to queue data")
+    
 
 @app.route("/api/getUserExecutionsData", methods=["POST"])
 def getUserExecutionsData() -> str:

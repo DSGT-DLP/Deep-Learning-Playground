@@ -328,18 +328,22 @@ const Home = () => {
     </>
   );
 
-  const InputCSVDisplay = (
-    <>
-      <TitleText text="CSV Input" />
-      <DataTable
-        pagination
-        highlightOnHover
-        columns={uploadedColumns}
-        data={csvDataInput}
-        className="dataTable"
-      />
-    </>
-  );
+  const InputCSVDisplay = useMemo(() => {
+    return (
+      <>
+        <TitleText text="CSV Input" />
+        <p id="csvRender_caption">Only displaying the first 5 rows</p>
+        <DataTable
+          pagination
+          highlightOnHover
+          columns={uploadedColumns}
+          data={csvDataInput.slice(0, 5)}
+          className="dataTable"
+          noDataComponent="No entries to display"
+        />
+      </>
+    );
+  }, [csvDataInput]);
 
   const ResultsMemo = useMemo(
     () => (

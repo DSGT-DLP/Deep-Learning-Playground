@@ -21,9 +21,14 @@ flask-cors
 flask-socketio
 ruamel.yaml
 eventlet
+transformers
+pre-commit
 torchvision
 timm
 wwf
 fastai==2.7.4
 firebase_admin
-python-dotenv
+pyrebase4
+moto
+docker
+ggshield

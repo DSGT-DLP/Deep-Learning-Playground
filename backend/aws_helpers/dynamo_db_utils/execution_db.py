@@ -52,8 +52,10 @@ def createUserExecutionsData(entryData: dict) -> str:
     @param **kwargs: execution_id and other table attributes to be created to the new entry e.g. user_id, if does not exist
     @return: A JSON string of the entry retrieved or created from the table
     """
-    if not validate_keys(entryData, ["user_id", "execution_id"]):
-        raise ValueError("Invalid keys in request body")
+
+    required_keys = ["execution_id", "user_id"]
+    if not validate_keys(entryData, required_keys):
+        raise ValueError(f"Missing keys {required_keys} in request body")
 
     dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
     newRecord = ExecutionData(**entryData)
@@ -68,18 +70,14 @@ def updateUserExecutionsData(requestData: dict) -> str:
     @return a success status message if the update is successful
     """
 
-    execution_id = requestData["execution_id"]
-    dataInput = {
-        "data_source": requestData.get("data_source", None),
-        "name": requestData.get("name", None),
-        "progress": requestData.get("progress", None),
-        "status": requestData.get("status", None),
-        "timestamp": requestData.get("timestamp", None),
-        "user_id": requestData["user_id"]
-    }
+    required_keys = ["execution_id"]
+    if not validate_keys(requestData, required_keys):
+        raise ValueError(f"Missing keys {required_keys} in request body")
 
     dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
-    dynamoTable.update_record(execution_id, **dataInput)
+    execution_id = requestData["execution_id"]
+    requestData.pop("execution_id")
+    dynamoTable.update_record(execution_id, **requestData)
     return "{\"status\": \"success\"}"
 
 def validate_keys(requestData: dict, required_keys: list[str]) -> bool:
@@ -90,7 +88,7 @@ def validate_keys(requestData: dict, required_keys: list[str]) -> bool:
     @param required_keys: The list of keys to be checked
     @return a boolean value indicating whether all required_keys are present in the requestData dictionary
     """
-    for key in requestData.keys():
-        if key not in valid_keys:
+    for key in required_keys:
+        if key not in requestData.keys():
             return False
     return True

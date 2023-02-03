@@ -56,17 +56,7 @@ def show_bounding_boxes(image, box_sets, names, colors):
     im_b64 = base64.b64encode(im_bytes)
     return im_b64 
 
-def detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type, transforms):   
-    for x in os.listdir(IMAGE_UPLOAD_FOLDER):
-        if x != ".gitkeep":
-            img_file = os.path.join(
-                os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
-            break
-    image = transform_image(img_file, transforms)
-    if (detection_type == "rekognition"):
-        im_b64, label_set = rekognition_detection(image, problem_type)
-    elif (detection_type == "yolo"):
-        im_b64, label_set = yolo_detection(image)
+def write_to_csv(label_set):
     if label_set:
         backend_dir = (
             ""
@@ -80,4 +70,17 @@ def detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type, trans
             writer = csv.DictWriter(f, keys)
             writer.writeheader()
             writer.writerows(label_set)
+
+def detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type, transforms):   
+    for x in os.listdir(IMAGE_UPLOAD_FOLDER):
+        if x != ".gitkeep":
+            img_file = os.path.join(
+                os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
+            break
+    image = transform_image(img_file, transforms)
+    if (detection_type == "rekognition"):
+        im_b64, label_set = rekognition_detection(image, problem_type)
+    elif (detection_type == "yolo"):
+        im_b64, label_set = yolo_detection(image)
+    write_to_csv(label_set)
     return { "auxiliary_outputs" : { "image_data" : im_b64.decode('ascii') }, "dl_results" : label_set }

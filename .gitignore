@@ -197,3 +197,4 @@ dlp-terraform/.terraform
 dlp-terraform/.terraform.lock.hcl
 dlp-terraform/terraform.tfstate
 dlp-terraform/terraform.tfstate.backup
+backend/detection_results.csv 

@@ -123,7 +123,7 @@ const ObjectDetection = () => {
       </BackgroundLayout>
       <FilerobotImageEditor
         source="https://scaleflex.airstore.io/demo/stephen-walker-unsplash.jpg"
-        onSave={(editedImageObject, designState) => {
+        onSave={(editedImageObject) => {
           const file = dataURLtoFile(
             editedImageObject.imageBase64,
             editedImageObject.fullName

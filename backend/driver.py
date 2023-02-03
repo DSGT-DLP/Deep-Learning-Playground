@@ -15,7 +15,7 @@ from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
-from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, getUserExecutionsData
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, createUserExecutionsData
 from backend.aws_helpers.sqs_utils.sqs_client import add_to_training_queue
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 from backend.dl.detection import detection_img_drive
@@ -40,8 +40,6 @@ CORS(app)
 
 app.wsgi_app = middleware(app.wsgi_app)
 
-# print(getUserExecutionsData("blah"))
-
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def root(path):
@@ -65,6 +63,7 @@ def tabular_run():
         uid = request.headers["uid"]
         json_csv_data_str = request_data["csv_data"]
         customModelName = request_data["custom_model_name"]
+        execution_id = request_data["execution_id"]
 
         params = {
             "target": request_data["target"],
@@ -78,6 +77,18 @@ def tabular_run():
             "test_size": request_data["test_size"],
             "batch_size": request_data["batch_size"],
         }
+
+        createUserExecutionsData(
+            {
+                "execution_id": execution_id, 
+                "user_id": uid, 
+                "name": customModelName, 
+                "data_source": "TABULAR", 
+                "status": "STARTING", 
+                "timestamp": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "progress": 0
+            }
+        )
 
         train_loss_results = dl_tabular_drive(user_arch, fileURL, uid, params,
             json_csv_data_str, customModelName)

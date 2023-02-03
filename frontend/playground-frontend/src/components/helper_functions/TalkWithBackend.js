@@ -36,10 +36,11 @@ const getSignedUploadUrl = async (version, filename, file) => {
 
 /**
  * Given timestamp and unique user id, generate an execution id
- * @param {*} uid
- * @returns execution id
+ * @param {string} uid
+ * @param {string} timestamp
+ * @returns {string} execution id
  */
-function createExecutionId(timestamp, uid) {
+function createExecutionId(uid, timestamp = new Date().getTime().toString()) {
   const hash = sha256(timestamp + uid);
   return "ex" + hash;
 }
@@ -52,8 +53,7 @@ async function sendToBackend(route, data) {
       }
     : undefined;
   data["route"] = route;
-  const timestamp = Date.now();
-  data["execution_id"] = createExecutionId(timestamp, headers.uid);
+  data["execution_id"] = createExecutionId(headers.uid);
   data["user_id"] = headers?.uid;
   if (process.env.REACT_APP_MODE === "prod") {
     //write request data to SQS here! If success, create entry in dynamo db and give success toast notification! if fail, throw error toast notification

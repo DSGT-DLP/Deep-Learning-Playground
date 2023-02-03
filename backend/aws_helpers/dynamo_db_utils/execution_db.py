@@ -76,8 +76,9 @@ def updateUserExecutionsData(requestData: dict) -> str:
 
     dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
     execution_id = requestData["execution_id"]
-    requestData.pop("execution_id")
-    dynamoTable.update_record(execution_id, **requestData)
+    updatedRecord = ExecutionData(**requestData).__dict__
+    updatedRecord.pop("execution_id")
+    dynamoTable.update_record(execution_id, **updatedRecord)
     return "{\"status\": \"success\"}"
 
 def validate_keys(requestData: dict, required_keys: list[str]) -> bool:

@@ -6,6 +6,7 @@ on:
       - "prod-deploy"
     paths:
       - 'backend/**'
+      - 'tests/**'
   pull_request:
     paths:
       - 'backend/**'

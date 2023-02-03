@@ -40,7 +40,6 @@ const CodeSnippetML = (props) => {
  * @returns string with correct python syntax to 'train' data
  */
 function codeSnippetFormat(layers) {
-  console.log(layers);
   const codeSnippet =
     create_import_statement(layers[0]) +
     "\n" +
@@ -88,7 +87,6 @@ export function layerToString(layer) {
         // param: "inputSize"
 
         if (typeof layer.parameters[param] !== "undefined") {
-          console.log(layer.parameters[param].parameter_type);
           if (layer.parameters[param].parameter_type === "text") {
             paramList[layer.parameters[param].index] =
               layer.parameters[param].kwarg +

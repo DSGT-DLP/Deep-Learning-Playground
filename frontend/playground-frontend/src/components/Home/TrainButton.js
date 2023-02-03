@@ -149,7 +149,11 @@ const TrainButton = (props) => {
       choice,
       functionMap[choice][1](paramList)
     );
+    if (process.env.REACT_APP_MODE === "prod") {
+      //redirect user to dashboard page!
+    }
     setResult(trainResult);
+    
   };
 
   useEffect(() => {

@@ -3,6 +3,8 @@ from backend.aws_helpers.lambda_utils.lambda_client import invoke
 import json
 import pandas as pd
 from moto import mock_iam, mock_lambda
+import io
+import zipfile
 import boto3
 import os 
 
@@ -11,6 +13,14 @@ os.environ["MOTO_DOCKER_LAMBDA_IMAGE"] = "mlupin/docker-lambda"
 def read_csv_to_json():
     df = pd.read_csv("tests/test_data/iris.csv")
     return df.to_dict("records")
+
+def create_zip_file(file):
+    zip_output = io.BytesIO()
+    zip_file = zipfile.ZipFile(zip_output, "w", zipfile.ZIP_DEFLATED)
+    zip_file.writestr("lambda_function.py", open(file, "rb").read())
+    zip_file.close()
+    zip_output.seek(0)
+    return zip_output.read()
 
 @mock_iam    
 def invoke_preprocess_lambda(payload):
@@ -48,7 +58,7 @@ def invoke_preprocess_lambda(payload):
             Runtime='python3.9',
             Role=role_arn,
             Handler='lambda_function.lambda_handler',
-            Code={'ZipFile': open("dlp-terraform/lambda/preprocess_lambda_function.py", "rb").read()}
+            Code={'ZipFile': create_zip_file("dlp-terraform/lambda/preprocess_lambda_function.py")}
         )
         response = client.invoke(FunctionName="preprocess_data", Payload=payload)
         print(response["Payload"].read())

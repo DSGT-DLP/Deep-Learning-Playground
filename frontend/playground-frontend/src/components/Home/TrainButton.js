@@ -153,7 +153,6 @@ const TrainButton = (props) => {
       //redirect user to dashboard page!
     }
     setResult(trainResult);
-    
   };
 
   useEffect(() => {

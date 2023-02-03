@@ -780,6 +780,27 @@ export const DETECTION_TRANSFORMS = [
         parameter_type: "number",
       },
     },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>
+            Horizontally flip the given image randomly with a given probability.
+          </strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>prob</em> - probability of the flip
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.RandomHorizontalFlip.html">
+          More info
+        </a>
+      </>
+    ),
     label: "Random Horizontal Flip",
     value: "RandomHorizontalFlip",
   },
@@ -796,6 +817,27 @@ export const DETECTION_TRANSFORMS = [
         parameter_type: "number",
       },
     },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>
+            Vertically flip the given image randomly with a given probability.
+          </strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>prob</em> - probability of the flip
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.RandomVerticalFlip.html">
+          More info
+        </a>
+      </>
+    ),
     label: "Random Vertical Flip",
     value: "RandomVerticalFlip",
   },
@@ -804,6 +846,22 @@ export const DETECTION_TRANSFORMS = [
     display_name: "To Tensor",
     object_name: "transforms.ToTensor",
     parameters: {},
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Convert PIL Image or numpy.ndarray to tensor.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <p className="info">
+          <i>None</i>
+        </p>
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.ToTensor.html">
+          More info
+        </a>
+      </>
+    ),
     label: "To Tensor",
     value: "ToTensor",
   },
@@ -820,6 +878,25 @@ export const DETECTION_TRANSFORMS = [
         parameter_type: "tuple",
       },
     },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Resize the input image to the given size.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>(H, W)</em> - output size
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.functional.resize.html">
+          More info
+        </a>
+      </>
+    ),
     label: "Resize",
     value: "Resize",
   },
@@ -835,6 +912,24 @@ export const DETECTION_TRANSFORMS = [
         parameter_type: "number",
       },
     },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Blurs image with randomly chosen GaussianBlur.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>kernel size</em> - size of Gaussian kernel
+          </li>
+        </ul>
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.GaussianBlur.html">
+          More info
+        </a>
+      </>
+    ),
     label: "Gaussian Blur",
     value: "GaussianBlur",
   },
@@ -842,6 +937,22 @@ export const DETECTION_TRANSFORMS = [
     display_name: "Grayscale",
     object_name: "transforms.Grayscale",
     parameters: {},
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Convert image to grayscale.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <p className="info">
+          <i>None</i>
+        </p>
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.Grayscale.html">
+          More info
+        </a>
+      </>
+    ),
     label: "Grayscale",
     value: "Grayscale",
   },
@@ -866,6 +977,28 @@ export const DETECTION_TRANSFORMS = [
         parameter_type: "number",
       },
     },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Normalize image with mean and standard deviation.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>mean</em> - mean of normalization
+          </li>
+          <li>
+            <em>mean</em> - standard deviation of normalization
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.Normalize.html">
+          More info
+        </a>
+      </>
+    ),
     label: "Normalize",
     value: "Normalize",
   },
@@ -883,6 +1016,24 @@ export const DETECTION_TRANSFORMS = [
         parameter_type: "number",
       },
     },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Adjust contrast of an image.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>contrast_factor</em> - how much to adjust the contrast
+          </li>
+        </ul>
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.functional.adjust_contrast.html">
+          More info
+        </a>
+      </>
+    ),
     label: "AdjustContrast",
     value: "AdjustContrast",
   },
@@ -900,6 +1051,25 @@ export const DETECTION_TRANSFORMS = [
         parameter_type: "number",
       },
     },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Adjust brightness of an image.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>brightness_factor</em> - how much to adjust the brightness
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.function.adjust_brightness.html">
+          More info
+        </a>
+      </>
+    ),
     label: "AdjustBrightness",
     value: "AdjustBrightness",
   },
@@ -941,6 +1111,37 @@ export const DETECTION_TRANSFORMS = [
         parameter_type: "tuple",
       },
     },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>
+            Apply affine transformation on the image keeping image center
+            invariant.
+          </strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>angle</em> - clockwise rotation angle between -180 and 180
+          </li>
+          <li>
+            <em>translate</em> - post-rotatation translation
+          </li>
+          <li>
+            <em>scale</em> - overall scale
+          </li>
+          <li>
+            <em>shear</em> - shear angle value between -180 and 180
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.functional.affine.html">
+          More info
+        </a>
+      </>
+    ),
     label: "Affine",
     value: "Affine",
   },

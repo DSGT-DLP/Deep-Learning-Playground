@@ -15,7 +15,7 @@ from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
-from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, getOrCreateUserExecutionsData_, updateUserExecutionsData_
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, getUserExecutionsData
 from backend.aws_helpers.sqs_utils.sqs_client import add_to_training_queue
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 from backend.dl.detection import detection_img_drive
@@ -40,6 +40,7 @@ CORS(app)
 
 app.wsgi_app = middleware(app.wsgi_app)
 
+# print(getUserExecutionsData("blah"))
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
@@ -318,7 +319,7 @@ def getUserExecutionsData() -> str:
     @return: A JSON string of the entry retrieved or created from the table
     """
     entryData = json.loads(request.data)
-    return getOrCreateUserExecutionsData_(entryData)
+    return getOrCreateUserExecutionsData(entryData)
 
 @app.route("/api/updateUserExecutionsData", methods=["POST"])
 def updateUserExecutionsData() -> str:
@@ -333,7 +334,7 @@ def updateUserExecutionsData() -> str:
     @return a success status message if the update is successful
     """
     requestData = json.loads(request.data)
-    return updateUserExecutionsData_(requestData)
+    return updateUserExecutionsData(requestData)
 
 
 @app.route("/api/getUserProgressData", methods=["POST"])

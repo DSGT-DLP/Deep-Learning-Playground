@@ -181,34 +181,34 @@ const ObjectDetection = () => {
       />
       <Spacer height={40} />
       <DndProvider backend={HTML5Backend}>
-      <TitleText text="Image Transformations" />
-      <BackgroundLayout>
-      {imageTransforms.map((_, i) => (
-      <AddedLayer
-        thisLayerIndex={i}
-        addedLayers={imageTransforms}
-        setAddedLayers={setImageTransforms}
-        key={i}
-        onDelete={() => {
-          const currentLayers = [...imageTransforms];
-          currentLayers.splice(i, 1);
-          setImageTransforms(currentLayers);
-        }}
-        style={{
-          input_box: {
-            margin: 7.5,
-            backgroundColor: "white",
-            width: 170,
-            paddingInline: 5,
-          },
-          layer_box: {
-            width: 150,
-            backgroundColor: COLORS.layer,
-          },
-        }}
-      />
-      ))}
-        <AddNewLayer />
+        <TitleText text="Image Transformations" />
+        <BackgroundLayout>
+          {imageTransforms.map((_, i) => (
+            <AddedLayer
+              thisLayerIndex={i}
+              addedLayers={imageTransforms}
+              setAddedLayers={setImageTransforms}
+              key={i}
+              onDelete={() => {
+                const currentLayers = [...imageTransforms];
+                currentLayers.splice(i, 1);
+                setImageTransforms(currentLayers);
+              }}
+              style={{
+                input_box: {
+                  margin: 7.5,
+                  backgroundColor: "white",
+                  width: 170,
+                  paddingInline: 5,
+                },
+                layer_box: {
+                  width: 150,
+                  backgroundColor: COLORS.layer,
+                },
+              }}
+            />
+          ))}
+          <AddNewLayer />
         </BackgroundLayout>
         <Spacer height={40} />
         <BackgroundLayout>
@@ -230,7 +230,6 @@ const ObjectDetection = () => {
             />
           ))}
         </BackgroundLayout>
-
       </DndProvider>
       <Spacer height={40} />
       <TitleText text="Detection Results" />

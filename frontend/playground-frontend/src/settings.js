@@ -784,7 +784,7 @@ export const DETECTION_TRANSFORMS = [
       <>
         <p className="info">
           <strong>
-          Horizontally flip the given image randomly with a given probability.
+            Horizontally flip the given image randomly with a given probability.
           </strong>
         </p>
         <p className="info">
@@ -821,7 +821,7 @@ export const DETECTION_TRANSFORMS = [
       <>
         <p className="info">
           <strong>
-          Vertically flip the given image randomly with a given probability.
+            Vertically flip the given image randomly with a given probability.
           </strong>
         </p>
         <p className="info">
@@ -849,9 +849,7 @@ export const DETECTION_TRANSFORMS = [
     tooltip_info: (
       <>
         <p className="info">
-          <strong>
-          Convert PIL Image or numpy.ndarray to tensor.
-          </strong>
+          <strong>Convert PIL Image or numpy.ndarray to tensor.</strong>
         </p>
         <p className="info">
           <strong>Parameters</strong>
@@ -883,9 +881,7 @@ export const DETECTION_TRANSFORMS = [
     tooltip_info: (
       <>
         <p className="info">
-          <strong>
-          Resize the input image to the given size.
-          </strong>
+          <strong>Resize the input image to the given size.</strong>
         </p>
         <p className="info">
           <strong>Parameters</strong>
@@ -919,9 +915,7 @@ export const DETECTION_TRANSFORMS = [
     tooltip_info: (
       <>
         <p className="info">
-          <strong>
-          Blurs image with randomly chosen GaussianBlur.
-          </strong>
+          <strong>Blurs image with randomly chosen GaussianBlur.</strong>
         </p>
         <p className="info">
           <strong>Parameters</strong>
@@ -946,9 +940,7 @@ export const DETECTION_TRANSFORMS = [
     tooltip_info: (
       <>
         <p className="info">
-          <strong>
-          Convert image to grayscale.
-          </strong>
+          <strong>Convert image to grayscale.</strong>
         </p>
         <p className="info">
           <strong>Parameters</strong>
@@ -988,9 +980,7 @@ export const DETECTION_TRANSFORMS = [
     tooltip_info: (
       <>
         <p className="info">
-          <strong>
-          Normalize image with mean and standard deviation.
-          </strong>
+          <strong>Normalize image with mean and standard deviation.</strong>
         </p>
         <p className="info">
           <strong>Parameters</strong>
@@ -1029,9 +1019,7 @@ export const DETECTION_TRANSFORMS = [
     tooltip_info: (
       <>
         <p className="info">
-          <strong>
-            Adjust contrast of an image.
-          </strong>
+          <strong>Adjust contrast of an image.</strong>
         </p>
         <p className="info">
           <strong>Parameters</strong>
@@ -1066,9 +1054,7 @@ export const DETECTION_TRANSFORMS = [
     tooltip_info: (
       <>
         <p className="info">
-          <strong>
-          Adjust brightness of an image.
-          </strong>
+          <strong>Adjust brightness of an image.</strong>
         </p>
         <p className="info">
           <strong>Parameters</strong>
@@ -1129,7 +1115,8 @@ export const DETECTION_TRANSFORMS = [
       <>
         <p className="info">
           <strong>
-          Apply affine transformation on the image keeping image center invariant.
+            Apply affine transformation on the image keeping image center
+            invariant.
           </strong>
         </p>
         <p className="info">

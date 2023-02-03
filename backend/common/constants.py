@@ -21,6 +21,7 @@ CLASSICAL_ML_CONFUSION_MATRIX = (
     "./frontend/playground-frontend/src/backend_outputs/visualization_output/confusion_matrix.png"
 )
 CLASSICAL_ML_RESULT_CSV_PATH = f"ml_results.csv"
+IMAGE_DETECTION_RESULT_CSV_PATH = f"detection_results.csv"
 EPOCH = "epoch"
 TRAIN_TIME = "train_time"
 TRAIN_LOSS = "train_loss"

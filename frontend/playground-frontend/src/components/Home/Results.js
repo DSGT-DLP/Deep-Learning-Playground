@@ -160,8 +160,6 @@ const Results = (props) => {
     const category_list = dlpBackendResponse?.auxiliary_outputs?.category_list;
     const numerical_category_list =
       dlpBackendResponse?.auxiliary_outputs?.numerical_category_list;
-    console.log(cm_data);
-    console.log(numerical_category_list);
 
     if (!cm_data?.length) return null;
 

@@ -78,7 +78,7 @@ def invoke_preprocess_lambda(payload):
             Role=role_arn,
             Handler='lambda_function.lambda_handler',
             Code={'ZipFile': create_zip_file("dlp-terraform/lambda/preprocess_lambda_function.py")},
-            Layers=['arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:2']
+            Layers=[pandas_arn]
         )
         response = lambda_func.invoke(FunctionName="preprocess_data", Payload=payload)
         print(response["Payload"].read())

@@ -55,23 +55,12 @@ async function sendToBackend(route, data) {
   data["route"] = route;
   data["execution_id"] = createExecutionId(headers.uid);
   data["user_id"] = headers?.uid;
-  if (process.env.REACT_APP_MODE === "prod") {
-    //write request data to SQS here! If success, create entry in dynamo db and give success toast notification! if fail, throw error toast notification
-    const queueResult = await fetch(`/api/writeToQueue`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: headers,
-    }).then((result) => result.json());
-
-    return queueResult;
-  } else {
-    const backendResult = await fetch(`/api/${route}`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: headers,
-    }).then((result) => result.json());
-    return backendResult;
-  }
+  const backendResult = await fetch(`/api/${route}`, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: headers,
+  }).then((result) => result.json());
+  return backendResult;
 }
 
 const routeDict = {
@@ -82,15 +71,14 @@ const routeDict = {
   objectdetection: "object-detection",
 };
 
-async function train_and_output(choice, choiceDict) {
+async function train_and_output(choice, data) {
+  let route = routeDict[choice];
+
   if (process.env.REACT_APP_MODE === "prod") {
-    //TODO: submit request to sqs. return success or fail message!
-    const trainResult = await sendToBackend(routeDict[choice], choiceDict);
-    return trainResult;
-  } else {
-    const trainResult = await sendToBackend(routeDict[choice], choiceDict);
-    return trainResult;
+    route = "writeToQueue";
   }
+  const trainResult = await sendToBackend(route, data);
+  return trainResult;
 }
 
 async function sendEmail(email, problemType) {

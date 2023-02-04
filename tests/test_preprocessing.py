@@ -68,7 +68,7 @@ def invoke_preprocess_lambda(payload):
                 'S3Bucket': 'pandas-bucket',
                 'S3Key': 'pandas_layer.zip'
             },
-            CompatibleRuntimes=['python3.0']
+            CompatibleRuntimes=['python3.9']
         )
         pandas_arn = pandas_lambda_layer['LayerVersionArn']
         

@@ -313,6 +313,7 @@ def writeToQueue() -> str:
         if (status_code != 200):
             return send_error("Your training request couldn't be added to the queue")
         else:
+            createExecution(queue_data)
             return send_success({"message": "Successfully added your training request to the queue"})
     except Exception:
         return send_error("Failed to queue data")
@@ -332,21 +333,6 @@ def getUserExecutionsData() -> str:
     """
     entryData = json.loads(request.data)
     return getOrCreateUserExecutionsData(entryData)
-
-@app.route("/api/updateUserExecutionsData", methods=["POST"])
-def updateUserExecutionsData() -> str:
-    """
-    Updates an entry on the `execution-table` DynamoDB table given an `execution_id`.
-
-    E.g.,
-    POST request to localhost:8000/api/updateUserExecutionsData with body
-    {"execution_id": "fsdh", "user_id": "fweadshas2"}
-    updates the execution_id = "fsdh" entry with the new user_id
-
-    @return a success status message if the update is successful
-    """
-    requestData = json.loads(request.data)
-    return updateUserExecutionsData(requestData)
 
 
 @app.route("/api/getUserProgressData", methods=["POST"])
@@ -397,6 +383,30 @@ def updateUserProgressData():
     
     dynamoTable.update_record(uid, progressData=updatedRecordAsString)
     return "{\"status\": \"success\"}"
+
+
+def createExecution(entryData: dict) -> dict:
+    """
+    Creates an entry in the `execution-table` DynamoDB table given an `execution_id`. If does not exist, create a new entry corresponding to the given user_id.
+
+    E.g.
+    POST request to http://localhost:8000/api/createExecution with body
+    {"execution_id": "fsdh", "user_id": "fweadshas"}
+    will create a new entry with the given execution_id and other attributes present e.g. user_id (user_id must be present upon creating a new entry)
+
+    @return: A JSON string of the entry created in the table
+    """
+    entryData = {
+        "execution_id": entryData["execution_id"], 
+        "user_id": entryData["user_id"], 
+        "name": entryData["custom_model_name"], 
+        "data_source": entryData["data_source"], 
+        "status": "QUEUED", 
+        "timestamp": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "progress": 0
+    }
+    createUserExecutionsData(entryData)
+
 
 def send_success(results: dict):
     return (json.dumps({"success": True, **results}), 200)

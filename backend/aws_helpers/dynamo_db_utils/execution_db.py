@@ -20,7 +20,7 @@ class ExecutionData(BaseData):
     
 @enumclass(
     DataClass=ExecutionData,
-    data_source=['TABULAR', 'PRETRAINED', 'IMAGE', 'AUDIO', 'TEXTUAL'],
+    data_source=['TABULAR', 'PRETRAINED', 'IMAGE', 'AUDIO', 'TEXTUAL', 'CLASSICAL_ML', 'OBJECT_DETECTION'],
     status=['QUEUED', 'STARTING', 'UPLOADING', 'TRAINING', 'SUCCESS', 'ERROR']
 )
 class ExecutionEnums:
@@ -52,7 +52,6 @@ def createUserExecutionsData(entryData: dict) -> str:
     @param **kwargs: execution_id and other table attributes to be created to the new entry e.g. user_id, if does not exist
     @return: A JSON string of the entry retrieved or created from the table
     """
-
     required_keys = ["execution_id", "user_id"]
     if not validate_keys(entryData, required_keys):
         raise ValueError(f"Missing keys {required_keys} in request body")

@@ -42,7 +42,6 @@ def invoke_preprocess_lambda(payload):
                 }]
             })
         )
-
         # Attach necessary permissions to the role
         iam_client.attach_role_policy(
             RoleName="preprocess_test_role",
@@ -51,16 +50,26 @@ def invoke_preprocess_lambda(payload):
         
         # Get the ARN of the new role
         role_arn = role["Role"]["Arn"]
+        
         lambda_func = boto3.client('lambda', aws_access_key_id="fake_access_key",
                             aws_secret_access_key="fake_secret_key",
                             region_name='us-west-2')
+<<<<<<< Updated upstream
         
         s3 = boto3.client('s3', aws_access_key_id="fake_access_key",
                             aws_secret_access_key="fake_secret_key",
                             region_name='us-west-2')
         s3.create_bucket(Bucket='pandas-bucket', CreateBucketConfiguration={'LocationConstraint': 'us-west-2'})
+=======
+        s3 = boto3.client('s3')
+        print("Here I am")
+        s3.create_bucket(Bucket='pandas-bucket', CreateBucketConfiguration={'LocationConstraint': 'us-west-2'})
+        print("I am after")
+
+>>>>>>> Stashed changes
         pandas_layer = pd.__file__
         s3.upload_file(pandas_layer, 'pandas-bucket', 'pandas_layer.zip')
+        print("after upload")
         
         pandas_lambda_layer = lambda_func.publish_layer_version(
             LayerName='pandas-layer',
@@ -71,7 +80,7 @@ def invoke_preprocess_lambda(payload):
             CompatibleRuntimes=['python3.9']
         )
         pandas_arn = pandas_lambda_layer['LayerVersionArn']
-        
+        print("After pandas arn" + pandas_arn)
         lambda_func.create_function(
             FunctionName='preprocess_data',
             Runtime='python3.9',

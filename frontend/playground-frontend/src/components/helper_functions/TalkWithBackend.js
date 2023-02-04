@@ -60,13 +60,14 @@ async function sendToBackend(route, data) {
     const queueResult = await fetch(`/api/writeToQueue`, {
       method: "POST",
       body: JSON.stringify(data),
-      header: headers,
+      headers: headers,
     }).then((result) => result.json());
 
     if (!queueResult.success) {
       toast.error(queueResult.message);
     } else {
       toast.success(queueResult.message);
+      
     }
     //logic to redirect user to user dashboard page
     return null; //don't display training results right now!

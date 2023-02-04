@@ -308,6 +308,7 @@ def writeToQueue() -> str:
     try:
         queue_data = json.loads(request.data)
         queue_send_outcome = add_to_training_queue(queue_data)
+        print(f"sqs outcome: {queue_send_outcome}")
         status_code = queue_send_outcome["ResponseMetadata"]["HTTPStatusCode"]
         if (status_code != 200):
             return send_error("Your training request couldn't be added to the queue")

@@ -2,7 +2,7 @@ import pytest
 from backend.aws_helpers.lambda_utils.lambda_client import invoke
 import json
 import pandas as pd
-from moto import mock_iam, mock_lambda
+from moto import mock_iam, mock_lambda, mock_s3
 import io
 import zipfile
 import boto3
@@ -22,6 +22,7 @@ def create_zip_file(file):
     zip_output.seek(0)
     return zip_output.read()
 
+@mock_s3
 @mock_iam    
 def invoke_preprocess_lambda(payload):
     with mock_lambda():
@@ -50,17 +51,34 @@ def invoke_preprocess_lambda(payload):
         
         # Get the ARN of the new role
         role_arn = role["Role"]["Arn"]
-        client = boto3.client('lambda', aws_access_key_id="fake_access_key",
+        lambda_func = boto3.client('lambda', aws_access_key_id="fake_access_key",
                             aws_secret_access_key="fake_secret_key",
                             region_name='us-west-2')
-        client.create_function(
+        
+        s3 = boto3.client('s3', aws_access_key_id="fake_access_key", aws_secret_access_key="fake_secret_key", region_name='us-west-2')
+        
+        pandas_layer = pd.__file__
+        s3.upload_file(pandas_layer, 'pandas-bucket', 'pandas_layer.zip')
+        
+        pandas_lambda_layer = lambda_func.publish_layer_version(
+            LayerName='pandas-layer',
+            Content={
+                'S3Bucket': 'mybucket',
+                'S3Key': 'pandas_layer.zip'
+            },
+            CompatibleRuntimes=['python3.0']
+        )
+        pandas_arn = pandas_lambda_layer['LayerVersionArn']
+        
+        lambda_func.create_function(
             FunctionName='preprocess_data',
             Runtime='python3.9',
             Role=role_arn,
             Handler='lambda_function.lambda_handler',
-            Code={'ZipFile': create_zip_file("dlp-terraform/lambda/preprocess_lambda_function.py")}
+            Code={'ZipFile': create_zip_file("dlp-terraform/lambda/preprocess_lambda_function.py")},
+            Layers=[pandas_arn]
         )
-        response = client.invoke(FunctionName="preprocess_data", Payload=payload)
+        response = lambda_func.invoke(FunctionName="preprocess_data", Payload=payload)
         print(response["Payload"].read())
         return response["Payload"].read()
     

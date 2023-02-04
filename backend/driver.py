@@ -313,7 +313,7 @@ def writeToQueue() -> str:
         if (status_code != 200):
             return send_error("Your training request couldn't be added to the queue")
         else:
-            return send_success({"messsage": "Successfully added your training request to the queue"})
+            return send_success({"message": "Successfully added your training request to the queue"})
     except Exception:
         return send_error("Failed to queue data")
     

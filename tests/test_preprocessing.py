@@ -55,7 +55,7 @@ def invoke_preprocess_lambda(payload):
                             aws_secret_access_key="fake_secret_key",
                             region_name='us-west-2')
         
-        s3 = boto3.client('s3', aws_access_key_id="fake_access_key", aws_secret_access_key="fake_secret_key", region_name='us-west-2')
+        s3 = session.client('s3')
         
         pandas_layer = pd.__file__
         s3.upload_file(pandas_layer, 'pandas-bucket', 'pandas_layer.zip')

@@ -147,14 +147,17 @@ const TrainButton = (props) => {
       formData.append("file", uploadFile);
       await uploadToBackend(formData);
     }
-    const trainResult = await train_and_output(
+    const trainState = await train_and_output(
       choice,
       functionMap[choice][1](paramList)
     );
     if (process.env.REACT_APP_MODE === "prod") {
+      if (trainState.success) toast.success(trainState.message);
+      else toast.error(trainState.message);
+
       navigate("/dashboard");
     } else {
-      setResult(trainResult);
+      setResult(trainState);
     }
   };
 

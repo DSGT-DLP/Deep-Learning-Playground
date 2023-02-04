@@ -1,11 +1,10 @@
 import React, { useState, useMemo } from "react";
-import Transforms from "../ImageModels/Transforms";
 import {
   OBJECT_DETECTION_PROBLEM_TYPES,
   DETECTION_TYPES,
   DETECTION_TRANSFORMS,
 } from "../../settings";
-import { DEFAULT_DETECTION_TRANSFORMS } from "../../constants";
+import { DEFAULT_DETECTION_TRANSFORMS, COLORS } from "../../constants";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { FormControlLabel, Switch } from "@mui/material";
@@ -13,6 +12,9 @@ import {
   Input,
   TitleText,
   BackgroundLayout,
+  AddedLayer,
+  AddNewLayer,
+  LayerChoice,
   TrainButton,
   Results,
   ChoiceTab,
@@ -91,7 +93,7 @@ const ObjectDetection = () => {
   };
 
   return (
-    <div id="ml-models">
+    <div id="image-models">
       <DndProvider backend={HTML5Backend}>
         <div className="d-flex flex-row justify-content-between">
           <FormControlLabel
@@ -121,7 +123,7 @@ const ObjectDetection = () => {
       </BackgroundLayout>
       <FilerobotImageEditor
         source="https://scaleflex.airstore.io/demo/stephen-walker-unsplash.jpg"
-        onSave={(editedImageObject, designState) => {
+        onSave={(editedImageObject) => {
           const file = dataURLtoFile(
             editedImageObject.imageBase64,
             editedImageObject.fullName
@@ -177,13 +179,57 @@ const ObjectDetection = () => {
         defaultToolId={TOOLS.TEXT} // or 'Text'
       />
       <Spacer height={40} />
-      <TitleText text="Image Transformations" />
-      <Transforms
-        queryText={"Image Transforms"}
-        options={DETECTION_TRANSFORMS}
-        transforms={imageTransforms}
-        setTransforms={setImageTransforms}
-      />
+      <DndProvider backend={HTML5Backend}>
+        <TitleText text="Image Transformations" />
+        <BackgroundLayout>
+          {imageTransforms.map((_, i) => (
+            <AddedLayer
+              thisLayerIndex={i}
+              addedLayers={imageTransforms}
+              setAddedLayers={setImageTransforms}
+              key={i}
+              onDelete={() => {
+                const currentLayers = [...imageTransforms];
+                currentLayers.splice(i, 1);
+                setImageTransforms(currentLayers);
+              }}
+              style={{
+                input_box: {
+                  margin: 7.5,
+                  backgroundColor: "white",
+                  width: 170,
+                  paddingInline: 5,
+                },
+                layer_box: {
+                  width: 150,
+                  backgroundColor: COLORS.layer,
+                },
+              }}
+            />
+          ))}
+          <AddNewLayer />
+        </BackgroundLayout>
+        <Spacer height={40} />
+        <BackgroundLayout>
+          {DETECTION_TRANSFORMS.map((e) => (
+            <LayerChoice
+              layer={e}
+              key={e.display_name}
+              onDrop={(newLayer) => {
+                setImageTransforms((currentAddedLayers) => {
+                  const copyCurrent = [...currentAddedLayers];
+                  const layerCopy = deepCopyObj(newLayer);
+                  Object.values(layerCopy.parameters).forEach((val) => {
+                    val.value = val.default ? val.default : val.min;
+                  });
+                  copyCurrent.push(layerCopy);
+                  return copyCurrent;
+                });
+              }}
+            />
+          ))}
+        </BackgroundLayout>
+      </DndProvider>
       <Spacer height={40} />
       <TitleText text="Detection Results" />
       {ResultMemo}
@@ -192,3 +238,4 @@ const ObjectDetection = () => {
 };
 
 export default ObjectDetection;
+const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));

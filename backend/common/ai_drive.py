@@ -17,8 +17,7 @@ from backend.dl.dl_model_parser import get_object
 from backend.ml.ml_trainer import train_classical_ml_model
 from backend.ml.ml_model_parser import get_object_ml
 
-from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData
-
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, getOrCreateUserExecutionsData_, updateUserExecutionsData_
 
 def dl_tabular_drive(
     user_arch: list,

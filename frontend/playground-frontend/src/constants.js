@@ -282,7 +282,7 @@ export const DEFAULT_DETECTION_TRANSFORMS = [
       size: {
         index: 0,
         parameter_name: "(H, W)",
-        value: "(32, 32)",
+        value: "(512, 512)",
         min: 1,
         max: 1000,
         parameter_type: "tuple",

@@ -402,11 +402,10 @@ def createExecution(entryData: dict) -> dict:
         "name": entryData["custom_model_name"], 
         "data_source": entryData["data_source"], 
         "status": "QUEUED", 
-        "timestamp": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "timestamp": get_current_timestamp(),
         "progress": 0
     }
     createUserExecutionsData(entryData)
-
 
 def send_success(results: dict):
     return (json.dumps({"success": True, **results}), 200)

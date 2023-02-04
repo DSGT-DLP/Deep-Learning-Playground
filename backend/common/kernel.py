@@ -7,36 +7,54 @@ import shutil
 import backend.aws_helpers.sqs_utils.sqs_client as sqs_helper
 import backend.aws_helpers.s3_utils.s3_client as s3_helper
 from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME, EXECUTION_BUCKET_NAME
-from backend.common.constants import UNZIPPED_DIR_NAME, ONNX_MODEL, SAVED_MODEL_DL, SAVED_MODEL_ML, DEEP_LEARNING_RESULT_CSV_PATH
+from backend.common.constants import UNZIPPED_DIR_NAME, ONNX_MODEL, SAVED_MODEL_DL, SAVED_MODEL_ML, DEEP_LEARNING_RESULT_CSV_PATH, IMAGE_DETECTION_RESULT_CSV_PATH
 from backend.common.utils import csv_to_json
 from backend.common.ai_drive import dl_tabular_drive, ml_drive, dl_img_drive
 from backend.dl.detection import detection_img_drive
+from backend.aws_helpers.dynamo_db_utils.execution_db import updateStatus
 
 def router(msg):
     '''
     Routes the message to the appropriate training function.
     '''
     execution_id = msg['execution_id']
+    updateStatus(execution_id=execution_id, status="STARTING")
     if msg['route'] == 'tabular-run':
-        tabular_run_route(msg)
+        result = tabular_run_route(msg)
+        if result[1] != 200:
+            updateStatus(execution_id=execution_id, status="ERROR")
+            return
+
+        updateStatus(execution_id=execution_id, status="SUCCESS")
         s3_helper.write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_DL)}")
         s3_helper.write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(ONNX_MODEL)}")
         s3_helper.write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}")
     elif msg['route'] == 'ml-run':
-        ml_run_route(msg)
+        result = ml_run_route(msg)
+        if result[1] != 200:
+            updateStatus(execution_id=execution_id, status="ERROR")
+            return
+
+        updateStatus(execution_id=execution_id, status="SUCCESS")
         s3_helper.write_to_bucket(SAVED_MODEL_ML, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_ML)}")
     elif msg['route'] == 'img-run':
-        img_run_route(msg)
+        result = img_run_route(msg)
+        if result[1] != 200:
+            updateStatus(execution_id=execution_id, status="ERROR")
+            return
+
+        updateStatus(execution_id=execution_id, status="SUCCESS")
         s3_helper.write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_DL)}")
         s3_helper.write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(ONNX_MODEL)}")
         s3_helper.write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}")
     elif msg['route'] == 'object-detection':
-        object_detection_route(msg)
-        #s3_helper.write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, "./test/")
-        #s3_helper.write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, "./test/")
-        #s3_helper.write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, "./test/")
-    # if succeed, success status in DDB
-    # if fail, fail status in DDB
+        result = object_detection_route(msg)
+        if result[1] != 200:
+            updateStatus(execution_id=execution_id, status="ERROR")
+            return
+
+        updateStatus(execution_id=execution_id, status="SUCCESS")
+        s3_helper.write_to_bucket(IMAGE_DETECTION_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(IMAGE_DETECTION_RESULT_CSV_PATH)}")
 
 # Wrapper for dl_tabular_drive() function
 def tabular_run_route(request):
@@ -199,11 +217,6 @@ while True:
 
     if not empty_message(msg):
         print(msg)
-
-        # Update DynamoDB progress
-        # - parse message, including execution ID and everything
-        # - DynamoDB helper update database function to write to DDB table
-
         # Handle data
         router(msg)
     else:

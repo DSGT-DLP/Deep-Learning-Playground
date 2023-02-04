@@ -5,6 +5,7 @@ from datetime import datetime
 
 from backend.aws_helpers.dynamo_db_utils.base_db import BaseData, BaseDDBUtil, enumclass, changevar
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION
+from backend.common.utils import get_current_timestamp
 from typing import Union
 
 @dataclass
@@ -79,6 +80,20 @@ def updateUserExecutionsData(requestData: dict) -> str:
     updatedRecord.pop("execution_id")
     dynamoTable.update_record(execution_id, **updatedRecord)
     return "{\"status\": \"success\"}"
+
+
+def updateStatus(execution_id: str, status: str) -> str:
+    """
+    Updates the status of an entry from the `execution-table` DynamoDB table given an `execution_id`.
+
+    @param execution_id: The execution_id of the entry to be updated
+    @param status: The new status of the entry
+    @return a success status message if the update is successful
+    """
+    dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
+    dynamoTable.update_record(execution_id, status=status, timestamp=get_current_timestamp())
+    return "{\"status\": \"success\"}"
+
 
 def validate_keys(requestData: dict, required_keys: list[str]) -> bool:
     """

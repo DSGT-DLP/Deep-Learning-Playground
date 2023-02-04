@@ -76,7 +76,7 @@ def invoke_preprocess_lambda(payload):
             FunctionName='preprocess_data',
             Runtime='python3.9',
             Role=role_arn,
-            Handler='preprocess_lambda_function.lambda_handler',
+            Handler='lambda_function.lambda_handler',
             Code={'ZipFile': create_zip_file("dlp-terraform/lambda/preprocess_lambda_function.py")},
             Layers=[pandas_arn]
         )

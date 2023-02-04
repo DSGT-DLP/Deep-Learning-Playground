@@ -65,7 +65,7 @@ def invoke_preprocess_lambda(payload):
         pandas_lambda_layer = lambda_func.publish_layer_version(
             LayerName='pandas-layer',
             Content={
-                'S3Bucket': 'mybucket',
+                'S3Bucket': 'pandas-bucket',
                 'S3Key': 'pandas_layer.zip'
             },
             CompatibleRuntimes=['python3.0']

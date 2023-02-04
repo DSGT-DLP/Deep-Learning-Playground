@@ -32,7 +32,7 @@ def router(msg):
         s3_helper.write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}")
     elif msg['route'] == 'object-detection':
         object_detection_route(msg)
-        s3_helper.write_to_bucket(IMAGE_DETECTION_RESULT_CSV_PATH, EXECTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(IMAGE_DETECTION_RESULT_CSV_PATH)}")
+        s3_helper.write_to_bucket(IMAGE_DETECTION_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(IMAGE_DETECTION_RESULT_CSV_PATH)}")
         #s3_helper.write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, "./test/")
         #s3_helper.write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, "./test/")
         #s3_helper.write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, "./test/")

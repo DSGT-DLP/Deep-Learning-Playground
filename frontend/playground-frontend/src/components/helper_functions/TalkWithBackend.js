@@ -55,6 +55,14 @@ async function sendToBackend(route, data) {
   data["route"] = route;
   data["execution_id"] = createExecutionId(headers.uid);
   data["user_id"] = headers?.uid;
+  if (data.shouldBeQueued) {
+    const backendResult = await fetch("/api/writeToQueue", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: headers,
+    }).then((result) => result.json());
+    return backendResult;
+  }
   const backendResult = await fetch(`/api/${route}`, {
     method: "POST",
     body: JSON.stringify(data),
@@ -75,7 +83,7 @@ async function train_and_output(choice, data) {
   let route = routeDict[choice];
 
   if (process.env.REACT_APP_MODE === "prod") {
-    route = "writeToQueue";
+    data["shouldBeQueued"] = true;
   }
   const trainResult = await sendToBackend(route, data);
   return trainResult;

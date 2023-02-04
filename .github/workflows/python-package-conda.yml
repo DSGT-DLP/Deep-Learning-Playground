@@ -10,6 +10,7 @@ on:
     paths:
       - 'backend/**'
       - 'dlp-terraform/**'
+      - 'tests/**'
 
 jobs:
   build-linux:

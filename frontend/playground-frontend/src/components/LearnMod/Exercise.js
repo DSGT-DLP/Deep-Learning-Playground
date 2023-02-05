@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { DEFAULT_ADDED_LAYERS } from "../../constants";
+import PropTypes from "prop-types";
 import {
   BOOL_OPTIONS,
   CRITERIONS,
@@ -24,10 +25,10 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "react-toastify";
 import { sendToBackend } from "../../components/helper_functions/TalkWithBackend";
 
-const Home = () => {
+const Exercise = (props) => {
   const csvDataInput = [];
   const uploadedColumns = [];
-  const [dlpBackendResponse, setDLPBackendResponse] = useState();
+  const [dlpBackendResponse, setDLPBackendResponse] = useState(null);
   const [inputKey, setInputKey] = useState(0);
 
   // input responses
@@ -54,6 +55,7 @@ const Home = () => {
     }))
   );
   const [activeColumns, setActiveColumns] = useState([]);
+  const [finalAccuracy, setFinalAccuracy] = useState(0);
 
   const input_responses = {
     addedLayers: addedLayers,
@@ -76,9 +78,7 @@ const Home = () => {
     value: i,
   }));
 
-  const inputColumnOptions = usingDefaultDataset.value
-    ? []
-    : columnOptionsArray;
+  const inputColumnOptions = usingDefaultDataset.value ? [] : columnOptionsArray;
 
   const handleTargetChange = (e) => {
     setTargetCol(e);
@@ -163,6 +163,17 @@ const Home = () => {
     },
   ];
 
+  async function updateUserProgress() {
+    let requestData = {
+      uid: props.user.uid,
+      moduleID: props.moduleID,
+      sectionID: props.sectionID,
+      questionID: props.exerciseObject.questionID,
+    };
+
+    sendToBackend("updateUserProgressData", requestData);
+  }
+
   useEffect(() => {
     setCriterion(
       problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0]
@@ -199,6 +210,19 @@ const Home = () => {
     setFeatures(null);
     setInputKey((e) => e + 1);
   }, [activeColumns]);
+
+  useEffect(() => {
+    if(dlpBackendResponse != null){
+      setFinalAccuracy(dlpBackendResponse["dl_results"][epochs - 1]["train_acc"]);
+    }
+
+    if (finalAccuracy > props.exerciseObject.minAccuracy) {
+
+      updateUserProgress();
+
+    }
+
+  }, [dlpBackendResponse]);
 
   const ImplementedLayers = (
     <>
@@ -266,10 +290,12 @@ const Home = () => {
 
   const ResultsMemo = useMemo(
     () => (
-      <Results
-        dlpBackendResponse={dlpBackendResponse}
-        problemType={problemType}
-      />
+      <div>
+        <Results
+          dlpBackendResponse={dlpBackendResponse}
+          problemType={problemType}
+        />
+      </div>
     ),
     [dlpBackendResponse, problemType]
   );
@@ -292,10 +318,22 @@ const Home = () => {
 
       <TitleText text="Deep Learning Results" />
       {ResultsMemo}
+      {
+        (finalAccuracy !== 0) ? (<h5 className="heading1">Final Accuracy was: {finalAccuracy}</h5>) : <div></div>
+      }
+      
     </div>
   );
 };
 
-export default Home;
+export default Exercise;
+
+const propTypes = {
+  user: PropTypes.object,
+  exerciseObject: PropTypes.object,
+  moduleID: PropTypes.number,
+  sectionID: PropTypes.number,
+};
+Exercise.propTypes = propTypes;
 
 const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));

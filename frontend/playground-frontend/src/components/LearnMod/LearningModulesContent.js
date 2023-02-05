@@ -347,10 +347,12 @@ let content = {
           content: [
             {
               sectionType: "text",
-              content: "You are now ready to build a very basic neural network. Try it out below."
+              content: "You are now ready to build a very basic neural network. Try it out below. Combine layers to build a model."
             },
             {
-              sectionType: "exercise"
+              sectionType: "exercise",
+              minAccuracy: 0.7,
+              questionID: 0
             }
           ],
           points: 0

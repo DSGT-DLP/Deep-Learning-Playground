@@ -114,7 +114,13 @@ const LearnContent = () => {
 
               if (contentComponent.sectionType === "exercise") {
                 return (
-                  <Exercise/>
+                  <Exercise
+                    key={index}
+                    user={user}
+                    exerciseObject={contentComponent}
+                    moduleID={moduleContent.moduleID}
+                    sectionID={moduleContent.subClasses[subSection].sectionID}
+                  />
                 );
               }
 

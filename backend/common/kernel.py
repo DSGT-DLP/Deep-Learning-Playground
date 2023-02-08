@@ -213,6 +213,7 @@ def empty_message(message):
 # Polls for messages from the SQS queue, and handles them.
 while True:
     # Get message from queue
+    print("Polling for messages...")
     msg = sqs_helper.receive_message()
 
     if not empty_message(msg):

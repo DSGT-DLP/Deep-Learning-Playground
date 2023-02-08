@@ -434,4 +434,5 @@ def send_traceback_error():
 
 
 if __name__ == "__main__":
+    print("Backend starting")
     app.run(debug=True, host="0.0.0.0", port=PORT)

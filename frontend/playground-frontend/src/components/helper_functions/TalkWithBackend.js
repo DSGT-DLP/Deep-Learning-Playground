@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import { auth } from "../../firebase";
 import sha256 from "crypto-js/sha256";
 import axios from "axios";
+import { EXPECTED_FAILURE_HTTP_CODES } from "../../constants";
 
 async function uploadToBackend(data) {
   let headers = auth.currentUser
@@ -67,7 +68,21 @@ async function sendToBackend(route, data) {
     method: "POST",
     body: JSON.stringify(data),
     headers: headers,
-  }).then((result) => result.json());
+  }).then((result) => {
+    if (result.ok) return result.json();
+    else if (EXPECTED_FAILURE_HTTP_CODES.includes(result.status)) {
+      return result.json().then((json) => {
+        toast.error(json.message);
+        throw new Error(json.message);
+      });
+    } else if (result.status === 504) {
+      toast.error("Backend not active. Please try again later.");
+      throw new Error("Something went wrong. Please try again later.");
+    } else {
+      toast.error("Something went wrong. Please try again later.");
+      throw new Error("Something went wrong. Please try again later.");
+    }
+  });
   return backendResult;
 }
 

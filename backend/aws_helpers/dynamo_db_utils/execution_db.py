@@ -5,6 +5,7 @@ from datetime import datetime
 
 from backend.aws_helpers.dynamo_db_utils.base_db import BaseData, BaseDDBUtil, enumclass, changevar
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION
+from boto3.dynamodb.conditions import Key
 from typing import Union
 
 @dataclass
@@ -50,6 +51,30 @@ def getOrCreateUserExecutionsData_(entryData: dict) -> str:
         newRecord = ExecutionData(**entryData)
         dynamoTable.create_record(newRecord)
         return json.dumps(newRecord.__dict__)
+
+def getAllUserExecutionsData(user_id: str) -> str:
+    """
+    Retrieves an entry from the `execution-table` DynamoDB table given an `execution_id`. Example output: {"execution_id": "blah", "user_id": "blah", "name": "blah", "timestamp": "blah", "data_source": "TABULAR", "status": "QUEUED", "progress": 1}
+
+    @param execution_id: The execution_id of the entry to be retrieved
+    @return: A JSON string of the entry retrieved from the table
+    """
+    dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
+    response = dynamoTable.table.query(IndexName='user_id', KeyConditionExpression=Key('user_id').eq(user_id))
+    items = response["Items"]
+    record = []
+    for item in items:
+        data_source, name, progress, status, timestamp, execution_id = item["data_source"], item["name"], item["progress"], item["status"], item["timestamp"], item["execution_id"]
+        record.append({"data_source": data_source, "name": name, "progress": float(progress), "status": status, "timestamp": timestamp, "execution_id": execution_id})
+
+    
+    while 'LastEvaluatedKey' in response:
+        key = response['LastEvaluatedKey']
+        response = dynamoTable.table.query(KeyConditionExpression=Key('user_id').eq(user_id), ExclusiveStartKey=key)
+        for item in items:
+            data_source, name, progress, status, timestamp, execution_id = item["data_source"], item["name"], item["progress"], item["status"], item["timestamp"], item["execution_id"]
+            record.append({"data_source": data_source, "name": name, "progress": float(progress), "status": status, "timestamp": timestamp, "execution_id": execution_id})
+    return json.dumps(record)
 
 def updateUserExecutionsData_(requestData: dict) -> str:
     """

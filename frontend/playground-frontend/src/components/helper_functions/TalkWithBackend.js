@@ -52,6 +52,7 @@ async function sendToBackend(route, data) {
       }
     : undefined;
   data["route"] = route;
+  data["user_id"] = headers.uid;
   const timestamp = Date.now();
   data["execution_id"] = createExecutionId(timestamp, headers.uid);
   if (process.env.REACT_APP_MODE === "prod") {

@@ -6,11 +6,14 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { Button } from "gestalt";
+import "gestalt/dist/gestalt.css";
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { sendToBackend } from "../helper_functions/TalkWithBackend";
 import "./../../App.css";
 
 const rows = [
@@ -128,61 +131,73 @@ const FilledGrid = () => {
   const navigate = useNavigate();
 
   return (
-    <TableContainer style={{ display: "flex", justifyContent: "center" }}>
-      <Table sx={{ minWidth: 400, m: 2 }}>
-        <TableHead>
-          <TableRow>
-            <TableCell className="dashboard-header">Name</TableCell>
-            <TableCell className="dashboard-header">Type</TableCell>
-            <TableCell className="dashboard-header" align="left">
-              Input
-            </TableCell>
-            <TableCell className="dashboard-header" align="left">
-              Date
-            </TableCell>
-            <TableCell className="dashboard-header" align="left">
-              Status
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.id}
-              sx={{
-                "&:last-child td, &:last-child th": { border: 0 },
-                cursor: "pointer",
-              }}
-              onClick={() => navigate("/")}
-              hover
-            >
-              <TableCell
-                component="th"
-                scope="row"
-                className="dashboard-header"
-              >
-                {row.name}
+    <>
+      <Button
+        color="red"
+        size="lg"
+        text="Refresh"
+        onClick={async () => {
+          const response = await sendToBackend("executiontable", {});
+
+          console.log(JSON.parse(response["record"]));
+        }}
+      />
+      <TableContainer style={{ display: "flex", justifyContent: "center" }}>
+        <Table sx={{ minWidth: 400, m: 2 }}>
+          <TableHead>
+            <TableRow>
+              <TableCell className="dashboard-header">Name</TableCell>
+              <TableCell className="dashboard-header">Type</TableCell>
+              <TableCell className="dashboard-header" align="left">
+                Input
               </TableCell>
-              <TableCell component="th" scope="row" className="row-style">
-                {row.type}
+              <TableCell className="dashboard-header" align="left">
+                Date
               </TableCell>
-              <TableCell align="left" className="row-style">
-                {row.input}
-              </TableCell>
-              <TableCell align="left" className="row-style">
-                {formatDate(row.date)}
-              </TableCell>
-              <TableCell align="left">
-                <StatusDisplay
-                  statusType={row.statusType}
-                  status={row.status}
-                />
+              <TableCell className="dashboard-header" align="left">
+                Status
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow
+                key={row.id}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  cursor: "pointer",
+                }}
+                onClick={() => navigate("/")}
+                hover
+              >
+                <TableCell
+                  component="th"
+                  scope="row"
+                  className="dashboard-header"
+                >
+                  {row.name}
+                </TableCell>
+                <TableCell component="th" scope="row" className="row-style">
+                  {row.type}
+                </TableCell>
+                <TableCell align="left" className="row-style">
+                  {row.input}
+                </TableCell>
+                <TableCell align="left" className="row-style">
+                  {formatDate(row.date)}
+                </TableCell>
+                <TableCell align="left">
+                  <StatusDisplay
+                    statusType={row.statusType}
+                    status={row.status}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 

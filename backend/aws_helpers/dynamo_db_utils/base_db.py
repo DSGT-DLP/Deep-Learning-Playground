@@ -221,7 +221,7 @@ class BaseDDBUtil:
         item = self.__number_decoder(item)        
         self.__param_checker("approve", **item)
         return self.DataClass(**item)
-    
+        
     def update_record(self, partition_id: Any, **kwargs) -> Literal['Success']:
         """Function to update a record with the partition_key values as attribute 'partition_id' from 
             the associated DynamoDB table. It takes in changes in attributes as keyword arguments"""

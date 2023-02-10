@@ -112,7 +112,7 @@ export const sendTabularJSON = (...args) => {
     file_URL: args.fileURL,
     email: args.email,
     custom_model_name: args.customModelName,
-    data_source: "TABULAR"
+    data_source: "TABULAR",
   };
 };
 
@@ -152,7 +152,7 @@ export const sendImageJSON = (...args) => {
     test_transform: args.testTransforms,
     email: args.email ? args.email : null,
     custom_model_name: args.customModelName,
-    data_source: "IMAGE"
+    data_source: "IMAGE",
   };
 };
 
@@ -195,7 +195,7 @@ export const sendPretrainedJSON = (...args) => {
     test_transform: args.testTransforms,
     email: args.email,
     custom_model_name: args.customModelName,
-    data_source: "PRETRAINED"
+    data_source: "PRETRAINED",
   };
 };
 
@@ -242,7 +242,7 @@ export const sendClassicalMLJSON = (...args) => {
     csv_data: csvDataStr,
     file_URL: args.fileURL,
     email: args.email,
-    data_source: "CLASSICAL_ML"
+    data_source: "CLASSICAL_ML",
   };
 };
 
@@ -264,6 +264,6 @@ export const sendObjectDetectionJSON = (...args) => {
     problem_type: args.problemType != null ? args.problemType : null,
     detection_type: args.detectionType,
     transforms: args.transforms,
-    data_source: "OBJECT_DETECTION"
+    data_source: "OBJECT_DETECTION",
   };
 };

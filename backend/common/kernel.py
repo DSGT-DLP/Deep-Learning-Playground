@@ -22,6 +22,7 @@ def router(msg):
     if msg['route'] == 'tabular-run':
         result = tabular_run_route(msg)
         if result[1] != 200:
+            print("Error in tabular run route: result is", result)
             updateStatus(execution_id=execution_id, status="ERROR")
             return
 
@@ -57,13 +58,11 @@ def router(msg):
         s3_helper.write_to_bucket(IMAGE_DETECTION_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(IMAGE_DETECTION_RESULT_CSV_PATH)}")
 
 # Wrapper for dl_tabular_drive() function
-def tabular_run_route(request):
+def tabular_run_route(request_data):
     try:
-        request_data = json.loads(request.data)
-
         user_arch = request_data["user_arch"]
         fileURL = request_data["file_URL"]
-        uid = request.headers["uid"]
+        uid = request_data["user_id"]
         json_csv_data_str = request_data["csv_data"]
         customModelName = request_data["custom_model_name"]
 
@@ -80,7 +79,7 @@ def tabular_run_route(request):
             "batch_size": request_data["batch_size"],
         }
 
-        train_loss_results = dl_tabular_drive(user_arch, fileURL, uid, params,
+        train_loss_results = dl_tabular_drive(user_arch, fileURL, params,
             json_csv_data_str, customModelName)
 
         print(train_loss_results)
@@ -91,14 +90,12 @@ def tabular_run_route(request):
         return send_traceback_error()
 
 # Wrapper for ml_drive() function
-def ml_run_route(request):
+def ml_run_route(request_data):
     try:
-        request_data = json.loads(request.data)
-        print(request_data)
-
         user_model = request_data["user_arch"]
         problem_type = request_data["problem_type"]
         target = request_data["target"]
+        uid = request_data["user_id"]
         features = request_data["features"]
         default = request_data["using_default_dataset"]
         shuffle = request_data["shuffle"]
@@ -119,11 +116,9 @@ def ml_run_route(request):
         return send_traceback_error()
 
 # Wrapper for dl_img_drive() function
-def img_run_route(request):
+def img_run_route(request_data):
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
-        request_data = json.loads(request.data)
-
         train_transform = request_data["train_transform"]
         test_transform = request_data["test_transform"]
         user_arch = request_data["user_arch"]
@@ -133,6 +128,7 @@ def img_run_route(request):
         epochs = request_data["epochs"]
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
+        uid = request_data["user_id"]
         customModelName = request_data["custom_model_name"]
 
         train_loss_results = dl_img_drive(
@@ -156,12 +152,12 @@ def img_run_route(request):
         return send_traceback_error()
 
 # Wrapper for detection_img_drive() function
-def object_detection_route(request):
+def object_detection_route(request_data):
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
-        request_data = json.loads(request.data)
         problem_type = request_data["problem_type"]
         detection_type = request_data["detection_type"]
+        uid = request_data["user_id"]
         transforms = request_data["transforms"]
         image = detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type, transforms)
         return send_detection_results(image)
@@ -213,7 +209,7 @@ def empty_message(message):
 # Polls for messages from the SQS queue, and handles them.
 while True:
     # Get message from queue
-    print("Polling for messages...")
+    print("Polling for messages...\n")
     msg = sqs_helper.receive_message()
 
     if not empty_message(msg):

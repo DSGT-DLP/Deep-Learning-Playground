@@ -22,7 +22,6 @@ from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, E
 def dl_tabular_drive(
     user_arch: list,
     fileURL: str,
-    uid: str,
     params: dict,
     json_csv_data_str: str = "",
     customModelName: str = None,
@@ -32,7 +31,6 @@ def dl_tabular_drive(
     Args:
         user_arch (list): list that contains user defined deep learning architecture
         fileURL (str): URL of the dataset file, if provided by user
-        uid (str): user id
         params (dict): dictionary containing all the parameters for the model, e.g. criterion and problem type
         json_csv_data_str (str, optional): json string of the dataset, if provided by user. Defaults to "".
         customModelName (str, optional): name of the custom model. Defaults to None.

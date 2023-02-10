@@ -90,7 +90,7 @@ def tabular_run():
             }
         )
 
-        train_loss_results = dl_tabular_drive(user_arch, fileURL, uid, params,
+        train_loss_results = dl_tabular_drive(user_arch, fileURL, params,
             json_csv_data_str, customModelName)
 
         print(train_loss_results)

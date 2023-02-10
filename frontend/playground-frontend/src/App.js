@@ -72,7 +72,7 @@ function App() {
               element={verifyLogin(<LearnContent />)}
             />
           </Routes>
-          <ToastContainer position="top-center" />
+          <ToastContainer position="top-center" autoClose={2500} />
         </div>
         <Footer />
       </BrowserRouter>

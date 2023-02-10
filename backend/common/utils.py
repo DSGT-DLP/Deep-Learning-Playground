@@ -16,6 +16,7 @@ from backend.common.constants import (
 import pandas as pd
 import numpy as np
 import torch
+import datetime
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -317,3 +318,12 @@ def make_directory(filepath: str):
         os.makedirs(filepath, exist_ok=True)
     else:
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+
+def get_current_timestamp() -> str:
+    """
+    Returns the current UTC timestamp in the format 2022-12-31T17:59:59Z
+
+    :return: current UTC timestamp in the format 2022-12-31T17:59:59Z
+    """
+    return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")

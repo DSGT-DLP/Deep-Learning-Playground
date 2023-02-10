@@ -17,6 +17,8 @@ export const URLs = {
   github: "https://github.com/karkir0003/Deep-Learning-Playground",
 };
 
+export const EXPECTED_FAILURE_HTTP_CODES = [400, 401, 403, 404, 405, 500];
+
 export const LAYOUT = {
   row: {
     display: "flex",

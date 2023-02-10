@@ -15,7 +15,8 @@ from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
-from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, getOrCreateUserExecutionsData_, updateUserExecutionsData_
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, createUserExecutionsData
+from backend.aws_helpers.sqs_utils.sqs_client import add_to_training_queue
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 from backend.dl.detection import detection_img_drive
 
@@ -38,7 +39,6 @@ app = Flask(
 CORS(app)
 
 app.wsgi_app = middleware(app.wsgi_app)
-
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
@@ -63,6 +63,7 @@ def tabular_run():
         uid = request.headers["uid"]
         json_csv_data_str = request_data["csv_data"]
         customModelName = request_data["custom_model_name"]
+        execution_id = request_data["execution_id"]
 
         params = {
             "target": request_data["target"],
@@ -77,7 +78,19 @@ def tabular_run():
             "batch_size": request_data["batch_size"],
         }
 
-        train_loss_results = dl_tabular_drive(user_arch, fileURL, uid, params,
+        createUserExecutionsData(
+            {
+                "execution_id": execution_id, 
+                "user_id": uid, 
+                "name": customModelName, 
+                "data_source": "TABULAR", 
+                "status": "STARTING", 
+                "timestamp": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "progress": 0
+            }
+        )
+
+        train_loss_results = dl_tabular_drive(user_arch, fileURL, params,
             json_csv_data_str, customModelName)
 
         print(train_loss_results)
@@ -284,6 +297,27 @@ def upload():
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
+    
+@app.route("/api/writeToQueue", methods=["POST"])
+def writeToQueue() -> str:
+    """
+    API Endpoint to write training request to SQS queue to be serviced by 
+    ECS Fargate training cluster
+    
+    """
+    try:
+        queue_data = json.loads(request.data)
+        queue_send_outcome = add_to_training_queue(queue_data)
+        print(f"sqs outcome: {queue_send_outcome}")
+        status_code = queue_send_outcome["ResponseMetadata"]["HTTPStatusCode"]
+        if (status_code != 200):
+            return send_error("Your training request couldn't be added to the queue")
+        else:
+            createExecution(queue_data)
+            return send_success({"message": "Successfully added your training request to the queue"})
+    except Exception:
+        return send_error("Failed to queue data")
+    
 
 @app.route("/api/getUserExecutionsData", methods=["POST"])
 def getUserExecutionsData() -> str:
@@ -298,22 +332,7 @@ def getUserExecutionsData() -> str:
     @return: A JSON string of the entry retrieved or created from the table
     """
     entryData = json.loads(request.data)
-    return getOrCreateUserExecutionsData_(entryData)
-
-@app.route("/api/updateUserExecutionsData", methods=["POST"])
-def updateUserExecutionsData() -> str:
-    """
-    Updates an entry on the `execution-table` DynamoDB table given an `execution_id`.
-
-    E.g.,
-    POST request to localhost:8000/api/updateUserExecutionsData with body
-    {"execution_id": "fsdh", "user_id": "fweadshas2"}
-    updates the execution_id = "fsdh" entry with the new user_id
-
-    @return a success status message if the update is successful
-    """
-    requestData = json.loads(request.data)
-    return updateUserExecutionsData_(requestData)
+    return getOrCreateUserExecutionsData(entryData)
 
 
 @app.route("/api/getUserProgressData", methods=["POST"])
@@ -365,6 +384,29 @@ def updateUserProgressData():
     dynamoTable.update_record(uid, progressData=updatedRecordAsString)
     return "{\"status\": \"success\"}"
 
+
+def createExecution(entryData: dict) -> dict:
+    """
+    Creates an entry in the `execution-table` DynamoDB table given an `execution_id`. If does not exist, create a new entry corresponding to the given user_id.
+
+    E.g.
+    POST request to http://localhost:8000/api/createExecution with body
+    {"execution_id": "fsdh", "user_id": "fweadshas"}
+    will create a new entry with the given execution_id and other attributes present e.g. user_id (user_id must be present upon creating a new entry)
+
+    @return: A JSON string of the entry created in the table
+    """
+    entryData = {
+        "execution_id": entryData["execution_id"], 
+        "user_id": entryData["user_id"], 
+        "name": entryData["custom_model_name"], 
+        "data_source": entryData["data_source"], 
+        "status": "QUEUED", 
+        "timestamp": get_current_timestamp(),
+        "progress": 0
+    }
+    createUserExecutionsData(entryData)
+
 def send_success(results: dict):
     return (json.dumps({"success": True, **results}), 200)
 
@@ -392,4 +434,5 @@ def send_traceback_error():
 
 
 if __name__ == "__main__":
+    print("Backend starting")
     app.run(debug=True, host="0.0.0.0", port=PORT)

@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import { auth } from "../../firebase";
 import sha256 from "crypto-js/sha256";
 import axios from "axios";
+import { EXPECTED_FAILURE_HTTP_CODES } from "../../constants";
 
 async function uploadToBackend(data) {
   let headers = auth.currentUser
@@ -36,10 +37,11 @@ const getSignedUploadUrl = async (version, filename, file) => {
 
 /**
  * Given timestamp and unique user id, generate an execution id
- * @param {*} uid
- * @returns execution id
+ * @param {string} uid
+ * @param {string} timestamp
+ * @returns {string} execution id
  */
-function createExecutionId(timestamp, uid) {
+function createExecutionId(uid, timestamp = new Date().getTime().toString()) {
   const hash = sha256(timestamp + uid);
   return "ex" + hash;
 }
@@ -52,18 +54,36 @@ async function sendToBackend(route, data) {
       }
     : undefined;
   data["route"] = route;
-  const timestamp = Date.now();
-  data["execution_id"] = createExecutionId(timestamp, headers.uid);
-  if (process.env.REACT_APP_MODE === "prod") {
-    //write request data to SQS here! If success, create entry in dynamo db and give success toast notification! if fail, throw error toast notification
-  } else {
-    const backendResult = await fetch(`/api/${route}`, {
+  data["execution_id"] = createExecutionId(headers.uid);
+  data["user_id"] = headers?.uid;
+  if (data.shouldBeQueued) {
+    const backendResult = await fetch("/api/writeToQueue", {
       method: "POST",
       body: JSON.stringify(data),
       headers: headers,
     }).then((result) => result.json());
     return backendResult;
   }
+  const backendResult = await fetch(`/api/${route}`, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: headers,
+  }).then((result) => {
+    if (result.ok) return result.json();
+    else if (EXPECTED_FAILURE_HTTP_CODES.includes(result.status)) {
+      return result.json().then((json) => {
+        toast.error(json.message);
+        throw new Error(json.message);
+      });
+    } else if (result.status === 504) {
+      toast.error("Backend not active. Please try again later.");
+      throw new Error("Something went wrong. Please try again later.");
+    } else {
+      toast.error("Something went wrong. Please try again later.");
+      throw new Error("Something went wrong. Please try again later.");
+    }
+  });
+  return backendResult;
 }
 
 const routeDict = {
@@ -74,15 +94,14 @@ const routeDict = {
   objectdetection: "object-detection",
 };
 
-async function train_and_output(choice, choiceDict) {
+async function train_and_output(choice, data) {
+  let route = routeDict[choice];
+
   if (process.env.REACT_APP_MODE === "prod") {
-    //TODO: submit request to sqs. return success or fail message!
-    const trainResult = await sendToBackend(routeDict[choice], choiceDict);
-    return trainResult;
-  } else {
-    const trainResult = await sendToBackend(routeDict[choice], choiceDict);
-    return trainResult;
+    data["shouldBeQueued"] = true;
   }
+  const trainResult = await sendToBackend(route, data);
+  return trainResult;
 }
 
 async function sendEmail(email, problemType) {

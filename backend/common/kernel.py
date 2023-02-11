@@ -11,42 +11,58 @@ from backend.common.constants import UNZIPPED_DIR_NAME, ONNX_MODEL, SAVED_MODEL_
 from backend.common.utils import csv_to_json
 from backend.common.ai_drive import dl_tabular_drive, ml_drive, dl_img_drive
 from backend.dl.detection import detection_img_drive
+from backend.aws_helpers.dynamo_db_utils.execution_db import updateStatus
 
 def router(msg):
     '''
     Routes the message to the appropriate training function.
     '''
     execution_id = msg['execution_id']
+    updateStatus(execution_id=execution_id, status="STARTING")
     if msg['route'] == 'tabular-run':
-        tabular_run_route(msg)
+        result = tabular_run_route(msg)
+        if result[1] != 200:
+            print("Error in tabular run route: result is", result)
+            updateStatus(execution_id=execution_id, status="ERROR")
+            return
+
+        updateStatus(execution_id=execution_id, status="SUCCESS")
         s3_helper.write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_DL)}")
         s3_helper.write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(ONNX_MODEL)}")
         s3_helper.write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}")
     elif msg['route'] == 'ml-run':
-        ml_run_route(msg)
+        result = ml_run_route(msg)
+        if result[1] != 200:
+            updateStatus(execution_id=execution_id, status="ERROR")
+            return
+
+        updateStatus(execution_id=execution_id, status="SUCCESS")
         s3_helper.write_to_bucket(SAVED_MODEL_ML, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_ML)}")
     elif msg['route'] == 'img-run':
-        img_run_route(msg)
+        result = img_run_route(msg)
+        if result[1] != 200:
+            updateStatus(execution_id=execution_id, status="ERROR")
+            return
+
+        updateStatus(execution_id=execution_id, status="SUCCESS")
         s3_helper.write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_DL)}")
         s3_helper.write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(ONNX_MODEL)}")
         s3_helper.write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}")
     elif msg['route'] == 'object-detection':
-        object_detection_route(msg)
+        result = object_detection_route(msg)
+        if result[1] != 200:
+            updateStatus(execution_id=execution_id, status="ERROR")
+            return
+
+        updateStatus(execution_id=execution_id, status="SUCCESS")
         s3_helper.write_to_bucket(IMAGE_DETECTION_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(IMAGE_DETECTION_RESULT_CSV_PATH)}")
-        #s3_helper.write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, "./test/")
-        #s3_helper.write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, "./test/")
-        #s3_helper.write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, "./test/")
-    # if succeed, success status in DDB
-    # if fail, fail status in DDB
 
 # Wrapper for dl_tabular_drive() function
-def tabular_run_route(request):
+def tabular_run_route(request_data):
     try:
-        request_data = json.loads(request.data)
-
         user_arch = request_data["user_arch"]
         fileURL = request_data["file_URL"]
-        uid = request.headers["uid"]
+        uid = request_data["user_id"]
         json_csv_data_str = request_data["csv_data"]
         customModelName = request_data["custom_model_name"]
 
@@ -63,7 +79,7 @@ def tabular_run_route(request):
             "batch_size": request_data["batch_size"],
         }
 
-        train_loss_results = dl_tabular_drive(user_arch, fileURL, uid, params,
+        train_loss_results = dl_tabular_drive(user_arch, fileURL, params,
             json_csv_data_str, customModelName)
 
         print(train_loss_results)
@@ -74,14 +90,12 @@ def tabular_run_route(request):
         return send_traceback_error()
 
 # Wrapper for ml_drive() function
-def ml_run_route(request):
+def ml_run_route(request_data):
     try:
-        request_data = json.loads(request.data)
-        print(request_data)
-
         user_model = request_data["user_arch"]
         problem_type = request_data["problem_type"]
         target = request_data["target"]
+        uid = request_data["user_id"]
         features = request_data["features"]
         default = request_data["using_default_dataset"]
         shuffle = request_data["shuffle"]
@@ -102,11 +116,9 @@ def ml_run_route(request):
         return send_traceback_error()
 
 # Wrapper for dl_img_drive() function
-def img_run_route(request):
+def img_run_route(request_data):
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
-        request_data = json.loads(request.data)
-
         train_transform = request_data["train_transform"]
         test_transform = request_data["test_transform"]
         user_arch = request_data["user_arch"]
@@ -116,6 +128,7 @@ def img_run_route(request):
         epochs = request_data["epochs"]
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
+        uid = request_data["user_id"]
         customModelName = request_data["custom_model_name"]
 
         train_loss_results = dl_img_drive(
@@ -139,12 +152,12 @@ def img_run_route(request):
         return send_traceback_error()
 
 # Wrapper for detection_img_drive() function
-def object_detection_route(request):
+def object_detection_route(request_data):
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
-        request_data = json.loads(request.data)
         problem_type = request_data["problem_type"]
         detection_type = request_data["detection_type"]
+        uid = request_data["user_id"]
         transforms = request_data["transforms"]
         image = detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type, transforms)
         return send_detection_results(image)
@@ -196,15 +209,11 @@ def empty_message(message):
 # Polls for messages from the SQS queue, and handles them.
 while True:
     # Get message from queue
+    print("Polling for messages...\n")
     msg = sqs_helper.receive_message()
 
     if not empty_message(msg):
         print(msg)
-
-        # Update DynamoDB progress
-        # - parse message, including execution ID and everything
-        # - DynamoDB helper update database function to write to DDB table
-
         # Handle data
         router(msg)
     else:

@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import {
@@ -21,7 +21,7 @@ const Login = () => {
   const [fullName, setFullName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [recaptcha, setRecaptcha] = useState(""); 
+  const [recaptcha, setRecaptcha] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const signedInUserEmail = useSelector((state) => state.currentUser.email);
@@ -29,10 +29,10 @@ const Login = () => {
   const handleSignInRegister = async () => {
     let user;
     if (isRegistering) {
-      if (recaptcha !== '') {
+      if (recaptcha !== "") {
         user = await registerWithPassword(email, password, fullName);
       } else {
-        toast.error('Please complete recaptcha');
+        toast.error("Please complete recaptcha");
       }
     } else {
       user = await signInWithPassword(email, password);
@@ -119,7 +119,7 @@ const Login = () => {
         />
         {!isRegistering && (
           <div className="link">
-          <Link to="/forgot">Forgot Password?</Link>
+            <Link to="/forgot">Forgot Password?</Link>
           </div>
         )}
       </Form.Group>
@@ -132,15 +132,15 @@ const Login = () => {
           {isRegistering ? "Log in" : "Register"}
         </a>
       </div>
-      
+
       {isRegistering && (
-      <div className="reCaptcha">  
-        <ReCAPTCHA
-          sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
-          theme="dark"
-          onChange={(e) => setRecaptcha(e)}
-        />
-      </div>
+        <div className="reCaptcha">
+          <ReCAPTCHA
+            sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
+            theme="dark"
+            onChange={(e) => setRecaptcha(e)}
+          />
+        </div>
       )}
     </>
   );

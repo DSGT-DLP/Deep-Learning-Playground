@@ -46,7 +46,7 @@ def get_object(element):
         Instantiated object behind the "string representation of the instance"
     """
     return eval(
-        element
+        element.replace("\'","")
     )  # takes in the string representation and returns the "instantiated object"
 
 if __name__ == "__main__":

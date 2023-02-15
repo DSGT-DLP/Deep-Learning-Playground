@@ -801,6 +801,10 @@ textarea {
   margin-inline: auto;
 }
 
+#login-page .main-container .reCaptcha {
+  display: inline-block;
+}
+
 #login-page .main-container .form-container .welcome-back {
   font-size: large;
 }

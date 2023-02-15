@@ -26,30 +26,34 @@ const firebaseConfig = {
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-
 // Exported functions
 
 export const updateUserProfile = async (
   displayName = null,
-  photoURL = null
+  phoneNumber = null
 ) => {
   const newDetails = {};
   if (displayName != null) newDetails.displayName = displayName;
-  if (photoURL != null) newDetails.photoURL = photoURL;
-  await updateProfile(auth.currentUser, newDetails)
-    .then(() => {})
+  if (phoneNumber != null) newDetails.phoneNumber = phoneNumber;
+  await updateProfile(auth.currentUser.uid, newDetails)
+    .then((userRecord) => {
+    })
     .catch((e) => toast.error(`Error: ${e.code}`, { autoClose: 1000 }));
 };
 
 export const updateUserSettings = async (
   displayName = null,
-  email,
-  password
+  email = null,
+  password = null,
+  phoneNumber = null
 ) => {
-  updateEmail(auth.currentUser, email)
+  if (email == null) {
+    email = auth.currentUser.email;
+  }
+  return updateEmail(auth.currentUser, email)
     .then(() => {
       const user = auth.currentUser;
-      updateUserProfile(displayName);
+      updateUserProfile(displayName, phoneNumber);
       setCookie("email", user.email);
       toast.success(`Updated email to ${user.email}`, {
         autoClose: 1000,

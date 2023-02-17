@@ -1,4 +1,3 @@
-import os
 import boto3
 from botocore.exceptions import ClientError
 from PIL import Image, ImageDraw
@@ -17,6 +16,14 @@ class RekognitionImage():
     def from_file(cls, file_name, rekognition_client):
         image = {'Bytes': open(file_name, 'rb').read()}
         return cls(image, file_name, rekognition_client)
+    
+    @classmethod
+    def from_image(cls, image, rekognition_client):
+        buf = io.BytesIO()
+        image.save(buf, format='JPEG')
+        img_bytes = buf.getvalue()
+        image = {'Bytes': img_bytes}
+        return cls(image, "None", rekognition_client)
 
     def detect_labels(self, max_labels):
         try:
@@ -56,7 +63,6 @@ def show_bounding_boxes(image_bytes, box_sets, names, colors):
     draw = ImageDraw.Draw(image)
     for boxes, color, name in zip(box_sets, colors, names):
         for box in boxes:
-            print(box['Left'])
             left = image.width * box['Left']
             top = image.height * box['Top']
             right = (image.width * box['Width']) + left
@@ -69,9 +75,9 @@ def show_bounding_boxes(image_bytes, box_sets, names, colors):
     im_b64 = base64.b64encode(im_bytes)
     return im_b64 
 
-def detect_labels_from_file(file_name, problem_type):
+def rekognition_detection(image, problem_type):
     rekognition_client = boto3.client('rekognition')
-    image = RekognitionImage.from_file(file_name, rekognition_client)
+    image = RekognitionImage.from_image(image, rekognition_client)
     
     names = []
     box_sets = []
@@ -96,13 +102,4 @@ def detect_labels_from_file(file_name, problem_type):
             box_sets.append([label.get('Face').get('BoundingBox')])
         im_b64 = show_bounding_boxes(image.image['Bytes'], box_sets, names, ['aqua'])
         return im_b64, label_set
-
-def rekognition_img_drive(IMAGE_UPLOAD_FOLDER, problem_type):
-    for x in os.listdir(IMAGE_UPLOAD_FOLDER):
-        if x != ".gitkeep":
-            img_file = os.path.join(
-                os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
-            break
-    im_b64, label_set = detect_labels_from_file(img_file, problem_type)
-    return { "auxiliary_outputs" : { "image_data" : im_b64.decode('ascii') }, "dl_results" : label_set }
 

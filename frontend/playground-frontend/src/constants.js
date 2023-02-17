@@ -17,6 +17,8 @@ export const URLs = {
   github: "https://github.com/karkir0003/Deep-Learning-Playground",
 };
 
+export const EXPECTED_FAILURE_HTTP_CODES = [400, 401, 403, 404, 405, 500];
+
 export const LAYOUT = {
   row: {
     display: "flex",
@@ -257,5 +259,38 @@ export const DEFAULT_IMG_LAYERS = [
     display_name: "Sigmoid",
     object_name: "nn.Sigmoid",
     parameters: {},
+  },
+];
+
+export const DEFAULT_DETECTION_TRANSFORMS = [
+  {
+    display_name: "Grayscale",
+    object_name: "transforms.Grayscale",
+    parameters: {},
+    label: "Grayscale",
+    value: "Grayscale",
+  },
+  {
+    display_name: "To Tensor",
+    object_name: "transforms.ToTensor",
+    parameters: {},
+    label: "To Tensor",
+    value: "TT",
+  },
+  {
+    display_name: "Resize",
+    object_name: "transforms.Resize",
+    parameters: {
+      size: {
+        index: 0,
+        parameter_name: "(H, W)",
+        value: "(512, 512)",
+        min: 1,
+        max: 1000,
+        parameter_type: "tuple",
+      },
+    },
+    label: "Resize",
+    value: "R",
   },
 ];

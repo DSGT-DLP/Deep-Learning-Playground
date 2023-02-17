@@ -26,6 +26,8 @@ Author URI:   https://datasciencegt.org/
   --dark-grey: #d3d3d3;
   --input: #e2e2e2;
   --add-layer: #f2ecff;
+
+  --footer-height: 190px;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -228,6 +230,11 @@ input.form-control {
 
 textarea#code-snippet-text {
   width: 100%;
+}
+
+#csvRender_caption {
+  font-size: 12px;
+  font-style: italic;
 }
 
 /* Deep Learning Parameters */
@@ -749,7 +756,7 @@ textarea {
 
 #login-page {
   background-color: var(--primary);
-  min-height: 70vh;
+  height: max(90vh, 900px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -792,6 +799,10 @@ textarea {
 #login-page .main-container .form-container .email-buttons {
   width: 50%;
   margin-inline: auto;
+}
+
+#login-page .main-container .reCaptcha {
+  display: inline-block;
 }
 
 #login-page .main-container .form-container .welcome-back {
@@ -897,7 +908,7 @@ textarea {
   padding: 0.75rem;
   margin: auto;
   align-items: center;
-  height: 150px;
+  height: calc(15 / 19 * var(--footer-height));
 }
 
 #footer #footer-name {
@@ -905,7 +916,7 @@ textarea {
   text-align: center;
   color: var(--dark-grey);
   font-size: small;
-  height: 40px;
+  height: calc(4 / 19 * var(--footer-height));
 }
 
 #footer .foot-element {

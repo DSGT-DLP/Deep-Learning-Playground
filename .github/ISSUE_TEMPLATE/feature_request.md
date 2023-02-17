@@ -19,4 +19,4 @@ git checkout dev
 git pull origin dev
 git checkout -b <dev-branch-name-here>
 ```
-FYI: If you are not able to immediately run `git checkout dev`, make sure you commit your changes in the current branch or run `git stash` and then 
+FYI: If you are not able to immediately run `git checkout dev`, make sure you commit your changes in the current branch or run `git stash` and then execute the above commands

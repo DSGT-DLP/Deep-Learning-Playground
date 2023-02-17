@@ -5,7 +5,7 @@ EXPOSE 8000
 
 WORKDIR /
 
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
 RUN unzip awscliv2.zip
 RUN ./aws/install
 
@@ -25,7 +25,6 @@ COPY . .
 
 RUN npm run secrets:deploy
 
-RUN npm run build
+RUN npm run build:prod
 
 CMD python -m backend.driver
-

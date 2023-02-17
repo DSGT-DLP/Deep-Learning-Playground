@@ -48,8 +48,8 @@ const Home = () => {
     `Model ${new Date().toLocaleString()}`
   );
   const [fileURL, setFileURL] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState();
-  const [notificationEmail, setNotificationEmail] = useState("");
+  const [notificationPhoneNumber, setNotificationPhoneNumber] = useState();
+  const [notificationEmail, setNotificationEmail] = useState();
   const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
   const [targetCol, setTargetCol] = useState(null);
   const [features, setFeatures] = useState([]);
@@ -87,9 +87,11 @@ const Home = () => {
     testSize: testSize,
     batchSize: batchSize,
     fileURL: fileURL,
-    email: notificationEmail,
+    notification: {
+      email: notificationEmail,
+      phoneNumber: notificationPhoneNumber,
+    },
     customModelName: customModelName,
-    phoneNumber: phoneNumber,
   };
 
   const columnOptionsArray = activeColumns.map((e, i) => ({
@@ -377,7 +379,7 @@ const Home = () => {
 
       <TitleText text="Email (optional)" />
       <EmailInput setEmail={setNotificationEmail} />
-      <PhoneNumberInput setPhoneNumber={setPhoneNumber} />
+      <PhoneNumberInput setPhoneNumber={setNotificationPhoneNumber} />
 
       <Spacer height={40} />
       {InputCSVDisplay}

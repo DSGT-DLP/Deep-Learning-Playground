@@ -60,7 +60,7 @@ async function sendToBackend(route, data) {
     uid: auth.currentUser.uid,
     email: auth.currentUser.email,
     displayName: auth.currentUser.displayName,
-  }
+  };
   if (data.shouldBeQueued) {
     const backendResult = await fetch("/api/writeToQueue", {
       method: "POST",

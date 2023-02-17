@@ -175,8 +175,8 @@ const TrainButton = (props) => {
   useEffect(() => {
     if (result) {
       if (result.success) {
-        if (props.email?.length) {
-          sendEmail(props.email, props.problemType);
+        if (props.notification?.email) {
+          sendEmail(props.notification.email, props.problemType);
         }
         toast.success(
           choice === "objectdetection"
@@ -214,8 +214,10 @@ const TrainButton = (props) => {
 
 TrainButton.propTypes = {
   addedLayers: PropTypes.array,
-  email: PropTypes.string,
-  phoneNumber: PropTypes.string,
+  notification: PropTypes.shape({
+    email: PropTypes.string,
+    number: PropTypes.string,
+  }),
   trainTransforms: PropTypes.array,
   testTransforms: PropTypes.array,
   transforms: PropTypes.array,

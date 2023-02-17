@@ -110,8 +110,7 @@ export const sendTabularJSON = (...args) => {
     shuffle: args.shuffle,
     csv_data: csvDataStr,
     file_URL: args.fileURL,
-    email: args.email,
-    phone_number: args.phoneNumber,
+    notification: args.notification,
     custom_model_name: args.customModelName,
     data_source: "TABULAR",
   };

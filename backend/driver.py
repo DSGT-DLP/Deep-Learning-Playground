@@ -349,7 +349,7 @@ def getUserProgressData():
 @app.route("/api/updateUserProgressData", methods=["POST"])
 def updateUserProgressData():
     requestData = json.loads(request.data)
-    uid = requestData['uid']
+    uid = requestData['user']['uid']
     moduleID = str(requestData["moduleID"])
     sectionID = str(requestData["sectionID"])
     questionID = str(requestData["questionID"])
@@ -398,7 +398,7 @@ def createExecution(entryData: dict) -> dict:
     """
     entryData = {
         "execution_id": entryData["execution_id"], 
-        "user_id": entryData["user_id"], 
+        "user_id": entryData["user"]["uid"], 
         "name": entryData["custom_model_name"], 
         "data_source": entryData["data_source"], 
         "status": "QUEUED", 

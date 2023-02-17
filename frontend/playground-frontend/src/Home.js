@@ -48,8 +48,8 @@ const Home = () => {
     `Model ${new Date().toLocaleString()}`
   );
   const [fileURL, setFileURL] = useState("");
-  const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState();
+  const [notificationEmail, setNotificationEmail] = useState("");
   const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
   const [targetCol, setTargetCol] = useState(null);
   const [features, setFeatures] = useState([]);
@@ -87,7 +87,7 @@ const Home = () => {
     testSize: testSize,
     batchSize: batchSize,
     fileURL: fileURL,
-    email: email,
+    email: notificationEmail,
     customModelName: customModelName,
     phoneNumber: phoneNumber,
   };
@@ -375,8 +375,8 @@ const Home = () => {
 
       <Spacer height={40} />
 
-      <TitleText text="Notify me when done (optional)" />
-      <EmailInput setEmail={setEmail} />
+      <TitleText text="Email (optional)" />
+      <EmailInput setEmail={setNotificationEmail} />
       <PhoneNumberInput setPhoneNumber={setPhoneNumber} />
 
       <Spacer height={40} />

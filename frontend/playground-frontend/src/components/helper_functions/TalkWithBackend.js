@@ -56,6 +56,11 @@ async function sendToBackend(route, data) {
   data["route"] = route;
   data["execution_id"] = createExecutionId(headers.uid);
   data["user_id"] = headers?.uid;
+  data["user"] = {
+    uid: auth.currentUser.uid,
+    email: auth.currentUser.email,
+    displayName: auth.currentUser.displayName,
+  }
   if (data.shouldBeQueued) {
     const backendResult = await fetch("/api/writeToQueue", {
       method: "POST",

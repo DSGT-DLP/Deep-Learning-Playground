@@ -215,6 +215,7 @@ const TrainButton = (props) => {
 TrainButton.propTypes = {
   addedLayers: PropTypes.array,
   email: PropTypes.string,
+  phoneNumber: PropTypes.string,
   trainTransforms: PropTypes.array,
   testTransforms: PropTypes.array,
   transforms: PropTypes.array,

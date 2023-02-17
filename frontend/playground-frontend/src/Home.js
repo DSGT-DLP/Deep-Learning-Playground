@@ -26,6 +26,7 @@ import {
   ChoiceTab,
   CustomModelName,
   Preprocessing,
+  PhoneNumberInput,
 } from "./components";
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
@@ -48,6 +49,7 @@ const Home = () => {
   );
   const [fileURL, setFileURL] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState();
   const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
   const [targetCol, setTargetCol] = useState(null);
   const [features, setFeatures] = useState([]);
@@ -87,6 +89,7 @@ const Home = () => {
     fileURL: fileURL,
     email: email,
     customModelName: customModelName,
+    phoneNumber: phoneNumber,
   };
 
   const columnOptionsArray = activeColumns.map((e, i) => ({
@@ -372,8 +375,9 @@ const Home = () => {
 
       <Spacer height={40} />
 
-      <TitleText text="Email (optional)" />
+      <TitleText text="Notify me when done (optional)" />
       <EmailInput setEmail={setEmail} />
+      <PhoneNumberInput setPhoneNumber={setPhoneNumber} />
 
       <Spacer height={40} />
       {InputCSVDisplay}

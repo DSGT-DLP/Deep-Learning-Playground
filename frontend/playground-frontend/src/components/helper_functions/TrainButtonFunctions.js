@@ -111,6 +111,7 @@ export const sendTabularJSON = (...args) => {
     csv_data: csvDataStr,
     file_URL: args.fileURL,
     email: args.email,
+    phone_number: args.phoneNumber,
     custom_model_name: args.customModelName,
     data_source: "TABULAR",
   };

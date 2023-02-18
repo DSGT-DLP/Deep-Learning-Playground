@@ -55,7 +55,6 @@ async function sendToBackend(route, data) {
     : undefined;
   data["route"] = route;
   data["execution_id"] = createExecutionId(headers.uid);
-  data["user_id"] = headers?.uid;
   data["user"] = {
     uid: auth.currentUser.uid,
     email: auth.currentUser.email,

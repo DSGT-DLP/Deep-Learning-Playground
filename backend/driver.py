@@ -60,7 +60,7 @@ def tabular_run():
 
         user_arch = request_data["user_arch"]
         fileURL = request_data["file_URL"]
-        uid = request.headers["uid"]
+        uid = request_data["user"]["uid"]
         json_csv_data_str = request_data["csv_data"]
         customModelName = request_data["custom_model_name"]
         execution_id = request_data["execution_id"]

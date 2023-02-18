@@ -265,5 +265,6 @@ export const sendObjectDetectionJSON = (...args) => {
     detection_type: args.detectionType,
     transforms: args.transforms,
     data_source: "OBJECT_DETECTION",
+    custom_model_name: args.customModelName,
   };
 };

@@ -56,7 +56,6 @@ def createUserExecutionsData(entryData: dict) -> str:
     required_keys = ["execution_id", "user_id"]
     if not validate_keys(entryData, required_keys):
         raise ValueError(f"Missing keys {required_keys} in request body")
-
     dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
     newRecord = ExecutionData(**entryData)
     dynamoTable.create_record(newRecord)

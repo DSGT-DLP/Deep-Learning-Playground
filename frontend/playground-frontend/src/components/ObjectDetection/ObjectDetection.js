@@ -45,6 +45,7 @@ const ObjectDetection = () => {
     detectionType: detectionType?.value,
     transforms: imageTransforms,
     uploadFile: uploadFile,
+    customModelName: customModelName,
   };
 
   const input_queries = [

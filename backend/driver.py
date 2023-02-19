@@ -351,7 +351,7 @@ def getUserProgressData():
 @app.route("/api/updateUserProgressData", methods=["POST"])
 def updateUserProgressData():
     requestData = json.loads(request.data)
-    uid = requestData['uid']
+    uid = requestData['user_id']
     moduleID = str(requestData["moduleID"])
     sectionID = str(requestData["sectionID"])
     questionID = str(requestData["questionID"])

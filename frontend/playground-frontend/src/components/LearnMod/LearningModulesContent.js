@@ -347,7 +347,7 @@ let content = {
           content: [
             {
               sectionType: "text",
-              content: "You are now ready to build a very basic neural network. Try it out below. Combine layers to build a model."
+              content: "You are now ready to build a very basic neural network. Try it out below. Combine layers to build a model that achieves at least 70% accuracy."
             },
             {
               sectionType: "exercise",

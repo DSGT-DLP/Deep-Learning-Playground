@@ -1,3 +1,4 @@
+import tempfile
 import boto3
 import os
 import shutil
@@ -37,4 +38,29 @@ def read_from_bucket(bucket_name: str, bucket_path: str, output_file_name: str, 
     s3.Bucket(bucket_name).download_file(bucket_path, output_file_name)
     shutil.move(f"{os.getcwd()}/{output_file_name}", f"{output_file_path}/{output_file_name}")
 
+def get_presigned_url_from_bucket(bucket_name: str, bucket_path: str):
+    """
+    Given S3 URI, read the file from the S3 bucket
+
+    Args:
+        bucket_name (str): name of s3 bucket
+        bucket_path (str): path within s3 bucket where the file resides
+        output_file_name (str): name of file to download S3 object to (this is because of the way the boto3 endpoint works)
+        output_file_path (str): filepath to download file to (ie: what folder/directory)
+        
+    """
+    s3 = boto3.client('s3')
+    return s3.generate_presigned_url("get_object", Params={'Bucket': bucket_name, 'Key': bucket_path})
+
+def get_presigned_url_from_exec_file(bucket_name: str, exec_id: str, filename: str):
+    return get_presigned_url_from_bucket(bucket_name, exec_id + "/" + filename)
+
+def get_fileobj_from_bucket(bucket_name: str, bucket_path: str):
+    """
+    Not used rn
+    """
+    s3 = boto3.resource('s3')
+    with tempfile.TemporaryFile(mode='w+b') as f:
+        s3.Bucket(bucket_name).download_fileobj(bucket_path, f)
+        return f
 

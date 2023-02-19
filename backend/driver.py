@@ -338,10 +338,12 @@ def getUserExecutionsData() -> str:
 @app.route("/api/getUserProgressData", methods=["POST"])
 def getUserProgressData():
     dynamoTable = UserProgressDDBUtil(USERPROGRESS_TABLE_NAME, AWS_REGION)
+    user_id = json.loads(request.data)["user_id"]
+    print(user_id)
     try:
-        return dynamoTable.get_record(json.loads(request.data)).progressData
+        return dynamoTable.get_record(json.loads(request.data)["user_id"]).progressData
     except ValueError:
-        newRecord = UserProgressData(json.loads(request.data), "{}")
+        newRecord = UserProgressData(json.loads(request.data)["user_id"], "{}")
         dynamoTable.create_record(newRecord)
         return "{}"
 

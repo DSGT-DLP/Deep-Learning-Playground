@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import { COLORS } from "../../constants";
 import {
   validateParameter,
@@ -28,6 +29,7 @@ const TrainButton = (props) => {
   const [result, setResult] = useState(null);
   const [uploaded, setUploaded] = useState(false);
   const [trainParams, setTrainParams] = useState(null);
+  const navigate = useNavigate();
 
   const reset = () => {
     setPendingResponse(false);
@@ -46,6 +48,9 @@ const TrainButton = (props) => {
       const obj_list_item = obj_list[i];
       const parameters = obj_list_item.parameters;
       let parameter_call_input = "";
+      let is_transform_type =
+        obj_list_item.transform_type &&
+        obj_list_item.transform_type === "functional";
       const parameters_to_be_added = Array(Object.keys(parameters).length);
       for (const v of Object.values(parameters)) {
         if (!validateParameter(source, i, v)) {
@@ -53,8 +58,13 @@ const TrainButton = (props) => {
           return false;
         }
         const parameter_value =
-          v.parameter_type === "number" ? v.value : `'${v.value}'`;
+          v.parameter_type === "number" || v.parameter_type === "tuple"
+            ? v.value
+            : `'${v.value}'`;
         parameters_to_be_added[v.index] = `${v.kwarg ?? ""}${parameter_value}`;
+      }
+      if (is_transform_type) {
+        parameter_call_input += "img, ";
       }
       parameters_to_be_added.forEach((e) => {
         parameter_call_input += e + ",";
@@ -62,7 +72,10 @@ const TrainButton = (props) => {
       // removing the last ','
       parameter_call_input = parameter_call_input.slice(0, -1);
 
-      const callback = `${obj_list_item.object_name}(${parameter_call_input})`;
+      let callback = `${obj_list_item.object_name}(${parameter_call_input})`;
+      if (is_transform_type) {
+        callback = "transforms.Lambda(lambda img: " + callback + ")";
+      }
       user_arch.push(callback);
     }
     return user_arch;
@@ -93,6 +106,7 @@ const TrainButton = (props) => {
 
     let trainTransforms = 0;
     let testTransforms = 0;
+    let transforms = 0;
     if (props.trainTransforms) {
       trainTransforms = make_obj_param_list(
         props.trainTransforms,
@@ -107,13 +121,23 @@ const TrainButton = (props) => {
       );
       if (testTransforms === false) return;
     }
+    if (props.transforms) {
+      transforms = make_obj_param_list(props.transforms, "Transforms");
+      if (transforms === false) return;
+    }
 
     if (!validateInputs(user_arch)) {
       setPendingResponse(false);
       return;
     }
 
-    const paramList = { ...props, trainTransforms, testTransforms, user_arch };
+    const paramList = {
+      ...props,
+      trainTransforms,
+      testTransforms,
+      transforms,
+      user_arch,
+    };
 
     if (
       (choice === "image" && !props.usingDefaultDataset) ||
@@ -123,11 +147,18 @@ const TrainButton = (props) => {
       formData.append("file", uploadFile);
       await uploadToBackend(formData);
     }
-    const trainResult = await train_and_output(
+    const trainState = await train_and_output(
       choice,
       functionMap[choice][1](paramList)
     );
-    setResult(trainResult);
+    if (process.env.REACT_APP_MODE === "prod") {
+      if (trainState.success) toast.success(trainState.message);
+      else toast.error(trainState.message);
+
+      navigate("/dashboard");
+    } else {
+      setResult(trainState);
+    }
   };
 
   useEffect(() => {
@@ -147,7 +178,11 @@ const TrainButton = (props) => {
         if (props.email?.length) {
           sendEmail(props.email, props.problemType);
         }
-        toast.success("Training successful! Scroll to see results!");
+        toast.success(
+          choice === "objectdetection"
+            ? "Detection successful! Scroll to see results!"
+            : "Training successful! Scroll to see results!"
+        );
       } else if (result.message) {
         toast.error("Training failed. Check output traceback message");
       } else {
@@ -182,6 +217,7 @@ TrainButton.propTypes = {
   email: PropTypes.string,
   trainTransforms: PropTypes.array,
   testTransforms: PropTypes.array,
+  transforms: PropTypes.array,
   setDLPBackendResponse: PropTypes.func.isRequired,
   choice: PropTypes.string,
   style: PropTypes.object,

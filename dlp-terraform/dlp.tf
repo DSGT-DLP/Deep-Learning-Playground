@@ -158,3 +158,14 @@ resource "aws_s3_bucket_public_access_block" "access_block_uploads" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+resource "aws_s3_bucket_cors_configuration" "uploads_cors_configuration" {
+  bucket = aws_s3_bucket.s3bucket_uploads.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET", "PUT", "POST", "HEAD", "DELETE"]
+    allowed_origins = ["*"]
+    expose_headers  = []
+    max_age_seconds = 3000
+  }
+}

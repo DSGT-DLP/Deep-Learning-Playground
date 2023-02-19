@@ -196,6 +196,11 @@ export const POSSIBLE_LAYERS = [
 
 export const ML_MODELS = [
   {
+    display_name: "Gaussian Naive Bayes",
+    object_name: "sklearn.naive_bayes.GaussianNB",
+    parameters: {},
+  },
+  {
     display_name: "RF Classifier",
     object_name: "sklearn.ensemble.RandomForestClassifier",
     parameters: {
@@ -317,6 +322,68 @@ export const ML_MODELS = [
         min: 0,
         max: 1,
         parameter_type: "number",
+      },
+    },
+  },
+  {
+    display_name: "Decision Tree Classifier",
+    object_name: "sklearn.tree.DecisionTreeClassifier",
+    parameters: {
+      max_depth: {
+        index: 0,
+        parameter_name: "Max Depth",
+        kwarg: "max_depth = ",
+        default: 5,
+        min: 1,
+        max: 100,
+        parameter_type: "number",
+      },
+      min_samples_split: {
+        index: 1,
+        parameter_name: "Minimum Sample Splits",
+        kwarg: "min_samples_split = ",
+        default: 2,
+        min: 2,
+        max: 10,
+        parameter_type: "number",
+      },
+      max_features: {
+        index: 2,
+        parameter_name: "Max Features",
+        kwarg: "max_features = ",
+        default: "sqrt",
+        parameter_type: "text",
+      },
+    },
+  },
+  {
+    display_name: "Decision Tree Regressor",
+    object_name: "sklearn.tree.DecisionTreeRegressor",
+    parameters: {
+      max_depth: {
+        index: 0,
+        parameter_name: "Max Depth",
+        kwarg: "max_depth = ",
+        default: 5,
+        min: 1,
+        max: 5,
+        parameter_type: "number",
+      },
+      min_samples_split: {
+        index: 1,
+        parameter_name: "Minimum Sample Splits",
+        kwarg: "min_samples_split = ",
+        default: 2,
+        min: 1,
+        max: 10,
+        parameter_type: "number",
+      },
+      max_features: {
+        index: 2,
+        parameter_name: "Max Features",
+        kwarg: "max_features = ",
+        default: "sqrt",
+        parameter_type: "text",
       },
     },
   },
@@ -646,7 +713,7 @@ export const POSSIBLE_TRANSFORMS = [
         min: 1,
         max: 1000,
         default: "(32, 32)",
-        parameter_type: "text",
+        parameter_type: "tuple",
       },
     },
     label: "Resize",
@@ -697,6 +764,386 @@ export const POSSIBLE_TRANSFORMS = [
     },
     label: "Normalize",
     value: "Normalize",
+  },
+];
+
+export const DETECTION_TRANSFORMS = [
+  {
+    display_name: "Random Horizontal Flip",
+    object_name: "transforms.RandomHorizontalFlip",
+    parameters: {
+      probability: {
+        index: 0,
+        parameter_name: "prob",
+        min: 0,
+        max: 1,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>
+            Horizontally flip the given image randomly with a given probability.
+          </strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>prob</em> - probability of the flip
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.RandomHorizontalFlip.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Random Horizontal Flip",
+    value: "RandomHorizontalFlip",
+  },
+
+  {
+    display_name: "Random Vertical Flip",
+    object_name: "transforms.RandomVerticalFlip",
+    parameters: {
+      p: {
+        index: 0,
+        parameter_name: "prob",
+        min: 0,
+        max: 1,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>
+            Vertically flip the given image randomly with a given probability.
+          </strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>prob</em> - probability of the flip
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.RandomVerticalFlip.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Random Vertical Flip",
+    value: "RandomVerticalFlip",
+  },
+
+  {
+    display_name: "To Tensor",
+    object_name: "transforms.ToTensor",
+    parameters: {},
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Convert PIL Image or numpy.ndarray to tensor.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <p className="info">
+          <i>None</i>
+        </p>
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.ToTensor.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "To Tensor",
+    value: "ToTensor",
+  },
+  {
+    display_name: "Resize",
+    object_name: "transforms.Resize",
+    parameters: {
+      size: {
+        index: 0,
+        parameter_name: "(H, W)",
+        min: 1,
+        max: 1000,
+        default: "(32, 32)",
+        parameter_type: "tuple",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Resize the input image to the given size.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>(H, W)</em> - output size
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.functional.resize.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Resize",
+    value: "Resize",
+  },
+  {
+    display_name: "Gaussian Blur",
+    object_name: "transforms.GaussianBlur",
+    parameters: {
+      kernel_size: {
+        index: 0,
+        parameter_name: "kernel size",
+        min: 1,
+        max: 1000,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Blurs image with randomly chosen GaussianBlur.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>kernel size</em> - size of Gaussian kernel
+          </li>
+        </ul>
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.GaussianBlur.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Gaussian Blur",
+    value: "GaussianBlur",
+  },
+  {
+    display_name: "Grayscale",
+    object_name: "transforms.Grayscale",
+    parameters: {},
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Convert image to grayscale.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <p className="info">
+          <i>None</i>
+        </p>
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.Grayscale.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Grayscale",
+    value: "Grayscale",
+  },
+  {
+    display_name: "Normalize",
+    object_name: "transforms.Normalize",
+    parameters: {
+      mean: {
+        index: 0,
+        parameter_name: "mean",
+        min: -1000,
+        max: 1000,
+        default: 0,
+        parameter_type: "number",
+      },
+      std: {
+        index: 1,
+        parameter_name: "std",
+        min: -1000,
+        max: 1000,
+        default: 1,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Normalize image with mean and standard deviation.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>mean</em> - mean of normalization
+          </li>
+          <li>
+            <em>mean</em> - standard deviation of normalization
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.Normalize.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Normalize",
+    value: "Normalize",
+  },
+  {
+    display_name: "AdjustContrast",
+    object_name: "transforms.functional.adjust_contrast",
+    transform_type: "functional",
+    parameters: {
+      contrast_factor: {
+        index: 0,
+        parameter_name: "contrast_factor",
+        min: 0,
+        max: 10000,
+        default: 0,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Adjust contrast of an image.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>contrast_factor</em> - how much to adjust the contrast
+          </li>
+        </ul>
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.functional.adjust_contrast.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "AdjustContrast",
+    value: "AdjustContrast",
+  },
+  {
+    display_name: "AdjustBrightness",
+    object_name: "transforms.functional.adjust_brightness",
+    transform_type: "functional",
+    parameters: {
+      brightness_factor: {
+        index: 0,
+        parameter_name: "brightness_factor",
+        min: 0,
+        max: 10000,
+        default: 0,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Adjust brightness of an image.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>brightness_factor</em> - how much to adjust the brightness
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.function.adjust_brightness.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "AdjustBrightness",
+    value: "AdjustBrightness",
+  },
+  {
+    display_name: "Affine",
+    object_name: "transforms.functional.affine",
+    transform_type: "functional",
+    parameters: {
+      angle: {
+        index: 0,
+        parameter_name: "angle",
+        min: -180,
+        max: 180,
+        default: 0,
+        parameter_type: "number",
+      },
+      translate: {
+        index: 1,
+        parameter_name: "translate",
+        min: -1000,
+        max: 1000,
+        default: "(0, 0)",
+        parameter_type: "tuple",
+      },
+      scale: {
+        index: 2,
+        parameter_name: "scale",
+        min: 0,
+        max: 1000,
+        default: 1,
+        parameter_type: "number",
+      },
+      shear: {
+        index: 3,
+        parameter_name: "shear",
+        min: -180,
+        max: 180,
+        default: "(0, 0)",
+        parameter_type: "tuple",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>
+            Apply affine transformation on the image keeping image center
+            invariant.
+          </strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>angle</em> - clockwise rotation angle between -180 and 180
+          </li>
+          <li>
+            <em>translate</em> - post-rotatation translation
+          </li>
+          <li>
+            <em>scale</em> - overall scale
+          </li>
+          <li>
+            <em>shear</em> - shear angle value between -180 and 180
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.functional.affine.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Affine",
+    value: "Affine",
   },
 ];
 
@@ -751,6 +1198,11 @@ export const PROBLEM_TYPES = [
 export const OBJECT_DETECTION_PROBLEM_TYPES = [
   { label: "Labels", value: "labels" },
   { label: "Celebrities", value: "celebrities" },
+];
+
+export const DETECTION_TYPES = [
+  { label: "Rekognition", value: "rekognition" },
+  { label: "YOLO", value: "yolo" },
 ];
 
 export const BOOL_OPTIONS = [

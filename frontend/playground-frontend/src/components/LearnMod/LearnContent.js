@@ -94,7 +94,7 @@ const LearnContent = () => {
                     key={index}
                     user={user}
                     questionObject={contentComponent}
-                    moduleID={moduleContent.moduleID}
+                    moduleID={Number(moduleContent.moduleID)}
                     sectionID={moduleContent.subClasses[subSection].sectionID}
                   />
                 );
@@ -118,7 +118,7 @@ const LearnContent = () => {
                     key={index}
                     user={user}
                     exerciseObject={contentComponent}
-                    moduleID={moduleContent.moduleID}
+                    moduleID={Number(moduleContent.moduleID)}
                     sectionID={moduleContent.subClasses[subSection].sectionID}
                   />
                 );

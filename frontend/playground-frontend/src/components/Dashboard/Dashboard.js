@@ -68,7 +68,7 @@ const BlankGrid = () => {
 
 const StatusDisplay = ({ statusType, status }) => {
   const navigate = useNavigate();
-  if (statusType === "queued") {
+  if (statusType === "QUEUED") {
     return (
       <button
         className="grid-status-display grid-status-display-gray"
@@ -84,6 +84,15 @@ const StatusDisplay = ({ statusType, status }) => {
         onClick={() => navigate("/")}
       >
         Training...
+      </button>
+    );
+  } else if (statusType === "ERROR") {
+    return (
+      <button
+        className="grid-status-display grid-status-display-red"
+        onClick={() => navigate("/")}
+      >
+        Error
       </button>
     );
   } else if (statusType === "SUCCESS") {
@@ -137,8 +146,11 @@ const FilledGrid = () => {
   }, [auth.currentUser]);
   const getExecutionTable = async () => {
     if (auth.currentUser) {
-      const response = await sendToBackend("executiontable", {});
-      setUserExecutionTable(JSON.parse(response["record"]));
+      const response = await sendToBackend("getExecutionsData", {});
+      let table = JSON.parse(response["record"]);
+      table.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      console.log(table);
+      setUserExecutionTable(table);
     } else {
       setUserExecutionTable(null);
     }
@@ -147,6 +159,31 @@ const FilledGrid = () => {
     return str.replace(/\w\S*/g, function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
+  }
+  async function handleOnDownloadClick(e, row) {
+    e.event.stopPropagation();
+    const response = await sendToBackend("getExecutionsFilesPresignedUrls", {
+      exec_id: row.execution_id,
+    });
+    const zip = new JSZip();
+    await Promise.all(
+      [
+        [response.dl_results, "dl_results.csv"],
+        [response.model_onnx, "my_deep_learning_model.onnx"],
+        [response.model_pt, "model.pt"],
+      ].map(([url, filename]) =>
+        fetch(url, {
+          mode: "cors",
+        }).then((res) =>
+          res.blob().then((blob) => {
+            zip.file(filename, blob);
+          })
+        )
+      )
+    );
+    zip
+      .generateAsync({ type: "blob" })
+      .then((blob) => saveAs(blob, "results.zip"));
   }
   return (
     <>
@@ -212,56 +249,8 @@ const FilledGrid = () => {
                         icon="download"
                         accessibilityLabel={"Download"}
                         size={"md"}
-                        onClick={async (e) => {
-                          e.event.stopPropagation();
-                          const response = await sendToBackend(
-                            "executionfiles",
-                            {
-                              exec_id: row.execution_id,
-                            }
-                          );
-                          console.log(response);
-                          //const thing = await fetch(response.dl_results, {
-                          //  mode: "cors",
-                          //});
-                          console.log([
-                            //response.dl_results,
-                            response.model_onnx,
-                            response.model_pt,
-                          ]);
-                          const zip = new JSZip();
-                          await Promise.all(
-                            [
-                              [response.dl_results, "dl_results.csv"],
-                              [
-                                response.model_onnx,
-                                "my_deep_learning_model.onnx",
-                              ],
-                              [response.model_pt, "model.pt"],
-                            ].map(([url, filename]) =>
-                              fetch(url, {
-                                mode: "cors",
-                              }).then((res) =>
-                                res.blob().then((blob) => {
-                                  zip.file(filename, blob);
-                                  /*let tempLink = document.createElement("a");
-                                  tempLink.href =
-                                    window.URL.createObjectURL(blob);
-                                  tempLink.setAttribute("download", filename);
-                                  tempLink.click();*/
-                                })
-                              )
-                            )
-                          );
-                          zip
-                            .generateAsync({ type: "blob" })
-                            .then((blob) => saveAs(blob, "results.zip"));
-                          //console.log(result);
-
-                          //set cors configuration for this bucket for all exec headers
-                          //const blob = await thing.blob();
-                          //console.log(await blob.text());
-                        }}
+                        disabled={row.status !== "SUCCESS"}
+                        onClick={(e) => handleOnDownloadClick(e, row)}
                       ></IconButton>
                     </TableCell>
                   </TableRow>
@@ -293,6 +282,6 @@ const Dashboard = () => {
 export default Dashboard;
 
 StatusDisplay.propTypes = {
-  statusType: PropTypes.oneOf(["queued", "STARTING", "SUCCESS"]),
+  statusType: PropTypes.string,
   status: PropTypes.string,
 };

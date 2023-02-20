@@ -86,6 +86,24 @@ const StatusDisplay = ({ statusType, status }) => {
         Training...
       </button>
     );
+  } else if (statusType === "UPLOADING") {
+    return (
+      <button
+        className="grid-status-display grid-status-display-blue"
+        onClick={() => navigate("/")}
+      >
+        Uploading...
+      </button>
+    );
+  } else if (statusType === "TRAINING") {
+    return (
+      <button
+        className="grid-status-display grid-status-display-blue"
+        onClick={() => navigate("/")}
+      >
+        Training...
+      </button>
+    );
   } else if (statusType === "ERROR") {
     return (
       <button

@@ -28,6 +28,8 @@ from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 import csv
 import os
 import json
+from captum.attr import GuidedGradCam, GuidedBackprop
+from captum.attr import LayerActivation, LayerConductance, LayerGradCam
 
 matplotlib.use("Agg")
 
@@ -181,7 +183,9 @@ def generate_train_time_csv(epoch_time):
                       index=epoch, columns=["Train Time"])
     df.to_csv(TRAIN_TIME_CSV)
 
+def generate_img_model_heatmap(model, layer):
 
+    return
 def generate_confusion_matrix(labels_last_epoch, y_pred_last_epoch, categoryList = [],model_type = 'dl'):
     """
     Given the prediction results and label, generate confusion matrix (only applicable to classification tasks)

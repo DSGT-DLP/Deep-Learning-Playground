@@ -30,6 +30,7 @@ dependencies:
   - python-dotenv
   - transformers
   - pre-commit
+  - captum
   - pip:
       - torchvision
       - timm

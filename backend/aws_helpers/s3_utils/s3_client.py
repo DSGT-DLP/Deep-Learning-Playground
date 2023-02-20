@@ -1,4 +1,3 @@
-import tempfile
 import boto3
 import os
 import shutil
@@ -54,13 +53,4 @@ def get_presigned_url_from_bucket(bucket_name: str, bucket_path: str):
 
 def get_presigned_url_from_exec_file(bucket_name: str, exec_id: str, filename: str):
     return get_presigned_url_from_bucket(bucket_name, exec_id + "/" + filename)
-
-def get_fileobj_from_bucket(bucket_name: str, bucket_path: str):
-    """
-    Not used rn
-    """
-    s3 = boto3.resource('s3')
-    with tempfile.TemporaryFile(mode='w+b') as f:
-        s3.Bucket(bucket_name).download_fileobj(bucket_path, f)
-        return f
 

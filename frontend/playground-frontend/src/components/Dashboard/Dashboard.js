@@ -149,7 +149,6 @@ const FilledGrid = () => {
       const response = await sendToBackend("getExecutionsData", {});
       let table = JSON.parse(response["record"]);
       table.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      console.log(table);
       setUserExecutionTable(table);
     } else {
       setUserExecutionTable(null);

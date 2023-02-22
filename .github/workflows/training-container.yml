@@ -61,7 +61,7 @@ jobs:
         ref: ${{ github.sha }}
         check-name: 'build-linux'
         repo-token: ${{ secrets.PAT }}
-        allowed-conclusions: success
+        allowed-conclusions: skipped
         verbose: true
         wait-interval: 10
     

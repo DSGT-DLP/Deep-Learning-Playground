@@ -62,7 +62,7 @@ def tabular_run_route(request_data):
     try:
         user_arch = request_data["user_arch"]
         fileURL = request_data["file_URL"]
-        uid = request_data["user_id"]
+        uid = request_data["user"]["uid"]
         json_csv_data_str = request_data["csv_data"]
         customModelName = request_data["custom_model_name"]
 
@@ -95,7 +95,7 @@ def ml_run_route(request_data):
         user_model = request_data["user_arch"]
         problem_type = request_data["problem_type"]
         target = request_data["target"]
-        uid = request_data["user_id"]
+        uid = request_data["user"]["uid"]
         features = request_data["features"]
         default = request_data["using_default_dataset"]
         shuffle = request_data["shuffle"]
@@ -128,7 +128,7 @@ def img_run_route(request_data):
         epochs = request_data["epochs"]
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
-        uid = request_data["user_id"]
+        uid = request_data["user"]["uid"]
         customModelName = request_data["custom_model_name"]
 
         train_loss_results = dl_img_drive(
@@ -157,7 +157,7 @@ def object_detection_route(request_data):
     try:
         problem_type = request_data["problem_type"]
         detection_type = request_data["detection_type"]
-        uid = request_data["user_id"]
+        uid = request_data["user"]["uid"]
         transforms = request_data["transforms"]
         image = detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type, transforms)
         return send_detection_results(image)

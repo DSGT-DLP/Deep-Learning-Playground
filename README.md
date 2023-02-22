@@ -71,6 +71,8 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
     npm start
     ```
 
+**Note:** If you want to start the app in `prod` mode, run `REACT_APP_MODE=prod npm run startf` from the root of the project
+
 3. Then, go to http://localhost:3000/
 
 ## Frontend Architecture

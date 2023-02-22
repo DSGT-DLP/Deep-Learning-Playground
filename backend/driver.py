@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import shutil
 
 from flask import Flask, request, send_from_directory
+from backend.aws_helpers.s3_utils.s3_client import get_presigned_url_from_exec_file
 from backend.middleware import middleware
 from flask_cors import CORS
 
@@ -15,8 +16,8 @@ from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
-from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, createUserExecutionsData
 from backend.aws_helpers.sqs_utils.sqs_client import add_to_training_queue
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, createUserExecutionsData, getAllUserExecutionsData
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 from backend.dl.detection import detection_img_drive
 
@@ -282,6 +283,29 @@ def send_columns():
         print(traceback.format_exc())
         return send_traceback_error()
 
+@app.route("/api/getExecutionsData", methods=["POST"])
+def executions_table():
+    try:
+        request_data = json.loads(request.data)
+        user_id = request_data['user']['uid']
+        record = getAllUserExecutionsData(user_id)
+        return send_success({"record": record})
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+
+@app.route("/api/getExecutionsFilesPresignedUrls", methods=["POST"])
+def executions_files():
+    try:
+        request_data = json.loads(request.data)
+        exec_id = request_data['exec_id']
+        dl_results = get_presigned_url_from_exec_file("dlp-executions-bucket", exec_id, "dl_results.csv")
+        model_pt = get_presigned_url_from_exec_file("dlp-executions-bucket", exec_id, "model.pt")
+        model_onnx = get_presigned_url_from_exec_file("dlp-executions-bucket", exec_id, "my_deep_learning_model.onnx")
+        return send_success({"dl_results": dl_results, "model_pt": model_pt, "model_onnx": model_onnx})
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
 
 @app.route("/api/upload", methods=["POST"])
 def upload():
@@ -317,23 +341,6 @@ def writeToQueue() -> str:
             return send_success({"message": "Successfully added your training request to the queue"})
     except Exception:
         return send_error("Failed to queue data")
-    
-
-@app.route("/api/getUserExecutionsData", methods=["POST"])
-def getUserExecutionsData() -> str:
-    """
-    Retrieves an entry from the `execution-table` DynamoDB table given an `execution_id`. If does not exist, create a new entry corresponding to the given user_id.
-
-    E.g.
-    POST request to http://localhost:8000/api/getUserExecutionsData with body
-    {"execution_id": "fsdh", "user_id": "fweadshas"}
-    will return the execution_id = "fsdh" entry if it exists, else create a new entry with the given execution_id and other attributes present e.g. user_id (user_id must be present upon creating a new entry)
-
-    @return: A JSON string of the entry retrieved or created from the table
-    """
-    entryData = json.loads(request.data)
-    return getOrCreateUserExecutionsData(entryData)
-
 
 @app.route("/api/getUserProgressData", methods=["POST"])
 def getUserProgressData():

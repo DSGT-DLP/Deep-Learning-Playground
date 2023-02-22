@@ -6,15 +6,16 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { Button } from "gestalt";
+import { Box, Button } from "gestalt";
 import "gestalt/dist/gestalt.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
 import "./../../App.css";
+import { auth } from "../../firebase";
 
 const rows = [
   {
@@ -74,7 +75,7 @@ const StatusDisplay = ({ statusType, status }) => {
         Queued: {status}
       </button>
     );
-  } else if (statusType === "training") {
+  } else if (statusType === "STARTING") {
     return (
       <button
         className="grid-status-display grid-status-display-yellow"
@@ -83,7 +84,7 @@ const StatusDisplay = ({ statusType, status }) => {
         Training: {status}
       </button>
     );
-  } else if (statusType === "finished") {
+  } else if (statusType === "SUCCESS") {
     return (
       <button
         className="grid-status-display grid-status-display-green"
@@ -105,9 +106,8 @@ const sameDay = (d1, d2) => {
   );
 };
 
-const formatDate = (unixTime) => {
+const formatDate = (date) => {
   const currDate = new Date();
-  const date = new Date(unixTime * 1000);
 
   const time = sameDay(date, currDate)
     ? date.toLocaleTimeString(undefined, {
@@ -129,74 +129,88 @@ const formatDate = (unixTime) => {
 
 const FilledGrid = () => {
   const navigate = useNavigate();
-
+  const [executiontable, setUserExecutionTable] = useState(null);
+  useEffect(() => {
+    getExecutionTable();
+  }, [auth.currentUser]);
+  const getExecutionTable = async () => {
+    if (auth.currentUser) {
+      const response = await sendToBackend("executiontable", {});
+      setUserExecutionTable(JSON.parse(response["record"]));
+    } else {
+      setUserExecutionTable(null);
+    }
+  };
+  function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+  }
   return (
     <>
-      <Button
-        color="red"
-        size="lg"
-        text="Refresh"
-        onClick={async () => {
-          const response = await sendToBackend("executiontable", {});
-
-          console.log(JSON.parse(response["record"]));
-        }}
-      />
-      <TableContainer style={{ display: "flex", justifyContent: "center" }}>
-        <Table sx={{ minWidth: 400, m: 2 }}>
-          <TableHead>
-            <TableRow>
-              <TableCell className="dashboard-header">Name</TableCell>
-              <TableCell className="dashboard-header">Type</TableCell>
-              <TableCell className="dashboard-header" align="left">
-                Input
-              </TableCell>
-              <TableCell className="dashboard-header" align="left">
-                Date
-              </TableCell>
-              <TableCell className="dashboard-header" align="left">
-                Status
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow
-                key={row.id}
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                  cursor: "pointer",
-                }}
-                onClick={() => navigate("/")}
-                hover
-              >
-                <TableCell
-                  component="th"
-                  scope="row"
-                  className="dashboard-header"
-                >
-                  {row.name}
-                </TableCell>
-                <TableCell component="th" scope="row" className="row-style">
-                  {row.type}
-                </TableCell>
-                <TableCell align="left" className="row-style">
-                  {row.input}
-                </TableCell>
-                <TableCell align="left" className="row-style">
-                  {formatDate(row.date)}
-                </TableCell>
-                <TableCell align="left">
-                  <StatusDisplay
-                    statusType={row.statusType}
-                    status={row.status}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {executiontable ? (
+        <>
+          <Box padding={5}>
+            <Button
+              color="red"
+              size="lg"
+              text="Refresh"
+              onClick={() => {
+                getExecutionTable();
+              }}
+            />
+          </Box>
+          <TableContainer style={{ display: "flex", justifyContent: "center" }}>
+            <Table sx={{ minWidth: 400, m: 2 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell className="dashboard-header">Name</TableCell>
+                  <TableCell className="dashboard-header">Type</TableCell>
+                  <TableCell className="dashboard-header" align="left">
+                    Date
+                  </TableCell>
+                  <TableCell className="dashboard-header" align="left">
+                    Status
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {executiontable.map((row) => (
+                  <TableRow
+                    key={row.execution_id}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      cursor: "pointer",
+                    }}
+                    onClick={() => navigate("/")}
+                    hover
+                  >
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      className="dashboard-header"
+                    >
+                      {row.name}
+                    </TableCell>
+                    <TableCell component="th" scope="row" className="row-style">
+                      {toTitleCase(row.data_source)}
+                    </TableCell>
+                    <TableCell align="left" className="row-style">
+                      {formatDate(new Date(row.timestamp))}
+                    </TableCell>
+                    <TableCell align="left">
+                      <StatusDisplay
+                        statusType={row.status}
+                        status={`${row.progress.toFixed(2)}%`}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </>
+      ) : null}
     </>
   );
 };
@@ -219,6 +233,6 @@ const Dashboard = () => {
 export default Dashboard;
 
 StatusDisplay.propTypes = {
-  statusType: PropTypes.oneOf(["queued", "training", "finished"]),
+  statusType: PropTypes.oneOf(["queued", "STARTING", "SUCCESS"]),
   status: PropTypes.string,
 };

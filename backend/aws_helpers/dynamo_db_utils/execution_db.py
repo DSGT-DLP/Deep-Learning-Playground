@@ -63,6 +63,24 @@ def createUserExecutionsData(entryData: dict) -> str:
     dynamoTable.create_record(newRecord)
     return json.dumps(newRecord.__dict__)
 
+def updateUserExecutionsData(requestData: dict) -> str:
+    """
+    Updates an entry from the `execution-table` DynamoDB table given an `execution_id`.
+    @param requestData: A dictionary containing the execution_id and other table attributes to be updated, with user_id as a required field
+    @return a success status message if the update is successful
+    """
+
+    required_keys = ["execution_id"]
+    if not validate_keys(requestData, required_keys):
+        raise ValueError(f"Missing keys {required_keys} in request body")
+
+    dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
+    execution_id = requestData["execution_id"]
+    updatedRecord = ExecutionData(**requestData).__dict__
+    updatedRecord.pop("execution_id")
+    dynamoTable.update_record(execution_id, **updatedRecord)
+    return "{\"status\": \"success\"}"
+
 def getAllUserExecutionsData(user_id: str) -> str:
     """
     Retrieves an entry from the `execution-table` DynamoDB table given an `execution_id`. Example output: {"execution_id": "blah", "user_id": "blah", "name": "blah", "timestamp": "blah", "data_source": "TABULAR", "status": "QUEUED", "progress": 1}

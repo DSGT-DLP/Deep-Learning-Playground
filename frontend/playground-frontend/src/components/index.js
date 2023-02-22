@@ -13,6 +13,7 @@ export { default as CodeSnippet } from "./Home/CodeSnippet";
 export { default as CodeSnippetML } from "./Home/CodeSnippetML";
 export { default as DropDown } from "./Home/DropDown";
 export { default as EmailInput } from "./Home/EmailInput";
+export { default as PhoneNumberInput } from "./Home/PhoneNumberInput";
 export { default as Input } from "./Home/Input";
 export { default as LayerChoice } from "./Home/LayerChoice";
 export { default as RectContainer } from "./Home/RectContainer";
@@ -20,10 +21,14 @@ export { default as Results } from "./Home/Results";
 export { default as TrainButton } from "./Home/TrainButton";
 export { default as ChoiceTab } from "./Home/ChoiceTab";
 export { default as CustomModelName } from "./Home/CustomModelName";
+export { default as Preprocessing } from "./Home/Preprocessing";
 
 // Dashboard
 export { default as Dashboard } from "./Dashboard/Dashboard";
 export { default as Login } from "./Dashboard/Login";
+
+//Forgot
+export { default as Forgot } from "./Forgot/Forgot";
 
 // About
 export { default as About } from "./About/About";
@@ -33,6 +38,10 @@ export { default as Wiki } from "./Wiki/Wiki";
 
 // Feedback
 export { default as Feedback } from "./Feedback/Feedback";
+
+// Learning Modules
+export { default as LearnMod } from "./LearnMod/LearnMod";
+export { default as LearnContent } from "./LearnMod/LearnContent";
 
 // Navbar
 export { default as NavbarMain } from "./Navbar/NavbarMain";
@@ -51,3 +60,6 @@ export { default as LargeFileUpload } from "./general/LargeFileUpload";
 
 //Account Settings Page
 export { default as AccountSettings } from "./AccountSettings/AccountSettings";
+
+//Object Detection Page
+export { default as ObjectDetection } from "./ObjectDetection/ObjectDetection";

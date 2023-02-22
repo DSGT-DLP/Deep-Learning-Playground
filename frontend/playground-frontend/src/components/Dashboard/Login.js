@@ -12,13 +12,16 @@ import { useDispatch } from "react-redux";
 import GoogleLogo from "../../images/logos/google.png";
 import GithubLogo from "../../images/logos/github.png";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [fullName, setFullName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [recaptcha, setRecaptcha] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const signedInUserEmail = useSelector((state) => state.currentUser.email);
@@ -26,7 +29,11 @@ const Login = () => {
   const handleSignInRegister = async () => {
     let user;
     if (isRegistering) {
-      user = await registerWithPassword(email, password, fullName);
+      if (recaptcha !== "") {
+        user = await registerWithPassword(email, password, fullName);
+      } else {
+        toast.error("Please complete recaptcha");
+      }
     } else {
       user = await signInWithPassword(email, password);
     }
@@ -38,6 +45,7 @@ const Login = () => {
       displayName: user.displayName,
       emailVerified: user.emailVerified,
     };
+
     dispatch(setCurrentUser(userData));
     navigate("/dashboard");
   };
@@ -109,7 +117,13 @@ const Login = () => {
           onBlur={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
         />
+        {!isRegistering && (
+          <div className="link">
+            <Link to="/forgot">Forgot Password?</Link>
+          </div>
+        )}
       </Form.Group>
+
       <div className="email-buttons d-flex flex-column">
         <Button id="log-in" className="mb-2" onClick={handleSignInRegister}>
           {isRegistering ? "Register" : "Log in"}
@@ -118,11 +132,21 @@ const Login = () => {
           {isRegistering ? "Log in" : "Register"}
         </a>
       </div>
+
+      {isRegistering && (
+        <div className="reCaptcha">
+          <ReCAPTCHA
+            sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
+            theme="dark"
+            onChange={(e) => setRecaptcha(e)}
+          />
+        </div>
+      )}
     </>
   );
 
   return (
-    <div id="login-page" className="text-center">
+    <div id="login-page" className="text-center d-flex justify-content-center">
       <div className="main-container mt-5 mb-5">
         {Title}
 

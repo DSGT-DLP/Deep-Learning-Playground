@@ -22,7 +22,7 @@ export const POSSIBLE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies a linear transformation to the incoming data:{" "}
             <i>
@@ -32,7 +32,7 @@ export const POSSIBLE_LAYERS = [
             .
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -56,7 +56,7 @@ export const POSSIBLE_LAYERS = [
     parameters: {},
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies the rectified linear unit function element-wise: ReLU
             <i>
@@ -65,10 +65,10 @@ export const POSSIBLE_LAYERS = [
             max(0, <i>x)</i>.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
-        <p>
+        <p className="info">
           <i>None</i>
         </p>
         <a href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html">
@@ -91,14 +91,14 @@ export const POSSIBLE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies the Softmax function to an <i>n</i>-dimensional input Tensor
             rescaling them so that the elements of the <i>n</i>-dimensional
             output Tensor lie in the range [0,1] and sum to 1.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -119,14 +119,14 @@ export const POSSIBLE_LAYERS = [
     parameters: {},
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>Applies the Sigmoid function.</strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
-        <p>
-          <i>None</i>
+        <p className="info">
+          <i className="info">None</i>
         </p>
         <a href="https://pytorch.org/docs/stable/generated/torch.nn.Sigmoid.html">
           More info
@@ -140,15 +140,15 @@ export const POSSIBLE_LAYERS = [
     parameters: {},
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies the Hyperbolic Tangent (Tanh) function element-wise.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
-        <p>
+        <p className="info">
           <i>None</i>
         </p>
         <a href="https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html">
@@ -171,13 +171,13 @@ export const POSSIBLE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies the log(Softmax(<i>x</i>)) function to an <i>n</i>
             -dimensional input Tensor.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -195,6 +195,11 @@ export const POSSIBLE_LAYERS = [
 ];
 
 export const ML_MODELS = [
+  {
+    display_name: "Gaussian Naive Bayes",
+    object_name: "sklearn.naive_bayes.GaussianNB",
+    parameters: {},
+  },
   {
     display_name: "RF Classifier",
     object_name: "sklearn.ensemble.RandomForestClassifier",
@@ -320,6 +325,68 @@ export const ML_MODELS = [
       },
     },
   },
+  {
+    display_name: "Decision Tree Classifier",
+    object_name: "sklearn.tree.DecisionTreeClassifier",
+    parameters: {
+      max_depth: {
+        index: 0,
+        parameter_name: "Max Depth",
+        kwarg: "max_depth = ",
+        default: 5,
+        min: 1,
+        max: 100,
+        parameter_type: "number",
+      },
+      min_samples_split: {
+        index: 1,
+        parameter_name: "Minimum Sample Splits",
+        kwarg: "min_samples_split = ",
+        default: 2,
+        min: 2,
+        max: 10,
+        parameter_type: "number",
+      },
+      max_features: {
+        index: 2,
+        parameter_name: "Max Features",
+        kwarg: "max_features = ",
+        default: "sqrt",
+        parameter_type: "text",
+      },
+    },
+  },
+  {
+    display_name: "Decision Tree Regressor",
+    object_name: "sklearn.tree.DecisionTreeRegressor",
+    parameters: {
+      max_depth: {
+        index: 0,
+        parameter_name: "Max Depth",
+        kwarg: "max_depth = ",
+        default: 5,
+        min: 1,
+        max: 5,
+        parameter_type: "number",
+      },
+      min_samples_split: {
+        index: 1,
+        parameter_name: "Minimum Sample Splits",
+        kwarg: "min_samples_split = ",
+        default: 2,
+        min: 1,
+        max: 10,
+        parameter_type: "number",
+      },
+      max_features: {
+        index: 2,
+        parameter_name: "Max Features",
+        kwarg: "max_features = ",
+        default: "sqrt",
+        parameter_type: "text",
+      },
+    },
+  },
 ];
 
 export const IMAGE_LAYERS = [
@@ -365,13 +432,13 @@ export const IMAGE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies a 2D convolution over an input signal composed of several
             input planes.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -407,7 +474,7 @@ export const IMAGE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies Batch Normalization over a 4D input (a mini-batch of 2D
             inputs with additional channel dimension) as described in the paper{" "}
@@ -417,7 +484,7 @@ export const IMAGE_LAYERS = [
             </a>
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -453,13 +520,13 @@ export const IMAGE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies a 2D max pooling over an input signal composed of several
             input planes.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -489,13 +556,13 @@ export const IMAGE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             Applies a 2D adaptive average pooling over an input signal composed
             of several input planes.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -527,7 +594,7 @@ export const IMAGE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>
             During training, randomly zeroes some of the elements of the input
             tensor with probability p using samples from a Bernoulli
@@ -535,7 +602,7 @@ export const IMAGE_LAYERS = [
             forward call.
           </strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -573,10 +640,10 @@ export const IMAGE_LAYERS = [
     },
     tooltip_info: (
       <>
-        <p>
+        <p className="info">
           <strong>Flattens a contiguous range of dims into a tensor.</strong>
         </p>
-        <p>
+        <p className="info">
           <strong>Parameters</strong>
         </p>
         <ul>
@@ -646,7 +713,7 @@ export const POSSIBLE_TRANSFORMS = [
         min: 1,
         max: 1000,
         default: "(32, 32)",
-        parameter_type: "text",
+        parameter_type: "tuple",
       },
     },
     label: "Resize",
@@ -700,6 +767,386 @@ export const POSSIBLE_TRANSFORMS = [
   },
 ];
 
+export const DETECTION_TRANSFORMS = [
+  {
+    display_name: "Random Horizontal Flip",
+    object_name: "transforms.RandomHorizontalFlip",
+    parameters: {
+      probability: {
+        index: 0,
+        parameter_name: "prob",
+        min: 0,
+        max: 1,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>
+            Horizontally flip the given image randomly with a given probability.
+          </strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>prob</em> - probability of the flip
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.RandomHorizontalFlip.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Random Horizontal Flip",
+    value: "RandomHorizontalFlip",
+  },
+
+  {
+    display_name: "Random Vertical Flip",
+    object_name: "transforms.RandomVerticalFlip",
+    parameters: {
+      p: {
+        index: 0,
+        parameter_name: "prob",
+        min: 0,
+        max: 1,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>
+            Vertically flip the given image randomly with a given probability.
+          </strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>prob</em> - probability of the flip
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.RandomVerticalFlip.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Random Vertical Flip",
+    value: "RandomVerticalFlip",
+  },
+
+  {
+    display_name: "To Tensor",
+    object_name: "transforms.ToTensor",
+    parameters: {},
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Convert PIL Image or numpy.ndarray to tensor.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <p className="info">
+          <i>None</i>
+        </p>
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.ToTensor.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "To Tensor",
+    value: "ToTensor",
+  },
+  {
+    display_name: "Resize",
+    object_name: "transforms.Resize",
+    parameters: {
+      size: {
+        index: 0,
+        parameter_name: "(H, W)",
+        min: 1,
+        max: 1000,
+        default: "(32, 32)",
+        parameter_type: "tuple",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Resize the input image to the given size.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>(H, W)</em> - output size
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.functional.resize.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Resize",
+    value: "Resize",
+  },
+  {
+    display_name: "Gaussian Blur",
+    object_name: "transforms.GaussianBlur",
+    parameters: {
+      kernel_size: {
+        index: 0,
+        parameter_name: "kernel size",
+        min: 1,
+        max: 1000,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Blurs image with randomly chosen GaussianBlur.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>kernel size</em> - size of Gaussian kernel
+          </li>
+        </ul>
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.GaussianBlur.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Gaussian Blur",
+    value: "GaussianBlur",
+  },
+  {
+    display_name: "Grayscale",
+    object_name: "transforms.Grayscale",
+    parameters: {},
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Convert image to grayscale.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <p className="info">
+          <i>None</i>
+        </p>
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.Grayscale.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Grayscale",
+    value: "Grayscale",
+  },
+  {
+    display_name: "Normalize",
+    object_name: "transforms.Normalize",
+    parameters: {
+      mean: {
+        index: 0,
+        parameter_name: "mean",
+        min: -1000,
+        max: 1000,
+        default: 0,
+        parameter_type: "number",
+      },
+      std: {
+        index: 1,
+        parameter_name: "std",
+        min: -1000,
+        max: 1000,
+        default: 1,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Normalize image with mean and standard deviation.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>mean</em> - mean of normalization
+          </li>
+          <li>
+            <em>mean</em> - standard deviation of normalization
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.Normalize.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Normalize",
+    value: "Normalize",
+  },
+  {
+    display_name: "AdjustContrast",
+    object_name: "transforms.functional.adjust_contrast",
+    transform_type: "functional",
+    parameters: {
+      contrast_factor: {
+        index: 0,
+        parameter_name: "contrast_factor",
+        min: 0,
+        max: 10000,
+        default: 0,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Adjust contrast of an image.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>contrast_factor</em> - how much to adjust the contrast
+          </li>
+        </ul>
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.functional.adjust_contrast.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "AdjustContrast",
+    value: "AdjustContrast",
+  },
+  {
+    display_name: "AdjustBrightness",
+    object_name: "transforms.functional.adjust_brightness",
+    transform_type: "functional",
+    parameters: {
+      brightness_factor: {
+        index: 0,
+        parameter_name: "brightness_factor",
+        min: 0,
+        max: 10000,
+        default: 0,
+        parameter_type: "number",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>Adjust brightness of an image.</strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>brightness_factor</em> - how much to adjust the brightness
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.function.adjust_brightness.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "AdjustBrightness",
+    value: "AdjustBrightness",
+  },
+  {
+    display_name: "Affine",
+    object_name: "transforms.functional.affine",
+    transform_type: "functional",
+    parameters: {
+      angle: {
+        index: 0,
+        parameter_name: "angle",
+        min: -180,
+        max: 180,
+        default: 0,
+        parameter_type: "number",
+      },
+      translate: {
+        index: 1,
+        parameter_name: "translate",
+        min: -1000,
+        max: 1000,
+        default: "(0, 0)",
+        parameter_type: "tuple",
+      },
+      scale: {
+        index: 2,
+        parameter_name: "scale",
+        min: 0,
+        max: 1000,
+        default: 1,
+        parameter_type: "number",
+      },
+      shear: {
+        index: 3,
+        parameter_name: "shear",
+        min: -180,
+        max: 180,
+        default: "(0, 0)",
+        parameter_type: "tuple",
+      },
+    },
+    tooltip_info: (
+      <>
+        <p className="info">
+          <strong>
+            Apply affine transformation on the image keeping image center
+            invariant.
+          </strong>
+        </p>
+        <p className="info">
+          <strong>Parameters</strong>
+        </p>
+        <ul>
+          <li>
+            <em>angle</em> - clockwise rotation angle between -180 and 180
+          </li>
+          <li>
+            <em>translate</em> - post-rotatation translation
+          </li>
+          <li>
+            <em>scale</em> - overall scale
+          </li>
+          <li>
+            <em>shear</em> - shear angle value between -180 and 180
+          </li>
+        </ul>
+
+        <a href="https://pytorch.org/vision/main/generated/torchvision.transforms.functional.affine.html">
+          More info
+        </a>
+      </>
+    ),
+    label: "Affine",
+    value: "Affine",
+  },
+];
+
 const CLASSIFICATION = "classification";
 const REGRESSION = "regression";
 
@@ -746,6 +1193,16 @@ export const IMAGE_CLASSIFICATION_CRITERION = [
 export const PROBLEM_TYPES = [
   { label: "Classification", value: CLASSIFICATION },
   { label: "Regression", value: REGRESSION },
+];
+
+export const OBJECT_DETECTION_PROBLEM_TYPES = [
+  { label: "Labels", value: "labels" },
+  { label: "Celebrities", value: "celebrities" },
+];
+
+export const DETECTION_TYPES = [
+  { label: "Rekognition", value: "rekognition" },
+  { label: "YOLO", value: "yolo" },
 ];
 
 export const BOOL_OPTIONS = [

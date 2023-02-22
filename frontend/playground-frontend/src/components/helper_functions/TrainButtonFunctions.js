@@ -4,12 +4,12 @@ import { toast } from "react-toastify";
  * This file's puropose is to generalise the methods of TrainButton (focusing on Tabular, Image, and Pretrained models)
  *
  */
-const tupleRegex = /^\(([1-9]{1}[0-9]*), ?([1-9]{1}[0-9]*)\)$/;
+const tupleRegex = /^\(([0-9]{1}[0-9]*), ?([0-9]{1}[0-9]*)\)$/;
 
 export const validateParameter = (source, index, parameter) => {
   const { parameter_name, min, max, parameter_type } = parameter;
   let { value } = parameter;
-  if (parameter_name === "(H, W)") {
+  if (parameter_type === "tuple") {
     if (tupleRegex.test(value)) {
       const result = value.match(tupleRegex);
       const H = result[1].valueOf();
@@ -19,14 +19,14 @@ export const validateParameter = (source, index, parameter) => {
         toast.error(
           `${source} Layer ${
             index + 1
-          }: H not an integer in range [${min}, ${max}]`
+          }: X not an integer in range [${min}, ${max}]`
         );
         return false;
       } else if (W < min || W > max) {
         toast.error(
           `${source} Layer ${
             index + 1
-          }: W not an integer in range [${min}, ${max}]`
+          }: Y not an integer in range [${min}, ${max}]`
         );
         return false;
       }
@@ -35,7 +35,7 @@ export const validateParameter = (source, index, parameter) => {
     toast.error(
       `${source} Layer ${
         index + 1
-      }: ${parameter_name} not of appropriate format: (H, W)`
+      }: ${parameter_name} not of appropriate format: (X, Y)`
     );
   } else {
     if (parameter_type !== "number") return true;
@@ -58,40 +58,30 @@ export const validateParameter = (source, index, parameter) => {
 };
 
 // TABULAR
-export const validateTabularInputs = (user_arch, ...args) => {
-  args = args[0];
-  let alertMessage = "";
-  if (!user_arch?.length) alertMessage += "At least one layer must be added. ";
-  if (!args.customModelName)
-    alertMessage += "Custom model name must be specified. ";
-  if (!args.criterion) alertMessage += "A criterion must be specified. ";
-  if (!args.optimizerName)
-    alertMessage += "An optimizer name must be specified. ";
-  if (!args.problemType) alertMessage += "A problem type must be specified. ";
+export const validateTabularInputs = (user_arch, args) => {
+  if (!user_arch?.length) return "At least one layer must be added. ";
+  if (!args.customModelName) return "Custom model name must be specified. ";
+  if (!args.criterion) return "A criterion must be specified. ";
+  if (!args.optimizerName) return "An optimizer name must be specified. ";
+  if (!args.problemType) return "A problem type must be specified. ";
   if (!args.usingDefaultDataset) {
     if (!args.targetCol || !args.features?.length) {
-      alertMessage +=
-        "Must specify an input file, target, and features if not selecting default dataset. ";
+      return "Must specify an input file, target, and features if not selecting default dataset. ";
     }
     for (let i = 0; i < args.features?.length; i++) {
       if (args.targetCol === args.features[i]) {
-        alertMessage +=
-          "A column that is selected as the target column cannot also be a feature column. ";
-        break;
+        return "A column that is selected as the target column cannot also be a feature column. ";
       }
     }
     if (!args.csvDataInput && !args.fileURL) {
-      alertMessage +=
-        "Must specify an input file either from local storage or from an internet URL. ";
+      return "Must specify an input file either from local storage or from an internet URL. ";
     }
   }
-  if (args.batchSize < 2) alertMessage += "Batch size cannot be less than 2";
-  return alertMessage;
+  if (args.batchSize < 2) return "Batch size cannot be less than 2";
+  return "";
 };
 
-export const sendTabularJSON = (...args) => {
-  args = args[0];
-
+export const sendTabularJSON = (args) => {
   const csvDataStr = JSON.stringify(args.csvDataInput);
 
   return {
@@ -110,8 +100,9 @@ export const sendTabularJSON = (...args) => {
     shuffle: args.shuffle,
     csv_data: csvDataStr,
     file_URL: args.fileURL,
-    email: args.email,
+    notification: args.notification,
     custom_model_name: args.customModelName,
+    data_source: "TABULAR",
   };
 };
 
@@ -151,6 +142,7 @@ export const sendImageJSON = (...args) => {
     test_transform: args.testTransforms,
     email: args.email ? args.email : null,
     custom_model_name: args.customModelName,
+    data_source: "IMAGE",
   };
 };
 
@@ -193,12 +185,12 @@ export const sendPretrainedJSON = (...args) => {
     test_transform: args.testTransforms,
     email: args.email,
     custom_model_name: args.customModelName,
+    data_source: "PRETRAINED",
   };
 };
 
 //Classical ML
 export const validateClassicalMLInput = (user_arch, ...args) => {
-  console.log("hello world");
   args = args[0];
   let alertMessage = "";
   if (!args.problemType) alertMessage += "A problem type must be specified. ";
@@ -240,5 +232,28 @@ export const sendClassicalMLJSON = (...args) => {
     csv_data: csvDataStr,
     file_URL: args.fileURL,
     email: args.email,
+    data_source: "CLASSICAL_ML",
+  };
+};
+
+export const validateObjectDetectionInput = (user_arch, ...args) => {
+  args = args[0];
+  let alertMessage = "";
+  if (!args.uploadFile)
+    alertMessage += "Must specify an input file from local storage. ";
+  if (args.detectionType === "rekognition" && !args.problemType)
+    alertMessage += "A problem type must be specified. ";
+  if (!args.detectionType)
+    alertMessage += "A detection type must be specified. ";
+  return alertMessage;
+};
+
+export const sendObjectDetectionJSON = (...args) => {
+  args = args[0];
+  return {
+    problem_type: args.problemType != null ? args.problemType : null,
+    detection_type: args.detectionType,
+    transforms: args.transforms,
+    data_source: "OBJECT_DETECTION",
   };
 };

@@ -64,7 +64,7 @@ const Feedback = () => {
       <div className="sections" style={styles.content_section}>
         <h2>Feedback Form</h2>
         <p>
-          Fill this feedback form for any bugs, feature requests or complains!
+          Fill this feedback form for any bugs, feature requests or complaints!
           We'll get back to as soon as we can.
         </p>
 

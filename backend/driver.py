@@ -17,7 +17,7 @@ from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
 from backend.aws_helpers.sqs_utils.sqs_client import add_to_training_queue
-from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, createUserExecutionsData
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, createUserExecutionsData, getAllUserExecutionsData
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 from backend.dl.detection import detection_img_drive
 
@@ -287,7 +287,7 @@ def send_columns():
 def executions_table():
     try:
         request_data = json.loads(request.data)
-        user_id = request_data['user_id']
+        user_id = request_data['user']['uid']
         record = getAllUserExecutionsData(user_id)
         return send_success({"record": record})
     except Exception:

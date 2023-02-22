@@ -6,7 +6,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { Box, Button } from "gestalt";
+import { Box, Button, IconButton } from "gestalt";
 import "gestalt/dist/gestalt.css";
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
@@ -16,6 +16,8 @@ import { useSelector } from "react-redux";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
 import "./../../App.css";
 import { auth } from "../../firebase";
+import JSZip from "jszip";
+import saveAs from "file-saver";
 
 const rows = [
   {
@@ -81,7 +83,7 @@ const StatusDisplay = ({ statusType, status }) => {
         className="grid-status-display grid-status-display-yellow"
         onClick={() => navigate("/")}
       >
-        Training: {status}
+        Training...
       </button>
     );
   } else if (statusType === "SUCCESS") {
@@ -153,7 +155,8 @@ const FilledGrid = () => {
           <Box padding={5}>
             <Button
               color="red"
-              size="lg"
+              size="md"
+              iconEnd="refresh"
               text="Refresh"
               onClick={() => {
                 getExecutionTable();
@@ -203,6 +206,63 @@ const FilledGrid = () => {
                         statusType={row.status}
                         status={`${row.progress.toFixed(2)}%`}
                       />
+                    </TableCell>
+                    <TableCell align="left">
+                      <IconButton
+                        icon="download"
+                        accessibilityLabel={"Download"}
+                        size={"md"}
+                        onClick={async (e) => {
+                          e.event.stopPropagation();
+                          const response = await sendToBackend(
+                            "executionfiles",
+                            {
+                              exec_id: row.execution_id,
+                            }
+                          );
+                          console.log(response);
+                          //const thing = await fetch(response.dl_results, {
+                          //  mode: "cors",
+                          //});
+                          console.log([
+                            //response.dl_results,
+                            response.model_onnx,
+                            response.model_pt,
+                          ]);
+                          const zip = new JSZip();
+                          await Promise.all(
+                            [
+                              [response.dl_results, "dl_results.csv"],
+                              [
+                                response.model_onnx,
+                                "my_deep_learning_model.onnx",
+                              ],
+                              [response.model_pt, "model.pt"],
+                            ].map(([url, filename]) =>
+                              fetch(url, {
+                                mode: "cors",
+                              }).then((res) =>
+                                res.blob().then((blob) => {
+                                  zip.file(filename, blob);
+                                  /*let tempLink = document.createElement("a");
+                                  tempLink.href =
+                                    window.URL.createObjectURL(blob);
+                                  tempLink.setAttribute("download", filename);
+                                  tempLink.click();*/
+                                })
+                              )
+                            )
+                          );
+                          zip
+                            .generateAsync({ type: "blob" })
+                            .then((blob) => saveAs(blob, "results.zip"));
+                          //console.log(result);
+
+                          //set cors configuration for this bucket for all exec headers
+                          //const blob = await thing.blob();
+                          //console.log(await blob.text());
+                        }}
+                      ></IconButton>
                     </TableCell>
                   </TableRow>
                 ))}

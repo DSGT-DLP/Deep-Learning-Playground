@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import shutil
 
 from flask import Flask, request, send_from_directory
+from backend.aws_helpers.s3_utils.s3_client import get_presigned_url_from_bucket, get_presigned_url_from_exec_file, read_from_bucket
 from backend.middleware import middleware
 from flask_cors import CORS
 
@@ -289,6 +290,20 @@ def executions_table():
         user_id = request_data['user_id']
         record = getAllUserExecutionsData(user_id)
         return send_success({"record": record})
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+
+@app.route("/api/executionfiles", methods=["POST"])
+def executions_files():
+    try:
+        request_data = json.loads(request.data)
+        exec_id = request_data['exec_id']
+        #"ex035ddcf7bc0d15e753c850f715aa5508ecb9df75b3c6b124327bbd5d1133397f"
+        dl_results = get_presigned_url_from_exec_file("dlp-executions-bucket", exec_id, "dl_results.csv")
+        model_pt = get_presigned_url_from_exec_file("dlp-executions-bucket", exec_id, "model.pt")
+        model_onnx = get_presigned_url_from_exec_file("dlp-executions-bucket", exec_id, "my_deep_learning_model.onnx")
+        return send_success({"dl_results": dl_results, "model_pt": model_pt, "model_onnx": model_onnx})
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()

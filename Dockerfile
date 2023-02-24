@@ -13,6 +13,9 @@ ARG AWS_REGION
 ARG AWS_DEPLOY_SECRET_ACCESS_KEY
 ARG AWS_DEPLOY_ACCESS_KEY_ID
 
+RUN echo "aws cli installed. now seeing path"
+RUN echo $PATH
+RUN echo "path variable shown"
 RUN aws configure set region $AWS_REGION
 RUN aws configure set aws_access_key_id $AWS_DEPLOY_ACCESS_KEY_ID
 RUN aws configure set aws_secret_access_key $AWS_DEPLOY_SECRET_ACCESS_KEY

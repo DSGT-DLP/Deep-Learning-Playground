@@ -16,8 +16,6 @@ ARG AWS_REGION
 ARG AWS_DEPLOY_ACCESS_KEY_ID
 ARG AWS_DEPLOY_SECRET_ACCESS_KEY
 
-RUN which aws
-
 RUN aws configure set region $AWS_REGION
 RUN aws configure set aws_access_key_id $AWS_DEPLOY_ACCESS_KEY_ID
 RUN aws configure set aws_secret_access_key $AWS_DEPLOY_SECRET_ACCESS_KEY

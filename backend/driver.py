@@ -17,7 +17,7 @@ from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
 from backend.aws_helpers.sqs_utils.sqs_client import add_to_training_queue
-from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, createUserExecutionsData, getAllUserExecutionsData
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, createUserExecutionsData, getAllUserExecutionsData, updateStatus
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 from backend.dl.detection import detection_img_drive
 
@@ -90,14 +90,14 @@ def tabular_run():
                 "progress": 0
             }
         )
-
         train_loss_results = dl_tabular_drive(user_arch, fileURL, params,
             json_csv_data_str, customModelName)
-
         print(train_loss_results)
+        updateStatus(execution_id, "SUCCESS")
         return send_train_results(train_loss_results)
 
     except Exception:
+        updateStatus(execution_id, "ERROR")
         print(traceback.format_exc())
         return send_traceback_error()
 

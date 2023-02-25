@@ -10,7 +10,6 @@ COPY . .
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 RUN unzip awscliv2.zip
 RUN ./aws/install
-RUN chmod +rwx /usr/local/bin/aws
 
 ARG AWS_REGION
 ARG AWS_DEPLOY_ACCESS_KEY_ID

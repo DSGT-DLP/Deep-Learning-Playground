@@ -151,7 +151,20 @@ def img_run():
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
         customModelName = request_data["custom_model_name"]
+        uid = request_data["user"]["uid"]
+        execution_id = request_data["execution_id"]
 
+        createUserExecutionsData(
+            {
+                "execution_id": execution_id, 
+                "user_id": uid, 
+                "name": customModelName, 
+                "data_source": "IMAGE", 
+                "status": "STARTING", 
+                "timestamp": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "progress": 0
+            }
+        )
         train_loss_results = dl_img_drive(
             train_transform,
             test_transform,
@@ -164,12 +177,16 @@ def img_run():
             shuffle,
             IMAGE_UPLOAD_FOLDER,
         )
-
+        write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_DL)}")
+        write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(ONNX_MODEL)}")
+        write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}")
+        updateStatus(execution_id, "SUCCESS")
         print("training successfully finished")
         return send_train_results(train_loss_results)
 
     except Exception:
         print(traceback.format_exc())
+        updateStatus(execution_id, "ERROR")
         return send_traceback_error()
 
     finally:

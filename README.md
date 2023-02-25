@@ -27,6 +27,13 @@ Have the following installed first:
 | Running the Frontend                                     | `npm run startf`       |
 | Running the Backend                         | `conda activate dlplayground && python -m backend.driver`   |
 
+## To run in `prod` mode:
+- To start the frontend:
+    - If you're using Unix, run `REACT_APP_MODE=prod npm run startf` from the root of the project
+    - If you're using Windows, run `set REACT_APP_MODE=prod && npm run startf` from the root of the project
+- Run the backend as usual
+- To run the SQS container, run the command in this [document](https://docs.google.com/document/d/1yYzT7CCUqxnShncHEeHC1MssABntJuKUN88pTXnh_HQ/edit#)
+
 # Development Practices
 ## GitGuardian Pre-commit Check
 To protect our secrets, we use the GitGuardian ggshield pre-commit check to ensure no keys are being committed. After installing the backend, every day or so, login to GitGuardian to activate the pre-commit hook using `ggshield auth login`.
@@ -63,15 +70,13 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 
 1. For complete functionality with the backend, first, start the backend using the instructions above. The backend will be live at http://localhost:8000/
 
-2. Then in a separate terminal, start the frontend development server. After installing the prerequisites above, run the following commands:
+2. Then in a separate terminal, start the frontend development server. After installing the prerequisites above, run the shortcut above or run the following commands:
 
     ```
     cd frontend\playground-frontend
     npm install
     npm start
     ```
-
-**Note:** If you want to start the app in `prod` mode, run `REACT_APP_MODE=prod npm run startf` from the root of the project
 
 3. Then, go to http://localhost:3000/
 

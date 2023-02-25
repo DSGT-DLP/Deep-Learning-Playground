@@ -151,7 +151,8 @@ def img_run():
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
         customModelName = request_data["custom_model_name"]
-
+        uid = request_data["user"]["uid"]
+        execution_id = request_data["execution_id"]
         train_loss_results = dl_img_drive(
             train_transform,
             test_transform,
@@ -164,7 +165,6 @@ def img_run():
             shuffle,
             IMAGE_UPLOAD_FOLDER,
         )
-
         print("training successfully finished")
         return send_train_results(train_loss_results)
 
@@ -303,9 +303,9 @@ def executions_files():
     try:
         request_data = json.loads(request.data)
         exec_id = request_data['exec_id']
-        dl_results = get_presigned_url_from_exec_file("dlp-executions-bucket", exec_id, "dl_results.csv")
-        model_pt = get_presigned_url_from_exec_file("dlp-executions-bucket", exec_id, "model.pt")
-        model_onnx = get_presigned_url_from_exec_file("dlp-executions-bucket", exec_id, "my_deep_learning_model.onnx")
+        dl_results = get_presigned_url_from_exec_file(EXECUTION_BUCKET_NAME, exec_id, "dl_results.csv")
+        model_pt = get_presigned_url_from_exec_file(EXECUTION_BUCKET_NAME, exec_id, "model.pt")
+        model_onnx = get_presigned_url_from_exec_file(EXECUTION_BUCKET_NAME, exec_id, "my_deep_learning_model.onnx")
         return send_success({"dl_results": dl_results, "model_pt": model_pt, "model_onnx": model_onnx})
     except Exception:
         print(traceback.format_exc())

@@ -9,9 +9,8 @@ on:
     branches:
       - frontend
       - main
-      - prettier-action-version-upgrade
     paths:
-      - 'frontend/**'
+      - '/**'
 
 jobs:
   prettier:

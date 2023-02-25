@@ -3,14 +3,7 @@ name: Prettier JS
 # This action works with pull requests and pushes
 on:
   pull_request:
-    paths:
-      - 'frontend/**'
   push:
-    branches:
-      - frontend
-      - main
-    paths:
-      - '/**'
 
 jobs:
   prettier:

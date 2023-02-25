@@ -5,19 +5,20 @@ from werkzeug.utils import secure_filename
 import shutil
 
 from flask import Flask, request, send_from_directory
-from backend.aws_helpers.s3_utils.s3_client import get_presigned_url_from_exec_file
+from backend.aws_helpers.s3_utils.s3_bucket_names import EXECUTION_BUCKET_NAME
+from backend.aws_helpers.s3_utils.s3_client import get_presigned_url_from_exec_file, write_to_bucket
 from backend.middleware import middleware
 from flask_cors import CORS
 
 from backend.common.ai_drive import dl_tabular_drive, dl_img_drive, ml_drive
-from backend.common.constants import UNZIPPED_DIR_NAME
+from backend.common.constants import ONNX_MODEL, SAVED_MODEL_DL, UNZIPPED_DIR_NAME
 from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
 from backend.aws_helpers.sqs_utils.sqs_client import add_to_training_queue
-from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, createUserExecutionsData, getAllUserExecutionsData
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, createUserExecutionsData, getAllUserExecutionsData, updateStatus
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 from backend.dl.detection import detection_img_drive
 
@@ -90,14 +91,17 @@ def tabular_run():
                 "progress": 0
             }
         )
-
         train_loss_results = dl_tabular_drive(user_arch, fileURL, params,
             json_csv_data_str, customModelName)
-
+        write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_DL)}")
+        write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(ONNX_MODEL)}")
+        write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}")
         print(train_loss_results)
+        updateStatus(execution_id, "SUCCESS")
         return send_train_results(train_loss_results)
 
     except Exception:
+        updateStatus(execution_id, "ERROR")
         print(traceback.format_exc())
         return send_traceback_error()
 

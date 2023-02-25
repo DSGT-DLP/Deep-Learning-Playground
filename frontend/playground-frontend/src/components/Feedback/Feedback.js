@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
 import { InlineWidget } from "react-calendly";
 
+const CALENDLY_URL = "https://calendly.com/dlp-dsgt/30min";
+
 const Feedback = () => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -47,13 +49,12 @@ const Feedback = () => {
         </div>
         <div>
           <div>"
-            <InlineWidget url="https://calendly.com/dlptest" styles={{marginTop: "-66px", minWidth:"320px", height:"750px"}}/>
+            <InlineWidget url={CALENDLY_URL} styles={{marginTop: "-66px", minWidth:"320px", height:"750px"}}/>
           </div>
         </div>
       </>
     );
   }
-  //embed calendly link here
 
   return (
     <>

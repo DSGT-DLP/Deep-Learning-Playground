@@ -39,17 +39,27 @@ const Feedback = () => {
         </div>
 
         <div className="sections" style={styles.content_section}>
-          <p style={{color: "0,0,0", fontSize: "5vh", textAlign: "center"}}>Feedback submitted!</p>
+          <p style={{ color: "0,0,0", fontSize: "5vh", textAlign: "center" }}>
+            Feedback submitted!
+          </p>
         </div>
         <div className="sections" style={styles.content_section}>
-          <p style={{color: "0,0,0", fontSize: "4vh", textAlign: "center"}} >
+          <p style={{ color: "0,0,0", fontSize: "4vh", textAlign: "center" }}>
             If you would like to discuss your feedback, feel free to schedule a
             15-20 minute meeting over Calendly
           </p>
         </div>
         <div>
-          <div>"
-            <InlineWidget url={CALENDLY_URL} styles={{marginTop: "-66px", minWidth:"320px", height:"750px"}}/>
+          <div>
+            "
+            <InlineWidget
+              url={CALENDLY_URL}
+              styles={{
+                marginTop: "-66px",
+                minWidth: "320px",
+                height: "750px",
+              }}
+            />
           </div>
         </div>
       </>

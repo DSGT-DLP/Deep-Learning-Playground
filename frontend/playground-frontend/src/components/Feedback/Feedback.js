@@ -37,17 +37,17 @@ const Feedback = () => {
         </div>
 
         <div className="sections" style={styles.content_section}>
-          <p>Feedback submitted!</p>
+          <p style={{color: "0,0,0", fontSize: "5vh", textAlign: "center"}}>Feedback submitted!</p>
         </div>
         <div className="sections" style={styles.content_section}>
-          <p>
+          <p style={{color: "0,0,0", fontSize: "4vh", textAlign: "center"}} >
             If you would like to discuss your feedback, feel free to schedule a
-            15-20 minute meeting over calendly
+            15-20 minute meeting over Calendly
           </p>
         </div>
         <div>
-          <div>
-            <InlineWidget url="https://calendly.com/dlptest" />
+          <div>"
+            <InlineWidget url="https://calendly.com/dlptest" styles={{marginTop: "-66px", minWidth:"320px", height:"750px"}}/>
           </div>
         </div>
       </>
@@ -106,7 +106,6 @@ const Feedback = () => {
           <TitleText text="Feedback" />
           <textarea
             placeholder="Type your feedback here"
-            rows="15"
             style={styles.feedback_area}
             onChange={(e) => setFeedback(e.target.value)}
           />

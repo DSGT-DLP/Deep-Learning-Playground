@@ -6,8 +6,14 @@ COPY requirements.txt .
 RUN apt-get update -y && apt-get install -y gcc && apt-get install -y curl && apt-get install -y unzip
 RUN pip install -r requirements.txt
 COPY . .
+ARG TARGETARCH
 
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+RUN if [ "${TARGETARCH}" = "arm64" ] ; then \
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" ; \
+    else \
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" ; \
+    fi
+
 RUN unzip awscliv2.zip
 RUN ./aws/install
 

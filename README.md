@@ -28,9 +28,11 @@ Have the following installed first:
 | Running the Backend                         | `conda activate dlplayground && python -m backend.driver`   |
 
 ## To run in `prod` mode:
-- If you're using Unix, run `REACT_APP_MODE=prod npm run startf` from the root of the project to start the frontend
-- If you're using Windows, run `set REACT_APP_MODE=prod && npm run startf` from the root of the project to start the frontend
+- To start the frontend:
+    - If you're using Unix, run `REACT_APP_MODE=prod npm run startf` from the root of the project
+    - If you're using Windows, run `set REACT_APP_MODE=prod && npm run startf` from the root of the project
 - Run the backend as usual
+- To run the SQS container, run the command in this [document](https://docs.google.com/document/d/1yYzT7CCUqxnShncHEeHC1MssABntJuKUN88pTXnh_HQ/edit#)
 
 # Development Practices
 ## GitGuardian Pre-commit Check

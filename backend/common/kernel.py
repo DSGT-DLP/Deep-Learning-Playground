@@ -17,7 +17,9 @@ def router(msg):
     '''
     Routes the message to the appropriate training function.
     '''
+    print("Message received")
     execution_id = msg['execution_id']
+    print(f"{execution_id} is marked as STARTING")
     updateStatus(execution_id=execution_id, status="STARTING")
     if msg['route'] == 'tabular-run':
         result = tabular_run_route(msg)
@@ -39,15 +41,19 @@ def router(msg):
         updateStatus(execution_id=execution_id, status="SUCCESS")
         s3_helper.write_to_bucket(SAVED_MODEL_ML, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_ML)}")
     elif msg['route'] == 'img-run':
+        print("Running Img run route")
         result = img_run_route(msg)
+        print(result)
         if result[1] != 200:
             updateStatus(execution_id=execution_id, status="ERROR")
             return
 
         updateStatus(execution_id=execution_id, status="SUCCESS")
+        print("execution id status updated after img run complete")
         s3_helper.write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_DL)}")
         s3_helper.write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(ONNX_MODEL)}")
         s3_helper.write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}")
+        print("img run result files successfully uploaded to s3")
     elif msg['route'] == 'object-detection':
         result = object_detection_route(msg)
         if result[1] != 200:

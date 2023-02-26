@@ -13,6 +13,7 @@ export { default as CodeSnippet } from "./Home/CodeSnippet";
 export { default as CodeSnippetML } from "./Home/CodeSnippetML";
 export { default as DropDown } from "./Home/DropDown";
 export { default as EmailInput } from "./Home/EmailInput";
+export { default as PhoneNumberInput } from "./Home/PhoneNumberInput";
 export { default as Input } from "./Home/Input";
 export { default as LayerChoice } from "./Home/LayerChoice";
 export { default as RectContainer } from "./Home/RectContainer";

@@ -6,12 +6,18 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import { Box, Button, IconButton } from "gestalt";
+import "gestalt/dist/gestalt.css";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { sendToBackend } from "../helper_functions/TalkWithBackend";
 import "./../../App.css";
+import { auth } from "../../firebase";
+import JSZip from "jszip";
+import saveAs from "file-saver";
 
 const rows = [
   {
@@ -62,7 +68,7 @@ const BlankGrid = () => {
 
 const StatusDisplay = ({ statusType, status }) => {
   const navigate = useNavigate();
-  if (statusType === "queued") {
+  if (statusType === "QUEUED") {
     return (
       <button
         className="grid-status-display grid-status-display-gray"
@@ -71,16 +77,43 @@ const StatusDisplay = ({ statusType, status }) => {
         Queued: {status}
       </button>
     );
-  } else if (statusType === "training") {
+  } else if (statusType === "STARTING") {
     return (
       <button
         className="grid-status-display grid-status-display-yellow"
         onClick={() => navigate("/")}
       >
-        Training: {status}
+        Training...
       </button>
     );
-  } else if (statusType === "finished") {
+  } else if (statusType === "UPLOADING") {
+    return (
+      <button
+        className="grid-status-display grid-status-display-blue"
+        onClick={() => navigate("/")}
+      >
+        Uploading...
+      </button>
+    );
+  } else if (statusType === "TRAINING") {
+    return (
+      <button
+        className="grid-status-display grid-status-display-blue"
+        onClick={() => navigate("/")}
+      >
+        Training...
+      </button>
+    );
+  } else if (statusType === "ERROR") {
+    return (
+      <button
+        className="grid-status-display grid-status-display-red"
+        onClick={() => navigate("/")}
+      >
+        Error
+      </button>
+    );
+  } else if (statusType === "SUCCESS") {
     return (
       <button
         className="grid-status-display grid-status-display-green"
@@ -102,9 +135,8 @@ const sameDay = (d1, d2) => {
   );
 };
 
-const formatDate = (unixTime) => {
+const formatDate = (date) => {
   const currDate = new Date();
-  const date = new Date(unixTime * 1000);
 
   const time = sameDay(date, currDate)
     ? date.toLocaleTimeString(undefined, {
@@ -126,63 +158,126 @@ const formatDate = (unixTime) => {
 
 const FilledGrid = () => {
   const navigate = useNavigate();
-
+  const [executiontable, setUserExecutionTable] = useState(null);
+  useEffect(() => {
+    getExecutionTable();
+  }, [auth.currentUser]);
+  const getExecutionTable = async () => {
+    if (auth.currentUser) {
+      const response = await sendToBackend("getExecutionsData", {});
+      let table = JSON.parse(response["record"]);
+      table.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      setUserExecutionTable(table);
+    } else {
+      setUserExecutionTable(null);
+    }
+  };
+  function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+  }
+  async function handleOnDownloadClick(e, row) {
+    e.event.stopPropagation();
+    const response = await sendToBackend("getExecutionsFilesPresignedUrls", {
+      exec_id: row.execution_id,
+    });
+    const zip = new JSZip();
+    await Promise.all(
+      [
+        [response.dl_results, "dl_results.csv"],
+        [response.model_onnx, "my_deep_learning_model.onnx"],
+        [response.model_pt, "model.pt"],
+      ].map(([url, filename]) =>
+        fetch(url, {
+          mode: "cors",
+        }).then((res) =>
+          res.blob().then((blob) => {
+            zip.file(filename, blob);
+          })
+        )
+      )
+    );
+    zip
+      .generateAsync({ type: "blob" })
+      .then((blob) => saveAs(blob, "results.zip"));
+  }
   return (
-    <TableContainer style={{ display: "flex", justifyContent: "center" }}>
-      <Table sx={{ minWidth: 400, m: 2 }}>
-        <TableHead>
-          <TableRow>
-            <TableCell className="dashboard-header">Name</TableCell>
-            <TableCell className="dashboard-header">Type</TableCell>
-            <TableCell className="dashboard-header" align="left">
-              Input
-            </TableCell>
-            <TableCell className="dashboard-header" align="left">
-              Date
-            </TableCell>
-            <TableCell className="dashboard-header" align="left">
-              Status
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.id}
-              sx={{
-                "&:last-child td, &:last-child th": { border: 0 },
-                cursor: "pointer",
+    <>
+      {executiontable ? (
+        <>
+          <Box padding={5}>
+            <Button
+              color="red"
+              size="md"
+              iconEnd="refresh"
+              text="Refresh"
+              onClick={() => {
+                getExecutionTable();
               }}
-              onClick={() => navigate("/")}
-              hover
-            >
-              <TableCell
-                component="th"
-                scope="row"
-                className="dashboard-header"
-              >
-                {row.name}
-              </TableCell>
-              <TableCell component="th" scope="row" className="row-style">
-                {row.type}
-              </TableCell>
-              <TableCell align="left" className="row-style">
-                {row.input}
-              </TableCell>
-              <TableCell align="left" className="row-style">
-                {formatDate(row.date)}
-              </TableCell>
-              <TableCell align="left">
-                <StatusDisplay
-                  statusType={row.statusType}
-                  status={row.status}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            />
+          </Box>
+          <TableContainer style={{ display: "flex", justifyContent: "center" }}>
+            <Table sx={{ minWidth: 400, m: 2 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell className="dashboard-header">Name</TableCell>
+                  <TableCell className="dashboard-header">Type</TableCell>
+                  <TableCell className="dashboard-header" align="left">
+                    Date
+                  </TableCell>
+                  <TableCell className="dashboard-header" align="left">
+                    Status
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {executiontable.map((row) => (
+                  <TableRow
+                    key={row.execution_id}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      cursor: "pointer",
+                    }}
+                    onClick={() => navigate("/")}
+                    hover
+                  >
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      className="dashboard-header"
+                    >
+                      {row.name}
+                    </TableCell>
+                    <TableCell component="th" scope="row" className="row-style">
+                      {toTitleCase(row.data_source)}
+                    </TableCell>
+                    <TableCell align="left" className="row-style">
+                      {formatDate(new Date(row.timestamp))}
+                    </TableCell>
+                    <TableCell align="left">
+                      <StatusDisplay
+                        statusType={row.status}
+                        status={`${row.progress.toFixed(2)}%`}
+                      />
+                    </TableCell>
+                    <TableCell align="left">
+                      <IconButton
+                        icon="download"
+                        accessibilityLabel={"Download"}
+                        size={"md"}
+                        disabled={row.status !== "SUCCESS"}
+                        onClick={(e) => handleOnDownloadClick(e, row)}
+                      ></IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </>
+      ) : null}
+    </>
   );
 };
 
@@ -204,6 +299,6 @@ const Dashboard = () => {
 export default Dashboard;
 
 StatusDisplay.propTypes = {
-  statusType: PropTypes.oneOf(["queued", "training", "finished"]),
+  statusType: PropTypes.string,
   status: PropTypes.string,
 };

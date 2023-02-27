@@ -327,3 +327,18 @@ def get_current_timestamp() -> str:
     :return: current UTC timestamp in the format 2022-12-31T17:59:59Z
     """
     return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+
+def generate_image_region_visualization(model_path, test_dataset_path, test_transforms):
+    """
+    Helper function that uses Captum Library to generate visualization of significant 
+    regions that an image classification model is using to base its decisions
+    
+    Helps provide interpretability to the user
+
+    Args:
+        model_path (str): file path to the .pt image model
+        test_dataset_path (DataLoader): DataLoader object for test set
+        test_transforms (list): Transforms to apply to the test set
+    """
+    #Captum code here!
+    pass

@@ -119,6 +119,7 @@ const ImageModels = () => {
       <Results
         dlpBackendResponse={dlpBackendResponse}
         problemType={PROBLEM_TYPES[0]}
+        choice="imagemodel"
       />
     ),
     [dlpBackendResponse, PROBLEM_TYPES[0]]

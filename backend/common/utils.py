@@ -15,12 +15,15 @@ from backend.common.constants import (
 )
 import pandas as pd
 import numpy as np
+import base64
 import torch
 import datetime
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
+from captum.attr import IntegratedGradients
 from enum import Enum
+from PIL import Image
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
 from sklearn.metrics import confusion_matrix, roc_curve, roc_auc_score
@@ -28,6 +31,7 @@ from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 import csv
 import os
 import json
+import io
 
 matplotlib.use("Agg")
 
@@ -328,7 +332,7 @@ def get_current_timestamp() -> str:
     """
     return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
 
-def generate_image_region_visualization(model_path, test_dataset_path, test_transforms):
+def generate_image_region_visualization(model_path, test_loader):
     """
     Helper function that uses Captum Library to generate visualization of significant 
     regions that an image classification model is using to base its decisions
@@ -337,8 +341,41 @@ def generate_image_region_visualization(model_path, test_dataset_path, test_tran
 
     Args:
         model_path (str): file path to the .pt image model
-        test_dataset_path (DataLoader): DataLoader object for test set
-        test_transforms (list): Transforms to apply to the test set
+        test_dataset_path (DataLoader): DataLoader object for test set (transforms on the test set have already been applied)
     """
     #Captum code here!
-    pass
+    
+    #load model
+    model = torch.load(model_path)
+    
+    #Integrated Gradients Attribution Algorithm
+    attribution_algo = IntegratedGradients(model)
+    
+    #Get image and label from test set
+    images, labels = next(iter(test_loader))
+    image = torch.unsqueeze(images[0], 0)
+    label = labels[0]
+    baseline = image * 0
+    
+    print(f"image dim: {image.shape}")
+    print(f"baseline dim: {baseline.shape}")
+    
+    #Compute Integrated Gradients Attribution
+    attribution = attribution_algo.attribute(image, target=label, baselines=baseline, return_convergence_delta=True)
+    print(f"attribution shape: {attribution.size()}")
+    
+    #Create a PNG image from attribution tensor and encode in base 64
+    attribution_np = attribution.squeeze(0).numpy()
+    
+    attribution_img = Image.fromarray(attribution_np, mode="L")
+    buffer = io.BytesIO()
+    attribution_img.save(buffer, format="PNG")
+    attribution_b64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
+
+    # Return the base64-encoded PNG image as a data URL
+    data_url = "data:image/png;base64," + attribution_b64
+
+    # Return the data URL as a JSON response
+    return data_url
+    
+    

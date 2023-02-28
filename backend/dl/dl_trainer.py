@@ -1,7 +1,7 @@
 from collections import Counter
 from backend.common.loss_functions import compute_loss, compute_img_loss
 from backend.dl.dl_eval import compute_accuracy, compute_correct
-from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE
+from backend.common.utils import generate_acc_plot, generate_loss_plot, generate_train_time_csv, generate_confusion_matrix, generate_AUC_ROC_CURVE, generate_image_region_visualization
 from backend.common.utils import ProblemType
 from backend.common.constants import (
     DEEP_LEARNING_RESULT_CSV_PATH,
@@ -373,6 +373,9 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
         auxiliary_outputs["category_list"] = category_list
 
         torch.save(model, SAVED_MODEL_DL)  # saving model into a pt file
+        
+        img_viz_url = generate_image_region_visualization(SAVED_MODEL_DL, test_loader)
+        auxiliary_outputs["img_viz"] = img_viz_url
 
         return auxiliary_outputs
 

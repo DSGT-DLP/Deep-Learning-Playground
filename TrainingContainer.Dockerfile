@@ -27,4 +27,4 @@ RUN aws configure set aws_secret_access_key $AWS_DEPLOY_SECRET_ACCESS_KEY
 
 ENV SQS_QUEUE_URL='https://sqs.us-west-2.amazonaws.com/521654603461/dlp-training-queue'
 
-CMD python -m backend.common.kernel
+CMD python -u -m backend.common.kernel

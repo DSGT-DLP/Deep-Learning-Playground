@@ -8,7 +8,7 @@ import backend.aws_helpers.sqs_utils.sqs_client as sqs_helper
 import backend.aws_helpers.s3_utils.s3_client as s3_helper
 from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME, EXECUTION_BUCKET_NAME
 from backend.common.constants import UNZIPPED_DIR_NAME, ONNX_MODEL, SAVED_MODEL_DL, SAVED_MODEL_ML, DEEP_LEARNING_RESULT_CSV_PATH, IMAGE_DETECTION_RESULT_CSV_PATH
-from backend.common.utils import csv_to_json
+from backend.common.utils import csv_to_json, get_current_timestamp
 from backend.common.ai_drive import dl_tabular_drive, ml_drive, dl_img_drive
 from backend.dl.detection import detection_img_drive
 from backend.aws_helpers.dynamo_db_utils.execution_db import updateStatus
@@ -215,7 +215,7 @@ def empty_message(message):
 # Polls for messages from the SQS queue, and handles them.
 while True:
     # Get message from queue
-    print("Polling for messages...\n")
+    print(get_current_timestamp(), "Polling for messages...\n")
     msg = sqs_helper.receive_message()
 
     if not empty_message(msg):

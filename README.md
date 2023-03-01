@@ -23,7 +23,7 @@ Have the following installed first:
 | -------------------------------------------------------- | ---------------------- |
 | Install (one-time) / Update Frontend Packages          | `npm run installf`     |
 | Install Backend Packages (one-time) | `npm run installb` |
-| Install Backend Packages (one-time) | `conda activate dlplayground && cd conda && conda env update -f environment.yml` |
+| Update Backend Packages (one-time) | `conda activate dlplayground && cd conda && conda env update -f environment.yml` |
 | Running the Frontend                                     | `npm run startf`       |
 | Running the Backend                         | `conda activate dlplayground && python -m backend.driver`   |
 

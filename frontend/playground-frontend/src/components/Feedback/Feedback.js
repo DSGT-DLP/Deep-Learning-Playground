@@ -4,6 +4,9 @@ import React, { useState } from "react";
 import { COLORS, GENERAL_STYLES } from "../../constants";
 import { toast } from "react-toastify";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
+import { InlineWidget } from "react-calendly";
+
+const CALENDLY_URL = "https://calendly.com/dlp-dsgt/30min";
 
 const Feedback = () => {
   const [email, setEmail] = useState("");
@@ -36,7 +39,28 @@ const Feedback = () => {
         </div>
 
         <div className="sections" style={styles.content_section}>
-          <p>Feedback submitted!</p>
+          <p style={{ color: "0,0,0", fontSize: "5vh", textAlign: "center" }}>
+            Feedback submitted!
+          </p>
+        </div>
+        <div className="sections" style={styles.content_section}>
+          <p style={{ color: "0,0,0", fontSize: "4vh", textAlign: "center" }}>
+            If you would like to discuss your feedback, feel free to schedule a
+            15-20 minute meeting over Calendly
+          </p>
+        </div>
+        <div>
+          <div>
+            "
+            <InlineWidget
+              url={CALENDLY_URL}
+              styles={{
+                marginTop: "-66px",
+                minWidth: "320px",
+                height: "750px",
+              }}
+            />
+          </div>
         </div>
       </>
     );
@@ -93,7 +117,6 @@ const Feedback = () => {
           <TitleText text="Feedback" />
           <textarea
             placeholder="Type your feedback here"
-            rows="15"
             style={styles.feedback_area}
             onChange={(e) => setFeedback(e.target.value)}
           />

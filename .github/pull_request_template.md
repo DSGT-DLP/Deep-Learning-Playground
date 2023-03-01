@@ -6,6 +6,6 @@
 
 **Testing Methodology**
 How did you test your changes and verify that existing 
-functionality not implemented
+functionality is not broken
 
 **Any other considerations**

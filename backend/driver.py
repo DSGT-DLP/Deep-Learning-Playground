@@ -5,18 +5,20 @@ from werkzeug.utils import secure_filename
 import shutil
 
 from flask import Flask, request, send_from_directory
+from backend.aws_helpers.s3_utils.s3_bucket_names import EXECUTION_BUCKET_NAME
+from backend.aws_helpers.s3_utils.s3_client import get_presigned_url_from_exec_file, write_to_bucket
 from backend.middleware import middleware
 from flask_cors import CORS
 
 from backend.common.ai_drive import dl_tabular_drive, dl_img_drive, ml_drive
-from backend.common.constants import UNZIPPED_DIR_NAME
+from backend.common.constants import ONNX_MODEL, SAVED_MODEL_DL, UNZIPPED_DIR_NAME
 from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
-from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, createUserExecutionsData
 from backend.aws_helpers.sqs_utils.sqs_client import add_to_training_queue
+from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, createUserExecutionsData, getAllUserExecutionsData, updateStatus
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
 from backend.dl.detection import detection_img_drive
 
@@ -60,7 +62,7 @@ def tabular_run():
 
         user_arch = request_data["user_arch"]
         fileURL = request_data["file_URL"]
-        uid = request.headers["uid"]
+        uid = request_data["user"]["uid"]
         json_csv_data_str = request_data["csv_data"]
         customModelName = request_data["custom_model_name"]
         execution_id = request_data["execution_id"]
@@ -89,14 +91,17 @@ def tabular_run():
                 "progress": 0
             }
         )
-
         train_loss_results = dl_tabular_drive(user_arch, fileURL, params,
             json_csv_data_str, customModelName)
-
+        write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_DL)}")
+        write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(ONNX_MODEL)}")
+        write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}")
         print(train_loss_results)
+        updateStatus(execution_id, "SUCCESS")
         return send_train_results(train_loss_results)
 
     except Exception:
+        updateStatus(execution_id, "ERROR")
         print(traceback.format_exc())
         return send_traceback_error()
 
@@ -146,7 +151,8 @@ def img_run():
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
         customModelName = request_data["custom_model_name"]
-
+        uid = request_data["user"]["uid"]
+        execution_id = request_data["execution_id"]
         train_loss_results = dl_img_drive(
             train_transform,
             test_transform,
@@ -159,7 +165,6 @@ def img_run():
             shuffle,
             IMAGE_UPLOAD_FOLDER,
         )
-
         print("training successfully finished")
         return send_train_results(train_loss_results)
 
@@ -282,6 +287,29 @@ def send_columns():
         print(traceback.format_exc())
         return send_traceback_error()
 
+@app.route("/api/getExecutionsData", methods=["POST"])
+def executions_table():
+    try:
+        request_data = json.loads(request.data)
+        user_id = request_data['user']['uid']
+        record = getAllUserExecutionsData(user_id)
+        return send_success({"record": record})
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+
+@app.route("/api/getExecutionsFilesPresignedUrls", methods=["POST"])
+def executions_files():
+    try:
+        request_data = json.loads(request.data)
+        exec_id = request_data['exec_id']
+        dl_results = get_presigned_url_from_exec_file(EXECUTION_BUCKET_NAME, exec_id, "dl_results.csv")
+        model_pt = get_presigned_url_from_exec_file(EXECUTION_BUCKET_NAME, exec_id, "model.pt")
+        model_onnx = get_presigned_url_from_exec_file(EXECUTION_BUCKET_NAME, exec_id, "my_deep_learning_model.onnx")
+        return send_success({"dl_results": dl_results, "model_pt": model_pt, "model_onnx": model_onnx})
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
 
 @app.route("/api/upload", methods=["POST"])
 def upload():
@@ -317,23 +345,6 @@ def writeToQueue() -> str:
             return send_success({"message": "Successfully added your training request to the queue"})
     except Exception:
         return send_error("Failed to queue data")
-    
-
-@app.route("/api/getUserExecutionsData", methods=["POST"])
-def getUserExecutionsData() -> str:
-    """
-    Retrieves an entry from the `execution-table` DynamoDB table given an `execution_id`. If does not exist, create a new entry corresponding to the given user_id.
-
-    E.g.
-    POST request to http://localhost:8000/api/getUserExecutionsData with body
-    {"execution_id": "fsdh", "user_id": "fweadshas"}
-    will return the execution_id = "fsdh" entry if it exists, else create a new entry with the given execution_id and other attributes present e.g. user_id (user_id must be present upon creating a new entry)
-
-    @return: A JSON string of the entry retrieved or created from the table
-    """
-    entryData = json.loads(request.data)
-    return getOrCreateUserExecutionsData(entryData)
-
 
 @app.route("/api/getUserProgressData", methods=["POST"])
 def getUserProgressData():
@@ -349,7 +360,7 @@ def getUserProgressData():
 @app.route("/api/updateUserProgressData", methods=["POST"])
 def updateUserProgressData():
     requestData = json.loads(request.data)
-    uid = requestData['uid']
+    uid = requestData['user']['uid']
     moduleID = str(requestData["moduleID"])
     sectionID = str(requestData["sectionID"])
     questionID = str(requestData["questionID"])
@@ -398,7 +409,7 @@ def createExecution(entryData: dict) -> dict:
     """
     entryData = {
         "execution_id": entryData["execution_id"], 
-        "user_id": entryData["user_id"], 
+        "user_id": entryData["user"]["uid"], 
         "name": entryData["custom_model_name"], 
         "data_source": entryData["data_source"], 
         "status": "QUEUED", 

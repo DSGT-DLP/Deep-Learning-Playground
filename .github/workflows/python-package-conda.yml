@@ -6,6 +6,8 @@ on:
       - "prod-deploy"
     paths:
       - 'backend/**'
+      - 'requirements.txt'
+      - 'conda/**'
   pull_request:
     paths:
       - 'backend/**'

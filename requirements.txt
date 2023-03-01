@@ -7,7 +7,7 @@ numpy
 pytest
 pandas
 scikit-learn
-scipy==1.7.3
+scipy==1.9.0
 boto3
 pyyaml
 pip

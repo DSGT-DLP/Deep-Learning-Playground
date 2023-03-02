@@ -28,6 +28,8 @@ import { sendToBackend } from "../../components/helper_functions/TalkWithBackend
 const Exercise = (props) => {
   const csvDataInput = [];
   const uploadedColumns = [];
+
+  // holds response data from model training
   const [dlpBackendResponse, setDLPBackendResponse] = useState(null);
   const [inputKey, setInputKey] = useState(0);
 
@@ -55,7 +57,7 @@ const Exercise = (props) => {
     }))
   );
   const [activeColumns, setActiveColumns] = useState([]);
-  const [finalAccuracy, setFinalAccuracy] = useState(0);
+  const [finalAccuracy, setFinalAccuracy] = useState("");
 
   const input_responses = {
     addedLayers: addedLayers,
@@ -80,6 +82,7 @@ const Exercise = (props) => {
 
   const inputColumnOptions = usingDefaultDataset.value ? [] : columnOptionsArray;
 
+  //handles change of target data
   const handleTargetChange = (e) => {
     setTargetCol(e);
     const csvColumnsCopy = JSON.parse(JSON.stringify(columnOptionsArray));
@@ -163,6 +166,7 @@ const Exercise = (props) => {
     },
   ];
 
+  // update user progress on model training completion
   async function updateUserProgress() {
     let requestData = {
       uid: props.user.uid,
@@ -216,7 +220,7 @@ const Exercise = (props) => {
       setFinalAccuracy(dlpBackendResponse["dl_results"][epochs - 1]["train_acc"]);
     }
 
-    if (finalAccuracy > props.exerciseObject.minAccuracy) {
+    if (finalAccuracy >= props.exerciseObject.minAccuracy) {
 
       updateUserProgress();
 
@@ -294,6 +298,7 @@ const Exercise = (props) => {
         <Results
           dlpBackendResponse={dlpBackendResponse}
           problemType={problemType}
+          simplified={true}
         />
       </div>
     ),
@@ -318,10 +323,13 @@ const Exercise = (props) => {
 
       <TitleText text="Deep Learning Results" />
       {ResultsMemo}
+      <br></br>
       {
-        (finalAccuracy !== 0) ? (<h5 className="heading1">Final Accuracy was: {finalAccuracy}</h5>) : <div></div>
+        (finalAccuracy !== 0) ? (<h4 id="FinalAccuracyDisplay">Final Accuracy was: {finalAccuracy.substring(0,6)}</h4>) : <div></div>
       }
-      
+      {
+        (finalAccuracy > props.exerciseObject.minAccuracy) ? (<h4 id="FinalAccuracyDisplay">You've met the required accuracy! Congrats!</h4>) : <div></div>
+      }
     </div>
   );
 };

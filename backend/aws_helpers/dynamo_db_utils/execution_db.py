@@ -125,7 +125,7 @@ def updateUserExecutionsData_(requestData: dict) -> str:
     return "{\"status\": \"success\"}"
 
 
-def updateStatus(execution_id: str, status: str) -> str:
+def updateStatus(execution_id: str, status: str, entryData: dict = None) -> str:
     """
     Updates the status of an entry from the `execution-table` DynamoDB table given an `execution_id`.
 
@@ -133,9 +133,14 @@ def updateStatus(execution_id: str, status: str) -> str:
     @param status: The new status of the entry
     @return a success status message if the update is successful
     """
-    dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
-    dynamoTable.update_record(execution_id, status=status, timestamp=get_current_timestamp())
-    return "{\"status\": \"success\"}"
+    try:
+        dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
+        dynamoTable.update_record(execution_id, status=status, timestamp=get_current_timestamp())
+        return "{\"status\": \"success\"}"
+    except:
+        entryData["status"] = status
+        dynamoTable.createUserExecutionsData(entryData)
+        return "{\"status\": \"success\"}"
 
 
 def validate_keys(requestData: dict, required_keys: list[str]) -> bool:

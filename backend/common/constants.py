@@ -10,6 +10,7 @@ ONNX_MODEL = (
 )
 LOSS_VIZ = "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_loss_plot.png"
 ACC_VIZ = "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_accuracy_plot.png"
+IMAGE_VISUALIZATIONS_PATH = "./frontend/playground-frontend/src/backend_outputs/visualization_output/"
 CONFUSION_VIZ = "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_confusion_matrix.png"
 AUC_ROC_VIZ = "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_AUC_ROC_Curve.png"
 SAVED_MODEL_DL = "./frontend/playground-frontend/src/backend_outputs/model.pt"

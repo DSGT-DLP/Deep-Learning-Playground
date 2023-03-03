@@ -58,40 +58,30 @@ export const validateParameter = (source, index, parameter) => {
 };
 
 // TABULAR
-export const validateTabularInputs = (user_arch, ...args) => {
-  args = args[0];
-  let alertMessage = "";
-  if (!user_arch?.length) alertMessage += "At least one layer must be added. ";
-  if (!args.customModelName)
-    alertMessage += "Custom model name must be specified. ";
-  if (!args.criterion) alertMessage += "A criterion must be specified. ";
-  if (!args.optimizerName)
-    alertMessage += "An optimizer name must be specified. ";
-  if (!args.problemType) alertMessage += "A problem type must be specified. ";
+export const validateTabularInputs = (user_arch, args) => {
+  if (!user_arch?.length) return "At least one layer must be added. ";
+  if (!args.customModelName) return "Custom model name must be specified. ";
+  if (!args.criterion) return "A criterion must be specified. ";
+  if (!args.optimizerName) return "An optimizer name must be specified. ";
+  if (!args.problemType) return "A problem type must be specified. ";
   if (!args.usingDefaultDataset) {
     if (!args.targetCol || !args.features?.length) {
-      alertMessage +=
-        "Must specify an input file, target, and features if not selecting default dataset. ";
+      return "Must specify an input file, target, and features if not selecting default dataset. ";
     }
     for (let i = 0; i < args.features?.length; i++) {
       if (args.targetCol === args.features[i]) {
-        alertMessage +=
-          "A column that is selected as the target column cannot also be a feature column. ";
-        break;
+        return "A column that is selected as the target column cannot also be a feature column. ";
       }
     }
     if (!args.csvDataInput && !args.fileURL) {
-      alertMessage +=
-        "Must specify an input file either from local storage or from an internet URL. ";
+      return "Must specify an input file either from local storage or from an internet URL. ";
     }
   }
-  if (args.batchSize < 2) alertMessage += "Batch size cannot be less than 2";
-  return alertMessage;
+  if (args.batchSize < 2) return "Batch size cannot be less than 2";
+  return "";
 };
 
-export const sendTabularJSON = (...args) => {
-  args = args[0];
-
+export const sendTabularJSON = (args) => {
   const csvDataStr = JSON.stringify(args.csvDataInput);
 
   return {
@@ -110,7 +100,7 @@ export const sendTabularJSON = (...args) => {
     shuffle: args.shuffle,
     csv_data: csvDataStr,
     file_URL: args.fileURL,
-    email: args.email,
+    notification: args.notification,
     custom_model_name: args.customModelName,
     data_source: "TABULAR",
   };

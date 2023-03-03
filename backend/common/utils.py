@@ -11,16 +11,21 @@ from backend.common.constants import (
     TEST,
     VAL_TEST_ACC,
     CONFUSION_VIZ,
-    AUC_ROC_VIZ
+    AUC_ROC_VIZ,
+    IMAGE_VISUALIZATIONS_PATH
 )
 import pandas as pd
 import numpy as np
+import base64
+import io
 import torch
 import datetime
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
+from captum.attr import IntegratedGradients
 from enum import Enum
+from PIL import Image
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
 from sklearn.metrics import confusion_matrix, roc_curve, roc_auc_score
@@ -30,6 +35,7 @@ import os
 import json
 from captum.attr import GuidedGradCam, GuidedBackprop
 from captum.attr import LayerActivation, LayerConductance, LayerGradCam
+from torch import nn
 
 matplotlib.use("Agg")
 
@@ -331,3 +337,68 @@ def get_current_timestamp() -> str:
     :return: current UTC timestamp in the format 2022-12-31T17:59:59Z
     """
     return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+
+def generate_image_region_visualization(model_path, test_loader):
+    """
+    Helper function that uses Captum Library to generate visualization of significant 
+    regions that an image classification model is using to base its decisions
+    
+    Helps provide interpretability to the user
+
+    Args:
+        model_path (str): file path to the .pt image model
+        test_dataset_path (DataLoader): DataLoader object for test set (transforms on the test set have already been applied)
+    """
+    #Captum code here!
+    
+    #load model
+    model = torch.load(model_path)
+    print("generating image visualizations")
+    # We don't want to train the model, so tell PyTorch not to compute gradients
+    # with respect to model parameters.
+    for param in model.parameters():
+        param.requires_grad = False
+    
+    # get image at selected idx
+    X_tensor, y_tensor = next(iter(test_loader))
+    
+    # get indices of any convolution layers. This might get more complicated as we have more layers
+    conv_layer_indices = []
+    for i,layer in enumerate(model.model.children()):
+        if isinstance(layer, nn.Conv2d):
+            conv_layer_indices.append(i)
+    conv_layer_indices
+    
+    # get guided gradcam image from last convolutional layer of Neural Network
+    gc_result = GuidedGradCam(model,model.model[conv_layer_indices[-1]])
+    attr_gc = gc_result.attribute(X_tensor, target=y_tensor)
+    
+    # generate image heatmap, and save it to directory. Code borrowed for CS 7643 Assignment 3
+    for i in range(attr_gc.shape[0]):
+        plt.clf()
+        plt.cla()
+
+        attr_preprocess=lambda attr: attr.detach().numpy()
+        cmap='viridis'
+        alpha=0.7
+
+        attributions = attr_gc[:,0]
+        N = attributions[0].shape[0]
+        plt.imshow(X_tensor[i,0])
+
+        attr = np.array(attr_preprocess(attributions[i]))
+        attr = (attr - np.mean(attr)) / np.std(attr).clip(1e-20)
+        attr = attr * 0.2 + 0.5
+        attr = attr.clip(0.0, 1.0)
+
+
+        plt.imshow(attr, cmap=cmap, alpha=alpha)
+        plt.savefig(f"{IMAGE_VISUALIZATIONS_PATH}/viz_image_{i}.png", bbox_inches = "tight")
+    
+    return
+
+
+    # Return the data URL as a JSON response
+    # return data_url
+    
+    

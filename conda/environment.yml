@@ -41,3 +41,4 @@ dependencies:
       - moto
       - docker
       - ggshield
+      - captum

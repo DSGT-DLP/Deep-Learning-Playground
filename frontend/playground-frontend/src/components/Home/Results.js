@@ -222,6 +222,17 @@ const Results = (props) => {
     );
   };
 
+  const ImageRegionVisualization = () => {
+    const img_viz_url = dlpBackendResponse?.auxiliary_outputs?.img_viz;
+
+    return (
+      <div>
+        {img_viz_url && <img src={img_viz_url}/>}
+      </div>
+    );
+
+  };
+
   return (
     <>
       {choice === "objectdetection" ? (
@@ -289,6 +300,7 @@ const Results = (props) => {
             </p>
           ) : null}
           {problemType.value === "classification" ? <ConfusionMatrix /> : null}
+          {choice === "imagemodel" ? ImageRegionVisualization() : null}
         </div>
       )}
     </>

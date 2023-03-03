@@ -4,8 +4,14 @@ FROM nikolaik/python-nodejs:latest
 EXPOSE 8000
 
 WORKDIR /
+ARG TARGETARCH
 
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+RUN if [ "${TARGETARCH}" = "arm64" ] ; then \
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" ; \
+    else \
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" ; \
+    fi
+
 RUN unzip awscliv2.zip
 RUN ./aws/install
 

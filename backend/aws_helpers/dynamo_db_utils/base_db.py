@@ -195,7 +195,7 @@ class BaseDDBUtil:
         try:
             self.table.put_item(
                 Item=item,
-                ConditionExpression=f"attribute_not_exists({partition_key_name})"
+                # ConditionExpression=f"attribute_not_exists({partition_key_name})"
             )
             return "Success"
         except ClientError as e:

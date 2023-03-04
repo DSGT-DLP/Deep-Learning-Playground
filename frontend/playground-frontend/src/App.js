@@ -46,7 +46,7 @@ function App() {
               }
             />
             <Route path="/health">
-                <h3>Hey There!!! The App is Healthy</h3>
+              <h3>Hey There!!! The App is Healthy</h3>
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/health" element={<Health />} />

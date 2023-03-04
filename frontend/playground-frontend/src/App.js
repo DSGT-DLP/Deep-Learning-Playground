@@ -46,7 +46,7 @@ function App() {
               }
             />
             <Route path="/login" element={<Login />} />
-            <Route path="/heath" element={<Health />} />
+            <Route path="/health" element={<Health />} />
             <Route path="/train" element={verifyLogin(<Home />)} />
             <Route path="/img-models" element={verifyLogin(<ImageModels />)} />
             <Route

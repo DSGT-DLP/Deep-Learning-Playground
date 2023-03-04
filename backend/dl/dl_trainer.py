@@ -13,6 +13,7 @@ from backend.common.constants import (
     TEST,
     VAL_TEST_ACC,
     SAVED_MODEL_DL,
+    ONNX_MODEL
 )
 import torch  # pytorch
 import torch.nn as nn
@@ -279,6 +280,8 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
         train_weights_count = Counter()
         test_weights_count = Counter()
 
+        input_dim = None
+
         for epoch in range(epochs):
             model.train(True)
 
@@ -293,7 +296,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
             for x in train_loader:
                 y = x[1]  # label for all images in the batch
                 x = x[0]  # (C, H, W) image
-
+                input_dim = x.shape
                 x, y = x.to(device), y.to(device)
                 optimizer.zero_grad()
                 pred = model(x)
@@ -312,7 +315,6 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
             train_loss.append(mean_train_loss)
 
             train_acc.append(mean_train_acc)
-
             model.train(False)
             loss, test_correct = 0, 0
             print("training for this epoch finished, going to validation")
@@ -321,11 +323,10 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
                 y = x[1]
                 x = x[0]
                 x, y = x.to(device), y.to(device)
-
+                input_dim = x.shape  
                 pred = model(x)
                 loss = compute_img_loss(criterion, pred, y, test_weights_count)
                 y_pred, y_true = torch.argmax(pred, axis=1), y.long().squeeze()
-
                 if (epoch == epochs - 1):
                     y_pred_last_epoch.append(pred.detach().numpy().squeeze())
                     labels_last_epoch.append(y.detach().numpy().squeeze())
@@ -373,7 +374,7 @@ def train_deep_image_classification(model, train_loader, test_loader, optimizer,
         auxiliary_outputs["category_list"] = category_list
 
         torch.save(model, SAVED_MODEL_DL)  # saving model into a pt file
-
+        torch.onnx.export(model, torch.randn(input_dim), ONNX_MODEL)
         return auxiliary_outputs
 
     except Exception:

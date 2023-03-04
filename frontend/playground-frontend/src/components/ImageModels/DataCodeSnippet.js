@@ -1,6 +1,5 @@
 import React from "react";
 import { PropTypes } from "prop-types";
-import { layerToString } from "../Home/CodeSnippet";
 
 const DataCodeSnippet = (props) => {
   const { backendResponse } = props;
@@ -19,6 +18,45 @@ const DataCodeSnippet = (props) => {
     );
   }
 };
+
+/**
+ * Depending on layer passed in, this function builds a string with layer's name, and parameters associated to it (if any)
+ * @param {layers} layer
+ * @returns string in form of <layer name>(<parameters>)
+ */
+function layerToString(layer) {
+  let layerToString = layer.object_name + "(";
+
+  if (layer.parameters !== undefined && layer.parameters !== null) {
+    const params = Object.keys(layer.parameters);
+    // params : [0: "inputSize", 1:"outputSize"]
+    if (params !== null && params !== undefined && params.length !== 0) {
+      // const paramList= Array{[params.length]}
+
+      const paramList = new Array(params.length);
+      for (let i = 0; i < params.length; i++) {
+        const param = params[i];
+        // param: "inputSize"
+
+        if (typeof layer.parameters[param] !== "undefined") {
+          paramList[layer.parameters[param].index] =
+            layer.parameters[param].value;
+        }
+      }
+      for (let i = 0; i < paramList.length; i++) {
+        layerToString += paramList[i];
+        layerToString += ",";
+      }
+
+      layerToString = layerToString.split("");
+      layerToString[layerToString.length - 1] = "";
+      layerToString = layerToString.join("");
+      // layerToString = layerToString.substring(0, layerToString.length)
+    }
+  }
+  layerToString += ")";
+  return layerToString;
+}
 
 function codeSnippetFormat(props) {
   let codeSnippet;

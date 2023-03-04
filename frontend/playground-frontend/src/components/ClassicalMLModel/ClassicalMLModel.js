@@ -45,7 +45,7 @@ const ClassicalMLModel = () => {
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
   const [csvDataInput, setCSVDataInput] = useState([]);
   const [uploadedColumns, setUploadedColumns] = useState([]);
-  // @ts-ignore
+  const [fileURL, setFileURL] = useState("");
   const [, setOldCSVDataInput] = useState([]);
   const [targetCol, setTargetCol] = useState(null);
   const [features, setFeatures] = useState([]);
@@ -189,7 +189,13 @@ const ClassicalMLModel = () => {
               fileName={fileName}
               setFileName={setFileName}
             />
-            <CSVInputURL />
+            <CSVInputURL
+              fileURL={fileURL}
+              setFileURL={setFileURL}
+              setCSVColumns={setUploadedColumns}
+              setCSVDataInput={setCSVDataInput}
+              setOldCSVDataInput={setOldCSVDataInput}
+            />
           </div>
 
           {addedLayers.map((_, i) => (

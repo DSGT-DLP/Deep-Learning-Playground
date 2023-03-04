@@ -93,6 +93,7 @@ def tabular_run():
         )
         train_loss_results = dl_tabular_drive(user_arch, fileURL, params,
             json_csv_data_str, customModelName)
+        train_loss_results["user_arch"] = user_arch
         write_to_bucket(SAVED_MODEL_DL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(SAVED_MODEL_DL)}")
         write_to_bucket(ONNX_MODEL, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(ONNX_MODEL)}")
         write_to_bucket(DEEP_LEARNING_RESULT_CSV_PATH, EXECUTION_BUCKET_NAME, f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}")
@@ -128,6 +129,7 @@ def ml_run():
             json_csv_data_str = json_csv_data_str,
             shuffle = shuffle
             )
+        train_loss_results["user_arch"] = user_model
         print(train_loss_results)
         return send_train_results(train_loss_results)
 
@@ -141,7 +143,7 @@ def img_run():
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
         request_data = json.loads(request.data)
-        
+
         train_transform = request_data["train_transform"]
         test_transform = request_data["test_transform"]
         user_arch = request_data["user_arch"]
@@ -166,6 +168,7 @@ def img_run():
             shuffle,
             IMAGE_UPLOAD_FOLDER,
         )
+        train_loss_results["user_arch"] = user_arch
         print("training successfully finished")
         return send_train_results(train_loss_results)
 

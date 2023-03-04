@@ -139,7 +139,7 @@ def updateStatus(execution_id: str, status: str, entryData: dict = None) -> str:
         return "{\"status\": \"success\"}"
     except:
         entryData["status"] = status
-        dynamoTable.createUserExecutionsData(entryData)
+        createUserExecutionsData(entryData)
         return "{\"status\": \"success\"}"
 
 

@@ -27,6 +27,7 @@ import {
 } from "../index";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
 import { toast } from "react-toastify";
+import DataTable from "react-data-table-component";
 
 const ClassicalMLModel = () => {
   const [customModelName, setCustomModelName] = useState(
@@ -145,6 +146,23 @@ const ClassicalMLModel = () => {
     setInputKey((e) => e + 1);
   };
 
+  const InputCSVDisplay = useMemo(() => {
+    return (
+      <>
+        <TitleText text="CSV Input" />
+        <p id="csvRender_caption">Only displaying the first 5 rows</p>
+        <DataTable
+          pagination
+          highlightOnHover
+          columns={uploadedColumns}
+          data={csvDataInput.slice(0, 5)}
+          className="dataTable"
+          noDataComponent="No entries to display"
+        />
+      </>
+    );
+  }, [csvDataInput]);
+
   useEffect(() => {
     (async () => {
       if (usingDefaultDataset.value) {
@@ -260,6 +278,8 @@ const ClassicalMLModel = () => {
       <TitleText text="Email (optional)" />
       <EmailInput email={email} setEmail={setEmail} />
 
+      <Spacer height={40} />
+      {InputCSVDisplay}
       <Spacer height={40} />
       <TitleText text="Machine Learning Results" />
       {ResultMemo}

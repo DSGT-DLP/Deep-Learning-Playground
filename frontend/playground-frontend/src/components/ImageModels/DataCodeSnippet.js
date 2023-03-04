@@ -10,7 +10,7 @@ const DataCodeSnippet = (props) => {
         <p style={{ margin: "2px" }}>Getting dataloaders</p>
         <textarea
           readOnly
-          rows="10"
+          rows={10}
           style={{ width: "100%" }}
           value={codeSnippetFormat(props)}
         />
@@ -29,14 +29,10 @@ function layerToString(layer) {
 
   if (layer.parameters !== undefined && layer.parameters !== null) {
     const params = Object.keys(layer.parameters);
-    // params : [0: "inputSize", 1:"outputSize"]
     if (params !== null && params !== undefined && params.length !== 0) {
-      // const paramList= Array{[params.length]}
-
       const paramList = new Array(params.length);
       for (let i = 0; i < params.length; i++) {
         const param = params[i];
-        // param: "inputSize"
 
         if (typeof layer.parameters[param] !== "undefined") {
           paramList[layer.parameters[param].index] =
@@ -51,7 +47,6 @@ function layerToString(layer) {
       layerToString = layerToString.split("");
       layerToString[layerToString.length - 1] = "";
       layerToString = layerToString.join("");
-      // layerToString = layerToString.substring(0, layerToString.length)
     }
   }
   layerToString += ")";

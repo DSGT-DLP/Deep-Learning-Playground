@@ -19,6 +19,7 @@ class ExecutionData(BaseData):
     data_source: str = None
     status: str = None
     progress: int = None
+    metadata: dict
     
 @enumclass(
     DataClass=ExecutionData,

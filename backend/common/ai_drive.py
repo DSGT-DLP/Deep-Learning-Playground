@@ -232,9 +232,19 @@ def ml_drive(
         else:
             if json_csv_data_str:
                 input_df = pd.read_json(json_csv_data_str, orient="records")
-
+                count = -1
+                valsToNums = {}
+                def to_nums(val):
+                    if val in valsToNums:
+                        return float(valsToNums[val])
+                    nonlocal count
+                    count += 1
+                    valsToNums[val] = count
+                    return float(count)
+                input_df[target] = input_df[target].map(to_nums)
                 y = input_df[target]
                 X = input_df[features]
+                print(input_df.head())
 
         if shuffle and problem_type.upper() == "CLASSIFICATION":
             X_train, X_test, y_train, y_test = train_test_split(

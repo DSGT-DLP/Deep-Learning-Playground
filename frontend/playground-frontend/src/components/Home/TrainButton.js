@@ -92,6 +92,7 @@ const TrainButton = (props) => {
   const validateInputs = (user_arch) => {
     let alertMessage = "";
     alertMessage = functionMap[choice][0](user_arch, props);
+
     if (alertMessage.length === 0) return true;
     toast.error(alertMessage);
     return false;
@@ -100,7 +101,6 @@ const TrainButton = (props) => {
   const onClick = async () => {
     setPendingResponse(true);
     setDLPBackendResponse(null);
-
     const user_arch = make_obj_param_list(props.addedLayers, "Model");
     if (user_arch === false) return;
 

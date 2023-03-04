@@ -110,12 +110,12 @@ def tabular_run():
 def ml_run():
     try:
         request_data = json.loads(request.data)
-        print(request_data)
 
         user_model = request_data["user_arch"]
         problem_type = request_data["problem_type"]
         target = request_data["target"]
         features = request_data["features"]
+        json_csv_data_str = request_data["csv_data"]
         default = request_data["using_default_dataset"]
         shuffle = request_data["shuffle"]
 
@@ -125,6 +125,7 @@ def ml_run():
             target = target,
             features = features,
             default = default,
+            json_csv_data_str = json_csv_data_str,
             shuffle = shuffle
             )
         print(train_loss_results)
@@ -140,7 +141,7 @@ def img_run():
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
         request_data = json.loads(request.data)
-
+        
         train_transform = request_data["train_transform"]
         test_transform = request_data["test_transform"]
         user_arch = request_data["user_arch"]

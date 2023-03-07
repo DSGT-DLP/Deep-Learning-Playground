@@ -30,11 +30,15 @@ class middleware:
         return url_map
     
     def __call__(self, environ, start_response):
-        request = Request(environ)
-        rule = self.url_map.bind_to_environ(environ).match()
-        endpoint = rule[0]
-        if (endpoint == 'test'):
-            return self.app(environ, start_response) #publicly accessible route
+        try:
+            request = Request(environ)
+            rule = self.url_map.bind_to_environ(environ).match()
+            endpoint = rule[0]
+            print(f"endpoint: {endpoint}")
+            if (endpoint is not None):
+                return self.app(environ, start_response) #exempt paths are publicly accessible
+        except Exception as e:
+            return send_error(environ, start_response)
         
         if (
             "Authorization" in request.headers

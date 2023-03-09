@@ -201,8 +201,9 @@ input.form-control {
 
 .layer-choice {
   background-color: var(--add-layer);
-  margin-right: 20px;
+  margin-right: 30px;
   margin-block: 10px;
+  width: 250px;
   position: relative;
   font-size: 1.5rem;
   font-weight: bold;

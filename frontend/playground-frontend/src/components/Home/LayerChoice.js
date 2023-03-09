@@ -45,7 +45,7 @@ const LayerChoice = (props) => {
       ref2={drag}
       style={{ opacity }}
       dataTestid="box"
-      className="d-flex justify-content-center align-items-center layer-box layer-choice text-center"
+      className="d-flex justify-content-center align-items-center layer-box layer-choice text-center p-2"
     >
       <div>
         <HtmlTooltip

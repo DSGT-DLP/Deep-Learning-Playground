@@ -17,6 +17,8 @@ export const URLs = {
   github: "https://github.com/karkir0003/Deep-Learning-Playground",
 };
 
+export const EXPECTED_FAILURE_HTTP_CODES = [400, 401, 403, 404, 405, 500];
+
 export const LAYOUT = {
   row: {
     display: "flex",
@@ -282,7 +284,7 @@ export const DEFAULT_DETECTION_TRANSFORMS = [
       size: {
         index: 0,
         parameter_name: "(H, W)",
-        value: "(32, 32)",
+        value: "(512, 512)",
         min: 1,
         max: 1000,
         parameter_type: "tuple",

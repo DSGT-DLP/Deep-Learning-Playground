@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import { COLORS } from "../../constants";
 import {
   validateParameter,
@@ -28,6 +29,7 @@ const TrainButton = (props) => {
   const [result, setResult] = useState(null);
   const [uploaded, setUploaded] = useState(false);
   const [trainParams, setTrainParams] = useState(null);
+  const navigate = useNavigate();
 
   const reset = () => {
     setPendingResponse(false);
@@ -145,11 +147,18 @@ const TrainButton = (props) => {
       formData.append("file", uploadFile);
       await uploadToBackend(formData);
     }
-    const trainResult = await train_and_output(
+    const trainState = await train_and_output(
       choice,
       functionMap[choice][1](paramList)
     );
-    setResult(trainResult);
+    if (process.env.REACT_APP_MODE === "prod") {
+      if (trainState.success) toast.success(trainState.message);
+      else toast.error(trainState.message);
+
+      navigate("/dashboard");
+    } else {
+      setResult(trainState);
+    }
   };
 
   useEffect(() => {
@@ -166,8 +175,8 @@ const TrainButton = (props) => {
   useEffect(() => {
     if (result) {
       if (result.success) {
-        if (props.email?.length) {
-          sendEmail(props.email, props.problemType);
+        if (props.notification?.email) {
+          sendEmail(props.notification.email, props.problemType);
         }
         toast.success(
           choice === "objectdetection"
@@ -205,7 +214,10 @@ const TrainButton = (props) => {
 
 TrainButton.propTypes = {
   addedLayers: PropTypes.array,
-  email: PropTypes.string,
+  notification: PropTypes.shape({
+    email: PropTypes.string,
+    number: PropTypes.string,
+  }),
   trainTransforms: PropTypes.array,
   testTransforms: PropTypes.array,
   transforms: PropTypes.array,

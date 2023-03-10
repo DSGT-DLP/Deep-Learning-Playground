@@ -1,11 +1,16 @@
-# FROM nikolaik/python3.9-nodejs16
-FROM nikolaik/python-nodejs:latest
+FROM nikolaik/python-nodejs:python3.9-nodejs18
 
 EXPOSE 8000
 
 WORKDIR /
+ARG TARGETARCH
 
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN if [ "${TARGETARCH}" = "arm64" ] ; then \
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" ; \
+    else \
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" ; \
+    fi
+
 RUN unzip awscliv2.zip
 RUN ./aws/install
 
@@ -28,4 +33,3 @@ RUN npm run secrets:deploy
 RUN npm run build:prod
 
 CMD python -m backend.driver
-

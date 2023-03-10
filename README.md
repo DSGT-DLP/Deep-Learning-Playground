@@ -21,10 +21,18 @@ Have the following installed first:
 ## To start on localhost:
 | Action                                                   | Command                |
 | -------------------------------------------------------- | ---------------------- |
-| Install / Update Frontend Packages (one-time)            | `npm run installf`     |
-| Install / Update Backend Packages (one-time) | `npm run installb` |
+| Install (one-time) / Update Frontend Packages          | `npm run installf`     |
+| Install Backend Packages (one-time) | `npm run installb` |
+| Update Backend Packages (one-time) | `conda activate dlplayground && cd conda && conda env update -f environment.yml` |
 | Running the Frontend                                     | `npm run startf`       |
-| Running the Backend                         | `npm run startb`   |
+| Running the Backend                         | `conda activate dlplayground && python -m backend.driver`   |
+
+## To run in `prod` mode:
+- To start the frontend:
+    - If you're using Unix, run `REACT_APP_MODE=prod npm run startf` from the root of the project
+    - If you're using Windows, run `set REACT_APP_MODE=prod && npm run startf` from the root of the project
+- Run the backend as usual
+- To run the SQS container, run the command in this [document](https://docs.google.com/document/d/1yYzT7CCUqxnShncHEeHC1MssABntJuKUN88pTXnh_HQ/edit#)
 
 # Development Practices
 ## GitGuardian Pre-commit Check
@@ -62,7 +70,7 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 
 1. For complete functionality with the backend, first, start the backend using the instructions above. The backend will be live at http://localhost:8000/
 
-2. Then in a separate terminal, start the frontend development server. After installing the prerequisites above, run the following commands:
+2. Then in a separate terminal, start the frontend development server. After installing the prerequisites above, run the shortcut above or run the following commands:
 
     ```
     cd frontend\playground-frontend

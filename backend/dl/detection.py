@@ -8,6 +8,7 @@ from backend.aws_helpers.aws_rekognition_utils.rekognition_client import rekogni
 import os
 from itertools import cycle
 from backend.dl.dl_model_parser import parse_deep_user_architecture
+import csv
 
 def transform_image(img_file, transforms):
     img = Image.open(img_file)
@@ -55,6 +56,21 @@ def show_bounding_boxes(image, box_sets, names, colors):
     im_b64 = base64.b64encode(im_bytes)
     return im_b64 
 
+def write_to_csv(label_set):
+    if label_set:
+        backend_dir = (
+            ""
+            if (os.getcwd()).split("\\")[-1].split("/")[-1] == "backend"
+            else "backend"
+            if ("backend" in os.listdir(os.getcwd()))
+            else "../backend"
+        )
+        keys = label_set[0].keys()
+        with open(os.path.join(backend_dir, "detection_results.csv"), 'w', newline = '') as f:
+            writer = csv.DictWriter(f, keys)
+            writer.writeheader()
+            writer.writerows(label_set)
+
 def detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type, transforms):   
     for x in os.listdir(IMAGE_UPLOAD_FOLDER):
         if x != ".gitkeep":
@@ -66,4 +82,5 @@ def detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type, trans
         im_b64, label_set = rekognition_detection(image, problem_type)
     elif (detection_type == "yolo"):
         im_b64, label_set = yolo_detection(image)
+    write_to_csv(label_set)
     return { "auxiliary_outputs" : { "image_data" : im_b64.decode('ascii') }, "dl_results" : label_set }

@@ -15,6 +15,7 @@ import {
   Forgot,
   AccountSettings,
   ObjectDetection,
+  Health,
 } from "./components";
 import Home from "./Home";
 import { ToastContainer } from "react-toastify";
@@ -44,7 +45,11 @@ function App() {
                 )
               }
             />
+            <Route path="/health">
+              <h3>Hey There!!! The App is Healthy</h3>
+            </Route>
             <Route path="/login" element={<Login />} />
+            <Route path="/health" element={<Health />} />
             <Route path="/train" element={verifyLogin(<Home />)} />
             <Route path="/img-models" element={verifyLogin(<ImageModels />)} />
             <Route
@@ -72,7 +77,7 @@ function App() {
               element={verifyLogin(<LearnContent />)}
             />
           </Routes>
-          <ToastContainer position="top-center" />
+          <ToastContainer position="top-center" autoClose={2500} />
         </div>
         <Footer />
       </BrowserRouter>

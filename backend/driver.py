@@ -37,8 +37,9 @@ app = Flask(
     static_folder=os.path.join(
         os.getcwd(), "frontend", "playground-frontend", "build"
     ),
+    static_url_path=''
 )
-CORS(app, origins="*")
+CORS(app)
 
 app.wsgi_app = middleware(app.wsgi_app, exempt_paths=['/test', '/'])
 

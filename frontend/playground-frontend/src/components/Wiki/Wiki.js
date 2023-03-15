@@ -81,7 +81,11 @@ const render_all_layer_info = (layer_wiki) => {
   const body = [];
   for (const layer_element of layer_wiki) {
     body.push(
-      <ul className="collapsed-layer" id={layer_element.id}>
+      <ul
+        className="collapsed-layer"
+        id={layer_element.id}
+        key={layer_element.id}
+      >
         <li key={layer_element.title}>{render_layer_info(layer_element)}</li>
       </ul>
     );

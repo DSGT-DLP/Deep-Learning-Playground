@@ -27,9 +27,9 @@ const DataCodeSnippet = (props) => {
 function layerToString(layer) {
   let layerToString = layer.object_name + "(";
 
-  if (layer.parameters !== undefined && layer.parameters !== null) {
+  if (layer.parameters != null) {
     const params = Object.keys(layer.parameters);
-    if (params !== null && params !== undefined && params.length !== 0) {
+    if (params?.length !== 0) {
       const paramList = new Array(params.length);
       for (let i = 0; i < params.length; i++) {
         const param = params[i];

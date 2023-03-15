@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { COLORS, LAYOUT } from "../../constants";
 import { DropDown } from "..";
 // import storage from 'local-storage-fallback';
-import "./../../App.css";
 
 const Input = (props) => {
   const {

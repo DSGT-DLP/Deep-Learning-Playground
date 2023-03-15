@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   BOOL_OPTIONS,
   DEFAULT_DATASETS,
@@ -25,13 +25,18 @@ import {
   CSVInputFile,
   CSVInputURL,
 } from "../index";
+import { sendToBackend } from "../helper_functions/TalkWithBackend";
+import { toast } from "react-toastify";
+import DataTable from "react-data-table-component";
 
 const ClassicalMLModel = () => {
   const [customModelName, setCustomModelName] = useState(
     `Model ${new Date().toLocaleString()}`
   );
   const [addedLayers, setAddedLayers] = useState([]);
-  const [usingDefaultDataset, setUsingDefaultDataset] = useState(null);
+  const [usingDefaultDataset, setUsingDefaultDataset] = useState(
+    DEFAULT_DATASETS[0]
+  );
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [email, setEmail] = useState("");
   const [dlpBackendResponse, setDLPBackendResponse] = useState();
@@ -39,15 +44,64 @@ const ClassicalMLModel = () => {
   const [inputKey, setInputKey] = useState(0);
   const [testSize, setTestSize] = useState(0.2);
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
+  const [csvDataInput, setCSVDataInput] = useState([]);
+  const [uploadedColumns, setUploadedColumns] = useState([]);
+  const [fileURL, setFileURL] = useState("");
+  const [, setOldCSVDataInput] = useState([]);
+  const [targetCol, setTargetCol] = useState(null);
+  const [features, setFeatures] = useState([]);
+  const [fileName, setFileName] = useState(null);
+  const [activeColumns, setActiveColumns] = useState([]);
+  const [inputFeatureColumnOptions, setInputFeatureColumnOptions] = useState(
+    uploadedColumns.map((e, i) => ({
+      label: e.name,
+      value: i,
+    }))
+  );
   const input_responses = {
     shuffle: shuffle?.value,
     problemType: problemType?.value,
     addedLayers: addedLayers,
+    targetCol: targetCol?.label,
+    features: features?.map((e) => e.label),
     usingDefaultDataset: usingDefaultDataset?.value,
     customModelName: customModelName,
+    csvDataInput: csvDataInput,
   };
+  const columnOptionsArray = activeColumns.map((e, i) => ({
+    label: e.name || e,
+    value: i,
+  }));
+  const handleTargetChange = (e) => {
+    setTargetCol(e);
+    const csvColumnsCopy = JSON.parse(JSON.stringify(columnOptionsArray));
+    let featuresCopy = JSON.parse(JSON.stringify(features));
+    csvColumnsCopy.splice(e.value, 1);
+    if (featuresCopy) {
+      featuresCopy = featuresCopy.filter((item) => item.value !== e.value);
+      setInputKey((e) => e + 1);
+      setFeatures(featuresCopy);
+    }
+    setInputFeatureColumnOptions(csvColumnsCopy);
+  };
+  const inputColumnOptions = usingDefaultDataset.value
+    ? []
+    : columnOptionsArray;
 
   const input_queries = [
+    {
+      queryText: "Target Column",
+      options: inputColumnOptions,
+      onChange: handleTargetChange,
+      defaultValue: targetCol,
+    },
+    {
+      queryText: "Features",
+      options: inputFeatureColumnOptions,
+      onChange: setFeatures,
+      isMultiSelect: true,
+      defaultValue: features,
+    },
     {
       queryText: "Default",
       options: DEFAULT_DATASETS,
@@ -92,6 +146,41 @@ const ClassicalMLModel = () => {
     setInputKey((e) => e + 1);
   };
 
+  const InputCSVDisplay = useMemo(() => {
+    return (
+      <>
+        <TitleText text="CSV Input" />
+        <p id="csvRender_caption">Only displaying the first 5 rows</p>
+        <DataTable
+          pagination
+          highlightOnHover
+          columns={uploadedColumns}
+          data={csvDataInput.slice(0, 5)}
+          className="dataTable"
+          noDataComponent="No entries to display"
+        />
+      </>
+    );
+  }, [csvDataInput]);
+
+  useEffect(() => {
+    (async () => {
+      if (usingDefaultDataset.value) {
+        const datasetResult = await sendToBackend("defaultDataset", {
+          using_default_dataset: usingDefaultDataset.value,
+        });
+
+        if (!datasetResult.success) {
+          toast.error(datasetResult.message);
+        } else {
+          setActiveColumns(datasetResult.columns);
+        }
+      } else {
+        setActiveColumns(uploadedColumns);
+      }
+    })();
+  }, [usingDefaultDataset, uploadedColumns]);
+
   return (
     <div id="ml-models">
       <DndProvider backend={HTML5Backend}>
@@ -111,8 +200,20 @@ const ClassicalMLModel = () => {
         <TitleText text="Implemented Layers" />
         <BackgroundLayout>
           <div className="input-container d-flex flex-column align-items-center justify-content-center">
-            <CSVInputFile />
-            <CSVInputURL />
+            <CSVInputFile
+              setData={setCSVDataInput}
+              setColumns={setUploadedColumns}
+              setOldData={setOldCSVDataInput}
+              fileName={fileName}
+              setFileName={setFileName}
+            />
+            <CSVInputURL
+              fileURL={fileURL}
+              setFileURL={setFileURL}
+              setCSVColumns={setUploadedColumns}
+              setCSVDataInput={setCSVDataInput}
+              setOldCSVDataInput={setOldCSVDataInput}
+            />
           </div>
 
           {addedLayers.map((_, i) => (
@@ -177,6 +278,8 @@ const ClassicalMLModel = () => {
       <TitleText text="Email (optional)" />
       <EmailInput email={email} setEmail={setEmail} />
 
+      <Spacer height={40} />
+      {InputCSVDisplay}
       <Spacer height={40} />
       <TitleText text="Machine Learning Results" />
       {ResultMemo}

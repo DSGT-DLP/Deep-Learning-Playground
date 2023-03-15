@@ -4,7 +4,8 @@ import { FaCopy } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 const CodeSnippetML = (props) => {
-  const { backendResponse, layers } = props;
+  const { backendResponse } = props;
+  const layers = backendResponse?.auxiliary_outputs.user_arch;
   if (!backendResponse?.success) {
     return (
       backendResponse?.message || (
@@ -12,7 +13,6 @@ const CodeSnippetML = (props) => {
       )
     );
   }
-
   return (
     <div id="code-snippet-div">
       <textarea
@@ -36,7 +36,7 @@ const CodeSnippetML = (props) => {
 
 /**
  * This function returns necessary code skeleton to train data from local terminal
- * @param {layers[]} layers
+ * @param {string[]} layers
  * @returns string with correct python syntax to 'train' data
  */
 function codeSnippetFormat(layers) {
@@ -45,7 +45,7 @@ function codeSnippetFormat(layers) {
     "\n" +
     "# import pickle\n\n" +
     "model = " +
-    layerToString(layers[0]) +
+    layers[0].split(".").at(-1) +
     "\n\n" +
     "## un-comment below code if loading model from a .pkl file, replace PATH with the location path of the .pkl file \n" +
     "# with open(PATH, 'rb') as f: \n" +
@@ -55,7 +55,7 @@ function codeSnippetFormat(layers) {
 }
 
 export function create_import_statement(layer) {
-  const full_model_name = layer.object_name;
+  const full_model_name = layer.split("(")[0];
   const components = full_model_name.split(".");
   const model_name = components[components.length - 1];
 
@@ -66,55 +66,10 @@ export function create_import_statement(layer) {
     model_name;
   return import_statement;
 }
-/**
- * Depending on layer passed in, this function builds a string with layer's name, and parameters associated to it (if any)
- * @param {layers} layer
- * @returns string in form of <layer name>(<parameters>)
- */
-export function layerToString(layer) {
-  const components = layer.object_name.split(".");
-  let layerToString = components[components.length - 1] + "(";
 
-  if (layer.parameters !== undefined && layer.parameters !== null) {
-    const params = Object.keys(layer.parameters);
-    // params : [0: "inputSize", 1:"outputSize"]
-    if (params !== null && params !== undefined && params.length !== 0) {
-      // const paramList= Array{[params.length]}
-
-      const paramList = new Array(params.length);
-      for (let i = 0; i < params.length; i++) {
-        const param = params[i];
-        // param: "inputSize"
-
-        if (typeof layer.parameters[param] !== "undefined") {
-          if (layer.parameters[param].parameter_type === "text") {
-            paramList[layer.parameters[param].index] =
-              layer.parameters[param].kwarg +
-              '"' +
-              layer.parameters[param].value +
-              '"';
-          } else {
-            paramList[layer.parameters[param].index] =
-              layer.parameters[param].kwarg + layer.parameters[param].value;
-          }
-        }
-      }
-      for (let i = 0; i < paramList.length; i++) {
-        layerToString += paramList[i];
-        layerToString += ",";
-      }
-
-      layerToString = layerToString.split("");
-      layerToString[layerToString.length - 1] = "";
-      layerToString = layerToString.join("");
-      // layerToString = layerToString.substring(0, layerToString.length)
-    }
-  }
-  layerToString += ")";
-  return layerToString;
-}
 CodeSnippetML.propTypes = {
   backendResponse: PropTypes.shape({
+    auxiliary_outputs: PropTypes.object,
     success: PropTypes.bool,
     message: PropTypes.string,
   }),

@@ -1,22 +1,25 @@
-import React from 'react'
-import { Form } from 'react-bootstrap'
-import { useDispatch, useSelector } from 'react-redux'
-import { setModelName } from '../../redux/train'
+import React from "react";
+import PropTypes from "prop-types";
+import { Form } from "react-bootstrap";
 
-const CustomModelName = () => {
-  const customModelName = useSelector((state) => state.train.customModelName)
-  const dispatch = useDispatch()
+const CustomModelName = (props) => {
+  const { customModelName, setCustomModelName } = props;
   return (
     <>
       <Form.Control
-        className='model-name-input'
-        placeholder='Give a custom model name'
-        value={customModelName}
-        onChange={(e) => dispatch(setModelName(e.target.value))}
+        className="model-name-input"
+        placeholder="Give a custom model name"
+        defaultValue={customModelName}
+        onBlur={(e) => setCustomModelName(e.target.value)}
         maxLength={255}
       />
     </>
-  )
-}
+  );
+};
 
-export default CustomModelName
+CustomModelName.propTypes = {
+  customModelName: PropTypes.string.isRequired,
+  setCustomModelName: PropTypes.func.isRequired,
+};
+
+export default CustomModelName;

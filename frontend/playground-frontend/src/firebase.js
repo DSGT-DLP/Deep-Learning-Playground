@@ -37,7 +37,9 @@ export const updateUserProfile = async (
   if (displayName != null) newDetails.displayName = displayName;
   if (photoURL != null) newDetails.photoURL = photoURL;
   await updateProfile(auth.currentUser, newDetails)
-    .then(() => {})
+    .then(() => {
+      /* */
+    })
     .catch((e) => toast.error(`Error: ${e.code}`, { autoClose: 1000 }));
 };
 

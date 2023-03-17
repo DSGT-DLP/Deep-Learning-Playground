@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 export const currentUserSlice = createSlice({
-  name: 'currentUser',
+  name: "currentUser",
   initialState: {
     email: null,
     uid: null,
@@ -10,24 +10,24 @@ export const currentUserSlice = createSlice({
   },
   reducers: {
     setCurrentUser: (state, action) => {
-      const payload = action.payload
+      const payload = action.payload;
       if (!payload) {
-        state.email = null
-        state.uid = null
-        state.displayName = null
-        state.emailVerified = null
-        return
+        state.email = null;
+        state.uid = null;
+        state.displayName = null;
+        state.emailVerified = null;
+        return;
       }
 
-      const { email, uid, displayName, emailVerified } = payload
-      state.email = email ?? null
-      state.uid = uid ?? null
-      state.displayName = displayName ?? null
-      state.emailVerified = emailVerified ?? null
+      const { email, uid, displayName, emailVerified } = payload;
+      state.email = email ?? null;
+      state.uid = uid ?? null;
+      state.displayName = displayName ?? null;
+      state.emailVerified = emailVerified ?? null;
     },
   },
-})
+});
 
-export const { setCurrentUser } = currentUserSlice.actions
+export const { setCurrentUser } = currentUserSlice.actions;
 
-export default currentUserSlice.reducer
+export default currentUserSlice.reducer;

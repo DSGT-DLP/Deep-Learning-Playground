@@ -1,5 +1,5 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from "react";
+import PropTypes from "prop-types";
 
 const RectContainer = (props) => {
   return (
@@ -11,8 +11,8 @@ const RectContainer = (props) => {
     >
       {props.children}
     </div>
-  )
-}
+  );
+};
 
 RectContainer.propTypes = {
   children: PropTypes.node,
@@ -23,6 +23,6 @@ RectContainer.propTypes = {
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
   ]),
   dataTestid: PropTypes.node,
-}
+};
 
-export default RectContainer
+export default RectContainer;

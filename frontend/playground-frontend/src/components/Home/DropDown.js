@@ -1,10 +1,10 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Select from 'react-select'
-import { GENERAL_STYLES } from '../../constants'
+import React from "react";
+import PropTypes from "prop-types";
+import Select from "react-select";
+import { GENERAL_STYLES } from "../../constants";
 
 const DropDown = (props) => {
-  const { options, onChange, defaultValue, isMulti } = props
+  const { options, onChange, defaultValue, isMulti } = props;
 
   return (
     <Select
@@ -14,8 +14,8 @@ const DropDown = (props) => {
       defaultValue={defaultValue}
       isMulti={isMulti}
     />
-  )
-}
+  );
+};
 
 DropDown.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object),
@@ -27,16 +27,16 @@ DropDown.propTypes = {
     PropTypes.array,
   ]),
   isMulti: PropTypes.bool,
-}
+};
 
-export default DropDown
+export default DropDown;
 
 const dropdownStyes = {
   control: (base) => ({
     ...base,
     ...GENERAL_STYLES.p,
-    border: 'none',
-    backgroundColor: 'transparent',
+    border: "none",
+    backgroundColor: "transparent",
     fontSize: 18,
   }),
   menu: (base) => ({
@@ -44,4 +44,4 @@ const dropdownStyes = {
     ...GENERAL_STYLES.p,
     fontSize: 18,
   }),
-}
+};

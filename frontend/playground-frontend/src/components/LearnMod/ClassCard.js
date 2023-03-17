@@ -1,38 +1,41 @@
-import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 const ClassCard = (props) => {
-  const [pointsEarned, setPointsEarned] = useState(0)
+  const [pointsEarned, setPointsEarned] = useState(0);
 
-  const points = props.info.points
+  const points = props.info.points;
 
   // get updated user progress
   useEffect(() => {
     if (props.moduleProgress != null) {
-      setPointsEarned(props.moduleProgress.modulePoints)
+      setPointsEarned(props.moduleProgress.modulePoints);
     }
-  })
+  });
 
-  let completed = false
+  let completed = false;
   if (pointsEarned === points) {
-    completed = true
+    completed = true;
   }
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const sectionSpec = {
     moduleContent: props.info,
     subsection: 0,
-  }
+  };
 
   return (
-    <div className='class' style={completed ? { border: '3px solid green' } : {}}>
-      <div className='classHeader'>
-        <h3 id='classTitle'> {props.info.title} </h3>
-        <div className='circleWrap'>
+    <div
+      className="class"
+      style={completed ? { border: "3px solid green" } : {}}
+    >
+      <div className="classHeader">
+        <h3 id="classTitle"> {props.info.title} </h3>
+        <div className="circleWrap">
           <div
-            className='circleFill'
+            className="circleFill"
             style={
               completed
                 ? {
@@ -47,37 +50,39 @@ const ClassCard = (props) => {
                   }
             }
           >
-            <div className='circleInFill'>
-              <span className='textInCircle'>{Math.floor((pointsEarned / points) * 100)}%</span>
+            <div className="circleInFill">
+              <span className="textInCircle">
+                {Math.floor((pointsEarned / points) * 100)}%
+              </span>
             </div>
           </div>
         </div>
       </div>
-      <div className='classBody'>
-        <div className='classBodyLeft'>
+      <div className="classBody">
+        <div className="classBodyLeft">
           {props.info.subClasses.map((subClass, index) => {
             return (
-              <p id='classBodyText' key={index}>
+              <p id="classBodyText" key={index}>
                 {subClass.title}
               </p>
-            )
+            );
           })}
         </div>
-        <div className='classBodyRight'>
+        <div className="classBodyRight">
           {props.info.subClasses.map((subClass, index) => {
             return (
-              <div className='progressBar' key={index} id='subClassBar'>
+              <div className="progressBar" key={index} id="subClassBar">
                 <div
-                  className='progressContainer'
-                  id='subClassBar'
-                  style={completed ? { border: '3px solid green' } : {}}
+                  className="progressContainer"
+                  id="subClassBar"
+                  style={completed ? { border: "3px solid green" } : {}}
                 >
                   <div
-                    className='progressFill'
+                    className="progressFill"
                     style={
                       completed
                         ? {
-                            backgroundColor: 'green',
+                            backgroundColor: "green",
                             width: `${pointsEarned}%`,
                           }
                         : { width: `${pointsEarned}%` }
@@ -85,28 +90,28 @@ const ClassCard = (props) => {
                   ></div>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </div>
-      <div className='classFooter'>
+      <div className="classFooter">
         <button
-          id='classBtn'
-          onClick={() => navigate('/LearnContent', { state: sectionSpec })}
-          style={completed ? { border: '3px solid green' } : {}}
+          id="classBtn"
+          onClick={() => navigate("/LearnContent", { state: sectionSpec })}
+          style={completed ? { border: "3px solid green" } : {}}
         >
-          {completed ? 'Completed' : 'Start'}
+          {completed ? "Completed" : "Start"}
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const propTypes = {
   info: PropTypes.object,
   user: PropTypes.object,
   moduleProgress: PropTypes.object,
-}
-ClassCard.propTypes = propTypes
+};
+ClassCard.propTypes = propTypes;
 
-export default ClassCard
+export default ClassCard;

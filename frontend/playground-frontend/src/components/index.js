@@ -1,68 +1,68 @@
 // General
-export { default as TitleText } from './general/TitleText'
-export { default as DButton } from './general/DButton'
-export { default as Spacer } from './general/Spacer'
+export { default as TitleText } from "./general/TitleText";
+export { default as DButton } from "./general/DButton";
+export { default as Spacer } from "./general/Spacer";
 
 // Home
-export { default as AddNewLayer } from './Home/AddNewLayer'
-export { default as AddedLayer } from './Home/AddedLayer'
-export { default as BackgroundLayout } from './Home/BackgroundLayout'
-export { default as CSVInputFile } from './Home/CSVInputFile'
-export { default as CSVInputURL } from './Home/CSVInputURL'
-export { default as CodeSnippet } from './Home/CodeSnippet'
-export { default as CodeSnippetML } from './Home/CodeSnippetML'
-export { default as DropDown } from './Home/DropDown'
-export { default as EmailInput } from './Home/EmailInput'
-export { default as PhoneNumberInput } from './Home/PhoneNumberInput'
-export { default as Input } from './Home/Input'
-export { default as LayerChoice } from './Home/LayerChoice'
-export { default as RectContainer } from './Home/RectContainer'
-export { default as Results } from './Home/Results'
-export { default as TrainButton } from './Home/TrainButton'
-export { default as ChoiceTab } from './Home/ChoiceTab'
-export { default as CustomModelName } from './Home/CustomModelName'
-export { default as Preprocessing } from './Home/Preprocessing'
+export { default as AddNewLayer } from "./Home/AddNewLayer";
+export { default as AddedLayer } from "./Home/AddedLayer";
+export { default as BackgroundLayout } from "./Home/BackgroundLayout";
+export { default as CSVInputFile } from "./Home/CSVInputFile";
+export { default as CSVInputURL } from "./Home/CSVInputURL";
+export { default as CodeSnippet } from "./Home/CodeSnippet";
+export { default as CodeSnippetML } from "./Home/CodeSnippetML";
+export { default as DropDown } from "./Home/DropDown";
+export { default as EmailInput } from "./Home/EmailInput";
+export { default as PhoneNumberInput } from "./Home/PhoneNumberInput";
+export { default as Input } from "./Home/Input";
+export { default as LayerChoice } from "./Home/LayerChoice";
+export { default as RectContainer } from "./Home/RectContainer";
+export { default as Results } from "./Home/Results";
+export { default as TrainButton } from "./Home/TrainButton";
+export { default as ChoiceTab } from "./Home/ChoiceTab";
+export { default as CustomModelName } from "./Home/CustomModelName";
+export { default as Preprocessing } from "./Home/Preprocessing";
 
 // Dashboard
-export { default as Dashboard } from './Dashboard/Dashboard'
-export { default as Login } from './Dashboard/Login'
+export { default as Dashboard } from "./Dashboard/Dashboard";
+export { default as Login } from "./Dashboard/Login";
 
 //Forgot
-export { default as Forgot } from './Forgot/Forgot'
+export { default as Forgot } from "./Forgot/Forgot";
 
 // About
-export { default as About } from './About/About'
+export { default as About } from "./About/About";
 
 // Wiki
-export { default as Wiki } from './Wiki/Wiki'
+export { default as Wiki } from "./Wiki/Wiki";
 
 // Feedback
-export { default as Feedback } from './Feedback/Feedback'
+export { default as Feedback } from "./Feedback/Feedback";
 
 // Learning Modules
-export { default as LearnMod } from './LearnMod/LearnMod'
-export { default as LearnContent } from './LearnMod/LearnContent'
+export { default as LearnMod } from "./LearnMod/LearnMod";
+export { default as LearnContent } from "./LearnMod/LearnContent";
 
 //Health
-export { default as Health } from './Health/Health'
+export { default as Health } from "./Health/Health";
 
 // Navbar
-export { default as NavbarMain } from './Navbar/NavbarMain'
+export { default as NavbarMain } from "./Navbar/NavbarMain";
 
 // Footer
-export { default as Footer } from './Footer/Footer'
+export { default as Footer } from "./Footer/Footer";
 
 // Image Models page
-export { default as ImageModels } from './ImageModels/ImageModels'
+export { default as ImageModels } from "./ImageModels/ImageModels";
 
 // Classical ML Models page
-export { default as ClassicalMLModel } from './ClassicalMLModel/ClassicalMLModel'
+export { default as ClassicalMLModel } from "./ClassicalMLModel/ClassicalMLModel";
 
 // Pretrained page
-export { default as LargeFileUpload } from './general/LargeFileUpload'
+export { default as LargeFileUpload } from "./general/LargeFileUpload";
 
 //Account Settings Page
-export { default as AccountSettings } from './AccountSettings/AccountSettings'
+export { default as AccountSettings } from "./AccountSettings/AccountSettings";
 
 //Object Detection Page
-export { default as ObjectDetection } from './ObjectDetection/ObjectDetection'
+export { default as ObjectDetection } from "./ObjectDetection/ObjectDetection";

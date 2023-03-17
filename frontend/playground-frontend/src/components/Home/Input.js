@@ -1,7 +1,7 @@
-import { React, useState } from 'react'
-import PropTypes from 'prop-types'
-import { COLORS, LAYOUT } from '../../constants'
-import { DropDown } from '..'
+import { React, useState } from "react";
+import PropTypes from "prop-types";
+import { COLORS, LAYOUT } from "../../constants";
+import { DropDown } from "..";
 // import storage from 'local-storage-fallback';
 
 const Input = (props) => {
@@ -14,21 +14,21 @@ const Input = (props) => {
     freeInputCustomRestrictions,
     isMultiSelect,
     beginnerMode,
-  } = props
+  } = props;
 
-  const [numberinput, setNumberInput] = useState(0.2)
-  const [rangeinput, setRangeInput] = useState(20)
+  const [numberinput, setNumberInput] = useState(0.2);
+  const [rangeinput, setRangeInput] = useState(20);
 
   const changeNumber = (userinput) => {
-    setNumberInput((Number(userinput.target.value / 100) * 20) / 20)
-    setRangeInput(userinput.target.value)
-    onChange(Number(userinput.target.value) / 100)
-  }
+    setNumberInput((Number(userinput.target.value / 100) * 20) / 20);
+    setRangeInput(userinput.target.value);
+    onChange(Number(userinput.target.value) / 100);
+  };
   const changeRange = (userinput) => {
-    setNumberInput(Number(userinput.target.value))
-    setRangeInput(Number(userinput.target.value) * 100)
-    onChange(Number(userinput.target.value))
-  }
+    setNumberInput(Number(userinput.target.value));
+    setRangeInput(Number(userinput.target.value) * 100);
+    onChange(Number(userinput.target.value));
+  };
 
   return (
     <div
@@ -36,18 +36,18 @@ const Input = (props) => {
       style={{
         ...LAYOUT.row,
         margin: 7.5,
-        display: beginnerMode ? 'none' : 'flex',
+        display: beginnerMode ? "none" : "flex",
       }}
     >
       <div style={styles.queryContainer}>
         <p
           // @ts-ignore
-          className='queryText'
+          className="queryText"
         >
           {queryText}
         </p>
       </div>
-      <div className='response-container'>
+      <div className="response-container">
         {options ? (
           <DropDown
             options={options}
@@ -60,30 +60,30 @@ const Input = (props) => {
             {range ? (
               <>
                 <input
-                  placeholder='Type...'
-                  className='inputText'
-                  type='number'
+                  placeholder="Type..."
+                  className="inputText"
+                  type="number"
                   value={Number(numberinput)}
                   onChange={changeRange}
                 />
                 <input
-                  className='inputText'
-                  type='range'
+                  className="inputText"
+                  type="range"
                   value={Number(rangeinput)}
                   onChange={changeNumber}
                 />
               </>
             ) : (
               <input
-                className='inputText'
-                placeholder='Type...'
+                className="inputText"
+                placeholder="Type..."
                 maxLength={64}
                 {...freeInputCustomRestrictions}
                 defaultValue={defaultValue}
                 onChange={(e) => {
-                  if (freeInputCustomRestrictions?.type === 'number')
-                    onChange(Number(e.target.value))
-                  else onChange(e.target.value)
+                  if (freeInputCustomRestrictions?.type === "number")
+                    onChange(Number(e.target.value));
+                  else onChange(e.target.value);
                 }}
               />
             )}
@@ -91,8 +91,8 @@ const Input = (props) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
 Input.propTypes = {
   queryText: PropTypes.string.isRequired,
@@ -110,17 +110,17 @@ Input.propTypes = {
   beginnerMode: PropTypes.bool,
   freeInputCustomRestrictions: PropTypes.shape({ type: PropTypes.string }),
   styles: PropTypes.array,
-}
+};
 
-export default Input
+export default Input;
 
 const styles = {
   queryContainer: {
     height: 50,
     width: 145,
     backgroundColor: COLORS.layer,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
-}
+};

@@ -1,27 +1,27 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { Form } from 'react-bootstrap'
-import { GENERAL_STYLES } from '../../constants'
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { Form } from "react-bootstrap";
+import { GENERAL_STYLES } from "../../constants";
 
 const PhoneNumberInput = (props) => {
-  const { setPhoneNumber } = props
-  const [numberIsValid, setNumberIsValid] = useState(true)
+  const { setPhoneNumber } = props;
+  const [numberIsValid, setNumberIsValid] = useState(true);
 
   function updateNumberInput(numberInput) {
     if (!validateNumber(numberInput)) {
-      setNumberIsValid(false)
-      return
+      setNumberIsValid(false);
+      return;
     }
-    setNumberIsValid(true)
-    setPhoneNumber(numberInput)
+    setNumberIsValid(true);
+    setPhoneNumber(numberInput);
   }
 
   return (
     <Form>
       <Form.Control
-        style={{ width: '25%' }}
+        style={{ width: "25%" }}
         maxLength={64}
-        placeholder='+16785552057'
+        placeholder="+16785552057"
         onBlur={(e) => updateNumberInput(e.target.value)}
       />
       {numberIsValid ? null : (
@@ -30,8 +30,8 @@ const PhoneNumberInput = (props) => {
         </p>
       )}
     </Form>
-  )
-}
+  );
+};
 
 /**
  * Validates the phone number according to format +238201934012080123
@@ -40,13 +40,13 @@ const PhoneNumberInput = (props) => {
  */
 export function validateNumber(phoneNumber) {
   if (phoneNumber && !phoneNumber.match(/^\+\d*$/)) {
-    return false
+    return false;
   }
-  return true
+  return true;
 }
 
 PhoneNumberInput.propTypes = {
   setPhoneNumber: PropTypes.func.isRequired,
-}
+};
 
-export default PhoneNumberInput
+export default PhoneNumberInput;

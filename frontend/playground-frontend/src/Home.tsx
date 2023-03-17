@@ -132,5 +132,3 @@ const Home2 = () => {
 };
 
 export default Home2;
-
-const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));

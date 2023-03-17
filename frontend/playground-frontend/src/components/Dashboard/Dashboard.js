@@ -21,7 +21,6 @@ import PropTypes from "prop-types";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
-import "./../../App.css";
 import { auth } from "../../firebase";
 import JSZip from "jszip";
 import saveAs from "file-saver";

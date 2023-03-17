@@ -1,21 +1,19 @@
-import React from "react";
-import { COLORS } from "../../constants";
-import { Link, useLocation } from "react-router-dom";
+import React from 'react'
+import { COLORS } from '../../constants'
+import { Link, useLocation } from 'react-router-dom'
 
 const ChoiceTab = () => {
-  const loc = useLocation().pathname;
+  const loc = useLocation().pathname
 
   const getBackground = (id) => {
-    if (id === loc) return COLORS.gold;
-    return COLORS.dark_blue;
-  };
+    if (id === loc) return COLORS.gold
+    return COLORS.dark_blue
+  }
 
   return (
     <div>
-      <button
-        style={{ ...styles.button, backgroundColor: getBackground("/train") }}
-      >
-        <Link to="/train" style={styles.linkelEment}>
+      <button style={{ ...styles.button, backgroundColor: getBackground('/train') }}>
+        <Link to='/train' style={styles.linkelEment}>
           Tabular Data
         </Link>
       </button>
@@ -23,10 +21,10 @@ const ChoiceTab = () => {
       <button
         style={{
           ...styles.button,
-          backgroundColor: getBackground("/img-models"),
+          backgroundColor: getBackground('/img-models'),
         }}
       >
-        <Link to="/img-models" style={styles.linkelEment}>
+        <Link to='/img-models' style={styles.linkelEment}>
           Image Models
         </Link>
       </button>
@@ -34,10 +32,10 @@ const ChoiceTab = () => {
       <button
         style={{
           ...styles.button,
-          backgroundColor: getBackground("/classical-ml"),
+          backgroundColor: getBackground('/classical-ml'),
         }}
       >
-        <Link to="/classical-ml" style={styles.linkelEment}>
+        <Link to='/classical-ml' style={styles.linkelEment}>
           Classical ML
         </Link>
       </button>
@@ -45,33 +43,33 @@ const ChoiceTab = () => {
       <button
         style={{
           ...styles.button,
-          backgroundColor: getBackground("/object-detection"),
+          backgroundColor: getBackground('/object-detection'),
         }}
       >
-        <Link to="/object-detection" style={styles.linkelEment}>
+        <Link to='/object-detection' style={styles.linkelEment}>
           Object Detection
         </Link>
       </button>
     </div>
-  );
-};
+  )
+}
 
-export default ChoiceTab;
+export default ChoiceTab
 
 const styles = {
   button: {
-    marginRight: "5px",
-    marginLeft: "5px",
+    marginRight: '5px',
+    marginLeft: '5px',
     borderColor: COLORS.background,
-    borderStyle: "solid",
-    paddingLeft: "10px",
-    paddingRight: "10px",
-    borderRadius: "25px",
-    fontSize: "17px",
+    borderStyle: 'solid',
+    paddingLeft: '10px',
+    paddingRight: '10px',
+    borderRadius: '25px',
+    fontSize: '17px',
     color: COLORS.background,
   },
   linkelEment: {
     color: COLORS.background,
-    textDecoration: "none",
+    textDecoration: 'none',
   },
-};
+}

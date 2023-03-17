@@ -1,0 +1,136 @@
+import * as React from "react";
+import { useMemo, useEffect } from "react";
+
+import { POSSIBLE_LAYERS } from "./settings";
+import {
+  AddNewLayer,
+  BackgroundLayout,
+  EmailInput,
+  LayerChoice,
+  Spacer,
+  TitleText,
+  ChoiceTab,
+  CustomModelName,
+  PhoneNumberInput,
+} from "./components";
+import DataTable from "react-data-table-component";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { toast } from "react-toastify";
+import { FormControlLabel, Switch } from "@mui/material";
+import { sendToBackend } from "./components/helper_functions/TalkWithBackend";
+import { useDispatch, useSelector } from "react-redux";
+import { resetTrain } from "./redux/train";
+import { RootState } from "./redux/store";
+//import CSVInputFile2 from "./components/Home/CSVInputFile";
+
+const Home2 = () => {
+  const customModelName = useSelector<RootState>(
+    (state) => state.train.customModelName
+  );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(resetTrain());
+  }, []);
+
+  const Heading = (
+    <div className="d-flex flex-row justify-content-between">
+      <FormControlLabel
+        control={<Switch id="mode-switch" onClick={() => {}}></Switch>}
+        label={`${true ? "Enable" : "Disable"} Advanced Settings`}
+      />
+      <CustomModelName />
+      <ChoiceTab />
+    </div>
+  );
+
+  const ImplementedLayers = (
+    <>
+      {/* {beginnerMode ? null : (
+        <Preprocessing
+          data={oldCsvDataInput}
+          setData={setCSVDataInput}
+          setColumns={setUploadedColumns}
+        />
+      )} */}
+
+      <TitleText text="Implemented Layers" />
+      <BackgroundLayout>
+        <div className="input-container d-flex flex-column align-items-center justify-content-center">
+          {/* <CSVInputFile2 /> */}
+          <Spacer height={12} />
+        </div>
+        <AddNewLayer />
+      </BackgroundLayout>
+    </>
+  );
+
+  const LayersInventory = (
+    <>
+      <TitleText text="Layers Inventory" />
+      <BackgroundLayout>
+        {POSSIBLE_LAYERS.map((e) => (
+          <LayerChoice
+            layer={e}
+            key={e.display_name}
+            onDrop={(newLayer) => {}}
+          />
+        ))}
+      </BackgroundLayout>
+    </>
+  );
+
+  const InputParameters = (
+    <>
+      <TitleText text="Deep Learning Parameters" />
+      <BackgroundLayout></BackgroundLayout>
+    </>
+  );
+
+  const InputCSVDisplay = useMemo(() => {
+    return (
+      <>
+        <TitleText text="CSV Input" />
+        <p id="csvRender_caption">Only displaying the first 5 rows</p>
+      </>
+    );
+  }, []);
+
+  return (
+    <div id="train-tabular-data" className="container-fluid">
+      {Heading}
+
+      <Spacer height={40} />
+
+      <DndProvider backend={HTML5Backend}>
+        {ImplementedLayers}
+        <Spacer height={40} />
+        {LayersInventory}
+      </DndProvider>
+
+      <Spacer height={40} />
+      {InputParameters}
+
+      <Spacer height={40} />
+
+      <TitleText text="Email (optional)" />
+      <EmailInput setEmail={() => {}} />
+      <PhoneNumberInput setPhoneNumber={() => {}} />
+
+      <Spacer height={40} />
+      {InputCSVDisplay}
+
+      <Spacer height={40} />
+
+      <TitleText text="Deep Learning Results" />
+
+      <Spacer height={40} />
+
+      <TitleText text="Code Snippet" />
+    </div>
+  );
+};
+
+export default Home2;
+
+const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));

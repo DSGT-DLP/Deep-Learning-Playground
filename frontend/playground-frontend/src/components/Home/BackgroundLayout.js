@@ -1,25 +1,25 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { COLORS } from "../../constants";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { COLORS } from '../../constants'
 
 const BackgroundLayout = (props) => {
-  return <div style={styles.layoutBackground}>{props.children}</div>;
-};
+  return <div style={styles.layoutBackground}>{props.children}</div>
+}
 
 BackgroundLayout.propTypes = {
   children: PropTypes.node,
-};
+}
 
-export default BackgroundLayout;
+export default BackgroundLayout
 
 const styles = {
   layoutBackground: {
-    color: "black",
+    color: 'black',
     backgroundColor: COLORS,
     padding: 10,
     marginVertical: 10,
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
-};
+}

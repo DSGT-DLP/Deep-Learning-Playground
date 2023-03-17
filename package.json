@@ -2,7 +2,7 @@
   "name": "deep-learning-playground",
   "version": "1.0.0",
   "description": "Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules through a drag and drop interface.",
-  "main": "index.js",
+  "main": "index.tsx",
   "scripts": {
     "build:prod": "cd frontend/playground-frontend && npm install && REACT_APP_MODE=prod npm run build",
     "installf": "cd frontend/playground-frontend && npm install",

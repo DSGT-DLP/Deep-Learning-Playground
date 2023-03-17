@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { DEFAULT_ADDED_LAYERS } from "./constants";
+import React, { useState, useMemo, useEffect } from 'react'
+import { DEFAULT_ADDED_LAYERS } from './constants'
 
 import {
   BOOL_OPTIONS,
@@ -8,7 +8,7 @@ import {
   OPTIMIZER_NAMES,
   POSSIBLE_LAYERS,
   PROBLEM_TYPES,
-} from "./settings";
+} from './settings'
 import {
   AddNewLayer,
   AddedLayer,
@@ -27,52 +27,52 @@ import {
   CustomModelName,
   Preprocessing,
   PhoneNumberInput,
-} from "./components";
-import DataTable from "react-data-table-component";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { toast } from "react-toastify";
-import { FormControlLabel, Switch } from "@mui/material";
-import { sendToBackend } from "./components/helper_functions/TalkWithBackend";
+} from './components'
+import DataTable from 'react-data-table-component'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { toast } from 'react-toastify'
+import { FormControlLabel, Switch } from '@mui/material'
+import { sendToBackend } from './components/helper_functions/TalkWithBackend'
+import { useDispatch, useSelector } from 'react-redux'
+import { resetTrain } from './redux/train'
 
 const Home = () => {
-  const [fileName, setFileName] = useState(null);
-  const [csvDataInput, setCSVDataInput] = useState([]);
-  const [uploadedColumns, setUploadedColumns] = useState([]);
-  const [oldCsvDataInput, setOldCSVDataInput] = useState([]);
-  const [dlpBackendResponse, setDLPBackendResponse] = useState();
-  const [inputKey, setInputKey] = useState(0);
-
-  // input responses
-  const [customModelName, setCustomModelName] = useState(
-    `Model ${new Date().toLocaleString()}`
-  );
-  const [fileURL, setFileURL] = useState("");
-  const [notificationPhoneNumber, setNotificationPhoneNumber] = useState();
-  const [notificationEmail, setNotificationEmail] = useState();
-  const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
-  const [targetCol, setTargetCol] = useState(null);
-  const [features, setFeatures] = useState([]);
-  const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
+  const [fileName, setFileName] = useState(null)
+  const [csvDataInput, setCSVDataInput] = useState([])
+  const [uploadedColumns, setUploadedColumns] = useState([])
+  const [oldCsvDataInput, setOldCSVDataInput] = useState([])
+  const [dlpBackendResponse, setDLPBackendResponse] = useState()
+  const [inputKey, setInputKey] = useState(0)
+  const customModelName = useSelector((state) => state.train.customModelName)
+  const [fileURL, setFileURL] = useState('')
+  const [notificationPhoneNumber, setNotificationPhoneNumber] = useState()
+  const [notificationEmail, setNotificationEmail] = useState()
+  const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS)
+  const [targetCol, setTargetCol] = useState(null)
+  const [features, setFeatures] = useState([])
+  const [problemType, setProblemType] = useState(PROBLEM_TYPES[0])
   const [criterion, setCriterion] = useState(
-    problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0]
-  );
-  const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
-  const [usingDefaultDataset, setUsingDefaultDataset] = useState(
-    DEFAULT_DATASETS[0]
-  );
-  const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
-  const [epochs, setEpochs] = useState(5);
-  const [testSize, setTestSize] = useState(0.2);
-  const [batchSize, setBatchSize] = useState(20);
+    problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0],
+  )
+  const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0])
+  const [usingDefaultDataset, setUsingDefaultDataset] = useState(DEFAULT_DATASETS[0])
+  const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1])
+  const [epochs, setEpochs] = useState(5)
+  const [testSize, setTestSize] = useState(0.2)
+  const [batchSize, setBatchSize] = useState(20)
   const [inputFeatureColumnOptions, setInputFeatureColumnOptions] = useState(
     uploadedColumns.map((e, i) => ({
       label: e.name,
       value: i,
-    }))
-  );
-  const [activeColumns, setActiveColumns] = useState([]);
-  const [beginnerMode, setBeginnerMode] = useState(true);
+    })),
+  )
+  const [activeColumns, setActiveColumns] = useState([])
+  const [beginnerMode, setBeginnerMode] = useState(true)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(resetTrain())
+  }, [])
 
   const input_responses = {
     addedLayers: addedLayers,
@@ -92,155 +92,146 @@ const Home = () => {
       phoneNumber: notificationPhoneNumber,
     },
     customModelName: customModelName,
-  };
+  }
 
   const columnOptionsArray = activeColumns.map((e, i) => ({
     label: e.name || e,
     value: i,
-  }));
+  }))
 
-  const inputColumnOptions = usingDefaultDataset.value
-    ? []
-    : columnOptionsArray;
+  const inputColumnOptions = usingDefaultDataset.value ? [] : columnOptionsArray
 
   const handleTargetChange = (e) => {
-    setTargetCol(e);
-    const csvColumnsCopy = JSON.parse(JSON.stringify(columnOptionsArray));
-    let featuresCopy = JSON.parse(JSON.stringify(features));
-    csvColumnsCopy.splice(e.value, 1);
+    setTargetCol(e)
+    const csvColumnsCopy = JSON.parse(JSON.stringify(columnOptionsArray))
+    let featuresCopy = JSON.parse(JSON.stringify(features))
+    csvColumnsCopy.splice(e.value, 1)
     if (featuresCopy) {
-      featuresCopy = featuresCopy.filter((item) => item.value !== e.value);
-      setInputKey((e) => e + 1);
-      setFeatures(featuresCopy);
+      featuresCopy = featuresCopy.filter((item) => item.value !== e.value)
+      setInputKey((e) => e + 1)
+      setFeatures(featuresCopy)
     }
-    setInputFeatureColumnOptions(csvColumnsCopy);
-  };
+    setInputFeatureColumnOptions(csvColumnsCopy)
+  }
 
   const onClick = () => {
-    setBeginnerMode(!beginnerMode);
-    setInputKey((e) => e + 1);
-  };
+    setBeginnerMode(!beginnerMode)
+    setInputKey((e) => e + 1)
+  }
 
   const input_queries = [
     {
-      queryText: "Target Column",
+      queryText: 'Target Column',
       options: inputColumnOptions,
       onChange: handleTargetChange,
       defaultValue: targetCol,
     },
     {
-      queryText: "Features",
+      queryText: 'Features',
       options: inputFeatureColumnOptions,
       onChange: setFeatures,
       isMultiSelect: true,
       defaultValue: features,
     },
     {
-      queryText: "Problem Type",
+      queryText: 'Problem Type',
       options: PROBLEM_TYPES,
       onChange: setProblemType,
       defaultValue: problemType,
     },
     {
-      queryText: "Optimizer Name",
+      queryText: 'Optimizer Name',
       options: OPTIMIZER_NAMES,
       onChange: setOptimizerName,
       defaultValue: optimizerName,
       beginnerMode: beginnerMode,
     },
     {
-      queryText: "Criterion",
-      options: CRITERIONS.filter((crit) =>
-        crit.problem_type.includes(problemType.value)
-      ),
+      queryText: 'Criterion',
+      options: CRITERIONS.filter((crit) => crit.problem_type.includes(problemType.value)),
       onChange: setCriterion,
       defaultValue: criterion,
       beginnerMode: beginnerMode,
     },
     {
-      queryText: "Default",
+      queryText: 'Default',
       options: DEFAULT_DATASETS,
       onChange: setUsingDefaultDataset,
       defaultValue: usingDefaultDataset,
     },
     {
-      queryText: "Epochs",
-      freeInputCustomRestrictions: { type: "number", min: 0 },
+      queryText: 'Epochs',
+      freeInputCustomRestrictions: { type: 'number', min: 0 },
       onChange: setEpochs,
       defaultValue: epochs,
     },
     {
-      queryText: "Shuffle",
+      queryText: 'Shuffle',
       options: BOOL_OPTIONS,
       onChange: setShuffle,
       defaultValue: shuffle,
       beginnerMode: beginnerMode,
     },
     {
-      queryText: "Test Size",
+      queryText: 'Test Size',
       range: true,
       onChange: setTestSize,
       defaultValue: testSize,
     },
     {
-      queryText: "Batch Size",
+      queryText: 'Batch Size',
       onChange: setBatchSize,
       defaultValue: batchSize,
-      freeInputCustomRestrictions: { type: "number", min: 2 },
+      freeInputCustomRestrictions: { type: 'number', min: 2 },
       beginnerMode: beginnerMode,
     },
-  ];
+  ]
 
   useEffect(() => {
-    setCriterion(
-      problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0]
-    );
-    setInputKey((e) => e + 1);
-  }, [problemType]);
+    setCriterion(problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0])
+    setInputKey((e) => e + 1)
+  }, [problemType])
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       if (usingDefaultDataset.value) {
-        const datasetResult = await sendToBackend("defaultDataset", {
+        const datasetResult = await sendToBackend('defaultDataset', {
           using_default_dataset: usingDefaultDataset.value,
-        });
+        })
 
         if (!datasetResult.success) {
-          toast.error(datasetResult.message);
+          toast.error(datasetResult.message)
         } else {
-          setActiveColumns(datasetResult.columns);
+          setActiveColumns(datasetResult.columns)
         }
       } else {
-        setActiveColumns(uploadedColumns);
+        setActiveColumns(uploadedColumns)
       }
-    })();
-  }, [usingDefaultDataset, uploadedColumns]);
+    })()
+  }, [usingDefaultDataset, uploadedColumns])
 
   useEffect(() => {
     if (usingDefaultDataset.value) {
-      setTargetCol({ label: "target", value: 0 });
-      handleTargetChange(columnOptionsArray[columnOptionsArray.length - 1]);
+      setTargetCol({ label: 'target', value: 0 })
+      handleTargetChange(columnOptionsArray[columnOptionsArray.length - 1])
     } else {
-      setTargetCol(null);
-      setInputFeatureColumnOptions([]);
+      setTargetCol(null)
+      setInputFeatureColumnOptions([])
     }
-    setFeatures(null);
-    setInputKey((e) => e + 1);
-  }, [activeColumns]);
+    setFeatures(null)
+    setInputKey((e) => e + 1)
+  }, [activeColumns])
 
   const Heading = (
-    <div className="d-flex flex-row justify-content-between">
+    <div className='d-flex flex-row justify-content-between'>
       <FormControlLabel
-        control={<Switch id="mode-switch" onClick={onClick}></Switch>}
-        label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
+        control={<Switch id='mode-switch' onClick={onClick}></Switch>}
+        label={`${beginnerMode ? 'Enable' : 'Disable'} Advanced Settings`}
       />
-      <CustomModelName
-        customModelName={customModelName}
-        setCustomModelName={setCustomModelName}
-      />
+      <CustomModelName />
       <ChoiceTab />
     </div>
-  );
+  )
 
   const ImplementedLayers = (
     <>
@@ -252,9 +243,9 @@ const Home = () => {
         />
       )}
 
-      <TitleText text="Implemented Layers" />
+      <TitleText text='Implemented Layers' />
       <BackgroundLayout>
-        <div className="input-container d-flex flex-column align-items-center justify-content-center">
+        <div className='input-container d-flex flex-column align-items-center justify-content-center'>
           <CSVInputFile
             setData={setCSVDataInput}
             setColumns={setUploadedColumns}
@@ -279,9 +270,9 @@ const Home = () => {
             setAddedLayers={setAddedLayers}
             key={i}
             onDelete={() => {
-              const currentLayers = [...addedLayers];
-              currentLayers.splice(i, 1);
-              setAddedLayers(currentLayers);
+              const currentLayers = [...addedLayers]
+              currentLayers.splice(i, 1)
+              setAddedLayers(currentLayers)
             }}
           />
         ))}
@@ -295,11 +286,11 @@ const Home = () => {
         />
       </BackgroundLayout>
     </>
-  );
+  )
 
   const LayersInventory = (
     <>
-      <TitleText text="Layers Inventory" />
+      <TitleText text='Layers Inventory' />
       <BackgroundLayout>
         {POSSIBLE_LAYERS.map((e) => (
           <LayerChoice
@@ -307,61 +298,56 @@ const Home = () => {
             key={e.display_name}
             onDrop={(newLayer) => {
               setAddedLayers((currentAddedLayers) => {
-                const copyCurrent = [...currentAddedLayers];
-                const layerCopy = deepCopyObj(newLayer);
+                const copyCurrent = [...currentAddedLayers]
+                const layerCopy = deepCopyObj(newLayer)
                 Object.values(layerCopy.parameters).forEach((val) => {
-                  val.value = val.default ? val.default : val.min;
-                });
-                copyCurrent.push(layerCopy);
-                return copyCurrent;
-              });
+                  val.value = val.default ? val.default : val.min
+                })
+                copyCurrent.push(layerCopy)
+                return copyCurrent
+              })
             }}
           />
         ))}
       </BackgroundLayout>
     </>
-  );
+  )
 
   const InputParameters = (
     <>
-      <TitleText text="Deep Learning Parameters" />
+      <TitleText text='Deep Learning Parameters' />
       <BackgroundLayout>
         {input_queries.map((e) => (
           <Input {...e} key={e.queryText + inputKey} />
         ))}
       </BackgroundLayout>
     </>
-  );
+  )
 
   const InputCSVDisplay = useMemo(() => {
     return (
       <>
-        <TitleText text="CSV Input" />
-        <p id="csvRender_caption">Only displaying the first 5 rows</p>
+        <TitleText text='CSV Input' />
+        <p id='csvRender_caption'>Only displaying the first 5 rows</p>
         <DataTable
           pagination
           highlightOnHover
           columns={uploadedColumns}
           data={csvDataInput.slice(0, 5)}
-          className="dataTable"
-          noDataComponent="No entries to display"
+          className='dataTable'
+          noDataComponent='No entries to display'
         />
       </>
-    );
-  }, [csvDataInput]);
+    )
+  }, [csvDataInput])
 
   const ResultsMemo = useMemo(
-    () => (
-      <Results
-        dlpBackendResponse={dlpBackendResponse}
-        problemType={problemType}
-      />
-    ),
-    [dlpBackendResponse, problemType]
-  );
+    () => <Results dlpBackendResponse={dlpBackendResponse} problemType={problemType} />,
+    [dlpBackendResponse, problemType],
+  )
 
   return (
-    <div id="train-tabular-data" className="container-fluid">
+    <div id='train-tabular-data' className='container-fluid'>
       {Heading}
 
       <Spacer height={40} />
@@ -377,7 +363,7 @@ const Home = () => {
 
       <Spacer height={40} />
 
-      <TitleText text="Email (optional)" />
+      <TitleText text='Email (optional)' />
       <EmailInput setEmail={setNotificationEmail} />
       <PhoneNumberInput setPhoneNumber={setNotificationPhoneNumber} />
 
@@ -386,17 +372,17 @@ const Home = () => {
 
       <Spacer height={40} />
 
-      <TitleText text="Deep Learning Results" />
+      <TitleText text='Deep Learning Results' />
       {ResultsMemo}
 
       <Spacer height={40} />
 
-      <TitleText text="Code Snippet" />
+      <TitleText text='Code Snippet' />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
 
-const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));
+const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj))

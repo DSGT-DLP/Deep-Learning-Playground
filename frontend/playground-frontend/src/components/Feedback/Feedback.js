@@ -1,52 +1,45 @@
-import { EmailInput, TitleText, Spacer } from "../index";
-import ReCAPTCHA from "react-google-recaptcha";
-import React, { useState } from "react";
-import { COLORS, GENERAL_STYLES } from "../../constants";
-import { toast } from "react-toastify";
-import { sendToBackend } from "../helper_functions/TalkWithBackend";
-import { InlineWidget } from "react-calendly";
+import { EmailInput, TitleText, Spacer } from '../index'
+import ReCAPTCHA from 'react-google-recaptcha'
+import React, { useState } from 'react'
+import { COLORS, GENERAL_STYLES } from '../../constants'
+import { toast } from 'react-toastify'
+import { sendToBackend } from '../helper_functions/TalkWithBackend'
+import { InlineWidget } from 'react-calendly'
 
-const CALENDLY_URL = "https://calendly.com/dlp-dsgt/30min";
+const CALENDLY_URL = 'https://calendly.com/dlp-dsgt/30min'
 
 const Feedback = () => {
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [feedback, setFeedback] = useState("");
-  const [recaptcha, setRecaptcha] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [successful, setSuccessful] = useState(false);
+  const [email, setEmail] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [feedback, setFeedback] = useState('')
+  const [recaptcha, setRecaptcha] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const [successful, setSuccessful] = useState(false)
 
   const onClickSubmit = async () => {
-    setSubmitted(true);
-    if (
-      firstName.trim() &&
-      lastName.trim() &&
-      email.trim() &&
-      feedback.trim()
-    ) {
-      setSuccessful(
-        await send_feedback_mail(firstName, lastName, email, feedback)
-      );
+    setSubmitted(true)
+    if (firstName.trim() && lastName.trim() && email.trim() && feedback.trim()) {
+      setSuccessful(await send_feedback_mail(firstName, lastName, email, feedback))
     }
-  };
+  }
 
   if (successful) {
     return (
       <>
-        <div id="header-section">
-          <h1 className="header">Deep Learning Playground Feedback</h1>
+        <div id='header-section'>
+          <h1 className='header'>Deep Learning Playground Feedback</h1>
         </div>
 
-        <div className="sections" style={styles.content_section}>
-          <p style={{ color: "0,0,0", fontSize: "5vh", textAlign: "center" }}>
+        <div className='sections' style={styles.content_section}>
+          <p style={{ color: '0,0,0', fontSize: '5vh', textAlign: 'center' }}>
             Feedback submitted!
           </p>
         </div>
-        <div className="sections" style={styles.content_section}>
-          <p style={{ color: "0,0,0", fontSize: "4vh", textAlign: "center" }}>
-            If you would like to discuss your feedback, feel free to schedule a
-            15-20 minute meeting over Calendly
+        <div className='sections' style={styles.content_section}>
+          <p style={{ color: '0,0,0', fontSize: '4vh', textAlign: 'center' }}>
+            If you would like to discuss your feedback, feel free to schedule a 15-20 minute meeting
+            over Calendly
           </p>
         </div>
         <div>
@@ -55,83 +48,75 @@ const Feedback = () => {
             <InlineWidget
               url={CALENDLY_URL}
               styles={{
-                marginTop: "-66px",
-                minWidth: "320px",
-                height: "750px",
+                marginTop: '-66px',
+                minWidth: '320px',
+                height: '750px',
               }}
             />
           </div>
         </div>
       </>
-    );
+    )
   }
 
   return (
     <>
-      <div id="header-section">
-        <h1 className="header">Deep Learning Playground Feedback</h1>
+      <div id='header-section'>
+        <h1 className='header'>Deep Learning Playground Feedback</h1>
       </div>
 
-      <div className="sections" style={styles.content_section}>
+      <div className='sections' style={styles.content_section}>
         <h2>Feedback Form</h2>
         <p>
-          Fill this feedback form for any bugs, feature requests or complaints!
-          We'll get back to as soon as we can.
+          Fill this feedback form for any bugs, feature requests or complaints! We'll get back to as
+          soon as we can.
         </p>
 
         <Spacer height={20} />
 
         <form>
-          <TitleText text="First Name" />
-          <input
-            type="text"
-            placeholder="John"
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-          {submitted && firstName.trim() === "" && recaptcha !== "" && (
+          <TitleText text='First Name' />
+          <input type='text' placeholder='John' onChange={(e) => setFirstName(e.target.value)} />
+          {submitted && firstName.trim() === '' && recaptcha !== '' && (
             <p style={GENERAL_STYLES.error_text}>First Name cannot be blank</p>
           )}
 
           <Spacer height={20} />
 
-          <TitleText text="Last name" />
-          <input
-            type="text"
-            placeholder="Doe"
-            onChange={(e) => setLastName(e.target.value)}
-          />
-          {submitted && lastName.trim() === "" && recaptcha !== "" && (
+          <TitleText text='Last name' />
+          <input type='text' placeholder='Doe' onChange={(e) => setLastName(e.target.value)} />
+          {submitted && lastName.trim() === '' && recaptcha !== '' && (
             <p style={GENERAL_STYLES.error_text}>Last Name cannot be blank</p>
           )}
 
           <Spacer height={20} />
 
-          <TitleText text="Email" />
+          <TitleText text='Email' />
           <EmailInput setEmail={setEmail} />
-          {submitted && email.trim() === "" && recaptcha !== "" && (
+          {submitted && email.trim() === '' && recaptcha !== '' && (
             <p style={GENERAL_STYLES.error_text}>Email Cannot be blank</p>
           )}
 
           <Spacer height={20} />
 
-          <TitleText text="Feedback" />
+          <TitleText text='Feedback' />
           <textarea
-            placeholder="Type your feedback here"
+            placeholder='Type your feedback here'
             style={styles.feedback_area}
             onChange={(e) => setFeedback(e.target.value)}
           />
-          {submitted && feedback === "" && recaptcha !== "" && (
+          {submitted && feedback === '' && recaptcha !== '' && (
             <p style={GENERAL_STYLES.error_text}>Please enter some feedback</p>
           )}
         </form>
 
-        <div style={{ marginTop: "2%" }} />
+        <div style={{ marginTop: '2%' }} />
 
         <ReCAPTCHA
           sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
           onChange={(e) => setRecaptcha(e)}
         />
-        {submitted && recaptcha === "" && (
+        {submitted && recaptcha === '' && (
           <p style={GENERAL_STYLES.error_text}>Please Complete ReCAPTCHA</p>
         )}
 
@@ -140,44 +125,44 @@ const Feedback = () => {
         </button>
       </div>
     </>
-  );
-};
+  )
+}
 
 const send_feedback_mail = async (firstName, lastName, email, feedback) => {
-  const emailResult = await sendToBackend("sendEmail", {
+  const emailResult = await sendToBackend('sendEmail', {
     email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
-    subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
+    subject: 'FEEDBACK - ' + firstName + ' ' + lastName + ' ' + email,
     body_text: feedback,
-  });
+  })
 
   if (!emailResult.success) {
-    toast.error(emailResult.message);
+    toast.error(emailResult.message)
   }
-  return emailResult.success;
-};
+  return emailResult.success
+}
 
-export default Feedback;
+export default Feedback
 
 const styles = {
   submit_button: {
     ...GENERAL_STYLES.p,
     backgroundColor: COLORS.dark_blue,
-    border: "none",
-    color: "white",
-    cursor: "pointer",
+    border: 'none',
+    color: 'white',
+    cursor: 'pointer',
     fontSize: 25,
-    marginTop: "2%",
+    marginTop: '2%',
     padding: 8,
   },
   feedback_area: {
-    borderRadius: "10px",
-    borderWidth: "0.5px",
-    padding: "5px",
-    width: "100%",
+    borderRadius: '10px',
+    borderWidth: '0.5px',
+    padding: '5px',
+    width: '100%',
   },
   content_section: {
     backgroundColor: COLORS.background,
-    paddingBottom: "1%",
-    paddingTop: "1%",
+    paddingBottom: '1%',
+    paddingTop: '1%',
   },
-};
+}

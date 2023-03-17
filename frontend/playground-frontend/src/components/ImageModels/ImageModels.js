@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from "react";
-import Transforms from "./Transforms";
-import DataCodeSnippet from "./DataCodeSnippet";
-import LargeFileUpload from "../general/LargeFileUpload";
+import React, { useState, useMemo } from 'react'
+import Transforms from './Transforms'
+import DataCodeSnippet from './DataCodeSnippet'
+import LargeFileUpload from '../general/LargeFileUpload'
 import {
   BOOL_OPTIONS,
   IMAGE_DEFAULT_DATASETS,
@@ -11,15 +11,11 @@ import {
   IMAGE_LAYERS,
   IMAGE_CLASSIFICATION_CRITERION,
   PROBLEM_TYPES,
-} from "../../settings";
-import {
-  DEFAULT_IMG_LAYERS,
-  DEFAULT_TRANSFORMS,
-  COLORS,
-} from "../../constants";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { FormControlLabel, Switch } from "@mui/material";
+} from '../../settings'
+import { DEFAULT_IMG_LAYERS, DEFAULT_TRANSFORMS, COLORS } from '../../constants'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { FormControlLabel, Switch } from '@mui/material'
 import {
   Input,
   TitleText,
@@ -34,26 +30,24 @@ import {
   ChoiceTab,
   Spacer,
   CustomModelName,
-} from "../index";
+} from '../index'
 
 const ImageModels = () => {
-  const [customModelName, setCustomModelName] = useState(
-    `Model ${new Date().toLocaleString()}`
-  );
-  const [addedLayers, setAddedLayers] = useState(DEFAULT_IMG_LAYERS);
-  const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
-  const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS);
-  const [criterion, setCriterion] = useState(IMAGE_CLASSIFICATION_CRITERION[0]);
-  const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
-  const [usingDefaultDataset, setUsingDefaultDataset] = useState(null);
-  const [epochs, setEpochs] = useState(5);
-  const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
-  const [batchSize, setBatchSize] = useState(20);
-  const [email, setEmail] = useState("");
-  const [dlpBackendResponse, setDLPBackendResponse] = useState();
-  const [beginnerMode, setBeginnerMode] = useState(true);
-  const [inputKey, setInputKey] = useState(0);
-  const [uploadFile, setUploadFile] = useState(null);
+  const [customModelName] = useState(`Model ${new Date().toLocaleString()}`)
+  const [addedLayers, setAddedLayers] = useState(DEFAULT_IMG_LAYERS)
+  const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS)
+  const [testTransforms, setTestTransforms] = useState(DEFAULT_TRANSFORMS)
+  const [criterion, setCriterion] = useState(IMAGE_CLASSIFICATION_CRITERION[0])
+  const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0])
+  const [usingDefaultDataset, setUsingDefaultDataset] = useState(null)
+  const [epochs, setEpochs] = useState(5)
+  const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1])
+  const [batchSize, setBatchSize] = useState(20)
+  const [email, setEmail] = useState('')
+  const [dlpBackendResponse, setDLPBackendResponse] = useState()
+  const [beginnerMode, setBeginnerMode] = useState(true)
+  const [inputKey, setInputKey] = useState(0)
+  const [uploadFile, setUploadFile] = useState(null)
 
   const input_responses = {
     batchSize: batchSize,
@@ -67,37 +61,37 @@ const ImageModels = () => {
     testTransforms: testTransforms,
     uploadFile: uploadFile,
     customModelName: customModelName,
-  };
+  }
 
   const input_queries = [
     {
-      queryText: "Optimizer Name",
+      queryText: 'Optimizer Name',
       options: OPTIMIZER_NAMES,
       onChange: setOptimizerName,
       defaultValue: optimizerName,
       beginnerMode: beginnerMode,
     },
     {
-      queryText: "Criterion",
+      queryText: 'Criterion',
       options: IMAGE_CLASSIFICATION_CRITERION,
       onChange: setCriterion,
       defaultValue: criterion,
       beginnerMode: beginnerMode,
     },
     {
-      queryText: "Default",
+      queryText: 'Default',
       options: IMAGE_DEFAULT_DATASETS,
       onChange: setUsingDefaultDataset,
       defaultValue: usingDefaultDataset,
     },
     {
-      queryText: "Epochs",
-      freeInputCustomRestrictions: { type: "number", min: 0 },
+      queryText: 'Epochs',
+      freeInputCustomRestrictions: { type: 'number', min: 0 },
       onChange: setEpochs,
       defaultValue: epochs,
     },
     {
-      queryText: "Shuffle",
+      queryText: 'Shuffle',
       options: BOOL_OPTIONS,
       onChange: setShuffle,
       defaultValue: shuffle,
@@ -105,53 +99,42 @@ const ImageModels = () => {
     },
 
     {
-      queryText: "Batch Size",
+      queryText: 'Batch Size',
       onChange: setBatchSize,
       defaultValue: batchSize,
-      freeInputCustomRestrictions: { type: "number", min: 2 },
+      freeInputCustomRestrictions: { type: 'number', min: 2 },
       beginnerMode: beginnerMode,
     },
-  ];
-  const ALL_LAYERS = POSSIBLE_LAYERS.concat(IMAGE_LAYERS);
+  ]
+  const ALL_LAYERS = POSSIBLE_LAYERS.concat(IMAGE_LAYERS)
 
   const ResultMemo = useMemo(
-    () => (
-      <Results
-        dlpBackendResponse={dlpBackendResponse}
-        problemType={PROBLEM_TYPES[0]}
-      />
-    ),
-    [dlpBackendResponse, PROBLEM_TYPES[0]]
-  );
+    () => <Results dlpBackendResponse={dlpBackendResponse} problemType={PROBLEM_TYPES[0]} />,
+    [dlpBackendResponse, PROBLEM_TYPES[0]],
+  )
 
   const onClick = () => {
-    setBeginnerMode(!beginnerMode);
-    setInputKey((e) => e + 1);
-  };
+    setBeginnerMode(!beginnerMode)
+    setInputKey((e) => e + 1)
+  }
 
   return (
-    <div id="image-models">
+    <div id='image-models'>
       <DndProvider backend={HTML5Backend}>
-        <div className="d-flex flex-row justify-content-between">
+        <div className='d-flex flex-row justify-content-between'>
           <FormControlLabel
-            control={<Switch id="mode-switch" onClick={onClick}></Switch>}
-            label={`${beginnerMode ? "Enable" : "Disable"} Advanced Settings`}
+            control={<Switch id='mode-switch' onClick={onClick}></Switch>}
+            label={`${beginnerMode ? 'Enable' : 'Disable'} Advanced Settings`}
           />
-          <CustomModelName
-            customModelName={customModelName}
-            setCustomModelName={setCustomModelName}
-          />
+          <CustomModelName />
           <ChoiceTab />
         </div>
 
         <Spacer height={40} />
-        <TitleText text="Implemented Layers" />
+        <TitleText text='Implemented Layers' />
         <BackgroundLayout>
-          <div className="input-container d-flex flex-column align-items-center justify-content-center">
-            <LargeFileUpload
-              uploadFile={uploadFile}
-              setUploadFile={setUploadFile}
-            />
+          <div className='input-container d-flex flex-column align-items-center justify-content-center'>
+            <LargeFileUpload uploadFile={uploadFile} setUploadFile={setUploadFile} />
           </div>
 
           {addedLayers.map((_, i) => (
@@ -161,14 +144,14 @@ const ImageModels = () => {
               setAddedLayers={setAddedLayers}
               key={i}
               onDelete={() => {
-                const currentLayers = [...addedLayers];
-                currentLayers.splice(i, 1);
-                setAddedLayers(currentLayers);
+                const currentLayers = [...addedLayers]
+                currentLayers.splice(i, 1)
+                setAddedLayers(currentLayers)
               }}
               style={{
                 input_box: {
                   margin: 7.5,
-                  backgroundColor: "white",
+                  backgroundColor: 'white',
                   width: 170,
                   paddingInline: 5,
                 },
@@ -183,13 +166,13 @@ const ImageModels = () => {
           <TrainButton
             {...input_responses}
             setDLPBackendResponse={setDLPBackendResponse}
-            choice="image"
+            choice='image'
           />
         </BackgroundLayout>
 
         <Spacer height={40} />
 
-        <TitleText text="Layers Inventory" />
+        <TitleText text='Layers Inventory' />
         <BackgroundLayout>
           {ALL_LAYERS.map((e) => (
             <LayerChoice
@@ -197,14 +180,14 @@ const ImageModels = () => {
               key={e.display_name}
               onDrop={(newLayer) => {
                 setAddedLayers((currentAddedLayers) => {
-                  const copyCurrent = [...currentAddedLayers];
-                  const layerCopy = deepCopyObj(newLayer);
+                  const copyCurrent = [...currentAddedLayers]
+                  const layerCopy = deepCopyObj(newLayer)
                   Object.values(layerCopy.parameters).forEach((val) => {
-                    val.value = val.default ? val.default : val.min;
-                  });
-                  copyCurrent.push(layerCopy);
-                  return copyCurrent;
-                });
+                    val.value = val.default ? val.default : val.min
+                  })
+                  copyCurrent.push(layerCopy)
+                  return copyCurrent
+                })
               }}
             />
           ))}
@@ -213,7 +196,7 @@ const ImageModels = () => {
 
       <Spacer height={40} />
 
-      <TitleText text="Deep Learning Parameters" />
+      <TitleText text='Deep Learning Parameters' />
       <BackgroundLayout>
         {input_queries.map((e) => (
           <Input {...e} key={e.queryText + inputKey} />
@@ -221,31 +204,31 @@ const ImageModels = () => {
       </BackgroundLayout>
 
       <Spacer height={40} />
-      <TitleText text="Image Transformations" />
+      <TitleText text='Image Transformations' />
       <Transforms
-        queryText={"Train Transform"}
+        queryText={'Train Transform'}
         options={POSSIBLE_TRANSFORMS}
         transforms={trainTransforms}
         setTransforms={setTrainTransforms}
       />
       <Spacer height={10} />
       <Transforms
-        queryText={"Test Transform"}
+        queryText={'Test Transform'}
         options={POSSIBLE_TRANSFORMS}
         transforms={testTransforms}
         setTransforms={setTestTransforms}
       />
 
       <Spacer height={40} />
-      <TitleText text="Email (optional)" />
+      <TitleText text='Email (optional)' />
       <EmailInput email={email} setEmail={setEmail} />
 
       <Spacer height={40} />
-      <TitleText text="Deep Learning Results" />
+      <TitleText text='Deep Learning Results' />
       {ResultMemo}
 
       <Spacer height={40} />
-      <TitleText text="Code Snippet" />
+      <TitleText text='Code Snippet' />
       <CodeSnippet backendResponse={dlpBackendResponse} layers={addedLayers} />
       <DataCodeSnippet
         backendResponse={dlpBackendResponse}
@@ -256,9 +239,9 @@ const ImageModels = () => {
         defaultData={usingDefaultDataset}
       />
     </div>
-  );
-};
+  )
+}
 
-export default ImageModels;
+export default ImageModels
 
-const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj));
+const deepCopyObj = (obj) => JSON.parse(JSON.stringify(obj))

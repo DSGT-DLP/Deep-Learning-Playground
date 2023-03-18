@@ -129,7 +129,7 @@ const Feedback = () => {
 
         <ReCAPTCHA
           sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
-          onChange={(e) => setRecaptcha(e)}
+          onChange={(e: string) => setRecaptcha(e)}
         />
         {submitted && recaptcha === "" && (
           <p style={GENERAL_STYLES.error_text}>Please Complete ReCAPTCHA</p>
@@ -143,7 +143,7 @@ const Feedback = () => {
   );
 };
 
-const send_feedback_mail = async (firstName, lastName, email, feedback) => {
+const send_feedback_mail = async (firstName: string, lastName: string, email: string, feedback: string) => {
   const emailResult = await sendToBackend("sendEmail", {
     email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
     subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,

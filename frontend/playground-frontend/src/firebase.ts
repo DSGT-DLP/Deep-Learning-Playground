@@ -30,27 +30,36 @@ export const auth = getAuth(app);
 // Exported functions
 
 export const updateUserProfile = async (
-  displayName = null,
-  photoURL = null
+  displayName: string | null = null,
+  photoURL: string | null = null
 ) => {
-  const newDetails = {};
+  const newDetails: {
+    displayName?: string;
+    photoURL?: string;
+  } = {};
   if (displayName != null) newDetails.displayName = displayName;
   if (photoURL != null) newDetails.photoURL = photoURL;
-  await updateProfile(auth.currentUser, newDetails)
-    .then(() => {
-      /* */
-    })
-    .catch((e) => toast.error(`Error: ${e.code}`, { autoClose: 1000 }));
+  if (!auth?.currentUser)
+    throw new Error("Firebase Auth current user is missing");
+
+  await updateProfile(auth.currentUser, newDetails).catch((e) =>
+    toast.error(`Error: ${e.code}`, { autoClose: 1000 })
+  );
 };
 
 export const updateUserSettings = async (
-  displayName = null,
-  email,
-  password
+  displayName: string | null = null,
+  email: string,
+  password: string
 ) => {
+  if (!auth?.currentUser)
+    throw new Error("Firebase Auth current user is missing");
+
   updateEmail(auth.currentUser, email)
     .then(() => {
       const user = auth.currentUser;
+      if (!user) throw new Error("Firebase Auth updated user is missing");
+
       updateUserProfile(displayName);
       setCookie("email", user.email);
       toast.success(`Updated email to ${user.email}`, {
@@ -69,9 +78,9 @@ export const updateUserSettings = async (
 };
 
 export const registerWithPassword = async (
-  email,
-  password,
-  displayName = null
+  email: string,
+  password: string,
+  displayName: string | null = null
 ) => {
   return await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
@@ -89,7 +98,7 @@ export const registerWithPassword = async (
     });
 };
 
-export const signInWithPassword = async (email, password) => {
+export const signInWithPassword = async (email: string, password: string) => {
   return signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;

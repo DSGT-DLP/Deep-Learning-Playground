@@ -28,8 +28,8 @@ RUN python -m pip install -r requirements.txt
 
 COPY . .
 
-RUN npm run secrets:deploy
+RUN yarn run secrets:deploy
 
-RUN npm run build:prod
+RUN yarn run build:prod
 
 CMD python -m backend.driver

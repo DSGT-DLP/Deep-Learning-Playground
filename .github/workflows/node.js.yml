@@ -19,7 +19,6 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v3
@@ -27,8 +26,8 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
+        cache: 'yarn'
+    - run: yarn install
       working-directory: ./frontend/playground-frontend
-    - run: npm run build --if-present
+    - run: yarn run build --if-present
       working-directory: ./frontend/playground-frontend        

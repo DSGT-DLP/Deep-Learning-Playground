@@ -37,7 +37,9 @@ export const updateUserProfile = async (
   if (displayName != null) newDetails.displayName = displayName;
   if (photoURL != null) newDetails.photoURL = photoURL;
   await updateProfile(auth.currentUser, newDetails)
-    .then(() => {})
+    .then(() => {
+      /* */
+    })
     .catch((e) => toast.error(`Error: ${e.code}`, { autoClose: 1000 }));
 };
 
@@ -56,7 +58,7 @@ export const updateUserSettings = async (
       });
       updatePassword(user, password)
         .then(() => {
-          toast.success(`Updated Password`, {
+          toast.success("Updated Password", {
             autoClose: 1000,
           });
         })

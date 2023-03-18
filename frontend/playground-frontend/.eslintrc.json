@@ -1,6 +1,31 @@
 {
   "root": true,
+  "env": {
+    "node": true,
+    "browser": true,
+    "es2021": true
+  },
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
-  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"]
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint", "react"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended"
+  ],
+  "rules": {
+    "react/no-unescaped-entities": 0,
+    "object-shorthand": ["error", "consistent-as-needed"],
+    "no-var": "error",
+    "semi": "error",
+    "eol-last": "error",
+    "eqeqeq": ["error", "smart"],
+    "no-multiple-empty-lines": ["error", { "max": 1, "maxBOF": 0, "maxEOF": 1 }]
+  }
 }

@@ -60,8 +60,7 @@
   "scripts": {
     "start": "react-scripts start",
     "lint": "eslint src/**/*.{js,ts,tsx}",
-    "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx,json}'",
-    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
+    "lint:fix": "eslint --fix 'src/**/*.{js,ts,tsx}'",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

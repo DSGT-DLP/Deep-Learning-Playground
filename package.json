@@ -4,31 +4,23 @@
   "description": "Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules through a drag and drop interface.",
   "main": "index.tsx",
   "scripts": {
-    "build:prod": "cd frontend/playground-frontend && npm install && REACT_APP_MODE=prod npm run build",
-    "installf": "cd frontend/playground-frontend && npm install",
+    "build:prod": "cd frontend/playground-frontend && yarn install && REACT_APP_MODE=prod yarn run build",
+    "installf": "cd frontend/playground-frontend && yarn install",
     "installb": "conda --version && cd conda && conda env create -f environment.yml && pre-commit install",
-    "startf": "cd frontend/playground-frontend && npm start",
-    "startb": "conda activate dlplayground && python -m backend.driver",
+    "startf": "cd frontend/playground-frontend && yarn start",
     "secrets": "conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env",
     "secrets:deploy": "python -m backend.aws_helpers.aws_secrets_utils.build_env",
     "docker:build": "docker build -t dlp ."
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/karkir0003/Deep-Learning-Playground.git"
+    "url": "git+https://github.com/DSGT-DLP/Deep-Learning-Playground.git"
   },
   "keywords": [],
-  "author": "https://github.com/karkir0003/Deep-Learning-Playground/blob/main/CODEOWNERS",
+  "author": "https://github.com/DSGT-DLP/Deep-Learning-Playground/blob/main/CODEOWNERS",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/karkir0003/Deep-Learning-Playground/issues"
+    "url": "https://github.com/DSGT-DLP/Deep-Learning-Playground/issues"
   },
-  "homepage": "https://github.com/karkir0003/Deep-Learning-Playground#readme",
-  "dependencies": {
-    "dotenv": "^16.0.3",
-    "file-saver": "^2.0.5",
-    "gestalt": "^93.0.1",
-    "jszip": "^3.10.1",
-    "local-storage-fallback": "^4.1.2"
-  }
+  "homepage": "https://github.com/DSGT-DLP/Deep-Learning-Playground#readme"
 }

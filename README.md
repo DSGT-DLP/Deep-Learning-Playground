@@ -21,16 +21,16 @@ Have the following installed first:
 ## To start on localhost:
 | Action                                                   | Command                |
 | -------------------------------------------------------- | ---------------------- |
-| Install (one-time) / Update Frontend Packages          | `npm run installf`     |
-| Install Backend Packages (one-time) | `npm run installb` |
+| Install (one-time) / Update Frontend Packages          | `yarn run installf`     |
+| Install Backend Packages (one-time) | `yarn run installb` |
 | Update Backend Packages (one-time) | `conda activate dlplayground && cd conda && conda env update -f environment.yml` |
-| Running the Frontend                                     | `npm run startf`       |
+| Running the Frontend                                     | `yarn run startf`       |
 | Running the Backend                         | `conda activate dlplayground && python -m backend.driver`   |
 
 ## To run in `prod` mode:
 - To start the frontend:
-    - If you're using Unix, run `REACT_APP_MODE=prod npm run startf` from the root of the project
-    - If you're using Windows, run `set REACT_APP_MODE=prod && npm run startf` from the root of the project
+    - If you're using Unix, run `REACT_APP_MODE=prod yarn run startf` from the root of the project
+    - If you're using Windows, run `set REACT_APP_MODE=prod && yarn run startf` from the root of the project
 - Run the backend as usual
 - To run the SQS container, run the command in this [document](https://docs.google.com/document/d/1yYzT7CCUqxnShncHEeHC1MssABntJuKUN88pTXnh_HQ/edit#)
 
@@ -66,7 +66,7 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 
 ## Startup Instructions
 
-> **Note:** You will need the `.env` file to get the `Feedback` page working, but other pages work fine without it. Run the [build_env.py](./backend/aws_helpers/aws_secrets_utils/build_env.py) using `python build_env.py` in the `backend/aws_helpers/aws_secrets_utils` directory. Alternatively, you can simply run `npm run secrets` while at the root of the project
+> **Note:** You will need the `.env` file to get the `Feedback` page working, but other pages work fine without it. Run the [build_env.py](./backend/aws_helpers/aws_secrets_utils/build_env.py) using `python build_env.py` in the `backend/aws_helpers/aws_secrets_utils` directory. Alternatively, you can simply run `yarn run secrets` while at the root of the project
 
 1. For complete functionality with the backend, first, start the backend using the instructions above. The backend will be live at http://localhost:8000/
 
@@ -74,8 +74,8 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 
     ```
     cd frontend\playground-frontend
-    npm install
-    npm start
+    yarn install
+    yarn start
     ```
 
 3. Then, go to http://localhost:3000/

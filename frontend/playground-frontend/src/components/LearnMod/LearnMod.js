@@ -76,6 +76,7 @@ const LearnMod = () => {
       </>
     );
   }
+  return <></>;
 };
 
 export default LearnMod;

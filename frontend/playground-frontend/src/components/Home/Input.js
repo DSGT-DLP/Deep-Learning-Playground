@@ -32,7 +32,6 @@ const Input = (props) => {
 
   return (
     <div
-      // @ts-ignore
       style={{
         ...LAYOUT.row,
         margin: 7.5,
@@ -40,12 +39,7 @@ const Input = (props) => {
       }}
     >
       <div style={styles.queryContainer}>
-        <p
-          // @ts-ignore
-          className="queryText"
-        >
-          {queryText}
-        </p>
+        <p className="queryText">{queryText}</p>
       </div>
       <div className="response-container">
         {options ? (

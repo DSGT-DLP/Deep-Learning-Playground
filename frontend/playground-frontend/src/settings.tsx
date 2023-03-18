@@ -1,6 +1,6 @@
 import React from "react";
 
-export const POSSIBLE_LAYERS = [
+export const POSSIBLE_LAYERS = Object.freeze([
   {
     display_name: "Linear",
     object_name: "nn.Linear",
@@ -192,9 +192,9 @@ export const POSSIBLE_LAYERS = [
       </>
     ),
   },
-];
+]);
 
-export const ML_MODELS = [
+export const ML_MODELS = Object.freeze([
   {
     display_name: "Gaussian Naive Bayes",
     object_name: "sklearn.naive_bayes.GaussianNB",
@@ -387,9 +387,9 @@ export const ML_MODELS = [
       },
     },
   },
-];
+]);
 
-export const IMAGE_LAYERS = [
+export const IMAGE_LAYERS = Object.freeze([
   {
     display_name: "Conv2D",
     object_name: "nn.Conv2d",
@@ -661,9 +661,9 @@ export const IMAGE_LAYERS = [
       </>
     ),
   },
-];
+]);
 
-export const POSSIBLE_TRANSFORMS = [
+export const POSSIBLE_TRANSFORMS = Object.freeze([
   {
     display_name: "Random Horizontal Flip",
     object_name: "transforms.RandomHorizontalFlip",
@@ -765,9 +765,9 @@ export const POSSIBLE_TRANSFORMS = [
     label: "Normalize",
     value: "Normalize",
   },
-];
+]);
 
-export const DETECTION_TRANSFORMS = [
+export const DETECTION_TRANSFORMS = Object.freeze([
   {
     display_name: "Random Horizontal Flip",
     object_name: "transforms.RandomHorizontalFlip",
@@ -1145,12 +1145,12 @@ export const DETECTION_TRANSFORMS = [
     label: "Affine",
     value: "Affine",
   },
-];
+]);
 
 const CLASSIFICATION = "classification";
 const REGRESSION = "regression";
 
-export const CRITERIONS = [
+export const CRITERIONS = Object.freeze([
   {
     label: "L1LOSS",
     value: "L1LOSS",
@@ -1175,9 +1175,9 @@ export const CRITERIONS = [
     object_name: "nn.CrossEntropyLoss(reduction='mean')",
     problem_type: [CLASSIFICATION],
   },
-];
+]);
 
-export const IMAGE_CLASSIFICATION_CRITERION = [
+export const IMAGE_CLASSIFICATION_CRITERION = Object.freeze([
   {
     label: "CELOSS",
     value: "CELOSS",
@@ -1188,45 +1188,47 @@ export const IMAGE_CLASSIFICATION_CRITERION = [
     value: "WCELOSS",
     object_name: "nn.CrossEntropyLoss()", // will define a randomized weights for classes in backend
   },
-];
+]);
 
-export const PROBLEM_TYPES = [
+export const PROBLEM_TYPES = Object.freeze([
   { label: "Classification", value: CLASSIFICATION },
   { label: "Regression", value: REGRESSION },
-];
+]);
 
-export const OBJECT_DETECTION_PROBLEM_TYPES = [
+export const OBJECT_DETECTION_PROBLEM_TYPES = Object.freeze([
   { label: "Labels", value: "labels" },
   { label: "Celebrities", value: "celebrities" },
-];
+]);
 
-export const DETECTION_TYPES = [
+export const DETECTION_TYPES = Object.freeze([
   { label: "Rekognition", value: "rekognition" },
   { label: "YOLO", value: "yolo" },
-];
+]);
 
-export const BOOL_OPTIONS = [
+export const BOOL_OPTIONS = Object.freeze([
   { label: "False", value: false },
   { label: "True", value: true },
-];
-export const OPTIMIZER_NAMES = [
+]);
+export const OPTIMIZER_NAMES = Object.freeze([
   { label: "SGD", value: "SGD" },
   { label: "Adam", value: "Adam" },
-];
+]);
 
-export const DEFAULT_DATASETS = [
+export const DEFAULT_DATASETS = Object.freeze([
   { label: "NONE", value: null },
   { label: "IRIS", value: "IRIS" },
   { label: "CALIFORNIAHOUSING", value: "CALIFORNIAHOUSING" },
   { label: "DIABETES", value: "DIABETES" },
   { label: "DIGITS", value: "DIGITS" },
   { label: "WINE", value: "WINE" },
-];
+]);
 
-export const IMAGE_DEFAULT_DATASETS = [
+export const IMAGE_DEFAULT_DATASETS = Object.freeze([
   { label: "MNIST", value: "MNIST" },
   { label: "FashionMNIST", value: "FashionMNIST" },
   { label: "CIFAR10", value: "CIFAR10" },
-];
+]);
 
-export const PRETRAINED_MODELS = [{ label: "RESNET18", value: "RESNET18" }];
+export const PRETRAINED_MODELS = Object.freeze([
+  { label: "RESNET18", value: "RESNET18" },
+]);

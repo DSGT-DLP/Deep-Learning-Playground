@@ -1,13 +1,17 @@
 import React from "react";
-import { PropTypes } from "prop-types";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
-const ImageFileUpload = (props) => {
+interface ImageFileUploadProps {
+  uploadFile: File | null;
+  setUploadFile: (file: File | null) => void;
+}
+
+const ImageFileUpload = (props: ImageFileUploadProps) => {
   const { uploadFile, setUploadFile } = props;
 
-  const handleFileUpload = (e) => {
-    e.preventDefault();
-    setUploadFile(e.target.files[0] ? e.target.files[0] : null);
+  const handleFileUpload = (target: HTMLInputElement) => {
+    if (!target.files) throw new Error("No files");
+    setUploadFile(target.files[0] ? target.files[0] : null);
   };
 
   return (
@@ -32,7 +36,7 @@ const ImageFileUpload = (props) => {
           name="file"
           id="file-upload"
           accept=".jpg"
-          onChange={handleFileUpload}
+          onChange={e => handleFileUpload(e.target)}
           style={{ width: "100%" }}
         />
         <input
@@ -45,11 +49,6 @@ const ImageFileUpload = (props) => {
       </form>
     </>
   );
-};
-
-ImageFileUpload.propTypes = {
-  uploadFile: PropTypes.object,
-  setUploadFile: PropTypes.func.isRequired,
 };
 
 export default ImageFileUpload;

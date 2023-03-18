@@ -26,7 +26,7 @@ import "./App.css";
 
 function App() {
   const userEmail = getCookie("userEmail");
-  const verifyLogin = (target) => (userEmail ? target : <Login />);
+  const verifyLogin = (target: JSX.Element) => (userEmail ? target : <Login />);
 
   return (
     <div id="app">
@@ -35,7 +35,6 @@ function App() {
           <NavbarMain />
           <Routes>
             <Route
-              exact
               path="/"
               element={
                 userEmail ? (

@@ -51,5 +51,4 @@ const ImageFileUpload = (props: ImageFileUploadProps) => {
   );
 };
 
-
 export default ImageFileUpload;

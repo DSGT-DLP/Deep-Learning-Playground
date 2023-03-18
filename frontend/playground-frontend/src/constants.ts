@@ -14,7 +14,7 @@ export const URLs = Object.freeze({
   linkedin: "https://www.linkedin.com/company/dsgt/",
   youtube: "https://www.youtube.com/channel/UC1DGL6Tb9ffwC-aHChadxMw",
   instagram: "https://www.instagram.com/datasciencegt/",
-  github: "https://github.com/karkir0003/Deep-Learning-Playground",
+  github: "https://github.com/DSGT-DLP/Deep-Learning-Playground",
 });
 
 export const EXPECTED_FAILURE_HTTP_CODES = Object.freeze([

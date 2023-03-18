@@ -1,13 +1,20 @@
 import React from "react";
-import pythonLogo from "../../images/logos/python-logo.png";
-import pandasLogo from "../../images/logos/pandas-logo.svg";
-import pyTorchLogo from "../../images/logos/pytorch-logo.png";
-import flaskLogo from "../../images/logos/flask-logo.png";
-import reactLogo from "../../images/logos/react-logo.png";
-import awsLogo from "../../images/logos/aws-logo.png";
+import { URLs } from "../../constants";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pythonLogo = require("../../images/logos/python-logo.png");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pandasLogo = require("../../images/logos/pandas-logo.png");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pyTorchLogo = require("../../images/logos/pytorch-logo.png");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const flaskLogo = require("../../images/logos/flask-logo.png");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const reactLogo = require("../../images/logos/react-logo.png");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const awsLogo = require("../../images/logos/aws-logo.png");
 
 const About = () => {
-  const urlOpener = (url) => () => window.open(url);
+  const urlOpener = (url: string) => () => window.open(url);
 
   return (
     <div id="about">
@@ -135,7 +142,7 @@ const About = () => {
         <h2>Installation</h2>
         <p>
           See the README.md in the{" "}
-          <a href="https://github.com/karkir0003/Deep-Learning-Playground">
+          <a href={URLs.github}>
             Github Repo
           </a>{" "}
           for setup instructions. These setup instructions are mainly for those

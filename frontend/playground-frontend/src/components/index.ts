@@ -43,9 +43,6 @@ export { default as Feedback } from "./Feedback/Feedback";
 export { default as LearnMod } from "./LearnMod/LearnMod";
 export { default as LearnContent } from "./LearnMod/LearnContent";
 
-//Health
-export { default as Health } from "./Health/Health";
-
 // Navbar
 export { default as NavbarMain } from "./Navbar/NavbarMain";
 

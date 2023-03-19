@@ -16,6 +16,7 @@
     "@types/node": "^18.15.3",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@types/react-google-recaptcha": "^2.1.5",
     "@types/styled-components": "^5.1.26",
     "@uiw/react-codemirror": "^4.12.3",
     "axios": "^0.27.2",

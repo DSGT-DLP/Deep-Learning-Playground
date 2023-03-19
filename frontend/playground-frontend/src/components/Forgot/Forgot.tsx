@@ -1,4 +1,7 @@
+// @flow
 import React, { useState } from "react";
+import type {ReactNode} from "react";
+
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -21,7 +24,7 @@ function Forgot() {
     }
   };
 
-  const EmailNewPassword = (
+  const EmailNewPassword: ReactNode = (
     <>
       <Form.Group className="mb-3" controlId="login-email">
         <h2 className="title">Forgot Password</h2>

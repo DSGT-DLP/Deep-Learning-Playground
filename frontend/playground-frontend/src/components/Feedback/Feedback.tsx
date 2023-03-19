@@ -1,6 +1,6 @@
 // @flow
-import React, { useState} from "react";
-import type {Node} from "react";
+import React, { useState } from "react";
+import type { Node } from "react";
 
 import { EmailInput, TitleText, Spacer } from "../index";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -14,37 +14,37 @@ const CALENDLY_URL = "https://calendly.com/dlp-dsgt/30min";
 
 function renderSuccessfulFeedbackSubmit(): Node {
   return (
-      <>
-        <div id="header-section">
-          <h1 className="header">Deep Learning Playground Feedback</h1>
-        </div>
+    <>
+      <div id="header-section">
+        <h1 className="header">Deep Learning Playground Feedback</h1>
+      </div>
 
-        <div className="sections" style={styles.content_section}>
-          <p style={{ color: "0,0,0", fontSize: "5vh", textAlign: "center" }}>
-            Feedback submitted!
-          </p>
-        </div>
-        <div className="sections" style={styles.content_section}>
-          <p style={{ color: "0,0,0", fontSize: "4vh", textAlign: "center" }}>
-            If you would like to discuss your feedback, feel free to schedule a
-            15-20 minute meeting over Calendly
-          </p>
-        </div>
+      <div className="sections" style={styles.content_section}>
+        <p style={{ color: "0,0,0", fontSize: "5vh", textAlign: "center" }}>
+          Feedback submitted!
+        </p>
+      </div>
+      <div className="sections" style={styles.content_section}>
+        <p style={{ color: "0,0,0", fontSize: "4vh", textAlign: "center" }}>
+          If you would like to discuss your feedback, feel free to schedule a
+          15-20 minute meeting over Calendly
+        </p>
+      </div>
+      <div>
         <div>
-          <div>
-            "
-            <InlineWidget
-              url={CALENDLY_URL}
-              styles={{
-                marginTop: "-66px",
-                minWidth: "320px",
-                height: "750px",
-              }}
-            />
-          </div>
+          "
+          <InlineWidget
+            url={CALENDLY_URL}
+            styles={{
+              marginTop: "-66px",
+              minWidth: "320px",
+              height: "750px",
+            }}
+          />
         </div>
-      </>
-    );
+      </div>
+    </>
+  );
 }
 
 const Feedback = () => {
@@ -72,9 +72,10 @@ const Feedback = () => {
 
   return (
     <>
-      {
-        successful ? renderSuccessfulFeedbackSubmit(): (
-          <>
+      {successful ? (
+        renderSuccessfulFeedbackSubmit()
+      ) : (
+        <>
           <div id="header-section">
             <h1 className="header">Deep Learning Playground Feedback</h1>
           </div>
@@ -82,8 +83,8 @@ const Feedback = () => {
           <div className="sections" style={styles.content_section}>
             <h2>Feedback Form</h2>
             <p>
-              Fill this feedback form for any bugs, feature requests or complaints!
-              We'll get back to as soon as we can.
+              Fill this feedback form for any bugs, feature requests or
+              complaints! We'll get back to as soon as we can.
             </p>
 
             <Spacer height={20} />
@@ -96,7 +97,9 @@ const Feedback = () => {
                 onChange={(e) => setFirstName(e.target.value)}
               />
               {submitted && firstName.trim() === "" && recaptcha !== "" && (
-                <p style={GENERAL_STYLES.error_text}>First Name cannot be blank</p>
+                <p style={GENERAL_STYLES.error_text}>
+                  First Name cannot be blank
+                </p>
               )}
 
               <Spacer height={20} />
@@ -108,7 +111,9 @@ const Feedback = () => {
                 onChange={(e) => setLastName(e.target.value)}
               />
               {submitted && lastName.trim() === "" && recaptcha !== "" && (
-                <p style={GENERAL_STYLES.error_text}>Last Name cannot be blank</p>
+                <p style={GENERAL_STYLES.error_text}>
+                  Last Name cannot be blank
+                </p>
               )}
 
               <Spacer height={20} />
@@ -128,7 +133,9 @@ const Feedback = () => {
                 onChange={(e) => setFeedback(e.target.value)}
               />
               {submitted && feedback === "" && recaptcha !== "" && (
-                <p style={GENERAL_STYLES.error_text}>Please enter some feedback</p>
+                <p style={GENERAL_STYLES.error_text}>
+                  Please enter some feedback
+                </p>
               )}
             </form>
 
@@ -146,14 +153,18 @@ const Feedback = () => {
               Submit
             </button>
           </div>
-          </>
-        )
-      }
+        </>
+      )}
     </>
   );
 };
 
-const send_feedback_mail = async (firstName: string, lastName: string, email: string, feedback: string) => {
+const send_feedback_mail = async (
+  firstName: string,
+  lastName: string,
+  email: string,
+  feedback: string
+) => {
   const emailResult = await sendToBackend("sendEmail", {
     email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
     subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,

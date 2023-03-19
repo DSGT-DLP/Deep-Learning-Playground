@@ -11,9 +11,9 @@ import { toast } from "react-toastify";
 function Forgot() {
   const [email, setEmail] = useState("");
 
-  const onChange = (e) => setEmail(e.target.value);
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
     try {
       const auth = getAuth();
@@ -41,7 +41,7 @@ function Forgot() {
         <Button
           id="forgot-password"
           className="buttons mb-2"
-          onClick={onSubmit}
+          onClick={(e) => onSubmit}
         >
           Send Reset Link
         </Button>

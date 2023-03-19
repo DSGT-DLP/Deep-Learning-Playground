@@ -1,6 +1,6 @@
 // @flow
 import React, { useState } from "react";
-import type { Node } from "react";
+import type { ReactNode } from "react";
 
 import { EmailInput, TitleText, Spacer } from "../index";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -12,7 +12,7 @@ import { InlineWidget } from "react-calendly";
 
 const CALENDLY_URL = "https://calendly.com/dlp-dsgt/30min";
 
-function renderSuccessfulFeedbackSubmit(): Node {
+function renderSuccessfulFeedbackSubmit(): ReactNode {
   return (
     <>
       <div id="header-section">

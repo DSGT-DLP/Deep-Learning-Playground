@@ -1,6 +1,6 @@
 import { EmailInput, TitleText, Spacer } from "../index";
 import ReCAPTCHA from "react-google-recaptcha";
-import React, { useState } from "react";
+import { useState } from "react";
 import { COLORS, GENERAL_STYLES } from "../../constants";
 import { toast } from "react-toastify";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";

@@ -3,13 +3,15 @@ name: Format Python Code with Black
 on: [push, pull_request]
 
 jobs:
-  lint:
+  linter_name:
+    name: Black Formatter
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: psf/black@stable
-        with:
-          fail_on_error: 'false' # if formatting errors are there, don't throw error
+      - uses: rickstaa/action-black@v1
+        id: action_black
+          with:
+            black_args: "."
       - name: Create Pull Request
         if: steps.action_black.outputs.is_formatted == 'true'
         uses: peter-evans/create-pull-request@v3

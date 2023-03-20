@@ -1,6 +1,6 @@
 name: Format Python Code with Black
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   linter_name:

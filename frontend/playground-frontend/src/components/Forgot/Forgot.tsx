@@ -41,6 +41,7 @@ function Forgot() {
         <Button
           id="forgot-password"
           className="buttons mb-2"
+          //eslint-disable-next-line  @typescript-eslint/no-unused-vars
           onClick={(e) => onSubmit}
         >
           Send Reset Link

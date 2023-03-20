@@ -171,14 +171,14 @@ const Overlay = () => {
   );
 };
 
-type Execution = {
+interface Execution {
   name: string;
   execution_id: number;
   data_source: string;
   timestamp: string;
   status: string;
   progress: number;
-};
+}
 
 const FilledGrid = (props: { executionTable: Execution[] }) => {
   const { executionTable } = props;

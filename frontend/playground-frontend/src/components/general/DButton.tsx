@@ -1,5 +1,3 @@
-import React from "react";
-
 interface DButtonProps {
   onClick?: () => void;
   style?: React.CSSProperties;

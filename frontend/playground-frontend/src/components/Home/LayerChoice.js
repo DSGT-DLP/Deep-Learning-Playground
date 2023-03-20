@@ -1,6 +1,6 @@
 import { Info } from "@mui/icons-material";
 import PropTypes from "prop-types";
-import React from "react";
+
 import RectContainer from "./RectContainer";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";

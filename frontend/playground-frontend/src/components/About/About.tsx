@@ -1,4 +1,3 @@
-import React from "react";
 import { URLs } from "../../constants";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pythonLogo = require("../../images/logos/python-logo.png");
@@ -141,11 +140,8 @@ const About = () => {
       <div className="sections" id="installation">
         <h2>Installation</h2>
         <p>
-          See the README.md in the{" "}
-          <a href={URLs.github}>
-            Github Repo
-          </a>{" "}
-          for setup instructions. These setup instructions are mainly for those
+          See the README.md in the <a href={URLs.github}>Github Repo</a> for
+          setup instructions. These setup instructions are mainly for those
           developing/enhancing the tool. For the user, simply go to the "Deep
           Learning tab" at the top of the page.
         </p>

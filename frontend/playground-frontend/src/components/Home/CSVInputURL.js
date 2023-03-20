@@ -1,7 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import { Form } from "react-bootstrap";
+import { PropTypes } from "prop-types";
 
 const HomeCSVInputURL = (props) => {
   const {

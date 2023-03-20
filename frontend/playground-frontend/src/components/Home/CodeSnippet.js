@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 import { FaCopy } from "react-icons/fa";
 import { toast } from "react-toastify";

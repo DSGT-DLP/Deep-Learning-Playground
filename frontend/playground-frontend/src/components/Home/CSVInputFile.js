@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 import * as XLSX from "xlsx";
 import { FaCloudUploadAlt } from "react-icons/fa";

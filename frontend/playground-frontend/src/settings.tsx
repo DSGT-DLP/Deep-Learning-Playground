@@ -1,5 +1,3 @@
-import React from "react";
-
 export const POSSIBLE_LAYERS = Object.freeze([
   {
     display_name: "Linear",

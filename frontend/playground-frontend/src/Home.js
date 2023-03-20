@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { DEFAULT_ADDED_LAYERS } from "./constants";
 
 import {

@@ -1,4 +1,3 @@
-import React from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
 interface ImageFileUploadProps {
@@ -36,7 +35,7 @@ const ImageFileUpload = (props: ImageFileUploadProps) => {
           name="file"
           id="file-upload"
           accept=".jpg"
-          onChange={e => handleFileUpload(e.target)}
+          onChange={(e) => handleFileUpload(e.target)}
           style={{ width: "100%" }}
         />
         <input

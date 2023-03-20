@@ -1,4 +1,3 @@
-import React from "react";
 import getContent from "./LearningModulesContent";
 import { useNavigate } from "react-router-dom";
 

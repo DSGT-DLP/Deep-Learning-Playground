@@ -4,7 +4,7 @@ import PT_PATH from "../../backend_outputs/model.pt";
 import PKL_PATH from "../../backend_outputs/model.pkl";
 import Plot from "react-plotly.js";
 import PropTypes from "prop-types";
-import React from "react";
+
 import { CSVLink } from "react-csv";
 import { GENERAL_STYLES, COLORS } from "../../constants";
 

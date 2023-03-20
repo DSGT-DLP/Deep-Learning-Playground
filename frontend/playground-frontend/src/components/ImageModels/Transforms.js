@@ -1,6 +1,6 @@
 import Input from "../Home/Input";
 import AddedLayer from "../Home/AddedLayer";
-import React from "react";
+
 import BackgroundLayout from "../Home/BackgroundLayout";
 import { PropTypes } from "prop-types";
 import { GENERAL_STYLES, COLORS } from "../../constants";

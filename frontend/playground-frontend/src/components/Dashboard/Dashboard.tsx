@@ -17,7 +17,6 @@ import {
 } from "gestalt";
 import "gestalt/dist/gestalt.css";
 import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
@@ -255,10 +254,7 @@ const FilledGrid = (props: { executionTable: Execution[] }) => {
                     {formatDate(new Date(row.timestamp))}
                   </TableCell>
                   <TableCell align="left">
-                    <StatusDisplay
-                      statusType={row.status}
-                      status={`${row.progress.toFixed(2)}%`}
-                    />
+                    <StatusDisplay statusType={row.status} />
                   </TableCell>
                   <TableCell align="left">
                     <IconButton
@@ -493,12 +489,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-StatusDisplay.propTypes = {
-  statusType: PropTypes.string,
-  status: PropTypes.string,
-};
-
-FilledGrid.propTypes = {
-  executionTable: PropTypes.array,
-};

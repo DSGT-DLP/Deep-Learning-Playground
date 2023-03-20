@@ -97,12 +97,16 @@ def train(
         else "../backend"
     )
 
-    SAVED_MODEL = SAVED_MODEL_DL if not "frontend" in os.listdir(os.getcwd()) else "/".join(SAVED_MODEL_DL.split("/")[1:])
+    SAVED_MODEL = (
+        SAVED_MODEL_DL
+        if not "frontend" in os.listdir(os.getcwd())
+        else "/".join(SAVED_MODEL_DL.split("/")[1:])
+    )
 
     learner.fit(
         n_epochs, cbs=[CSVLogger(fname=os.path.join(backend_dir, "dl_results.csv"))]
     )
-    save_model(SAVED_MODEL, learner.model, getattr(learner, 'opt', None))
+    save_model(SAVED_MODEL, learner.model, getattr(learner, "opt", None))
     return learner
 
 
@@ -232,5 +236,12 @@ def is_pytorch(model_name):
             return True
     return False
 
+
 if __name__ == "__main__":
-    train("./tests/zip_files/double_zipped.zip", "resnet34", 2, torch.nn.CrossEntropyLoss(), 2)
+    train(
+        "./tests/zip_files/double_zipped.zip",
+        "resnet34",
+        2,
+        torch.nn.CrossEntropyLoss(),
+        2,
+    )

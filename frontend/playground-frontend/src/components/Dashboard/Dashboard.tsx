@@ -16,7 +16,7 @@ import {
   Spinner,
 } from "gestalt";
 import "gestalt/dist/gestalt.css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
@@ -34,6 +34,7 @@ import {
   BarElement,
   Title,
   TimeSeriesScale,
+  ChartData,
 } from "chart.js";
 import "chartjs-adapter-date-fns";
 import { enUS } from "date-fns/locale";
@@ -66,7 +67,7 @@ const BlankGrid = () => {
   );
 };
 
-const StatusDisplay = ({ statusType, status }) => {
+const StatusDisplay = ({ statusType }: { statusType: string }) => {
   const navigate = useNavigate();
   if (statusType === "QUEUED") {
     return (
@@ -74,7 +75,7 @@ const StatusDisplay = ({ statusType, status }) => {
         className="grid-status-display grid-status-display-gray"
         onClick={() => navigate("/")}
       >
-        Queued: {status}
+        Queued
       </button>
     );
   } else if (statusType === "STARTING") {
@@ -127,7 +128,7 @@ const StatusDisplay = ({ statusType, status }) => {
   }
 };
 
-const sameDay = (d1, d2) => {
+const sameDay = (d1: Date, d2: Date) => {
   return (
     d1.getFullYear() === d2.getFullYear() &&
     d1.getMonth() === d2.getMonth() &&
@@ -135,7 +136,7 @@ const sameDay = (d1, d2) => {
   );
 };
 
-const formatDate = (date) => {
+const formatDate = (date: Date) => {
   const currDate = new Date();
 
   const time = sameDay(date, currDate)
@@ -170,16 +171,25 @@ const Overlay = () => {
   );
 };
 
-const FilledGrid = (props) => {
+type Execution = {
+  name: string;
+  execution_id: number;
+  data_source: string;
+  timestamp: string;
+  status: string;
+  progress: number;
+};
+
+const FilledGrid = (props: { executionTable: Execution[] }) => {
   const { executionTable } = props;
   const navigate = useNavigate();
-  function toTitleCase(str) {
+  function toTitleCase(str: string) {
     return str.replace(/\w\S*/g, function (txt) {
-      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
     });
   }
-  async function handleOnDownloadClick(e, row) {
-    e.event.stopPropagation();
+  async function handleOnDownloadClick(e: unknown, row: Execution) {
+    (e as Event).stopPropagation();
     const response = await sendToBackend("getExecutionsFilesPresignedUrls", {
       exec_id: row.execution_id,
     });
@@ -256,7 +266,7 @@ const FilledGrid = (props) => {
                       accessibilityLabel={"Download"}
                       size={"md"}
                       disabled={row.status !== "SUCCESS"}
-                      onClick={(e) => handleOnDownloadClick(e, row)}
+                      onClick={(e) => handleOnDownloadClick(e.event, row)}
                     ></IconButton>
                   </TableCell>
                 </TableRow>
@@ -271,10 +281,16 @@ const FilledGrid = (props) => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [executionTable, setUserExecutionTable] = useState(null);
+  const [executionTable, setUserExecutionTable] = useState<Execution[] | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(false);
-  const [modelTypeDoughnutData, setModelTypeDoughnutData] = useState(null);
-  const [execFrequencyBarData, setExecFrequencyBarData] = useState(null);
+  const [modelTypeDoughnutData, setModelTypeDoughnutData] =
+    useState<ChartData<"doughnut"> | null>(null);
+  const [execFrequencyBarData, setExecFrequencyBarData] = useState<ChartData<
+    "bar",
+    { x: Date; y: number }[]
+  > | null>(null);
   useEffect(() => {
     if (auth.currentUser) navigate("/dashboard");
     getExecutionTable();
@@ -283,15 +299,24 @@ const Dashboard = () => {
     if (auth.currentUser) {
       setIsLoading(true);
       const response = await sendToBackend("getExecutionsData", {});
-      let table = JSON.parse(response["record"]);
-      table.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      const table: Execution[] = JSON.parse(response["record"]);
+      table.sort(
+        (
+          a: { timestamp: string | number },
+          b: { timestamp: string | number }
+        ) => new Date(b.timestamp).valueOf() - new Date(a.timestamp).valueOf()
+      );
       setUserExecutionTable(table);
       setModelTypeDoughnutData({
         datasets: [
           {
             data: [
-              table.filter((row) => row.data_source === "TABULAR").length,
-              table.filter((row) => row.data_source === "IMAGE").length,
+              table.filter(
+                (row: { data_source: string }) => row.data_source === "TABULAR"
+              ).length,
+              table.filter(
+                (row: { data_source: string }) => row.data_source === "IMAGE"
+              ).length,
             ],
             backgroundColor: [
               "rgb(255, 99, 132)",
@@ -303,23 +328,26 @@ const Dashboard = () => {
         ],
         labels: ["Tabular", "Image"],
       });
-      const sameDay = (d1, d2) => {
+      const sameDay = (d1: Date, d2: Date) => {
         return (
           d1.getFullYear() === d2.getFullYear() &&
           d1.getMonth() === d2.getMonth() &&
           d1.getDate() === d2.getDate()
         );
       };
-      const setToNearestDay = (d) => {
+      const setToNearestDay = (d: Date) => {
         d.setHours(0, 0, 0, 0);
         return d;
       };
-      let execFrequencyData = [];
+      const execFrequencyData: { x: Date; y: number }[] = [];
       table.forEach((row) => {
         if (isFuture(add(new Date(row.timestamp), { days: 30 }))) {
           execFrequencyData.length !== 0 &&
-          sameDay(new Date(row.timestamp), execFrequencyData.at(-1).x)
-            ? (execFrequencyData.at(-1).y += 1)
+          sameDay(
+            new Date(row.timestamp),
+            execFrequencyData[execFrequencyData.length - 1].x
+          )
+            ? (execFrequencyData[execFrequencyData.length - 1].y += 1)
             : execFrequencyData.push({
                 x: setToNearestDay(new Date(row.timestamp)),
                 y: 1,
@@ -442,7 +470,7 @@ const Dashboard = () => {
             </Box>
           ) : null}
         </Flex>
-        <FilledGrid executionTable={executionTable} />
+        {executionTable && <FilledGrid executionTable={executionTable} />}
         {executionTable && executionTable.length === 0 && <BlankGrid />}
         {isLoading ? (
           <div id="loading">

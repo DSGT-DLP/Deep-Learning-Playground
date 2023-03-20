@@ -18,6 +18,7 @@ import {
 import Home from "./Home";
 import { ToastContainer } from "react-toastify";
 import { getCookie } from "./components/helper_functions/Cookie";
+import React from "react";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";

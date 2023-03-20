@@ -38,6 +38,7 @@ import {
 import "chartjs-adapter-date-fns";
 import { enUS } from "date-fns/locale";
 import { format, isFuture, add } from "date-fns";
+import React from "react";
 
 ChartJS.register(
   ArcElement,

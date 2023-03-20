@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const DEMO_VIDEO = require("../../images/demo_video.gif");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -37,7 +37,7 @@ const render_layer_info = (layer_info: WikiLayerItem) => {
   const changeClassName = () => {
     const layer_info_button = document.getElementById(layer_info.id);
     if (!layer_info_button) throw new Error("layer_info_button is null");
-    
+
     if (layer_info_button.classList.contains("collapsed-layer")) {
       layer_info_button.classList.remove("collapsed-layer");
       layer_info_button.classList.add("expanded-layer");

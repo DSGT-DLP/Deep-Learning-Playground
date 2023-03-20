@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ClassCard from "./ClassCard";
 import getContent from "./LearningModulesContent";
 import { auth } from "../../firebase";

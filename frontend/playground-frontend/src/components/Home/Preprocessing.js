@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { python } from "@codemirror/lang-python";
 import { basicSetup } from "codemirror";
 import Button from "react-bootstrap/Button";
-import React, { useState } from "react";
+import { useState } from "react";
 import { userCodeEval } from "../helper_functions/TalkWithBackend";
 import PropTypes from "prop-types";
 

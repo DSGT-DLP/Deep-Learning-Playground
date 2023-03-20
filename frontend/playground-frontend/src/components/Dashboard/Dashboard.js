@@ -16,7 +16,7 @@ import {
   Spinner,
 } from "gestalt";
 import "gestalt/dist/gestalt.css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";

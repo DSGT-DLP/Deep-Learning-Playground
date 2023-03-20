@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { COLORS, GENERAL_STYLES, ITEM_TYPES } from "../../constants";
 import { styled } from "@mui/material/styles";
 import { useDrag } from "react-dnd";
+import { Fragment } from "react";
 
 const LayerChoice = (props) => {
   const { layer, onDrop } = props;
@@ -50,10 +51,10 @@ const LayerChoice = (props) => {
       <div>
         <HtmlTooltip
           title={
-            <React.Fragment>
+            <Fragment>
               <Typography color="inherit">{layer.display_name}</Typography>
               {layer.tooltip_info}
-            </React.Fragment>
+            </Fragment>
           }
         >
           <button style={styles.top_left_tooltip}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import storage from "local-storage-fallback";
 import Container from "react-bootstrap/Container";
 import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";

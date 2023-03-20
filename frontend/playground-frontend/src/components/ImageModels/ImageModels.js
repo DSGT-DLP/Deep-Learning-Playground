@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import Transforms from "./Transforms";
 import DataCodeSnippet from "./DataCodeSnippet";
 import LargeFileUpload from "../general/LargeFileUpload";

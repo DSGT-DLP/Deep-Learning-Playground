@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   OBJECT_DETECTION_PROBLEM_TYPES,
   DETECTION_TYPES,

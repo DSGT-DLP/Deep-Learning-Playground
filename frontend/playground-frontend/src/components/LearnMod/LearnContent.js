@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import MCQuestion from "./MCQuestion";
 import FRQuestion from "./FRQuestion";
 import ImageComponent from "./ImageComponent";

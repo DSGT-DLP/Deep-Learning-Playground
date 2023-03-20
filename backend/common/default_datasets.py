@@ -37,8 +37,7 @@ def get_default_dataset_header(dataset):
             default_dataset.dropna(how="all", inplace=True)
             return default_dataset.columns
     except Exception:
-        raise Exception(
-            f"Unable to load the {dataset} file into Pandas DataFrame")
+        raise Exception(f"Unable to load the {dataset} file into Pandas DataFrame")
 
 
 def get_default_dataset(dataset, target=None, features=None):
@@ -71,7 +70,7 @@ def get_default_dataset(dataset, target=None, features=None):
             )
             # remove any empty lines
             default_dataset.dropna(how="all", inplace=True)
-            if (features and target):
+            if features and target:
                 y = default_dataset[target]
                 X = default_dataset[features]
             else:
@@ -81,8 +80,7 @@ def get_default_dataset(dataset, target=None, features=None):
             return X, y, target_names
 
     except Exception:
-        raise Exception(
-            f"Unable to load the {dataset} file into Pandas DataFrame")
+        raise Exception(f"Unable to load the {dataset} file into Pandas DataFrame")
 
 
 def get_img_default_dataset_loaders(
@@ -96,10 +94,8 @@ def get_img_default_dataset_loaders(
         train_transform (list) : list of transforms
         batch_size (int) : batch_size
     """
-    train_transform = torchvision.transforms.Compose(
-        [x for x in train_transform])
-    test_transform = torchvision.transforms.Compose(
-        [x for x in test_transform])
+    train_transform = torchvision.transforms.Compose([x for x in train_transform])
+    test_transform = torchvision.transforms.Compose([x for x in test_transform])
 
     train_set = eval(
         f"torchvision.datasets.{datasetname}(root='./backend/image_data_uploads', train=True, download=True, transform=train_transform)"

@@ -9,12 +9,13 @@ interface QuestionType {
   questionID: string;
   sectionType: string;
 }
-const MCQuestion = (props: {
+interface MCQuestionProps {
   moduleID: string;
   questionObject: QuestionType;
   sectionID: number;
   user: User;
-}) => {
+}
+const MCQuestion = (props: MCQuestionProps) => {
   const [answeredCorrect, setAnsweredCorrect] = useState(false);
   const [answeredIncorrect, setAnsweredIncorrect] = useState(false);
   const [unanswered, setUnanswered] = useState(false);

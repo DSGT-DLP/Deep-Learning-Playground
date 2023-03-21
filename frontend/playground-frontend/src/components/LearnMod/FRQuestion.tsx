@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
 import { User } from "firebase/auth";
 
@@ -9,12 +8,13 @@ interface QuestionType {
   questionID: string;
   sectionType: string;
 }
-const FRQuestion = (props: {
+interface FRQuestionProps {
   moduleID: string;
   questionObject: QuestionType;
   sectionID: number;
   user: User;
-}) => {
+}
+const FRQuestion = (props: FRQuestionProps) => {
   const [answeredCorrect, setAnsweredCorrect] = useState(false);
   const [answeredIncorrect, setAnsweredIncorrect] = useState(false);
   const [unanswered, setUnanswered] = useState(false);
@@ -86,13 +86,5 @@ const FRQuestion = (props: {
     </div>
   );
 };
-
-const propTypes = {
-  user: PropTypes.object,
-  questionObject: PropTypes.object,
-  moduleID: PropTypes.string,
-  sectionID: PropTypes.number,
-};
-FRQuestion.propTypes = propTypes;
 
 export default FRQuestion;

@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
+import { User } from "firebase/auth";
 
-const MCQuestion = (props) => {
+interface QuestionType {
+  answerChoices: string[];
+  correctAnswer: number;
+  question: string;
+  questionID: string;
+  sectionType: string;
+}
+const MCQuestion = (props: {
+  moduleID: string;
+  questionObject: QuestionType;
+  sectionID: number;
+  user: User;
+}) => {
   const [answeredCorrect, setAnsweredCorrect] = useState(false);
   const [answeredIncorrect, setAnsweredIncorrect] = useState(false);
   const [unanswered, setUnanswered] = useState(false);
+  useEffect(() => {
+    console.log(props);
+  }, [answeredCorrect]);
 
   // function that makes call to backend to update user progress
   async function updateUserProgress() {
@@ -30,9 +45,11 @@ const MCQuestion = (props) => {
       setAnsweredCorrect(false);
       setAnsweredIncorrect(false);
     } else {
-      let answer = parseInt(
-        document.querySelector(
-          'input[name="' + props.questionObject.questionID + '"]:checked'
+      const answer = parseInt(
+        (
+          document.querySelector(
+            'input[name="' + props.questionObject.questionID + '"]:checked'
+          ) as HTMLInputElement
         ).value
       );
 
@@ -84,13 +101,5 @@ const MCQuestion = (props) => {
     </div>
   );
 };
-
-const propTypes = {
-  user: PropTypes.object,
-  questionObject: PropTypes.object,
-  moduleID: PropTypes.number,
-  sectionID: PropTypes.number,
-};
-MCQuestion.propTypes = propTypes;
 
 export default MCQuestion;

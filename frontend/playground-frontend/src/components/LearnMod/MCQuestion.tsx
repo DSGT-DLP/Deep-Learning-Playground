@@ -3,13 +3,16 @@ import PropTypes from "prop-types";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
 
 const MCQuestion = (props) => {
+  useEffect(() => {
+    console.log(props);
+  }, []);
   const [answeredCorrect, setAnsweredCorrect] = useState(false);
   const [answeredIncorrect, setAnsweredIncorrect] = useState(false);
   const [unanswered, setUnanswered] = useState(false);
 
   // function that makes call to backend to update user progress
   async function updateUserProgress() {
-    let requestData = {
+    const requestData = {
       uid: props.user.uid,
       moduleID: props.moduleID,
       sectionID: props.sectionID,

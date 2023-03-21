@@ -1,15 +1,30 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
+import { User } from "firebase/auth";
 
-const MCQuestion = (props) => {
+interface QuestionType {
+  answer: number;
+  question: string;
+  questionID: string;
+  sectionType: string;
+}
+const FRQuestion = (props: {
+  moduleID: string;
+  questionObject: QuestionType;
+  sectionID: number;
+  user: User;
+}) => {
   const [answeredCorrect, setAnsweredCorrect] = useState(false);
   const [answeredIncorrect, setAnsweredIncorrect] = useState(false);
   const [unanswered, setUnanswered] = useState(false);
+  useEffect(() => {
+    console.log(props);
+  }, [answeredCorrect]);
 
   // function that makes call to backend to update user progress
   async function updateUserProgress() {
-    let requestData = {
+    const requestData = {
       uid: props.user.uid,
       moduleID: props.moduleID,
       sectionID: props.sectionID,
@@ -21,12 +36,14 @@ const MCQuestion = (props) => {
 
   // run when submit button on question is pressed
   const questionSubmit = () => {
-    if (document.getElementById("frInput").value === "") {
+    if ((document.getElementById("frInput") as HTMLInputElement).value === "") {
       setUnanswered(true);
       setAnsweredCorrect(false);
       setAnsweredIncorrect(false);
     } else {
-      let answer = parseInt(document.getElementById("frInput").value);
+      const answer = parseInt(
+        (document.getElementById("frInput") as HTMLInputElement).value
+      );
 
       if (answer === props.questionObject.answer) {
         setAnsweredCorrect(true);
@@ -76,6 +93,6 @@ const propTypes = {
   moduleID: PropTypes.string,
   sectionID: PropTypes.number,
 };
-MCQuestion.propTypes = propTypes;
+FRQuestion.propTypes = propTypes;
 
-export default MCQuestion;
+export default FRQuestion;

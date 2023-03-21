@@ -3,9 +3,6 @@ import PropTypes from "prop-types";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
 
 const MCQuestion = (props) => {
-  useEffect(() => {
-    console.log(props);
-  }, []);
   const [answeredCorrect, setAnsweredCorrect] = useState(false);
   const [answeredIncorrect, setAnsweredIncorrect] = useState(false);
   const [unanswered, setUnanswered] = useState(false);

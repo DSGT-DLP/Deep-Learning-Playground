@@ -1,7 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
+interface ImageData {
+  path: string;
+  caption: string;
+  licenseLink: string;
+  attribution: string;
+}
 
-const ImageComponent = (props) => {
+const ImageComponent = (props: { imageData: ImageData }) => {
   return (
     <div id="imageContainer">
       <img
@@ -16,8 +21,5 @@ const ImageComponent = (props) => {
     </div>
   );
 };
-
-const propTypes = { imageData: PropTypes.object };
-ImageComponent.propTypes = propTypes;
 
 export default ImageComponent;

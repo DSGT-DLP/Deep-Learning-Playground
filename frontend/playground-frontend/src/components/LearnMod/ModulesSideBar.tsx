@@ -7,7 +7,7 @@ const ModulesSideBar = () => {
 
   const navigate = useNavigate();
 
-  let lessons = content.map((x) => ({
+  const lessons = content.map((x) => ({
     title: x.title,
     points: x.points,
     subClasses: x.subsections,

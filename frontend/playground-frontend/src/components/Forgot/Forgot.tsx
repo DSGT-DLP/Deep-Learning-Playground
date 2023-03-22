@@ -13,8 +13,7 @@ function Forgot() {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
 
-  const onSubmit = async (e: React.FormEvent<HTMLInputElement>) => {
-    e.preventDefault();
+  const onSubmit = async () => {
     try {
       const auth = getAuth();
       await sendPasswordResetEmail(auth, email);
@@ -41,8 +40,7 @@ function Forgot() {
         <Button
           id="forgot-password"
           className="buttons mb-2"
-          //eslint-disable-next-line  @typescript-eslint/no-unused-vars
-          onClick={(e) => onSubmit}
+          onClick={onSubmit}
         >
           Send Reset Link
         </Button>

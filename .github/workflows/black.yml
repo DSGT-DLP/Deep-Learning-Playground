@@ -1,6 +1,6 @@
 name: Format Python Code with Black
 
-on: [push]
+on: [pull_request]
 
 jobs:
   linter_name:
@@ -12,15 +12,11 @@ jobs:
         id: action_black
         with:
           black_args: "."
-      - name: Create Pull Request
+      - uses: stefanzweifel/git-auto-commit-action@v4
         if: steps.action_black.outputs.is_formatted == 'true'
-        uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Format Python code with psf/black push"
-          commit-message: ":art: Format Python code with psf/black"
-          body: |
-            There appear to be some python formatting errors in ${{ github.sha }}. This pull request
-            uses the [psf/black](https://github.com/psf/black) formatter to fix these issues.
-          base: ${{ github.head_ref }} # Creates pull request onto pull request or commit branch
-          branch: actions/black
+          commit_message: ":art: Format Python code with psf/black"
+          commit_options: '--no-verify'
+          commit_user_name: github-actions
+          commit_user_email: ghaction@github.com
+          

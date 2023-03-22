@@ -24,7 +24,7 @@ export { default as CustomModelName } from "./Home/CustomModelName";
 export { default as Preprocessing } from "./Home/Preprocessing";
 
 // Dashboard
-export { default as Dashboard } from "./Dashboard/Dashboard";
+export { default as Dashboard } from "../Dashboard";
 export { default as Login } from "./Dashboard/Login";
 
 //Forgot

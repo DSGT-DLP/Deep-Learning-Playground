@@ -299,10 +299,8 @@ const Dashboard = () => {
       const response = await sendToBackend("getExecutionsData", {});
       const table: Execution[] = JSON.parse(response["record"]);
       table.sort(
-        (
-          a: { timestamp: string | number },
-          b: { timestamp: string | number }
-        ) => new Date(b.timestamp).valueOf() - new Date(a.timestamp).valueOf()
+        (a, b) =>
+          new Date(b.timestamp).valueOf() - new Date(a.timestamp).valueOf()
       );
       setUserExecutionTable(table);
       setModelTypeDoughnutData({

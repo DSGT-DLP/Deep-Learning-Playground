@@ -57,7 +57,6 @@ CORS(app)
 
 app.wsgi_app = middleware(app.wsgi_app, exempt_paths=["/test", "/"])
 
-
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def root(path):

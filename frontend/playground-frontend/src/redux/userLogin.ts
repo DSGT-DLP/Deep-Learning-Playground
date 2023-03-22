@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { User } from "firebase/auth";
 import { sendToBackend } from "../components/helper_functions/TalkWithBackend";
-import { ModuleType } from "../components/LearnMod/LearningModulesContent";
 import { ThunkApiType } from "./store";
 
 export interface UserState {

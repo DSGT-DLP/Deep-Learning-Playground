@@ -2,26 +2,24 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { updateUserSettings } from "../../firebase";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../redux/hooks";
 
 const SettingsBlock = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckedPassword] = useState("");
-  const signedInUserEmail = useSelector((state) => state.currentUser.email);
-  const signedInUserName = useSelector(
+  const signedInUserEmail = useAppSelector((state) => state.currentUser.email);
+  const signedInUserName = useAppSelector(
     (state) => state.currentUser.displayName
   );
 
   const handleUpdateUser = async () => {
-    let user;
     if (password !== checkPassword) {
       alert("Passwords don't Match");
     } else {
-      user = await updateUserSettings(fullName, email, password);
+      await updateUserSettings(fullName, email, password);
     }
-    if (!user) return;
   };
   return (
     <Form>

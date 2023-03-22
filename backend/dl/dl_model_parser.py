@@ -1,5 +1,5 @@
 from sklearn.tree import *
-from  sklearn.ensemble import *
+from sklearn.ensemble import *
 from sklearn.linear_model import *
 from sklearn.svm import *
 from sklearn.naive_bayes import *
@@ -46,8 +46,9 @@ def get_object(element):
         Instantiated object behind the "string representation of the instance"
     """
     return eval(
-        element
+        element.replace("'", "")
     )  # takes in the string representation and returns the "instantiated object"
+
 
 if __name__ == "__main__":
     print("starting")

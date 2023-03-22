@@ -22,7 +22,7 @@ Author URI:   https://datasciencegt.org/
   --hi-translucent: rgba(255, 255, 255, 0.8);
   --whitehover: #f7f7f7;
   --footer-dark-blue: #00233f;
-  --layer: #CD7BFF;
+  --layer: #cd7bff;
   --dark-grey: #d3d3d3;
   --input: #e2e2e2;
   --add-layer: #f2ecff;
@@ -35,7 +35,7 @@ Author URI:   https://datasciencegt.org/
 /* -------------------------------------------------------------------------- */
 
 * {
-  font-family: "Lato", "Arial", "Helvetica", sans-serif;
+  font-family: 'Lato', 'Arial', 'Helvetica', sans-serif;
 }
 
 h2 {
@@ -201,8 +201,9 @@ input.form-control {
 
 .layer-choice {
   background-color: var(--add-layer);
-  margin-right: 20px;
+  margin-right: 30px;
   margin-block: 10px;
+  width: 250px;
   position: relative;
   font-size: 1.5rem;
   font-weight: bold;
@@ -217,10 +218,9 @@ input.form-control {
   color: black;
 }
 
-
-#train-tabular-data input[type="file"],
-#image-models input[type="file"],
-#ml-models input[type="file"] {
+#train-tabular-data input[type='file'],
+#image-models input[type='file'],
+#ml-models input[type='file'] {
   display: none;
 }
 
@@ -271,7 +271,7 @@ textarea#code-snippet-text {
   font-size: 18;
 }
 
-.responseDropDownButton { 
+.responseDropDownButton {
   border: none;
   font-size: 18;
   cursor: pointer;
@@ -320,9 +320,7 @@ textarea#code-snippet-text {
   border: 0.5px solid var(--tertiary);
 }
 
-.added-layer-container
-  .layer-param-container
-  .layer-param-input-box.free-response {
+.added-layer-container .layer-param-container .layer-param-input-box.free-response {
   width: 35%;
 }
 
@@ -466,11 +464,11 @@ textarea {
 }
 
 .collapsed-layer li {
-  list-style-type: "▶  ";
+  list-style-type: '▶  ';
 }
 
 .expanded-layer li {
-  list-style-type: "▼  ";
+  list-style-type: '▼  ';
 }
 
 .layer-info-button {
@@ -622,14 +620,14 @@ textarea {
 
 #classBtn {
   display: inline-block;
-  padding: .75rem 1.25rem;
+  padding: 0.75rem 1.25rem;
   border-radius: 10rem;
   border: 1px solid black;
   color: var(--primary);
   text-transform: uppercase;
   font-size: 1rem;
-  letter-spacing: .15rem;
-  transition: all .3s;
+  letter-spacing: 0.15rem;
+  transition: all 0.3s;
   position: relative;
   overflow: hidden;
   z-index: 1;
@@ -639,7 +637,6 @@ textarea {
 #classBtn:hover {
   cursor: pointer;
   background-color: darken((var(--footer-dark-blue), 10%));
-  
 }
 
 .classFooter {
@@ -696,7 +693,7 @@ textarea {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding-left :20px;
+  padding-left: 20px;
   padding-right: 20px;
   background-color: #b3a36a;
 }
@@ -811,7 +808,6 @@ textarea {
   font-size: larger;
 }
 
-
 #login-page .main-container .form-container .email-buttons {
   width: 50%;
   margin-inline: auto;
@@ -832,7 +828,6 @@ textarea {
 #login-page .main-container .form-container input {
   margin-inline: auto;
 }
-
 
 /* Login Popup */
 

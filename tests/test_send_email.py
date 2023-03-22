@@ -4,6 +4,7 @@ import json
 
 SUCCESS_EMAIL = "Email sent! Message ID:"
 
+
 @pytest.mark.parametrize(
     "email,subject,body_text",
     [

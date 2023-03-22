@@ -1,17 +1,31 @@
 import React, { useState } from "react";
-import DEMO_VIDEO from "../../images/demo_video.gif";
-import softmax_eq from "./softmax_equation.png";
-import tanh_eq from "./tanh_equation.png";
-import tanh_plot from "./tanh_plot.png";
-import sigmoid_eq from "./sigmoid_equation.png";
-import dropout_dg from "./dropout_diagram.png";
-import conv2dgif from "./conv2d.gif";
-import conv2dgif2 from "./conv2d2.gif";
-import maxpool2dgif from "./maxpool2d.gif";
-import avgmaxpoolgif from "./avgpool_maxpool.gif";
-import batchnorm from "./batchnorm_diagram.png";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const DEMO_VIDEO = require("../../images/demo_video.gif");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const softmax_eq = require("./softmax_equation.png");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const tanh_eq = require("./tanh_equation.png");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const tanh_plot = require("./tanh_plot.png");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const sigmoid_eq = require("./sigmoid_equation.png");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const dropout_dg = require("./dropout_diagram.png");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const conv2dgif = require("./conv2d.gif");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const conv2dgif2 = require("./conv2d2.gif");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const maxpool2dgif = require("./maxpool2d.gif");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const avgmaxpoolgif = require("./avgpool_maxpool.gif");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const batchnorm = require("./batchnorm_diagram.png");
 
-const displayChange = (display, setdisplay) => {
+const displayChange = (
+  display: DisplayValue,
+  setdisplay: React.Dispatch<React.SetStateAction<DisplayValue>>
+) => {
   if (display === "block") {
     setdisplay("none");
   } else {
@@ -19,9 +33,11 @@ const displayChange = (display, setdisplay) => {
   }
 };
 
-const render_layer_info = (layer_info) => {
+const render_layer_info = (layer_info: WikiLayerItem) => {
   const changeClassName = () => {
     const layer_info_button = document.getElementById(layer_info.id);
+    if (!layer_info_button) throw new Error("layer_info_button is null");
+    
     if (layer_info_button.classList.contains("collapsed-layer")) {
       layer_info_button.classList.remove("collapsed-layer");
       layer_info_button.classList.add("expanded-layer");
@@ -30,7 +46,7 @@ const render_layer_info = (layer_info) => {
       layer_info_button.classList.add("collapsed-layer");
     }
   };
-  let body = [];
+  const body: JSX.Element[] = [];
   for (let i = 0; i < layer_info.docs.length; i++) {
     body.push(
       <li
@@ -77,11 +93,15 @@ const render_layer_info = (layer_info) => {
   );
 };
 
-const render_all_layer_info = (layer_wiki) => {
+const render_all_layer_info = (layer_wiki: WikiLayerItem[]) => {
   const body = [];
   for (const layer_element of layer_wiki) {
     body.push(
-      <ul className="collapsed-layer" id={layer_element.id}>
+      <ul
+        className="collapsed-layer"
+        id={layer_element.id}
+        key={layer_element.id}
+      >
         <li key={layer_element.title}>{render_layer_info(layer_element)}</li>
       </ul>
     );
@@ -90,22 +110,23 @@ const render_all_layer_info = (layer_wiki) => {
 };
 
 const Wiki = () => {
-  const [common, setCommon] = useState("none");
-  const [linearDisp, setLinearDisp] = useState("none");
-  const [conv, setConv] = useState("none");
-  const [softmax, setSoftmax] = useState("none");
-  const [relu, setRelu] = useState("none");
-  const [nla, setnla] = useState("none");
-  const [outerrelu, setouterrelu] = useState("none");
-  const [tanh, settanh] = useState("none");
-  const [sigmoid, setSigmoid] = useState("none");
-  const [conv2d, setconv2d] = useState("none");
-  const [maxpool2d, setMaxpool2d] = useState("none");
-  const [adaptiveAvgPool2d, setAdaptiveAvgPool2d] = useState("none");
-  const [dropout, setDropout] = useState("none");
-  const [batchNorm2d, setBatchNorm2d] = useState("none");
+  const [common, setCommon] = useState<DisplayValue>("none");
+  const [linearDisp, setLinearDisp] = useState<DisplayValue>("none");
+  const [conv, setConv] = useState<DisplayValue>("none");
+  const [softmax, setSoftmax] = useState<DisplayValue>("none");
+  const [relu, setRelu] = useState<DisplayValue>("none");
+  const [nla, setnla] = useState<DisplayValue>("none");
+  const [outerrelu, setouterrelu] = useState<DisplayValue>("none");
+  const [tanh, settanh] = useState<DisplayValue>("none");
+  const [sigmoid, setSigmoid] = useState<DisplayValue>("none");
+  const [conv2d, setconv2d] = useState<DisplayValue>("none");
+  const [maxpool2d, setMaxpool2d] = useState<DisplayValue>("none");
+  const [adaptiveAvgPool2d, setAdaptiveAvgPool2d] =
+    useState<DisplayValue>("none");
+  const [dropout, setDropout] = useState<DisplayValue>("none");
+  const [batchNorm2d, setBatchNorm2d] = useState<DisplayValue>("none");
 
-  const layer_wiki = [
+  const layer_wiki: WikiLayerItem[] = [
     {
       title: "Common Layers",
       id: "common-layers",
@@ -635,7 +656,6 @@ const Wiki = () => {
         <h3>Layers Inventory</h3>
         <p>Click for more information about each layer.</p>
 
-        {/* {render_all_layers(layer_wiki)} */}
         {render_all_layer_info(layer_wiki)}
 
         <h3>Deep Learning Parameters</h3>
@@ -680,3 +700,18 @@ const Wiki = () => {
 };
 
 export default Wiki;
+
+type DisplayValue = "none" | "block";
+
+interface WikiLayerItem {
+  title: string;
+  id: string;
+  docs: {
+    layer_name: string;
+    body: JSX.Element;
+    displayState: DisplayValue;
+    setDisplayState: React.Dispatch<React.SetStateAction<DisplayValue>>;
+  }[];
+  displayState: DisplayValue;
+  setDisplayState: React.Dispatch<React.SetStateAction<DisplayValue>>;
+}

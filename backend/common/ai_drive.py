@@ -5,7 +5,10 @@ from sklearn.datasets import load_iris, fetch_california_housing
 
 from backend.common.constants import ONNX_MODEL, CSV_FILE_NAME
 from backend.common.dataset import read_dataset, loader_from_zipped
-from backend.common.default_datasets import get_default_dataset, get_img_default_dataset_loaders
+from backend.common.default_datasets import (
+    get_default_dataset,
+    get_img_default_dataset_loaders,
+)
 from backend.common.optimizer import get_optimizer
 from backend.common.utils import *
 
@@ -17,7 +20,11 @@ from backend.dl.dl_model_parser import get_object
 from backend.ml.ml_trainer import train_classical_ml_model
 from backend.ml.ml_model_parser import get_object_ml
 
-from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData
+from backend.aws_helpers.dynamo_db_utils.execution_db import (
+    ExecutionDDBUtil,
+    ExecutionData,
+)
+
 
 def dl_tabular_drive(
     user_arch: list,
@@ -39,7 +46,6 @@ def dl_tabular_drive(
     NOTE:
          CSV_FILE_NAME is the data csv file for the torch model. Assumed that you have one dataset file
     """
-    
 
     """
     Params:
@@ -74,8 +80,7 @@ def dl_tabular_drive(
             raise ValueError("Need a file input")
 
     if default and problem_type.upper() == "CLASSIFICATION":
-        X, y, category_list = get_default_dataset(
-            default.upper(), target, features)
+        X, y, category_list = get_default_dataset(default.upper(), target, features)
     elif default and problem_type.upper() == "REGRESSION":
         X, y, discard = get_default_dataset(default.upper(), target, features)
     else:
@@ -112,9 +117,7 @@ def dl_tabular_drive(
     model = DLModel(parse_deep_user_architecture(user_arch))
     print(f"model: {model}")
 
-    optimizer = get_optimizer(
-        model, optimizer_name=optimizer_name, learning_rate=0.05
-    )
+    optimizer = get_optimizer(model, optimizer_name=optimizer_name, learning_rate=0.05)
 
     print(f"loss criterion: {criterion}")
     train_loader, test_loader = get_dataloaders(
@@ -122,7 +125,7 @@ def dl_tabular_drive(
         y_train_tensor,
         X_test_tensor,
         y_test_tensor,
-        batch_size=batch_size
+        batch_size=batch_size,
     )
     if problem_type.upper() == "CLASSIFICATION" and not default:
         category_list = []
@@ -140,7 +143,7 @@ def dl_tabular_drive(
         criterion,
         epochs,
         problem_type,
-        category_list
+        category_list,
     )
     torch.onnx.export(model, X_train_tensor, ONNX_MODEL)
 
@@ -168,23 +171,24 @@ def dl_img_drive(
     if not default:
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
             if x != ".gitkeep":
-                zip_file = os.path.join(
-                    os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
+                zip_file = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
                 break
         train_loader, test_loader = loader_from_zipped(
-            zip_file, batch_size, shuffle, train_transform, test_transform)
+            zip_file, batch_size, shuffle, train_transform, test_transform
+        )
     else:
         train_loader, test_loader = get_img_default_dataset_loaders(
-            default, train_transform, test_transform, batch_size, shuffle)
+            default, train_transform, test_transform, batch_size, shuffle
+        )
 
     print("got data loaders")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.to(device)  # model should go to GPU before initializing optimizer  https://stackoverflow.com/questions/66091226/runtimeerror-expected-all-tensors-to-be-on-the-same-device-but-found-at-least/66096687#66096687
+    model.to(
+        device
+    )  # model should go to GPU before initializing optimizer  https://stackoverflow.com/questions/66091226/runtimeerror-expected-all-tensors-to-be-on-the-same-device-but-found-at-least/66096687#66096687
 
-    optimizer = get_optimizer(
-        model, optimizer_name=optimizer_name, learning_rate=0.05
-    )
+    optimizer = get_optimizer(model, optimizer_name=optimizer_name, learning_rate=0.05)
 
     train_loss_results = train_deep_image_classification(
         model, train_loader, test_loader, optimizer, criterion, epochs, device
@@ -201,7 +205,7 @@ def ml_drive(
     test_size=0.2,
     shuffle=True,
     json_csv_data_str="",
-    fileURL = ""
+    fileURL="",
 ):
     """
     Driver function/endpoint into backend for training a classical ML model (eg: SVC, SVR, DecisionTree, Naive Bayes, etc)
@@ -232,9 +236,10 @@ def ml_drive(
         else:
             if json_csv_data_str:
                 input_df = pd.read_json(json_csv_data_str, orient="records")
-
+                input_df[target] = input_df[target].astype("category").cat.codes
                 y = input_df[target]
                 X = input_df[features]
+                print(input_df.head())
 
         if shuffle and problem_type.upper() == "CLASSIFICATION":
             X_train, X_test, y_train, y_test = train_test_split(

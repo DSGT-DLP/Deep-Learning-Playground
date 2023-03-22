@@ -26,6 +26,7 @@ import {
   ChoiceTab,
   CustomModelName,
   Preprocessing,
+  PhoneNumberInput,
 } from "./components";
 import DataTable from "react-data-table-component";
 import { DndProvider } from "react-dnd";
@@ -47,7 +48,8 @@ const Home = () => {
     `Model ${new Date().toLocaleString()}`
   );
   const [fileURL, setFileURL] = useState("");
-  const [email, setEmail] = useState("");
+  const [notificationPhoneNumber, setNotificationPhoneNumber] = useState();
+  const [notificationEmail, setNotificationEmail] = useState();
   const [addedLayers, setAddedLayers] = useState(DEFAULT_ADDED_LAYERS);
   const [targetCol, setTargetCol] = useState(null);
   const [features, setFeatures] = useState([]);
@@ -85,7 +87,10 @@ const Home = () => {
     testSize: testSize,
     batchSize: batchSize,
     fileURL: fileURL,
-    email: email,
+    notification: {
+      email: notificationEmail,
+      phoneNumber: notificationPhoneNumber,
+    },
     customModelName: customModelName,
   };
 
@@ -284,7 +289,6 @@ const Home = () => {
 
         <TrainButton
           {...input_responses}
-          // @ts-ignore
           csvDataInput={csvDataInput}
           setDLPBackendResponse={setDLPBackendResponse}
         />
@@ -373,7 +377,8 @@ const Home = () => {
       <Spacer height={40} />
 
       <TitleText text="Email (optional)" />
-      <EmailInput setEmail={setEmail} />
+      <EmailInput setEmail={setNotificationEmail} />
+      <PhoneNumberInput setPhoneNumber={setNotificationPhoneNumber} />
 
       <Spacer height={40} />
       {InputCSVDisplay}

@@ -1,29 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+interface UserState {
+  email?: string;
+  uid?: string;
+  displayName?: string;
+  emailVerified?: boolean;
+}
+
 export const currentUserSlice = createSlice({
   name: "currentUser",
-  initialState: {
-    email: null,
-    uid: null,
-    displayName: null,
-    emailVerified: null,
-  },
+  initialState: {} as UserState,
   reducers: {
     setCurrentUser: (state, action) => {
       const payload = action.payload;
       if (!payload) {
-        state.email = null;
-        state.uid = null;
-        state.displayName = null;
-        state.emailVerified = null;
+        state.email = undefined;
+        state.uid = undefined;
+        state.displayName = undefined;
+        state.emailVerified = undefined;
         return;
       }
 
       const { email, uid, displayName, emailVerified } = payload;
-      state.email = email ?? null;
-      state.uid = uid ?? null;
-      state.displayName = displayName ?? null;
-      state.emailVerified = emailVerified ?? null;
+      state.email = email;
+      state.uid = uid;
+      state.displayName = displayName;
+      state.emailVerified = emailVerified;
     },
   },
 });

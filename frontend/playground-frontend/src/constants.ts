@@ -1,4 +1,4 @@
-export const COLORS = {
+export const COLORS = Object.freeze({
   input: "#E2E2E2",
   layer: "#CD7BFF",
   addLayer: "#F2ECFF",
@@ -7,19 +7,21 @@ export const COLORS = {
   dark_blue: "#003058", // primary
   gold: "#B3A36A", // secondary
   visited: "#808080",
-};
+});
 
-export const URLs = {
+export const URLs = Object.freeze({
   donate: "https://buy.stripe.com/9AQ3e4eO81X57y8aEG",
   linkedin: "https://www.linkedin.com/company/dsgt/",
   youtube: "https://www.youtube.com/channel/UC1DGL6Tb9ffwC-aHChadxMw",
   instagram: "https://www.instagram.com/datasciencegt/",
-  github: "https://github.com/karkir0003/Deep-Learning-Playground",
-};
+  github: "https://github.com/DSGT-DLP/Deep-Learning-Playground",
+});
 
-export const EXPECTED_FAILURE_HTTP_CODES = [400, 401, 403, 404, 405, 500];
+export const EXPECTED_FAILURE_HTTP_CODES = Object.freeze([
+  400, 401, 403, 404, 405, 500,
+]);
 
-export const LAYOUT = {
+export const LAYOUT = Object.freeze({
   row: {
     display: "flex",
     flexDirection: "row",
@@ -33,9 +35,9 @@ export const LAYOUT = {
     alignItems: "center",
     justifyContent: "center",
   },
-};
+});
 
-export const GENERAL_STYLES = {
+export const GENERAL_STYLES = Object.freeze({
   p: {
     fontWeight: "bold",
   },
@@ -45,13 +47,13 @@ export const GENERAL_STYLES = {
     marginLeft: 3,
     marginTop: 5,
   },
-};
+});
 
-export const ITEM_TYPES = {
+export const ITEM_TYPES = Object.freeze({
   NEW_LAYER: "new_layer",
-};
+});
 
-export const DEFAULT_ADDED_LAYERS = [
+export const DEFAULT_ADDED_LAYERS = Object.freeze([
   {
     display_name: "Linear",
     object_name: "nn.Linear",
@@ -115,9 +117,9 @@ export const DEFAULT_ADDED_LAYERS = [
       },
     },
   },
-];
+]);
 
-export const DEFAULT_TRANSFORMS = [
+export const DEFAULT_TRANSFORMS = Object.freeze([
   {
     display_name: "Grayscale",
     object_name: "transforms.Grayscale",
@@ -148,9 +150,9 @@ export const DEFAULT_TRANSFORMS = [
     label: "Resize",
     value: "R",
   },
-];
+]);
 
-export const DEFAULT_IMG_LAYERS = [
+export const DEFAULT_IMG_LAYERS = Object.freeze([
   {
     display_name: "Conv2D",
     object_name: "nn.Conv2d",
@@ -260,9 +262,9 @@ export const DEFAULT_IMG_LAYERS = [
     object_name: "nn.Sigmoid",
     parameters: {},
   },
-];
+]);
 
-export const DEFAULT_DETECTION_TRANSFORMS = [
+export const DEFAULT_DETECTION_TRANSFORMS = Object.freeze([
   {
     display_name: "Grayscale",
     object_name: "transforms.Grayscale",
@@ -293,4 +295,21 @@ export const DEFAULT_DETECTION_TRANSFORMS = [
     label: "Resize",
     value: "R",
   },
-];
+]);
+
+// must be in the same order as the enum in the backend: backend/aws_helpers/dynamo_db_utils/execution_db.py
+export type DATA_SOURCE =
+  | "TABULAR"
+  | "PRETRAINED"
+  | "IMAGE"
+  | "AUDIO"
+  | "TEXTUAL"
+  | "CLASSICAL_ML"
+  | "OBJECT_DETECTION";
+export type EXECUTION_STATUS =
+  | "QUEUED"
+  | "STARTING"
+  | "UPLOADING"
+  | "TRAINING"
+  | "SUCCESS"
+  | "ERROR";

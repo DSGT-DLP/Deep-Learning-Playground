@@ -3,14 +3,22 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 
-from backend.aws_helpers.dynamo_db_utils.base_db import BaseData, BaseDDBUtil, enumclass, changevar
+from backend.aws_helpers.dynamo_db_utils.base_db import (
+    BaseData,
+    BaseDDBUtil,
+    enumclass,
+    changevar,
+)
 from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION
+from boto3.dynamodb.conditions import Key
 from backend.common.utils import get_current_timestamp
 from typing import Union
+
 
 @dataclass
 class ExecutionData(BaseData):
     """Data class to hold the attribute values of a record of the execution-table DynamoDB table"""
+
     execution_id: str
     user_id: str = None
     name: str = None
@@ -18,22 +26,38 @@ class ExecutionData(BaseData):
     data_source: str = None
     status: str = None
     progress: int = None
-    
+
+
 @enumclass(
     DataClass=ExecutionData,
-    data_source=['TABULAR', 'PRETRAINED', 'IMAGE', 'AUDIO', 'TEXTUAL', 'CLASSICAL_ML', 'OBJECT_DETECTION'],
-    status=['QUEUED', 'STARTING', 'UPLOADING', 'TRAINING', 'SUCCESS', 'ERROR']
+    data_source=[
+        "TABULAR",
+        "PRETRAINED",
+        "IMAGE",
+        "AUDIO",
+        "TEXTUAL",
+        "CLASSICAL_ML",
+        "OBJECT_DETECTION",
+    ],
+    status=["QUEUED", "STARTING", "UPLOADING", "TRAINING", "SUCCESS", "ERROR"],
 )
 class ExecutionEnums:
     """Class that holds the enums associated with the ExecutionDDBUtil class. It includes:
-        ExecutionEnums.Attribute - Enum that defines the schema of the execution-table. It holds the attribute names of the table
-        ExecutionEnums.Execution_Source - Enum that defines the categorical values associated with the 'execution_source' attribute"""
+    ExecutionEnums.Attribute - Enum that defines the schema of the execution-table. It holds the attribute names of the table
+    ExecutionEnums.Execution_Source - Enum that defines the categorical values associated with the 'execution_source' attribute
+    """
+
     pass
 
-@changevar(DataClass=ExecutionData, EnumClass=ExecutionEnums, partition_key='execution_id')
+
+@changevar(
+    DataClass=ExecutionData, EnumClass=ExecutionEnums, partition_key="execution_id"
+)
 class ExecutionDDBUtil(BaseDDBUtil):
     """Class that interacts with AWS DynamoDB to manipulate information stored in the execution-table DynamoDB table"""
+
     pass
+
 
 def getUserExecutionsData(execution_id: str) -> str:
     """
@@ -45,6 +69,7 @@ def getUserExecutionsData(execution_id: str) -> str:
     dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
     record = dynamoTable.get_record(execution_id)
     return json.dumps(record.__dict__)
+
 
 def createUserExecutionsData(entryData: dict) -> str:
     """
@@ -62,7 +87,87 @@ def createUserExecutionsData(entryData: dict) -> str:
     dynamoTable.create_record(newRecord)
     return json.dumps(newRecord.__dict__)
 
+
 def updateUserExecutionsData(requestData: dict) -> str:
+    """
+    Updates an entry from the `execution-table` DynamoDB table given an `execution_id`.
+    @param requestData: A dictionary containing the execution_id and other table attributes to be updated, with user_id as a required field
+    @return a success status message if the update is successful
+    """
+
+    required_keys = ["execution_id"]
+    if not validate_keys(requestData, required_keys):
+        raise ValueError(f"Missing keys {required_keys} in request body")
+
+    dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
+    execution_id = requestData["execution_id"]
+    updatedRecord = ExecutionData(**requestData).__dict__
+    updatedRecord.pop("execution_id")
+    dynamoTable.update_record(execution_id, **updatedRecord)
+    return '{"status": "success"}'
+
+
+def getAllUserExecutionsData(user_id: str) -> str:
+    """
+    Retrieves an entry from the `execution-table` DynamoDB table given an `execution_id`. Example output: {"execution_id": "blah", "user_id": "blah", "name": "blah", "timestamp": "blah", "data_source": "TABULAR", "status": "QUEUED", "progress": 1}
+
+    @param execution_id: The execution_id of the entry to be retrieved
+    @return: A JSON string of the entry retrieved from the table
+    """
+    dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
+    response = dynamoTable.table.query(
+        IndexName="user_id", KeyConditionExpression=Key("user_id").eq(user_id)
+    )
+    items = response["Items"]
+    record = []
+    for item in items:
+        data_source, name, progress, status, timestamp, execution_id = (
+            item["data_source"],
+            item["name"],
+            item["progress"],
+            item["status"],
+            item["timestamp"],
+            item["execution_id"],
+        )
+        record.append(
+            {
+                "data_source": data_source,
+                "name": name,
+                "progress": float(progress),
+                "status": status,
+                "timestamp": timestamp,
+                "execution_id": execution_id,
+            }
+        )
+
+    while "LastEvaluatedKey" in response:
+        key = response["LastEvaluatedKey"]
+        response = dynamoTable.table.query(
+            KeyConditionExpression=Key("user_id").eq(user_id), ExclusiveStartKey=key
+        )
+        for item in items:
+            data_source, name, progress, status, timestamp, execution_id = (
+                item["data_source"],
+                item["name"],
+                item["progress"],
+                item["status"],
+                item["timestamp"],
+                item["execution_id"],
+            )
+            record.append(
+                {
+                    "data_source": data_source,
+                    "name": name,
+                    "progress": float(progress),
+                    "status": status,
+                    "timestamp": timestamp,
+                    "execution_id": execution_id,
+                }
+            )
+    return json.dumps(record)
+
+
+def updateUserExecutionsData_(requestData: dict) -> str:
     """
     Updates an entry from the `execution-table` DynamoDB table given an `execution_id`.
 
@@ -79,10 +184,10 @@ def updateUserExecutionsData(requestData: dict) -> str:
     updatedRecord = ExecutionData(**requestData).__dict__
     updatedRecord.pop("execution_id")
     dynamoTable.update_record(execution_id, **updatedRecord)
-    return "{\"status\": \"success\"}"
+    return '{"status": "success"}'
 
 
-def updateStatus(execution_id: str, status: str) -> str:
+def updateStatus(execution_id: str, status: str, entryData: dict = None) -> str:
     """
     Updates the status of an entry from the `execution-table` DynamoDB table given an `execution_id`.
 
@@ -90,9 +195,16 @@ def updateStatus(execution_id: str, status: str) -> str:
     @param status: The new status of the entry
     @return a success status message if the update is successful
     """
-    dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
-    dynamoTable.update_record(execution_id, status=status, timestamp=get_current_timestamp())
-    return "{\"status\": \"success\"}"
+    try:
+        dynamoTable = ExecutionDDBUtil(EXECUTION_TABLE_NAME, AWS_REGION)
+        dynamoTable.update_record(
+            execution_id, status=status, timestamp=get_current_timestamp()
+        )
+        return '{"status": "success"}'
+    except:
+        entryData["status"] = status
+        createUserExecutionsData(entryData)
+        return '{"status": "success"}'
 
 
 def validate_keys(requestData: dict, required_keys: list[str]) -> bool:

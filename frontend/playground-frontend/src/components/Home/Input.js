@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { COLORS, LAYOUT } from "../../constants";
 import { DropDown } from "..";
 // import storage from 'local-storage-fallback';
-import "./../../App.css";
 
 const Input = (props) => {
   const {
@@ -33,7 +32,6 @@ const Input = (props) => {
 
   return (
     <div
-      // @ts-ignore
       style={{
         ...LAYOUT.row,
         margin: 7.5,
@@ -41,12 +39,7 @@ const Input = (props) => {
       }}
     >
       <div style={styles.queryContainer}>
-        <p
-          // @ts-ignore
-          className="queryText"
-        >
-          {queryText}
-        </p>
+        <p className="queryText">{queryText}</p>
       </div>
       <div className="response-container">
         {options ? (

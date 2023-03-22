@@ -92,6 +92,7 @@ const TrainButton = (props) => {
   const validateInputs = (user_arch) => {
     let alertMessage = "";
     alertMessage = functionMap[choice][0](user_arch, props);
+
     if (alertMessage.length === 0) return true;
     toast.error(alertMessage);
     return false;
@@ -100,7 +101,6 @@ const TrainButton = (props) => {
   const onClick = async () => {
     setPendingResponse(true);
     setDLPBackendResponse(null);
-
     const user_arch = make_obj_param_list(props.addedLayers, "Model");
     if (user_arch === false) return;
 
@@ -175,8 +175,8 @@ const TrainButton = (props) => {
   useEffect(() => {
     if (result) {
       if (result.success) {
-        if (props.email?.length) {
-          sendEmail(props.email, props.problemType);
+        if (props.notification?.email) {
+          sendEmail(props.notification.email, props.problemType);
         }
         toast.success(
           choice === "objectdetection"
@@ -214,7 +214,10 @@ const TrainButton = (props) => {
 
 TrainButton.propTypes = {
   addedLayers: PropTypes.array,
-  email: PropTypes.string,
+  notification: PropTypes.shape({
+    email: PropTypes.string,
+    number: PropTypes.string,
+  }),
   trainTransforms: PropTypes.array,
   testTransforms: PropTypes.array,
   transforms: PropTypes.array,

@@ -1,3 +1,4 @@
+# middleware.py
 from werkzeug.wrappers import Request, Response, ResponseStream
 
 from backend.firebase_helpers.authenticate import authenticate
@@ -14,7 +15,7 @@ def send_error(environ, start_response):
 
 
 class middleware:
-    def __init__(self, app):
+    def __init__(self, app, exempt_paths=[]):
         self.app = app
 
     def __call__(self, environ, start_response):

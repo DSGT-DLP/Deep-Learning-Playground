@@ -16,7 +16,9 @@ class LossFunctions(Enum):
     BCELOSS = nn.BCELoss()
     BCEWITHLOGITSLOSS = nn.BCEWithLogitsLoss()
     CELOSS = nn.CrossEntropyLoss(reduction="mean")
-    WCELOSS = nn.CrossEntropyLoss(reduction="mean") # Will not use this, just to prevent errors
+    WCELOSS = nn.CrossEntropyLoss(
+        reduction="mean"
+    )  # Will not use this, just to prevent errors
 
     def get_loss_obj(self):
         return self.value
@@ -50,7 +52,6 @@ def compute_loss(loss_function_name, output, labels):
             loss_function_name.upper() == "MSELOSS"
             or loss_function_name.upper() == "L1LOSS"
         ):
-
             postprocess_output = torch.reshape(
                 postprocess_output,
                 (postprocess_output.shape[0], postprocess_output.shape[2]),
@@ -74,20 +75,22 @@ def compute_loss(loss_function_name, output, labels):
 
 
 def compute_img_loss(criterion, pred, ground_truth, weights_counter):
-    '''
+    """
     Computes CE and WCE loss. pred and y are processed to different shapes supported by the corresponding functions.
-    '''
+    """
     loss_obj = LossFunctions.get_loss_obj(LossFunctions[criterion])
 
     if criterion == LossFunctions.CELOSS.name:
-        return loss_obj(pred , ground_truth.squeeze())
+        return loss_obj(pred, ground_truth.squeeze())
     if criterion == "WCELOSS":
         weight_list = [0] * len(pred[0])
 
         for i in range(len(weight_list)):
-            if (weights_counter[i] != 0):
-                weight_list[i] = 1/weights_counter[i]
+            if weights_counter[i] != 0:
+                weight_list[i] = 1 / weights_counter[i]
         # Weighting the class with least representation in dataset with maximum weight
 
-        loss = nn.CrossEntropyLoss(weight=torch.FloatTensor(weight_list), reduction='mean')
+        loss = nn.CrossEntropyLoss(
+            weight=torch.FloatTensor(weight_list), reduction="mean"
+        )
         return loss(pred, ground_truth.squeeze())

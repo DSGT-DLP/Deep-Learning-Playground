@@ -6,7 +6,10 @@ import shutil
 
 from flask import Flask, request, send_from_directory
 from backend.aws_helpers.s3_utils.s3_bucket_names import EXECUTION_BUCKET_NAME
-from backend.aws_helpers.s3_utils.s3_client import get_presigned_url_from_exec_file, write_to_bucket
+from backend.aws_helpers.s3_utils.s3_client import (
+    get_presigned_url_from_exec_file,
+    write_to_bucket,
+)
 from backend.middleware import middleware
 from flask_cors import CORS
 
@@ -16,10 +19,24 @@ from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
-from backend.aws_helpers.dynamo_db_utils.learnmod_db import UserProgressDDBUtil, UserProgressData
+from backend.aws_helpers.dynamo_db_utils.learnmod_db import (
+    UserProgressDDBUtil,
+    UserProgressData,
+)
 from backend.aws_helpers.sqs_utils.sqs_client import add_to_training_queue
-from backend.aws_helpers.dynamo_db_utils.execution_db import ExecutionDDBUtil, ExecutionData, createUserExecutionsData, getAllUserExecutionsData, updateStatus
-from backend.common.constants import EXECUTION_TABLE_NAME, AWS_REGION, USERPROGRESS_TABLE_NAME, POINTS_PER_QUESTION
+from backend.aws_helpers.dynamo_db_utils.execution_db import (
+    ExecutionDDBUtil,
+    ExecutionData,
+    createUserExecutionsData,
+    getAllUserExecutionsData,
+    updateStatus,
+)
+from backend.common.constants import (
+    EXECUTION_TABLE_NAME,
+    AWS_REGION,
+    USERPROGRESS_TABLE_NAME,
+    POINTS_PER_QUESTION,
+)
 from backend.dl.detection import detection_img_drive
 
 from backend.aws_helpers.lambda_utils.lambda_client import invoke
@@ -34,13 +51,11 @@ else:
 
 app = Flask(
     __name__,
-    static_folder=os.path.join(
-        os.getcwd(), "frontend", "playground-frontend", "build"
-    ),
+    static_folder=os.path.join(os.getcwd(), "frontend", "playground-frontend", "build"),
 )
 CORS(app)
 
-app.wsgi_app = middleware(app.wsgi_app, exempt_paths=['/test', '/'])
+app.wsgi_app = middleware(app.wsgi_app, exempt_paths=["/test", "/"])
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
@@ -49,6 +64,7 @@ def root(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, "index.html")
+
 
 @app.route("/test")
 def verify_backend_alive():
@@ -82,17 +98,18 @@ def tabular_run():
 
         createUserExecutionsData(
             {
-                "execution_id": execution_id, 
-                "user_id": uid, 
-                "name": customModelName, 
-                "data_source": "TABULAR", 
-                "status": "STARTING", 
+                "execution_id": execution_id,
+                "user_id": uid,
+                "name": customModelName,
+                "data_source": "TABULAR",
+                "status": "STARTING",
                 "timestamp": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "progress": 0
+                "progress": 0,
             }
         )
-        train_loss_results = dl_tabular_drive(user_arch, fileURL, params,
-            json_csv_data_str, customModelName)
+        train_loss_results = dl_tabular_drive(
+            user_arch, fileURL, params, json_csv_data_str, customModelName
+        )
         train_loss_results["user_arch"] = user_arch
         print(train_loss_results)
         updateStatus(execution_id, "SUCCESS")
@@ -118,14 +135,14 @@ def ml_run():
         shuffle = request_data["shuffle"]
 
         train_loss_results = ml_drive(
-            user_model =  user_model,
-            problem_type = problem_type,
-            target = target,
-            features = features,
-            default = default,
-            json_csv_data_str = json_csv_data_str,
-            shuffle = shuffle
-            )
+            user_model=user_model,
+            problem_type=problem_type,
+            target=target,
+            features=features,
+            default=default,
+            json_csv_data_str=json_csv_data_str,
+            shuffle=shuffle,
+        )
         train_loss_results["user_arch"] = user_model
         print(train_loss_results)
         return send_train_results(train_loss_results)
@@ -175,14 +192,15 @@ def img_run():
 
     finally:
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
-            if (x != ".gitkeep"):
+            if x != ".gitkeep":
                 file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
-                if (os.path.isdir(file_rem)):
+                if os.path.isdir(file_rem):
                     shutil.rmtree(file_rem)
                 else:
                     os.remove(file_rem)
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
+
 
 @app.route("/api/object-detection", methods=["POST"])
 def object_detection_run():
@@ -192,22 +210,23 @@ def object_detection_run():
         problem_type = request_data["problem_type"]
         detection_type = request_data["detection_type"]
         transforms = request_data["transforms"]
-        image = detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type, transforms)
+        image = detection_img_drive(
+            IMAGE_UPLOAD_FOLDER, detection_type, problem_type, transforms
+        )
         return send_detection_results(image)
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
     finally:
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
-            if (x != ".gitkeep"):
+            if x != ".gitkeep":
                 file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
-                if (os.path.isdir(file_rem)):
+                if os.path.isdir(file_rem):
                     shutil.rmtree(file_rem)
                 else:
                     os.remove(file_rem)
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
-
 
 
 @app.route("/api/sendEmail", methods=["POST"])
@@ -237,28 +256,33 @@ def send_email_route():
         print(traceback.format_exc())
         return send_traceback_error()
 
+
 @app.route("/api/sendUserCodeEval", methods=["POST"])
 def send_user_code_eval():
     try:
         request_data = json.loads(request.data)
         data = request_data["data"]
         codeSnippet = request_data["codeSnippet"]
-        payload = json.dumps({
-            "data": data,
-            "code": codeSnippet
-        })
-        resJson = invoke('preprocess_data', payload)
-        if (resJson['statusCode'] == 200):
-            send_success({"message": "Preprocessed data", "data": resJson['data'], "columns": resJson['columns']})
+        payload = json.dumps({"data": data, "code": codeSnippet})
+        resJson = invoke("preprocess_data", payload)
+        if resJson["statusCode"] == 200:
+            send_success(
+                {
+                    "message": "Preprocessed data",
+                    "data": resJson["data"],
+                    "columns": resJson["columns"],
+                }
+            )
         else:
-            print(resJson['message'])
-            send_error(resJson['message'])
+            print(resJson["message"])
+            send_error(resJson["message"])
         return resJson
     except Exception:
         print(traceback.format_exc())
         print("error")
         print("Last element: ", send_traceback_error()[0])
         return send_traceback_error()
+
 
 @app.route("/api/getSignedUploadUrl", methods=["POST"])
 def get_signed_upload_url():
@@ -269,12 +293,15 @@ def get_signed_upload_url():
         """ s3_client = boto3.client('s3')
         response = s3_client.generate_presigned_post("dlp-upload-bucket", "v" + str(version) + "/" + filename)
         print(requests.put(response['url'], data=response['fields'], files={'file': file.read()})) """
-        s3 = boto3.client('s3')
-        s3.upload_fileobj(file, "dlp-upload-bucket", "v" + str(version) + "/" + filename)
+        s3 = boto3.client("s3")
+        s3.upload_fileobj(
+            file, "dlp-upload-bucket", "v" + str(version) + "/" + filename
+        )
         return send_success({"message": "Upload successful"})
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
+
 
 @app.route("/api/defaultDataset", methods=["POST"])
 def send_columns():
@@ -288,37 +315,50 @@ def send_columns():
         print(traceback.format_exc())
         return send_traceback_error()
 
+
 @app.route("/api/getExecutionsData", methods=["POST"])
 def executions_table():
     try:
         request_data = json.loads(request.data)
-        user_id = request_data['user']['uid']
+        user_id = request_data["user"]["uid"]
         record = getAllUserExecutionsData(user_id)
         return send_success({"record": record})
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
 
+
 @app.route("/api/getExecutionsFilesPresignedUrls", methods=["POST"])
 def executions_files():
     try:
         request_data = json.loads(request.data)
-        exec_id = request_data['exec_id']
-        dl_results = get_presigned_url_from_exec_file(EXECUTION_BUCKET_NAME, exec_id, "dl_results.csv")
-        model_pt = get_presigned_url_from_exec_file(EXECUTION_BUCKET_NAME, exec_id, "model.pt")
-        model_onnx = get_presigned_url_from_exec_file(EXECUTION_BUCKET_NAME, exec_id, "my_deep_learning_model.onnx")
-        return send_success({"dl_results": dl_results, "model_pt": model_pt, "model_onnx": model_onnx})
+        exec_id = request_data["exec_id"]
+        dl_results = get_presigned_url_from_exec_file(
+            EXECUTION_BUCKET_NAME, exec_id, "dl_results.csv"
+        )
+        model_pt = get_presigned_url_from_exec_file(
+            EXECUTION_BUCKET_NAME, exec_id, "model.pt"
+        )
+        model_onnx = get_presigned_url_from_exec_file(
+            EXECUTION_BUCKET_NAME, exec_id, "my_deep_learning_model.onnx"
+        )
+        return send_success(
+            {"dl_results": dl_results, "model_pt": model_pt, "model_onnx": model_onnx}
+        )
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
+
 
 @app.route("/api/upload", methods=["POST"])
 def upload():
     try:
         print(datetime.datetime.now().isoformat() + " upload has started its task")
-        file = request.files['file']
+        file = request.files["file"]
         basepath = os.path.dirname(__file__)
-        upload_path = os.path.join(basepath, 'image_data_uploads', secure_filename(file.filename))
+        upload_path = os.path.join(
+            basepath, "image_data_uploads", secure_filename(file.filename)
+        )
         file.save(upload_path)
         file.stream.close()
         print(datetime.datetime.now().isoformat() + " upload has finished its task")
@@ -326,26 +366,30 @@ def upload():
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
-    
+
+
 @app.route("/api/writeToQueue", methods=["POST"])
 def writeToQueue() -> str:
     """
-    API Endpoint to write training request to SQS queue to be serviced by 
+    API Endpoint to write training request to SQS queue to be serviced by
     ECS Fargate training cluster
-    
+
     """
     try:
         queue_data = json.loads(request.data)
         queue_send_outcome = add_to_training_queue(queue_data)
         print(f"sqs outcome: {queue_send_outcome}")
         status_code = queue_send_outcome["ResponseMetadata"]["HTTPStatusCode"]
-        if (status_code != 200):
+        if status_code != 200:
             return send_error("Your training request couldn't be added to the queue")
         else:
             createExecution(queue_data)
-            return send_success({"message": "Successfully added your training request to the queue"})
+            return send_success(
+                {"message": "Successfully added your training request to the queue"}
+            )
     except Exception:
         return send_error("Failed to queue data")
+
 
 @app.route("/api/getUserProgressData", methods=["POST"])
 def getUserProgressData():
@@ -361,7 +405,7 @@ def getUserProgressData():
 @app.route("/api/updateUserProgressData", methods=["POST"])
 def updateUserProgressData():
     requestData = json.loads(request.data)
-    uid = requestData['user']['uid']
+    uid = requestData["user"]["uid"]
     moduleID = str(requestData["moduleID"])
     sectionID = str(requestData["sectionID"])
     questionID = str(requestData["questionID"])
@@ -375,26 +419,28 @@ def updateUserProgressData():
             "modulePoints": POINTS_PER_QUESTION,
             sectionID: {
                 "sectionPoints": POINTS_PER_QUESTION,
-                questionID: POINTS_PER_QUESTION
-            }  
+                questionID: POINTS_PER_QUESTION,
+            },
         }
     else:
         if sectionID not in updatedRecord[moduleID]:
             updatedRecord[moduleID][sectionID] = {
                 "sectionPoints": POINTS_PER_QUESTION,
-                questionID: POINTS_PER_QUESTION
+                questionID: POINTS_PER_QUESTION,
             }
             updatedRecord[moduleID]["modulePoints"] += POINTS_PER_QUESTION
         else:
             if questionID not in updatedRecord[moduleID][sectionID]:
                 updatedRecord[moduleID]["modulePoints"] += POINTS_PER_QUESTION
                 updatedRecord[moduleID][sectionID][questionID] = POINTS_PER_QUESTION
-                updatedRecord[moduleID][sectionID]["sectionPoints"] += POINTS_PER_QUESTION
+                updatedRecord[moduleID][sectionID][
+                    "sectionPoints"
+                ] += POINTS_PER_QUESTION
 
     updatedRecordAsString = json.dumps(updatedRecord)
-    
+
     dynamoTable.update_record(uid, progressData=updatedRecordAsString)
-    return "{\"status\": \"success\"}"
+    return '{"status": "success"}'
 
 
 def createExecution(entryData: dict) -> dict:
@@ -409,15 +455,16 @@ def createExecution(entryData: dict) -> dict:
     @return: A JSON string of the entry created in the table
     """
     entryData = {
-        "execution_id": entryData["execution_id"], 
-        "user_id": entryData["user"]["uid"], 
-        "name": entryData["custom_model_name"], 
-        "data_source": entryData["data_source"], 
-        "status": "QUEUED", 
+        "execution_id": entryData["execution_id"],
+        "user_id": entryData["user"]["uid"],
+        "name": entryData["custom_model_name"],
+        "data_source": entryData["data_source"],
+        "status": "QUEUED",
         "timestamp": get_current_timestamp(),
-        "progress": 0
+        "progress": 0,
     }
     createUserExecutionsData(entryData)
+
 
 def send_success(results: dict):
     return (json.dumps({"success": True, **results}), 200)
@@ -428,18 +475,24 @@ def send_error(message: str):
 
 
 def send_train_results(train_loss_results: dict):
-    return send_success({
-        "message": "Dataset trained and results outputted successfully",
-        "dl_results": csv_to_json(),
-        "auxiliary_outputs": train_loss_results,
-    })
+    return send_success(
+        {
+            "message": "Dataset trained and results outputted successfully",
+            "dl_results": csv_to_json(),
+            "auxiliary_outputs": train_loss_results,
+        }
+    )
+
 
 def send_detection_results(object_detection_results: dict):
-    return send_success({
-        "message": "Detection worked successfully",
-        "dl_results": object_detection_results["dl_results"],
-        "auxiliary_outputs": object_detection_results["auxiliary_outputs"],
-    })
+    return send_success(
+        {
+            "message": "Detection worked successfully",
+            "dl_results": object_detection_results["dl_results"],
+            "auxiliary_outputs": object_detection_results["auxiliary_outputs"],
+        }
+    )
+
 
 def send_traceback_error():
     return send_error(traceback.format_exc(limit=1))

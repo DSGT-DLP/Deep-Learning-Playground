@@ -81,27 +81,27 @@ def get_unzipped(zipped_file):
         train_dir = os.path.join(UNZIPPED_DIR_NAME, "input", "train")
         test_dir = os.path.join(UNZIPPED_DIR_NAME, "input", "test")
 
-        if (not os.path.exists(train_dir) or not os.path.exists(test_dir)):
+        if not os.path.exists(train_dir) or not os.path.exists(test_dir):
             name = os.path.splitext(zipped_file)[0]
             name = name.split("/")[-1]
             name = name.split("\\")[-1]
             train_dir = os.path.join(UNZIPPED_DIR_NAME, "input", name, "train")
             test_dir = os.path.join(UNZIPPED_DIR_NAME, "input", name, "test")
-        
-        if (not os.path.exists(train_dir) or not os.path.exists(test_dir)):
+
+        if not os.path.exists(train_dir) or not os.path.exists(test_dir):
             raise ValueError(errorMessage.CHECK_FILE_STRUCTURE.value)
-        
-        if (len(os.listdir(train_dir)) != len(os.listdir(test_dir))):
+
+        if len(os.listdir(train_dir)) != len(os.listdir(test_dir)):
             raise ValueError(errorMessage.CHECK_FILE_STRUCTURE.value)
 
         return train_dir, test_dir
     except:
         raise ValueError(errorMessage.CHECK_FILE_STRUCTURE.value)
 
+
 def dataset_from_zipped(
     zipped_folder, train_transform=DEFAULT_TRANSFORM, test_transform=DEFAULT_TRANSFORM
 ):
-
     """
     Returns a dataset from a zipped folder applying train and  trtestansformation (if they are legal).
     Calls get_unzipped to create unzipped folder and obtain train and test directories
@@ -118,9 +118,12 @@ def dataset_from_zipped(
 
         return train_dataset, test_dataset
     except Exception as e:
-        error = errorMessage.CHECK_FILE_STRUCTURE if (str(e) == errorMessage.CHECK_FILE_STRUCTURE.value) else errorMessage.CHECK_TRANSFORM
+        error = (
+            errorMessage.CHECK_FILE_STRUCTURE
+            if (str(e) == errorMessage.CHECK_FILE_STRUCTURE.value)
+            else errorMessage.CHECK_TRANSFORM
+        )
         raise ValueError(error.value)
-
 
 
 def loader_from_zipped(
@@ -151,7 +154,7 @@ def loader_from_zipped(
         )
         test_loader = DataLoader(
             test_dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True
-        ) ### DROP LAST drops the last non full batch. 97 data points and batchsize = 10 would lead to creation of only 9 datasets, 7 extra data points will be lost 
+        )  ### DROP LAST drops the last non full batch. 97 data points and batchsize = 10 would lead to creation of only 9 datasets, 7 extra data points will be lost
 
         return train_loader, test_loader
     except Exception as e:

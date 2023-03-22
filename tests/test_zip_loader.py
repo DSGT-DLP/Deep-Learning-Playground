@@ -118,11 +118,8 @@ def check_diff_transforms(train_transform, valid_transform, filepath):
         (double_zipped, [transforms.Normalize(0, 1)]),  ## Applying Tensor only
         (
             double_zipped,
-            [
-            transforms.RandomVerticalFlip(p=0.3),
-            transforms.ToTensor()
-            ], 
-        ), 
+            [transforms.RandomVerticalFlip(p=0.3), transforms.ToTensor()],
+        ),
         (
             double_zipped,
             [

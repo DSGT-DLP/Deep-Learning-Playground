@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import {
   About,
@@ -19,6 +18,7 @@ import {
 import Home from "./Home";
 import { ToastContainer } from "react-toastify";
 import { getCookie } from "./components/helper_functions/Cookie";
+import React from "react";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";

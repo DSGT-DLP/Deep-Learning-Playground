@@ -1,26 +1,18 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import { UserState } from "../../redux/userLogin";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
-import { User } from "firebase/auth";
+import { ContentType } from "./LearningModulesContent";
 
-interface QuestionType {
-  answer: number;
-  question: string;
-  questionID: string;
-  sectionType: string;
-}
-const FRQuestion = (props: {
-  moduleID: string;
-  questionObject: QuestionType;
+interface FRQuestionProps {
+  moduleID: number;
+  questionObject: ContentType<"frQuestion">;
   sectionID: number;
-  user: User;
-}) => {
+  user: UserState;
+}
+const FRQuestion = (props: FRQuestionProps) => {
   const [answeredCorrect, setAnsweredCorrect] = useState(false);
   const [answeredIncorrect, setAnsweredIncorrect] = useState(false);
   const [unanswered, setUnanswered] = useState(false);
-  useEffect(() => {
-    console.log(props);
-  }, [answeredCorrect]);
 
   // function that makes call to backend to update user progress
   async function updateUserProgress() {
@@ -30,7 +22,6 @@ const FRQuestion = (props: {
       sectionID: props.sectionID,
       questionID: props.questionObject.questionID,
     };
-
     sendToBackend("updateUserProgressData", requestData);
   }
 
@@ -86,13 +77,5 @@ const FRQuestion = (props: {
     </div>
   );
 };
-
-const propTypes = {
-  user: PropTypes.object,
-  questionObject: PropTypes.object,
-  moduleID: PropTypes.string,
-  sectionID: PropTypes.number,
-};
-FRQuestion.propTypes = propTypes;
 
 export default FRQuestion;

@@ -1,7 +1,7 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { ContentType } from "./LearningModulesContent";
 
-const ImageComponent = (props) => {
+const ImageComponent = (props: { imageData: ContentType<"image"> }) => {
   return (
     <div id="imageContainer">
       <img
@@ -16,8 +16,5 @@ const ImageComponent = (props) => {
     </div>
   );
 };
-
-const propTypes = { imageData: PropTypes.object };
-ImageComponent.propTypes = propTypes;
 
 export default ImageComponent;

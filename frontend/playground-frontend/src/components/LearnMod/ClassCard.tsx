@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import { ModuleType } from "./LearningModulesContent";
 
-interface InfoType {
-  moduleId: number;
-  points: number;
-  subClasses: { title: string }[];
-  sectionID: number;
-  title: string;
-}
 const ClassCard = (props: {
-  info: InfoType;
+  info: ModuleType;
   moduleProgress: { modulePoints: number };
 }) => {
-  useEffect(() => {
-    console.log(props);
-  }, []);
   const [pointsEarned, setPointsEarned] = useState(0);
 
   const points = props.info.points;

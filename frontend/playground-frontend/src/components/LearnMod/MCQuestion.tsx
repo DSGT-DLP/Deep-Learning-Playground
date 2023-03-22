@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
-import { User } from "firebase/auth";
+import { UserState } from "../../redux/userLogin";
+import { ContentType } from "./LearningModulesContent";
 
-interface QuestionType {
+export interface MCQuestionType {
   answerChoices: string[];
   correctAnswer: number;
   question: string;
   questionID: string;
   sectionType: string;
 }
-const MCQuestion = (props: {
-  moduleID: string;
-  questionObject: QuestionType;
+interface MCQuestionProps {
+  moduleID: number;
+  questionObject: ContentType<"mcQuestion">;
   sectionID: number;
-  user: User;
-}) => {
+  user: UserState;
+}
+const MCQuestion = (props: MCQuestionProps) => {
   const [answeredCorrect, setAnsweredCorrect] = useState(false);
   const [answeredIncorrect, setAnsweredIncorrect] = useState(false);
   const [unanswered, setUnanswered] = useState(false);
-  useEffect(() => {
-    console.log(props);
-  }, [answeredCorrect]);
 
   // function that makes call to backend to update user progress
   async function updateUserProgress() {
@@ -82,7 +81,7 @@ const MCQuestion = (props: {
             <input
               type="radio"
               value={index}
-              name={props.questionObject.questionID}
+              name={props.questionObject.questionID.toString()}
             />
             {answer}
           </div>

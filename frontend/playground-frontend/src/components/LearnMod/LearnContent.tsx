@@ -1,40 +1,28 @@
 import React, { useState, useEffect } from "react";
 import MCQuestion from "./MCQuestion";
-import FRQuestion from "./FRQuestion";
 import ImageComponent from "./ImageComponent";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../firebase";
 import ModulesSideBar from "./ModulesSideBar";
+import FRQuestion from "./FRQuestion";
+import { useAppSelector } from "../../redux/hooks";
+import { UserState } from "../../redux/userLogin";
+import { ContentType, ModuleType } from "./LearningModulesContent";
 
 const LearnContent = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
 
-  const [moduleContent, setModuleContent] = useState(
+  const [moduleContent, setModuleContent] = useState<ModuleType>(
     location.state.moduleContent
   );
   const [subSection, setSubSection] = useState(location.state.subsection);
-
+  const user = useAppSelector<UserState>((state) => state.currentUser);
   useEffect(() => {
     setSubSection(location.state.subsection);
     setModuleContent(location.state.moduleContent);
   }, [location.state]);
-
-  //current user logged in
-  const [user, setUser] = useState(null);
-
-  // check if logged in
-  useEffect(() => {
-    auth.onAuthStateChanged((userLogged) => {
-      if (userLogged) {
-        setUser(userLogged);
-      } else {
-        navigate("/login");
-      }
-    });
-  });
 
   // moves to previous subsection if there is one
   const onPreviousClick = () => {
@@ -66,11 +54,11 @@ const LearnContent = () => {
         <div className="learningContentDiv">
           <h2>{moduleContent.subClasses[subSection].title}</h2>
           {moduleContent.subClasses[subSection].content.map(
-            (contentComponent, index) => {
+            (contentComponent: ContentType, index: number) => {
               if (contentComponent.sectionType === "text") {
                 return (
                   <p className="contentParagraph" key={index}>
-                    {contentComponent.content}
+                    {(contentComponent as ContentType<"text">).content}
                   </p>
                 );
               }
@@ -78,14 +66,17 @@ const LearnContent = () => {
               if (contentComponent.sectionType === "heading1") {
                 return (
                   <h5 className="heading1" key={index}>
-                    {contentComponent.content}
+                    {(contentComponent as ContentType<"text">).content}
                   </h5>
                 );
               }
 
               if (contentComponent.sectionType === "image") {
                 return (
-                  <ImageComponent key={index} imageData={contentComponent} />
+                  <ImageComponent
+                    key={index}
+                    imageData={contentComponent as ContentType<"image">}
+                  />
                 );
               }
 
@@ -94,7 +85,9 @@ const LearnContent = () => {
                   <MCQuestion
                     key={index}
                     user={user}
-                    questionObject={contentComponent}
+                    questionObject={
+                      contentComponent as ContentType<"mcQuestion">
+                    }
                     moduleID={moduleContent.moduleID}
                     sectionID={moduleContent.subClasses[subSection].sectionID}
                   />
@@ -106,7 +99,9 @@ const LearnContent = () => {
                   <FRQuestion
                     key={index}
                     user={user}
-                    questionObject={contentComponent}
+                    questionObject={
+                      contentComponent as ContentType<"frQuestion">
+                    }
                     moduleID={moduleContent.moduleID}
                     sectionID={moduleContent.subClasses[subSection].sectionID}
                   />

@@ -7,18 +7,11 @@ const ModulesSideBar = () => {
 
   const navigate = useNavigate();
 
-  const lessons = content.map((x) => ({
-    title: x.title,
-    points: x.points,
-    subClasses: x.subsections,
-    moduleID: x.moduleID.toString(),
-  }));
-
   return (
     <div>
       <h2 style={{ color: "white" }}>Modules</h2>
       <ul style={{ padding: 0 }}>
-        {lessons.map((lesson, index) => {
+        {content.map((lesson, index) => {
           return (
             <li className="sideBarModule" key={index}>
               <p>{lesson.title}</p>

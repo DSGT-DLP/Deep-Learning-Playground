@@ -15,6 +15,7 @@ backend_dir = (
 double_zipped = os.path.join(train_dir, "zip_files/double_zipped.zip")
 valid_2 = os.path.join(train_dir, "zip_files/valid_2.zip")
 
+
 # timm: adv_inception_v3, resnet50, vit_small_r26_s32_224, tf_mobilenetv3_small_075
 # torch: others
 @pytest.mark.parametrize(
@@ -58,6 +59,7 @@ def test_train_valid_input_diff_models(path_to_file, model_name):
     assert val.shape[0] == 3
     assert True
 
+
 @pytest.mark.parametrize(
     "path_to_file,model_name, n_classes",
     [
@@ -87,6 +89,7 @@ def test_train_diff_valid_input_files(path_to_file, model_name, n_classes):
         assert False
     assert val.shape[0] == 2  # n_epochs
     assert True
+
 
 @pytest.mark.parametrize(
     "path_to_file,model_name",

@@ -1,4 +1,7 @@
+// @flow
 import React, { useState } from "react";
+import type {ReactNode} from "react";
+
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -8,10 +11,9 @@ import { toast } from "react-toastify";
 function Forgot() {
   const [email, setEmail] = useState("");
 
-  const onChange = (e) => setEmail(e.target.value);
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async () => {
     try {
       const auth = getAuth();
       await sendPasswordResetEmail(auth, email);
@@ -21,7 +23,7 @@ function Forgot() {
     }
   };
 
-  const EmailNewPassword = (
+  const EmailNewPassword: ReactNode = (
     <>
       <Form.Group className="mb-3" controlId="login-email">
         <h2 className="title">Forgot Password</h2>

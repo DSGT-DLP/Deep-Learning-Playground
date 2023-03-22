@@ -39,6 +39,7 @@ import "chartjs-adapter-date-fns";
 import { enUS } from "date-fns/locale";
 import { format, isFuture, add } from "date-fns";
 import React from "react";
+import { DATA_SOURCE, EXECUTION_STATUS } from "./constants";
 
 ChartJS.register(
   ArcElement,
@@ -174,9 +175,9 @@ const Overlay = () => {
 interface Execution {
   name: string;
   execution_id: number;
-  data_source: string;
+  data_source: DATA_SOURCE;
   timestamp: string;
-  status: string;
+  status: EXECUTION_STATUS;
   progress: number;
 }
 
@@ -308,12 +309,8 @@ const Dashboard = () => {
         datasets: [
           {
             data: [
-              table.filter(
-                (row: { data_source: string }) => row.data_source === "TABULAR"
-              ).length,
-              table.filter(
-                (row: { data_source: string }) => row.data_source === "IMAGE"
-              ).length,
+              table.filter((row) => row.data_source === "TABULAR").length,
+              table.filter((row) => row.data_source === "IMAGE").length,
             ],
             backgroundColor: [
               "rgb(255, 99, 132)",

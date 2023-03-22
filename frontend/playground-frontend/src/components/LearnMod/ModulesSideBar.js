@@ -20,26 +20,20 @@ const ModulesSideBar = () => {
   }));
 
   const onSideBarToggle = () => {
-
     if (sideBarOpen) {
-
       setSideBarOpen(false);
       setSideBarToggleText(">>");
       setSideBarToggleDisplay("none");
-
     } else {
-
       setSideBarOpen(true);
       setSideBarToggleText("<<");
       setSideBarToggleDisplay("block");
-
     }
-
   };
 
   return (
     <div className="sideBar">
-      <div style={{display: sideBarToggleDisplay}}>
+      <div style={{ display: sideBarToggleDisplay }}>
         <h2 style={{ color: "white" }}>Modules</h2>
         <ul style={{ padding: 0 }}>
           {lessons.map((lesson, index) => {
@@ -72,7 +66,9 @@ const ModulesSideBar = () => {
           })}
         </ul>
       </div>
-      <button onClick={onSideBarToggle} id="sideBarToggleButton">{sideBarToggleText}</button>
+      <button onClick={onSideBarToggle} id="sideBarToggleButton">
+        {sideBarToggleText}
+      </button>
     </div>
   );
 };

@@ -80,7 +80,9 @@ const Exercise = (props) => {
     value: i,
   }));
 
-  const inputColumnOptions = usingDefaultDataset.value ? [] : columnOptionsArray;
+  const inputColumnOptions = usingDefaultDataset.value
+    ? []
+    : columnOptionsArray;
 
   //handles change of target data
   const handleTargetChange = (e) => {
@@ -216,16 +218,15 @@ const Exercise = (props) => {
   }, [activeColumns]);
 
   useEffect(() => {
-    if(dlpBackendResponse != null){
-      setFinalAccuracy(dlpBackendResponse["dl_results"][epochs - 1]["train_acc"]);
+    if (dlpBackendResponse != null) {
+      setFinalAccuracy(
+        dlpBackendResponse["dl_results"][epochs - 1]["train_acc"]
+      );
     }
 
     if (finalAccuracy >= props.exerciseObject.minAccuracy) {
-
       updateUserProgress();
-
     }
-
   }, [dlpBackendResponse]);
 
   const ImplementedLayers = (
@@ -307,7 +308,6 @@ const Exercise = (props) => {
 
   return (
     <div id="train-tabular-data" className="container-fluid">
-
       <Spacer height={40} />
 
       <DndProvider backend={HTML5Backend}>
@@ -324,12 +324,20 @@ const Exercise = (props) => {
       <TitleText text="Deep Learning Results" />
       {ResultsMemo}
       <br></br>
-      {
-        (finalAccuracy !== 0) ? (<h4 id="FinalAccuracyDisplay">Final Accuracy was: {finalAccuracy.substring(0,6)}</h4>) : <div></div>
-      }
-      {
-        (finalAccuracy > props.exerciseObject.minAccuracy) ? (<h4 id="FinalAccuracyDisplay">You've met the required accuracy! Congrats!</h4>) : <div></div>
-      }
+      {finalAccuracy !== 0 ? (
+        <h4 id="FinalAccuracyDisplay">
+          Final Accuracy was: {finalAccuracy.substring(0, 6)}
+        </h4>
+      ) : (
+        <div></div>
+      )}
+      {finalAccuracy > props.exerciseObject.minAccuracy ? (
+        <h4 id="FinalAccuracyDisplay">
+          You've met the required accuracy! Congrats!
+        </h4>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 };

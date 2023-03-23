@@ -11,7 +11,17 @@ export interface UserState {
 }
 
 interface UserProgressDataType {
-  progressData: string;
+  modules: {
+    [moduleID: string]: {
+      modulePoints: number;
+      sections: {
+        [sectionID: string]: {
+          sectionPoints: number;
+          questions: { [questionID: string]: number };
+        };
+      };
+    };
+  };
 }
 
 export const fetchUserProgressData = createAsyncThunk<
@@ -20,10 +30,11 @@ export const fetchUserProgressData = createAsyncThunk<
   ThunkApiType
 >("currentUser/fetchUserProgressData", async (_, thunkAPI) => {
   if (thunkAPI.getState().currentUser.uid) {
-    return await sendToBackend(
+    const result: string = await sendToBackend(
       "getUserProgressData",
       thunkAPI.getState().currentUser.uid
     );
+    return JSON.parse(result);
   }
   return thunkAPI.rejectWithValue(
     Error("User does not exist in currentUser slice")

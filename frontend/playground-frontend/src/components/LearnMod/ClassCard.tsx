@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import { ModuleType } from "./LearningModulesContent";
 
-const ClassCard = (props) => {
+const ClassCard = (props: {
+  info: ModuleType;
+  moduleProgress: { modulePoints: number };
+}) => {
   const [pointsEarned, setPointsEarned] = useState(0);
 
   const points = props.info.points;

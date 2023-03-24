@@ -663,7 +663,7 @@ export const IMAGE_LAYERS = Object.freeze([
   },
 ]);
 
-export const POSSIBLE_TRANSFORMS = Object.freeze([
+export const POSSIBLE_TRANSFORMS = [
   {
     display_name: "Random Horizontal Flip",
     object_name: "transforms.RandomHorizontalFlip",
@@ -765,7 +765,7 @@ export const POSSIBLE_TRANSFORMS = Object.freeze([
     label: "Normalize",
     value: "Normalize",
   },
-]);
+];
 
 export const DETECTION_TRANSFORMS = Object.freeze([
   {

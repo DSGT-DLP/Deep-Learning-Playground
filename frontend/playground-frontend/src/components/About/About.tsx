@@ -1,17 +1,11 @@
 import React from "react";
 import { URLs } from "../../constants";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const pythonLogo = require("../../images/logos/python-logo.png");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const pandasLogo = require("../../images/logos/pandas-logo.png");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const pyTorchLogo = require("../../images/logos/pytorch-logo.png");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const flaskLogo = require("../../images/logos/flask-logo.png");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const reactLogo = require("../../images/logos/react-logo.png");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const awsLogo = require("../../images/logos/aws-logo.png");
+import pythonLogo from "../../images/logos/python-logo.png";
+import pandasLogo from "../../images/logos/pandas-logo.png";
+import pyTorchLogo from "../../images/logos/pytorch-logo.png";
+import flaskLogo from "../../images/logos/flask-logo.png";
+import reactLogo from "../../images/logos/react-logo.png";
+import awsLogo from "../../images/logos/aws-logo.png";
 
 const About = () => {
   const urlOpener = (url: string) => () => window.open(url);
@@ -141,11 +135,8 @@ const About = () => {
       <div className="sections" id="installation">
         <h2>Installation</h2>
         <p>
-          See the README.md in the{" "}
-          <a href={URLs.github}>
-            Github Repo
-          </a>{" "}
-          for setup instructions. These setup instructions are mainly for those
+          See the README.md in the <a href={URLs.github}>Github Repo</a> for
+          setup instructions. These setup instructions are mainly for those
           developing/enhancing the tool. For the user, simply go to the "Deep
           Learning tab" at the top of the page.
         </p>

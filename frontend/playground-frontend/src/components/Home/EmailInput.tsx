@@ -1,18 +1,21 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { GENERAL_STYLES } from "../../constants";
 import { Form } from "react-bootstrap";
 
-const EmailInput = (props) => {
+interface EmailInputProps {
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const EmailInput = (props: EmailInputProps) => {
   const { setEmail } = props;
-  const [emailNotValid, setValue] = useState("");
+  const [emailNotValid, setValue] = useState(true);
   const validRegex = /^\S+@\S+\.\S+$/;
 
-  function updateEmailInput(emailInput) {
+  function updateEmailInput(emailInput: string) {
     setEmail(emailInput);
   }
 
-  function validateEmail(email) {
+  function validateEmail(email: string) {
     if (!email?.length || !email.match(validRegex)) {
       setValue(true);
       return;
@@ -34,10 +37,6 @@ const EmailInput = (props) => {
       )}
     </Form>
   );
-};
-
-EmailInput.propTypes = {
-  setEmail: PropTypes.func.isRequired,
 };
 
 export default EmailInput;

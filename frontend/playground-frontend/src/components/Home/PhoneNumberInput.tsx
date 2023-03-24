@@ -3,11 +3,15 @@ import PropTypes from "prop-types";
 import { Form } from "react-bootstrap";
 import { GENERAL_STYLES } from "../../constants";
 
-const PhoneNumberInput = (props) => {
+interface PhoneNumberInputProps {
+  setPhoneNumber: React.Dispatch<React.SetStateAction<string>>
+}
+
+const PhoneNumberInput = (props: PhoneNumberInputProps) => {
   const { setPhoneNumber } = props;
   const [numberIsValid, setNumberIsValid] = useState(true);
 
-  function updateNumberInput(numberInput) {
+  function updateNumberInput(numberInput: string) {
     if (!validateNumber(numberInput)) {
       setNumberIsValid(false);
       return;
@@ -38,7 +42,7 @@ const PhoneNumberInput = (props) => {
  * @param {string} phoneNumber
  * @returns true if valid, false if not
  */
-export function validateNumber(phoneNumber) {
+export function validateNumber(phoneNumber: string) {
   if (phoneNumber && !phoneNumber.match(/^\+\d*$/)) {
     return false;
   }

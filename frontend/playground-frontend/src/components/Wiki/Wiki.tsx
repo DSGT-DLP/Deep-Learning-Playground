@@ -1,26 +1,15 @@
 import React, { useState } from "react";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const DEMO_VIDEO = require("../../images/demo_video.gif");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const softmax_eq = require("./softmax_equation.png");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const tanh_eq = require("./tanh_equation.png");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const tanh_plot = require("./tanh_plot.png");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const sigmoid_eq = require("./sigmoid_equation.png");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const dropout_dg = require("./dropout_diagram.png");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const conv2dgif = require("./conv2d.gif");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const conv2dgif2 = require("./conv2d2.gif");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const maxpool2dgif = require("./maxpool2d.gif");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const avgmaxpoolgif = require("./avgpool_maxpool.gif");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const batchnorm = require("./batchnorm_diagram.png");
+import DEMO_VIDEO from "../../images/demo_video.gif";
+import softmax_eq from "./softmax_equation.png";
+import tanh_eq from "./tanh_equation.png";
+import tanh_plot from "./tanh_plot.png";
+import sigmoid_eq from "./sigmoid_equation.png";
+import dropout_dg from "./dropout_diagram.png";
+import conv2dgif from "./conv2d.gif";
+import conv2dgif2 from "./conv2d2.gif";
+import maxpool2dgif from "./maxpool2d.gif";
+import avgmaxpoolgif from "./avgpool_maxpool.gif";
+import batchnorm from "./batchnorm_diagram.png";
 
 const displayChange = (
   display: DisplayValue,
@@ -37,7 +26,7 @@ const render_layer_info = (layer_info: WikiLayerItem) => {
   const changeClassName = () => {
     const layer_info_button = document.getElementById(layer_info.id);
     if (!layer_info_button) throw new Error("layer_info_button is null");
-    
+
     if (layer_info_button.classList.contains("collapsed-layer")) {
       layer_info_button.classList.remove("collapsed-layer");
       layer_info_button.classList.add("expanded-layer");

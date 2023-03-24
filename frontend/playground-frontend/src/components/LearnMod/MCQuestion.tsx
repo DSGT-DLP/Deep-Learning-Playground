@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
-import { UserState } from "../../redux/userLogin";
+import { UserType } from "../../redux/userLogin";
 import { ContentType } from "./LearningModulesContent";
 
 export interface MCQuestionType {
@@ -14,7 +14,7 @@ interface MCQuestionProps {
   moduleID: number;
   questionObject: ContentType<"mcQuestion">;
   sectionID: number;
-  user: UserState;
+  user: UserType;
 }
 const MCQuestion = (props: MCQuestionProps) => {
   const [answeredCorrect, setAnsweredCorrect] = useState(false);

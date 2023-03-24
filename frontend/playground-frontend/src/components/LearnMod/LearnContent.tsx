@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import ModulesSideBar from "./ModulesSideBar";
 import FRQuestion from "./FRQuestion";
 import { useAppSelector } from "../../redux/hooks";
-import { UserState } from "../../redux/userLogin";
 import { ContentType, ModuleType } from "./LearningModulesContent";
 
 const LearnContent = () => {
@@ -18,7 +17,7 @@ const LearnContent = () => {
     location.state.moduleContent
   );
   const [subSection, setSubSection] = useState(location.state.subsection);
-  const user = useAppSelector<UserState>((state) => state.currentUser);
+  const user = useAppSelector((state) => state.currentUser.user);
   useEffect(() => {
     setSubSection(location.state.subsection);
     setModuleContent(location.state.moduleContent);
@@ -42,6 +41,9 @@ const LearnContent = () => {
     }
   };
 
+  if (!user) {
+    return <></>;
+  }
   return (
     <>
       <div id="header-section">

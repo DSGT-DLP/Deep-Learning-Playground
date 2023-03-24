@@ -27,11 +27,19 @@ interface SubClassType {
   points: number;
 }
 
-type CTypes = "mcQuestion" | "frQuestion" | "text" | "heading1" | "image";
+type CTypes =
+  | "mcQuestion"
+  | "frQuestion"
+  | "text"
+  | "heading1"
+  | "image"
+  | "exercise";
 export interface ContentType<T extends CTypes = CTypes> {
   sectionType: T;
   answer: T extends "frQuestion" ? number : void;
-  questionID: T extends "mcQuestion" | "frQuestion" ? number : void;
+  questionID: T extends "mcQuestion" | "frQuestion" | "exercise"
+    ? number
+    : void;
   question: T extends "mcQuestion" | "frQuestion" ? string : void;
   answerChoices: T extends "mcQuestion" ? string[] : void;
   correctAnswer: T extends "mcQuestion" ? number : void;
@@ -40,6 +48,7 @@ export interface ContentType<T extends CTypes = CTypes> {
   attribution: T extends "image" ? string : void;
   licenseLink: T extends "image" ? string : void;
   content: T extends "text" | "heading1" ? string : void;
+  minAccuracy: T extends "exercise" ? number : void;
 }
 
 const content: LearningModuleType = {
@@ -369,6 +378,24 @@ const content: LearningModuleType = {
               content:
                 "Now that we have covered most of the structure of the neural network, we need a way to evaluate our neural network! This will be covered in the next module where we talk about loss.",
             } as ContentType<"text">,
+          ],
+          points: 0,
+        },
+        {
+          sectionID: 3,
+          title: "A First Attempt",
+          content: [
+            {
+              sectionType: "text",
+              content:
+                "You are now ready to build a very basic neural network. Try it out below. Combine layers to build a model that achieves at least 70% accuracy.",
+            } as ContentType<"text">,
+            /*
+            {
+              sectionType: "exercise",
+              minAccuracy: 0.7,
+              questionID: 0,
+            } as ContentType<"exercise">,*/
           ],
           points: 0,
         },

@@ -9,10 +9,7 @@ const SettingsBlock = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckedPassword] = useState("");
-  const signedInUserEmail = useAppSelector((state) => state.currentUser.email);
-  const signedInUserName = useAppSelector(
-    (state) => state.currentUser.displayName
-  );
+  const user = useAppSelector((state) => state.currentUser.user);
 
   const handleUpdateUser = async () => {
     if (password !== checkPassword) {
@@ -21,13 +18,17 @@ const SettingsBlock = () => {
       await updateUserSettings(fullName, email, password);
     }
   };
+
+  if (!user) {
+    return <></>;
+  }
   return (
     <Form>
       <h2>View or Change your Account Settings </h2>
       <Form.Group className="mb-3" controlId="update-name">
         <Form.Label>Full Name</Form.Label>
         <Form.Control
-          placeholder={signedInUserName}
+          placeholder={user.displayName}
           onBlur={(e) => setFullName(e.target.value)}
           size="lg"
         />
@@ -36,7 +37,7 @@ const SettingsBlock = () => {
         <Form.Label>Email address</Form.Label>
         <Form.Control
           type="email"
-          placeholder={signedInUserEmail}
+          placeholder={user.email}
           onBlur={(e) => setEmail(e.target.value)}
           autoComplete="email"
           size="lg"

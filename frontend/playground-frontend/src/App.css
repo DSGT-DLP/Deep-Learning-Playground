@@ -702,10 +702,12 @@ textarea {
   background-color: #003058;
   margin-right: auto;
   padding: 10px;
+  display: flex;
+  flex-direction: row;
 }
 
 .sideBarModule {
-  background-color: #b7b7b7;
+  background-color: #003058;
   list-style: none;
   padding: 5px;
 }
@@ -720,6 +722,20 @@ textarea {
 
 .sideBarSubsection:hover {
   background-color: #2ab5f6;
+}
+
+#sideBarToggleButton {
+  background-color: #003058;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  color: white;
+  font-weight: bold;
+}
+
+#FinalAccuracyDisplay {
+  color: #cd7bff;
 }
 
 /* -------------------------------------------------------------------------- */

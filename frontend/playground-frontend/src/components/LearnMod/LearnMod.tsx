@@ -8,7 +8,7 @@ const LearnMod = () => {
   //module content
   const content = getContent.modules;
 
-  const user = useAppSelector((state) => state.currentUser);
+  const user = useAppSelector((state) => state.currentUser.user);
   //const dispatch = useAppDispatch();
   /*
   useEffect(() => {
@@ -22,6 +22,9 @@ const LearnMod = () => {
     console.log(user.userProgressData);
   }, []);*/
 
+  if (!user) {
+    return <></>;
+  }
   return (
     <>
       <div id="header-section">

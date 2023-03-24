@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { UserState } from "../../redux/userLogin";
+import { UserType } from "../../redux/userLogin";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
 import { ContentType } from "./LearningModulesContent";
 
@@ -7,7 +7,7 @@ interface FRQuestionProps {
   moduleID: number;
   questionObject: ContentType<"frQuestion">;
   sectionID: number;
-  user: UserState;
+  user: UserType;
 }
 const FRQuestion = (props: FRQuestionProps) => {
   const [answeredCorrect, setAnsweredCorrect] = useState(false);

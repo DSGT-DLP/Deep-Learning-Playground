@@ -3,13 +3,16 @@ import { sendToBackend } from "../components/helper_functions/TalkWithBackend";
 import { ThunkApiType } from "./store";
 
 export interface UserState {
-  email?: string;
-  uid?: string;
-  displayName?: string;
-  emailVerified?: boolean;
+  user?: UserType;
   userProgressData?: UserProgressDataType;
 }
 
+export interface UserType {
+  email: string;
+  uid: string;
+  displayName: string;
+  emailVerified: boolean;
+}
 interface UserProgressDataType {
   modules: {
     [moduleID: string]: {
@@ -29,11 +32,8 @@ export const fetchUserProgressData = createAsyncThunk<
   void,
   ThunkApiType
 >("currentUser/fetchUserProgressData", async (_, thunkAPI) => {
-  if (thunkAPI.getState().currentUser.uid) {
-    const result: string = await sendToBackend(
-      "getUserProgressData",
-      thunkAPI.getState().currentUser.uid
-    );
+  if (thunkAPI.getState().currentUser.user) {
+    const result: string = await sendToBackend("getUserProgressData", {});
     return JSON.parse(result);
   }
   return thunkAPI.rejectWithValue(
@@ -43,35 +43,32 @@ export const fetchUserProgressData = createAsyncThunk<
 
 export const currentUserSlice = createSlice({
   name: "currentUser",
-  initialState: { userDataFetchInitiated: false } as UserState,
+  initialState: {} as UserState,
   reducers: {
-    setCurrentUser: (state, { payload }: { payload: UserState }) => {
+    setCurrentUser: (state, { payload }: { payload: UserType | undefined }) => {
       if (!payload) {
-        state.email = undefined;
-        state.uid = undefined;
-        state.displayName = undefined;
-        state.emailVerified = undefined;
+        state.user = undefined;
         state.userProgressData = undefined;
-        return;
       }
-
-      const { email, uid, displayName, emailVerified } = payload;
-      state.email = email;
-      state.uid = uid;
-      state.displayName = displayName;
-      state.emailVerified = emailVerified;
+      state.user = payload;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserProgressData.pending, (state) => {
-      state.userProgressData = undefined;
+      if (state.user) {
+        state.userProgressData = undefined;
+      }
     });
     builder.addCase(fetchUserProgressData.fulfilled, (state, { payload }) => {
-      state.userProgressData = payload;
+      if (state.user) {
+        state.userProgressData = payload;
+      }
     });
     builder.addCase(fetchUserProgressData.rejected, (state, { payload }) => {
-      state.userProgressData = undefined;
-      console.log(payload);
+      if (state.user) {
+        state.userProgressData = undefined;
+        console.log(payload);
+      }
     });
   },
 });

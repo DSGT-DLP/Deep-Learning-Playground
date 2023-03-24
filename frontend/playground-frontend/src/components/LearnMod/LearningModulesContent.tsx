@@ -390,12 +390,11 @@ const content: LearningModuleType = {
               content:
                 "You are now ready to build a very basic neural network. Try it out below. Combine layers to build a model that achieves at least 70% accuracy.",
             } as ContentType<"text">,
-            /*
             {
               sectionType: "exercise",
               minAccuracy: 0.7,
               questionID: 0,
-            } as ContentType<"exercise">,*/
+            } as ContentType<"exercise">,
           ],
           points: 0,
         },

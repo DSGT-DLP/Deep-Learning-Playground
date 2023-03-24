@@ -18,9 +18,9 @@ const LearnMod = () => {
   const [userProgressData, setUserProgressData] = useState(null);
   const [userDataFetchInitiated, setUserDataFetchInitiated] = useState(false);
 
-  async function getUserProgress(userLogged) {
+  async function getUserProgress() {
     setUserDataFetchInitiated(true);
-    sendToBackend("getUserProgressData", userLogged.uid).then((result) => {
+    sendToBackend("getUserProgressData", {}).then((result) => {
       setUserProgressData(result);
     });
   }
@@ -31,7 +31,7 @@ const LearnMod = () => {
         setUser(userLogged);
 
         if (userProgressData == null && !userDataFetchInitiated) {
-          getUserProgress(userLogged);
+          getUserProgress();
         }
       } else {
         navigate("/login");

@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import ModulesSideBar from "./ModulesSideBar";
+import Exercise from "./Exercise";
 
 const LearnContent = () => {
   const navigate = useNavigate();
@@ -60,9 +61,7 @@ const LearnContent = () => {
         <h1 className="headers">{moduleContent.title}</h1>
       </div>
       <div id="learningBody">
-        <div className="sideBar">
-          <ModulesSideBar />
-        </div>
+        <ModulesSideBar />
         <div className="learningContentDiv">
           <h2>{moduleContent.subClasses[subSection].title}</h2>
           {moduleContent.subClasses[subSection].content.map(
@@ -95,7 +94,7 @@ const LearnContent = () => {
                     key={index}
                     user={user}
                     questionObject={contentComponent}
-                    moduleID={moduleContent.moduleID}
+                    moduleID={Number(moduleContent.moduleID)}
                     sectionID={moduleContent.subClasses[subSection].sectionID}
                   />
                 );
@@ -108,6 +107,18 @@ const LearnContent = () => {
                     user={user}
                     questionObject={contentComponent}
                     moduleID={moduleContent.moduleID}
+                    sectionID={moduleContent.subClasses[subSection].sectionID}
+                  />
+                );
+              }
+
+              if (contentComponent.sectionType === "exercise") {
+                return (
+                  <Exercise
+                    key={index}
+                    user={user}
+                    exerciseObject={contentComponent}
+                    moduleID={Number(moduleContent.moduleID)}
                     sectionID={moduleContent.subClasses[subSection].sectionID}
                   />
                 );

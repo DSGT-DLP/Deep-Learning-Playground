@@ -10,16 +10,16 @@ import { auth } from "../../firebase";
 import { setCurrentUser } from "../../redux/userLogin";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setCookie, deleteCookie } from "../helper_functions/Cookie";
 import GlobalStyle from "../../GlobalStyle";
 import { ThemeProvider } from "styled-components";
 import { FormControlLabel, Switch } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 const NavbarMain = () => {
-  const userEmail = useSelector((state) => state.currentUser.email);
-  const dispatch = useDispatch();
+  const userEmail = useAppSelector((state) => state.currentUser.email);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   function getInitialTheme() {

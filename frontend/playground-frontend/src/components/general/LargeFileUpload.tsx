@@ -1,14 +1,12 @@
 import React from "react";
-import { PropTypes } from "prop-types";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
-const LargeFileUpload = (props) => {
+interface LargeFileUploadProps {
+  uploadFile: File | null;
+  setUploadFile: React.Dispatch<React.SetStateAction<File | null>>;
+}
+const LargeFileUpload = (props: LargeFileUploadProps) => {
   const { uploadFile, setUploadFile } = props;
-
-  const handleFileUpload = (e) => {
-    e.preventDefault();
-    setUploadFile(e.target.files[0] ? e.target.files[0] : null);
-  };
 
   return (
     <>
@@ -32,7 +30,10 @@ const LargeFileUpload = (props) => {
           name="file"
           id="file-upload"
           accept=".zip"
-          onChange={handleFileUpload}
+          onChange={(e) => {
+            e.preventDefault();
+            setUploadFile(e.target?.files?.[0] ? e.target.files[0] : null);
+          }}
           style={{ width: "100%" }}
         />
         <input
@@ -45,11 +46,6 @@ const LargeFileUpload = (props) => {
       </form>
     </>
   );
-};
-
-LargeFileUpload.propTypes = {
-  uploadFile: PropTypes.object,
-  setUploadFile: PropTypes.func.isRequired,
 };
 
 export default LargeFileUpload;

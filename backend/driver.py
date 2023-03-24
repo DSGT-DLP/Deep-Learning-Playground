@@ -398,9 +398,9 @@ def getUserProgressData():
     user_id = json.loads(request.data)["user_id"]
     print(user_id)
     try:
-        return dynamoTable.get_record(json.loads(request.data)["user_id"]).progressData
+        return dynamoTable.get_record(user_id).progressData
     except ValueError:
-        newRecord = UserProgressData(json.loads(request.data)["user_id"], "{}")
+        newRecord = UserProgressData(user_id, "{}")
         dynamoTable.create_record(newRecord)
         return "{}"
 

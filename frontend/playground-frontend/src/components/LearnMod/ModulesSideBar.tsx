@@ -12,13 +12,6 @@ const ModulesSideBar = () => {
   const [sideBarToggleText, setSideBarToggleText] = useState("<<");
   const [sideBarToggleDisplay, setSideBarToggleDisplay] = useState("block");
 
-  let lessons = content.map((x) => ({
-    title: x.title,
-    points: x.points,
-    subClasses: x.subsections,
-    moduleID: x.moduleID.toString(),
-  }));
-
   const onSideBarToggle = () => {
     if (sideBarOpen) {
       setSideBarOpen(false);
@@ -36,7 +29,7 @@ const ModulesSideBar = () => {
       <div style={{ display: sideBarToggleDisplay }}>
         <h2 style={{ color: "white" }}>Modules</h2>
         <ul style={{ padding: 0 }}>
-          {lessons.map((lesson, index) => {
+          {content.map((lesson, index) => {
             return (
               <li className="sideBarModule" key={index}>
                 <p style={{ color: "white" }}>{lesson.title}</p>

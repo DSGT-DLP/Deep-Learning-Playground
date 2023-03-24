@@ -18,10 +18,9 @@ import { FormControlLabel, Switch } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 const NavbarMain = () => {
-  const userEmail = useAppSelector((state) => state.currentUser.email);
+  const user = useAppSelector((state) => state.currentUser.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
   function getInitialTheme() {
     const savedTheme = storage.getItem("theme");
     return savedTheme
@@ -53,7 +52,7 @@ const NavbarMain = () => {
   const logout = () => {
     signOut(auth)
       .then(() => {
-        dispatch(setCurrentUser(null));
+        dispatch(setCurrentUser());
         toast.success("Logged out successfully", { autoClose: 1000 });
         deleteCookie("userEmail");
         navigate("/login");
@@ -63,7 +62,7 @@ const NavbarMain = () => {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (!user) return;
+      if (!user || !user.email || !user.displayName) return;
 
       const userData = {
         email: user.email,
@@ -76,6 +75,9 @@ const NavbarMain = () => {
     });
   }, []);
 
+  if (!user) {
+    return <></>;
+  }
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
@@ -95,12 +97,12 @@ const NavbarMain = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              {userEmail ? <Nav.Link href="/train">Train</Nav.Link> : null}
+              {user.email ? <Nav.Link href="/train">Train</Nav.Link> : null}
               <Nav.Link href="/about">About</Nav.Link>
               <Nav.Link href="/wiki">Wiki</Nav.Link>
               <Nav.Link href="/feedback">Feedback</Nav.Link>
               <Nav.Link href={URLs.donate}>Donate</Nav.Link>
-              {userEmail ? (
+              {user.email ? (
                 <NavDropdown title="Account" id="basic-nav-dropdown">
                   <NavDropdown.Item href="/">Dashboard</NavDropdown.Item>
                   <NavDropdown.Item href="/account-settings">

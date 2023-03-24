@@ -1,12 +1,7 @@
 import React from "react";
-interface ImageData {
-  path: string;
-  caption: string;
-  licenseLink: string;
-  attribution: string;
-}
+import { ContentType } from "./LearningModulesContent";
 
-const ImageComponent = (props: { imageData: ImageData }) => {
+const ImageComponent = (props: { imageData: ContentType<"image"> }) => {
   return (
     <div id="imageContainer">
       <img

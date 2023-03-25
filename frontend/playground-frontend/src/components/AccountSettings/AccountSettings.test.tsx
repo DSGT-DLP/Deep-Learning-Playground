@@ -1,12 +1,13 @@
 import React from "react";
 import {Provider} from "react-redux";
+import {act} from "react-dom/test-utils";
 import AccountSettings from './AccountSettings';
 import configureMockStore from 'redux-mock-store';
 import {render, screen, waitFor, within} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
-import Form from "react-bootstrap/Form";
 import { updateUserSettings } from '../../firebase';
+import { ScreenRotation } from "@mui/icons-material";
 
 const mockStore = configureMockStore();
 const store = mockStore({ currentUser:  {
@@ -45,11 +46,11 @@ describe("AccountSettings tests", () => {
   describe("SettingsBlock tests", () => {
     
     test("test_passwords_match: tests that handleUpdateUser function checks if passwords match before calling updateUserSettings", async () => {
-
       render(
-      <Provider store={store}>
-        <AccountSettings />
-      </Provider>);
+        <Provider store={store}>
+          <AccountSettings />
+        </Provider>
+      );
       
       const passwordInput = screen.getByLabelText("Password");
       const checkPasswordInput = screen.getByLabelText("Re-Type Password");
@@ -59,7 +60,26 @@ describe("AccountSettings tests", () => {
       expect(passwordInput).toHaveValue("password");
       expect(checkPasswordInput).toHaveValue("password");
       expect(passwordInput === checkPasswordInput);
-  });
+      
+    });
+
+        // Tests that the function returns an empty fragment when there is no current user. tags: [happy path]
+    test("test_empty_user: tests that the function returns an empty fragment when there is no current user", () => {
+      const mockUseAppSelector = jest.fn();
+      jest.mock("../../redux/hooks", () => ({
+          useAppSelector: mockUseAppSelector
+      }));
+      mockUseAppSelector.mockReturnValueOnce(null);
+      act(async () => {
+        render(
+          <Provider store={store}>
+            <AccountSettings />
+          </Provider>
+        );
+      });
+      expect(screen.queryByText("View or Change your Account Settings")).not.toBeInTheDocument();
+    });
+
   });
   
 });

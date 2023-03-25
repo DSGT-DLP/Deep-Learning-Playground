@@ -52,6 +52,7 @@ export const updateUserSettings = async (
   email: string,
   password: string
 ) => {
+  console.log("in real update user settings function");
   if (!auth?.currentUser)
     throw new Error("Firebase Auth current user is missing");
 

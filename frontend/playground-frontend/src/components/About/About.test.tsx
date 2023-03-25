@@ -55,6 +55,8 @@ describe("About_function", () => {
     expect(developer.getElementsByTagName("h2")[0]).toHaveTextContent("Development");
     expect(developer.getElementsByTagName("p").length).toEqual(2);
     const paragraphs = developer.getElementsByTagName("p");
-    expect("Want to contribute?").toBeInstanceOf(paragraphs);
+    expect(paragraphs).toHaveLength(2);
+    const devGreeting = screen.getByTestId("developer-greeting");
+    expect(devGreeting.textContent).toContain("Want to contribute?");
   });
 });

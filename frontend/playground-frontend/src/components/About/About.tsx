@@ -202,7 +202,7 @@ function renderDeveloperInstructions(): ReactNode {
   return (
     <div className="sections" id="dev" data-testid="dev">
         <h2>Development</h2>
-        <p>
+        <p data-testid="developer-greeting">
           Want to contribute? Great! Email one of the collaborators in the
           Github Repo for more information on how you can get involved in
           pushing the impact of Deep Learning Playground Forward.

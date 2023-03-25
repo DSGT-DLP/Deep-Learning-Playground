@@ -1,18 +1,21 @@
-import { toast } from "react-toastify";
-import { auth } from "../../firebase";
-import sha256 from "crypto-js/sha256";
 import axios from "axios";
+import sha256 from "crypto-js/sha256";
+import { toast } from "react-toastify";
 import { EXPECTED_FAILURE_HTTP_CODES } from "../../constants";
+import { auth } from "../../firebase";
 
-async function uploadToBackend(data) {
-  let headers = auth.currentUser
+export async function uploadToBackend(data: { [key: string]: any }) {
+  const headers = auth.currentUser
     ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
     : undefined;
 
   await axios.post("/api/upload", data, { headers });
 }
 
-const userCodeEval = async (data, snippet) => {
+export const userCodeEval = async (
+  data: { [key: string]: any },
+  snippet: string
+) => {
   const codeEval = await sendToBackend("sendUserCodeEval", {
     data: data,
     codeSnippet: snippet,
@@ -20,12 +23,16 @@ const userCodeEval = async (data, snippet) => {
   return codeEval;
 };
 
-const getSignedUploadUrl = async (version, filename, file) => {
-  let headers = auth.currentUser
+export const getSignedUploadUrl = async (
+  version: number,
+  filename: string,
+  file: File
+) => {
+  const headers = auth.currentUser
     ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
     : undefined;
-  let data = new FormData();
-  data.append("version", version);
+  const data = new FormData();
+  data.append("version", version.toString());
   data.append("filename", filename);
   data.append("file", file);
   return await fetch("/api/getSignedUploadUrl", {
@@ -37,23 +44,30 @@ const getSignedUploadUrl = async (version, filename, file) => {
 
 /**
  * Given timestamp and unique user id, generate an execution id
- * @param {string} uid
- * @param {string} timestamp
- * @returns {string} execution id
+ * @param uid
+ * @param timestamp
+ * @returns execution id
  */
-function createExecutionId(uid, timestamp = new Date().getTime().toString()) {
+function createExecutionId(
+  uid: string,
+  timestamp: string = new Date().getTime().toString()
+) {
   const hash = sha256(timestamp + uid);
   return "ex" + hash;
 }
 
-async function sendToBackend(route, data) {
-  let headers = auth.currentUser
-    ? {
-        Authorization: "bearer " + (await auth.currentUser.getIdToken(true)),
-        uid: auth.currentUser.uid,
-      }
-    : undefined;
+export async function sendToBackend(
+  route: string,
+  data: { [key: string]: any }
+) {
+  if (auth.currentUser == null) throw new Error("Not logged in");
+
+  const headers = {
+    Authorization: "bearer " + (await auth.currentUser.getIdToken(true)),
+    uid: auth.currentUser.uid,
+  };
   data["route"] = route;
+
   data["execution_id"] = createExecutionId(headers.uid);
   data["user"] = {
     uid: auth.currentUser.uid,
@@ -90,16 +104,19 @@ async function sendToBackend(route, data) {
   return backendResult;
 }
 
-const routeDict = {
+const routeDict = Object.freeze({
   tabular: "tabular-run",
   image: "img-run",
   pretrained: "pretrain-run",
   classicalml: "ml-run",
   objectdetection: "object-detection",
-};
+});
 
-async function train_and_output(choice, data) {
-  let route = routeDict[choice];
+export async function train_and_output(
+  choice: keyof typeof routeDict,
+  data: { [key: string]: any }
+) {
+  const route = routeDict[choice];
 
   if (process.env.REACT_APP_MODE === "prod") {
     data["shouldBeQueued"] = true;
@@ -108,7 +125,10 @@ async function train_and_output(choice, data) {
   return trainResult;
 }
 
-async function sendEmail(email, problemType) {
+export async function sendEmail(
+  email: string,
+  problemType: "classification" | "regression"
+) {
   // send email if provided
   const attachments = [
     // we will not create constant values for the source files because the constants cannot be used in Home
@@ -143,16 +163,6 @@ async function sendEmail(email, problemType) {
   }
 }
 
-async function isLoggedIn() {
+export async function isLoggedIn() {
   return await auth.currentUser?.getIdToken(true), toast.error("Not logged in");
 }
-
-export {
-  uploadToBackend,
-  sendToBackend,
-  train_and_output,
-  sendEmail,
-  isLoggedIn,
-  userCodeEval,
-  getSignedUploadUrl,
-};

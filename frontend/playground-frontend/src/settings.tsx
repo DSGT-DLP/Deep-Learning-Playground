@@ -1,6 +1,6 @@
 import React from "react";
 
-interface LayerParameter {
+export interface LayerParameter {
   index: number;
   parameter_name: string;
   min?: number;
@@ -8,6 +8,7 @@ interface LayerParameter {
   parameter_type: "number" | "text" | "tuple";
   default?: number | string;
   kwarg?: string;
+  value?: number | string;
 }
 
 interface ModelLayer {

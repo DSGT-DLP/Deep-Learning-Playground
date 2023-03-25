@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { EXPECTED_FAILURE_HTTP_CODES } from "../../constants";
 import { auth } from "../../firebase";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function uploadToBackend(data: { [key: string]: any }) {
   const headers = auth.currentUser
     ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
@@ -13,6 +14,7 @@ export async function uploadToBackend(data: { [key: string]: any }) {
 }
 
 export const userCodeEval = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: { [key: string]: any },
   snippet: string
 ) => {
@@ -58,6 +60,7 @@ function createExecutionId(
 
 export async function sendToBackend(
   route: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: { [key: string]: any }
 ) {
   if (auth.currentUser == null) throw new Error("Not logged in");
@@ -114,6 +117,7 @@ const routeDict = Object.freeze({
 
 export async function train_and_output(
   choice: keyof typeof routeDict,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: { [key: string]: any }
 ) {
   const route = routeDict[choice];

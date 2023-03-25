@@ -30,4 +30,7 @@ jobs:
     - run: yarn install
       working-directory: ./frontend/playground-frontend
     - run: yarn run build --if-present
-      working-directory: ./frontend/playground-frontend        
+      working-directory: ./frontend/playground-frontend
+    #frontend unit tests    
+    - run: yarn run test
+      working-directory: ./frontend/playground-frontend    

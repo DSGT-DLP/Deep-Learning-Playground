@@ -80,7 +80,7 @@ const AccountSettings = () => {
       <div id="header-section">
         <h1 className="headers">User Settings</h1>
       </div>
-      <div className="sections" id="User Settigs">
+      <div className="sections" id="User Settings" data-testid="user-settings">
         <SettingsBlock />
       </div>
     </div>

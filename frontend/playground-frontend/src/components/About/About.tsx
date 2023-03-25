@@ -14,7 +14,7 @@ function renderHeading(): ReactNode {
    * Function that renders the heading of the About Page
    */
   return (
-    <div id="header-section">
+    <div id="header-section" data-testid="header">
         <h1 className="headers">Deep Learning Playground</h1>
         <h2>Your destination for training Deep Learning models</h2>
     </div>
@@ -26,7 +26,7 @@ function renderMotivationSection(): ReactNode {
    * Section in About page that explains motivation behind DLP
    */
   return (
-    <div className="sections" id="motivation">
+    <div className="sections" id="motivation" data-testid="motivation">
         <h2>Motivation</h2>
         <p>
           Deep Learning has made advancements recently. People are trying to
@@ -63,11 +63,11 @@ function renderTechnologiesUsedSection(): ReactNode {
    * Explain what technologies we use for DLP
    */
   return (
-    <div className="sections" id="tech">
+    <div className="sections" id="tech" data-testid="tech">
         <h2>Technologies Used</h2>
 
         <div className="tech-rows">
-          <div className="tech-row-content">
+          <div className="tech-row-content" data-testid="tech-row-content">
             <img
               src={pythonLogo}
               className="tech-img-content"
@@ -80,7 +80,7 @@ function renderTechnologiesUsedSection(): ReactNode {
               developer support
             </p>
           </div>
-          <div className="tech-row-content">
+          <div className="tech-row-content" data-testid="tech-row-content">
             <img
               src={pyTorchLogo}
               className="tech-img-content"
@@ -93,7 +93,7 @@ function renderTechnologiesUsedSection(): ReactNode {
               learning model
             </p>
           </div>
-          <div className="tech-row-content">
+          <div className="tech-row-content" data-testid="tech-row-content">
             <img
               src={pandasLogo}
               className="tech-img-content"
@@ -106,7 +106,7 @@ function renderTechnologiesUsedSection(): ReactNode {
               helpful documentation
             </p>
           </div>
-          <div className="tech-row-content">
+          <div className="tech-row-content" data-testid="tech-row-content">
             <img
               src={flaskLogo}
               className="tech-img-content"
@@ -118,7 +118,7 @@ function renderTechnologiesUsedSection(): ReactNode {
               to happen
             </p>
           </div>
-          <div className="tech-row-content">
+          <div className="tech-row-content" data-testid="tech-row-content">
             <img
               src={reactLogo}
               className="tech-img-content"
@@ -132,7 +132,7 @@ function renderTechnologiesUsedSection(): ReactNode {
               the user
             </p>
           </div>
-          <div className="tech-row-content">
+          <div className="tech-row-content" data-testid="tech-row-content">
             <img
               src={awsLogo}
               className="tech-img-content"
@@ -157,7 +157,7 @@ function renderInstallInstructions(): ReactNode {
    */
 
   return (
-    <div className="sections" id="installation">
+    <div className="sections" id="installation" data-testid="installation">
         <h2>Installation</h2>
         <p>
           See the README.md in the <a href={URLs.github}>Github Repo</a> for
@@ -174,7 +174,7 @@ function renderUserInstructions(): ReactNode {
    * Explain what the user will have to do to use DLP
    */
   return (
-    <div className="sections" id="user">
+    <div className="sections" id="user" data-testid="user">
         <h2>User</h2>
         <p>
           As the user, all you need to do in the Deep Learning Playground is
@@ -200,7 +200,7 @@ function renderDeveloperInstructions(): ReactNode {
    * Render instructions for developers on DLP
    */
   return (
-    <div className="sections" id="dev">
+    <div className="sections" id="dev" data-testid="dev">
         <h2>Development</h2>
         <p>
           Want to contribute? Great! Email one of the collaborators in the

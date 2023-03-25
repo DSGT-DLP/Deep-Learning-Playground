@@ -1,6 +1,6 @@
 module.exports = {
-    preset: 'ts-jest',
-    transform: {
-      '^.+\\.tsx?$': 'babel-jest',
-    },
-}
+  preset: "ts-jest",
+  transform: {
+    "^.+\\.tsx?$": "babel-jest",
+  },
+};

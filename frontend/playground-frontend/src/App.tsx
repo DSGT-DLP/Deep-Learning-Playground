@@ -17,15 +17,15 @@ import {
 } from "./components";
 import Home from "./Home";
 import { ToastContainer } from "react-toastify";
-import { getCookie } from "./components/helper_functions/Cookie";
 import React from "react";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import { useAppSelector } from "./redux/hooks";
 
 function App() {
-  const userEmail = getCookie("userEmail");
-  const verifyLogin = (target: JSX.Element) => (userEmail ? target : <Login />);
+  const user = useAppSelector((state) => state.currentUser.user);
+  const verifyLogin = (target: JSX.Element) => (user ? target : <Login />);
 
   return (
     <div id="app">
@@ -36,11 +36,7 @@ function App() {
             <Route
               path="/"
               element={
-                userEmail ? (
-                  <Navigate to="/dashboard" />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
               }
             />
             <Route path="/login" element={<Login />} />

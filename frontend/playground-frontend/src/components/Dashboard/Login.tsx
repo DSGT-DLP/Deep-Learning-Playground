@@ -8,44 +8,48 @@ import {
   signInWithGithub,
 } from "../../firebase";
 import { setCurrentUser } from "../../redux/userLogin";
-import { useDispatch } from "react-redux";
 import GoogleLogo from "../../images/logos/google.png";
 import GithubLogo from "../../images/logos/github.png";
-import { useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { User } from "firebase/auth";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
-  const [fullName, setFullName] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [recaptcha, setRecaptcha] = useState("");
-  const dispatch = useDispatch();
+  const [fullName, setFullName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [recaptcha, setRecaptcha] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const signedInUserEmail = useSelector((state) => state.currentUser.email);
+  const user = useAppSelector((state) => state.currentUser.user);
 
   const handleSignInRegister = async () => {
-    let user;
+    let newUser: User | null = null;
     if (isRegistering) {
-      if (recaptcha !== "") {
-        user = await registerWithPassword(email, password, fullName);
-      } else {
+      if (!recaptcha) {
         toast.error("Please complete recaptcha");
+      } else if (fullName === "") {
+        toast.error("Please enter a name");
+      } else if (email === "") {
+        toast.error("Please enter an email");
+      } else if (password === "") {
+        toast.error("Please enter a password");
+      } else {
+        newUser = await registerWithPassword(email, password, fullName);
       }
     } else {
-      user = await signInWithPassword(email, password);
+      newUser = await signInWithPassword(email, password);
     }
-
-    if (!user) return;
+    if (!newUser || !newUser.email || !newUser.displayName) return;
     const userData = {
-      email: user.email,
-      uid: user.uid,
-      displayName: user.displayName,
-      emailVerified: user.emailVerified,
+      email: newUser.email,
+      uid: newUser.uid,
+      displayName: newUser.displayName,
+      emailVerified: newUser.emailVerified,
     };
-
     dispatch(setCurrentUser(userData));
     navigate("/dashboard");
   };
@@ -64,8 +68,8 @@ const Login = () => {
   );
 
   useEffect(() => {
-    if (signedInUserEmail) navigate("/dashboard");
-  }, [signedInUserEmail]);
+    if (user) navigate("/dashboard");
+  }, [user]);
 
   const SocialLogins = (
     <>
@@ -133,7 +137,7 @@ const Login = () => {
         </a>
       </div>
 
-      {isRegistering && (
+      {isRegistering && process.env.REACT_APP_CAPTCHA_SITE_KEY && (
         <div className="reCaptcha">
           <ReCAPTCHA
             sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}

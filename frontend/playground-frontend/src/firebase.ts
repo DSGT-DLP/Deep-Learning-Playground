@@ -82,36 +82,42 @@ export const registerWithPassword = async (
   password: string,
   displayName: string | null = null
 ) => {
-  return await createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      updateUserProfile(displayName);
-      setCookie("email", user.email);
-      toast.success(`Registered with email ${user.email}`, {
-        autoClose: 1000,
-      });
-      return user;
-    })
-    .catch((error) => {
-      toast.error(`Error: ${error.code}`);
-      return false;
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+    await updateUserProfile(displayName);
+    setCookie("email", user.email);
+    toast.success(`Registered with email ${user.email}`, {
+      autoClose: 1000,
     });
+    return user;
+  } catch (error) {
+    toast.error(`Error: ${(error as Error).message}`);
+    return null;
+  }
 };
 
 export const signInWithPassword = async (email: string, password: string) => {
-  return signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      setCookie("email", user.email);
-      toast.success(`Signed in with email ${user.email}`, {
-        autoClose: 1000,
-      });
-      return user;
-    })
-    .catch((error) => {
-      toast.error(`Error: ${error.code}`);
-      return false;
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+    setCookie("email", user.email);
+    toast.success(`Signed in with email ${user.email}`, {
+      autoClose: 1000,
     });
+    return user;
+  } catch (error) {
+    toast.error(`Error: ${(error as Error).message}`);
+    return null;
+  }
 };
 
 export const signInWithGithub = async () => {

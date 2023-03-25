@@ -377,7 +377,7 @@ const Home = () => {
       <Spacer height={40} />
 
       <TitleText text="Email (optional)" />
-      <EmailInput setEmail={setNotificationEmail} />
+      <EmailInput email={notificationEmail} setEmail={setNotificationEmail} />
       <PhoneNumberInput setPhoneNumber={setNotificationPhoneNumber} />
 
       <Spacer height={40} />

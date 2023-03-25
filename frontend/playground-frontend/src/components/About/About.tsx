@@ -1,4 +1,4 @@
-import React from "react";
+import React, {type ReactNode} from "react";
 import { URLs } from "../../constants";
 import pythonLogo from "../../images/logos/python-logo.png";
 import pandasLogo from "../../images/logos/pandas-logo.png";
@@ -7,17 +7,26 @@ import flaskLogo from "../../images/logos/flask-logo.png";
 import reactLogo from "../../images/logos/react-logo.png";
 import awsLogo from "../../images/logos/aws-logo.png";
 
-const About = () => {
-  const urlOpener = (url: string) => () => window.open(url);
+const urlOpener = (url: string) => () => window.open(url);
 
+function renderHeading(): ReactNode {
+  /**
+   * Function that renders the heading of the About Page
+   */
   return (
-    <div id="about">
-      <div id="header-section">
+    <div id="header-section" data-testid="header">
         <h1 className="headers">Deep Learning Playground</h1>
         <h2>Your destination for training Deep Learning models</h2>
-      </div>
+    </div>
+  );
+}
 
-      <div className="sections" id="motivation">
+function renderMotivationSection(): ReactNode {
+  /**
+   * Section in About page that explains motivation behind DLP
+   */
+  return (
+    <div className="sections" id="motivation" data-testid="motivation">
         <h2>Motivation</h2>
         <p>
           Deep Learning has made advancements recently. People are trying to
@@ -46,12 +55,19 @@ const About = () => {
           </li>
         </ul>
       </div>
+  );
+}
 
-      <div className="sections" id="tech">
+function renderTechnologiesUsedSection(): ReactNode {
+  /**
+   * Explain what technologies we use for DLP
+   */
+  return (
+    <div className="sections" id="tech" data-testid="tech">
         <h2>Technologies Used</h2>
 
         <div className="tech-rows">
-          <div className="tech-row-content">
+          <div className="tech-row-content" data-testid="tech-row-content">
             <img
               src={pythonLogo}
               className="tech-img-content"
@@ -64,7 +80,7 @@ const About = () => {
               developer support
             </p>
           </div>
-          <div className="tech-row-content">
+          <div className="tech-row-content" data-testid="tech-row-content">
             <img
               src={pyTorchLogo}
               className="tech-img-content"
@@ -77,7 +93,7 @@ const About = () => {
               learning model
             </p>
           </div>
-          <div className="tech-row-content">
+          <div className="tech-row-content" data-testid="tech-row-content">
             <img
               src={pandasLogo}
               className="tech-img-content"
@@ -90,7 +106,7 @@ const About = () => {
               helpful documentation
             </p>
           </div>
-          <div className="tech-row-content">
+          <div className="tech-row-content" data-testid="tech-row-content">
             <img
               src={flaskLogo}
               className="tech-img-content"
@@ -102,7 +118,7 @@ const About = () => {
               to happen
             </p>
           </div>
-          <div className="tech-row-content">
+          <div className="tech-row-content" data-testid="tech-row-content">
             <img
               src={reactLogo}
               className="tech-img-content"
@@ -116,7 +132,7 @@ const About = () => {
               the user
             </p>
           </div>
-          <div className="tech-row-content">
+          <div className="tech-row-content" data-testid="tech-row-content">
             <img
               src={awsLogo}
               className="tech-img-content"
@@ -131,8 +147,17 @@ const About = () => {
           </div>
         </div>
       </div>
+  );
+}
 
-      <div className="sections" id="installation">
+function renderInstallInstructions(): ReactNode {
+  /**
+   * Explain how to setup Deep Learning Playground on your local machine for 
+   * those interested in developing
+   */
+
+  return (
+    <div className="sections" id="installation" data-testid="installation">
         <h2>Installation</h2>
         <p>
           See the README.md in the <a href={URLs.github}>Github Repo</a> for
@@ -140,9 +165,16 @@ const About = () => {
           developing/enhancing the tool. For the user, simply go to the "Deep
           Learning tab" at the top of the page.
         </p>
-      </div>
+    </div>
+  );
+}
 
-      <div className="sections" id="user">
+function renderUserInstructions(): ReactNode {
+  /**
+   * Explain what the user will have to do to use DLP
+   */
+  return (
+    <div className="sections" id="user" data-testid="user">
         <h2>User</h2>
         <p>
           As the user, all you need to do in the Deep Learning Playground is
@@ -159,11 +191,18 @@ const About = () => {
           access to a CSV corresponding to the performance stats/metrics of your
           model!
         </p>
-      </div>
+    </div>
+  );
+}
 
-      <div className="sections" id="dev">
+function renderDeveloperInstructions(): ReactNode {
+  /**
+   * Render instructions for developers on DLP
+   */
+  return (
+    <div className="sections" id="dev" data-testid="dev">
         <h2>Development</h2>
-        <p>
+        <p data-testid="developer-greeting">
           Want to contribute? Great! Email one of the collaborators in the
           Github Repo for more information on how you can get involved in
           pushing the impact of Deep Learning Playground Forward.
@@ -174,12 +213,39 @@ const About = () => {
           on the "Issues" tab at the top and selecting "New Issue". The
           development team will respond to your request ASAP!
         </p>
-      </div>
+    </div>
+  );
+}
 
-      <div className="sections" id="license">
+function renderLicense(): ReactNode {
+  /**
+   * Render License for DLP
+   */
+  return (
+    <div className="sections" id="license">
         <h2>License</h2>
         <p>MIT</p>
-      </div>
+    </div>
+  );
+}
+
+const About = () => {
+  
+  return (
+    <div id="about">
+      {renderHeading()}
+
+      {renderMotivationSection()}
+
+      {renderTechnologiesUsedSection()}
+
+      {renderInstallInstructions()}
+      
+      {renderUserInstructions()}
+
+      {renderDeveloperInstructions()}
+
+      {renderLicense()}
     </div>
   );
 };

@@ -1,6 +1,23 @@
 import React from "react";
 
-export const POSSIBLE_LAYERS = Object.freeze([
+interface LayerParameter {
+  index: number;
+  parameter_name: string;
+  min?: number;
+  max?: number;
+  parameter_type: "number" | "text" | "tuple";
+  default?: number | string;
+  kwarg?: string;
+}
+
+interface ModelLayer {
+  display_name: string;
+  object_name: string;
+  parameters: { [key: string]: LayerParameter };
+  tooltip_info?: JSX.Element;
+}
+
+export const POSSIBLE_LAYERS: ModelLayer[] = [
   {
     display_name: "Linear",
     object_name: "nn.Linear",
@@ -192,9 +209,9 @@ export const POSSIBLE_LAYERS = Object.freeze([
       </>
     ),
   },
-]);
+];
 
-export const ML_MODELS = Object.freeze([
+export const ML_MODELS: ModelLayer[] = [
   {
     display_name: "Gaussian Naive Bayes",
     object_name: "sklearn.naive_bayes.GaussianNB",
@@ -387,9 +404,9 @@ export const ML_MODELS = Object.freeze([
       },
     },
   },
-]);
+];
 
-export const IMAGE_LAYERS = Object.freeze([
+export const IMAGE_LAYERS: ModelLayer[] = [
   {
     display_name: "Conv2D",
     object_name: "nn.Conv2d",
@@ -661,9 +678,14 @@ export const IMAGE_LAYERS = Object.freeze([
       </>
     ),
   },
-]);
+];
 
-export const POSSIBLE_TRANSFORMS = [
+interface PossibleTransform extends ModelLayer {
+  label: string;
+  value: string;
+}
+
+export const POSSIBLE_TRANSFORMS: PossibleTransform[] = [
   {
     display_name: "Random Horizontal Flip",
     object_name: "transforms.RandomHorizontalFlip",
@@ -767,7 +789,11 @@ export const POSSIBLE_TRANSFORMS = [
   },
 ];
 
-export const DETECTION_TRANSFORMS = Object.freeze([
+interface DetectionTransform extends PossibleTransform {
+  transform_type?: string;
+}
+
+export const DETECTION_TRANSFORMS: DetectionTransform[] = [
   {
     display_name: "Random Horizontal Flip",
     object_name: "transforms.RandomHorizontalFlip",
@@ -1145,12 +1171,24 @@ export const DETECTION_TRANSFORMS = Object.freeze([
     label: "Affine",
     value: "Affine",
   },
-]);
+];
 
 const CLASSIFICATION = "classification";
 const REGRESSION = "regression";
 
-export const CRITERIONS = Object.freeze([
+type ProblemType = typeof CLASSIFICATION | typeof REGRESSION;
+
+interface BaseCriterion {
+  label: string;
+  value: string;
+  object_name: string;
+}
+
+interface Criterion extends BaseCriterion {
+  problem_type: ProblemType[];
+}
+
+export const CRITERIONS: Criterion[] = [
   {
     label: "L1LOSS",
     value: "L1LOSS",
@@ -1175,9 +1213,9 @@ export const CRITERIONS = Object.freeze([
     object_name: "nn.CrossEntropyLoss(reduction='mean')",
     problem_type: [CLASSIFICATION],
   },
-]);
+];
 
-export const IMAGE_CLASSIFICATION_CRITERION = Object.freeze([
+export const IMAGE_CLASSIFICATION_CRITERION: BaseCriterion[] = [
   {
     label: "CELOSS",
     value: "CELOSS",
@@ -1188,7 +1226,7 @@ export const IMAGE_CLASSIFICATION_CRITERION = Object.freeze([
     value: "WCELOSS",
     object_name: "nn.CrossEntropyLoss()", // will define a randomized weights for classes in backend
   },
-]);
+];
 
 export const PROBLEM_TYPES = Object.freeze([
   { label: "Classification", value: CLASSIFICATION },

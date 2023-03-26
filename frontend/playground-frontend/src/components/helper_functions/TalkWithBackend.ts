@@ -8,8 +8,7 @@ import { auth } from "../../firebase";
 export async function uploadToBackend(data: { [key: string]: any }) {
   const headers = auth.currentUser
     ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
-    : undefined;
-
+    : undefined;  
   await axios.post("/api/upload", data, { headers });
 }
 

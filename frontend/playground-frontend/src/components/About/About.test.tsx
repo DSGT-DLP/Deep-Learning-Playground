@@ -1,8 +1,8 @@
-import React from "react";
-import About from './About';
-import {render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
+import React from "react";
 import { URLs } from "../../constants";
+import About from './About';
 
 describe("About_function", () => {
   // Tests that the heading section is rendered correctly. tags: [happy path]

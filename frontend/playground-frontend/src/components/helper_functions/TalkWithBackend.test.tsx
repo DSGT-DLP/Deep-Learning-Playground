@@ -1,15 +1,7 @@
 import axios from "axios";
-import { render, screen, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { auth } from "../../firebase";
 import {
-  uploadToBackend,
-  userCodeEval,
-  getSignedUploadUrl,
-  createExecutionId,
-  sendToBackend,
-  train_and_output,
-  sendEmail,
+    getSignedUploadUrl, uploadToBackend
 } from "./TalkWithBackend";
 
 jest.mock('axios', () => ({

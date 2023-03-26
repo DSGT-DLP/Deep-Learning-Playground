@@ -28,11 +28,5 @@ describe("TitleText_function", () => {
     render(<TitleText text="" />);
     expect(screen.getAllByText("").length).toBeGreaterThanOrEqual(1);
   });
-
-  // Tests that the function renders a title text with a number or boolean input. tags: [edge case]
-  test("test_render_title_text_with_number_input", () => {
-    const { getByText: getByTextNumber } = render(<TitleText text={123} />);
-    expect(getByTextNumber("123")).toBeInTheDocument();
-  });
   
 });

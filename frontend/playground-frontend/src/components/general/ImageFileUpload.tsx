@@ -27,7 +27,7 @@ const ImageFileUpload = (props: ImageFileUploadProps) => {
         method="POST"
         target="dummyframe"
       >
-        <label htmlFor="file-upload" className="custom-file-upload">
+        <label htmlFor="file-upload" data-testid="form" className="custom-file-upload">
           <FaCloudUploadAlt />{" "}
           {uploadFile?.name.substring(0, 20) || "Choose jpg file"}
         </label>

@@ -1,8 +1,8 @@
+import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
+import userEvent from "@testing-library/user-event";
 import React from "react";
 import LargeFileUpload from './LargeFileUpload';
-import {render, screen, waitFor} from '@testing-library/react';
-import '@testing-library/jest-dom';
-import userEvent from "@testing-library/user-event";
 
 describe("LargeFileUpload", () => {
     // Tests that the function displays the faclouduploadalt icon and the name of the selected file or "choose zip file" if no file is selected. tags: [happy path]

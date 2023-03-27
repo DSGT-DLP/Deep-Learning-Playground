@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import React from "react";
 import { BrowserRouter } from 'react-router-dom';
 import ClassCard from './ClassCard';
-import userEvent from "@testing-library/user-event";
 
 describe("ClassCard_function", () => {
   // Tests that the component renders correctly with valid props. tags: [happy path]

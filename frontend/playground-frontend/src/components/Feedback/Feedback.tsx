@@ -2,7 +2,10 @@
 import React, { useState } from "react";
 import type { ReactNode } from "react";
 
-import { EmailInput, TitleText, Spacer } from "../index";
+import EmailInput from "../Home/EmailInput";
+import TitleText from "../general/TitleText";
+import Spacer from "../general/Spacer";
+//import { EmailInput, TitleText, Spacer } from "../index";
 import ReCAPTCHA from "react-google-recaptcha";
 
 import { COLORS, GENERAL_STYLES } from "../../constants";
@@ -142,6 +145,7 @@ const Feedback = () => {
             <div style={{ marginTop: "2%" }} />
 
             <ReCAPTCHA
+              data-testid="recaptcha-feedback"
               sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY || ""}
               onChange={(e) => setRecaptcha(e || "")}
             />

@@ -61,7 +61,7 @@ const FRQuestion = (props: FRQuestionProps) => {
     <div className="class">
       <h3 id="classTitle">Question</h3>
       <h6>{props.questionObject.question}</h6>
-      <input id="frInput" type="number"></input>
+      <input id="frInput" data-testid="frInput" type="number"></input>
       <button className="submitButton" onClick={questionSubmit}>
         Submit Answer
       </button>

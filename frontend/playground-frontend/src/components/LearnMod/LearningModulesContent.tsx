@@ -27,7 +27,7 @@ interface SubClassType {
   points: number;
 }
 
-type CTypes =
+export type CTypes =
   | "mcQuestion"
   | "frQuestion"
   | "text"
@@ -35,20 +35,20 @@ type CTypes =
   | "image"
   | "exercise";
 export interface ContentType<T extends CTypes = CTypes> {
-  sectionType: T;
+  sectionType: CTypes;
   answer: T extends "frQuestion" ? number : void;
   questionID: T extends "mcQuestion" | "frQuestion" | "exercise"
     ? number
     : void;
-  question: T extends "mcQuestion" | "frQuestion" ? string : void;
-  answerChoices: T extends "mcQuestion" ? string[] : void;
-  correctAnswer: T extends "mcQuestion" ? number : void;
-  path: T extends "image" ? string : void;
-  caption: T extends "image" ? string : void;
-  attribution: T extends "image" ? string : void;
-  licenseLink: T extends "image" ? string : void;
-  content: T extends "text" | "heading1" ? string : void;
-  minAccuracy: T extends "exercise" ? number : void;
+  question: T extends "mcQuestion" | "frQuestion" ? string : null;
+  answerChoices: T extends "mcQuestion" ? string[] : null;
+  correctAnswer: T extends "mcQuestion" ? number : null;
+  path: T extends "image" ? string : null;
+  caption: T extends "image" ? string : null;
+  attribution: T extends "image" ? string : null;
+  licenseLink: T extends "image" ? string : null;
+  content: T extends "text" | "heading1" ? string : null;
+  minAccuracy: T extends "exercise" ? number : null;
 }
 
 const content: LearningModuleType = {

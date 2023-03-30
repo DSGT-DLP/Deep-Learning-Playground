@@ -25,16 +25,16 @@ export const LAYOUT = Object.freeze({
   row: {
     display: "flex",
     flexDirection: "row",
-  },
+  } as React.CSSProperties,
   column: {
     display: "flex",
     flexDirection: "column",
-  },
+  } as React.CSSProperties,
   centerMiddle: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-  },
+  } as React.CSSProperties,
 });
 
 export const GENERAL_STYLES = Object.freeze({

@@ -1,8 +1,11 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Form } from "react-bootstrap";
 
-const CustomModelName = (props) => {
+interface CustomModelNamePropTypes {
+  customModelName: string;
+  setCustomModelName: React.Dispatch<React.SetStateAction<string>>;
+}
+const CustomModelName = (props: CustomModelNamePropTypes) => {
   const { customModelName, setCustomModelName } = props;
   return (
     <>
@@ -15,11 +18,6 @@ const CustomModelName = (props) => {
       />
     </>
   );
-};
-
-CustomModelName.propTypes = {
-  customModelName: PropTypes.string.isRequired,
-  setCustomModelName: PropTypes.func.isRequired,
 };
 
 export default CustomModelName;

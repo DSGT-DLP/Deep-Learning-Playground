@@ -6,16 +6,18 @@ import { basicSetup } from "codemirror";
 import Button from "react-bootstrap/Button";
 import React, { useState } from "react";
 import { userCodeEval } from "../helper_functions/TalkWithBackend";
-import PropTypes from "prop-types";
+import { CSVInputDataColumnType, CSVInputDataRowType } from "./CSVInputFile";
 
-const Preprocessing = (props) => {
+interface PreprocessingPropTypes {
+  data: CSVInputDataRowType[];
+  setData: React.Dispatch<React.SetStateAction<CSVInputDataRowType[]>>;
+  setColumns: React.Dispatch<React.SetStateAction<CSVInputDataColumnType[]>>;
+}
+const Preprocessing = (props: PreprocessingPropTypes) => {
   const { data, setData, setColumns } = props;
   const startingCode =
     "import pandas as pd\n\ndef preprocess(df): \n  # put your preprocessing code here!\n  return df";
   const [userCode, setUserCode] = useState(startingCode);
-  const onChange = (value) => {
-    setUserCode(value.target.innerText);
-  };
   return (
     <div>
       <TitleText text="Preprocessing" />
@@ -23,7 +25,7 @@ const Preprocessing = (props) => {
         value={startingCode}
         height="200px"
         extensions={[basicSetup, python()]}
-        onBlur={onChange}
+        onBlur={(e) => setUserCode(e.target.innerText)}
       />
       <Button
         onClick={async () => {
@@ -33,9 +35,9 @@ const Preprocessing = (props) => {
           } else {
             setData(response["data"]);
 
-            const newColumns = response["columns"].map((c) => ({
+            const newColumns = response["columns"].map((c: string) => ({
               name: c,
-              selector: (row) => row[c],
+              selector: (row: CSVInputDataRowType) => row[c],
             }));
 
             setColumns(newColumns);
@@ -47,11 +49,6 @@ const Preprocessing = (props) => {
       </Button>
     </div>
   );
-};
-Preprocessing.propTypes = {
-  data: PropTypes.array.isRequired,
-  setData: PropTypes.func.isRequired,
-  setColumns: PropTypes.func.isRequired,
 };
 
 export default Preprocessing;

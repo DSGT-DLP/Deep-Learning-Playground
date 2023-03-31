@@ -1,9 +1,18 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import { Form } from "react-bootstrap";
+import { CSVInputDataColumnType, CSVInputDataRowType } from "./CSVInputFile";
 
-const HomeCSVInputURL = (props) => {
+interface CSVInputURLPropTypes {
+  fileURL: string;
+  setFileURL: React.Dispatch<React.SetStateAction<string>>;
+  setCSVColumns: React.Dispatch<React.SetStateAction<CSVInputDataColumnType[]>>;
+  setCSVDataInput: React.Dispatch<React.SetStateAction<CSVInputDataRowType[]>>;
+  setOldCSVDataInput: React.Dispatch<
+    React.SetStateAction<CSVInputDataRowType[]>
+  >;
+}
+const HomeCSVInputURL = (props: CSVInputURLPropTypes) => {
   const {
     fileURL,
     setFileURL,
@@ -12,13 +21,13 @@ const HomeCSVInputURL = (props) => {
     setOldCSVDataInput,
   } = props;
 
-  async function handleURL(url) {
+  async function handleURL(url: string) {
     try {
       if (!url) return;
 
-      let response = await fetch(url);
-      response = await response.text();
-      const responseLines = response.split(/\r\n|\n/);
+      const response = await fetch(url);
+      const responseText = await response.text();
+      const responseLines = responseText.split(/\r\n|\n/);
       const headers = responseLines[0].split(
         /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
       );
@@ -29,7 +38,7 @@ const HomeCSVInputURL = (props) => {
           /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
         );
         if (headers && row.length === headers.length) {
-          const obj = {};
+          const obj: CSVInputDataRowType = {};
           for (let j = 0; j < headers.length; j++) {
             let d = row[j];
             if (d.length > 0) {
@@ -50,7 +59,7 @@ const HomeCSVInputURL = (props) => {
         // prepare columns list from headers
         const columns = headers.map((c) => ({
           name: c,
-          selector: (row) => row[c],
+          selector: (row: CSVInputDataRowType) => row[c],
         }));
 
         setCSVDataInput(list);
@@ -71,14 +80,6 @@ const HomeCSVInputURL = (props) => {
       onBlur={(e) => handleURL(e.target.value)}
     />
   );
-};
-
-HomeCSVInputURL.propTypes = {
-  fileURL: PropTypes.string.isRequired,
-  setFileURL: PropTypes.func.isRequired,
-  setCSVColumns: PropTypes.func.isRequired,
-  setCSVDataInput: PropTypes.func.isRequired,
-  setOldCSVDataInput: PropTypes.func.isRequired,
 };
 
 export default HomeCSVInputURL;

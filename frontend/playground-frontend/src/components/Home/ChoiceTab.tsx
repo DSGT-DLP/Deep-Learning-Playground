@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 const ChoiceTab = () => {
   const loc = useLocation().pathname;
 
-  const getBackground = (id) => {
+  const getBackground = (id: string) => {
     if (id === loc) return COLORS.gold;
     return COLORS.dark_blue;
   };

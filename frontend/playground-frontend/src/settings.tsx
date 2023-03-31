@@ -5,13 +5,13 @@ export interface LayerParameter {
   parameter_name: string;
   min?: number;
   max?: number;
-  parameter_type: "number" | "text" | "tuple";
+  parameter_type: "number" | "text" | "tuple" | "boolean";
   default?: number | string;
   kwarg?: string;
   value?: number | string;
 }
 
-interface ModelLayer {
+export interface ModelLayer {
   display_name: string;
   object_name: string;
   parameters: { [key: string]: LayerParameter };

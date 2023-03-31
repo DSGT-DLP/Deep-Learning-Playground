@@ -12,7 +12,7 @@ const AddNewLayer = () => {
     }),
   }));
   const isActive = canDrop && isOver;
-  let backgroundColor = COLORS.addLayer;
+  let backgroundColor: string = COLORS.addLayer;
   if (isActive) {
     backgroundColor = COLORS.layer;
   } else if (canDrop) {

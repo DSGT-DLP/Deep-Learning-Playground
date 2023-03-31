@@ -36,14 +36,15 @@ const LayerChoice = (props: LayerChoicePropTypes) => {
     ({
       className,
       title,
+      children,
       ...props
     }: {
       className?: string;
-      children: object;
+      children: React.ReactElement;
       title: React.ReactNode;
     }) => (
       <Tooltip title={title} {...props} classes={{ popper: className }}>
-        <></>
+        {children}
       </Tooltip>
     )
   )(({ theme }) => ({

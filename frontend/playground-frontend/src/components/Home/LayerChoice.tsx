@@ -1,5 +1,4 @@
 import { Info } from "@mui/icons-material";
-import PropTypes from "prop-types";
 import React from "react";
 import RectContainer from "./RectContainer";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
@@ -7,8 +6,13 @@ import Typography from "@mui/material/Typography";
 import { COLORS, GENERAL_STYLES, ITEM_TYPES } from "../../constants";
 import { styled } from "@mui/material/styles";
 import { useDrag } from "react-dnd";
+import { ModelLayer } from "../../settings";
 
-const LayerChoice = (props) => {
+interface LayerChoicePropTypes {
+  layer: ModelLayer;
+  onDrop: (layer: ModelLayer) => void;
+}
+const LayerChoice = (props: LayerChoicePropTypes) => {
   const { layer, onDrop } = props;
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -28,9 +32,21 @@ const LayerChoice = (props) => {
   }));
   const opacity = isDragging ? 0.4 : 1;
 
-  const HtmlTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-  ))(({ theme }) => ({
+  const HtmlTooltip = styled(
+    ({
+      className,
+      title,
+      ...props
+    }: {
+      className?: string;
+      children: object;
+      title: React.ReactNode;
+    }) => (
+      <Tooltip title={title} {...props} classes={{ popper: className }}>
+        <></>
+      </Tooltip>
+    )
+  )(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
       backgroundColor: "rgba(255, 255, 255, 0.95)",
       color: "rgba(0, 0, 0, 0.87)",
@@ -66,11 +82,6 @@ const LayerChoice = (props) => {
   );
 };
 
-LayerChoice.propTypes = {
-  layer: PropTypes.object.isRequired,
-  onDrop: PropTypes.func,
-};
-
 export default LayerChoice;
 
 const styles = {
@@ -80,7 +91,7 @@ const styles = {
     left: 0,
     backgroundColor: "transparent",
     borderWidth: 0,
-  },
+  } as React.CSSProperties,
   text: {
     ...GENERAL_STYLES.p,
     color: COLORS.layer,

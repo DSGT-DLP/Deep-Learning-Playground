@@ -11,7 +11,7 @@ export interface LayerParameter {
   value?: number | string;
 }
 
-interface ModelLayer {
+export interface ModelLayer {
   display_name: string;
   object_name: string;
   parameters: { [key: string]: LayerParameter };

@@ -1,10 +1,19 @@
-import { React, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
 import { COLORS, LAYOUT } from "../../constants";
 import { DropDown } from "..";
 // import storage from 'local-storage-fallback';
 
-const Input = (props) => {
+interface InputPropType {
+  queryText: string;
+  options: object[];
+  onChange: (e: unknown) => void;
+  defaultValue: unknown;
+  isMultiSelect: boolean;
+  range: boolean;
+  beginnerMode: boolean;
+  freeInputCustomRestrictions: { type: string; min: number };
+}
+const Input = (props: InputPropType) => {
   const {
     queryText,
     range,
@@ -19,21 +28,21 @@ const Input = (props) => {
   const [numberinput, setNumberInput] = useState(0.2);
   const [rangeinput, setRangeInput] = useState(20);
 
-  const changeNumber = (userinput) => {
-    setNumberInput((Number(userinput.target.value / 100) * 20) / 20);
-    setRangeInput(userinput.target.value);
-    onChange(Number(userinput.target.value) / 100);
+  const changeNumber = (value: string) => {
+    setNumberInput((Number(parseInt(value) / 100) * 20) / 20);
+    setRangeInput(parseInt(value));
+    onChange(Number(parseInt(value)) / 100);
   };
-  const changeRange = (userinput) => {
-    setNumberInput(Number(userinput.target.value));
-    setRangeInput(Number(userinput.target.value) * 100);
-    onChange(Number(userinput.target.value));
+  const changeRange = (value: string) => {
+    setNumberInput(Number(parseInt(value)));
+    setRangeInput(Number(parseInt(value)) * 100);
+    onChange(Number(parseInt(value)));
   };
 
   return (
     <div
       style={{
-        ...LAYOUT.row,
+        flexDirection: LAYOUT.row.flexDirection,
         margin: 7.5,
         display: beginnerMode ? "none" : "flex",
       }}
@@ -58,13 +67,13 @@ const Input = (props) => {
                   className="inputText"
                   type="number"
                   value={Number(numberinput)}
-                  onChange={changeRange}
+                  onChange={(e) => changeRange(e.target.value)}
                 />
                 <input
                   className="inputText"
                   type="range"
                   value={Number(rangeinput)}
-                  onChange={changeNumber}
+                  onChange={(e) => changeNumber(e.target.value)}
                 />
               </>
             ) : (
@@ -73,7 +82,13 @@ const Input = (props) => {
                 placeholder="Type..."
                 maxLength={64}
                 {...freeInputCustomRestrictions}
-                defaultValue={defaultValue}
+                defaultValue={
+                  defaultValue as
+                    | string
+                    | number
+                    | readonly string[]
+                    | undefined
+                }
                 onChange={(e) => {
                   if (freeInputCustomRestrictions?.type === "number")
                     onChange(Number(e.target.value));
@@ -86,24 +101,6 @@ const Input = (props) => {
       </div>
     </div>
   );
-};
-
-Input.propTypes = {
-  queryText: PropTypes.string.isRequired,
-  options: PropTypes.arrayOf(PropTypes.object),
-  onChange: PropTypes.func,
-  freeInputCustomProps: PropTypes.object,
-  defaultValue: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.number,
-    PropTypes.string,
-    PropTypes.array,
-  ]),
-  isMultiSelect: PropTypes.bool,
-  range: PropTypes.bool,
-  beginnerMode: PropTypes.bool,
-  freeInputCustomRestrictions: PropTypes.shape({ type: PropTypes.string }),
-  styles: PropTypes.array,
 };
 
 export default Input;

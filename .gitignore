@@ -199,3 +199,5 @@ dlp-terraform/.terraform.lock.hcl
 dlp-terraform/terraform.tfstate
 dlp-terraform/terraform.tfstate.backup
 
+# SSH keys
+dlp-ssh.key

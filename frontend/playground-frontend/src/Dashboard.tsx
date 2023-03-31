@@ -466,7 +466,6 @@ const Dashboard = () => {
         {executionTable && executionTable.length === 0 && <BlankGrid />}
         {isLoading ? (
           <div id="loading">
-            <Overlay />
             <Box height="100%" position="fixed" top left width="100%">
               <Flex
                 alignItems="center"

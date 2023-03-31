@@ -158,20 +158,6 @@ const formatDate = (date: Date) => {
   );
 };
 
-const Overlay = () => {
-  return (
-    <Box
-      color="default"
-      height="100%"
-      opacity={0.8}
-      position="absolute"
-      top
-      left
-      width="100%"
-    />
-  );
-};
-
 interface Execution {
   name: string;
   execution_id: number;

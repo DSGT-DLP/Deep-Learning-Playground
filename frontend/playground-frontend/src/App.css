@@ -35,7 +35,7 @@ Author URI:   https://datasciencegt.org/
 /* -------------------------------------------------------------------------- */
 
 * {
-  font-family: 'Lato', 'Arial', 'Helvetica', sans-serif;
+  font-family: "Lato", "Arial", "Helvetica", sans-serif;
 }
 
 h2 {
@@ -218,9 +218,9 @@ input.form-control {
   color: black;
 }
 
-#train-tabular-data input[type='file'],
-#image-models input[type='file'],
-#ml-models input[type='file'] {
+#train-tabular-data input[type="file"],
+#image-models input[type="file"],
+#ml-models input[type="file"] {
   display: none;
 }
 
@@ -320,7 +320,9 @@ textarea#code-snippet-text {
   border: 0.5px solid var(--tertiary);
 }
 
-.added-layer-container .layer-param-container .layer-param-input-box.free-response {
+.added-layer-container
+  .layer-param-container
+  .layer-param-input-box.free-response {
   width: 35%;
 }
 
@@ -424,6 +426,11 @@ textarea#code-snippet-text {
 .row-style {
   font-weight: normal !important;
 }
+
+#dashboard #loading {
+  margin-block: 10%;
+}
+
 /* -------------------------------------------------------------------------- */
 /*	About and Wiki
 /* -------------------------------------------------------------------------- */
@@ -464,11 +471,11 @@ textarea {
 }
 
 .collapsed-layer li {
-  list-style-type: '▶  ';
+  list-style-type: "▶  ";
 }
 
 .expanded-layer li {
-  list-style-type: '▼  ';
+  list-style-type: "▼  ";
 }
 
 .layer-info-button {

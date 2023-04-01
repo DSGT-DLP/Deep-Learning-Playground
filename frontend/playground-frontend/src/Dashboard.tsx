@@ -452,16 +452,7 @@ const Dashboard = () => {
         {executionTable && executionTable.length === 0 && <BlankGrid />}
         {isLoading ? (
           <div id="loading">
-            <Box height="100%" position="fixed" top left width="100%">
-              <Flex
-                alignItems="center"
-                height="100%"
-                justifyContent="center"
-                width="100%"
-              >
-                <Spinner show accessibilityLabel="Spinner" />
-              </Flex>
-            </Box>
+            <Spinner show accessibilityLabel="Spinner" />
           </div>
         ) : null}
       </>

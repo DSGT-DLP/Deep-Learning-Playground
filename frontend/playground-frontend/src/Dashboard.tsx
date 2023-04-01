@@ -451,7 +451,7 @@ const Dashboard = () => {
         {executionTable && <FilledGrid executionTable={executionTable} />}
         {executionTable && executionTable.length === 0 && <BlankGrid />}
         {isLoading ? (
-          <div id="loading">
+          <div className="loading">
             <Spinner show accessibilityLabel="Spinner" />
           </div>
         ) : null}

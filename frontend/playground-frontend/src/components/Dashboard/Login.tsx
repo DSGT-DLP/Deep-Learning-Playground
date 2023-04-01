@@ -6,6 +6,7 @@ import {
   registerWithPassword,
   signInWithGoogle,
   signInWithGithub,
+  getRedirectResultFromFirebase,
 } from "../../firebase";
 import { setCurrentUser } from "../../redux/userLogin";
 import GoogleLogo from "../../images/logos/google.png";
@@ -51,6 +52,7 @@ const Login = () => {
       emailVerified: newUser.emailVerified,
     };
     dispatch(setCurrentUser(userData));
+
     navigate("/dashboard");
   };
 
@@ -67,8 +69,18 @@ const Login = () => {
     </>
   );
 
+  async function handleRedirectResult() {
+    const userData = await getRedirectResultFromFirebase();
+    if (!userData) return;
+
+    dispatch(setCurrentUser(userData));
+    navigate("/dashboard");
+  }
+
   useEffect(() => {
     if (user) navigate("/dashboard");
+
+    handleRedirectResult();
   }, [user]);
 
   const SocialLogins = (

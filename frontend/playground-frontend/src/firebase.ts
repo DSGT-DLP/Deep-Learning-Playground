@@ -9,19 +9,21 @@ import {
   updateProfile,
   updateEmail,
   updatePassword,
+  getRedirectResult,
 } from "firebase/auth";
 import { toast } from "react-toastify";
 import { setCookie } from "./components/helper_functions/Cookie";
+import { UserType } from "./redux/userLogin";
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
+const firebaseConfig = Object.freeze({
   apiKey: "AIzaSyAMJgYSG_TW7CT_krdWaFUBLxU4yRINxX8",
   authDomain: "deep-learning-playground-8d2ce.firebaseapp.com",
   projectId: "deep-learning-playground-8d2ce",
   storageBucket: "deep-learning-playground-8d2ce.appspot.com",
   messagingSenderId: "771338023154",
   appId: "1:771338023154:web:8ab6e73fc9c646426a606b",
-};
+});
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
@@ -130,3 +132,28 @@ export const signInWithGoogle = async () => {
   const googleProvider = new GoogleAuthProvider();
   signInWithRedirect(auth, googleProvider);
 };
+
+export async function getRedirectResultFromFirebase(): Promise<
+  UserType | undefined
+> {
+  const result = await getRedirectResult(auth);
+  if (!result) return;
+
+  // The signed-in user info.
+  const user = result.user;
+
+  if (!user.providerData[0].email) throw new Error("No email found");
+
+  const userData: UserType = {
+    email: user.providerData[0].email,
+    uid: user.uid,
+    displayName: user.displayName ?? "",
+    emailVerified: user.emailVerified,
+  };
+
+  setCookie("email", userData.email);
+  toast.success(`Signed in with email ${userData.email}`, {
+    autoClose: 1000,
+  });
+  return userData;
+}

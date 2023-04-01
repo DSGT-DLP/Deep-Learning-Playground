@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
+import { FormControlLabel, Switch } from "@mui/material";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import storage from "local-storage-fallback";
+import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
-import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Navbar from "react-bootstrap/Navbar";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { ThemeProvider } from "styled-components";
+import GlobalStyle from "../../GlobalStyle";
 import { URLs } from "../../constants";
 import { auth } from "../../firebase";
-import { setCurrentUser } from "../../redux/userLogin";
-import { signOut, onAuthStateChanged } from "firebase/auth";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { setCookie, deleteCookie } from "../helper_functions/Cookie";
-import GlobalStyle from "../../GlobalStyle";
-import { ThemeProvider } from "styled-components";
-import { FormControlLabel, Switch } from "@mui/material";
+import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { UserType, setCurrentUser } from "../../redux/userLogin";
+import { deleteCookie, setCookie } from "../helper_functions/Cookie";
 
 const NavbarMain = () => {
   const user = useAppSelector((state) => state.currentUser.user);
@@ -62,12 +62,15 @@ const NavbarMain = () => {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (!user || !user.email || !user.displayName) return;
+      if (!user?.uid) return;
 
-      const userData = {
-        email: user.email,
+      const email = user.email || user.providerData[0].email;
+      if (!email) throw new Error("No email found");
+
+      const userData: UserType = {
+        email: email,
         uid: user.uid,
-        displayName: user.displayName,
+        displayName: user.displayName ?? "",
         emailVerified: user.emailVerified,
       };
       dispatch(setCurrentUser(userData));
@@ -97,12 +100,12 @@ const NavbarMain = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              {user.email ? <Nav.Link href="/train">Train</Nav.Link> : null}
+              {user?.email ? <Nav.Link href="/train">Train</Nav.Link> : null}
               <Nav.Link href="/about">About</Nav.Link>
               <Nav.Link href="/wiki">Wiki</Nav.Link>
               <Nav.Link href="/feedback">Feedback</Nav.Link>
               <Nav.Link href={URLs.donate}>Donate</Nav.Link>
-              {user.email ? (
+              {user?.email ? (
                 <NavDropdown title="Account" id="basic-nav-dropdown">
                   <NavDropdown.Item href="/">Dashboard</NavDropdown.Item>
                   <NavDropdown.Item href="/account-settings">

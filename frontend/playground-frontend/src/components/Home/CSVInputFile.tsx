@@ -3,11 +3,27 @@ import PropTypes from "prop-types";
 import * as XLSX from "xlsx";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
-const CSVInputFile = (props) => {
+interface CSVInputFilePropTypes {
+  setData: React.Dispatch<React.SetStateAction<CSVInputDataRowType[]>>;
+  setColumns: React.Dispatch<React.SetStateAction<CSVInputDataColumnType[]>>;
+  setOldData: React.Dispatch<React.SetStateAction<CSVInputDataRowType[]>>;
+  fileName: string;
+  setFileName: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface CSVInputDataRowType {
+  [header: string]: string;
+}
+export interface CSVInputDataColumnType {
+  name: string;
+  selector: (row: CSVInputDataRowType) => string;
+}
+
+const CSVInputFile = (props: CSVInputFilePropTypes) => {
   const { setData, setColumns, setOldData, fileName, setFileName } = props;
 
   // process CSV data
-  const csvToJson = (dataString) => {
+  const csvToJson = (dataString: string) => {
     const dataStringLines = dataString.split(/\r\n|\n/);
     const headers = dataStringLines[0].split(
       /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
@@ -19,7 +35,7 @@ const CSVInputFile = (props) => {
         /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
       );
       if (headers && row.length === headers.length) {
-        const obj = {};
+        const obj: CSVInputDataRowType = {};
         for (let j = 0; j < headers.length; j++) {
           let d = row[j];
           if (d.length > 0) {
@@ -41,37 +57,39 @@ const CSVInputFile = (props) => {
     // prepare columns list from headers
     const columns = headers.map((c) => ({
       name: c,
-      selector: (row) => row[c],
+      selector: (row: Record<string, string>) => row[c],
     }));
     return [list, columns];
   };
 
   // handle file upload
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    setFileName(
-      file.name == null
-        ? null
-        : file.name.replace(/\.[^/.]+$/, "").substring(0, 20) +
-            "." +
-            file.name.split(".").pop()
-    );
-    const reader = new FileReader();
-    reader.onload = async (evt) => {
-      /* Parse data */
-      const bstr = evt.target.result;
-      const wb = XLSX.read(bstr, { type: "binary" });
-      /* Get first worksheet */
-      const wsname = wb.SheetNames[0];
-      const ws = wb.Sheets[wsname];
-      /* Convert array of arrays */
-      const data = XLSX.utils.sheet_to_csv(ws);
-      const [list, columns] = csvToJson(data);
-      setData(list);
-      setColumns(columns);
-      setOldData(list);
-    };
-    reader.readAsBinaryString(file);
+  const handleFileUpload = (files: FileList | null) => {
+    if (files) {
+      const file = files[0];
+      setFileName(
+        file.name.replace(/\.[^/.]+$/, "").substring(0, 20) +
+          "." +
+          file.name.split(".").pop()
+      );
+      const reader = new FileReader();
+      reader.onload = async (evt) => {
+        /* Parse data */
+        if (evt.target) {
+          const bstr = evt.target.result;
+          const wb = XLSX.read(bstr, { type: "binary" });
+          /* Get first worksheet */
+          const wsname = wb.SheetNames[0];
+          const ws = wb.Sheets[wsname];
+          /* Convert array of arrays */
+          const data = XLSX.utils.sheet_to_csv(ws);
+          const [list, columns] = csvToJson(data);
+          setData(list as CSVInputDataRowType[]);
+          setColumns(columns as CSVInputDataColumnType[]);
+          setOldData(list as CSVInputDataRowType[]);
+        }
+      };
+      reader.readAsBinaryString(file);
+    }
   };
 
   return (
@@ -87,7 +105,7 @@ const CSVInputFile = (props) => {
         type="file"
         id="csv-upload"
         accept=".csv,.xlsx,.xls"
-        onChange={handleFileUpload}
+        onChange={(e) => handleFileUpload(e.target.files)}
         style={{ width: "100%" }}
       />
     </>

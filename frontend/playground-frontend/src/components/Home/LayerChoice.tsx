@@ -59,9 +59,9 @@ const LayerChoice = (props: LayerChoicePropTypes) => {
 
   return (
     <RectContainer
-      ref2={drag}
+      containerRef={drag}
       style={{ opacity }}
-      dataTestid="box"
+      dataTestId="box"
       className="d-flex justify-content-center align-items-center layer-box layer-choice text-center p-2"
     >
       <div>

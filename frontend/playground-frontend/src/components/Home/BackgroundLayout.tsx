@@ -5,7 +5,7 @@ interface BackgroundLayoutPropTypes {
   children: React.ReactNode;
 }
 const BackgroundLayout = (props: BackgroundLayoutPropTypes) => {
-  return <div style={styles.layoutBackground}>{props.children}</div>;
+  return <div style={styles.layoutBackground} data-testid="layoutBackground">{props.children}</div>;
 };
 
 export default BackgroundLayout;

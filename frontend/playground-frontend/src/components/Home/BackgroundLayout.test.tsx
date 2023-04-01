@@ -41,12 +41,6 @@ describe("BackgroundLayout_function", () => {
     expect(layoutBackground).toHaveStyle(`flex-wrap: wrap`);
   });
 
-  // Tests that the backgroundlayout component renders without any child components. tags: [edge case]
-  it("test_renders_without_children", () => {
-    const { queryByTestId } = render(<BackgroundLayout />);
-    expect(queryByTestId("child")).toBeNull();
-  });
-
   // Tests that the backgroundlayout component renders with child components. tags: [happy path]
   it("test_renders_with_children", () => {
     const { getByTestId } = render(

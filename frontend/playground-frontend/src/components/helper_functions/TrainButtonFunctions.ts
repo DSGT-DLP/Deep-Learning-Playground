@@ -1,4 +1,12 @@
 import { toast } from "react-toastify";
+import {
+  Criterion,
+  DefaultDatasetType,
+  LayerParameter,
+  ModelLayer,
+  ProblemType,
+} from "../../settings";
+import { CSVInputDataRowType } from "../Home/CSVInputFile";
 
 /**
  * This file's puropose is to generalise the methods of TrainButton (focusing on Tabular, Image, and Pretrained models)
@@ -6,59 +14,110 @@ import { toast } from "react-toastify";
  */
 const tupleRegex = /^\(([0-9]{1}[0-9]*), ?([0-9]{1}[0-9]*)\)$/;
 
-export const validateParameter = (source, index, parameter) => {
-  const { parameter_name, min, max, parameter_type } = parameter;
-  let { value } = parameter;
-  if (parameter_type === "tuple") {
-    if (tupleRegex.test(value)) {
-      const result = value.match(tupleRegex);
-      const H = result[1].valueOf();
-      const W = result[2].valueOf();
+export const validateParameter = (
+  source: "Model" | "Transforms" | "Train Transform",
+  index: number,
+  parameter: LayerParameter
+) => {
+  if (parameter.value) {
+    if (parameter.parameter_type === "tuple") {
+      const { parameter_name, min, max, value } =
+        parameter as LayerParameter<"tuple">;
+      if (value) {
+        if (tupleRegex.test(value)) {
+          const result = value.match(tupleRegex);
+          if (result) {
+            const H = parseInt(result[1].valueOf());
+            const W = parseInt(result[2].valueOf());
 
-      if (H < min || H > max) {
-        toast.error(
-          `${source} Layer ${
-            index + 1
-          }: X not an integer in range [${min}, ${max}]`
-        );
-        return false;
-      } else if (W < min || W > max) {
-        toast.error(
-          `${source} Layer ${
-            index + 1
-          }: Y not an integer in range [${min}, ${max}]`
-        );
-        return false;
+            if (H < min || H > max) {
+              toast.error(
+                `${source} Layer ${
+                  index + 1
+                }: X not an integer in range [${min}, ${max}]`
+              );
+              return false;
+            } else if (W < min || W > max) {
+              toast.error(
+                `${source} Layer ${
+                  index + 1
+                }: Y not an integer in range [${min}, ${max}]`
+              );
+              return false;
+            }
+            return true;
+          }
+        }
       }
-      return true;
+      toast.error(
+        `${source} Layer ${
+          index + 1
+        }: ${parameter_name} not of appropriate format: (X, Y)`
+      );
+    } else {
+      if (parameter.parameter_type !== "number") return true;
+      const { parameter_name, min, max, value } =
+        parameter as LayerParameter<"number">;
+      if (value) {
+        if (min == null && max == null) return true;
+
+        if (min == null && value <= max) return true;
+
+        if (value >= min && max == null) return true;
+
+        if (value >= min && value <= max) return true;
+      }
+
+      toast.error(
+        `${source} Layer ${
+          index + 1
+        }: ${parameter_name} not an integer in range [${min}, ${max}]`
+      );
     }
-    toast.error(
-      `${source} Layer ${
-        index + 1
-      }: ${parameter_name} not of appropriate format: (X, Y)`
-    );
-  } else {
-    if (parameter_type !== "number") return true;
-
-    if (min == null && max == null) return true;
-
-    if (min == null && value <= max) return true;
-
-    if (value >= min && max == null) return true;
-
-    if (value >= min && value <= max) return true;
-
-    toast.error(
-      `${source} Layer ${
-        index + 1
-      }: ${parameter_name} not an integer in range [${min}, ${max}]`
-    );
   }
+  toast.error(
+    `${source} Layer ${index + 1}: ${
+      parameter.parameter_name
+    } value not specified`
+  );
   return false;
 };
 
+interface FeatureType {
+  label: string;
+  value: number;
+}
+
+interface TrainParamsType {
+  user_arch: ModelLayer[];
+  trainTransforms: string[];
+  testTransforms: string[];
+  transforms: string[];
+}
 // TABULAR
-export const validateTabularInputs = (user_arch, args) => {
+interface TabularInputType {
+  customModelName: string | null;
+  criterion: Criterion | null;
+  optimizerName: string | null;
+  problemType: ProblemType | null;
+  usingDefaultDataset: DefaultDatasetType;
+  targetCol: FeatureType | null;
+  features: FeatureType[] | null;
+  csvDataInput: CSVInputDataRowType[] | null;
+  fileURL: string | null;
+  shuffle: boolean;
+  epochs: number;
+  testSize: number;
+  notification: {
+    email?: string;
+    phoneNumber?: string;
+  };
+  batchSize: number;
+}
+export const validateTabularInputs = (
+  user_arch: ModelLayer[],
+  args: TabularInputType
+) => {
   if (!user_arch?.length) return "At least one layer must be added. ";
   if (!args.customModelName) return "Custom model name must be specified. ";
   if (!args.criterion) return "A criterion must be specified. ";
@@ -81,7 +140,7 @@ export const validateTabularInputs = (user_arch, args) => {
   return "";
 };
 
-export const sendTabularJSON = (args) => {
+export const sendTabularJSON = (args: TabularInputType & TrainParamsType) => {
   const csvDataStr = JSON.stringify(args.csvDataInput);
 
   return {
@@ -106,9 +165,24 @@ export const sendTabularJSON = (args) => {
   };
 };
 
+interface ImageInputType {
+  batchSize: number;
+  criterion: Criterion | null;
+  shuffle: boolean;
+  epochs: number;
+  optimizerName: string | null;
+  addedLayers: ModelLayer[];
+  usingDefaultDataset: DefaultDatasetType;
+  trainTransforms: string[];
+  testTransforms: string[];
+  uploadFile: File;
+  customModelName: string | null;
+}
 // IMAGE
-export const validateImageInputs = (user_arch, ...args) => {
-  args = args[0];
+export const validateImageInputs = (
+  user_arch: ModelLayer[],
+  args: ImageInputType
+) => {
   let alertMessage = "";
   if (!user_arch?.length) alertMessage += "At least one layer must be added. ";
   if (!args.customModelName)
@@ -124,9 +198,7 @@ export const validateImageInputs = (user_arch, ...args) => {
   return alertMessage;
 };
 
-export const sendImageJSON = (...args) => {
-  args = args[0];
-
+export const sendImageJSON = (args: ImageInputType & TrainParamsType) => {
   return {
     user_arch: args.user_arch,
     criterion: args.criterion,
@@ -137,10 +209,10 @@ export const sendImageJSON = (...args) => {
     epochs: args.epochs,
     batch_size: args.batchSize,
     shuffle: args.shuffle,
-    file_URL: args.fileURL,
+    //file_URL: args.fileURL,
     train_transform: args.trainTransforms,
     test_transform: args.testTransforms,
-    email: args.email ? args.email : null,
+    //email: args.email ? args.email : null,
     custom_model_name: args.customModelName,
     data_source: "IMAGE",
   };
@@ -148,8 +220,28 @@ export const sendImageJSON = (...args) => {
 
 // PRETRAINED
 
-export const validatePretrainedInput = (user_arch, ...args) => {
-  args = args[0];
+interface PreTrainedInputType {
+  customModelName: string | null;
+  modelName: string | null;
+  criterion: Criterion | null;
+  optimizerName: string | null;
+  problemType: ProblemType | null;
+  usingDefaultDataset: DefaultDatasetType;
+  targetCol: FeatureType | null;
+  features: FeatureType[] | null;
+  csvDataInput: CSVInputDataRowType[] | null;
+  dataInput: CSVInputDataRowType[] | null;
+  fileURL: string | null;
+  shuffle: boolean;
+  epochs: number;
+  testSize: number;
+  email?: string;
+  batchSize: number;
+}
+export const validatePretrainedInput = (
+  user_arch: ModelLayer[],
+  args: PreTrainedInputType
+) => {
   let alertMessage = "";
   if (!args.customModelName)
     alertMessage += "Custom model name must be specified. ";
@@ -167,9 +259,9 @@ export const validatePretrainedInput = (user_arch, ...args) => {
   return alertMessage;
 };
 
-export const sendPretrainedJSON = (...args) => {
-  args = args[0];
-
+export const sendPretrainedJSON = (
+  args: PreTrainedInputType & TrainParamsType
+) => {
   return {
     model_name: args.modelName,
     criterion: args.criterion,
@@ -190,8 +282,20 @@ export const sendPretrainedJSON = (...args) => {
 };
 
 //Classical ML
-export const validateClassicalMLInput = (user_arch, ...args) => {
-  args = args[0];
+interface ClassicalMLModelInputType {
+  shuffle: boolean;
+  problemType: ProblemType | null;
+  addedLayers: ModelLayer[];
+  targetCol: FeatureType;
+  features: FeatureType[];
+  usingDefaultDataset: DefaultDatasetType;
+  customModelName: string | null;
+  csvDataInput: CSVInputDataRowType[] | null;
+}
+export const validateClassicalMLInput = (
+  user_arch: ModelLayer[],
+  args: ClassicalMLModelInputType
+) => {
   let alertMessage = "";
   if (!args.problemType) alertMessage += "A problem type must be specified. ";
   if (!args.usingDefaultDataset) {
@@ -206,7 +310,7 @@ export const validateClassicalMLInput = (user_arch, ...args) => {
         break;
       }
     }
-    if (!args.csvDataInput && !args.fileURL) {
+    if (!args.csvDataInput /* && !args.fileURL*/) {
       alertMessage +=
         "Must specify an input file either from local storage or from an internet URL. ";
     }
@@ -214,9 +318,9 @@ export const validateClassicalMLInput = (user_arch, ...args) => {
   return alertMessage;
 };
 
-export const sendClassicalMLJSON = (...args) => {
-  args = args[0];
-
+export const sendClassicalMLJSON = (
+  args: ClassicalMLModelInputType & TrainParamsType
+) => {
   const csvDataStr = JSON.stringify(args.csvDataInput);
 
   return {
@@ -227,17 +331,24 @@ export const sendClassicalMLJSON = (...args) => {
     using_default_dataset: args.usingDefaultDataset
       ? args.usingDefaultDataset
       : null,
-    test_size: args.testSize,
+    //test_size: args.testSize,
     shuffle: args.shuffle,
     csv_data: csvDataStr,
-    file_URL: args.fileURL,
-    email: args.email,
+    //file_URL: args.fileURL,
+    //email: args.email,
     data_source: "CLASSICAL_ML",
   };
 };
 
-export const validateObjectDetectionInput = (user_arch, ...args) => {
-  args = args[0];
+interface ObjectDetectionInputType {
+  uploadFile: File;
+  problemType: string;
+  detectionType: string;
+}
+export const validateObjectDetectionInput = (
+  user_arch: ModelLayer[],
+  args: ObjectDetectionInputType
+) => {
   let alertMessage = "";
   if (!args.uploadFile)
     alertMessage += "Must specify an input file from local storage. ";
@@ -248,8 +359,9 @@ export const validateObjectDetectionInput = (user_arch, ...args) => {
   return alertMessage;
 };
 
-export const sendObjectDetectionJSON = (...args) => {
-  args = args[0];
+export const sendObjectDetectionJSON = (
+  args: ObjectDetectionInputType & TrainParamsType
+) => {
   return {
     problem_type: args.problemType != null ? args.problemType : null,
     detection_type: args.detectionType,

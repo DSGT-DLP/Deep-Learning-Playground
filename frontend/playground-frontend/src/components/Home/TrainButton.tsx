@@ -21,8 +21,26 @@ import {
   train_and_output,
 } from "../helper_functions/TalkWithBackend";
 import { toast } from "react-toastify";
+import { ModelLayer } from "../../settings";
 
-const TrainButton = (props) => {
+interface TrainButtonPropTypes {
+  addedLayers?: ModelLayer[];
+  notification?: {
+    email?: string;
+    number?: string;
+  };
+  trainTransforms?: string[];
+  testTransforms?: string[];
+  transforms?: string;
+  setDLPBackendResponse?: unknown;
+  choice?: string;
+  style?: object;
+  problemType?: string;
+  usingDefaultDataset?: string;
+  uploadFile?: File;
+  customModelName?: string;
+}
+const TrainButton = (props: TrainButtonPropTypes) => {
   const { uploadFile, setDLPBackendResponse, choice = "tabular" } = props;
 
   const [pendingResponse, setPendingResponse] = useState(false);
@@ -36,7 +54,10 @@ const TrainButton = (props) => {
     setResult(null);
   };
 
-  const make_obj_param_list = (obj_list, source) => {
+  const make_obj_param_list = (
+    obj_list: (ModelLayer[] & string[]) | undefined,
+    source: "Model" | "Transforms" | "Train Transform"
+  ) => {
     if (!obj_list) return; // ValidateInputs throw error in case of empty things. This is to prevent an unnecessary errors in case of creating a layer
 
     // making a array of relating methods (like "nn.Linear") with their parameters (in_feature, out_feature) by including all methods and their parameters to make something like:
@@ -48,7 +69,7 @@ const TrainButton = (props) => {
       const obj_list_item = obj_list[i];
       const parameters = obj_list_item.parameters;
       let parameter_call_input = "";
-      let is_transform_type =
+      const is_transform_type =
         obj_list_item.transform_type &&
         obj_list_item.transform_type === "functional";
       const parameters_to_be_added = Array(Object.keys(parameters).length);
@@ -189,6 +210,7 @@ const TrainButton = (props) => {
         toast.error("Training failed. Check your inputs");
       }
       setDLPBackendResponse(result);
+      console.log(result);
       reset();
     }
   }, [result]);

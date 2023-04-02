@@ -88,8 +88,8 @@ interface FeatureType {
   value: number;
 }
 
-interface TrainParamsType {
-  user_arch: ModelLayer[];
+export interface TrainParamsType {
+  user_arch: string[];
   trainTransforms: string[];
   testTransforms: string[];
   transforms: string[];

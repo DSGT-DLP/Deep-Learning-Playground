@@ -17,6 +17,7 @@ export interface ModelLayer {
   object_name: string;
   parameters: { [key: string]: LayerParameter };
   tooltip_info?: JSX.Element;
+  transform_type?: string;
 }
 
 export const POSSIBLE_LAYERS: ModelLayer[] = [

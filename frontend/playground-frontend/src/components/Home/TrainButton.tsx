@@ -29,9 +29,9 @@ interface TrainButtonPropTypes {
     email?: string;
     number?: string;
   };
-  trainTransforms?: string[];
-  testTransforms?: string[];
-  transforms?: string;
+  trainTransforms?: ModelLayer[];
+  testTransforms?: ModelLayer[];
+  transforms?: ModelLayer[];
   setDLPBackendResponse?: unknown;
   choice?: string;
   style?: object;
@@ -55,8 +55,8 @@ const TrainButton = (props: TrainButtonPropTypes) => {
   };
 
   const make_obj_param_list = (
-    obj_list: (ModelLayer[] & string[]) | undefined,
-    source: "Model" | "Transforms" | "Train Transform"
+    obj_list: ModelLayer[] | undefined,
+    source: "Model" | "Transforms" | "Train Transform" | "Test Transform"
   ) => {
     if (!obj_list) return; // ValidateInputs throw error in case of empty things. This is to prevent an unnecessary errors in case of creating a layer
 
@@ -102,7 +102,7 @@ const TrainButton = (props: TrainButtonPropTypes) => {
     return user_arch;
   };
 
-  const functionMap = {
+  const functionMap: { [trainType: string]: unknown[] } = {
     tabular: [validateTabularInputs, sendTabularJSON],
     image: [validateImageInputs, sendImageJSON],
     pretrained: [validatePretrainedInput, sendPretrainedJSON],
@@ -110,9 +110,14 @@ const TrainButton = (props: TrainButtonPropTypes) => {
     objectdetection: [validateObjectDetectionInput, sendObjectDetectionJSON],
   };
 
-  const validateInputs = (user_arch) => {
+  const validateInputs = (user_arch: ModelLayer[]) => {
     let alertMessage = "";
-    alertMessage = functionMap[choice][0](user_arch, props);
+    alertMessage = (
+      functionMap[choice][0] as (
+        user_arch: ModelLayer[],
+        props: TrainButtonPropTypes
+      ) => string
+    )(user_arch, props);
 
     if (alertMessage.length === 0) return true;
     toast.error(alertMessage);
@@ -125,9 +130,9 @@ const TrainButton = (props: TrainButtonPropTypes) => {
     const user_arch = make_obj_param_list(props.addedLayers, "Model");
     if (user_arch === false) return;
 
-    let trainTransforms = 0;
-    let testTransforms = 0;
-    let transforms = 0;
+    let trainTransforms;
+    let testTransforms;
+    let transforms;
     if (props.trainTransforms) {
       trainTransforms = make_obj_param_list(
         props.trainTransforms,
@@ -221,7 +226,7 @@ const TrainButton = (props: TrainButtonPropTypes) => {
         id="train-button"
         className="btn btn-primary"
         style={{
-          backgroundColor: pendingResponse ? COLORS.disabled : null,
+          backgroundColor: pendingResponse ? COLORS.disabled : undefined,
           cursor: pendingResponse ? "wait" : "pointer",
         }}
         onClick={onClick}

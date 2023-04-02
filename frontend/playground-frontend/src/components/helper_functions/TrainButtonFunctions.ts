@@ -15,7 +15,7 @@ import { CSVInputDataRowType } from "../Home/CSVInputFile";
 const tupleRegex = /^\(([0-9]{1}[0-9]*), ?([0-9]{1}[0-9]*)\)$/;
 
 export const validateParameter = (
-  source: "Model" | "Transforms" | "Train Transform",
+  source: "Model" | "Transforms" | "Train Transform" | "Test Transform",
   index: number,
   parameter: LayerParameter
 ) => {

@@ -79,7 +79,7 @@ const AddedLayer = (props: AddedLayerPropTypes) => {
   return (
     <div className="added-layer-container">
       <div className="layer-box layer-container text-center d-flex justify-content-center align-items-center">
-        <button className="delete-layer" onClick={onDelete}>
+        <button className="delete-layer" data-testid="delete-layer-button" onClick={onDelete}>
           ❌
         </button>
         {display_name}

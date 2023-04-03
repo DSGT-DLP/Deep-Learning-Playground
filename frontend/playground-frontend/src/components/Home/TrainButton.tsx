@@ -208,12 +208,10 @@ const TrainButton = (props: TrainButtonPropTypes) => {
       choice === "objectdetection"
     ) {
       const formData = new FormData();
-      if (!uploadFile) {
-        console.log("File doesn't exist");
-        return;
+      if (uploadFile) {
+        formData.append("file", uploadFile);
+        await uploadToBackend(formData);
       }
-      formData.append("file", uploadFile);
-      await uploadToBackend(formData);
     }
     const trainState = await train_and_output(
       choice as

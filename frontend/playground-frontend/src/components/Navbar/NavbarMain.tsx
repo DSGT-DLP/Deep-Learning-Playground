@@ -6,7 +6,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Navbar from "react-bootstrap/Navbar";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import GlobalStyle from "../../GlobalStyle";
@@ -100,11 +100,11 @@ const NavbarMain = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              {user?.email ? <Nav.Link href="/train">Train</Nav.Link> : null}
-              <Nav.Link href="/about">About</Nav.Link>
-              <Nav.Link href="/wiki">Wiki</Nav.Link>
-              <Nav.Link href="/feedback">Feedback</Nav.Link>
-              <Nav.Link href={URLs.donate}>Donate</Nav.Link>
+              {user?.email ? <Link to="/train">Train</Link> : null}
+              <Link to="/about">About</Link>
+              <Link to="/wiki">Wiki</Link>
+              <Link to="/feedback">Feedback</Link>
+              <Link to={URLs.donate}>Donate</Link>
               {user?.email ? (
                 <NavDropdown title="Account" id="basic-nav-dropdown">
                   <NavDropdown.Item href="/">Dashboard</NavDropdown.Item>

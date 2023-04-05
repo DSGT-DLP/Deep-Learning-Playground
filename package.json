@@ -23,8 +23,5 @@
     "url": "https://github.com/DSGT-DLP/Deep-Learning-Playground/issues"
   },
   "homepage": "https://github.com/DSGT-DLP/Deep-Learning-Playground#readme",
-  "dependencies": {
-    "@types/react-csv": "^1.1.3",
-    "@types/react-plotly.js": "^2.6.0"
-  }
+  "dependencies": {}
 }

@@ -1,9 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { FaCopy } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { TrainResultsJSONResponseType } from "./TrainButton";
 
-const CodeSnippetML = (props) => {
+interface CodeSnippetPropTypes {
+  backendResponse: TrainResultsJSONResponseType;
+}
+const CodeSnippetML = (props: CodeSnippetPropTypes) => {
   const { backendResponse } = props;
   const layers = backendResponse?.auxiliary_outputs.user_arch;
   if (!backendResponse?.success) {
@@ -18,7 +21,7 @@ const CodeSnippetML = (props) => {
       <textarea
         id="code-snippet-text"
         readOnly
-        rows="10"
+        rows={10}
         value={codeSnippetFormat(layers)}
       />
       <button
@@ -39,7 +42,7 @@ const CodeSnippetML = (props) => {
  * @param {string[]} layers
  * @returns string with correct python syntax to 'train' data
  */
-function codeSnippetFormat(layers) {
+function codeSnippetFormat(layers: string[]) {
   const codeSnippet =
     create_import_statement(layers[0]) +
     "\n" +
@@ -54,7 +57,7 @@ function codeSnippetFormat(layers) {
   return codeSnippet;
 }
 
-export function create_import_statement(layer) {
+export function create_import_statement(layer: string) {
   const full_model_name = layer.split("(")[0];
   const components = full_model_name.split(".");
   const model_name = components[components.length - 1];
@@ -66,14 +69,5 @@ export function create_import_statement(layer) {
     model_name;
   return import_statement;
 }
-
-CodeSnippetML.propTypes = {
-  backendResponse: PropTypes.shape({
-    auxiliary_outputs: PropTypes.object,
-    success: PropTypes.bool,
-    message: PropTypes.string,
-  }),
-  layers: PropTypes.array.isRequired,
-};
 
 export default CodeSnippetML;

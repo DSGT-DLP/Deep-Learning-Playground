@@ -1,7 +1,16 @@
 import React from "react";
-import { PropTypes } from "prop-types";
+import { TrainResultsJSONResponseType } from "../Home/TrainButton";
+import { DefaultDatasetType, ModelLayer } from "../../settings";
 
-const DataCodeSnippet = (props) => {
+interface DataCodeSnippetPropTypes {
+  backendResponse: TrainResultsJSONResponseType;
+  trainTransforms: ModelLayer[];
+  testTransforms: ModelLayer[];
+  shuffle: { label: string; value: boolean };
+  batchSize: number;
+  defaultData: DefaultDatasetType;
+}
+const DataCodeSnippet = (props: DataCodeSnippetPropTypes) => {
   const { backendResponse } = props;
 
   if (backendResponse?.success) {
@@ -21,10 +30,10 @@ const DataCodeSnippet = (props) => {
 
 /**
  * Depending on layer passed in, this function builds a string with layer's name, and parameters associated to it (if any)
- * @param {layers} layer
+ * @param {ModelLayer} layer
  * @returns string in form of <layer name>(<parameters>)
  */
-function layerToString(layer) {
+function layerToString(layer: ModelLayer) {
   let layerToString = layer.object_name + "(";
 
   if (layer.parameters != null) {
@@ -44,16 +53,16 @@ function layerToString(layer) {
         layerToString += ",";
       }
 
-      layerToString = layerToString.split("");
-      layerToString[layerToString.length - 1] = "";
-      layerToString = layerToString.join("");
+      const layerList = layerToString.split("");
+      layerList[layerList.length - 1] = "";
+      layerToString = layerList.join("");
     }
   }
   layerToString += ")";
   return layerToString;
 }
 
-function codeSnippetFormat(props) {
+function codeSnippetFormat(props: DataCodeSnippetPropTypes) {
   let codeSnippet;
 
   const trainTransform = transformsToString(props.trainTransforms);
@@ -87,7 +96,7 @@ function codeSnippetFormat(props) {
   return codeSnippet;
 }
 
-function transformsToString(transform) {
+function transformsToString(transform: ModelLayer[]) {
   const prepend = "transforms.Compose(";
   let transformsToString = prepend;
   const resultingList = [];
@@ -97,12 +106,5 @@ function transformsToString(transform) {
   transformsToString += resultingList.join(",") + ")";
   return transformsToString;
 }
-
-DataCodeSnippet.propTypes = {
-  backendResponse: PropTypes.shape({
-    success: PropTypes.bool,
-    message: PropTypes.string,
-  }),
-};
 
 export default DataCodeSnippet;

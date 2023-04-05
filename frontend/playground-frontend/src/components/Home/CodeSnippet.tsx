@@ -1,9 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { FaCopy } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { TrainResultsJSONResponseType } from "./TrainButton";
 
-const CodeSnippet = (props) => {
+interface CodeSnippetPropTypes {
+  backendResponse: TrainResultsJSONResponseType;
+}
+const CodeSnippet = (props: CodeSnippetPropTypes) => {
   const { backendResponse } = props;
   const layers = backendResponse?.auxiliary_outputs.user_arch;
   if (!backendResponse?.success) {
@@ -40,7 +43,7 @@ const CodeSnippet = (props) => {
  * @param {string[]} layers
  * @returns string with correct python syntax to 'train' data
  */
-function codeSnippetFormat(layers) {
+function codeSnippetFormat(layers: string[]) {
   const codeSnippet =
     "import torch\n" +
     "import torch.nn as nn \n" +
@@ -66,7 +69,7 @@ function codeSnippetFormat(layers) {
  * @param {string[]} layers
  * @returns string in form of 'self.model = nn.Sequential(*[layerToString(layers[0]),... ,layerToString(layers[N-1])])
  */
-function layersToString(layers) {
+function layersToString(layers: string[]) {
   const prepend = "self.model = nn.Sequential(*[";
   let layersToString = prepend;
   const resultingList = [];
@@ -76,14 +79,5 @@ function layersToString(layers) {
   layersToString += resultingList.join(",") + "])";
   return layersToString;
 }
-
-CodeSnippet.propTypes = {
-  backendResponse: PropTypes.shape({
-    auxiliary_outputs: PropTypes.object,
-    success: PropTypes.bool,
-    message: PropTypes.string,
-  }),
-  layers: PropTypes.array.isRequired,
-};
 
 export default CodeSnippet;

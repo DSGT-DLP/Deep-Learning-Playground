@@ -7,11 +7,11 @@ interface InputPropType {
   queryText: string;
   options: object[];
   onChange: (e: unknown) => void;
-  defaultValue: unknown;
-  isMultiSelect: boolean;
-  range: boolean;
-  beginnerMode: boolean;
-  freeInputCustomRestrictions: { type: string; min: number };
+  defaultValue?: unknown;
+  isMultiSelect?: boolean;
+  range?: boolean;
+  beginnerMode?: boolean;
+  freeInputCustomRestrictions?: { type: string; min: number };
 }
 const Input = (props: InputPropType) => {
   const {

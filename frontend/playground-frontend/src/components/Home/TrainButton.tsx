@@ -49,7 +49,7 @@ type TrainParamsWithPropsType = Omit<
 > &
   TrainParamsType;
 
-interface DLResultsType {
+export interface DLResultsType {
   epoch: string;
   train_time: string;
   train_loss: string;
@@ -58,15 +58,16 @@ interface DLResultsType {
   "val/test acc": string;
 }
 
-interface TrainResultsJSONResponseType extends JSONResponseType {
+export interface TrainResultsJSONResponseType extends JSONResponseType {
   //TODO: make different types based on tabular, image, or classical
   auxiliary_outputs: {
     AUC_ROC_curve_data?: number[][][];
-    category_list?: string[];
+    category_list: string[];
     confusion_matrix: number[][];
     numerical_category_list: number[];
     numerical_category_list_AUC?: number[];
     user_arch: string[];
+    image_data?: string;
   };
   dl_results: DLResultsType[];
 }

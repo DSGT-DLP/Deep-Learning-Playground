@@ -22,5 +22,6 @@
   "bugs": {
     "url": "https://github.com/DSGT-DLP/Deep-Learning-Playground/issues"
   },
-  "homepage": "https://github.com/DSGT-DLP/Deep-Learning-Playground#readme"
+  "homepage": "https://github.com/DSGT-DLP/Deep-Learning-Playground#readme",
+  "dependencies": {}
 }

@@ -25,7 +25,7 @@ describe("Test uploadToBackend function", () => {
         const token = "mytoken";
         (auth.currentUser?.getIdToken as jest.Mock).mockResolvedValueOnce(token);
         const headers = {
-          Authorization: `bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         };
         await uploadToBackend(data);
         expect(axios.post).toHaveBeenCalledWith("/api/upload", data, { headers });
@@ -38,7 +38,7 @@ describe("Test getSignedUploadUrl function", () => {
     const filename = "test.png";
     const file = new File(["hello"], "test.png", { type: "image/png" });
     const headers = {
-      Authorization: "bearer mytoken",
+      Authorization: "Bearer mytoken",
     };
     const token = "mytoken";
         (auth.currentUser?.getIdToken as jest.Mock).mockResolvedValueOnce(token);

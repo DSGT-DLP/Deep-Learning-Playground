@@ -10,12 +10,13 @@ import {
   getRedirectResultFromFirebase,
 } from "../../firebase";*/
 /* import { setCurrentUser } from "../../redux/userLogin"; */
-//import GoogleLogo from "../../images/logos/google.png";
-//import GithubLogo from "../../images/logos/github.png";
+import GoogleLogo from "../../public/images/logos/google.png";
+import GithubLogo from "../../public/images/logos/github.png";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
 /* import { useAppDispatch, useAppSelector } from "../../redux/hooks"; */
 import { User } from "firebase/auth";
+import Image from "next/image";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -86,19 +87,31 @@ const Login = () => {
       <div className="d-flex justify-content-evenly mb-5">
         <Button
           className="login-button google"
+          style={{ position: "relative" }}
           onClick={() => {
             console.log();
           }}
         >
-          {/* <img src={GoogleLogo} /> */}
+          <Image
+            src={GoogleLogo}
+            alt={"Sign In With Google"}
+            fill={true}
+            style={{ objectFit: "contain" }}
+          />
         </Button>
         <Button
           className="login-button github"
+          style={{ position: "relative" }}
           onClick={() => {
             console.log();
           }}
         >
-          {/* <img src={GithubLogo} /> */}
+          <Image
+            src={GithubLogo}
+            alt={"Sign In With Github"}
+            fill={true}
+            style={{ objectFit: "contain" }}
+          />
         </Button>
       </div>
     </>

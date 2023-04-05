@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import DEMO_VIDEO from "../../images/demo_video.gif";
-import softmax_eq from "./softmax_equation.png";
-import tanh_eq from "./tanh_equation.png";
-import tanh_plot from "./tanh_plot.png";
-import sigmoid_eq from "./sigmoid_equation.png";
-import dropout_dg from "./dropout_diagram.png";
-import conv2dgif from "./conv2d.gif";
-import conv2dgif2 from "./conv2d2.gif";
-import maxpool2dgif from "./maxpool2d.gif";
-import avgmaxpoolgif from "./avgpool_maxpool.gif";
-import batchnorm from "./batchnorm_diagram.png";
+import DEMO_VIDEO from "/public/images/demo_video.gif";
+import softmax_eq from "/public/images/wiki_images/softmax_equation.png";
+import tanh_eq from "/public/images/wiki_images/tanh_equation.png";
+import tanh_plot from "/public/images/wiki_images/tanh_plot.png";
+import sigmoid_eq from "/public/images/wiki_images/sigmoid_equation.png";
+import dropout_dg from "/public/images/wiki_images/dropout_diagram.png";
+import conv2dgif from "/public/images/wiki_images/conv2d.gif";
+import conv2dgif2 from "/public/images/wiki_images/conv2d2.gif";
+import maxpool2dgif from "/public/images/wiki_images/maxpool2d.gif";
+import avgmaxpoolgif from "/public/images/wiki_images/avgpool_maxpool.gif";
+import batchnorm from "/public/images/wiki_images/batchnorm_diagram.png";
+import Image from "next/image";
 
 const displayChange = (
   display: DisplayValue,
@@ -176,7 +177,7 @@ const Wiki = () => {
               </p>
 
               <p> Below is the dropout layer in action (notice the X marks) </p>
-              <img
+              <Image
                 src={dropout_dg}
                 alt="Dropout diagram"
                 style={{ maxHeight: 200, marginInline: "auto" }}
@@ -252,7 +253,7 @@ const Wiki = () => {
               </p>
               <p>The Tanh formula is:</p>
 
-              <img
+              <Image
                 src={tanh_eq}
                 alt="Tanh equation"
                 style={{ maxHeight: 200, marginInline: "auto" }}
@@ -264,7 +265,7 @@ const Wiki = () => {
                 function is doing:{" "}
               </p>
 
-              <img
+              <Image
                 src={tanh_plot}
                 alt="Tanh plot"
                 style={{ maxHeight: 300, marginInline: "auto" }}
@@ -306,7 +307,7 @@ const Wiki = () => {
               </p>
 
               <p> Plot and Equation of the sigmoid function is shown below</p>
-              <img
+              <Image
                 src={sigmoid_eq}
                 alt="Sigmoid plot"
                 style={{ maxHeight: 300, marginInline: "auto" }}
@@ -355,7 +356,7 @@ const Wiki = () => {
 
               <p>The Softmax formula is:</p>
 
-              <img
+              <Image
                 src={softmax_eq}
                 alt="Softmax equation"
                 style={{ maxHeight: 200, marginInline: "auto" }}
@@ -409,13 +410,13 @@ const Wiki = () => {
 
               <p>Helpful gifs to understand conv2d</p>
 
-              <img
+              <Image
                 src={conv2dgif}
                 alt="Conv 2d gif #1"
                 style={{ maxHeight: 400, marginInline: "auto" }}
               />
 
-              <img
+              <Image
                 src={conv2dgif2}
                 alt="Conv 2d gif #2"
                 style={{ maxHeight: 500, marginInline: "auto" }}
@@ -448,7 +449,7 @@ const Wiki = () => {
 
               <p>Max pool in action</p>
 
-              <img
+              <Image
                 src={maxpool2dgif}
                 alt="Max pool 2d gif"
                 style={{ maxHeight: 400, marginInline: "auto" }}
@@ -482,7 +483,7 @@ const Wiki = () => {
 
               <p>Adaptive Avg Pool and Max Pool 2d in action</p>
 
-              <img
+              <Image
                 src={avgmaxpoolgif}
                 alt="Max pool and Avg pool side by side"
                 style={{ maxHeight: 400, marginInline: "auto" }}
@@ -524,7 +525,7 @@ const Wiki = () => {
                 norm
               </p>
 
-              <img
+              <Image
                 src={batchnorm}
                 alt="Batch norm 2d"
                 style={{ maxHeight: 400, marginInline: "auto" }}
@@ -599,7 +600,7 @@ const Wiki = () => {
 
       <div className="sections">
         <h2>Live Demo</h2>
-        <img
+        <Image
           src={DEMO_VIDEO}
           alt="GIF showing a demo of the playground"
           loading="lazy"

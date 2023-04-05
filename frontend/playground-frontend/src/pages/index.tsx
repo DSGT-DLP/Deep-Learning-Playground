@@ -10,8 +10,8 @@ import {
   getRedirectResultFromFirebase,
 } from "../../firebase";*/
 /* import { setCurrentUser } from "../../redux/userLogin"; */
-import GoogleLogo from "../../public/images/logos/google.png";
-import GithubLogo from "../../public/images/logos/github.png";
+import GoogleLogo from "/public/images/logos/google.png";
+import GithubLogo from "/public/images/logos/github.png";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
 /* import { useAppDispatch, useAppSelector } from "../../redux/hooks"; */
@@ -87,7 +87,9 @@ const Login = () => {
       <div className="d-flex justify-content-evenly mb-5">
         <Button
           className="login-button google"
-          style={{ position: "relative" }}
+          style={{
+            position: "relative",
+          }}
           onClick={() => {
             console.log();
           }}
@@ -96,7 +98,7 @@ const Login = () => {
             src={GoogleLogo}
             alt={"Sign In With Google"}
             fill={true}
-            style={{ objectFit: "contain" }}
+            style={{ objectFit: "contain", margin: "auto" }}
           />
         </Button>
         <Button
@@ -110,7 +112,7 @@ const Login = () => {
             src={GithubLogo}
             alt={"Sign In With Github"}
             fill={true}
-            style={{ objectFit: "contain" }}
+            style={{ objectFit: "contain", margin: "auto" }}
           />
         </Button>
       </div>

@@ -35,7 +35,7 @@ export { default as Forgot } from "./Forgot/Forgot";
 export { default as About } from "./About/About";
 
 // Wiki
-export { default as Wiki } from "./Wiki/Wiki";
+//export { default as Wiki } from "../../public/images/wiki_images/Wiki/Wiki";
 
 // Feedback
 export { default as Feedback } from "./Feedback/Feedback";

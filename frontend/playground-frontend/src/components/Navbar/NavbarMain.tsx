@@ -16,6 +16,7 @@ import DSGTLogo from "../../images/logos/dlp_branding/dlp-logo.png";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { UserType, setCurrentUser } from "../../redux/userLogin";
 import { deleteCookie, setCookie } from "../helper_functions/Cookie";
+import { LinkContainer } from "react-router-bootstrap";
 
 const NavbarMain = () => {
   const user = useAppSelector((state) => state.currentUser.user);
@@ -100,27 +101,43 @@ const NavbarMain = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              {user?.email ? <Nav.Link href="/train">Train</Nav.Link> : null}
-              <Nav.Link href="/about">About</Nav.Link>
-              <Nav.Link href="/wiki">Wiki</Nav.Link>
-              <Nav.Link href="/feedback">Feedback</Nav.Link>
+              {user?.email ? (
+                <LinkContainer to="/train">
+                  <Nav.Link>Train</Nav.Link>
+                </LinkContainer>
+              ) : null}
+              <LinkContainer to="/about">
+                <Nav.Link>About</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/wiki">
+                <Nav.Link>Wiki</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/feedback">
+                <Nav.Link>Feedback</Nav.Link>
+              </LinkContainer>
               <Nav.Link href={URLs.donate}>Donate</Nav.Link>
               {user?.email ? (
                 <NavDropdown title="Account" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="/">Dashboard</NavDropdown.Item>
-                  <NavDropdown.Item href="/account-settings">
-                    Settings
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="learn-mod">Learn</NavDropdown.Item>
+                  <LinkContainer to="/">
+                    <NavDropdown.Item href="/">Dashboard</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/account-settings">
+                    <NavDropdown.Item>Settings</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/learn-mod">
+                    <NavDropdown.Item>Learn</NavDropdown.Item>
+                  </LinkContainer>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="#" onClick={logout}>
-                    Log out
-                  </NavDropdown.Item>
+                  <LinkContainer to={""}>
+                    <NavDropdown.Item onClick={logout}>
+                      Log out
+                    </NavDropdown.Item>
+                  </LinkContainer>
                 </NavDropdown>
               ) : (
-                <Nav.Link href="#" onClick={goToLogin}>
-                  Log in
-                </Nav.Link>
+                <LinkContainer to="">
+                  <Nav.Link onClick={goToLogin}>Log in</Nav.Link>
+                </LinkContainer>
               )}
             </Nav>
           </Navbar.Collapse>

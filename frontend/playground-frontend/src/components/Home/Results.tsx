@@ -3,12 +3,19 @@ import ONNX_OUTPUT_PATH from "../../backend_outputs/my_deep_learning_model.onnx"
 import PT_PATH from "../../backend_outputs/model.pt";
 import PKL_PATH from "../../backend_outputs/model.pkl";
 import Plot from "react-plotly.js";
-import PropTypes from "prop-types";
 import React from "react";
 import { CSVLink } from "react-csv";
-import { GENERAL_STYLES, COLORS } from "../../constants";
+import { GENERAL_STYLES, COLORS, ROUTE_DICT } from "../../constants";
+import { DLResultsType, TrainResultsJSONResponseType } from "./TrainButton";
+import { Data, Layout, XAxisName, YAxisName } from "plotly.js";
 
-const Results = (props) => {
+interface ResultsPropsType {
+  dlpBackendResponse: TrainResultsJSONResponseType;
+  problemType: { label: string; value: string };
+  choice: keyof typeof ROUTE_DICT;
+  simplified?: boolean;
+}
+const Results = (props: ResultsPropsType) => {
   const { dlpBackendResponse, problemType, choice } = props;
   const dl_results_data = dlpBackendResponse?.dl_results || [];
 
@@ -22,7 +29,7 @@ const Results = (props) => {
 
   const auc_roc_data_res =
     dlpBackendResponse?.auxiliary_outputs?.AUC_ROC_curve_data || [];
-  const auc_roc_data = [];
+  const auc_roc_data: Data[] = [];
   const category_list_auc =
     dlpBackendResponse?.auxiliary_outputs?.category_list;
   const image_data = dlpBackendResponse?.auxiliary_outputs?.image_data || "";
@@ -31,20 +38,18 @@ const Results = (props) => {
     name: "baseline",
     x: [0, 1],
     y: [0, 1],
-    type: "line",
+    type: "scatter",
     marker: { color: "grey" },
     line: {
       dash: "dash",
     },
-    config: { responsive: true },
   });
   for (let i = 0; i < auc_roc_data_res.length; i++) {
     auc_roc_data.push({
       name: `${category_list_auc[i]} (AUC: ${auc_roc_data_res[i][2]})`,
       x: auc_roc_data_res[i][0] || [],
       y: auc_roc_data_res[i][1] || [],
-      type: "line",
-      config: { responsive: true },
+      type: "scatter",
     });
   }
 
@@ -55,8 +60,10 @@ const Results = (props) => {
     key: c,
   }));
 
-  const mapResponses = (key) =>
-    dlpBackendResponse?.dl_results?.map((e) => e[key]) || [];
+  const mapResponses = (key: string) =>
+    dlpBackendResponse?.dl_results?.map((e) =>
+      hasKey(e, key) ? e[key] : ""
+    ) || [];
 
   const FIGURE_HEIGHT = 500;
   const FIGURE_WIDTH = 750;
@@ -77,7 +84,6 @@ const Results = (props) => {
               type: "scatter",
               mode: "markers",
               marker: { color: "red", size: 10 },
-              config: { responsive: true },
             },
             {
               name: "Test accuracy",
@@ -86,7 +92,6 @@ const Results = (props) => {
               type: "scatter",
               mode: "markers",
               marker: { color: "blue", size: 10 },
-              config: { responsive: true },
             },
           ]}
           layout={{
@@ -97,6 +102,7 @@ const Results = (props) => {
             title: "Train vs. Test Accuracy for your Deep Learning Model",
             showlegend: true,
           }}
+          config={{ responsive: true }}
         />
       );
     }
@@ -116,7 +122,6 @@ const Results = (props) => {
               type: "scatter",
               mode: "markers",
               marker: { color: "red", size: 10 },
-              config: { responsive: true },
             },
             {
               name: "Test loss",
@@ -125,7 +130,6 @@ const Results = (props) => {
               type: "scatter",
               mode: "markers",
               marker: { color: "blue", size: 10 },
-              config: { responsive: true },
             },
           ]}
           layout={{
@@ -136,6 +140,7 @@ const Results = (props) => {
             title: "Train vs. Test Loss for your Deep Learning Model",
             showlegend: true,
           }}
+          config={{ responsive: true }}
         />
       );
     }
@@ -152,6 +157,7 @@ const Results = (props) => {
         title: "AUC/ROC Curves for your Deep Learning Model",
         showlegend: true,
       }}
+      config={{ responsive: true }}
     />
   );
 
@@ -163,7 +169,7 @@ const Results = (props) => {
 
     if (!cm_data?.length) return null;
 
-    const layout = {
+    const layout: Partial<Layout> = {
       title: "Confusion Matrix (Last Epoch)",
       xaxis: {
         title: "Predicted",
@@ -176,7 +182,6 @@ const Results = (props) => {
         ticktext: category_list,
         tickvals: numerical_category_list,
         tickangle: 270,
-        showarrow: false,
       },
       showlegend: true,
       width: FIGURE_HEIGHT,
@@ -191,17 +196,19 @@ const Results = (props) => {
       for (let j = 0; j < COLS; j++) {
         const currentValue = cm_data[(i + ROWS - 1) % ROWS][j];
         const result = {
-          xref: "x1",
-          yref: "y1",
+          xref: "x1" as XAxisName,
+          yref: "y1" as YAxisName,
           x: j,
           y: (i + ROWS - 1) % ROWS,
-          text: currentValue,
+          text: currentValue.toString(),
           font: {
             color: currentValue > 0 ? "white" : "black",
           },
           showarrow: false,
         };
-        layout.annotations.push(result);
+        if (layout.annotations) {
+          layout.annotations.push(result);
+        }
       }
     }
 
@@ -266,7 +273,7 @@ const Results = (props) => {
           highlightOnHover
           columns={Object.keys(dl_results_data[0] || []).map((c) => ({
             name: c,
-            selector: (row) => row[c],
+            selector: (row: DLResultsType) => (hasKey(row, c) ? row[c] : ""),
           }))}
           data={dl_results_data}
         />
@@ -278,42 +285,25 @@ const Results = (props) => {
           <TrainVTestLoss />
           {problemType.value === "classification" &&
           auc_roc_data_res.length !== 0 &&
-          props.simplified === false ? (
+          !props.simplified ? (
             <AUC_ROC_curves />
           ) : null}
           {problemType.value === "classification" &&
           auc_roc_data_res.length === 0 &&
-          props.simplified === false ? (
+          !props.simplified ? (
             <p style={{ textAlign: "center" }}>
               No AUC/ROC curve could be generated. If this is not intended,
               check that shuffle is set to true to produce a more balanced
               train/test split which would enable correct AUC score calculation
             </p>
           ) : null}
-          {problemType.value === "classification" &&
-          props.simplified === false ? (
+          {problemType.value === "classification" && !props.simplified ? (
             <ConfusionMatrix />
           ) : null}
         </div>
       )}
     </>
   );
-};
-
-Results.defaultProps = {
-  simplified: false,
-};
-
-Results.propTypes = {
-  dlpBackendResponse: PropTypes.shape({
-    dl_results: PropTypes.array,
-    auxiliary_outputs: PropTypes.object,
-    message: PropTypes.string.isRequired,
-    success: PropTypes.bool.isRequired,
-  }),
-  problemType: PropTypes.objectOf(PropTypes.string).isRequired,
-  simplified: PropTypes.bool,
-  choice: PropTypes.string,
 };
 
 export default Results;
@@ -330,3 +320,7 @@ const styles = {
     fontSize: "medium",
   },
 };
+
+function hasKey<O extends object>(obj: O, key: PropertyKey): key is keyof O {
+  return key in obj;
+}

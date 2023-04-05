@@ -682,7 +682,7 @@ export const IMAGE_LAYERS: ModelLayer[] = [
   },
 ];
 
-interface PossibleTransform extends ModelLayer {
+export interface PossibleTransform extends ModelLayer {
   label: string;
   value: string;
 }

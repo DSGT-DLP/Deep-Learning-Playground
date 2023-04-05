@@ -10,8 +10,8 @@ import {
   getRedirectResultFromFirebase,
 } from "../../firebase";*/
 /* import { setCurrentUser } from "../../redux/userLogin"; */
-import GoogleLogo from "../../images/logos/google.png";
-import GithubLogo from "../../images/logos/github.png";
+//import GoogleLogo from "../../images/logos/google.png";
+//import GithubLogo from "../../images/logos/github.png";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
 /* import { useAppDispatch, useAppSelector } from "../../redux/hooks"; */
@@ -90,7 +90,7 @@ const Login = () => {
             console.log();
           }}
         >
-          <img src={GoogleLogo} />
+          {/* <img src={GoogleLogo} /> */}
         </Button>
         <Button
           className="login-button github"
@@ -98,7 +98,7 @@ const Login = () => {
             console.log();
           }}
         >
-          <img src={GithubLogo} />
+          {/* <img src={GithubLogo} /> */}
         </Button>
       </div>
     </>

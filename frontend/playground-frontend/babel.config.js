@@ -1,7 +1,14 @@
 module.exports = {
   presets: [
-    ["@babel/preset-env", { targets: { node: "current" } }],
-    "@babel/preset-typescript",
+    [
+      "next/babel",
+      {
+        "preset-env": { targets: { node: "current" } },
+        "transform-runtime": { regenerator: true },
+        "styled-jsx": {},
+        "class-properties": {},
+      },
+    ],
   ],
-  plugins: [["@babel/plugin-transform-runtime", { regenerator: true }]],
+  plugins: [],
 };

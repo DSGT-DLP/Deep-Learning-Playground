@@ -12,7 +12,8 @@ from backend.aws_helpers.s3_utils.s3_client import (
 )
 from backend.middleware import middleware
 from flask_cors import CORS
-
+from flasgger import Swagger
+from flasgger.utils import swag_from
 from backend.common.ai_drive import dl_tabular_drive, dl_img_drive, ml_drive
 from backend.common.constants import ONNX_MODEL, SAVED_MODEL_DL, UNZIPPED_DIR_NAME
 from backend.common.default_datasets import get_default_dataset_header
@@ -53,9 +54,22 @@ app = Flask(
     __name__,
     static_folder=os.path.join(os.getcwd(), "frontend", "playground-frontend", "build"),
 )
-CORS(app)
 
-app.wsgi_app = middleware(app.wsgi_app, exempt_paths=["/test", "/"])
+CORS(app)
+app.config['SWAGGER'] = {
+    'title': 'DLP API',
+    'uiversion': 3,
+    'host': 'localhost:8000'
+}
+swagger = Swagger(app)
+# app.config['SWAGGER'] = {
+#     'title': 'DLP API',
+#     'uiversion': 3,
+#     'host': 'localhost:8000'
+# }
+# swagger = Swagger(app)
+
+app.wsgi_app = middleware(app.wsgi_app, exempt_paths=["/test", "/", "/apidocs"])
 
 
 @app.route("/", defaults={"path": ""})
@@ -68,6 +82,7 @@ def root(path):
 
 
 @app.route("/test")
+@swag_from('dlp-api.yml')
 def verify_backend_alive():
     return {"Status": "Backend is alive"}
 

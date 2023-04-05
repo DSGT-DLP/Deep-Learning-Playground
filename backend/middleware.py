@@ -17,9 +17,14 @@ def send_error(environ, start_response):
 class middleware:
     def __init__(self, app, exempt_paths=[]):
         self.app = app
+        self.exempt_paths = exempt_paths
 
     def __call__(self, environ, start_response):
         request = Request(environ)
+        # '/api/defaultDataset' => '/defaultDataset'
+        real_route = '/' + ''.join(request.path.split("/")[2:])
+        if real_route in self.exempt_paths:
+            return self.app(environ, start_response)
         if (
             "Authorization" in request.headers
             and "Bearer " in request.headers["Authorization"]

@@ -1,7 +1,7 @@
 import axios from "axios";
 import sha256 from "crypto-js/sha256";
 import { toast } from "react-toastify";
-import { EXPECTED_FAILURE_HTTP_CODES } from "../../constants";
+import { EXPECTED_FAILURE_HTTP_CODES, ROUTE_DICT } from "../../constants";
 import { auth } from "../../firebase";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -109,19 +109,11 @@ export async function sendToBackend(
   return backendResult;
 }
 
-const routeDict = Object.freeze({
-  tabular: "tabular-run",
-  image: "img-run",
-  pretrained: "pretrain-run",
-  classicalml: "ml-run",
-  objectdetection: "object-detection",
-});
-
 export async function train_and_output(
-  choice: keyof typeof routeDict,
+  choice: keyof typeof ROUTE_DICT,
   data: { [key: string]: unknown }
 ) {
-  const route = routeDict[choice];
+  const route = ROUTE_DICT[choice];
 
   if (process.env.REACT_APP_MODE === "prod") {
     data["shouldBeQueued"] = true;

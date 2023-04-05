@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { COLORS } from "../../constants";
+import { COLORS, ROUTE_DICT } from "../../constants";
 import {
   validateParameter,
   validateTabularInputs,
@@ -36,7 +36,7 @@ interface TrainButtonPropTypes {
   setDLPBackendResponse: React.Dispatch<
     React.SetStateAction<TrainResultsJSONResponseType | null>
   >;
-  choice?: string;
+  choice?: keyof typeof ROUTE_DICT;
   style?: object;
   problemType: ProblemType;
   usingDefaultDataset?: string;
@@ -214,12 +214,7 @@ const TrainButton = (props: TrainButtonPropTypes) => {
       }
     }
     const trainState = await train_and_output(
-      choice as
-        | "tabular"
-        | "image"
-        | "pretrained"
-        | "classicalml"
-        | "objectdetection",
+      choice as keyof typeof ROUTE_DICT,
       (
         functionMap[choice][1] as (paramList: TrainParamsWithPropsType) => {
           [key: string]: unknown;
@@ -232,7 +227,6 @@ const TrainButton = (props: TrainButtonPropTypes) => {
 
       navigate("/dashboard");
     } else {
-      console.log(trainState);
       setResult(trainState as TrainResultsJSONResponseType);
     }
   };
@@ -274,7 +268,6 @@ const TrainButton = (props: TrainButtonPropTypes) => {
         toast.error("Training failed. Check your inputs");
       }
       setDLPBackendResponse(result);
-      console.log(result);
       reset();
     }
   }, [result]);

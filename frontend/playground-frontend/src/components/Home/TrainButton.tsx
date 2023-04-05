@@ -79,7 +79,7 @@ const TrainButton = (props: TrainButtonPropTypes) => {
   );
   const [uploaded, setUploaded] = useState(false);
   const [trainParams, setTrainParams] = useState<{
-    choice: string;
+    choice: keyof typeof ROUTE_DICT;
     paramList: TrainParamsWithPropsType;
   } | null>(null);
   const navigate = useNavigate();
@@ -162,10 +162,7 @@ const TrainButton = (props: TrainButtonPropTypes) => {
   const onClick = async () => {
     setPendingResponse(true);
     setDLPBackendResponse(null);
-    const user_arch: boolean | string[] | undefined = make_obj_param_list(
-      props.addedLayers,
-      "Model"
-    );
+    const user_arch = make_obj_param_list(props.addedLayers, "Model");
     if (user_arch === false) return;
 
     let trainTransforms: boolean | string[] | undefined;
@@ -214,7 +211,7 @@ const TrainButton = (props: TrainButtonPropTypes) => {
       }
     }
     const trainState = await train_and_output(
-      choice as keyof typeof ROUTE_DICT,
+      choice,
       (
         functionMap[choice][1] as (paramList: TrainParamsWithPropsType) => {
           [key: string]: unknown;
@@ -234,12 +231,7 @@ const TrainButton = (props: TrainButtonPropTypes) => {
   useEffect(() => {
     if (uploaded && trainParams) {
       train_and_output(
-        trainParams.choice as
-          | "tabular"
-          | "image"
-          | "pretrained"
-          | "classicalml"
-          | "objectdetection",
+        trainParams.choice,
         (
           functionMap[trainParams.choice][1] as (
             paramList: TrainParamsWithPropsType

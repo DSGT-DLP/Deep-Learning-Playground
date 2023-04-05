@@ -6,7 +6,6 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Navbar from "react-bootstrap/Navbar";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import GlobalStyle from "../../GlobalStyle";
@@ -21,7 +20,6 @@ import { LinkContainer } from "react-router-bootstrap";
 const NavbarMain = () => {
   const user = useAppSelector((state) => state.currentUser.user);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   function getInitialTheme() {
     const savedTheme = storage.getItem("theme");
     return savedTheme
@@ -46,7 +44,7 @@ const NavbarMain = () => {
   const goToLogin = () => {
     if (!window.location.href.match(/\/login/g)) {
       // Go to Login page if we aren't already there
-      navigate("/login");
+      //navigate("/login");
     }
   };
 
@@ -56,7 +54,7 @@ const NavbarMain = () => {
         dispatch(setCurrentUser());
         toast.success("Logged out successfully", { autoClose: 1000 });
         deleteCookie("userEmail");
-        navigate("/login");
+        //navigate("/login");
       })
       .catch((error) => toast.error(`Error: ${error.code}`));
   };

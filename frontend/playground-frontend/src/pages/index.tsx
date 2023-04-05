@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+/*
 import {
   signInWithPassword,
   registerWithPassword,
   signInWithGoogle,
   signInWithGithub,
   getRedirectResultFromFirebase,
-} from "../../firebase";
-import { setCurrentUser } from "../../redux/userLogin";
+} from "../../firebase";*/
+/* import { setCurrentUser } from "../../redux/userLogin"; */
 import GoogleLogo from "../../images/logos/google.png";
 import GithubLogo from "../../images/logos/github.png";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+/* import { useAppDispatch, useAppSelector } from "../../redux/hooks"; */
 import { User } from "firebase/auth";
 
 const Login = () => {
@@ -22,11 +23,11 @@ const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [recaptcha, setRecaptcha] = useState<string | null>(null);
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.currentUser.user);
+  //const dispatch = useAppDispatch();
+  //const user = useAppSelector((state) => state.currentUser.user);
 
   const handleSignInRegister = async () => {
-    let newUser: User | null = null;
+    //let newUser: User | null = null;
     if (isRegistering) {
       if (!recaptcha) {
         toast.error("Please complete recaptcha");
@@ -37,11 +38,11 @@ const Login = () => {
       } else if (password === "") {
         toast.error("Please enter a password");
       } else {
-        newUser = await registerWithPassword(email, password, fullName);
+        //newUser = await registerWithPassword(email, password, fullName);
       }
     } else {
-      newUser = await signInWithPassword(email, password);
-    }
+      //newUser = await signInWithPassword(email, password);
+    } /*
     if (!newUser || !newUser.email || !newUser.displayName) return;
     const userData = {
       email: newUser.email,
@@ -51,7 +52,7 @@ const Login = () => {
     };
     dispatch(setCurrentUser(userData));
 
-    //navigate("/dashboard");
+    navigate("/dashboard");*/
   };
 
   const Title = (
@@ -68,31 +69,34 @@ const Login = () => {
   );
 
   async function handleRedirectResult() {
-    const userData = await getRedirectResultFromFirebase();
-    if (!userData) return;
-
-    dispatch(setCurrentUser(userData));
+    //const userData = await getRedirectResultFromFirebase();
+    //if (!userData) return;
+    //dispatch(setCurrentUser(userData));
     //navigate("/dashboard");
   }
-
+  /*
   useEffect(() => {
     //if (user) navigate("/dashboard");
 
-    handleRedirectResult();
-  }, [user]);
+    //handleRedirectResult();
+  }, [user]);*/
 
   const SocialLogins = (
     <>
       <div className="d-flex justify-content-evenly mb-5">
         <Button
           className="login-button google"
-          onClick={() => signInWithGoogle()}
+          onClick={() => {
+            console.log();
+          }}
         >
           <img src={GoogleLogo} />
         </Button>
         <Button
           className="login-button github"
-          onClick={() => signInWithGithub()}
+          onClick={() => {
+            console.log();
+          }}
         >
           <img src={GithubLogo} />
         </Button>
@@ -133,7 +137,7 @@ const Login = () => {
         />
         {!isRegistering && (
           <div className="link">
-            {/*             <Link to="/forgot">Forgot Password?</Link> */}
+            {/* <Link to="/forgot">Forgot Password?</Link> */}
           </div>
         )}
       </Form.Group>

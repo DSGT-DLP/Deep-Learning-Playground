@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { COLORS, ROUTE_DICT } from "../../constants";
 import {
   validateParameter,
@@ -83,7 +82,6 @@ const TrainButton = (props: TrainButtonPropTypes) => {
     choice: keyof typeof ROUTE_DICT;
     paramList: TrainParamsWithPropsType;
   } | null>(null);
-  const navigate = useNavigate();
 
   const reset = () => {
     setPendingResponse(false);
@@ -223,7 +221,7 @@ const TrainButton = (props: TrainButtonPropTypes) => {
       if (trainState.success) toast.success(trainState.message);
       else toast.error(trainState.message);
 
-      navigate("/dashboard");
+      //navigate("/dashboard");
     } else {
       setResult(trainState as TrainResultsJSONResponseType);
     }

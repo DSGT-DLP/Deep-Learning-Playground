@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+/*
 import {
   About,
   Wiki,
@@ -74,4 +74,4 @@ function App() {
     </div>
   );
 }
-export default App;
+export default App;*/

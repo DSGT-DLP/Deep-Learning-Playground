@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/core": "^7.21.4",
     "@babel/plugin-transform-runtime": "^7.21.0",
+    "@babel/preset-env": "^7.21.4",
     "@codemirror/commands": "^6.1.1",
     "@codemirror/lang-python": "^6.0.2",
     "@emotion/react": "^11.10.0",
@@ -40,6 +42,7 @@
     "http-proxy-middleware": "^2.0.6",
     "jszip": "^3.10.1",
     "local-storage-fallback": "^4.1.2",
+    "next": "^13.2.4",
     "plotly.js": "^2.18.2",
     "prop-types": "^15.8.1",
     "rc-progress": "^3.4.0",
@@ -58,8 +61,6 @@
     "react-plotly.js": "^2.5.1",
     "react-redux": "^8.0.4",
     "react-router-bootstrap": "^0.26.2",
-    "react-router-dom": "^6.3.0",
-    "react-scripts": "^5.0.1",
     "react-select": "^5.3.2",
     "react-toastify": "^9.0.7",
     "socket.io-client": "^4.5.1",
@@ -69,12 +70,12 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "eslint src/**/*.{js,ts,tsx}",
     "lint:fix": "eslint --fix 'src/**/*.{js,ts,tsx}'",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test"
   },
   "browserslist": {
     "production": [

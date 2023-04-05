@@ -21,6 +21,14 @@ export const EXPECTED_FAILURE_HTTP_CODES = Object.freeze([
   400, 401, 403, 404, 405, 500,
 ]);
 
+export const ROUTE_DICT = Object.freeze({
+  tabular: "tabular-run",
+  image: "img-run",
+  pretrained: "pretrain-run",
+  classicalml: "ml-run",
+  objectdetection: "object-detection",
+});
+
 export const LAYOUT = Object.freeze({
   row: {
     display: "flex",

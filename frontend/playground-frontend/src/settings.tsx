@@ -1,14 +1,15 @@
 import React from "react";
 
-export interface LayerParameter {
+type LTypes = "number" | "text" | "tuple" | "boolean";
+export interface LayerParameter<T extends LTypes = LTypes> {
   index: number;
   parameter_name: string;
-  min?: number;
-  max?: number;
-  parameter_type: "number" | "text" | "tuple" | "boolean";
-  default?: number | string;
+  min: T extends "number" | "tuple" ? number : null;
+  max: T extends "number" | "tuple" ? number : null;
+  parameter_type: T;
+  default?: T extends "number" ? number : string;
   kwarg?: string;
-  value?: number | string;
+  value?: T extends "number" ? number : string;
 }
 
 export interface ModelLayer {
@@ -16,6 +17,7 @@ export interface ModelLayer {
   object_name: string;
   parameters: { [key: string]: LayerParameter };
   tooltip_info?: JSX.Element;
+  transform_type?: string;
 }
 
 export const POSSIBLE_LAYERS: ModelLayer[] = [
@@ -29,14 +31,14 @@ export const POSSIBLE_LAYERS: ModelLayer[] = [
         min: 1,
         max: 1600,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       outputSize: {
         index: 1,
         parameter_name: "Output size",
         min: 1,
         max: 1600,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -105,7 +107,7 @@ export const POSSIBLE_LAYERS: ModelLayer[] = [
         min: -3,
         max: 2,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -185,7 +187,7 @@ export const POSSIBLE_LAYERS: ModelLayer[] = [
         min: -3,
         max: 2,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -230,7 +232,7 @@ export const ML_MODELS: ModelLayer[] = [
         min: 1,
         max: 200,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       max_depth: {
         index: 1,
         parameter_name: "Max Depth",
@@ -239,7 +241,7 @@ export const ML_MODELS: ModelLayer[] = [
         min: 1,
         max: 100,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       min_samples_split: {
         index: 2,
         parameter_name: "Minimum Samples Split",
@@ -248,14 +250,13 @@ export const ML_MODELS: ModelLayer[] = [
         min: 1,
         max: 10,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       max_features: {
         index: 3,
         parameter_name: "Max Features",
         kwarg: "max_features = ",
         default: "sqrt",
-        parameter_type: "text",
-      },
+      } as LayerParameter<"text">,
     },
   },
   {
@@ -270,7 +271,7 @@ export const ML_MODELS: ModelLayer[] = [
         min: 1,
         max: 200,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       max_depth: {
         index: 1,
         parameter_name: "Max Depth",
@@ -279,7 +280,7 @@ export const ML_MODELS: ModelLayer[] = [
         min: 1,
         max: 5,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       min_samples_split: {
         index: 2,
         parameter_name: "Minimum Samples Split",
@@ -288,14 +289,14 @@ export const ML_MODELS: ModelLayer[] = [
         min: 2,
         max: 10,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       max_features: {
         index: 3,
         parameter_name: "Max Features",
         kwarg: "max_features = ",
         default: "sqrt",
         parameter_type: "text",
-      },
+      } as LayerParameter<"text">,
     },
   },
   {
@@ -310,7 +311,7 @@ export const ML_MODELS: ModelLayer[] = [
         min: 0,
         max: 1,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       C: {
         index: 1,
         parameter_name: "Regularization Strength (C)",
@@ -319,14 +320,14 @@ export const ML_MODELS: ModelLayer[] = [
         min: 0,
         max: 10,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       penslty: {
         index: 2,
         parameter_name: "Penalty",
         default: "l2",
         kwarg: "penalty = ",
         parameter_type: "text",
-      },
+      } as LayerParameter<"text">,
     },
   },
   {
@@ -340,7 +341,7 @@ export const ML_MODELS: ModelLayer[] = [
         min: 0,
         max: 1,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
   },
   {
@@ -355,7 +356,7 @@ export const ML_MODELS: ModelLayer[] = [
         min: 1,
         max: 100,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       min_samples_split: {
         index: 1,
         parameter_name: "Minimum Sample Splits",
@@ -364,14 +365,14 @@ export const ML_MODELS: ModelLayer[] = [
         min: 2,
         max: 10,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       max_features: {
         index: 2,
         parameter_name: "Max Features",
         kwarg: "max_features = ",
         default: "sqrt",
         parameter_type: "text",
-      },
+      } as LayerParameter<"text">,
     },
   },
   {
@@ -386,7 +387,7 @@ export const ML_MODELS: ModelLayer[] = [
         min: 1,
         max: 5,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       min_samples_split: {
         index: 1,
         parameter_name: "Minimum Sample Splits",
@@ -395,14 +396,14 @@ export const ML_MODELS: ModelLayer[] = [
         min: 1,
         max: 10,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       max_features: {
         index: 2,
         parameter_name: "Max Features",
         kwarg: "max_features = ",
         default: "sqrt",
         parameter_type: "text",
-      },
+      } as LayerParameter<"text">,
     },
   },
 ];
@@ -418,35 +419,35 @@ export const IMAGE_LAYERS: ModelLayer[] = [
         min: 1,
         max: 16,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       out_channels: {
         index: 1,
         parameter_name: "out channels",
         min: 1,
         max: 16,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       kernel_size: {
         index: 2,
         parameter_name: "kernel size",
         min: 1,
         max: 1000,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       stride: {
         index: 3,
         parameter_name: "stride",
         min: 1,
         max: 1000,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       padding: {
         index: 4,
         parameter_name: "padding",
         min: 1,
         max: 1000,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -488,7 +489,7 @@ export const IMAGE_LAYERS: ModelLayer[] = [
         min: 1,
         max: 16,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -527,14 +528,14 @@ export const IMAGE_LAYERS: ModelLayer[] = [
         min: 1,
         max: 1000,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       stride: {
         index: 1,
         parameter_name: "stride",
         min: 1,
         max: 1000,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -570,7 +571,7 @@ export const IMAGE_LAYERS: ModelLayer[] = [
         min: 1,
         max: 16,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -608,7 +609,7 @@ export const IMAGE_LAYERS: ModelLayer[] = [
         min: 0,
         max: 1,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -647,14 +648,14 @@ export const IMAGE_LAYERS: ModelLayer[] = [
         min: -4,
         max: 3,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       end_dim: {
         index: 1,
         parameter_name: "end dim",
         min: -4,
         max: 3,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -697,7 +698,7 @@ export const POSSIBLE_TRANSFORMS: PossibleTransform[] = [
         min: 0,
         max: 1,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     label: "Random Horizontal Flip",
     value: "RandomHorizontalFlip",
@@ -713,7 +714,7 @@ export const POSSIBLE_TRANSFORMS: PossibleTransform[] = [
         min: 0,
         max: 1,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     label: "Random Vertical Flip",
     value: "RandomVerticalFlip",
@@ -737,7 +738,7 @@ export const POSSIBLE_TRANSFORMS: PossibleTransform[] = [
         max: 1000,
         default: "(32, 32)",
         parameter_type: "tuple",
-      },
+      } as LayerParameter<"tuple">,
     },
     label: "Resize",
     value: "Resize",
@@ -752,7 +753,7 @@ export const POSSIBLE_TRANSFORMS: PossibleTransform[] = [
         min: 1,
         max: 1000,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     label: "Gaussian Blur",
     value: "GaussianBlur",
@@ -775,7 +776,7 @@ export const POSSIBLE_TRANSFORMS: PossibleTransform[] = [
         max: 1000,
         default: 0,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       std: {
         index: 1,
         parameter_name: "std",
@@ -783,7 +784,7 @@ export const POSSIBLE_TRANSFORMS: PossibleTransform[] = [
         max: 1000,
         default: 1,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     label: "Normalize",
     value: "Normalize",
@@ -805,7 +806,7 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
         min: 0,
         max: 1,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -842,7 +843,7 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
         min: 0,
         max: 1,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -903,7 +904,7 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
         max: 1000,
         default: "(32, 32)",
         parameter_type: "tuple",
-      },
+      } as LayerParameter<"tuple">,
     },
     tooltip_info: (
       <>
@@ -937,7 +938,7 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
         min: 1,
         max: 1000,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -994,7 +995,7 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
         max: 1000,
         default: 0,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       std: {
         index: 1,
         parameter_name: "std",
@@ -1002,7 +1003,7 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
         max: 1000,
         default: 1,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -1041,7 +1042,7 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
         max: 10000,
         default: 0,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -1076,7 +1077,7 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
         max: 10000,
         default: 0,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>
@@ -1112,7 +1113,7 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
         max: 180,
         default: 0,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       translate: {
         index: 1,
         parameter_name: "translate",
@@ -1120,7 +1121,7 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
         max: 1000,
         default: "(0, 0)",
         parameter_type: "tuple",
-      },
+      } as LayerParameter<"tuple">,
       scale: {
         index: 2,
         parameter_name: "scale",
@@ -1128,7 +1129,7 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
         max: 1000,
         default: 1,
         parameter_type: "number",
-      },
+      } as LayerParameter<"number">,
       shear: {
         index: 3,
         parameter_name: "shear",
@@ -1136,7 +1137,7 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
         max: 180,
         default: "(0, 0)",
         parameter_type: "tuple",
-      },
+      } as LayerParameter<"tuple">,
     },
     tooltip_info: (
       <>
@@ -1177,7 +1178,7 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
 const CLASSIFICATION = "classification";
 const REGRESSION = "regression";
 
-type ProblemType = typeof CLASSIFICATION | typeof REGRESSION;
+export type ProblemType = typeof CLASSIFICATION | typeof REGRESSION;
 
 interface BaseCriterion {
   label: string;
@@ -1185,7 +1186,7 @@ interface BaseCriterion {
   object_name: string;
 }
 
-interface Criterion extends BaseCriterion {
+export interface Criterion extends BaseCriterion {
   problem_type: ProblemType[];
 }
 
@@ -1253,6 +1254,10 @@ export const OPTIMIZER_NAMES = Object.freeze([
   { label: "Adam", value: "Adam" },
 ]);
 
+export interface DefaultDatasetType {
+  label: string;
+  value: string | null;
+}
 export const DEFAULT_DATASETS = Object.freeze([
   { label: "NONE", value: null },
   { label: "IRIS", value: "IRIS" },

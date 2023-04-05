@@ -30,8 +30,8 @@ const _InputOutputPromptResponse = (
       ) : (
         <input
           type={parameter_type}
-          min={min}
-          max={max}
+          min={min as number}
+          max={max as number}
           value={value}
           onChange={(e) =>
             // updates the addedLayers state with the current user input value of parameters

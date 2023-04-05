@@ -1,14 +1,14 @@
 import axios from "axios";
 import sha256 from "crypto-js/sha256";
 import { toast } from "react-toastify";
-import { EXPECTED_FAILURE_HTTP_CODES } from "../../constants";
+import { EXPECTED_FAILURE_HTTP_CODES, ROUTE_DICT } from "../../constants";
 import { auth } from "../../firebase";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function uploadToBackend(data: { [key: string]: any }) {
   const headers = auth.currentUser
     ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
-    : undefined;  
+    : undefined;
   await axios.post("/api/upload", data, { headers });
 }
 
@@ -57,10 +57,13 @@ function createExecutionId(
   return "ex" + hash;
 }
 
+export interface JSONResponseType {
+  success: boolean;
+  message: string;
+}
 export async function sendToBackend(
   route: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: { [key: string]: any }
+  data: { [key: string]: unknown }
 ) {
   if (auth.currentUser == null) throw new Error("Not logged in");
 
@@ -91,7 +94,7 @@ export async function sendToBackend(
   }).then((result) => {
     if (result.ok) return result.json();
     else if (EXPECTED_FAILURE_HTTP_CODES.includes(result.status)) {
-      return result.json().then((json) => {
+      return result.json().then((json: JSONResponseType) => {
         toast.error(json.message);
         throw new Error(json.message);
       });
@@ -106,26 +109,17 @@ export async function sendToBackend(
   return backendResult;
 }
 
-const routeDict = Object.freeze({
-  tabular: "tabular-run",
-  image: "img-run",
-  pretrained: "pretrain-run",
-  classicalml: "ml-run",
-  objectdetection: "object-detection",
-});
-
 export async function train_and_output(
-  choice: keyof typeof routeDict,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: { [key: string]: any }
+  choice: keyof typeof ROUTE_DICT,
+  data: { [key: string]: unknown }
 ) {
-  const route = routeDict[choice];
+  const route = ROUTE_DICT[choice];
 
   if (process.env.REACT_APP_MODE === "prod") {
     data["shouldBeQueued"] = true;
   }
   const trainResult = await sendToBackend(route, data);
-  return trainResult;
+  return trainResult as JSONResponseType;
 }
 
 export async function sendEmail(

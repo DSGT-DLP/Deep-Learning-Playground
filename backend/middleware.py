@@ -22,7 +22,7 @@ class middleware:
         request = Request(environ)
         if (
             "Authorization" in request.headers
-            and "bearer " in request.headers["Authorization"]
+            and "Bearer " in request.headers["Authorization"]
         ):
             token = request.headers["Authorization"]
             environ["user"] = authenticate(token)

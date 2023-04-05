@@ -7,7 +7,7 @@ import { auth } from "../../firebase";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function uploadToBackend(data: { [key: string]: any }) {
   const headers = auth.currentUser
-    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
+    ? { Authorization: "Bearer " + (await auth.currentUser.getIdToken(true)) }
     : undefined;
   await axios.post("/api/upload", data, { headers });
 }
@@ -30,7 +30,7 @@ export const getSignedUploadUrl = async (
   file: File
 ) => {
   const headers = auth.currentUser
-    ? { Authorization: "bearer " + (await auth.currentUser.getIdToken(true)) }
+    ? { Authorization: "Bearer " + (await auth.currentUser.getIdToken(true)) }
     : undefined;
   const data = new FormData();
   data.append("version", version.toString());
@@ -68,7 +68,7 @@ export async function sendToBackend(
   if (auth.currentUser == null) throw new Error("Not logged in");
 
   const headers = {
-    Authorization: "bearer " + (await auth.currentUser.getIdToken(true)),
+    Authorization: "Bearer " + (await auth.currentUser.getIdToken(true)),
     uid: auth.currentUser.uid,
   };
   data["route"] = route;

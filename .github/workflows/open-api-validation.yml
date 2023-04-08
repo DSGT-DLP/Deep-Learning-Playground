@@ -1,0 +1,27 @@
+name: OpenAPI Schema Validation
+
+on:
+  push:
+    paths:
+      - "backend/openapi"
+  pull_request:
+    paths:
+      - "backend/openapi"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install openapi-cli-validator
+        run: npm install -g @apidevtools/openapi-cli-validator
+
+      - name: Validate OpenAPI Schema
+        run: openapi-cli-validator path/to/openapi.yaml --exit

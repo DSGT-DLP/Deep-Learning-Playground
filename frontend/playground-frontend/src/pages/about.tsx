@@ -7,6 +7,8 @@ import flaskLogo from "../../public/images/logos/flask-logo.png";
 import reactLogo from "../../public/images/logos/react-logo.png";
 import awsLogo from "../../public/images/logos/aws-logo.png";
 import Image from "next/image";
+import NavbarMain from "@/common/components/NavBarMain";
+import Footer from "@/common/components/Footer";
 
 const urlOpener = (url: string) => () => window.open(url);
 
@@ -228,21 +230,25 @@ function renderLicense(): ReactNode {
 
 const About = () => {
   return (
-    <div id="about">
-      {renderHeading()}
+    <>
+      <NavbarMain />
+      <div id="about">
+        {renderHeading()}
 
-      {renderMotivationSection()}
+        {renderMotivationSection()}
 
-      {renderTechnologiesUsedSection()}
+        {renderTechnologiesUsedSection()}
 
-      {renderInstallInstructions()}
+        {renderInstallInstructions()}
 
-      {renderUserInstructions()}
+        {renderUserInstructions()}
 
-      {renderDeveloperInstructions()}
+        {renderDeveloperInstructions()}
 
-      {renderLicense()}
-    </div>
+        {renderLicense()}
+      </div>
+      <Footer />
+    </>
   );
 };
 

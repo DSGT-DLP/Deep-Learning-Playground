@@ -20,7 +20,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-const NavbarMain = (props: { children: React.ReactNode }) => {
+const NavbarMain = () => {
   const user = useAppSelector((state) => state.currentUser.user);
   const dispatch = useAppDispatch();
   function getInitialTheme() {
@@ -49,31 +49,32 @@ const NavbarMain = (props: { children: React.ReactNode }) => {
       <GlobalStyle />
       <Navbar id="navbar-main" className="p-0" expand="lg">
         <Container fluid className="ms-1 pe-0">
-          <Navbar.Brand
-            href="/"
-            className="d-flex align-items-center logo-title"
-            style={{
-              position: "relative",
-            }}
-          >
-            <div
+          <Link href="/" passHref legacyBehavior>
+            <Navbar.Brand
+              className="d-flex align-items-center logo-title"
               style={{
                 position: "relative",
-                height: "50px",
-                width: "50px",
-                paddingLeft: "60px",
               }}
             >
-              <Image
-                src={DSGTLogo}
-                className="logo d-inline-block align-top me-3"
-                alt="DSGT Logo"
-                fill={true}
-                style={{ objectFit: "contain", margin: "auto" }}
-              />
-            </div>
-            Deep Learning Playground
-          </Navbar.Brand>
+              <div
+                style={{
+                  position: "relative",
+                  height: "50px",
+                  width: "50px",
+                  paddingLeft: "60px",
+                }}
+              >
+                <Image
+                  src={DSGTLogo}
+                  className="logo d-inline-block align-top me-3"
+                  alt="DSGT Logo"
+                  fill={true}
+                  style={{ objectFit: "contain", margin: "auto" }}
+                />
+              </div>
+              Deep Learning Playground
+            </Navbar.Brand>
+          </Link>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
@@ -133,7 +134,6 @@ const NavbarMain = (props: { children: React.ReactNode }) => {
           label={`${theme.mode === "dark" ? "🌙" : "☀️"}`}
         />
       </Navbar>
-      {props.children}
     </ThemeProvider>
   );
 };

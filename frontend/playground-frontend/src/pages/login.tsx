@@ -23,6 +23,8 @@ import {
 } from "@/common/redux/userLogin";
 import { useRouter } from "next/router";
 import NavbarMain from "@/common/components/NavBarMain";
+import Link from "next/link";
+import Footer from "@/common/components/Footer";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -88,8 +90,7 @@ const Login = () => {
             position: "relative",
           }}
           onClick={() => {
-            //dispatch(signInViaGoogleRedirect());
-            router.push("/about");
+            dispatch(signInViaGoogleRedirect());
           }}
         >
           <Image
@@ -150,7 +151,7 @@ const Login = () => {
         />
         {!isRegistering && (
           <div className="link">
-            {/* <Link to="/forgot">Forgot Password?</Link> */}
+            <Link href="/forgot">Forgot Password?</Link>
           </div>
         )}
       </Form.Group>
@@ -177,7 +178,8 @@ const Login = () => {
   );
 
   return (
-    <NavbarMain>
+    <>
+      <NavbarMain />
       <div
         id="login-page"
         className="text-center d-flex justify-content-center"
@@ -191,7 +193,8 @@ const Login = () => {
           </Form>
         </div>
       </div>
-    </NavbarMain>
+      <Footer />
+    </>
   );
 };
 

@@ -1,16 +1,20 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 //import { sendToBackend } from "../common/components/helper_functions/TalkWithBackend";
-import { ThunkApiType } from "./store";
+import { AppDispatch, ThunkApiType } from "./store";
 import {
   GithubAuthProvider,
   GoogleAuthProvider,
-  User,
-  getRedirectResult,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signInWithRedirect,
   signOut,
+  updateEmail,
+  updatePassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "@/common/utils/firebase";
 import { FirebaseError } from "firebase/app";
+import storage from "local-storage-fallback";
 
 export interface UserState {
   user?: UserType | "pending";
@@ -20,7 +24,7 @@ export interface UserState {
 export interface UserType {
   email: string;
   uid: string;
-  displayName: string;
+  displayName?: string;
   emailVerified: boolean;
 }
 export const isSignedIn = (
@@ -41,6 +45,128 @@ interface UserProgressDataType {
   };
 }
 
+export const updateUserPassword = createAsyncThunk<
+  void,
+  { password: string },
+  ThunkApiType
+>("currentUser/updateUserPassword", async ({ password }, thunkAPI) => {
+  try {
+    if (!auth.currentUser) {
+      await thunkAPI.dispatch(signOutUser());
+      return;
+    }
+    await updatePassword(auth.currentUser, password);
+    return;
+  } catch (e) {
+    if (e instanceof FirebaseError) {
+      return thunkAPI.rejectWithValue({ message: e.message });
+    }
+  }
+  return thunkAPI.rejectWithValue({
+    message: "Update password failed",
+  });
+});
+
+export const updateUserEmail = createAsyncThunk<
+  void,
+  { email: string },
+  ThunkApiType
+>("currentUser/updateUserEmail", async ({ email }, thunkAPI) => {
+  try {
+    if (!auth.currentUser) {
+      await thunkAPI.dispatch(signOutUser());
+      return;
+    }
+    await updateEmail(auth.currentUser, email);
+    return;
+  } catch (e) {
+    if (e instanceof FirebaseError) {
+      return thunkAPI.rejectWithValue({ message: e.message });
+    }
+  }
+  return thunkAPI.rejectWithValue({
+    message: "Update email failed",
+  });
+});
+
+export const updateUserProfile = createAsyncThunk<
+  void,
+  { displayName?: string; photoURL?: string },
+  ThunkApiType
+>(
+  "currentUser/updateUserProfile",
+  async ({ displayName, photoURL }, thunkAPI) => {
+    try {
+      if (!auth.currentUser) {
+        await thunkAPI.dispatch(signOutUser());
+        return;
+      }
+      await updateProfile(auth.currentUser, {
+        displayName: displayName,
+        photoURL: photoURL,
+      });
+      return;
+    } catch (e) {
+      if (e instanceof FirebaseError) {
+        return thunkAPI.rejectWithValue({ message: e.message });
+      }
+    }
+    return thunkAPI.rejectWithValue({
+      message: "Updating the user profile failed",
+    });
+  }
+);
+
+export const registerViaEmailAndPassword = createAsyncThunk<
+  void,
+  { email: string; password: string; displayName?: string },
+  ThunkApiType
+>(
+  "currentUser/registerViaEmailAndPassword",
+  async ({ email, password, displayName }, thunkAPI) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      await updateProfile(user, { displayName: displayName });
+      storage.setItem("expect-user", "true");
+      return;
+    } catch (e) {
+      if (e instanceof FirebaseError) {
+        return thunkAPI.rejectWithValue({ message: e.message });
+      }
+    }
+    return thunkAPI.rejectWithValue({
+      message: "Registration with email and password failed",
+    });
+  }
+);
+
+export const signInViaEmailAndPassword = createAsyncThunk<
+  void,
+  { email: string; password: string },
+  ThunkApiType
+>(
+  "currentUser/signInViaEmailAndPassword",
+  async ({ email, password }, thunkAPI) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      storage.setItem("expect-user", "true");
+      return;
+    } catch (e) {
+      if (e instanceof FirebaseError) {
+        return thunkAPI.rejectWithValue({ message: e.message });
+      }
+    }
+    return thunkAPI.rejectWithValue({
+      message: "Sign in with email and password failed",
+    });
+  }
+);
+
 export const signInViaGoogleRedirect = createAsyncThunk<
   void,
   void,
@@ -48,6 +174,7 @@ export const signInViaGoogleRedirect = createAsyncThunk<
 >("currentUser/signInViaGoogle", async (_, thunkAPI) => {
   try {
     const googleProvider = new GoogleAuthProvider();
+    storage.setItem("expect-user", "true");
     await signInWithRedirect(auth, googleProvider);
     return;
   } catch (e) {
@@ -65,6 +192,7 @@ export const signInViaGithubRedirect = createAsyncThunk<
 >("currentUser/signInViaGitHub", async (_, thunkAPI) => {
   try {
     const githubProvider = new GithubAuthProvider();
+    storage.setItem("expect-user", "true");
     await signInWithRedirect(auth, githubProvider);
     return;
   } catch (e) {
@@ -81,6 +209,7 @@ export const signOutUser = createAsyncThunk<void, void, ThunkApiType>(
     if (thunkAPI.getState().currentUser.user) {
       try {
         await signOut(auth);
+        storage.removeItem("expect-user");
         return;
       } catch (e) {
         if (e instanceof FirebaseError) {
@@ -112,12 +241,12 @@ export const currentUserSlice = createSlice({
   reducers: {
     setCurrentUser: (
       state,
-      { payload }: PayloadAction<UserType | undefined>
+      { payload }: PayloadAction<UserType | "pending" | undefined>
     ) => {
       if (!payload) {
         state.user = undefined;
         state.userProgressData = undefined;
-      } else if (payload && !state.user) {
+      } else {
         state.user = payload;
       }
     },
@@ -125,6 +254,9 @@ export const currentUserSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(signOutUser.fulfilled, (state) => {
       state.user = undefined;
+    });
+    builder.addCase(signInViaEmailAndPassword.pending, (state) => {
+      state.user = "pending";
     });
     builder.addCase(signInViaGoogleRedirect.pending, (state) => {
       state.user = "pending";

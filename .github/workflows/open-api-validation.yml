@@ -31,11 +31,11 @@ jobs:
           done
 
       - name: Install openapi-cli-validator
-        run: yarn global add @redocly/openapi-cli-validator
+        run: yarn global add @stoplight/spectral-cli
 
       - name: Validate OpenAPI Schema
         run: |
           for file in backend/openapi/*.openapi.yml
           do
-            openapi-cli-validator "$file" --exit
+            spectral lint "$file"
           done

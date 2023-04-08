@@ -30,9 +30,5 @@ jobs:
             fi
           done
 
-      - name: Install dependencies
-        run: yarn add swagger-cli
-
-      
-      - name: Validate OpenAPI YAML files
-        run: swagger-cli validate backend/openapi/*.yaml
+      - name: Validate Open API YAML files
+        run: yarn add swagger-cli && yarn swagger-cli validate backend/openapi/*.yaml

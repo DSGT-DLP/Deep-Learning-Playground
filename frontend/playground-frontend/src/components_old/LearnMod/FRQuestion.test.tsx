@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import FRQuestion from "./FRQuestion";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
-import { CTypes } from "./LearningModulesContent";
+import { CTypes } from "../../common/components/LearningModulesContent";
 
 jest.mock("../helper_functions/TalkWithBackend");
 

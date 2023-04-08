@@ -2,10 +2,10 @@ import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-import ModulesSideBar from "./ModulesSideBar";
-import getContent from './LearningModulesContent';
+import ModulesSideBar from "../../common/components/ModulesSideBar";
+import getContent from '../../common/components/LearningModulesContent';
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
-import { CTypes } from "./LearningModulesContent";
+import { CTypes } from "../../common/components/LearningModulesContent";
 import {BrowserRouter} from 'react-router-dom';
 describe("ModulesSideBar_function", () => {
   // Tests that the sidebar is rendered with the correct list of modules and subsections. tags: [happy path]

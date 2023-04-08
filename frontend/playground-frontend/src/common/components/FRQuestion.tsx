@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { sendToBackend } from "../helper_functions/TalkWithBackend";
-import { UserType } from "../../redux/userLogin";
-import { ContentType } from "./LearningModulesContent";
+import { UserType } from "../redux/userLogin";
+//import { sendToBackend } from "../helper_functions/TalkWithBackend";
+import { ContentType } from "../../common/components/LearningModulesContent";
 
-export interface MCQuestionType {
-  answerChoices: string[];
-  correctAnswer: number;
-  question: string;
-  questionID: string;
-  sectionType: string;
-}
-interface MCQuestionProps {
+interface FRQuestionProps {
   moduleID: number;
-  questionObject: ContentType<"mcQuestion">;
+  questionObject: ContentType<"frQuestion">;
   sectionID: number;
   user: UserType;
 }
-const MCQuestion = (props: MCQuestionProps) => {
+const FRQuestion = (props: FRQuestionProps) => {
   const [answeredCorrect, setAnsweredCorrect] = useState(false);
   const [answeredIncorrect, setAnsweredIncorrect] = useState(false);
   const [unanswered, setUnanswered] = useState(false);
@@ -29,37 +22,30 @@ const MCQuestion = (props: MCQuestionProps) => {
       sectionID: props.sectionID,
       questionID: props.questionObject.questionID,
     };
-
-    sendToBackend("updateUserProgressData", requestData);
+    //sendToBackend("updateUserProgressData", requestData);
   }
 
   // run when submit button on question is pressed
   const questionSubmit = () => {
-    if (
-      document.querySelector(
-        'input[name="' + props.questionObject.questionID + '"]:checked'
-      ) == null
-    ) {
+    if ((document.getElementById("frInput") as HTMLInputElement).value === "") {
       setUnanswered(true);
       setAnsweredCorrect(false);
       setAnsweredIncorrect(false);
     } else {
       const answer = parseInt(
-        (
-          document.querySelector(
-            'input[name="' + props.questionObject.questionID + '"]:checked'
-          ) as HTMLInputElement
-        ).value
+        (document.getElementById("frInput") as HTMLInputElement).value
       );
 
-      if (answer === props.questionObject.correctAnswer) {
+      if (answer === props.questionObject.answer) {
         setAnsweredCorrect(true);
         setAnsweredIncorrect(false);
+        setUnanswered(false);
 
         updateUserProgress();
       } else {
         setAnsweredCorrect(false);
         setAnsweredIncorrect(true);
+        setUnanswered(false);
       }
     }
   };
@@ -75,19 +61,10 @@ const MCQuestion = (props: MCQuestionProps) => {
     <div className="class">
       <h3 id="classTitle">Question</h3>
       <h6>{props.questionObject.question}</h6>
-      {props.questionObject.answerChoices.map((answer, index) => {
-        return (
-          <div key={index}>
-            <input
-              type="radio"
-              value={index}
-              name={props.questionObject.questionID.toString()}
-            />
-            {answer}
-          </div>
-        );
-      })}
-      <button onClick={questionSubmit}>Submit Answer</button>
+      <input id="frInput" data-testid="frInput" type="number"></input>
+      <button className="submitButton" onClick={questionSubmit}>
+        Submit Answer
+      </button>
       {answeredCorrect ? (
         <h6 style={{ color: "green" }}>That is correct!</h6>
       ) : null}
@@ -95,10 +72,10 @@ const MCQuestion = (props: MCQuestionProps) => {
         <h6 style={{ color: "red" }}>Sorry, that is incorrect</h6>
       ) : null}
       {unanswered ? (
-        <h6 style={{ color: "orange" }}>Please select an answer</h6>
+        <h6 style={{ color: "orange" }}>Please type an answer</h6>
       ) : null}
     </div>
   );
 };
 
-export default MCQuestion;
+export default FRQuestion;

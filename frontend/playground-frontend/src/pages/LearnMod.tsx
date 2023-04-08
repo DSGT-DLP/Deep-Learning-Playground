@@ -1,7 +1,7 @@
 import React from "react";
-import ClassCard from "./ClassCard";
-import getContent from "./LearningModulesContent";
-import { useAppSelector } from "../../redux/hooks";
+import ClassCard from "../common/components/ClassCard";
+import getContent from "../common/components/LearningModulesContent";
+import { useAppSelector } from "../common/redux/hooks";
 //import { fetchUserProgressData } from "../../redux/userLogin";
 
 const LearnMod = () => {

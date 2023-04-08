@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import MCQuestion from "./MCQuestion";
-import ImageComponent from "./ImageComponent";
+import ImageComponent from "../../common/components/ImageComponent";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import ModulesSideBar from "./ModulesSideBar";
+import ModulesSideBar from "../../common/components/ModulesSideBar";
 import FRQuestion from "./FRQuestion";
 import { useAppSelector } from "../../redux/hooks";
-import { ContentType, ModuleType } from "./LearningModulesContent";
+import { ContentType, ModuleType } from "../../common/components/LearningModulesContent";
 import Exercise from "./Exercise";
 
 const LearnContent = () => {

@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
-import ImageComponent from "./ImageComponent";
-import { CTypes } from "./LearningModulesContent";
+import ImageComponent from "../../common/components/ImageComponent";
+import { CTypes } from "../../common/components/LearningModulesContent";
 
 describe("ImageComponent_function", () => {
   // Tests that the imagecomponent renders an image with valid imagedata object. tags: [happy path]

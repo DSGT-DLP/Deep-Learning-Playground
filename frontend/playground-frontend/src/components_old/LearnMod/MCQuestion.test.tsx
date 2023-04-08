@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import MCQuestion from "./MCQuestion";
 import { sendToBackend } from "../helper_functions/TalkWithBackend";
-import { CTypes, ContentType } from "./LearningModulesContent";
+import { CTypes, ContentType } from "../../common/components/LearningModulesContent";
 
 jest.mock("../helper_functions/TalkWithBackend");
 

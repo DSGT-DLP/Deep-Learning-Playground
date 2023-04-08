@@ -30,9 +30,8 @@ jobs:
             fi
           done
 
-      - name: Install openapi-cli-validator
-        run: yarn global add @stoplight/spectral-cli
-
-      - name: Validate OpenAPI Schema
-        run: |
-          spectral lint backend/openapi/*.openapi.yaml --ruleset=https://unpkg.com/@stoplight/spectral/rulesets/openapi.json --verbose
+      - name: Install dependencies
+        run: npm install -g swagger-cli
+      
+      - name: Validate OpenAPI YAML files
+        run: swagger validate backend/openapi/*.yaml

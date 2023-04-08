@@ -31,7 +31,8 @@ jobs:
           done
 
       - name: Install dependencies
-        run: npm install -g swagger-cli
+        run: yarn add swagger-cli
+
       
       - name: Validate OpenAPI YAML files
         run: swagger validate backend/openapi/*.yaml

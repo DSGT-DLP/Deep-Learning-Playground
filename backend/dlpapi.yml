@@ -1,0 +1,123 @@
+openapi: '3.0.0'
+info:
+  title: DLP API 
+  description: API endpoints for the Deep Learning Playground Project
+  version: '1.0.0'
+paths:
+  /test:
+    get:
+      summary: A simple endpoint to test if our backend is alive
+      responses:
+        '200':
+          description: Test Backend alive
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    type: string 
+                    example: "Backend is alive"
+  /api/sendEmail:
+    post:
+      summary: An endpoint to send email notification after a user finishes training their model
+      description: Endpoint to send email notification to user after training completes via AWS SES
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email_address
+                - subject
+                - body_text
+              properties:
+                email_address:
+                  type: string
+                  description: The email address of the recipient
+                subject:
+                  type: string
+                  description: The subject of the email
+                body_text:
+                  type: string
+                  description: The body text of the email
+              example:
+                email_address: example@example.com
+                subject: "Training completed"
+                body_text: "Your model training has been completed successfully."
+        required: true
+      responses:
+        '200':
+          description: Train Success Email Notification Completed Correctly
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string 
+                    example: "Message Sent to example@example.com"
+        '400':
+          description: Train Success Email Notification Not working. Cause of error depends on your use case
+        '401':
+          description: User is not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User is not authenticated"
+  /api/sendUserCodeEval:
+    post: 
+      description: Given user inputted code in the preprocessing mode, execute it!
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+                - codeSnippet
+              properties:
+                data:
+                  type: object
+                  description: The email address of the recipient
+                codeSnippet:
+                  type: string
+                  description: The subject of the email
+              example:
+                data: {"col1": [val1, val2], "col2": [val3, val4]}
+                codeSnippet: "def preprocess(df):print(\"Hello World\")"
+        required: true
+      responses:
+        '200':
+          description: Preprocessed data successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Preprocessed data"
+                  data:
+                    type: object
+                    example: {"col1": [val1, val2], "col2": [val3, val4]}
+                  columns:
+                    type: array
+                    example: ["newcol1"]
+        '400':
+          description: Preprocess didn't go through successfully. This is usually something wrong with your code
+        '401':
+          description: User is not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User is not authenticated"
+

@@ -13,7 +13,9 @@ def send_error(environ, start_response):
     )
     return response(environ, start_response)
 
-
+#to help render the apidocs endpoint with flasgger
+SWAGGER_UI_ROUTES = ["/flasgger_static/swagger-ui.css", "/flasgger_static/swagger-ui-bundle.js", "/flasgger_static/swagger-ui-standalone-preset.js",
+                     "/flasgger_static/lib/jquery.min.js", "/flasgger_static/favicon-32x32.png"]
 class middleware:
     def __init__(self, app, exempt_paths=[]):
         self.app = app
@@ -23,7 +25,8 @@ class middleware:
         request = Request(environ)
         # '/api/defaultDataset' => '/defaultDataset'
         real_route = '/' + ''.join(request.path.split("/")[2:])
-        if real_route in self.exempt_paths:
+        if request.path in SWAGGER_UI_ROUTES or real_route in self.exempt_paths:
+            print("in exempt paths")
             return self.app(environ, start_response)
         if (
             "Authorization" in request.headers

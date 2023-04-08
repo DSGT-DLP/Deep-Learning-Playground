@@ -56,20 +56,22 @@ app = Flask(
 )
 
 CORS(app)
+
 app.config['SWAGGER'] = {
     'title': 'DLP API',
     'uiversion': 3,
-    'host': 'localhost:8000'
+    'host': 'localhost:8000',
+    'openapi': '3.0.2',
+    'basePath': '/'
 }
-swagger = Swagger(app)
-# app.config['SWAGGER'] = {
-#     'title': 'DLP API',
-#     'uiversion': 3,
-#     'host': 'localhost:8000'
-# }
-# swagger = Swagger(app)
+swagger = Swagger(app, template_file="dlpapi.yml")
 
-app.wsgi_app = middleware(app.wsgi_app, exempt_paths=["/test", "/", "/apidocs"])
+app.wsgi_app = middleware(app.wsgi_app, exempt_paths=["/test", "/", "/apidocs", 
+                                                      "/flasgger_static/swagger-ui.css", 
+                                                      "/flasgger_static/swagger-ui-bundle.js", 
+                                                      "/flasgger_static/swagger-ui-standalone-preset.js",
+                                                      "/flasgger_static/lib/jquery.min.js",
+                                                      "/flasgger_static/favicon-32x32.png"])
 
 
 @app.route("/", defaults={"path": ""})
@@ -82,7 +84,7 @@ def root(path):
 
 
 @app.route("/test")
-@swag_from('dlp-api.yml')
+@swag_from('dlpapi.yml')
 def verify_backend_alive():
     return {"Status": "Backend is alive"}
 
@@ -246,6 +248,7 @@ def object_detection_run():
 
 
 @app.route("/api/sendEmail", methods=["POST"])
+@swag_from("dlpapi.yml")
 def send_email_route():
     # extract data
     request_data = json.loads(request.data)
@@ -274,6 +277,7 @@ def send_email_route():
 
 
 @app.route("/api/sendUserCodeEval", methods=["POST"])
+@swag_from("dlpapi.yml")
 def send_user_code_eval():
     try:
         request_data = json.loads(request.data)

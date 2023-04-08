@@ -30,5 +30,11 @@ jobs:
             fi
           done
 
-      - name: Validate Open API YAML files
-        run: yarn add swagger-cli && yarn swagger-cli validate backend/openapi/*.yaml --no-color
+      - name: Validate OpenAPI files
+        run: |
+          yarn add swagger-cli
+          for file in backend/openapi/*.yaml
+          do
+            echo "Validating $file"
+            yarn swagger-cli validate $file --no-color || exit 1
+          done

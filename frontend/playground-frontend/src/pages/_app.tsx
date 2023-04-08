@@ -9,31 +9,21 @@ import { Provider, useDispatch } from "react-redux";
 import { setCurrentUser } from "@/common/redux/userLogin";
 import { auth } from "@/common/utils/firebase";
 import store from "@/common/redux/store";
-import { useAppSelector } from "@/common/redux/hooks";
 //import { wrapper } from "@/common/redux/store";
 
 const FirebaseAuthState = () => {
   const dispatch = useDispatch();
-  const user = useAppSelector((state) => state.currentUser.user);
   useEffect(() => {
     auth.onAuthStateChanged((firebaseUser) => {
-      if (!firebaseUser) {
-        console.log("whoops");
-      }
-      if (!user && firebaseUser) {
-        if (firebaseUser) {
-          console.log("nvm");
-        }
-        if (firebaseUser.email && firebaseUser.displayName) {
-          dispatch(
-            setCurrentUser({
-              email: firebaseUser.email,
-              uid: firebaseUser.uid,
-              displayName: firebaseUser.displayName,
-              emailVerified: firebaseUser.emailVerified,
-            })
-          );
-        }
+      if (firebaseUser && firebaseUser.email && firebaseUser.displayName) {
+        dispatch(
+          setCurrentUser({
+            email: firebaseUser.email,
+            uid: firebaseUser.uid,
+            displayName: firebaseUser.displayName,
+            emailVerified: firebaseUser.emailVerified,
+          })
+        );
       }
     });
   });

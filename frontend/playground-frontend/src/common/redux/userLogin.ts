@@ -9,11 +9,11 @@ import {
   signInWithRedirect,
   signOut,
 } from "firebase/auth";
-import { auth } from "../utils/firebase";
+import { auth } from "@/common/utils/firebase";
 import { FirebaseError } from "firebase/app";
 
 export interface UserState {
-  user?: UserType;
+  user?: UserType | "pending";
   userProgressData?: UserProgressDataType;
 }
 
@@ -23,6 +23,10 @@ export interface UserType {
   displayName: string;
   emailVerified: boolean;
 }
+export const isSignedIn = (
+  user: UserType | "pending" | undefined
+): user is UserType => user != undefined && user != "pending";
+
 interface UserProgressDataType {
   modules: {
     [moduleID: string]: {
@@ -37,72 +41,54 @@ interface UserProgressDataType {
   };
 }
 
-export const signInViaGoogle = createAsyncThunk<UserType, void, ThunkApiType>(
-  "currentUser/signInViaGoogle",
-  async (_, thunkAPI) => {
-    try {
-      const googleProvider = new GoogleAuthProvider();
-      await signInWithRedirect(auth, googleProvider);
-      const result = await getRedirectResult(auth);
-      if (result) {
-        if (!result.user.email || !result.user.displayName) {
-          throw Error();
-        }
-        return {
-          email: result.user.email,
-          uid: result.user.uid,
-          displayName: result.user.displayName,
-          emailVerified: result.user.emailVerified,
-        } as UserType;
-      }
-    } catch (e) {
-      if (e instanceof FirebaseError) {
-        return thunkAPI.rejectWithValue({ message: e.message });
-      }
+export const signInViaGoogleRedirect = createAsyncThunk<
+  void,
+  void,
+  ThunkApiType
+>("currentUser/signInViaGoogle", async (_, thunkAPI) => {
+  try {
+    const googleProvider = new GoogleAuthProvider();
+    await signInWithRedirect(auth, googleProvider);
+    return;
+  } catch (e) {
+    if (e instanceof FirebaseError) {
+      return thunkAPI.rejectWithValue({ message: e.message });
     }
-    return thunkAPI.rejectWithValue({ message: "Sign in with Google failed" });
   }
-);
+  return thunkAPI.rejectWithValue({ message: "Sign in with Google failed" });
+});
 
-export const signInViaGithub = createAsyncThunk<UserType, void, ThunkApiType>(
-  "currentUser/signInViaGitHub",
-  async (_, thunkAPI) => {
-    try {
-      const githubProvider = new GithubAuthProvider();
-      await signInWithRedirect(auth, githubProvider);
-      const result = await getRedirectResult(auth);
-      if (result) {
-        if (!result.user.email || !result.user.displayName) {
-          throw Error();
-        }
-        return {
-          email: result.user.email,
-          uid: result.user.uid,
-          displayName: result.user.displayName,
-          emailVerified: result.user.emailVerified,
-        } as UserType;
-      }
-    } catch (e) {
-      if (e instanceof FirebaseError) {
-        return thunkAPI.rejectWithValue({ message: e.message });
-      }
+export const signInViaGithubRedirect = createAsyncThunk<
+  void,
+  void,
+  ThunkApiType
+>("currentUser/signInViaGitHub", async (_, thunkAPI) => {
+  try {
+    const githubProvider = new GithubAuthProvider();
+    await signInWithRedirect(auth, githubProvider);
+    return;
+  } catch (e) {
+    if (e instanceof FirebaseError) {
+      return thunkAPI.rejectWithValue({ message: e.message });
     }
-    return thunkAPI.rejectWithValue({ message: "Sign in with GitHub failed" });
   }
-);
+  return thunkAPI.rejectWithValue({ message: "Sign in with GitHub failed" });
+});
 
 export const signOutUser = createAsyncThunk<void, void, ThunkApiType>(
   "currentUser/signOutUser",
   async (_, thunkAPI) => {
-    try {
-      await signOut(auth);
-      return;
-    } catch (e) {
-      if (e instanceof FirebaseError) {
-        return thunkAPI.rejectWithValue(Error(e.message));
+    if (thunkAPI.getState().currentUser.user) {
+      try {
+        await signOut(auth);
+        return;
+      } catch (e) {
+        if (e instanceof FirebaseError) {
+          return thunkAPI.rejectWithValue({ message: e.message });
+        }
       }
+      return thunkAPI.rejectWithValue({ message: "Sign out failed" });
     }
-    return thunkAPI.rejectWithValue({ message: "Sign out failed" });
   }
 );
 
@@ -128,19 +114,11 @@ export const currentUserSlice = createSlice({
       state,
       { payload }: PayloadAction<UserType | undefined>
     ) => {
-      if (!payload && state.user) {
+      if (!payload) {
         state.user = undefined;
         state.userProgressData = undefined;
       } else if (payload && !state.user) {
         state.user = payload;
-        if (payload.email && payload.displayName) {
-          state.user = {
-            email: payload.email,
-            uid: payload.uid,
-            displayName: payload.displayName,
-            emailVerified: payload.emailVerified,
-          };
-        }
       }
     },
   },
@@ -148,35 +126,17 @@ export const currentUserSlice = createSlice({
     builder.addCase(signOutUser.fulfilled, (state) => {
       state.user = undefined;
     });
-    builder.addCase(signInViaGoogle.pending, (state) => {
-      if (state.user) {
-        state.user = undefined;
-      }
+    builder.addCase(signInViaGoogleRedirect.pending, (state) => {
+      state.user = "pending";
     });
-    builder.addCase(signInViaGoogle.fulfilled, (state, { payload }) => {
-      if (state.user) {
-        state.user = payload;
-      }
-    });
-    builder.addCase(signInViaGithub.pending, (state) => {
-      if (state.user) {
-        state.user = undefined;
-      }
-    });
-    builder.addCase(signInViaGithub.fulfilled, (state, { payload }) => {
-      if (state.user) {
-        state.user = payload;
-      }
+    builder.addCase(signInViaGithubRedirect.pending, (state) => {
+      state.user = "pending";
     });
     builder.addCase(fetchUserProgressData.pending, (state) => {
-      if (state.user) {
-        state.userProgressData = undefined;
-      }
+      state.userProgressData = undefined;
     });
     builder.addCase(fetchUserProgressData.fulfilled, (state, { payload }) => {
-      if (state.user) {
-        state.userProgressData = payload;
-      }
+      state.userProgressData = payload;
     });
   },
 });

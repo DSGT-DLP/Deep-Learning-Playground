@@ -17,7 +17,10 @@ import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import { User } from "firebase/auth";
 import Image from "next/image";
-import { signInViaGithub, signInViaGoogle } from "@/common/redux/userLogin";
+import {
+  signInViaGithubRedirect,
+  signInViaGoogleRedirect,
+} from "@/common/redux/userLogin";
 import { useRouter } from "next/router";
 import NavbarMain from "@/common/components/NavBarMain";
 
@@ -85,7 +88,7 @@ const Login = () => {
             position: "relative",
           }}
           onClick={() => {
-            //dispatch(signInViaGoogle());
+            //dispatch(signInViaGoogleRedirect());
             router.push("/about");
           }}
         >
@@ -100,7 +103,7 @@ const Login = () => {
           className="login-button github"
           style={{ position: "relative" }}
           onClick={() => {
-            dispatch(signInViaGithub());
+            dispatch(signInViaGithubRedirect());
           }}
         >
           <Image

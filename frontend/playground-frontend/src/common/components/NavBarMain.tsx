@@ -13,6 +13,7 @@ import DSGTLogo from "/public/images/logos/dlp_branding/dlp-logo.png";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import {
   UserType,
+  isSignedIn,
   setCurrentUser,
   signOutUser,
 } from "@/common/redux/userLogin";
@@ -76,7 +77,7 @@ const NavbarMain = (props: { children: React.ReactNode }) => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              {user?.email ? (
+              {isSignedIn(user) ? (
                 <Link href="/train" passHref legacyBehavior>
                   <Nav.Link>Train</Nav.Link>
                 </Link>
@@ -91,7 +92,7 @@ const NavbarMain = (props: { children: React.ReactNode }) => {
                 <Nav.Link>Feedback</Nav.Link>
               </Link>
               <Nav.Link href={URLs.donate}>Donate</Nav.Link>
-              {user?.email ? (
+              {isSignedIn(user) ? (
                 <NavDropdown title="Account" id="basic-nav-dropdown">
                   <Link href="/" passHref legacyBehavior>
                     <NavDropdown.Item>Dashboard</NavDropdown.Item>

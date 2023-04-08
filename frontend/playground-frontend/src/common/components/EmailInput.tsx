@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GENERAL_STYLES } from "../../constants";
-import { Form, SSRProvider } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 
 interface EmailInputProps {
   email?: string;

@@ -23,9 +23,9 @@ jobs:
       - name: Check file extensions
         run: |
           shopt -s globstar
-          for file in backend/openapi/**/*.yml; do
-            if [[ ! "$file" =~ \.openapi\.yml$ ]]; then
-              echo "Error: $file does not have the .openapi.yml extension"
+          for file in backend/openapi/**/*.yaml; do
+            if [[ ! "$file" =~ \.openapi\.yaml$ ]]; then
+              echo "Error: $file does not have the .openapi.yaml extension"
               exit 1
             fi
           done

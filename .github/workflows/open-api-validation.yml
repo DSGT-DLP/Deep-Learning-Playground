@@ -31,4 +31,4 @@ jobs:
           done
 
       - name: Validate Open API YAML files
-        run: yarn add swagger-cli && yarn swagger-cli validate backend/openapi/*.yaml
+        run: yarn add swagger-cli && yarn swagger-cli validate backend/openapi/*.yaml --no-color

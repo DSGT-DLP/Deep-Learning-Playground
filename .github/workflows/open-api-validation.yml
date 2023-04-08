@@ -35,4 +35,4 @@ jobs:
 
       
       - name: Validate OpenAPI YAML files
-        run: swagger validate backend/openapi/*.yaml
+        run: swagger-cli validate backend/openapi/*.yaml

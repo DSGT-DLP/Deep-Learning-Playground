@@ -19,11 +19,11 @@ import {
   Results,
   TitleText,
   TrainButton,
-} from "../../components";
+} from "../../common/components";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "react-toastify";
-import { sendToBackend } from "../../components/helper_functions/TalkWithBackend";
+import { sendToBackend } from "../../common/components/helper_functions/TalkWithBackend";
 
 const Exercise = (props) => {
   const csvDataInput = [];

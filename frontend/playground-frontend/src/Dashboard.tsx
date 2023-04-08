@@ -19,7 +19,7 @@ import "gestalt/dist/gestalt.css";
 import { useEffect, useState } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
-import { sendToBackend } from "./components/helper_functions/TalkWithBackend";
+import { sendToBackend } from "./common/components/helper_functions/TalkWithBackend";
 import { auth } from "./firebase";
 import JSZip from "jszip";
 import saveAs from "file-saver";

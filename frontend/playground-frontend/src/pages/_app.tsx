@@ -1,10 +1,45 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "@/styles/globals.css";
+import "@/common/styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import React from "react";
+import React, { useEffect } from "react";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { Provider, useDispatch } from "react-redux";
+import { setCurrentUser } from "@/common/redux/userLogin";
+import { auth } from "@/common/utils/firebase";
+import store from "@/common/redux/store";
+import { useAppSelector } from "@/common/redux/hooks";
+//import { wrapper } from "@/common/redux/store";
 
-export default function App({ Component, pageProps }: AppProps) {
+const FirebaseAuthState = () => {
+  const dispatch = useDispatch();
+  const user = useAppSelector((state) => state.currentUser.user);
+  useEffect(() => {
+    auth.onAuthStateChanged((firebaseUser) => {
+      if (!firebaseUser) {
+        console.log("whoops");
+      }
+      if (!user && firebaseUser) {
+        if (firebaseUser) {
+          console.log("nvm");
+        }
+        if (firebaseUser.email && firebaseUser.displayName) {
+          dispatch(
+            setCurrentUser({
+              email: firebaseUser.email,
+              uid: firebaseUser.uid,
+              displayName: firebaseUser.displayName,
+              emailVerified: firebaseUser.emailVerified,
+            })
+          );
+        }
+      }
+    });
+  });
+  return <></>;
+};
+const App = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head>
@@ -25,7 +60,12 @@ export default function App({ Component, pageProps }: AppProps) {
 
         <title>Deep Learning Playground</title>
       </Head>
-      <Component {...pageProps} />
+      <Provider store={store}>
+        <FirebaseAuthState />
+        <Component {...pageProps} />
+      </Provider>
     </>
   );
-}
+};
+
+export default App;

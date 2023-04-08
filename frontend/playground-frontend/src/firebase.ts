@@ -12,7 +12,6 @@ import {
   getRedirectResult,
 } from "firebase/auth";
 import { toast } from "react-toastify";
-import { setCookie } from "./components/helper_functions/Cookie";
 import { UserType } from "./redux/userLogin";
 
 // Your web app's Firebase configuration
@@ -26,8 +25,10 @@ const firebaseConfig = Object.freeze({
 });
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+getAuth(app).onAuthStateChanged((user) => {
+  
+});
 
 // Exported functions
 
@@ -64,7 +65,6 @@ export const updateUserSettings = async (
       if (!user) throw new Error("Firebase Auth updated user is missing");
 
       updateUserProfile(displayName);
-      setCookie("email", user.email);
       toast.success(`Updated email to ${user.email}`, {
         autoClose: 1000,
       });
@@ -93,7 +93,6 @@ export const registerWithPassword = async (
     );
     const user = userCredential.user;
     await updateUserProfile(displayName);
-    setCookie("email", user.email);
     toast.success(`Registered with email ${user.email}`, {
       autoClose: 1000,
     });
@@ -112,7 +111,6 @@ export const signInWithPassword = async (email: string, password: string) => {
       password
     );
     const user = userCredential.user;
-    setCookie("email", user.email);
     toast.success(`Signed in with email ${user.email}`, {
       autoClose: 1000,
     });
@@ -151,7 +149,6 @@ export async function getRedirectResultFromFirebase(): Promise<
     emailVerified: user.emailVerified,
   };
 
-  setCookie("email", userData.email);
   toast.success(`Signed in with email ${userData.email}`, {
     autoClose: 1000,
   });

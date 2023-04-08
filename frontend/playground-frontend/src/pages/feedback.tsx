@@ -1,10 +1,10 @@
 // @flow
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
-import EmailInput from "../components/EmailInput";
-import TitleText from "../components/TitleText";
-import Spacer from "../components/Spacer";
+import EmailInput from "@/common/components/EmailInput";
+import TitleText from "@/common/components/TitleText";
+import Spacer from "@/common/components/Spacer";
 //import { EmailInput, TitleText, Spacer } from "../index";
 import ReCAPTCHA from "react-google-recaptcha";
 

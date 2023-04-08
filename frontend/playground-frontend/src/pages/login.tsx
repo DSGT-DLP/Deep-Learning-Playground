@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+/*
 import {
   signInWithPassword,
   registerWithPassword,
   signInWithGoogle,
   signInWithGithub,
   getRedirectResultFromFirebase,
-} from "../../firebase";
-import  from "@/common/redux/userLogin";
-import GoogleLogo from "../../images/logos/google.png";
-import GithubLogo from "../../images/logos/github.png";
+} from "../../firebase";*/
+/* import { setCurrentUser } from "../../redux/userLogin"; */
+import GoogleLogo from "/public/images/logos/google.png";
+import GithubLogo from "/public/images/logos/github.png";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import { User } from "firebase/auth";
+import Image from "next/image";
+import { signInViaGithub, signInViaGoogle } from "@/common/redux/userLogin";
+import { useRouter } from "next/router";
+import NavbarMain from "@/common/components/NavBarMain";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -24,9 +29,13 @@ const Login = () => {
   const [recaptcha, setRecaptcha] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.currentUser.user);
+  const router = useRouter();
+  useEffect(() => {
+    console.log(user);
+  });
 
   const handleSignInRegister = async () => {
-    let newUser: User | null = null;
+    //let newUser: User | null = null;
     if (isRegistering) {
       if (!recaptcha) {
         toast.error("Please complete recaptcha");
@@ -37,11 +46,11 @@ const Login = () => {
       } else if (password === "") {
         toast.error("Please enter a password");
       } else {
-        newUser = await registerWithPassword(email, password, fullName);
+        //newUser = await registerWithPassword(email, password, fullName);
       }
     } else {
-      newUser = await signInWithPassword(email, password);
-    }
+      //newUser = await signInWithPassword(email, password);
+    } /*
     if (!newUser || !newUser.email || !newUser.displayName) return;
     const userData = {
       email: newUser.email,
@@ -51,7 +60,7 @@ const Login = () => {
     };
     dispatch(setCurrentUser(userData));
 
-    //navigate("/dashboard");
+    navigate("/dashboard");*/
   };
 
   const Title = (
@@ -67,34 +76,39 @@ const Login = () => {
     </>
   );
 
-  async function handleRedirectResult() {
-    const userData = await getRedirectResultFromFirebase();
-    if (!userData) return;
-
-    dispatch(setCurrentUser(userData));
-    //navigate("/dashboard");
-  }
-
-  useEffect(() => {
-    //if (user) navigate("/dashboard");
-
-    handleRedirectResult();
-  }, [user]);
-
   const SocialLogins = (
     <>
       <div className="d-flex justify-content-evenly mb-5">
         <Button
           className="login-button google"
-          onClick={() => signInWithGoogle()}
+          style={{
+            position: "relative",
+          }}
+          onClick={() => {
+            //dispatch(signInViaGoogle());
+            router.push("/about");
+          }}
         >
-          <img src={GoogleLogo} />
+          <Image
+            src={GoogleLogo}
+            alt={"Sign In With Google"}
+            fill={true}
+            style={{ objectFit: "contain", margin: "auto" }}
+          />
         </Button>
         <Button
           className="login-button github"
-          onClick={() => signInWithGithub()}
+          style={{ position: "relative" }}
+          onClick={() => {
+            dispatch(signInViaGithub());
+          }}
         >
-          <img src={GithubLogo} />
+          <Image
+            src={GithubLogo}
+            alt={"Sign In With Github"}
+            fill={true}
+            style={{ objectFit: "contain", margin: "auto" }}
+          />
         </Button>
       </div>
     </>
@@ -133,7 +147,7 @@ const Login = () => {
         />
         {!isRegistering && (
           <div className="link">
-            {/*             <Link to="/forgot">Forgot Password?</Link> */}
+            {/* <Link to="/forgot">Forgot Password?</Link> */}
           </div>
         )}
       </Form.Group>
@@ -160,16 +174,21 @@ const Login = () => {
   );
 
   return (
-    <div id="login-page" className="text-center d-flex justify-content-center">
-      <div className="main-container mt-5 mb-5">
-        {Title}
+    <NavbarMain>
+      <div
+        id="login-page"
+        className="text-center d-flex justify-content-center"
+      >
+        <div className="main-container mt-5 mb-5">
+          {Title}
 
-        <Form className="form-container p-5">
-          {SocialLogins}
-          {EmailPasswordInput}
-        </Form>
+          <Form className="form-container p-5">
+            {SocialLogins}
+            {EmailPasswordInput}
+          </Form>
+        </div>
       </div>
-    </div>
+    </NavbarMain>
   );
 };
 

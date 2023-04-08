@@ -3,10 +3,10 @@ name: OpenAPI Schema Validation
 on:
   push:
     paths:
-      - "backend/openapi"
+      - "backend/openapi/**"
   pull_request:
     paths:
-      - "backend/openapi"
+      - "backend/openapi/**"
 
 jobs:
   validate:

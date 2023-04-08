@@ -20,8 +20,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Check file extensions
+        run: |
+          shopt -s globstar
+          for file in backend/openapi/**/*.yml; do
+            if [[ ! "$file" =~ \.openapi\.yml$ ]]; then
+              echo "Error: $file does not have the .openapi.yml extension"
+              exit 1
+            fi
+          done
+
       - name: Install openapi-cli-validator
-        run: npm install -g @apidevtools/openapi-cli-validator
+        run: yarn global add @apidevtools/openapi-cli-validator
 
       - name: Validate OpenAPI Schema
-        run: openapi-cli-validator path/to/openapi.yaml --exit
+        run: |
+          for file in backend/openapi/*.openapi.yml
+          do
+            openapi-cli-validator "$file" --exit
+          done

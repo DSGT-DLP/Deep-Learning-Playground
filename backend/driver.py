@@ -66,7 +66,6 @@ app.config['SWAGGER'] = {
 }
 
 swagger = Swagger(app, template_file='openapi/dlpapi.yml')
-print(f"your swagger object is {vars(swagger)}")
 
 app.wsgi_app = middleware(app.wsgi_app, exempt_paths=["/test", "/", "/apidocs", 
                                                       "/flasgger_static/swagger-ui.css", 

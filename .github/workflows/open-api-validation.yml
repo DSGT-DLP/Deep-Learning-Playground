@@ -35,7 +35,4 @@ jobs:
 
       - name: Validate OpenAPI Schema
         run: |
-          for file in backend/openapi/*.openapi.yml
-          do
-            spectral lint "$file"
-          done
+          spectral lint backend/openapi/*.openapi.yaml --ruleset=https://unpkg.com/@stoplight/spectral/rulesets/openapi.json

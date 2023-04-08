@@ -57,22 +57,29 @@ app = Flask(
 
 CORS(app)
 
-app.config['SWAGGER'] = {
-    'title': 'DLP API',
-    'uiversion': 3,
-    'host': 'localhost:8000',
-    'openapi': '3.0.2',
-    'basePath': '/'
+app.config["SWAGGER"] = {
+    "title": "DLP API",
+    "uiversion": 3,
+    "host": "localhost:8000",
+    "openapi": "3.0.2",
+    "basePath": "/",
 }
 
-swagger = Swagger(app, template_file='openapi/dlpapi.openapi.yml')
+swagger = Swagger(app, template_file="openapi/dlpapi.openapi.yml")
 
-app.wsgi_app = middleware(app.wsgi_app, exempt_paths=["/test", "/", "/apidocs", 
-                                                      "/flasgger_static/swagger-ui.css", 
-                                                      "/flasgger_static/swagger-ui-bundle.js", 
-                                                      "/flasgger_static/swagger-ui-standalone-preset.js",
-                                                      "/flasgger_static/lib/jquery.min.js",
-                                                      "/flasgger_static/favicon-32x32.png"])
+app.wsgi_app = middleware(
+    app.wsgi_app,
+    exempt_paths=[
+        "/test",
+        "/",
+        "/apidocs",
+        "/flasgger_static/swagger-ui.css",
+        "/flasgger_static/swagger-ui-bundle.js",
+        "/flasgger_static/swagger-ui-standalone-preset.js",
+        "/flasgger_static/lib/jquery.min.js",
+        "/flasgger_static/favicon-32x32.png",
+    ],
+)
 
 
 @app.route("/", defaults={"path": ""})
@@ -85,7 +92,7 @@ def root(path):
 
 
 @app.route("/test")
-@swag_from('openapi/test.openapi.yml')
+@swag_from("openapi/test.openapi.yml")
 def verify_backend_alive():
     return {"Status": "Backend is alive"}
 

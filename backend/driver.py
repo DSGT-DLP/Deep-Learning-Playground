@@ -65,7 +65,7 @@ app.config['SWAGGER'] = {
     'basePath': '/'
 }
 
-swagger = Swagger(app, template_file='openapi/dlpapi.yml')
+swagger = Swagger(app, template_file='openapi/dlpapi.openapi.yml')
 
 app.wsgi_app = middleware(app.wsgi_app, exempt_paths=["/test", "/", "/apidocs", 
                                                       "/flasgger_static/swagger-ui.css", 
@@ -85,7 +85,7 @@ def root(path):
 
 
 @app.route("/test")
-@swag_from('openapi/test.yml')
+@swag_from('openapi/test.openapi.yml')
 def verify_backend_alive():
     return {"Status": "Backend is alive"}
 
@@ -249,7 +249,7 @@ def object_detection_run():
 
 
 @app.route("/api/sendEmail", methods=["POST"])
-@swag_from("openapi/sendEmail.yml")
+@swag_from("openapi/sendEmail.openapi.yml")
 def send_email_route():
     # extract data
     request_data = json.loads(request.data)
@@ -278,7 +278,7 @@ def send_email_route():
 
 
 @app.route("/api/sendUserCodeEval", methods=["POST"])
-@swag_from("openapi/sendUserCodeEval.yml")
+@swag_from("openapi/sendUserCodeEval.openapi.yml")
 def send_user_code_eval():
     try:
         request_data = json.loads(request.data)

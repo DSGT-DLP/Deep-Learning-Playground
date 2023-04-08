@@ -35,4 +35,4 @@ jobs:
 
       - name: Validate OpenAPI Schema
         run: |
-          spectral lint backend/openapi/*.openapi.yaml --ruleset=https://unpkg.com/@stoplight/spectral/rulesets/openapi.json
+          spectral lint backend/openapi/*.openapi.yaml --ruleset=https://unpkg.com/@stoplight/spectral/rulesets/openapi.json --verbose

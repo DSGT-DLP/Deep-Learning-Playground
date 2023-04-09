@@ -1,4 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  PayloadAction,
+  SerializedError,
+  createAsyncThunk,
+  createSlice,
+} from "@reduxjs/toolkit";
 //import { sendToBackend } from "../common/components/helper_functions/TalkWithBackend";
 import { ThunkApiType } from "./store";
 import {
@@ -45,26 +50,21 @@ interface UserProgressDataType {
   };
 }
 
-export const updateUserSettings = createAsyncThunk<
+export const updateUserPassword = createAsyncThunk<
   UserType | undefined,
-  {
-    displayName?: string;
-    email?: string;
-    password?: string;
-    checkPassword?: string;
-  },
+  { password?: string; checkPassword?: string },
   ThunkApiType
 >(
-  "currentUser/updateUserSettings",
-  async ({ displayName, email, password, checkPassword }, thunkAPI) => {
-    if (password && !checkPassword) {
-      return thunkAPI.rejectWithValue({
-        message: "Please retype your password",
-      });
-    }
-    if (!password && checkPassword) {
+  "currentUser/updateUserPassword",
+  async ({ password, checkPassword }, thunkAPI) => {
+    if (!password || password === "") {
       return thunkAPI.rejectWithValue({
         message: "Please enter your password",
+      });
+    }
+    if (!checkPassword || checkPassword === "") {
+      return thunkAPI.rejectWithValue({
+        message: "Please retype your password",
       });
     }
     if (password !== checkPassword) {
@@ -75,40 +75,15 @@ export const updateUserSettings = createAsyncThunk<
     try {
       const user = thunkAPI.getState().currentUser.user;
       if (!auth.currentUser || !isSignedIn(user)) {
-        const action = await thunkAPI.dispatch(signOutUser());
-        if (action.meta.requestStatus === "rejected") {
-          return thunkAPI.rejectWithValue(action.payload);
-        }
-        return;
+        return thunkAPI.rejectWithValue({
+          message: "User not signed in",
+        });
       }
-      if (displayName) {
-        const action = await thunkAPI.dispatch(
-          updateUserProfile({ displayName: displayName })
-        );
-        if (action.meta.requestStatus === "rejected") {
-          return thunkAPI.rejectWithValue(action.payload);
-        }
-      }
-      if (email) {
-        const action = await thunkAPI.dispatch(
-          updateUserEmail({ email: email })
-        );
-        if (action.meta.requestStatus === "rejected") {
-          return thunkAPI.rejectWithValue(action.payload);
-        }
-      }
-      if (password) {
-        const action = await thunkAPI.dispatch(
-          updateUserPassword({ password: password })
-        );
-        if (action.meta.requestStatus === "rejected") {
-          return thunkAPI.rejectWithValue(action.payload);
-        }
-      }
+      await updatePassword(auth.currentUser, password);
       return {
-        email: auth.currentUser.email,
-        uid: auth.currentUser.uid,
-        displayName: auth.currentUser.displayName,
+        email: user.email,
+        uid: user.uid,
+        displayName: user.displayName,
         emailVerified: user.emailVerified,
       } as UserType;
     } catch (e) {
@@ -122,50 +97,22 @@ export const updateUserSettings = createAsyncThunk<
   }
 );
 
-export const updateUserPassword = createAsyncThunk<
-  UserType | undefined,
-  { password: string },
-  ThunkApiType
->("currentUser/updateUserPassword", async ({ password }, thunkAPI) => {
-  try {
-    const user = thunkAPI.getState().currentUser.user;
-    if (!auth.currentUser || !isSignedIn(user)) {
-      const action = await thunkAPI.dispatch(signOutUser());
-      if (action.meta.requestStatus === "rejected") {
-        return thunkAPI.rejectWithValue(action.payload);
-      }
-      return;
-    }
-    await updatePassword(auth.currentUser, password);
-    return {
-      email: user.email,
-      uid: user.uid,
-      displayName: user.displayName,
-      emailVerified: user.emailVerified,
-    } as UserType;
-  } catch (e) {
-    if (e instanceof FirebaseError) {
-      return thunkAPI.rejectWithValue({ message: e.message });
-    }
-  }
-  return thunkAPI.rejectWithValue({
-    message: "Update password failed",
-  });
-});
-
 export const updateUserEmail = createAsyncThunk<
   UserType | undefined,
-  { email: string },
+  { email?: string },
   ThunkApiType
 >("currentUser/updateUserEmail", async ({ email }, thunkAPI) => {
+  if (!email || email === "") {
+    return thunkAPI.rejectWithValue({
+      message: "Please enter your email",
+    });
+  }
   try {
     const user = thunkAPI.getState().currentUser.user;
     if (!auth.currentUser || !isSignedIn(user)) {
-      const action = await thunkAPI.dispatch(signOutUser());
-      if (action.meta.requestStatus === "rejected") {
-        return thunkAPI.rejectWithValue(action.payload);
-      }
-      return;
+      return thunkAPI.rejectWithValue({
+        message: "User not signed in",
+      });
     }
     await updateEmail(auth.currentUser, email);
     return {
@@ -184,6 +131,42 @@ export const updateUserEmail = createAsyncThunk<
   });
 });
 
+export const updateUserDisplayName = createAsyncThunk<
+  UserType | undefined,
+  { displayName?: string },
+  ThunkApiType
+>("currentUser/updateUserProfile", async ({ displayName }, thunkAPI) => {
+  if (!displayName || displayName === "") {
+    return thunkAPI.rejectWithValue({
+      message: "Please enter your display name",
+    });
+  }
+  try {
+    const user = thunkAPI.getState().currentUser.user;
+    if (!auth.currentUser || !isSignedIn(user)) {
+      return thunkAPI.rejectWithValue({
+        message: "User not signed in",
+      });
+    }
+    return await thunkAPI
+      .dispatch(
+        updateUserProfile({
+          displayName: displayName,
+        })
+      )
+      .unwrap();
+  } catch (e) {
+    if ("message" in (e as SerializedError)) {
+      return thunkAPI.rejectWithValue({
+        message: (e as SerializedError).message,
+      });
+    }
+  }
+  return thunkAPI.rejectWithValue({
+    message: "Updating the user profile failed",
+  });
+});
+
 export const updateUserProfile = createAsyncThunk<
   UserType | undefined,
   { displayName?: string; photoURL?: string },
@@ -194,11 +177,9 @@ export const updateUserProfile = createAsyncThunk<
     try {
       const user = thunkAPI.getState().currentUser.user;
       if (!auth.currentUser || !isSignedIn(user)) {
-        const action = await thunkAPI.dispatch(signOutUser());
-        if (action.meta.requestStatus === "rejected") {
-          return thunkAPI.rejectWithValue(action.payload);
-        }
-        return;
+        return thunkAPI.rejectWithValue({
+          message: "User not signed in",
+        });
       }
       await updateProfile(auth.currentUser, {
         displayName: displayName,
@@ -384,7 +365,12 @@ export const currentUserSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(updateUserSettings.fulfilled, (state, { payload }) => {
+    builder.addCase(updateUserDisplayName.fulfilled, (state, { payload }) => {
+      if (payload) {
+        state.user = payload;
+      }
+    });
+    builder.addCase(updateUserEmail.fulfilled, (state, { payload }) => {
       if (payload) {
         state.user = payload;
       }

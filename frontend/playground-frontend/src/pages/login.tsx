@@ -25,6 +25,7 @@ import {
 import NavbarMain from "@/common/components/NavBarMain";
 import Link from "next/link";
 import Footer from "@/common/components/Footer";
+import { SerializedError } from "@reduxjs/toolkit";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -55,14 +56,14 @@ const Login = () => {
           style={{
             position: "relative",
           }}
-          onClick={() => {
-            dispatch(signInViaGoogleRedirect()).then((action) => {
-              action.meta.requestStatus === "fulfilled"
-                ? null
-                : toast.error((action.payload as Error).message, {
-                    position: toast.POSITION.TOP_CENTER,
-                  });
-            });
+          onClick={async () => {
+            try {
+              await dispatch(signInViaGoogleRedirect()).unwrap();
+            } catch (e) {
+              toast.error((e as SerializedError).message, {
+                position: toast.POSITION.TOP_CENTER,
+              });
+            }
           }}
         >
           <Image
@@ -75,14 +76,14 @@ const Login = () => {
         <Button
           className="login-button github"
           style={{ position: "relative" }}
-          onClick={() => {
-            dispatch(signInViaGithubRedirect()).then((action) => {
-              action.meta.requestStatus === "fulfilled"
-                ? null
-                : toast.error((action.payload as Error).message, {
-                    position: toast.POSITION.TOP_CENTER,
-                  });
-            });
+          onClick={async () => {
+            try {
+              await dispatch(signInViaGithubRedirect()).unwrap();
+            } catch (e) {
+              toast.error((e as SerializedError).message, {
+                position: toast.POSITION.TOP_CENTER,
+              });
+            }
           }}
         >
           <Image
@@ -146,34 +147,35 @@ const Login = () => {
         <Button
           id="log-in"
           className="mb-2"
-          onClick={() => {
+          onClick={async () => {
             if (isRegistering) {
-              dispatch(
-                registerViaEmailAndPassword({
-                  email,
-                  password,
-                  displayName: fullName,
-                  recaptcha: recaptcha,
-                })
-              ).then((action) => {
-                action.meta.requestStatus === "fulfilled"
-                  ? toast.success(`Welcome ${fullName}`, {
-                      position: toast.POSITION.TOP_CENTER,
-                    })
-                  : toast.error((action.payload as Error).message, {
-                      position: toast.POSITION.TOP_CENTER,
-                    });
-              });
+              try {
+                await dispatch(
+                  registerViaEmailAndPassword({
+                    email,
+                    password,
+                    displayName: fullName,
+                    recaptcha: recaptcha,
+                  })
+                ).unwrap();
+                toast.success(`Welcome ${fullName}`, {
+                  position: toast.POSITION.TOP_CENTER,
+                });
+              } catch (e) {
+                toast.error((e as SerializedError).message, {
+                  position: toast.POSITION.TOP_CENTER,
+                });
+              }
             } else {
-              dispatch(signInViaEmailAndPassword({ email, password })).then(
-                (action) => {
-                  action.meta.requestStatus === "fulfilled"
-                    ? null
-                    : toast.error((action.payload as Error).message, {
-                        position: toast.POSITION.TOP_CENTER,
-                      });
-                }
-              );
+              try {
+                await dispatch(
+                  signInViaEmailAndPassword({ email, password })
+                ).unwrap();
+              } catch (e) {
+                toast.error((e as SerializedError).message, {
+                  position: toast.POSITION.TOP_CENTER,
+                });
+              }
             }
           }}
         >

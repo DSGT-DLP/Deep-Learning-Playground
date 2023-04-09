@@ -2,11 +2,17 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
-import { isSignedIn, updateUserSettings } from "@/common/redux/userLogin";
+import {
+  isSignedIn,
+  updateUserDisplayName,
+  updateUserEmail,
+  updateUserPassword,
+} from "@/common/redux/userLogin";
 import { useRouter } from "next/router";
 import NavbarMain from "@/common/components/NavBarMain";
 import Footer from "@/common/components/Footer";
 import { toast } from "react-toastify";
+import { SerializedError } from "@reduxjs/toolkit";
 
 const SettingsBlock = () => {
   const [fullName, setFullName] = useState<string>("");
@@ -60,23 +66,65 @@ const SettingsBlock = () => {
       </Form.Group>
       <div
         className="email-buttons d-flex flex-column"
-        onClick={() => {
-          dispatch(
-            updateUserSettings({
-              displayName: fullName == "" ? undefined : fullName,
-              email: email == "" ? undefined : email,
-              password: password == "" ? undefined : password,
-              checkPassword: checkPassword == "" ? undefined : checkPassword,
-            })
-          ).then((action) => {
-            action.meta.requestStatus === "fulfilled"
-              ? toast.success("Successfully updated account settings", {
-                  position: toast.POSITION.TOP_CENTER,
-                })
-              : toast.error((action.payload as Error).message, {
-                  position: toast.POSITION.TOP_CENTER,
-                });
-          });
+        onClick={async () => {
+          if (
+            fullName !== "" ||
+            email !== "" ||
+            password !== "" ||
+            checkPassword !== ""
+          ) {
+            Promise.allSettled([
+              new Promise(async (_) => {
+                if (fullName) {
+                  try {
+                    await dispatch(
+                      updateUserDisplayName({ displayName: fullName })
+                    ).unwrap();
+                    toast.success("Successfully updated display name", {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
+                  } catch (e) {
+                    toast.error((e as SerializedError).message, {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
+                  }
+                }
+              }),
+              new Promise(async (_) => {
+                if (email) {
+                  try {
+                    await dispatch(updateUserEmail({ email: email })).unwrap();
+                    toast.success("Successfully updated email", {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
+                  } catch (e) {
+                    toast.error((e as SerializedError).message, {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
+                  }
+                }
+              }),
+              new Promise(async (_) => {
+                if (password) {
+                  try {
+                    await dispatch(
+                      updateUserPassword({
+                        password: password,
+                        checkPassword: checkPassword,
+                      })
+                    ).unwrap();
+                    toast.success("Successfully updated password", {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
+                  } catch (e) {
+                    toast.error((e as SerializedError).message, {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
+                  }
+                }
+              }),
+            ]);
+          }
         }}
       >
         <Button id="update-profile" className="mb-2">

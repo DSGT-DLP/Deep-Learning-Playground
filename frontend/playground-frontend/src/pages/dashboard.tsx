@@ -18,9 +18,6 @@ import {
 import "gestalt/dist/gestalt.css";
 import { useEffect, useState } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useNavigate } from "react-router-dom";
-import { sendToBackend } from "./common/components/helper_functions/TalkWithBackend";
-import { auth } from "./firebase";
 import JSZip from "jszip";
 import saveAs from "file-saver";
 import { Doughnut, Bar } from "react-chartjs-2";
@@ -39,7 +36,12 @@ import "chartjs-adapter-date-fns";
 import { enUS } from "date-fns/locale";
 import { format, isFuture, add } from "date-fns";
 import React from "react";
-import { DATA_SOURCE, EXECUTION_STATUS } from "./constants";
+import { useGetExecutionsDataQuery } from "@/common/redux/backendApi";
+import NavbarMain from "@/common/components/NavBarMain";
+import Footer from "@/common/components/Footer";
+import { useAppSelector } from "@/common/redux/hooks";
+import { useRouter } from "next/router";
+import { isSignedIn } from "@/common/redux/userLogin";
 
 ChartJS.register(
   ArcElement,
@@ -52,15 +54,16 @@ ChartJS.register(
 );
 
 const BlankGrid = () => {
-  const navigate = useNavigate();
-
   return (
     <div id="blank-grid-wrapper">
       <div id="blank-grid">
         <p>
           You haven't trained any models yet. Create your first model below!
         </p>
-        <button id="blank-grid-button" onClick={() => navigate("/")}>
+        <button
+          id="blank-grid-button"
+          onClick={() => console.log("To be implemented")}
+        >
           Train Model
         </button>
       </div>
@@ -69,12 +72,11 @@ const BlankGrid = () => {
 };
 
 const StatusDisplay = ({ statusType }: { statusType: string }) => {
-  const navigate = useNavigate();
   if (statusType === "QUEUED") {
     return (
       <button
         className="grid-status-display grid-status-display-gray"
-        onClick={() => navigate("/")}
+        onClick={() => console.log("To be implemented")}
       >
         Queued
       </button>
@@ -83,7 +85,7 @@ const StatusDisplay = ({ statusType }: { statusType: string }) => {
     return (
       <button
         className="grid-status-display grid-status-display-yellow"
-        onClick={() => navigate("/")}
+        onClick={() => console.log("To be implemented")}
       >
         Training...
       </button>
@@ -92,7 +94,7 @@ const StatusDisplay = ({ statusType }: { statusType: string }) => {
     return (
       <button
         className="grid-status-display grid-status-display-blue"
-        onClick={() => navigate("/")}
+        onClick={() => console.log("To be implemented")}
       >
         Uploading...
       </button>
@@ -101,7 +103,7 @@ const StatusDisplay = ({ statusType }: { statusType: string }) => {
     return (
       <button
         className="grid-status-display grid-status-display-blue"
-        onClick={() => navigate("/")}
+        onClick={() => console.log("To be implemented")}
       >
         Training...
       </button>
@@ -110,7 +112,7 @@ const StatusDisplay = ({ statusType }: { statusType: string }) => {
     return (
       <button
         className="grid-status-display grid-status-display-red"
-        onClick={() => navigate("/")}
+        onClick={() => console.log("To be implemented")}
       >
         Error
       </button>
@@ -119,7 +121,7 @@ const StatusDisplay = ({ statusType }: { statusType: string }) => {
     return (
       <button
         className="grid-status-display grid-status-display-green"
-        onClick={() => navigate("/")}
+        onClick={() => console.log("To be implemented")}
       >
         Done <ArrowForwardIcon fontSize="small" />
       </button>
@@ -158,6 +160,21 @@ const formatDate = (date: Date) => {
   );
 };
 
+export type DATA_SOURCE =
+  | "TABULAR"
+  | "PRETRAINED"
+  | "IMAGE"
+  | "AUDIO"
+  | "TEXTUAL"
+  | "CLASSICAL_ML"
+  | "OBJECT_DETECTION";
+export type EXECUTION_STATUS =
+  | "QUEUED"
+  | "STARTING"
+  | "UPLOADING"
+  | "TRAINING"
+  | "SUCCESS"
+  | "ERROR";
 export interface Execution {
   name: string;
   execution_id: number;
@@ -169,7 +186,6 @@ export interface Execution {
 
 const FilledGrid = (props: { executionTable: Execution[] }) => {
   const { executionTable } = props;
-  const navigate = useNavigate();
   function toTitleCase(str: string) {
     return str.replace(/\w\S*/g, function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
@@ -177,6 +193,7 @@ const FilledGrid = (props: { executionTable: Execution[] }) => {
   }
   async function handleOnDownloadClick(e: unknown, row: Execution) {
     (e as Event).stopPropagation();
+    /*
     const response = await sendToBackend("getExecutionsFilesPresignedUrls", {
       exec_id: row.execution_id,
     });
@@ -198,7 +215,7 @@ const FilledGrid = (props: { executionTable: Execution[] }) => {
     );
     zip
       .generateAsync({ type: "blob" })
-      .then((blob) => saveAs(blob, "results.zip"));
+      .then((blob) => saveAs(blob, "results.zip"));*/
   }
   return (
     <>
@@ -225,7 +242,7 @@ const FilledGrid = (props: { executionTable: Execution[] }) => {
                     "&:last-child td, &:last-child th": { border: 0 },
                     cursor: "pointer",
                   }}
-                  onClick={() => navigate("/")}
+                  onClick={() => console.log("To be implemented")}
                   hover
                 >
                   <TableCell
@@ -264,37 +281,53 @@ const FilledGrid = (props: { executionTable: Execution[] }) => {
 };
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-  const [executionTable, setUserExecutionTable] = useState<Execution[] | null>(
-    null
-  );
-  const [isLoading, setIsLoading] = useState(false);
   const [modelTypeDoughnutData, setModelTypeDoughnutData] =
     useState<ChartData<"doughnut"> | null>(null);
   const [execFrequencyBarData, setExecFrequencyBarData] = useState<ChartData<
     "bar",
     { x: Date; y: number }[]
   > | null>(null);
+  const {
+    data: executionTable,
+    isLoading: executionTableLoading,
+    refetch: refetchExecutionTable,
+  } = useGetExecutionsDataQuery();
+  const user = useAppSelector((state) => state.currentUser.user);
+  const router = useRouter();
   useEffect(() => {
-    if (auth.currentUser) navigate("/dashboard");
-    getExecutionTable();
-  }, [auth.currentUser]);
-  const getExecutionTable = async () => {
-    if (auth.currentUser) {
-      setIsLoading(true);
-      const response = await sendToBackend("getExecutionsData", {});
-      const table: Execution[] = JSON.parse(response["record"]);
-      table.sort(
-        (a, b) =>
-          new Date(b.timestamp).valueOf() - new Date(a.timestamp).valueOf()
-      );
-      setUserExecutionTable(table);
+    if (!user) {
+      router.replace("/login");
+    }
+  }, [user]);
+  useEffect(() => {
+    if (executionTable) {
       setModelTypeDoughnutData({
         datasets: [
           {
             data: [
-              table.filter((row) => row.data_source === "TABULAR").length,
-              table.filter((row) => row.data_source === "IMAGE").length,
+              executionTable.filter((row) => row.data_source === "TABULAR")
+                .length,
+              executionTable.filter((row) => row.data_source === "IMAGE")
+                .length,
+            ],
+            backgroundColor: [
+              "rgb(255, 99, 132)",
+              "rgb(54, 162, 235)",
+              "rgb(255, 205, 86)",
+            ],
+            label: "Frequency",
+          },
+        ],
+        labels: ["Tabular", "Image"],
+      });
+      setModelTypeDoughnutData({
+        datasets: [
+          {
+            data: [
+              executionTable.filter((row) => row.data_source === "TABULAR")
+                .length,
+              executionTable.filter((row) => row.data_source === "IMAGE")
+                .length,
             ],
             backgroundColor: [
               "rgb(255, 99, 132)",
@@ -318,7 +351,7 @@ const Dashboard = () => {
         return d;
       };
       const execFrequencyData: { x: Date; y: number }[] = [];
-      table.forEach((row) => {
+      executionTable.forEach((row) => {
         if (isFuture(add(new Date(row.timestamp), { days: 30 }))) {
           execFrequencyData.length !== 0 &&
           sameDay(
@@ -344,119 +377,123 @@ const Dashboard = () => {
           },
         ],
       });
-      setIsLoading(false);
-    } else {
-      setUserExecutionTable(null);
     }
-  };
+  }, [executionTable]);
+  if (!isSignedIn(user)) {
+    return <></>;
+  }
   return (
-    <div id="dashboard">
-      <>
-        <PageHeader
-          maxWidth="85%"
-          title="Dashboard"
-          primaryAction={{
-            component: (
-              <Button
-                color="red"
-                size="md"
-                iconEnd="refresh"
-                text="Refresh"
-                onClick={() => {
-                  getExecutionTable();
-                }}
-              />
-            ),
-            dropdownItems: [
-              <Dropdown.Item
-                key="refresh"
-                option={{ value: "refresh", label: "Refresh" }}
-                onSelect={() => {
-                  getExecutionTable();
-                }}
-              />,
-            ],
-          }}
-          dropdownAccessibilityLabel="More options"
-        />
-        <Flex
-          direction="row"
-          justifyContent="center"
-          alignItems="stretch"
-          width="100%"
-          wrap
-        >
-          {modelTypeDoughnutData ? (
-            <Box>
-              <Doughnut data={modelTypeDoughnutData} />
-            </Box>
+    <>
+      <NavbarMain />
+      <div id="dashboard">
+        <>
+          <PageHeader
+            maxWidth="85%"
+            title="Dashboard"
+            primaryAction={{
+              component: (
+                <Button
+                  color="red"
+                  size="md"
+                  iconEnd="refresh"
+                  text="Refresh"
+                  onClick={() => {
+                    refetchExecutionTable();
+                  }}
+                />
+              ),
+              dropdownItems: [
+                <Dropdown.Item
+                  key="refresh"
+                  option={{ value: "refresh", label: "Refresh" }}
+                  onSelect={() => {
+                    refetchExecutionTable();
+                  }}
+                />,
+              ],
+            }}
+            dropdownAccessibilityLabel="More options"
+          />
+          <Flex
+            direction="row"
+            justifyContent="center"
+            alignItems="stretch"
+            width="100%"
+            wrap
+          >
+            {modelTypeDoughnutData ? (
+              <Box>
+                <Doughnut data={modelTypeDoughnutData} />
+              </Box>
+            ) : null}
+            {execFrequencyBarData ? (
+              <Box height={300} width={300}>
+                <Bar
+                  data={execFrequencyBarData}
+                  options={{
+                    maintainAspectRatio: false,
+                    scales: {
+                      x: {
+                        adapters: {
+                          date: {
+                            locale: enUS,
+                          },
+                        },
+                        ticks: {
+                          maxRotation: 80,
+                          minRotation: 80,
+                        },
+                        type: "timeseries",
+                        time: {
+                          unit: "day",
+                          minUnit: "day",
+                          displayFormats: {
+                            day: "MMM dd",
+                          },
+                        },
+                      },
+                      y: {
+                        beginAtZero: true,
+                      },
+                    },
+                    responsive: true,
+                    plugins: {
+                      tooltip: {
+                        callbacks: {
+                          title: (context) => {
+                            return format(
+                              execFrequencyBarData.datasets[0].data[
+                                context[0].dataIndex
+                              ].x,
+                              "MMM d"
+                            );
+                          },
+                        },
+                      },
+                      legend: {
+                        display: false,
+                      },
+                      title: {
+                        display: true,
+                        text: "Training Frequency",
+                      },
+                    },
+                  }}
+                />
+              </Box>
+            ) : null}
+          </Flex>
+          {executionTable && <FilledGrid executionTable={executionTable} />}
+          {executionTable && executionTable.length === 0 && <BlankGrid />}
+          {executionTableLoading ? (
+            <div className="loading">
+              <Spinner show accessibilityLabel="Spinner" />
+            </div>
           ) : null}
-          {execFrequencyBarData ? (
-            <Box height={300} width={300}>
-              <Bar
-                data={execFrequencyBarData}
-                options={{
-                  maintainAspectRatio: false,
-                  scales: {
-                    x: {
-                      adapters: {
-                        date: {
-                          locale: enUS,
-                        },
-                      },
-                      ticks: {
-                        maxRotation: 80,
-                        minRotation: 80,
-                      },
-                      type: "timeseries",
-                      time: {
-                        unit: "day",
-                        minUnit: "day",
-                        displayFormats: {
-                          day: "MMM dd",
-                        },
-                      },
-                    },
-                    y: {
-                      beginAtZero: true,
-                    },
-                  },
-                  responsive: true,
-                  plugins: {
-                    tooltip: {
-                      callbacks: {
-                        title: (context) => {
-                          return format(
-                            execFrequencyBarData.datasets[0].data[
-                              context[0].dataIndex
-                            ].x,
-                            "MMM d"
-                          );
-                        },
-                      },
-                    },
-                    legend: {
-                      display: false,
-                    },
-                    title: {
-                      display: true,
-                      text: "Training Frequency",
-                    },
-                  },
-                }}
-              />
-            </Box>
-          ) : null}
-        </Flex>
-        {executionTable && <FilledGrid executionTable={executionTable} />}
-        {executionTable && executionTable.length === 0 && <BlankGrid />}
-        {isLoading ? (
-          <div className="loading">
-            <Spinner show accessibilityLabel="Spinner" />
-          </div>
-        ) : null}
-      </>
-    </div>
+        </>
+      </div>
+      <Footer />
+    </>
   );
 };
 

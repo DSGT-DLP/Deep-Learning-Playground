@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import Image from "next/image";
 import {
+  isSignedIn,
   registerViaEmailAndPassword,
   signInViaEmailAndPassword,
   signInViaGithubRedirect,
@@ -26,6 +27,7 @@ import NavbarMain from "@/common/components/NavBarMain";
 import Link from "next/link";
 import Footer from "@/common/components/Footer";
 import { SerializedError } from "@reduxjs/toolkit";
+import { useRouter } from "next/router";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -33,8 +35,14 @@ const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [recaptcha, setRecaptcha] = useState<string | null>(null);
+  const user = useAppSelector((state) => state.currentUser.user);
+  const router = useRouter();
   const dispatch = useAppDispatch();
-
+  useEffect(() => {
+    if (isSignedIn(user)) {
+      router.replace("/dashboard");
+    }
+  }, [user]);
   const Title = (
     <>
       <h1 className="title mb-5">
@@ -191,7 +199,9 @@ const Login = () => {
       </div>
     </>
   );
-
+  if (user != undefined) {
+    return <></>;
+  }
   return (
     <>
       <NavbarMain />

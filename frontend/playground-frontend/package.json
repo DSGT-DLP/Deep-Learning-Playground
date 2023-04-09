@@ -35,7 +35,6 @@
     "firebase": "^9.9.3",
     "gestalt": "^101.3.9",
     "gestalt-datepicker": "^101.3.9",
-    "http-proxy-middleware": "^2.0.6",
     "jszip": "^3.10.1",
     "local-storage-fallback": "^4.1.2",
     "next": "^13.2.4",

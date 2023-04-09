@@ -15,13 +15,13 @@ import GithubLogo from "/public/images/logos/github.png";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
-import { User } from "firebase/auth";
 import Image from "next/image";
 import {
+  registerViaEmailAndPassword,
+  signInViaEmailAndPassword,
   signInViaGithubRedirect,
   signInViaGoogleRedirect,
 } from "@/common/redux/userLogin";
-import { useRouter } from "next/router";
 import NavbarMain from "@/common/components/NavBarMain";
 import Link from "next/link";
 import Footer from "@/common/components/Footer";
@@ -33,40 +33,6 @@ const Login = () => {
   const [password, setPassword] = useState<string>("");
   const [recaptcha, setRecaptcha] = useState<string | null>(null);
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.currentUser.user);
-  const router = useRouter();
-  useEffect(() => {
-    console.log(user);
-  });
-
-  const handleSignInRegister = async () => {
-    //let newUser: User | null = null;
-    if (isRegistering) {
-      if (!recaptcha) {
-        toast.error("Please complete recaptcha");
-      } else if (fullName === "") {
-        toast.error("Please enter a name");
-      } else if (email === "") {
-        toast.error("Please enter an email");
-      } else if (password === "") {
-        toast.error("Please enter a password");
-      } else {
-        //newUser = await registerWithPassword(email, password, fullName);
-      }
-    } else {
-      //newUser = await signInWithPassword(email, password);
-    } /*
-    if (!newUser || !newUser.email || !newUser.displayName) return;
-    const userData = {
-      email: newUser.email,
-      uid: newUser.uid,
-      displayName: newUser.displayName,
-      emailVerified: newUser.emailVerified,
-    };
-    dispatch(setCurrentUser(userData));
-
-    navigate("/dashboard");*/
-  };
 
   const Title = (
     <>
@@ -90,7 +56,13 @@ const Login = () => {
             position: "relative",
           }}
           onClick={() => {
-            dispatch(signInViaGoogleRedirect());
+            dispatch(signInViaGoogleRedirect()).then((action) => {
+              action.meta.requestStatus === "fulfilled"
+                ? null
+                : toast.error((action.payload as Error).message, {
+                    position: toast.POSITION.TOP_CENTER,
+                  });
+            });
           }}
         >
           <Image
@@ -104,7 +76,13 @@ const Login = () => {
           className="login-button github"
           style={{ position: "relative" }}
           onClick={() => {
-            dispatch(signInViaGithubRedirect());
+            dispatch(signInViaGithubRedirect()).then((action) => {
+              action.meta.requestStatus === "fulfilled"
+                ? null
+                : toast.error((action.payload as Error).message, {
+                    position: toast.POSITION.TOP_CENTER,
+                  });
+            });
           }}
         >
           <Image
@@ -155,16 +133,6 @@ const Login = () => {
           </div>
         )}
       </Form.Group>
-
-      <div className="email-buttons d-flex flex-column">
-        <Button id="log-in" className="mb-2" onClick={handleSignInRegister}>
-          {isRegistering ? "Register" : "Log in"}
-        </Button>
-        <a href="#" id="sign-up" onClick={() => setIsRegistering((e) => !e)}>
-          {isRegistering ? "Log in" : "Register"}
-        </a>
-      </div>
-
       {isRegistering && process.env.REACT_APP_CAPTCHA_SITE_KEY && (
         <div className="reCaptcha">
           <ReCAPTCHA
@@ -174,6 +142,51 @@ const Login = () => {
           />
         </div>
       )}
+      <div className="email-buttons d-flex flex-column">
+        <Button
+          id="log-in"
+          className="mb-2"
+          onClick={() => {
+            if (isRegistering) {
+              dispatch(
+                registerViaEmailAndPassword({
+                  email,
+                  password,
+                  displayName: fullName,
+                  recaptcha: recaptcha,
+                })
+              ).then((action) => {
+                action.meta.requestStatus === "fulfilled"
+                  ? toast.success(`Welcome ${fullName}`, {
+                      position: toast.POSITION.TOP_CENTER,
+                    })
+                  : toast.error((action.payload as Error).message, {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
+              });
+            } else {
+              dispatch(signInViaEmailAndPassword({ email, password })).then(
+                (action) => {
+                  action.meta.requestStatus === "fulfilled"
+                    ? null
+                    : toast.error((action.payload as Error).message, {
+                        position: toast.POSITION.TOP_CENTER,
+                      });
+                }
+              );
+            }
+          }}
+        >
+          {isRegistering ? "Register" : "Log in"}
+        </Button>
+        <Button
+          variant="outline-dark"
+          id="sign-up"
+          onClick={() => setIsRegistering((e) => !e)}
+        >
+          {isRegistering ? "Log in" : "Register"}
+        </Button>
+      </div>
     </>
   );
 

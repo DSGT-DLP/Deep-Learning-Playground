@@ -95,10 +95,10 @@ const NavbarMain = () => {
               <Nav.Link href={URLs.donate}>Donate</Nav.Link>
               {isSignedIn(user) ? (
                 <NavDropdown title="Account" id="basic-nav-dropdown">
-                  <Link href="/" passHref legacyBehavior>
+                  <Link href="/dashboard" passHref legacyBehavior>
                     <NavDropdown.Item>Dashboard</NavDropdown.Item>
                   </Link>
-                  <Link href="/account-settings" passHref legacyBehavior>
+                  <Link href="/settings" passHref legacyBehavior>
                     <NavDropdown.Item>Settings</NavDropdown.Item>
                   </Link>
                   <Link href="/learn-mod" passHref legacyBehavior>

@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 //import { sendToBackend } from "../common/components/helper_functions/TalkWithBackend";
-import { AppDispatch, ThunkApiType } from "./store";
+import { ThunkApiType } from "./store";
 import {
   GithubAuthProvider,
   GoogleAuthProvider,
@@ -24,7 +24,7 @@ export interface UserState {
 export interface UserType {
   email: string;
   uid: string;
-  displayName?: string;
+  displayName: string;
   emailVerified: boolean;
 }
 export const isSignedIn = (
@@ -45,18 +45,104 @@ interface UserProgressDataType {
   };
 }
 
+export const updateUserSettings = createAsyncThunk<
+  UserType | undefined,
+  {
+    displayName?: string;
+    email?: string;
+    password?: string;
+    checkPassword?: string;
+  },
+  ThunkApiType
+>(
+  "currentUser/updateUserSettings",
+  async ({ displayName, email, password, checkPassword }, thunkAPI) => {
+    if (password && !checkPassword) {
+      return thunkAPI.rejectWithValue({
+        message: "Please retype your password",
+      });
+    }
+    if (!password && checkPassword) {
+      return thunkAPI.rejectWithValue({
+        message: "Please enter your password",
+      });
+    }
+    if (password !== checkPassword) {
+      return thunkAPI.rejectWithValue({
+        message: "Passwords do not match",
+      });
+    }
+    try {
+      const user = thunkAPI.getState().currentUser.user;
+      if (!auth.currentUser || !isSignedIn(user)) {
+        const action = await thunkAPI.dispatch(signOutUser());
+        if (action.meta.requestStatus === "rejected") {
+          return thunkAPI.rejectWithValue(action.payload);
+        }
+        return;
+      }
+      if (displayName) {
+        const action = await thunkAPI.dispatch(
+          updateUserProfile({ displayName: displayName })
+        );
+        if (action.meta.requestStatus === "rejected") {
+          return thunkAPI.rejectWithValue(action.payload);
+        }
+      }
+      if (email) {
+        const action = await thunkAPI.dispatch(
+          updateUserEmail({ email: email })
+        );
+        if (action.meta.requestStatus === "rejected") {
+          return thunkAPI.rejectWithValue(action.payload);
+        }
+      }
+      if (password) {
+        const action = await thunkAPI.dispatch(
+          updateUserPassword({ password: password })
+        );
+        if (action.meta.requestStatus === "rejected") {
+          return thunkAPI.rejectWithValue(action.payload);
+        }
+      }
+      return {
+        email: auth.currentUser.email,
+        uid: auth.currentUser.uid,
+        displayName: auth.currentUser.displayName,
+        emailVerified: user.emailVerified,
+      } as UserType;
+    } catch (e) {
+      if (e instanceof FirebaseError) {
+        return thunkAPI.rejectWithValue({ message: e.message });
+      }
+    }
+    return thunkAPI.rejectWithValue({
+      message: "Update password failed",
+    });
+  }
+);
+
 export const updateUserPassword = createAsyncThunk<
-  void,
+  UserType | undefined,
   { password: string },
   ThunkApiType
 >("currentUser/updateUserPassword", async ({ password }, thunkAPI) => {
   try {
-    if (!auth.currentUser) {
-      await thunkAPI.dispatch(signOutUser());
+    const user = thunkAPI.getState().currentUser.user;
+    if (!auth.currentUser || !isSignedIn(user)) {
+      const action = await thunkAPI.dispatch(signOutUser());
+      if (action.meta.requestStatus === "rejected") {
+        return thunkAPI.rejectWithValue(action.payload);
+      }
       return;
     }
     await updatePassword(auth.currentUser, password);
-    return;
+    return {
+      email: user.email,
+      uid: user.uid,
+      displayName: user.displayName,
+      emailVerified: user.emailVerified,
+    } as UserType;
   } catch (e) {
     if (e instanceof FirebaseError) {
       return thunkAPI.rejectWithValue({ message: e.message });
@@ -68,17 +154,26 @@ export const updateUserPassword = createAsyncThunk<
 });
 
 export const updateUserEmail = createAsyncThunk<
-  void,
+  UserType | undefined,
   { email: string },
   ThunkApiType
 >("currentUser/updateUserEmail", async ({ email }, thunkAPI) => {
   try {
-    if (!auth.currentUser) {
-      await thunkAPI.dispatch(signOutUser());
+    const user = thunkAPI.getState().currentUser.user;
+    if (!auth.currentUser || !isSignedIn(user)) {
+      const action = await thunkAPI.dispatch(signOutUser());
+      if (action.meta.requestStatus === "rejected") {
+        return thunkAPI.rejectWithValue(action.payload);
+      }
       return;
     }
     await updateEmail(auth.currentUser, email);
-    return;
+    return {
+      email: auth.currentUser.email,
+      uid: user.uid,
+      displayName: user.displayName,
+      emailVerified: user.emailVerified,
+    } as UserType;
   } catch (e) {
     if (e instanceof FirebaseError) {
       return thunkAPI.rejectWithValue({ message: e.message });
@@ -90,22 +185,31 @@ export const updateUserEmail = createAsyncThunk<
 });
 
 export const updateUserProfile = createAsyncThunk<
-  void,
+  UserType | undefined,
   { displayName?: string; photoURL?: string },
   ThunkApiType
 >(
   "currentUser/updateUserProfile",
   async ({ displayName, photoURL }, thunkAPI) => {
     try {
-      if (!auth.currentUser) {
-        await thunkAPI.dispatch(signOutUser());
+      const user = thunkAPI.getState().currentUser.user;
+      if (!auth.currentUser || !isSignedIn(user)) {
+        const action = await thunkAPI.dispatch(signOutUser());
+        if (action.meta.requestStatus === "rejected") {
+          return thunkAPI.rejectWithValue(action.payload);
+        }
         return;
       }
       await updateProfile(auth.currentUser, {
         displayName: displayName,
         photoURL: photoURL,
       });
-      return;
+      return {
+        email: user.email,
+        uid: user.uid,
+        displayName: auth.currentUser.displayName,
+        emailVerified: user.emailVerified,
+      } as UserType;
     } catch (e) {
       if (e instanceof FirebaseError) {
         return thunkAPI.rejectWithValue({ message: e.message });
@@ -118,12 +222,37 @@ export const updateUserProfile = createAsyncThunk<
 );
 
 export const registerViaEmailAndPassword = createAsyncThunk<
-  void,
-  { email: string; password: string; displayName?: string },
+  UserType,
+  {
+    email: string;
+    password: string;
+    displayName: string;
+    recaptcha: string | null;
+  },
   ThunkApiType
 >(
   "currentUser/registerViaEmailAndPassword",
-  async ({ email, password, displayName }, thunkAPI) => {
+  async ({ email, password, displayName, recaptcha }, thunkAPI) => {
+    if (!recaptcha) {
+      return thunkAPI.rejectWithValue({
+        message: "Please complete the recaptcha",
+      });
+    }
+    if (email === "") {
+      return thunkAPI.rejectWithValue({
+        message: "Please enter your email",
+      });
+    }
+    if (password === "") {
+      return thunkAPI.rejectWithValue({
+        message: "Please enter your password",
+      });
+    }
+    if (displayName === "") {
+      return thunkAPI.rejectWithValue({
+        message: "Please enter your display name",
+      });
+    }
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -131,9 +260,15 @@ export const registerViaEmailAndPassword = createAsyncThunk<
         password
       );
       const user = userCredential.user;
-      await updateProfile(user, { displayName: displayName });
-      storage.setItem("expect-user", "true");
-      return;
+      if (displayName) {
+        await updateProfile(user, { displayName: displayName });
+      }
+      return {
+        email: user.email,
+        uid: user.uid,
+        displayName: user.displayName,
+        emailVerified: user.emailVerified,
+      } as UserType;
     } catch (e) {
       if (e instanceof FirebaseError) {
         return thunkAPI.rejectWithValue({ message: e.message });
@@ -154,7 +289,6 @@ export const signInViaEmailAndPassword = createAsyncThunk<
   async ({ email, password }, thunkAPI) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      storage.setItem("expect-user", "true");
       return;
     } catch (e) {
       if (e instanceof FirebaseError) {
@@ -174,7 +308,6 @@ export const signInViaGoogleRedirect = createAsyncThunk<
 >("currentUser/signInViaGoogle", async (_, thunkAPI) => {
   try {
     const googleProvider = new GoogleAuthProvider();
-    storage.setItem("expect-user", "true");
     await signInWithRedirect(auth, googleProvider);
     return;
   } catch (e) {
@@ -192,7 +325,6 @@ export const signInViaGithubRedirect = createAsyncThunk<
 >("currentUser/signInViaGitHub", async (_, thunkAPI) => {
   try {
     const githubProvider = new GithubAuthProvider();
-    storage.setItem("expect-user", "true");
     await signInWithRedirect(auth, githubProvider);
     return;
   } catch (e) {
@@ -237,7 +369,7 @@ export const fetchUserProgressData = createAsyncThunk<
 
 export const currentUserSlice = createSlice({
   name: "currentUser",
-  initialState: {} as UserState,
+  initialState: { user: "pending" } as UserState,
   reducers: {
     setCurrentUser: (
       state,
@@ -252,6 +384,21 @@ export const currentUserSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(updateUserSettings.fulfilled, (state, { payload }) => {
+      if (payload) {
+        state.user = payload;
+      }
+    });
+    builder.addCase(registerViaEmailAndPassword.pending, (state) => {
+      state.user = "pending";
+    });
+    builder.addCase(
+      registerViaEmailAndPassword.fulfilled,
+      (state, { payload }) => {
+        storage.setItem("expect-user", "true");
+        state.user = payload;
+      }
+    );
     builder.addCase(signOutUser.fulfilled, (state) => {
       state.user = undefined;
     });

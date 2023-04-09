@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-toastify/dist/ReactToastify.css";
 import "@/common/styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -11,35 +12,44 @@ import { auth } from "@/common/utils/firebase";
 import store from "@/common/redux/store";
 import storage from "local-storage-fallback";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
+import { ToastContainer } from "react-toastify";
 //import { wrapper } from "@/common/redux/store";
 
 const FirebaseAuthState = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.currentUser.user);
+  const [isExpectingUser, setIsExpectingUser] = React.useState(true);
   useEffect(() => {
     const expectUser = storage.getItem("expect-user");
     if (expectUser) {
-      dispatch(setCurrentUser("pending"));
       setTimeout(() => {
-        if (user == "pending") {
-          storage.removeItem("expect-user");
-          dispatch(setCurrentUser(undefined));
-        }
+        setIsExpectingUser(false);
       }, 3000);
+    } else {
+      if (user == "pending") {
+        dispatch(setCurrentUser(undefined));
+      }
     }
     auth.onAuthStateChanged((firebaseUser) => {
-      if (firebaseUser && firebaseUser.email) {
+      if (firebaseUser && firebaseUser.email && firebaseUser.displayName) {
+        storage.setItem("expect-user", "true");
         dispatch(
           setCurrentUser({
             email: firebaseUser.email,
             uid: firebaseUser.uid,
-            displayName: firebaseUser.displayName ?? undefined,
+            displayName: firebaseUser.displayName,
             emailVerified: firebaseUser.emailVerified,
           })
         );
       }
     });
   }, []);
+  useEffect(() => {
+    if (!isExpectingUser && user == "pending") {
+      storage.removeItem("expect-user");
+      dispatch(setCurrentUser(undefined));
+    }
+  }, [isExpectingUser, user]);
   return <></>;
 };
 const App = ({ Component, pageProps }: AppProps) => {
@@ -66,6 +76,7 @@ const App = ({ Component, pageProps }: AppProps) => {
       <Provider store={store}>
         <FirebaseAuthState />
         <Component {...pageProps} />
+        <ToastContainer />
       </Provider>
     </>
   );

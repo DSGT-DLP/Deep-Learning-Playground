@@ -5,6 +5,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Button as MuiButton,
+  Typography,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import {
   Box,
@@ -45,7 +49,18 @@ import { isSignedIn } from "@/common/redux/userLogin";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { DataGrid } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridAddIcon,
+  GridColDef,
+  GridDeleteIcon,
+  GridToolbar,
+  GridToolbarContainer,
+  GridToolbarDensitySelector,
+  GridToolbarExport,
+  GridToolbarFilterButton,
+} from "@mui/x-data-grid";
+import { ArrowDropDown, KeyboardArrowDown, Margin } from "@mui/icons-material";
 
 ChartJS.register(
   ArcElement,
@@ -284,6 +299,96 @@ const FilledGrid = (props: { executionTable: Execution[] }) => {
   );
 };
 
+const GridPlayButton = ({ rowElement }: { rowElement: HTMLDivElement }) => {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    rowElement.onmouseenter = () => setVisible(true);
+    rowElement.onmouseleave = () => setVisible(false);
+  }, []);
+  return (
+    <>
+      {visible ? (
+        <IconButton
+          accessibilityLabel="Open"
+          icon="play"
+          onClick={(e) => {
+            e.event.stopPropagation();
+            console.log("To be implemented");
+          }}
+        />
+      ) : null}
+    </>
+  );
+};
+
+const CustomGridToolBar = () => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  return (
+    <>
+      <Typography variant="h2" fontSize={25} margin={2}>
+        Train Spaces
+      </Typography>
+
+      <GridToolbarContainer>
+        <MuiButton
+          variant="contained"
+          startIcon={<GridAddIcon></GridAddIcon>}
+          style={{ margin: "10px" }}
+          endIcon={<KeyboardArrowDown></KeyboardArrowDown>}
+          onClick={(e) => setAnchorEl(e.currentTarget)}
+        >
+          New Train Space
+        </MuiButton>
+        <NewTrainSpaceMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector />
+        <GridToolbarExport />
+        <MuiButton variant="text" startIcon={<GridDeleteIcon></GridDeleteIcon>}>
+          Delete
+        </MuiButton>
+      </GridToolbarContainer>
+    </>
+  );
+};
+
+const NewTrainSpaceMenu = ({
+  anchorEl,
+  setAnchorEl,
+}: {
+  anchorEl: null | HTMLElement;
+  setAnchorEl: React.Dispatch<React.SetStateAction<null | HTMLElement>>;
+}) => {
+  const open = Boolean(anchorEl);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  return (
+    <div>
+      <Menu
+        MenuListProps={{
+          "aria-labelledby": "demo-customized-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={handleClose} disableRipple>
+          Tabular
+        </MenuItem>
+        <MenuItem onClick={handleClose} disableRipple>
+          Image
+        </MenuItem>
+        <MenuItem onClick={handleClose} disableRipple>
+          Classical ML
+        </MenuItem>
+        <MenuItem onClick={handleClose} disableRipple>
+          Object Detection
+        </MenuItem>
+      </Menu>
+    </div>
+  );
+};
+
 const Dashboard = () => {
   const [modelTypeDoughnutData, setModelTypeDoughnutData] =
     useState<ChartData<"doughnut"> | null>(null);
@@ -296,6 +401,7 @@ const Dashboard = () => {
     isLoading: executionTableLoading,
     refetch: refetchExecutionTable,
   } = useGetExecutionsDataQuery();
+
   const user = useAppSelector((state) => state.currentUser.user);
   const router = useRouter();
   useEffect(() => {
@@ -488,27 +594,71 @@ const Dashboard = () => {
             ) : null}
           </Flex>
           {executionTable && (
-            <div style={{ width: "100%" }}>
+            <div
+              style={{
+                minWidth: "900px",
+                width: "75%",
+                margin: "auto",
+              }}
+            >
               <DataGrid
                 initialState={{
                   sorting: {
                     sortModel: [{ field: "timestamp", sort: "desc" }],
                   },
+                  pagination: { paginationModel: { pageSize: 10, page: 0 } },
                 }}
                 rows={executionTable}
                 getRowId={(row) => row.execution_id}
                 autoHeight
+                disableColumnMenu
+                slots={{
+                  toolbar: CustomGridToolBar,
+                }}
+                density="comfortable"
                 columns={[
-                  { field: "name", headerName: "Name", width: 300 },
-                  { field: "data_source", width: 150 },
+                  {
+                    field: "train",
+                    width: 75,
+                    filterable: false,
+                    sortable: false,
+                    hideable: false,
+                    disableColumnMenu: true,
+                    renderHeader: (_) => {
+                      return (
+                        <div style={{ width: "45px", textAlign: "center" }}>
+                          Train
+                        </div>
+                      );
+                    },
+                    renderCell: (params) => {
+                      const rowElement = params.api.getRowElement(params.id);
+                      if (rowElement) {
+                        return <GridPlayButton rowElement={rowElement} />;
+                      }
+                    },
+                  },
+                  { field: "name", headerName: "Name", flex: 2, minWidth: 300 },
+                  {
+                    field: "data_source",
+                    headerName: "Source",
+                    flex: 1,
+                    minWidth: 150,
+                  },
                   {
                     field: "timestamp",
                     headerName: "Date",
-                    width: 150,
+                    flex: 1,
+                    minWidth: 150,
                     valueFormatter: (params) =>
                       formatDate(new Date(params.value)),
                   },
-                  { field: "status", width: 150 },
+                  {
+                    field: "status",
+                    headerName: "Status",
+                    flex: 1,
+                    minWidth: 150,
+                  },
                 ]}
                 checkboxSelection
               />

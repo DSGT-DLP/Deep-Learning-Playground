@@ -42,6 +42,10 @@ import Footer from "@/common/components/Footer";
 import { useAppSelector } from "@/common/redux/hooks";
 import { useRouter } from "next/router";
 import { isSignedIn } from "@/common/redux/userLogin";
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-alpine.css";
+import { DataGrid } from "@mui/x-data-grid";
 
 ChartJS.register(
   ArcElement,
@@ -483,7 +487,33 @@ const Dashboard = () => {
               </Box>
             ) : null}
           </Flex>
-          {executionTable && <FilledGrid executionTable={executionTable} />}
+          {executionTable && (
+            <div style={{ width: "100%" }}>
+              <DataGrid
+                initialState={{
+                  sorting: {
+                    sortModel: [{ field: "timestamp", sort: "desc" }],
+                  },
+                }}
+                rows={executionTable}
+                getRowId={(row) => row.execution_id}
+                autoHeight
+                columns={[
+                  { field: "name", headerName: "Name", width: 300 },
+                  { field: "data_source", width: 150 },
+                  {
+                    field: "timestamp",
+                    headerName: "Date",
+                    width: 150,
+                    valueFormatter: (params) =>
+                      formatDate(new Date(params.value)),
+                  },
+                  { field: "status", width: 150 },
+                ]}
+                checkboxSelection
+              />
+            </div>
+          )}
           {executionTable && executionTable.length === 0 && <BlankGrid />}
           {executionTableLoading ? (
             <div className="loading">

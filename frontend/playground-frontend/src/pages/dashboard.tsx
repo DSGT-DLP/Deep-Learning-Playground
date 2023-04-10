@@ -368,6 +368,14 @@ const NewTrainSpaceMenu = ({
         MenuListProps={{
           "aria-labelledby": "demo-customized-button",
         }}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -608,6 +616,7 @@ const Dashboard = () => {
                   },
                   pagination: { paginationModel: { pageSize: 10, page: 0 } },
                 }}
+                pageSizeOptions={[10]}
                 rows={executionTable}
                 getRowId={(row) => row.execution_id}
                 autoHeight

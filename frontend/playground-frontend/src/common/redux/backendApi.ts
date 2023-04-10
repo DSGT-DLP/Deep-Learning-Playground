@@ -1,4 +1,5 @@
 import {
+  BaseQueryApi,
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
@@ -8,19 +9,46 @@ import {
 import { auth } from "../utils/firebase";
 import { Execution } from "@/pages/dashboard";
 import { he } from "date-fns/locale";
+import { FirebaseError } from "firebase/app";
+import axios, { AxiosRequestConfig } from "axios";
+import { MaybePromise } from "@reduxjs/toolkit/dist/query/tsHelpers";
+
+const customFetchBaseQuery =
+  ({
+    prepareHeaders,
+  }: {
+    prepareHeaders?: (
+      headers: Headers
+    ) => MaybePromise<void | Headers> | undefined;
+  }): BaseQueryFn<FetchArgs, unknown, FetchBaseQueryError> =>
+  async (args, api, extraOptions) => {
+    args.headers = new Headers();
+    if (prepareHeaders) {
+      try {
+        await prepareHeaders(args.headers);
+      } catch (e) {
+        let err = e as FirebaseError;
+        return {
+          error: {
+            status: "CUSTOM_ERROR",
+            data: err,
+            error: err.message,
+          },
+        };
+      }
+    }
+    const baseQuery = fetchBaseQuery();
+    return baseQuery(args, api, extraOptions);
+  };
 
 export const backendApi = createApi({
   reducerPath: "backendApi",
-  baseQuery: fetchBaseQuery({
-    mode: "cors",
+  baseQuery: customFetchBaseQuery({
     prepareHeaders: async (headers) => {
       if (auth.currentUser) {
-        const token = await auth.currentUser.getIdToken(true);
-        console.log(token);
-        headers.set("accepts", "application/json");
+        const token = await auth.currentUser.getIdToken();
         headers.set("Authorization", `Bearer ${token}`);
         headers.entries().next();
-        console.log(Array.from(headers.entries()));
         return headers;
       }
     },

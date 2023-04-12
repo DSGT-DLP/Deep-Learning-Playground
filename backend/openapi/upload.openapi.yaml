@@ -4,36 +4,36 @@ info:
   description: API endpoints for the Deep Learning Playground Project
   version: "1.0.0"
 paths:
-  /api/defaultDataset:
+  /api/upload:
     post:
-      description: Endpoint to get user selected default dataset for training
+      description: Endpoint to upload files locally
       requestBody:
         content:
           application/json:
             schema:
-              type: string
+              type: object
               required:
-                - using_default_dataset
+                - file
               properties:
-                using_default_dataset:
-                  type: string
-                  description: dataset selected for training
+                file:
+                  type: object
+                  description: the file
               example:
-                using_default_dataset: "IRIS"
+                file: { "col1": [val1, val2], "col2": [val3, val4] }
         required: true
       responses:
         "200":
-          description: Dataset selected successfully
+          description: Data uploaded successfully
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  columns:
-                    type: array
-                    example: [col1, col2, col3]
+                  message:
+                    type: string
+                    example: "Upload success"
         "400":
-          description: Dataset wasn't selected properly. This is usually something wrong with your code
+          description: Upload didn't go through successfully. This is usually something wrong with your code
         "401":
           description: User is not authenticated
           content:

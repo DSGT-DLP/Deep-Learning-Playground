@@ -4,36 +4,36 @@ info:
   description: API endpoints for the Deep Learning Playground Project
   version: "1.0.0"
 paths:
-  /api/defaultDataset:
+  /api/writeToQueue:
     post:
-      description: Endpoint to get user selected default dataset for training
+      description: Endpoint to add training requests to SQS queue
       requestBody:
         content:
           application/json:
             schema:
-              type: string
+              type: object
               required:
-                - using_default_dataset
+                - queue_data
               properties:
-                using_default_dataset:
-                  type: string
-                  description: dataset selected for training
+                queue_data:
+                  type: object
+                  description: data to be added to queue
               example:
-                using_default_dataset: "IRIS"
+                queue_data: { "col1": [val1, val2], "col2": [val3, val4] }
         required: true
       responses:
         "200":
-          description: Dataset selected successfully
+          description: Wrote to queue successfully
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  columns:
-                    type: array
-                    example: [col1, col2, col3]
+                  message:
+                    type: string
+                    example: "Successfully added your training request to the queue"
         "400":
-          description: Dataset wasn't selected properly. This is usually something wrong with your code
+          description: Write to queue didn't go through successfully. This is usually something wrong with your code
         "401":
           description: User is not authenticated
           content:

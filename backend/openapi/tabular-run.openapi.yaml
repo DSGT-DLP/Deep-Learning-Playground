@@ -1,0 +1,127 @@
+openapi: "3.0.0"
+info:
+  title: DLP API
+  description: API endpoints for the Deep Learning Playground Project
+  version: "1.0.0"
+paths:
+  /api/tabular-run:
+    post:
+      description: Endpoint to train models on tabular data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_arch
+                - fileURL
+                - uid
+                - csv_data
+                - custom_model_name
+                - execution_id
+                - target
+                - features
+                - problem_type
+                - optimizer_name
+                - criterion
+                - using_default_dataset
+                - epochs
+                - shuffle
+                - test_size
+                - batch_size
+              properties:
+                user_arch:
+                  type: array
+                  description: Architecture of the model
+                fileURL:
+                  type: string
+                  description: URL of the uploaded dataset
+                uid:
+                  type: string
+                  description: user id
+                csv_data:
+                  type: object
+                  description: csv input data
+                custom_model_name:
+                  type: string
+                  description: name of the model
+                execution_id:
+                  type: string
+                  description: id of the process in the execution table
+                target:
+                  type: string
+                  description: selected target column
+                features:
+                  type: array
+                  description: selected features
+                problem_type:
+                  type: string
+                  description: problem type selected (classification, regression)
+                optimizer_name:
+                  type: string
+                  description: optimizer selected (SGD, ADAM)
+                criterion:
+                  type: string
+                  description: criterion selected (BCELOSS, CELOSS)
+                using_default_dataset:
+                  type: string
+                  description: default dataset selected
+                epochs:
+                  type: int
+                  description: number of epochs
+                shuffle:
+                  type: bool
+                  description: determines whether to shuffle the datasets
+                test_size:
+                  type: float
+                  description: size of the test dataset
+                batch_size:
+                  type: int
+                  description: size of the batch
+              example:
+                user_arch: [val1, val2, val3]
+                fileURL: "file"
+                uid: "user"
+                csv_data: { "col1": [val1, val2], "col2": [val3, val4] }
+                custom_model_name: "model"
+                execution_id: "abcde"
+                target: "target"
+                features: [val1, val2, val3]
+                problem_type: "regression"
+                optimizer_name: "SGD"
+                criterion: "CELOSS"
+                using_default_dataset: "IRIS"
+                epochs: 10
+                shuffle: True
+                test_size: 0.2
+                batch_size: 10
+        required: true
+      responses:
+        "200":
+          description: Trained model successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Dataset trained and results outputted successfully"
+                  dl_results:
+                    type: object
+                    example: { "col1": [val1, val2], "col2": [val3, val4] }
+                  auxiliary_outputs:
+                    type: object
+                    example: { "col1": [val1, val2], "col2": [val3, val4] }
+        "400":
+          description: Training didn't go through successfully. This is usually something wrong with your code
+        "401":
+          description: User is not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User is not authenticated"

@@ -1,0 +1,61 @@
+openapi: "3.0.0"
+info:
+  title: DLP API
+  description: API endpoints for the Deep Learning Playground Project
+  version: "1.0.0"
+paths:
+  /api/updateUserProgressData:
+    post:
+      description: Endpoint to update user progress data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - moduleID
+                - sectionID
+                - questionID
+              properties:
+                user_id:
+                  type: object
+                  description: user id
+                moduleID:
+                  type: int
+                  description: module id
+                sectionID:
+                  type: int
+                  description: section id
+                questionID:
+                  type: int
+                  description: question id
+              example:
+                user_id: { "col1": [val1, val2], "col2": [val3, val4] }
+                moduleID: 1
+                sectionID: 1
+                questionID: 1
+        required: true
+      responses:
+        "200":
+          description: Progress data updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+        "400":
+          description: Progress data wasn't updated successfully. This is usually something wrong with your code
+        "401":
+          description: User is not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User is not authenticated"

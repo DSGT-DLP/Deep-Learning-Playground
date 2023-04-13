@@ -7,11 +7,11 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 import { auth } from "../utils/firebase";
-import { Execution } from "@/pages/dashboard";
 import { he } from "date-fns/locale";
 import { FirebaseError } from "firebase/app";
 import axios, { AxiosRequestConfig } from "axios";
 import { MaybePromise } from "@reduxjs/toolkit/dist/query/tsHelpers";
+import { TrainSpaceData } from "@/features/Dashboard/types/train_types";
 
 const customFetchBaseQuery =
   ({
@@ -54,7 +54,7 @@ export const backendApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getExecutionsData: builder.query<Execution[], void>({
+    getExecutionsData: builder.query<TrainSpaceData[], void>({
       query: () => ({
         url: "/api/getExecutionsData",
         method: "POST",

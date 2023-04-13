@@ -61,6 +61,7 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 import { ArrowDropDown, KeyboardArrowDown, Margin } from "@mui/icons-material";
+import { TrainSpaceData } from "@/features/Dashboard/types/train_types";
 
 ChartJS.register(
   ArcElement,
@@ -179,38 +180,14 @@ const formatDate = (date: Date) => {
   );
 };
 
-export type DATA_SOURCE =
-  | "TABULAR"
-  | "PRETRAINED"
-  | "IMAGE"
-  | "AUDIO"
-  | "TEXTUAL"
-  | "CLASSICAL_ML"
-  | "OBJECT_DETECTION";
-export type EXECUTION_STATUS =
-  | "QUEUED"
-  | "STARTING"
-  | "UPLOADING"
-  | "TRAINING"
-  | "SUCCESS"
-  | "ERROR";
-export interface Execution {
-  name: string;
-  execution_id: number;
-  data_source: DATA_SOURCE;
-  timestamp: string;
-  status: EXECUTION_STATUS;
-  progress: number;
-}
-
-const FilledGrid = (props: { executionTable: Execution[] }) => {
+const FilledGrid = (props: { executionTable: TrainSpaceData[] }) => {
   const { executionTable } = props;
   function toTitleCase(str: string) {
     return str.replace(/\w\S*/g, function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
     });
   }
-  async function handleOnDownloadClick(e: unknown, row: Execution) {
+  async function handleOnDownloadClick(e: unknown, row: TrainSpaceData) {
     (e as Event).stopPropagation();
     /*
     const response = await sendToBackend("getExecutionsFilesPresignedUrls", {

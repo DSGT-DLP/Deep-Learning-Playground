@@ -306,6 +306,8 @@ export const signInViaGithubRedirect = createAsyncThunk<
 >("currentUser/signInViaGitHub", async (_, thunkAPI) => {
   try {
     const githubProvider = new GithubAuthProvider();
+    storage.setItem("expect-user", "true");
+    console.log("exp", storage.getItem("expect-user"));
     await signInWithRedirect(auth, githubProvider);
     return;
   } catch (e) {

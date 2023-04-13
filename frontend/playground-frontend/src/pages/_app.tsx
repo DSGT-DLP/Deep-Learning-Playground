@@ -18,17 +18,17 @@ import { ToastContainer } from "react-toastify";
 const FirebaseAuthState = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.currentUser.user);
-  const [isExpectingUser, setIsExpectingUser] = React.useState(true);
+  const [pendingUser, setPendingUser] = React.useState<
+    "PENDING" | "RESET" | "DONE"
+  >("PENDING");
   useEffect(() => {
     const expectUser = storage.getItem("expect-user");
     if (expectUser) {
       setTimeout(() => {
-        setIsExpectingUser(false);
-      }, 3000);
+        setPendingUser("RESET");
+      }, 5000);
     } else {
-      if (user == "pending") {
-        dispatch(setCurrentUser(undefined));
-      }
+      setPendingUser("RESET");
     }
     auth.onAuthStateChanged((firebaseUser) => {
       if (firebaseUser && firebaseUser.email && firebaseUser.displayName) {
@@ -41,15 +41,22 @@ const FirebaseAuthState = () => {
             emailVerified: firebaseUser.emailVerified,
           })
         );
+      } else if (firebaseUser == null) {
+        storage.removeItem("expect-user");
+        dispatch(setCurrentUser(undefined));
       }
     });
   }, []);
+
   useEffect(() => {
-    if (!isExpectingUser && user == "pending") {
-      storage.removeItem("expect-user");
-      dispatch(setCurrentUser(undefined));
+    if (pendingUser == "RESET") {
+      if (user == "pending") {
+        storage.removeItem("expect-user");
+        dispatch(setCurrentUser(undefined));
+      }
+      setPendingUser("DONE");
     }
-  }, [isExpectingUser, user]);
+  }, [pendingUser, user]);
   return <></>;
 };
 const App = ({ Component, pageProps }: AppProps) => {

@@ -22,13 +22,13 @@ paths:
                   type: object
                   description: user id
                 moduleID:
-                  type: int
+                  type: integer
                   description: id of the learning module
                 sectionID:
-                  type: int
+                  type: integer
                   description: id of the secion in the learning module
                 questionID:
-                  type: int
+                  type: integer
                   description: id of the question in the section
               example:
                 user_id: { "col1": [val1, val2], "col2": [val3, val4] }

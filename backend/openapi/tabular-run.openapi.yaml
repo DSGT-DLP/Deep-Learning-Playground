@@ -67,16 +67,16 @@ paths:
                   type: string
                   description: default dataset selected
                 epochs:
-                  type: int
+                  type: integer
                   description: number of epochs
                 shuffle:
-                  type: bool
+                  type: boolean
                   description: determines whether to shuffle the datasets
                 test_size:
-                  type: float
+                  type: number
                   description: size of the test dataset
                 batch_size:
-                  type: int
+                  type: integer
                   description: size of the batch
               example:
                 user_arch: [val1, val2, val3]
@@ -92,7 +92,7 @@ paths:
                 criterion: "CELOSS"
                 using_default_dataset: "IRIS"
                 epochs: 10
-                shuffle: True
+                shuffle: true
                 test_size: 0.2
                 batch_size: 10
         required: true

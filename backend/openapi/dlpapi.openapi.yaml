@@ -170,7 +170,7 @@ paths:
                 - file
               properties:
                 version:
-                  type: int
+                  type: integer
                   description: The file version
                 filename:
                   type: string
@@ -256,13 +256,13 @@ paths:
                   type: string
                   description: default dataset selected
                 epochs:
-                  type: int
+                  type: integer
                   description: number of epochs
                 shuffle:
-                  type: bool
+                  type: boolean
                   description: determines whether to shuffle the datasets
                 batch_size:
-                  type: int
+                  type: integer
                   description: size of the batch
               example:
                 train_transforms: [val1, val2, val3]
@@ -277,7 +277,6 @@ paths:
                 using_default_dataset: "IRIS"
                 epochs: 10
                 shuffle: True
-                test_size: 0.2
                 batch_size: 10
         required: true
       responses:
@@ -342,7 +341,7 @@ paths:
                   type: string
                   description: default dataset selected
                 shuffle:
-                  type: bool
+                  type: boolean
                   description: determines whether to shuffle the datasets
                 problem_type:
                   type: string
@@ -504,16 +503,16 @@ paths:
                   type: string
                   description: default dataset selected
                 epochs:
-                  type: int
+                  type: integer
                   description: number of epochs
                 shuffle:
-                  type: bool
+                  type: boolean
                   description: determines whether to shuffle the datasets
                 test_size:
-                  type: float
+                  type: number
                   description: size of the test dataset
                 batch_size:
-                  type: int
+                  type: integer
                   description: size of the batch
               example:
                 user_arch: [val1, val2, val3]
@@ -700,13 +699,13 @@ paths:
                   type: object
                   description: user id
                 moduleID:
-                  type: int
+                  type: integer
                   description: id of the learning module
                 sectionID:
-                  type: int
+                  type: integer
                   description: id of the secion in the learning module
                 questionID:
-                  type: int
+                  type: integer
                   description: id of the question in the section
               example:
                 user_id: { "col1": [val1, val2], "col2": [val3, val4] }

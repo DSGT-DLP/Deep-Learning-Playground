@@ -18,7 +18,7 @@ paths:
                 - file
               properties:
                 version:
-                  type: int
+                  type: integer
                   description: The file version
                 filename:
                   type: string

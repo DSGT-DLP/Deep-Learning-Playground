@@ -37,7 +37,7 @@ paths:
                   type: string
                   description: default dataset selected
                 shuffle:
-                  type: bool
+                  type: boolean
                   description: determines whether to shuffle the datasets
                 problem_type:
                   type: string

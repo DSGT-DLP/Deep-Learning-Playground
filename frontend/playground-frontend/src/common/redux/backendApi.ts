@@ -1,5 +1,4 @@
 import {
-  BaseQueryApi,
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
@@ -7,11 +6,8 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 import { auth } from "../utils/firebase";
-import { he } from "date-fns/locale";
 import { FirebaseError } from "firebase/app";
-import axios, { AxiosRequestConfig } from "axios";
 import { MaybePromise } from "@reduxjs/toolkit/dist/query/tsHelpers";
-import { TrainSpaceData } from "@/features/Dashboard/types/train_types";
 
 const customFetchBaseQuery =
   ({
@@ -27,7 +23,7 @@ const customFetchBaseQuery =
       try {
         await prepareHeaders(args.headers);
       } catch (e) {
-        let err = e as FirebaseError;
+        const err = e as FirebaseError;
         return {
           error: {
             status: "CUSTOM_ERROR",
@@ -53,20 +49,5 @@ export const backendApi = createApi({
       }
     },
   }),
-  endpoints: (builder) => ({
-    getExecutionsData: builder.query<TrainSpaceData[], void>({
-      query: () => ({
-        url: "/api/getExecutionsData",
-        method: "POST",
-        body: {
-          user: auth.currentUser,
-        },
-      }),
-      transformResponse: (response: { record: string }) => {
-        return JSON.parse(response.record);
-      },
-    }),
-  }),
+  endpoints: () => ({}),
 });
-
-export const { useGetExecutionsDataQuery } = backendApi;

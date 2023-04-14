@@ -154,6 +154,7 @@ const Feedback = () => {
               sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY || ""}
               onChange={(e) => setRecaptcha(e || "")}
             />
+
             {submitted && recaptcha === "" && (
               <p style={GENERAL_STYLES.error_text}>Please Complete ReCAPTCHA</p>
             )}

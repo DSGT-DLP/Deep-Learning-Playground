@@ -28,9 +28,7 @@ name: Push image to Amazon ECR
 
 # Only trigger, when we push to prod-deploy
 on:
-  push:
-    branches:
-      - "prod-deploy"
+  push
 
 env:
   AWS_REGION: "us-west-2" # set this to your preferred AWS region, e.g. us-west-1
@@ -57,16 +55,16 @@ jobs:
       - name: Get current branch
         run: echo running on branch ${GITHUB_REF##*/}
 
-      - name: Wait for tests to succeed
-        if: ${{ github.ref }} = "refs/heads/prod-deploy"
-        uses: lewagon/wait-on-check-action@v1.1.1
-        with:
-          ref: ${{ github.sha }}
-          check-name: "build-linux"
-          repo-token: ${{ secrets.PAT }}
-          allowed-conclusions: success,skipped
-          verbose: true
-          wait-interval: 10
+      # - name: Wait for tests to succeed
+      #   if: ${{ github.ref }} = "refs/heads/prod-deploy"
+      #   uses: lewagon/wait-on-check-action@v1.1.1
+      #   with:
+      #     ref: ${{ github.sha }}
+      #     check-name: "build-linux"
+      #     repo-token: ${{ secrets.PAT }}
+      #     allowed-conclusions: success,skipped
+      #     verbose: true
+      #     wait-interval: 10
 
       - name: Checkout
         uses: actions/checkout@v3

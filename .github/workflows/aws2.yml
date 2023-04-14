@@ -24,13 +24,10 @@
 #    See the documentation for each action used below for the recommended IAM policies for this IAM user,
 #    and best practices on handling the access key credentials.
 
-name: Deploy to Amazon ECS
+name: Push image to Amazon ECR
 
 # Only trigger, when we push to prod-deploy
-on:
-  push:
-    branches:
-      - "prod-deploy"
+on: push
 
 env:
   AWS_REGION: "us-west-2" # set this to your preferred AWS region, e.g. us-west-1

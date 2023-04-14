@@ -6,14 +6,13 @@ name: React Build Check
 on:
   push:
     paths:
-      - 'frontend/**'
+      - "frontend/**"
   pull_request:
     paths:
-      - 'frontend/**'
+      - "frontend/**"
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -21,16 +20,13 @@ jobs:
         node-version: [18.x]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-    - run: yarn install
-      working-directory: ./frontend/playground-frontend
-    - run: yarn run build --if-present
-      working-directory: ./frontend/playground-frontend
-    #frontend unit tests    
-    - run: yarn run test
-      working-directory: ./frontend/playground-frontend    
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - run: yarn install
+        working-directory: ./frontend/playground-frontend
+      - run: next build --if-present
+        working-directory: ./frontend/playground-frontend

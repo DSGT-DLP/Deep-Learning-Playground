@@ -67,64 +67,60 @@ const SettingsBlock = () => {
       <div
         className="email-buttons d-flex flex-column"
         onClick={async () => {
-          if (
-            fullName !== "" ||
-            email !== "" ||
-            password !== "" ||
-            checkPassword !== ""
-          ) {
-            Promise.allSettled([
-              new Promise(async (_) => {
-                if (fullName) {
-                  try {
-                    await dispatch(
-                      updateUserDisplayName({ displayName: fullName })
-                    ).unwrap();
-                    toast.success("Successfully updated display name", {
+          Promise.allSettled([
+            (async () => {
+              if (fullName) {
+                try {
+                  await dispatch(
+                    updateUserDisplayName({ displayName: fullName })
+                  ).unwrap();
+                  toast.success("Successfully updated display name", {
+                    position: toast.POSITION.TOP_CENTER,
+                  });
+                } catch (e) {
+                  toast.error(
+                    `Display name - ${(e as SerializedError).message}`,
+                    {
                       position: toast.POSITION.TOP_CENTER,
-                    });
-                  } catch (e) {
-                    toast.error((e as SerializedError).message, {
-                      position: toast.POSITION.TOP_CENTER,
-                    });
-                  }
+                    }
+                  );
                 }
-              }),
-              new Promise(async (_) => {
-                if (email) {
-                  try {
-                    await dispatch(updateUserEmail({ email: email })).unwrap();
-                    toast.success("Successfully updated email", {
-                      position: toast.POSITION.TOP_CENTER,
-                    });
-                  } catch (e) {
-                    toast.error((e as SerializedError).message, {
-                      position: toast.POSITION.TOP_CENTER,
-                    });
-                  }
+              }
+            })(),
+            (async () => {
+              if (email) {
+                try {
+                  await dispatch(updateUserEmail({ email })).unwrap();
+                  toast.success("Successfully updated email", {
+                    position: toast.POSITION.TOP_CENTER,
+                  });
+                } catch (e) {
+                  toast.error(`Email - ${(e as SerializedError).message}`, {
+                    position: toast.POSITION.TOP_CENTER,
+                  });
                 }
-              }),
-              new Promise(async (_) => {
-                if (password) {
-                  try {
-                    await dispatch(
-                      updateUserPassword({
-                        password: password,
-                        checkPassword: checkPassword,
-                      })
-                    ).unwrap();
-                    toast.success("Successfully updated password", {
-                      position: toast.POSITION.TOP_CENTER,
-                    });
-                  } catch (e) {
-                    toast.error((e as SerializedError).message, {
-                      position: toast.POSITION.TOP_CENTER,
-                    });
-                  }
+              }
+            })(),
+            (async () => {
+              if (password) {
+                try {
+                  await dispatch(
+                    updateUserPassword({
+                      password,
+                      checkPassword,
+                    })
+                  ).unwrap();
+                  toast.success("Successfully updated password", {
+                    position: toast.POSITION.TOP_CENTER,
+                  });
+                } catch (e) {
+                  toast.error(`Password - ${(e as SerializedError).message}`, {
+                    position: toast.POSITION.TOP_CENTER,
+                  });
                 }
-              }),
-            ]);
-          }
+              }
+            })(),
+          ]);
         }}
       >
         <Button id="update-profile" className="mb-2">

@@ -20,6 +20,7 @@ import {
 import { auth } from "@/common/utils/firebase";
 import { FirebaseError } from "firebase/app";
 import storage from "local-storage-fallback";
+import { backendApi } from "./backendApi";
 
 export interface UserState {
   user?: UserType | "pending";
@@ -34,7 +35,7 @@ export interface UserType {
 }
 export const isSignedIn = (
   user: UserType | "pending" | undefined
-): user is UserType => user != undefined && user != "pending";
+): user is UserType => user !== undefined && user !== "pending";
 
 interface UserProgressDataType {
   modules: {
@@ -151,7 +152,7 @@ export const updateUserDisplayName = createAsyncThunk<
     return await thunkAPI
       .dispatch(
         updateUserProfile({
-          displayName: displayName,
+          displayName,
         })
       )
       .unwrap();
@@ -182,8 +183,8 @@ export const updateUserProfile = createAsyncThunk<
         });
       }
       await updateProfile(auth.currentUser, {
-        displayName: displayName,
-        photoURL: photoURL,
+        displayName,
+        photoURL,
       });
       return {
         email: user.email,
@@ -242,7 +243,7 @@ export const registerViaEmailAndPassword = createAsyncThunk<
       );
       const user = userCredential.user;
       if (displayName) {
-        await updateProfile(user, { displayName: displayName });
+        await updateProfile(user, { displayName });
       }
       return {
         email: user.email,
@@ -324,6 +325,7 @@ export const signOutUser = createAsyncThunk<void, void, ThunkApiType>(
     if (thunkAPI.getState().currentUser.user) {
       try {
         await signOut(auth);
+        thunkAPI.dispatch(backendApi.util.resetApiState());
         storage.removeItem("expect-user");
         return;
       } catch (e) {

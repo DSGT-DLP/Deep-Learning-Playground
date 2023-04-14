@@ -4,8 +4,6 @@ import "@/common/styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import React, { useEffect } from "react";
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 import { Provider } from "react-redux";
 import { setCurrentUser } from "@/common/redux/userLogin";
 import { auth } from "@/common/utils/firebase";
@@ -13,7 +11,6 @@ import store from "@/common/redux/store";
 import storage from "local-storage-fallback";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import { ToastContainer } from "react-toastify";
-//import { wrapper } from "@/common/redux/store";
 
 const FirebaseAuthState = () => {
   const dispatch = useAppDispatch();
@@ -49,8 +46,8 @@ const FirebaseAuthState = () => {
   }, []);
 
   useEffect(() => {
-    if (pendingUser == "RESET") {
-      if (user == "pending") {
+    if (pendingUser === "RESET") {
+      if (user === "pending") {
         storage.removeItem("expect-user");
         dispatch(setCurrentUser(undefined));
       }

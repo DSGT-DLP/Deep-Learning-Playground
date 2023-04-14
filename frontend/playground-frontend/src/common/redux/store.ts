@@ -1,4 +1,4 @@
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import currentUserReducer from "./userLogin";
 import trainReducer from "./train";
 import { backendApi } from "./backendApi";

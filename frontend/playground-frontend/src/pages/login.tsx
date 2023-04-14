@@ -160,8 +160,8 @@ const Login = () => {
               try {
                 await dispatch(
                   registerViaEmailAndPassword({
-                    email,
-                    password,
+                    email: email,
+                    password: password,
                     displayName: fullName,
                     recaptcha: recaptcha,
                   })
@@ -199,7 +199,7 @@ const Login = () => {
       </div>
     </>
   );
-  if (user != undefined) {
+  if (user !== undefined) {
     return <></>;
   }
   return (

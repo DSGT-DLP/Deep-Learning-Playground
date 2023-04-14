@@ -28,5 +28,3 @@ jobs:
           cache: "yarn"
       - run: yarn install
         working-directory: ./frontend/playground-frontend
-      - run: next build --if-present
-        working-directory: ./frontend/playground-frontend

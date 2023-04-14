@@ -1,15 +1,4 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Button as MuiButton,
-  Typography,
-  Menu,
-  MenuItem,
-} from "@mui/material";
+import { Button as MuiButton, Typography, Menu, MenuItem } from "@mui/material";
 import {
   Box,
   Button,
@@ -21,9 +10,8 @@ import {
 } from "gestalt";
 import "gestalt/dist/gestalt.css";
 import { useEffect, useState } from "react";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import JSZip from "jszip";
-import saveAs from "file-saver";
+//import JSZip from "jszip";
+//import saveAs from "file-saver";
 import { Doughnut, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -46,22 +34,16 @@ import Footer from "@/common/components/Footer";
 import { useAppSelector } from "@/common/redux/hooks";
 import { useRouter } from "next/router";
 import { isSignedIn } from "@/common/redux/userLogin";
-import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
 import {
   DataGrid,
   GridAddIcon,
-  GridColDef,
   GridDeleteIcon,
-  GridToolbar,
   GridToolbarContainer,
   GridToolbarDensitySelector,
   GridToolbarExport,
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
-import { ArrowDropDown, KeyboardArrowDown, Margin } from "@mui/icons-material";
-import { TrainSpaceData } from "@/features/Dashboard/types/train_types";
+import { KeyboardArrowDown } from "@mui/icons-material";
 
 ChartJS.register(
   ArcElement,
@@ -91,6 +73,7 @@ const BlankGrid = () => {
   );
 };
 
+/*
 const StatusDisplay = ({ statusType }: { statusType: string }) => {
   if (statusType === "QUEUED") {
     return (
@@ -149,7 +132,7 @@ const StatusDisplay = ({ statusType }: { statusType: string }) => {
   } else {
     return <p>Incorrect status type passed</p>;
   }
-};
+};*/
 
 const sameDay = (d1: Date, d2: Date) => {
   return (
@@ -180,16 +163,16 @@ const formatDate = (date: Date) => {
   );
 };
 
+/*
 const FilledGrid = (props: { executionTable: TrainSpaceData[] }) => {
   const { executionTable } = props;
-  function toTitleCase(str: string) {
-    return str.replace(/\w\S*/g, function (txt) {
-      return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
-    });
-  }
+  function toTitleCase(str: string) {*/
+//return str.replace(/\w\S*/g, function (txt) {
+//  return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+//});
+/*}
   async function handleOnDownloadClick(e: unknown, row: TrainSpaceData) {
     (e as Event).stopPropagation();
-    /*
     const response = await sendToBackend("getExecutionsFilesPresignedUrls", {
       exec_id: row.execution_id,
     });
@@ -211,7 +194,7 @@ const FilledGrid = (props: { executionTable: TrainSpaceData[] }) => {
     );
     zip
       .generateAsync({ type: "blob" })
-      .then((blob) => saveAs(blob, "results.zip"));*/
+      .then((blob) => saveAs(blob, "results.zip"));
   }
   return (
     <>
@@ -274,7 +257,7 @@ const FilledGrid = (props: { executionTable: TrainSpaceData[] }) => {
       ) : null}
     </>
   );
-};
+};*/
 
 const GridPlayButton = ({ rowElement }: { rowElement: HTMLDivElement }) => {
   const [visible, setVisible] = useState(false);
@@ -610,7 +593,7 @@ const Dashboard = () => {
                     sortable: false,
                     hideable: false,
                     disableColumnMenu: true,
-                    renderHeader: (_) => {
+                    renderHeader: () => {
                       return (
                         <div style={{ width: "45px", textAlign: "center" }}>
                           Train

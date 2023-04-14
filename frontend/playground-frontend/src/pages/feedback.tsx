@@ -1,6 +1,6 @@
 // @flow
-import React, { useEffect, useState } from "react";
-import type { ReactNode } from "react";
+import React, { useState } from "react";
+//import type { ReactNode } from "react";
 
 import EmailInput from "@/common/components/EmailInput";
 import TitleText from "@/common/components/TitleText";
@@ -9,14 +9,15 @@ import Spacer from "@/common/components/Spacer";
 import ReCAPTCHA from "react-google-recaptcha";
 
 import { COLORS, GENERAL_STYLES } from "../constants";
-import { toast } from "react-toastify";
+//import { toast } from "react-toastify";
 //import { sendToBackend } from "../helper_functions/TalkWithBackend";
-import { InlineWidget } from "react-calendly";
+//import { InlineWidget } from "react-calendly";
 import NavbarMain from "@/common/components/NavBarMain";
 import Footer from "@/common/components/Footer";
 
-const CALENDLY_URL = "https://calendly.com/dlp-dsgt/30min";
+//const CALENDLY_URL = "https://calendly.com/dlp-dsgt/30min";
 
+/*
 function renderSuccessfulFeedbackSubmit(): ReactNode {
   return (
     <>
@@ -50,7 +51,7 @@ function renderSuccessfulFeedbackSubmit(): ReactNode {
       </div>
     </>
   );
-}
+}*/
 
 const Feedback = () => {
   const [email, setEmail] = useState("");
@@ -59,7 +60,7 @@ const Feedback = () => {
   const [feedback, setFeedback] = useState("");
   const [recaptcha, setRecaptcha] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [successful, setSuccessful] = useState(false);
+  const [successful] = useState(false);
 
   const onClickSubmit = async () => {
     setSubmitted(true);
@@ -170,13 +171,14 @@ const Feedback = () => {
   );
 };
 
+/*
 const send_feedback_mail = async (
   firstName: string,
   lastName: string,
   email: string,
   feedback: string
 ) => {
-  /*
+  
   const emailResult = await sendToBackend("sendEmail", {
     email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
     subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
@@ -186,8 +188,8 @@ const send_feedback_mail = async (
   if (!emailResult.success) {
     toast.error(emailResult.message);
   }
-  return emailResult.success;*/
-};
+  return emailResult.success;
+};*/
 
 export default Feedback;
 

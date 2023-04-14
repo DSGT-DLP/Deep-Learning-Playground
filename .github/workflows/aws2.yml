@@ -88,7 +88,11 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg TARGETARCH="x86" --build-arg AWS_REGION=${{ secrets.AWS_REGION }} --build-arg AWS_DEPLOY_ACCESS_KEY_ID=${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }} --build-arg AWS_DEPLOY_SECRET_ACCESS_KEY=${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }} .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          aws ecr put-image --repository-name dlp-eks-container --image-manifest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+          aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 521654603461.dkr.ecr.us-west-2.amazonaws.com
+
+          docker build -t $IMAGE_TAG --build-arg TARGETARCH="x86" --build-arg AWS_REGION=${{ secrets.AWS_REGION }} --build-arg AWS_DEPLOY_ACCESS_KEY_ID=${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }} --build-arg AWS_DEPLOY_SECRET_ACCESS_KEY=${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }} .
+
+          docker tag $IMAGE_TAG 521654603461.dkr.ecr.us-west-2.amazonaws.com/dlp-eks-container:latest
+
+          docker push 521654603461.dkr.ecr.us-west-2.amazonaws.com/dlp-eks-container:latest

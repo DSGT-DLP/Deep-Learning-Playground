@@ -7,7 +7,7 @@
     "build:prod": "cd frontend/playground-frontend && yarn install && REACT_APP_MODE=prod yarn run build",
     "installf": "cd frontend/playground-frontend && yarn install",
     "installb": "conda --version && cd conda && conda env create -f environment.yml && pre-commit install",
-    "startf": "cd frontend/playground-frontend && yarn start",
+    "startf": "cd frontend/playground-frontend && yarn dev",
     "secrets": "conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env",
     "secrets:deploy": "python -m backend.aws_helpers.aws_secrets_utils.build_env",
     "docker:build": "docker build -t dlp ."

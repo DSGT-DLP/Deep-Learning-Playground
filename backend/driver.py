@@ -12,7 +12,8 @@ from backend.aws_helpers.s3_utils.s3_client import (
 )
 from backend.middleware import middleware
 from flask_cors import CORS
-
+from flasgger import Swagger
+from flasgger.utils import swag_from
 from backend.common.ai_drive import dl_tabular_drive, dl_img_drive, ml_drive
 from backend.common.constants import ONNX_MODEL, SAVED_MODEL_DL, UNZIPPED_DIR_NAME
 from backend.common.default_datasets import get_default_dataset_header
@@ -53,9 +54,32 @@ app = Flask(
     __name__,
     static_folder=os.path.join(os.getcwd(), "frontend", "playground-frontend", "build"),
 )
+
 CORS(app)
 
-app.wsgi_app = middleware(app.wsgi_app, exempt_paths=["/test", "/"])
+app.config["SWAGGER"] = {
+    "title": "DLP API",
+    "uiversion": 3,
+    "host": "localhost:8000",
+    "openapi": "3.0.2",
+    "basePath": "/",
+}
+
+swagger = Swagger(app, template_file="openapi/dlpapi.openapi.yaml")
+
+app.wsgi_app = middleware(
+    app.wsgi_app,
+    exempt_paths=[
+        "/test",
+        "/",
+        "/apidocs",
+        "/flasgger_static/swagger-ui.css",
+        "/flasgger_static/swagger-ui-bundle.js",
+        "/flasgger_static/swagger-ui-standalone-preset.js",
+        "/flasgger_static/lib/jquery.min.js",
+        "/flasgger_static/favicon-32x32.png",
+    ],
+)
 
 
 @app.route("/", defaults={"path": ""})
@@ -68,11 +92,13 @@ def root(path):
 
 
 @app.route("/test")
+@swag_from("openapi/test.openapi.yaml")
 def verify_backend_alive():
     return {"Status": "Backend is alive"}
 
 
 @app.route("/api/tabular-run", methods=["POST"])
+@swag_from("openapi/tabular-run.openapi.yaml")
 def tabular_run():
     try:
         request_data = json.loads(request.data)
@@ -123,6 +149,7 @@ def tabular_run():
 
 
 @app.route("/api/ml-run", methods=["POST"])
+@swag_from("openapi/ml-run.openapi.yaml")
 def ml_run():
     try:
         request_data = json.loads(request.data)
@@ -154,6 +181,7 @@ def ml_run():
 
 
 @app.route("/api/img-run", methods=["POST"])
+@swag_from("openapi/img-run.openapi.yaml")
 def img_run():
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
@@ -204,6 +232,7 @@ def img_run():
 
 
 @app.route("/api/object-detection", methods=["POST"])
+@swag_from("openapi/object-detection.openapi.yaml")
 def object_detection_run():
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
@@ -231,6 +260,7 @@ def object_detection_run():
 
 
 @app.route("/api/sendEmail", methods=["POST"])
+@swag_from("openapi/sendEmail.openapi.yaml")
 def send_email_route():
     # extract data
     request_data = json.loads(request.data)
@@ -259,6 +289,7 @@ def send_email_route():
 
 
 @app.route("/api/sendUserCodeEval", methods=["POST"])
+@swag_from("openapi/sendUserCodeEval.openapi.yaml")
 def send_user_code_eval():
     try:
         request_data = json.loads(request.data)
@@ -286,6 +317,7 @@ def send_user_code_eval():
 
 
 @app.route("/api/getSignedUploadUrl", methods=["POST"])
+@swag_from("openapi/getSignedUploadUrl.openapi.yaml")
 def get_signed_upload_url():
     try:
         version = request.form.get("version")
@@ -305,6 +337,7 @@ def get_signed_upload_url():
 
 
 @app.route("/api/defaultDataset", methods=["POST"])
+@swag_from("openapi/defaultDataset.openapi.yaml")
 def send_columns():
     try:
         request_data = json.loads(request.data)
@@ -352,6 +385,7 @@ def executions_files():
 
 
 @app.route("/api/upload", methods=["POST"])
+@swag_from("openapi/upload.openapi.yaml")
 def upload():
     try:
         print(datetime.datetime.now().isoformat() + " upload has started its task")
@@ -370,6 +404,7 @@ def upload():
 
 
 @app.route("/api/writeToQueue", methods=["POST"])
+@swag_from("openapi/writeToQueue.openapi.yaml")
 def writeToQueue() -> str:
     """
     API Endpoint to write training request to SQS queue to be serviced by
@@ -393,6 +428,7 @@ def writeToQueue() -> str:
 
 
 @app.route("/api/getUserProgressData", methods=["POST"])
+@swag_from("openapi/getUserProgressData.openapi.yaml")
 def getUserProgressData():
     dynamoTable = UserProgressDDBUtil(USERPROGRESS_TABLE_NAME, AWS_REGION)
     user_id = json.loads(request.data)["user_id"]
@@ -406,6 +442,7 @@ def getUserProgressData():
 
 
 @app.route("/api/updateUserProgressData", methods=["POST"])
+@swag_from("openapi/updateUserProgressData.openapi.yaml")
 def updateUserProgressData():
     requestData = json.loads(request.data)
     uid = requestData["user_id"]

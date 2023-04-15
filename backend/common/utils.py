@@ -333,4 +333,4 @@ def get_current_timestamp() -> str:
 
     :return: current UTC timestamp in the format 2022-12-31T17:59:59Z
     """
-    return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.now().isoformat()

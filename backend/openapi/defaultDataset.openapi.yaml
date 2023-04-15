@@ -1,0 +1,46 @@
+openapi: "3.0.0"
+info:
+  title: DLP API
+  description: API endpoints for the Deep Learning Playground Project
+  version: "1.0.0"
+paths:
+  /api/defaultDataset:
+    post:
+      description: Endpoint to get user selected default dataset for training
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              required:
+                - using_default_dataset
+              properties:
+                using_default_dataset:
+                  type: string
+                  description: dataset selected for training
+              example:
+                using_default_dataset: "IRIS"
+        required: true
+      responses:
+        "200":
+          description: Dataset selected successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  columns:
+                    type: array
+                    example: [col1, col2, col3]
+        "400":
+          description: Dataset wasn't selected properly. This is usually something wrong with your code
+        "401":
+          description: User is not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User is not authenticated"

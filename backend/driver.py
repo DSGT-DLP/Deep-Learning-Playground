@@ -98,6 +98,7 @@ def verify_backend_alive():
 
 
 @app.route("/api/tabular-run", methods=["POST"])
+@swag_from("openapi/tabular-run.openapi.yaml")
 def tabular_run():
     try:
         request_data = json.loads(request.data)
@@ -148,6 +149,7 @@ def tabular_run():
 
 
 @app.route("/api/ml-run", methods=["POST"])
+@swag_from("openapi/ml-run.openapi.yaml")
 def ml_run():
     try:
         request_data = json.loads(request.data)
@@ -179,6 +181,7 @@ def ml_run():
 
 
 @app.route("/api/img-run", methods=["POST"])
+@swag_from("openapi/img-run.openapi.yaml")
 def img_run():
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
@@ -229,6 +232,7 @@ def img_run():
 
 
 @app.route("/api/object-detection", methods=["POST"])
+@swag_from("openapi/object-detection.openapi.yaml")
 def object_detection_run():
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
@@ -313,6 +317,7 @@ def send_user_code_eval():
 
 
 @app.route("/api/getSignedUploadUrl", methods=["POST"])
+@swag_from("openapi/getSignedUploadUrl.openapi.yaml")
 def get_signed_upload_url():
     try:
         version = request.form.get("version")
@@ -332,6 +337,7 @@ def get_signed_upload_url():
 
 
 @app.route("/api/defaultDataset", methods=["POST"])
+@swag_from("openapi/defaultDataset.openapi.yaml")
 def send_columns():
     try:
         request_data = json.loads(request.data)
@@ -379,6 +385,7 @@ def executions_files():
 
 
 @app.route("/api/upload", methods=["POST"])
+@swag_from("openapi/upload.openapi.yaml")
 def upload():
     try:
         print(datetime.datetime.now().isoformat() + " upload has started its task")
@@ -397,6 +404,7 @@ def upload():
 
 
 @app.route("/api/writeToQueue", methods=["POST"])
+@swag_from("openapi/writeToQueue.openapi.yaml")
 def writeToQueue() -> str:
     """
     API Endpoint to write training request to SQS queue to be serviced by
@@ -420,6 +428,7 @@ def writeToQueue() -> str:
 
 
 @app.route("/api/getUserProgressData", methods=["POST"])
+@swag_from("openapi/getUserProgressData.openapi.yaml")
 def getUserProgressData():
     dynamoTable = UserProgressDDBUtil(USERPROGRESS_TABLE_NAME, AWS_REGION)
     user_id = json.loads(request.data)["user_id"]
@@ -433,6 +442,7 @@ def getUserProgressData():
 
 
 @app.route("/api/updateUserProgressData", methods=["POST"])
+@swag_from("openapi/updateUserProgressData.openapi.yaml")
 def updateUserProgressData():
     requestData = json.loads(request.data)
     uid = requestData["user_id"]

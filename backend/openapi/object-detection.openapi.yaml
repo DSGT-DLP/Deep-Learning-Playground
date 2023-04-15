@@ -4,31 +4,36 @@ info:
   description: API endpoints for the Deep Learning Playground Project
   version: "1.0.0"
 paths:
-  /api/sendUserCodeEval:
+  /api/object-detection:
     post:
-      description: Given user inputted code in the preprocessing mode, execute it!
+      description: Endpoint to detect objects on user uploaded images
       requestBody:
         content:
           application/json:
             schema:
               type: object
               required:
-                - data
-                - codeSnippet
+                - problem_type
+                - detection_type
+                - transforms
               properties:
-                data:
-                  type: object
-                  description: The email address of the recipient
-                codeSnippet:
+                problem_type:
                   type: string
-                  description: The subject of the email
+                  description: problem type selected (Labels, Celebrities)
+                detection_type:
+                  type: string
+                  description: detection type selected (Rekognition, Huggingface)
+                transforms:
+                  type: array
+                  description: transforms to be applied to the image
               example:
-                data: { "col1": [val1, val2], "col2": [val3, val4] }
-                codeSnippet: 'def preprocess(df):print("Hello World")'
+                problem_type: "Labels"
+                detection_type: "Rekognition"
+                transforms: [val1, val2, val3]
         required: true
       responses:
         "200":
-          description: Preprocessed data successfully
+          description: Objects detected successfully
           content:
             application/json:
               schema:
@@ -36,15 +41,15 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "Preprocessed data"
-                  data:
+                    example: "Detection worked successfully"
+                  dl_results:
                     type: object
                     example: { "col1": [val1, val2], "col2": [val3, val4] }
-                  columns:
+                  auxiliary_outputs:
                     type: array
-                    example: ["newcol1"]
+                    example: [val1, val2, val3]
         "400":
-          description: Preprocess didn't go through successfully. This is usually something wrong with your code
+          description: Detection didn't go through successfully. This is usually something wrong with your code
         "401":
           description: User is not authenticated
           content:

@@ -1,8 +1,8 @@
-openapi: '3.0.0'
+openapi: "3.0.0"
 info:
-  title: DLP API 
+  title: DLP API
   description: API endpoints for the Deep Learning Playground Project
-  version: '1.0.0'
+  version: "1.0.0"
 paths:
   /api/sendEmail:
     post:
@@ -33,7 +33,7 @@ paths:
                 body_text: "Your model training has been completed successfully."
         required: true
       responses:
-        '200':
+        "200":
           description: Train Success Email Notification Completed Correctly
           content:
             application/json:
@@ -41,11 +41,11 @@ paths:
                 type: object
                 properties:
                   message:
-                    type: string 
+                    type: string
                     example: "Message Sent to example@example.com"
-        '400':
+        "400":
           description: Train Success Email Notification Not working. Cause of error depends on your use case
-        '401':
+        "401":
           description: User is not authenticated
           content:
             application/json:

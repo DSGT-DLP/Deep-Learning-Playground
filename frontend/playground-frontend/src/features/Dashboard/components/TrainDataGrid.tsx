@@ -8,7 +8,7 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
-import { TrainSpaceData } from "../types/trainTypes";
+import { TrainspaceData } from "@/features/Train/types/trainTypes";
 import { IconButton } from "gestalt";
 import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import { KeyboardArrowDown } from "@mui/icons-material";
@@ -16,7 +16,7 @@ import { KeyboardArrowDown } from "@mui/icons-material";
 const TrainDataGrid = ({
   trainSpaceDataArr,
 }: {
-  trainSpaceDataArr?: TrainSpaceData[];
+  trainSpaceDataArr?: TrainspaceData[];
 }) => {
   return (
     <>
@@ -24,13 +24,13 @@ const TrainDataGrid = ({
         <DataGrid
           initialState={{
             sorting: {
-              sortModel: [{ field: "timestamp", sort: "desc" }],
+              sortModel: [{ field: "created", sort: "desc" }],
             },
             pagination: { paginationModel: { pageSize: 10, page: 0 } },
           }}
           pageSizeOptions={[10]}
           rows={trainSpaceDataArr}
-          getRowId={(row) => row.execution_id}
+          getRowId={(row) => row.trainspaceId}
           autoHeight
           disableColumnMenu
           slots={{
@@ -61,17 +61,17 @@ const TrainDataGrid = ({
             },
             { field: "name", headerName: "Name", flex: 2, minWidth: 300 },
             {
-              field: "data_source",
+              field: "dataSource",
               headerName: "Source",
               flex: 1,
               minWidth: 150,
             },
             {
-              field: "timestamp",
+              field: "created",
               headerName: "Date",
               flex: 1,
               minWidth: 150,
-              valueFormatter: (params) => formatDate(new Date(params.value)),
+              valueFormatter: (params) => formatDate(params.value),
             },
             {
               field: "status",

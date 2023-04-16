@@ -3,7 +3,7 @@ import { ChartData } from "chart.js";
 import { enUS } from "date-fns/locale";
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import { TrainSpaceData } from "../types/trainTypes";
+import { TrainspaceData } from "@/features/Train/types/trainTypes";
 import { add, format, isFuture } from "date-fns";
 import {
   Chart as ChartJS,
@@ -25,7 +25,7 @@ ChartJS.register(
 const TrainBarChart = ({
   trainSpaceDataArr,
 }: {
-  trainSpaceDataArr?: TrainSpaceData[];
+  trainSpaceDataArr?: TrainspaceData[];
 }) => {
   const [execFrequencyBarData, setExecFrequencyBarData] = useState<ChartData<
     "bar",
@@ -46,15 +46,15 @@ const TrainBarChart = ({
       };
       const execFrequencyData: { x: Date; y: number }[] = [];
       trainSpaceDataArr.forEach((row) => {
-        if (isFuture(add(new Date(row.timestamp), { days: 30 }))) {
+        if (isFuture(add(row.created, { days: 30 }))) {
           execFrequencyData.length !== 0 &&
           sameDay(
-            new Date(row.timestamp),
+            row.created,
             execFrequencyData[execFrequencyData.length - 1].x
           )
             ? (execFrequencyData[execFrequencyData.length - 1].y += 1)
             : execFrequencyData.push({
-                x: setToNearestDay(new Date(row.timestamp)),
+                x: setToNearestDay(row.created),
                 y: 1,
               });
         }

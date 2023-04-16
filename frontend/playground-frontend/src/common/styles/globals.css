@@ -30,6 +30,14 @@ Author URI:   https://datasciencegt.org/
   --footer-height: 190px;
 }
 
+html,
+body {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
 /* -------------------------------------------------------------------------- */
 /*	General HTML
 /* -------------------------------------------------------------------------- */

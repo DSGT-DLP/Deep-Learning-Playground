@@ -33,7 +33,7 @@ def test_send_email_success(email, subject, body_text):
             "karkir0003@outlook.com",
             "subject",
             "body",
-            ["frontend/playground-frontend/src/images/logos/react-logo.png"],
+            ["frontend/playground-frontend/layer_docs/softmax_equation.png"],
         )
     ],
 )

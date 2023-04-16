@@ -150,12 +150,3 @@ def validate_keys(requestData: dict, required_keys: list[str]) -> bool:
         if key not in requestData.keys():
             return False
     return True
-
-if __name__ == '__main__':
-    file_up_ddb = FileUploadDDBUtil(FILE_UPLOAD_TABLE_NAME, AWS_REGION)
-    createFileUploadData({"s3_uri": "s3://test-bucket/test.csv", "uid": "1234", "created": get_current_timestamp(), "filename": "test.csv"})
-    print(getFileUploadData("s3://test-bucket/test.csv"));
-    updateFileUploadData({"s3_uri": "s3://test-bucket/test.csv", "filename": "test2.csv", "created": get_current_timestamp(), "uid": "1234"});
-    print(getFileUploadData("s3://test-bucket/test.csv"));
-    createFileUploadData({"s3_uri": "s3://test-bucket-2/test2.csv", "uid": "5678", "filename": "test2_1.csv", "created": get_current_timestamp()})
-    print(getAllUserFileUploadData("5678"))

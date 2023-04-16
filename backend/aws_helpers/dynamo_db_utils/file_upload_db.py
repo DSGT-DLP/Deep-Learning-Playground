@@ -57,7 +57,7 @@ class FileUploadDDBUtil(BaseDDBUtil):
 
 def getFileUploadData(s3_uri: str) -> str:
     """
-    Retrieves an entry from the `dlp-file-upload-table` DynamoDB table given an `s3_uri`. 
+    Retrieves an entry from the `dlp-file-upload-table` DynamoDB table given an `s3_uri`.
     Example output: {"s3_uri": "s3://upload-bucket/blah/blah.csv", "uid": "blah", "filename": "blah.csv", "created": "blah"}
     @param s3_uri: The s3_uri of the file that we care about
     @return: A JSON string of the entry retrieved from the table
@@ -77,7 +77,7 @@ def createFileUploadData(entryData: dict) -> str:
         raise ValueError(f"Missing keys {REQUIRED_KEYS} in request body")
 
     dynamoTable = FileUploadDDBUtil(FILE_UPLOAD_TABLE_NAME, AWS_REGION)
-    entryData["ttl"] = get_current_unix_time() + 5*24*60*60 # add time to live
+    entryData["ttl"] = get_current_unix_time() + 5 * 24 * 60 * 60  # add time to live
     newRecord = FileUploadData(**entryData)
     dynamoTable.create_record(newRecord)
     return json.dumps(newRecord.__dict__)

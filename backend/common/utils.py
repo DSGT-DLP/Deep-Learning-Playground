@@ -335,6 +335,7 @@ def get_current_timestamp() -> str:
     """
     return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
 
+
 def get_current_unix_time() -> int:
     """
     Helper function that returns the current unix timestamp

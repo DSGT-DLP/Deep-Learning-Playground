@@ -8,15 +8,21 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
-import { TrainspaceData } from "@/features/Train/types/trainTypes";
+import {
+  DATA_SOURCE_ARR,
+  TrainResultsData,
+} from "@/features/Train/types/trainTypes";
 import { IconButton } from "gestalt";
 import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import { KeyboardArrowDown } from "@mui/icons-material";
+import camelCase from "lodash.camelcase";
+import startCase from "lodash.startcase";
+import { useRouter } from "next/router";
 
 const TrainDataGrid = ({
   trainSpaceDataArr,
 }: {
-  trainSpaceDataArr?: TrainspaceData[];
+  trainSpaceDataArr?: TrainResultsData[];
 }) => {
   return (
     <>
@@ -178,6 +184,7 @@ const NewTrainSpaceMenu = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const router = useRouter();
   return (
     <div>
       <Menu
@@ -196,18 +203,20 @@ const NewTrainSpaceMenu = ({
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose} disableRipple>
-          Tabular
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          Image
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          Classical ML
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          Object Detection
-        </MenuItem>
+        {DATA_SOURCE_ARR.map((source) => (
+          <MenuItem
+            key={source}
+            value={source}
+            onClick={() => {
+              handleClose();
+              router.push({ pathname: "/train", query: { source } });
+            }}
+          >
+            {source === "CLASSICAL_ML"
+              ? "Classical ML"
+              : startCase(camelCase(source))}
+          </MenuItem>
+        ))}
       </Menu>
     </div>
   );

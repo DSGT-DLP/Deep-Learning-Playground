@@ -39,17 +39,17 @@ export interface DefaultUploadData extends UploadData {
   dataSetName: string;
 }
 
-export interface TrainspaceData {
+export interface TrainResultsData {
   name: string;
   trainspaceId: number;
   dataSource: DATA_SOURCE;
   status: TRAIN_STATUS;
   created: Date;
   step: string;
-  uid: string; // append in api
+  uid: string;
 }
 
-export interface TabularTrainspaceData extends TrainspaceData {
+export interface TabularTrainResultsData extends TrainResultsData {
   dataSource: "TABULAR";
   tabularData: TabularData<"TRAIN">;
 }

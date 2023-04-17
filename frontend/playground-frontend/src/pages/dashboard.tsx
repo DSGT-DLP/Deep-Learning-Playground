@@ -19,10 +19,10 @@ const Dashboard = () => {
   const user = useAppSelector((state) => state.currentUser.user);
   const router = useRouter();
   useEffect(() => {
-    if (!user) {
-      router.replace("/login");
+    if (router.isReady && !user) {
+      router.replace({ pathname: "/login" });
     }
-  }, [user]);
+  }, [user, router.isReady]);
   if (!isSignedIn(user)) {
     return <></>;
   }

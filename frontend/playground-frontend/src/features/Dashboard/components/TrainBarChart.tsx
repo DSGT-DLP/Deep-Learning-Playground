@@ -3,7 +3,7 @@ import { ChartData } from "chart.js";
 import { enUS } from "date-fns/locale";
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import { TrainspaceData } from "@/features/Train/types/trainTypes";
+import { TrainResultsData } from "@/features/Train/types/trainTypes";
 import { add, format, isFuture } from "date-fns";
 import {
   Chart as ChartJS,
@@ -25,7 +25,7 @@ ChartJS.register(
 const TrainBarChart = ({
   trainSpaceDataArr,
 }: {
-  trainSpaceDataArr?: TrainspaceData[];
+  trainSpaceDataArr?: TrainResultsData[];
 }) => {
   const [execFrequencyBarData, setExecFrequencyBarData] = useState<ChartData<
     "bar",

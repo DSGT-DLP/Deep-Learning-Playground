@@ -1,13 +1,13 @@
 import { ChartData } from "chart.js";
 import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
-import { TrainspaceData } from "@/features/Train/types/trainTypes";
+import { TrainResultsData } from "@/features/Train/types/trainTypes";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 ChartJS.register(ArcElement, Tooltip, Legend);
 const TrainDoughnutChart = ({
   trainSpaceDataArr,
 }: {
-  trainSpaceDataArr?: TrainspaceData[];
+  trainSpaceDataArr?: TrainResultsData[];
 }) => {
   const [modelTypeDoughnutData, setModelTypeDoughnutData] =
     useState<ChartData<"doughnut"> | null>(null);

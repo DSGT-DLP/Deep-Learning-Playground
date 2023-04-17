@@ -1,11 +1,11 @@
 import { backendApi } from "@/common/redux/backendApi";
-import { TrainspaceData } from "@/features/Train/types/trainTypes";
+import { TrainResultsData } from "@/features/Train/types/trainTypes";
 import { auth } from "@/common/utils/firebase";
 import camelCase from "lodash.camelcase";
 
 const dashboardApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({
-    getExecutionsData: builder.query<TrainspaceData[], void>({
+    getExecutionsData: builder.query<TrainResultsData[], void>({
       query: () => ({
         url: "/api/getTrainspaceData",
         method: "POST",

@@ -1,37 +1,52 @@
 import Footer from "@/common/components/Footer";
 import NavbarMain from "@/common/components/NavBarMain";
-import {
-  Button,
-  FormControl,
-  FormHelperText,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
 import {
   BaseTrainspaceData,
+  DATA_SOURCE,
   DATA_SOURCE_ARR,
 } from "@/features/Train/types/trainTypes";
-import React from "react";
+import React, { useEffect } from "react";
 import startCase from "lodash.startcase";
 import camelCase from "lodash.camelcase";
 import { Controller, useForm } from "react-hook-form";
+import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
+import { useRouter } from "next/router";
+import { isSignedIn } from "@/common/redux/userLogin";
+import { setTrainspace } from "@/features/Train/redux/trainspaceSlice";
 
-const TrainSpaceNew = () => {
+const Trainspace = () => {
   const {
     handleSubmit,
     formState: { errors },
     register,
     control,
+    setValue,
   } = useForm<BaseTrainspaceData>({
-    defaultValues: { name: "My Trainspace" },
+    defaultValues: {
+      name: "My Trainspace",
+    },
   });
   const onSubmit = handleSubmit((data: BaseTrainspaceData) => {
     console.log(data);
+    dispatch(setTrainspace(data));
   });
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.currentUser.user);
+  const router = useRouter();
+  useEffect(() => {
+    if (router.isReady && !user) {
+      router.replace({ pathname: "/login" });
+    }
+  }, [user, router.isReady]);
+  useEffect(() => {
+    if (router.isReady && router.query.source) {
+      setValue("dataSource", router.query.source as DATA_SOURCE);
+    }
+  }, [router.isReady]);
+  if (!isSignedIn(user)) {
+    return <></>;
+  }
   return (
     <div style={{ height: "100vh" }}>
       <NavbarMain />
@@ -100,4 +115,4 @@ const TrainSpaceNew = () => {
   );
 };
 
-export default TrainSpaceNew;
+export default Trainspace;

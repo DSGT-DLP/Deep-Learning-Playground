@@ -1,17 +1,15 @@
 import { Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
-import * as React from "react";
+import React from "react";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  BaseTrainspaceData,
-  DATA_SOURCE,
-  DATA_SOURCE_ARR,
-} from "../types/trainTypes";
+import { BaseTrainspaceData, DATA_SOURCE } from "../types/trainTypes";
 import { useAppDispatch } from "@/common/redux/hooks";
 import { useRouter } from "next/router";
 import { setTrainspace } from "../redux/trainspaceSlice";
-import startCase from "lodash.startcase";
-import camelCase from "lodash.camelcase";
+import {
+  DATA_SOURCE_ARR,
+  DATA_SOURCE_SETTINGS,
+} from "../constants/trainConstants";
 const CreateTrainspace = () => {
   const {
     handleSubmit,
@@ -81,9 +79,7 @@ const CreateTrainspace = () => {
             >
               {DATA_SOURCE_ARR.map((source) => (
                 <MenuItem key={source} value={source}>
-                  {source === "CLASSICAL_ML"
-                    ? "Classical ML"
-                    : startCase(camelCase(source))}
+                  {DATA_SOURCE_SETTINGS[source].name}
                 </MenuItem>
               ))}
             </TextField>

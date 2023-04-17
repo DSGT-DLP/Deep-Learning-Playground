@@ -8,16 +8,17 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
-import {
-  DATA_SOURCE_ARR,
-  TrainResultsData,
-} from "@/features/Train/types/trainTypes";
+import { TrainResultsData } from "@/features/Train/types/trainTypes";
 import { IconButton } from "gestalt";
 import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import { KeyboardArrowDown } from "@mui/icons-material";
-import camelCase from "lodash.camelcase";
-import startCase from "lodash.startcase";
 import { useRouter } from "next/router";
+import { useAppDispatch } from "@/common/redux/hooks";
+import { setTrainspace } from "@/features/Train/redux/trainspaceSlice";
+import {
+  DATA_SOURCE_ARR,
+  DATA_SOURCE_SETTINGS,
+} from "@/features/Train/constants/trainConstants";
 
 const TrainDataGrid = ({
   trainSpaceDataArr,
@@ -185,6 +186,7 @@ const NewTrainSpaceMenu = ({
     setAnchorEl(null);
   };
   const router = useRouter();
+  const dispatch = useAppDispatch();
   return (
     <div>
       <Menu
@@ -209,12 +211,11 @@ const NewTrainSpaceMenu = ({
             value={source}
             onClick={() => {
               handleClose();
+              dispatch(setTrainspace());
               router.push({ pathname: "/train", query: { source } });
             }}
           >
-            {source === "CLASSICAL_ML"
-              ? "Classical ML"
-              : startCase(camelCase(source))}
+            {DATA_SOURCE_SETTINGS[source].name}
           </MenuItem>
         ))}
       </Menu>

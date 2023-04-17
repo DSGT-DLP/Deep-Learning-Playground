@@ -5,9 +5,11 @@ import { useAppSelector } from "@/common/redux/hooks";
 import { useRouter } from "next/router";
 import { isSignedIn } from "@/common/redux/userLogin";
 import CreateTrainspace from "@/features/Train/components/CreateTrainspace";
+import TrainspaceSteps from "@/features/Train/components/TrainspaceSteps";
 
 const Trainspace = () => {
   const user = useAppSelector((state) => state.currentUser.user);
+  const trainspace = useAppSelector((state) => state.trainspace.current);
   const router = useRouter();
   useEffect(() => {
     if (router.isReady && !user) {
@@ -20,7 +22,7 @@ const Trainspace = () => {
   return (
     <div style={{ height: "100vh" }}>
       <NavbarMain />
-      <CreateTrainspace />
+      {trainspace ? <TrainspaceSteps /> : <CreateTrainspace />}
       <Footer />
     </div>
   );

@@ -1,12 +1,18 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { BaseTrainspaceData } from "../types/trainTypes";
 
+interface TrainspaceState {
+  current?: BaseTrainspaceData;
+}
 export const trainspaceSlice = createSlice({
   name: "trainspace",
-  initialState: null as BaseTrainspaceData | null,
+  initialState: {} as TrainspaceState,
   reducers: {
-    setTrainspace: (state, { payload }: PayloadAction<BaseTrainspaceData>) => {
-      state = payload;
+    setTrainspace: (
+      state,
+      { payload }: PayloadAction<BaseTrainspaceData | undefined>
+    ) => {
+      state.current = payload;
     },
   },
 });

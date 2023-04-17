@@ -1,14 +1,10 @@
-export const DATA_SOURCE_ARR = [
-  "TABULAR",
-  "PRETRAINED",
-  "IMAGE",
-  "AUDIO",
-  "TEXTUAL",
-  "CLASSICAL_ML",
-  "OBJECT_DETECTION",
-] as const;
+import {
+  DATA_SOURCE_ARR,
+  TABULAR_STEPS_ARR,
+} from "@/features/Train/constants/trainConstants";
 
 export type DATA_SOURCE = typeof DATA_SOURCE_ARR[number];
+
 export type TRAIN_STATUS =
   | "QUEUED"
   | "STARTING"
@@ -16,14 +12,6 @@ export type TRAIN_STATUS =
   | "TRAINING"
   | "SUCCESS"
   | "ERROR";
-
-export const TABULAR_STEPS_ARR = [
-  "UPLOAD",
-  "PARAMETERS",
-  "REVIEW",
-  "TRAIN",
-] as const;
-export type TABULAR_STEPS = typeof TABULAR_STEPS_ARR[number];
 
 export interface UploadData {
   isDefaultDataSet: boolean;
@@ -58,6 +46,9 @@ export interface BaseTrainspaceData {
   name: string;
   dataSource: DATA_SOURCE;
 }
+
+export type ALL_STEPS = TABULAR_STEPS;
+export type TABULAR_STEPS = typeof TABULAR_STEPS_ARR[number];
 
 export interface TabularData<T extends TABULAR_STEPS = TABULAR_STEPS>
   extends BaseTrainspaceData {

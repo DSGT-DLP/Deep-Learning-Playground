@@ -1,6 +1,6 @@
 import React from "react";
 import { Controller, UseFormReturn, useForm } from "react-hook-form";
-import { BaseTrainspaceData, DefaultUploadData } from "../types/trainTypes";
+import { DefaultDatasetData } from "../types/trainTypes";
 import {
   FormControl,
   FormControlLabel,
@@ -13,14 +13,15 @@ import {
 } from "@mui/material";
 import { useAppSelector } from "@/common/redux/hooks";
 import { DATA_SOURCE_SETTINGS } from "../constants/trainConstants";
+import { DataGrid } from "@mui/x-data-grid";
 
-const UploadStep = ({
+const DatasetStep = ({
   renderStepperButtons,
 }: {
   renderStepperButtons: (handleStepSubmit: () => void) => React.ReactNode;
 }) => {
   const [currTab, setCurrTab] = React.useState("upload-dataset");
-  const defaultDatasetMethods = useForm<DefaultUploadData>();
+  const defaultDatasetMethods = useForm<DefaultDatasetData>();
   return (
     <Stack spacing={3}>
       <Tabs
@@ -46,13 +47,13 @@ const UploadStep = ({
 };
 
 const UploadDatasetPanel = () => {
-  return <></>;
+  return <DataGrid columns={[]} rows={[]}></DataGrid>;
 };
 
 const DefaultDatasetPanel = ({
   methods,
 }: {
-  methods: UseFormReturn<DefaultUploadData, unknown>;
+  methods: UseFormReturn<DefaultDatasetData, unknown>;
 }) => {
   const trainspace = useAppSelector((state) => state.trainspace.current);
   if (!trainspace) return <></>;
@@ -82,4 +83,4 @@ const DefaultDatasetPanel = ({
   );
 };
 
-export default UploadStep;
+export default DatasetStep;

@@ -13,16 +13,24 @@ export type TRAIN_STATUS =
   | "SUCCESS"
   | "ERROR";
 
-export interface UploadData {
+export interface FileUploadData {
+  fileUrl: string;
+  name: string;
+  lastModified: Date;
+  contentType: string;
+  sizeInBytes: number;
+}
+
+export interface DatasetData {
   isDefaultDataSet: boolean;
 }
 
-export interface FileUploadData extends UploadData {
+export interface FileDatasetData extends DatasetData {
   isDefaultDataSet: false;
   fileUrl: string;
 }
 
-export interface DefaultUploadData extends UploadData {
+export interface DefaultDatasetData extends DatasetData {
   isDefaultDataSet: true;
   dataSetName: string;
 }
@@ -45,7 +53,7 @@ export interface TabularTrainResultsData extends TrainResultsData {
 export interface BaseTrainspaceData {
   name: string;
   dataSource: DATA_SOURCE;
-  step: string;
+  step: ALL_STEPS;
 }
 
 export type ALL_STEPS = TABULAR_STEPS;
@@ -55,8 +63,8 @@ export interface TabularData<T extends TABULAR_STEPS = TABULAR_STEPS>
   extends BaseTrainspaceData {
   dataSource: "TABULAR";
   step: T;
-  uploadData: T extends "PARAMETERS" | "REVIEW" | "TRAIN"
-    ? UploadData
+  datasetData: T extends "PARAMETERS" | "REVIEW" | "TRAIN"
+    ? DatasetData
     : undefined;
   parameterData: T extends "REVIEW" | "TRAIN"
     ? TabularParameterData

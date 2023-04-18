@@ -1,10 +1,5 @@
-import {
-  ALL_STEPS,
-  BaseTrainspaceData,
-  DATA_SOURCE,
-} from "@/features/Train/types/trainTypes";
-import UploadStep from "../components/UploadStep";
-import { UseFormReturn } from "react-hook-form";
+import { ALL_STEPS, DATA_SOURCE } from "@/features/Train/types/trainTypes";
+import DatasetStep from "../components/DatasetStep";
 
 export const DATA_SOURCE_ARR = [
   "TABULAR",
@@ -82,12 +77,12 @@ export const STEPS_SETTINGS: {
     }>;
   };
 } = {
-  DATASET: { name: "Dataset", optional: false, stepComponent: UploadStep },
+  DATASET: { name: "Dataset", optional: false, stepComponent: DatasetStep },
   PARAMETERS: {
     name: "Parameters",
     optional: false,
-    stepComponent: UploadStep,
+    stepComponent: DatasetStep,
   },
-  REVIEW: { name: "Review", optional: false, stepComponent: UploadStep },
-  TRAIN: { name: "Train", optional: false, stepComponent: UploadStep },
+  REVIEW: { name: "Review", optional: false, stepComponent: DatasetStep },
+  TRAIN: { name: "Train", optional: false, stepComponent: DatasetStep },
 };

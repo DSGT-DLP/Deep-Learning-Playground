@@ -12,7 +12,7 @@ import {
   Stepper,
   TextField,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yLight } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import {

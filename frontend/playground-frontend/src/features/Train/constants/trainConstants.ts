@@ -1,8 +1,10 @@
 import {
   ALL_STEPS,
+  BaseTrainspaceData,
   DATA_SOURCE,
-  TABULAR_STEPS,
 } from "@/features/Train/types/trainTypes";
+import UploadStep from "../components/UploadStep";
+import { UseFormReturn } from "react-hook-form";
 
 export const DATA_SOURCE_ARR = [
   "TABULAR",
@@ -15,50 +17,77 @@ export const DATA_SOURCE_ARR = [
 ] as const;
 
 export const TABULAR_STEPS_ARR = [
-  "UPLOAD",
+  "DATASET",
   "PARAMETERS",
   "REVIEW",
   "TRAIN",
 ] as const;
 
 export const DATA_SOURCE_SETTINGS: {
-  [T in DATA_SOURCE]: { name: string; steps: readonly string[] };
+  [T in DATA_SOURCE]: {
+    name: string;
+    steps: readonly string[];
+    defaultDatasets: { label: string; value: string }[];
+  };
 } = {
   TABULAR: {
     name: "Tabular",
     steps: TABULAR_STEPS_ARR,
+    defaultDatasets: [
+      { label: "Iris", value: "IRIS" },
+      { label: "California Housing", value: "CALIFORNIAHOUSING" },
+      { label: "Diabetes", value: "DIABETES" },
+      { label: "Digits", value: "DIGITS" },
+      { label: "Wine", value: "WINE" },
+    ],
   },
   PRETRAINED: {
     name: "Pretrained",
-    steps: [],
+    steps: ["UPLOAD"],
+    defaultDatasets: [],
   },
   IMAGE: {
     name: "Image",
-    steps: [],
+    steps: ["UPLOAD"],
+    defaultDatasets: [],
   },
   AUDIO: {
     name: "Audio",
-    steps: [],
+    steps: ["UPLOAD"],
+    defaultDatasets: [],
   },
   TEXTUAL: {
     name: "Textual",
-    steps: [],
+    steps: ["UPLOAD"],
+    defaultDatasets: [],
   },
   CLASSICAL_ML: {
     name: "Classical ML",
-    steps: [],
+    steps: ["UPLOAD"],
+    defaultDatasets: [],
   },
   OBJECT_DETECTION: {
     name: "Object Detection",
-    steps: [],
+    steps: ["UPLOAD"],
+    defaultDatasets: [],
   },
 };
 
 export const STEPS_SETTINGS: {
-  [T in ALL_STEPS]: { name: string; optional: boolean };
+  [T in ALL_STEPS]: {
+    name: string;
+    optional: boolean;
+    stepComponent: React.FC<{
+      renderStepperButtons: (handleStepSubmit: () => void) => React.ReactNode;
+    }>;
+  };
 } = {
-  UPLOAD: { name: "Upload", optional: false },
-  PARAMETERS: { name: "Parameters", optional: false },
-  REVIEW: { name: "Review", optional: false },
-  TRAIN: { name: "Train", optional: false },
+  DATASET: { name: "Dataset", optional: false, stepComponent: UploadStep },
+  PARAMETERS: {
+    name: "Parameters",
+    optional: false,
+    stepComponent: UploadStep,
+  },
+  REVIEW: { name: "Review", optional: false, stepComponent: UploadStep },
+  TRAIN: { name: "Train", optional: false, stepComponent: UploadStep },
 };

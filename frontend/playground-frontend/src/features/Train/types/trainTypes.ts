@@ -45,6 +45,7 @@ export interface TabularTrainResultsData extends TrainResultsData {
 export interface BaseTrainspaceData {
   name: string;
   dataSource: DATA_SOURCE;
+  step: string;
 }
 
 export type ALL_STEPS = TABULAR_STEPS;

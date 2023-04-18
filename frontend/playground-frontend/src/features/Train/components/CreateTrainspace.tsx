@@ -25,7 +25,7 @@ const CreateTrainspace = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const onSubmit = handleSubmit((data: BaseTrainspaceData) => {
-    console.log(data);
+    data.step = DATA_SOURCE_SETTINGS[data.dataSource].steps[0];
     dispatch(setTrainspace(data));
   });
   useEffect(() => {

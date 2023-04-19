@@ -329,6 +329,7 @@ def executions_table():
         print(traceback.format_exc())
         return send_traceback_error()
 
+
 @app.route("/api/getTrainspaceData", methods=["POST"])
 def trainspace_table():
     try:
@@ -339,6 +340,7 @@ def trainspace_table():
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
+
 
 @app.route("/api/getExecutionsFilesPresignedUrls", methods=["POST"])
 def executions_files():

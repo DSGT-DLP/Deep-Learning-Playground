@@ -8,15 +8,22 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
-import { TrainSpaceData } from "../types/trainTypes";
+import { TrainResultsData } from "@/features/Train/types/trainTypes";
 import { IconButton } from "gestalt";
 import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import { KeyboardArrowDown } from "@mui/icons-material";
+import { useRouter } from "next/router";
+import { useAppDispatch } from "@/common/redux/hooks";
+import { setTrainspace } from "@/features/Train/redux/trainspaceSlice";
+import {
+  DATA_SOURCE_ARR,
+  DATA_SOURCE_SETTINGS,
+} from "@/features/Train/constants/trainConstants";
 
 const TrainDataGrid = ({
   trainSpaceDataArr,
 }: {
-  trainSpaceDataArr?: TrainSpaceData[];
+  trainSpaceDataArr?: TrainResultsData[];
 }) => {
   return (
     <>
@@ -24,13 +31,13 @@ const TrainDataGrid = ({
         <DataGrid
           initialState={{
             sorting: {
-              sortModel: [{ field: "timestamp", sort: "desc" }],
+              sortModel: [{ field: "created", sort: "desc" }],
             },
             pagination: { paginationModel: { pageSize: 10, page: 0 } },
           }}
           pageSizeOptions={[10]}
           rows={trainSpaceDataArr}
-          getRowId={(row) => row.execution_id}
+          getRowId={(row) => row.trainspaceId}
           autoHeight
           disableColumnMenu
           slots={{
@@ -61,17 +68,17 @@ const TrainDataGrid = ({
             },
             { field: "name", headerName: "Name", flex: 2, minWidth: 300 },
             {
-              field: "data_source",
+              field: "dataSource",
               headerName: "Source",
               flex: 1,
               minWidth: 150,
             },
             {
-              field: "timestamp",
+              field: "created",
               headerName: "Date",
               flex: 1,
               minWidth: 150,
-              valueFormatter: (params) => formatDate(new Date(params.value)),
+              valueFormatter: (params) => formatDate(params.value),
             },
             {
               field: "status",
@@ -178,6 +185,8 @@ const NewTrainSpaceMenu = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   return (
     <div>
       <Menu
@@ -196,18 +205,19 @@ const NewTrainSpaceMenu = ({
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose} disableRipple>
-          Tabular
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          Image
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          Classical ML
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          Object Detection
-        </MenuItem>
+        {DATA_SOURCE_ARR.map((source) => (
+          <MenuItem
+            key={source}
+            value={source}
+            onClick={() => {
+              handleClose();
+              dispatch(setTrainspace());
+              router.push({ pathname: "/train", query: { source } });
+            }}
+          >
+            {DATA_SOURCE_SETTINGS[source].name}
+          </MenuItem>
+        ))}
       </Menu>
     </div>
   );

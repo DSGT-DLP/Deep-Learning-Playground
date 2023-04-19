@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import shutil
 
 from flask import Flask, request, send_from_directory
+from backend.aws_helpers.dynamo_db_utils.trainspace_db import getAllUserTrainspaceData
 from backend.aws_helpers.s3_utils.s3_bucket_names import EXECUTION_BUCKET_NAME
 from backend.aws_helpers.s3_utils.s3_client import (
     get_presigned_url_from_exec_file,
@@ -328,6 +329,16 @@ def executions_table():
         print(traceback.format_exc())
         return send_traceback_error()
 
+@app.route("/api/getTrainspaceData", methods=["POST"])
+def trainspace_table():
+    try:
+        request_data = json.loads(request.data)
+        user_id = request_data["user"]["uid"]
+        record = getAllUserTrainspaceData(user_id)
+        return send_success({"record": record})
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
 
 @app.route("/api/getExecutionsFilesPresignedUrls", methods=["POST"])
 def executions_files():

@@ -14,9 +14,8 @@ export type TRAIN_STATUS =
   | "ERROR";
 
 export interface FileUploadData {
-  fileUrl: string;
   name: string;
-  lastModified: Date;
+  lastModified: string;
   contentType: string;
   sizeInBytes: number;
 }
@@ -27,7 +26,7 @@ export interface DatasetData {
 
 export interface FileDatasetData extends DatasetData {
   isDefaultDataSet: false;
-  fileUrl: string;
+  name: string;
 }
 
 export interface DefaultDatasetData extends DatasetData {

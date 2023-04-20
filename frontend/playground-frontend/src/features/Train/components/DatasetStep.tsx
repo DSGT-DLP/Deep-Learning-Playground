@@ -2,6 +2,7 @@ import React from "react";
 import { Controller, UseFormReturn, useForm } from "react-hook-form";
 import { DefaultDatasetData } from "../types/trainTypes";
 import {
+  Button,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -14,6 +15,13 @@ import {
 import { useAppSelector } from "@/common/redux/hooks";
 import { DATA_SOURCE_SETTINGS } from "../constants/trainConstants";
 import { DataGrid } from "@mui/x-data-grid";
+import {
+  useGetDatasetFilesDataQuery,
+  useUploadDatasetFileMutation,
+} from "@/features/Train/redux/trainspaceApi";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { formatDate } from "@/common/utils/dateFormat";
+import prettyBytes from "pretty-bytes";
 
 const DatasetStep = ({
   renderStepperButtons,
@@ -47,7 +55,67 @@ const DatasetStep = ({
 };
 
 const UploadDatasetPanel = () => {
-  return <DataGrid columns={[]} rows={[]}></DataGrid>;
+  //const [getDatasetUploadPresignedUrl] =
+  //  useGetDatasetUploadPresignedUrlMutation();
+  const [uploadFile] = useUploadDatasetFileMutation();
+  const { data, refetch } = useGetDatasetFilesDataQuery();
+  if (!data) return <></>;
+  return (
+    <>
+      <Stack direction={"row"} spacing={2}>
+        <Button
+          variant="contained"
+          component="label"
+          startIcon={<CloudUploadIcon />}
+        >
+          Upload
+          <input
+            type="file"
+            hidden
+            onChange={(e) => {
+              if (e.target.files && e.target.files[0]) {
+                console.log(e.target.files[0]);
+
+                uploadFile({ file: e.target.files[0] });
+              }
+              e.target.value = "";
+            }}
+          />
+        </Button>
+        <Button variant="outlined" onClick={() => refetch()}>
+          Refresh
+        </Button>
+      </Stack>
+      <DataGrid
+        initialState={{
+          sorting: {
+            sortModel: [{ field: "lastModified", sort: "desc" }],
+          },
+        }}
+        rows={data}
+        hideFooter={true}
+        getRowId={(row) => row.name}
+        autoHeight
+        disableColumnMenu
+        sx={{ border: 0 }}
+        columns={[
+          { field: "name", headerName: "Name", flex: 3 },
+          {
+            field: "sizeInBytes",
+            headerName: "Size",
+            flex: 1,
+            valueFormatter: (params) => prettyBytes(params.value),
+          },
+          {
+            field: "lastModified",
+            headerName: "Last Modified",
+            flex: 2,
+            valueFormatter: (params) => formatDate(new Date(params.value)),
+          },
+        ]}
+      ></DataGrid>
+    </>
+  );
 };
 
 const DefaultDatasetPanel = ({

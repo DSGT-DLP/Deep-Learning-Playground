@@ -333,6 +333,7 @@ def executions_table():
         print(traceback.format_exc())
         return send_traceback_error()
 
+
 @app.route("/api/getTrainspaceData", methods=["POST"])
 def trainspace_table():
     try:
@@ -343,6 +344,7 @@ def trainspace_table():
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
+
 
 @app.route("/api/getExecutionsFilesPresignedUrls", methods=["POST"])
 def executions_files():
@@ -365,27 +367,46 @@ def executions_files():
         print(traceback.format_exc())
         return send_traceback_error()
 
+
 @app.route("/api/getUserDatasetFileUploadPresignedPostObj", methods=["POST"])
 def getUserDatasetFileUploadPresignedPostObj():
     try:
         request_data = json.loads(request.data)
-        post_obj = get_presigned_upload_post_from_user_dataset_file(request_data["user"]["uid"], request_data["name"])
-        return send_success({"message": "File upload success", "presigned_post_obj": post_obj})
+        post_obj = get_presigned_upload_post_from_user_dataset_file(
+            request_data["user"]["uid"], request_data["name"]
+        )
+        return send_success(
+            {"message": "File upload success", "presigned_post_obj": post_obj}
+        )
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
+
 
 @app.route("/api/getUserDatasetFilesData", methods=["POST"])
 def getUserDatasetFilesData():
     try:
         request_data = json.loads(request.data)
         file_objects = get_user_dataset_file_objects(request_data["user"]["uid"])
-        data = list(map(lambda f: {"name": Path(f['Key']).name, "type": Path(f['Key']).suffix, "last_modified": f['LastModified'].isoformat(), "size": f['Size']}, file_objects ))
+        data = list(
+            map(
+                lambda f: {
+                    "name": Path(f["Key"]).name,
+                    "type": Path(f["Key"]).suffix,
+                    "last_modified": f["LastModified"].isoformat(),
+                    "size": f["Size"],
+                },
+                file_objects,
+            )
+        )
         print(data)
-        return send_success({"message": "Get dataset files data success", "data": json.dumps(data)})
+        return send_success(
+            {"message": "Get dataset files data success", "data": json.dumps(data)}
+        )
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
+
 
 @app.route("/api/upload", methods=["POST"])
 def upload():

@@ -1,6 +1,14 @@
 import React from "react";
-import { Controller, UseFormReturn, useForm } from "react-hook-form";
-import { DefaultDatasetData } from "../types/trainTypes";
+import {
+  Controller,
+  ControllerFieldState,
+  ControllerRenderProps,
+  FieldValues,
+  UseFormReturn,
+  UseFormStateReturn,
+  useForm,
+} from "react-hook-form";
+import { DefaultDatasetData, FileUploadData } from "../types/trainTypes";
 import {
   Button,
   FormControl,
@@ -22,6 +30,7 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { formatDate } from "@/common/utils/dateFormat";
 import prettyBytes from "pretty-bytes";
+import { FileDatasetData } from "../types/trainTypes";
 
 const DatasetStep = ({
   renderStepperButtons,
@@ -30,6 +39,7 @@ const DatasetStep = ({
 }) => {
   const [currTab, setCurrTab] = React.useState("upload-dataset");
   const defaultDatasetMethods = useForm<DefaultDatasetData>();
+  const uploadDatasetMethods = useForm<FileDatasetData>();
   return (
     <Stack spacing={3}>
       <Tabs
@@ -43,7 +53,7 @@ const DatasetStep = ({
         <Tab label="Default Datasets" value="default-dataset" />
       </Tabs>
       {currTab === "upload-dataset" ? (
-        <UploadDatasetPanel />
+        <UploadDatasetPanel methods={uploadDatasetMethods} />
       ) : (
         <DefaultDatasetPanel methods={defaultDatasetMethods} />
       )}
@@ -54,12 +64,15 @@ const DatasetStep = ({
   );
 };
 
-const UploadDatasetPanel = () => {
+const UploadDatasetPanel = ({
+  methods,
+}: {
+  methods: UseFormReturn<FileDatasetData, unknown>;
+}) => {
   //const [getDatasetUploadPresignedUrl] =
   //  useGetDatasetUploadPresignedUrlMutation();
   const [uploadFile] = useUploadDatasetFileMutation();
   const { data, refetch } = useGetDatasetFilesDataQuery();
-  if (!data) return <></>;
   return (
     <>
       <Stack direction={"row"} spacing={2}>
@@ -86,35 +99,74 @@ const UploadDatasetPanel = () => {
           Refresh
         </Button>
       </Stack>
-      <DataGrid
-        initialState={{
-          sorting: {
-            sortModel: [{ field: "lastModified", sort: "desc" }],
-          },
-        }}
-        rows={data}
-        hideFooter={true}
-        getRowId={(row) => row.name}
-        autoHeight
-        disableColumnMenu
-        sx={{ border: 0 }}
-        columns={[
-          { field: "name", headerName: "Name", flex: 3 },
-          {
-            field: "sizeInBytes",
-            headerName: "Size",
-            flex: 1,
-            valueFormatter: (params) => prettyBytes(params.value),
-          },
-          {
-            field: "lastModified",
-            headerName: "Last Modified",
-            flex: 2,
-            valueFormatter: (params) => formatDate(new Date(params.value)),
-          },
-        ]}
-      ></DataGrid>
+      {data && <UploadDataGrid data={data} methods={methods} />}
     </>
+  );
+};
+
+const UploadDataGrid = ({
+  data,
+  methods,
+}: {
+  data: FileUploadData[];
+  methods: UseFormReturn<FileDatasetData, unknown>;
+}) => {
+  return (
+    <Controller
+      name="name"
+      control={methods.control}
+      render={({ field: { onChange, value } }) => (
+        <DataGrid
+          initialState={{
+            sorting: {
+              sortModel: [{ field: "lastModified", sort: "desc" }],
+            },
+          }}
+          disableRowSelectionOnClick
+          rows={data}
+          hideFooter={true}
+          getRowId={(row) => row.name}
+          autoHeight
+          disableColumnMenu
+          sx={{ border: 0 }}
+          columns={[
+            {
+              field: "radio",
+              width: 75,
+              filterable: false,
+              sortable: false,
+              hideable: false,
+              disableColumnMenu: true,
+              renderHeader: () => {
+                return <></>;
+              },
+              renderCell: (params) => {
+                return (
+                  <Radio
+                    value={params.row.name}
+                    checked={value === params.row.name}
+                    onChange={onChange}
+                  />
+                );
+              },
+            },
+            { field: "name", headerName: "Name", flex: 3 },
+            {
+              field: "sizeInBytes",
+              headerName: "Size",
+              flex: 1,
+              valueFormatter: (params) => prettyBytes(params.value),
+            },
+            {
+              field: "lastModified",
+              headerName: "Last Modified",
+              flex: 2,
+              valueFormatter: (params) => formatDate(new Date(params.value)),
+            },
+          ]}
+        />
+      )}
+    />
   );
 };
 
@@ -133,7 +185,7 @@ const DefaultDatasetPanel = ({
         control={methods.control}
         rules={{ required: true }}
         render={({ field: { onChange, value } }) => (
-          <RadioGroup onChange={onChange} value={value}>
+          <RadioGroup onChange={onChange} value={value ?? ""}>
             {DATA_SOURCE_SETTINGS[trainspace.dataSource].defaultDatasets.map(
               (defaultDataset) => (
                 <FormControlLabel

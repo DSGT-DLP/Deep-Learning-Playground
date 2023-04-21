@@ -115,3 +115,14 @@ def get_presigned_upload_post_from_user_dataset_file(user_id: str, filename: str
     """
     post_obj = get_presigned_upload_post_from_bucket(FILE_UPLOAD_BUCKET_NAME, user_id + "/" + filename)
     return post_obj
+
+def get_column_name(user_id: str, filename: str):
+    s3 = boto3.client("s3")
+    response = s3.select_object_content(Bucket=FILE_UPLOAD_BUCKET_NAME, Key=user_id + "/" + filename, ExpressionType='SQL', Expression="SELECT * FROM S3Object LIMIT 1", InputSerialization={'CSV': {"FileHeaderInfo": "NONE"}}, OutputSerialization={'CSV': {}})
+    # Iterate over the response records to extract the header row
+    for event in response['Payload']:
+        if 'Records' in event:
+            records = event['Records']['Payload'].decode('utf-8')
+            print(records)
+            columns = records.split('\n')[0].split(',')
+    return columns

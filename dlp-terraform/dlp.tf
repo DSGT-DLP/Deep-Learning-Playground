@@ -126,6 +126,36 @@ resource "aws_dynamodb_table" "userprogress_table" {
   point_in_time_recovery { enabled = true }
   server_side_encryption { enabled = true }
 }
+
+resource "aws_dynamodb_table" "trainspace" {
+  name           = "trainspace"
+  hash_key       = "trainspace_id"
+  billing_mode   = "PROVISIONED"
+  write_capacity = 10
+  read_capacity  = 10
+  attribute {
+    name = "trainspace_id"
+    type = "S"
+  }
+  attribute {
+    name = "uid"
+    type = "S"
+  }
+  ttl {
+    enabled        = true
+    attribute_name = "expiryPeriod"
+  }
+  global_secondary_index {
+    name            = "uid"
+    hash_key        = "uid"
+    write_capacity  = 10
+    read_capacity   = 10
+    projection_type = "ALL"
+  }
+  point_in_time_recovery { enabled = true }
+  server_side_encryption { enabled = true }
+}
+
 resource "aws_appautoscaling_target" "dynamodb_table_userprogress_read_target" {
   max_capacity       = 10
   min_capacity       = 1

@@ -64,6 +64,7 @@ def get_presigned_url_from_bucket(bucket_name: str, bucket_path: str):
         "get_object", Params={"Bucket": bucket_name, "Key": bucket_path}
     )
 
+
 def get_presigned_upload_post_from_bucket(bucket_name: str, object_name: str):
     """
     Generate a presigned URL to upload a file to an S3 bucket
@@ -88,11 +89,12 @@ def get_objects_in_folder(bucket_name: str, folder_prefix: str):
         A list of dictionaries containing data for each object in the folder.
     """
     # Create an S3 client
-    s3 = boto3.client('s3')
-    
+    s3 = boto3.client("s3")
+
     # List all objects in the specified folder
     objects = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_prefix)
-    return objects['Contents']
+    return objects["Contents"]
+
 
 def get_user_dataset_file_objects(user_id: str):
     """
@@ -106,12 +108,16 @@ def get_user_dataset_file_objects(user_id: str):
     """
     return get_objects_in_folder(FILE_UPLOAD_BUCKET_NAME, user_id)
 
+
 def get_presigned_url_from_exec_file(bucket_name: str, exec_id: str, filename: str):
     return get_presigned_url_from_bucket(bucket_name, exec_id + "/" + filename)
+
 
 def get_presigned_upload_post_from_user_dataset_file(user_id: str, filename: str):
     """
     Get the presigned url for a file stored by a user in the file upload S3 bucket.
     """
-    post_obj = get_presigned_upload_post_from_bucket(FILE_UPLOAD_BUCKET_NAME, user_id + "/" + filename)
+    post_obj = get_presigned_upload_post_from_bucket(
+        FILE_UPLOAD_BUCKET_NAME, user_id + "/" + filename
+    )
     return post_obj

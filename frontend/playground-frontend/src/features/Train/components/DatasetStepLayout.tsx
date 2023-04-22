@@ -1,15 +1,6 @@
 import React from "react";
+import { Controller, UseFormReturn } from "react-hook-form";
 import {
-  Controller,
-  ControllerFieldState,
-  ControllerRenderProps,
-  FieldValues,
-  UseFormReturn,
-  UseFormStateReturn,
-  useForm,
-} from "react-hook-form";
-import {
-  BaseTrainspaceData,
   DefaultDatasetData,
   FileUploadData,
   FileDatasetData,
@@ -26,11 +17,8 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
-import {
-  DATA_SOURCE_SETTINGS,
-  setTrainspaceDataset,
-} from "../constants/trainConstants";
+import { useAppSelector } from "@/common/redux/hooks";
+import { DATA_SOURCE_SETTINGS } from "@/features/Train/constants/trainConstants";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   useGetDatasetFilesDataQuery,
@@ -39,19 +27,20 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { formatDate } from "@/common/utils/dateFormat";
 import prettyBytes from "pretty-bytes";
-import { setTrainspaceData } from "../redux/trainspaceSlice";
 
-const DatasetStep = ({
-  renderStepperButtons,
+export const DatasetStepTabLayout = ({
+  currTab,
+  setCurrTab,
+  tabs,
+  tabComponents,
+  stepperButtons,
 }: {
-  renderStepperButtons: (
-    submitTrainspace: (data: BaseTrainspaceData) => void
-  ) => React.ReactNode;
+  currTab: string;
+  setCurrTab: React.Dispatch<React.SetStateAction<string>>;
+  tabs: { tabLabel: string; tabValue: string }[];
+  tabComponents: { [tabValue: string]: React.ReactNode };
+  stepperButtons: React.ReactNode;
 }) => {
-  const [currTab, setCurrTab] = React.useState("upload-dataset");
-  const defaultDatasetMethods = useForm<DefaultDatasetData>();
-  const uploadDatasetMethods = useForm<FileDatasetData>();
-  const dispatch = useAppDispatch();
   return (
     <Stack spacing={3}>
       <Tabs
@@ -61,37 +50,21 @@ const DatasetStep = ({
         }}
         aria-label="basic tabs example"
       >
-        <Tab label="Recently Uploaded Datasets" value="upload-dataset" />
-        <Tab label="Default Datasets" value="default-dataset" />
+        {tabs.map((tab) => (
+          <Tab key={tab.tabValue} label={tab.tabLabel} value={tab.tabValue} />
+        ))}
       </Tabs>
-      {currTab === "upload-dataset" ? (
-        <UploadDatasetPanel methods={uploadDatasetMethods} />
-      ) : (
-        <DefaultDatasetPanel methods={defaultDatasetMethods} />
-      )}
-      {renderStepperButtons((trainspaceData) => {
-        if (currTab === "upload-dataset") {
-          uploadDatasetMethods.handleSubmit((data) => {
-            setTrainspaceDataset(trainspaceData, data);
-          })();
-        } else {
-          defaultDatasetMethods.handleSubmit((data) => {
-            setTrainspaceDataset(trainspaceData, data);
-          })();
-        }
-        dispatch(setTrainspaceData(trainspaceData));
-      })}
+      {tabComponents[currTab]}
+      {stepperButtons}
     </Stack>
   );
 };
 
-const UploadDatasetPanel = ({
+export const UploadDatasetPanel = ({
   methods,
 }: {
   methods: UseFormReturn<FileDatasetData, unknown>;
 }) => {
-  //const [getDatasetUploadPresignedUrl] =
-  //  useGetDatasetUploadPresignedUrlMutation();
   const [uploadFile] = useUploadDatasetFileMutation();
   const { data, refetch } = useGetDatasetFilesDataQuery();
   return (
@@ -128,7 +101,7 @@ const UploadDatasetPanel = ({
   );
 };
 
-const UploadDataGrid = ({
+export const UploadDataGrid = ({
   data,
   methods,
 }: {
@@ -195,7 +168,7 @@ const UploadDataGrid = ({
   );
 };
 
-const DefaultDatasetPanel = ({
+export const DefaultDatasetPanel = ({
   methods,
 }: {
   methods: UseFormReturn<DefaultDatasetData, unknown>;
@@ -230,5 +203,3 @@ const DefaultDatasetPanel = ({
     </FormControl>
   );
 };
-
-export default DatasetStep;

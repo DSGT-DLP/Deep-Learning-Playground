@@ -1,11 +1,15 @@
 import {
-  ALL_STEPS,
   BaseTrainspaceData,
   DATA_SOURCE,
   DatasetData,
-  TabularData,
 } from "@/features/Train/types/trainTypes";
-import DatasetStep from "../components/DatasetStep";
+import TabularDatasetStep from "@/features/Train/features/Tabular/components/TabularDatasetStep";
+import TabularTrainspace from "../features/Tabular/components/TabularTrainspace";
+import {
+  TabularData,
+  TrainspaceStep,
+  TrainspaceSteps,
+} from "@/features/Train/features/Tabular/types/tabularTypes";
 
 export const DATA_SOURCE_ARR = [
   "TABULAR",
@@ -27,13 +31,48 @@ export const TABULAR_STEPS_ARR = [
 export const DATA_SOURCE_SETTINGS: {
   [T in DATA_SOURCE]: {
     name: string;
-    steps: readonly string[];
+    steps: TrainspaceSteps<T>;
+    trainspaceComponent: React.FC;
+    stepsSettings: {
+      [_ in TrainspaceStep<T>]: {
+        name: string;
+        optional: boolean;
+        stepComponent: React.FC<{
+          renderStepperButtons: (
+            handleStepSubmit: (data: BaseTrainspaceData) => void
+          ) => React.ReactNode;
+        }>;
+      };
+    };
     defaultDatasets: { label: string; value: string }[];
   };
 } = {
   TABULAR: {
     name: "Tabular",
+    trainspaceComponent: TabularTrainspace,
     steps: TABULAR_STEPS_ARR,
+    stepsSettings: {
+      DATASET: {
+        name: "Dataset",
+        optional: false,
+        stepComponent: TabularDatasetStep,
+      },
+      PARAMETERS: {
+        name: "Parameters",
+        optional: false,
+        stepComponent: TabularDatasetStep,
+      },
+      REVIEW: {
+        name: "Review",
+        optional: false,
+        stepComponent: TabularDatasetStep,
+      },
+      TRAIN: {
+        name: "Train",
+        optional: false,
+        stepComponent: TabularDatasetStep,
+      },
+    },
     defaultDatasets: [
       { label: "Iris", value: "IRIS" },
       { label: "California Housing", value: "CALIFORNIAHOUSING" },
@@ -44,55 +83,46 @@ export const DATA_SOURCE_SETTINGS: {
   },
   PRETRAINED: {
     name: "Pretrained",
-    steps: ["UPLOAD"],
+    trainspaceComponent: TabularTrainspace,
+    steps: [],
+    stepsSettings: {},
     defaultDatasets: [],
   },
   IMAGE: {
     name: "Image",
-    steps: ["UPLOAD"],
+    trainspaceComponent: TabularTrainspace,
+    steps: [],
+    stepsSettings: {},
     defaultDatasets: [],
   },
   AUDIO: {
     name: "Audio",
-    steps: ["UPLOAD"],
+    trainspaceComponent: TabularTrainspace,
+    steps: [],
+    stepsSettings: {},
     defaultDatasets: [],
   },
   TEXTUAL: {
     name: "Textual",
-    steps: ["UPLOAD"],
+    trainspaceComponent: TabularTrainspace,
+    steps: [],
+    stepsSettings: {},
     defaultDatasets: [],
   },
   CLASSICAL_ML: {
     name: "Classical ML",
-    steps: ["UPLOAD"],
+    trainspaceComponent: TabularTrainspace,
+    steps: [],
+    stepsSettings: {},
     defaultDatasets: [],
   },
   OBJECT_DETECTION: {
     name: "Object Detection",
-    steps: ["UPLOAD"],
+    trainspaceComponent: TabularTrainspace,
+    steps: [],
+    stepsSettings: {},
     defaultDatasets: [],
   },
-};
-
-export const STEPS_SETTINGS: {
-  [T in ALL_STEPS]: {
-    name: string;
-    optional: boolean;
-    stepComponent: React.FC<{
-      renderStepperButtons: (
-        handleStepSubmit: (data: BaseTrainspaceData) => void
-      ) => React.ReactNode;
-    }>;
-  };
-} = {
-  DATASET: { name: "Dataset", optional: false, stepComponent: DatasetStep },
-  PARAMETERS: {
-    name: "Parameters",
-    optional: false,
-    stepComponent: DatasetStep,
-  },
-  REVIEW: { name: "Review", optional: false, stepComponent: DatasetStep },
-  TRAIN: { name: "Train", optional: false, stepComponent: DatasetStep },
 };
 
 export const setTrainspaceDataset = (

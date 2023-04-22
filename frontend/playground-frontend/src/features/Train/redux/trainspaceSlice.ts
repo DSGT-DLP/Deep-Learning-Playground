@@ -12,6 +12,9 @@ export const trainspaceSlice = createSlice({
       state,
       { payload }: PayloadAction<BaseTrainspaceData | undefined>
     ) => {
+      if (!payload) {
+        state.current = undefined;
+      }
       if (!state.current) {
         state.current = payload;
         return;

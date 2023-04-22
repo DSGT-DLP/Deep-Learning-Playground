@@ -2,11 +2,7 @@ import { Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
 import React from "react";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  ALL_STEPS,
-  BaseTrainspaceData,
-  DATA_SOURCE,
-} from "../types/trainTypes";
+import { BaseTrainspaceData, DATA_SOURCE } from "../types/trainTypes";
 import { useAppDispatch } from "@/common/redux/hooks";
 import { useRouter } from "next/router";
 import { setTrainspaceData } from "../redux/trainspaceSlice";
@@ -29,7 +25,7 @@ const CreateTrainspace = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const onSubmit = handleSubmit((data: BaseTrainspaceData) => {
-    data.step = DATA_SOURCE_SETTINGS[data.dataSource].steps[0] as ALL_STEPS;
+    data.step = DATA_SOURCE_SETTINGS[data.dataSource].steps[0];
     dispatch(setTrainspaceData(data));
   });
   useEffect(() => {

@@ -14,7 +14,7 @@ import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { useAppDispatch } from "@/common/redux/hooks";
-import { setTrainspace } from "@/features/Train/redux/trainspaceSlice";
+import { setTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
 import {
   DATA_SOURCE_ARR,
   DATA_SOURCE_SETTINGS,
@@ -184,7 +184,7 @@ const NewTrainSpaceMenu = ({
             value={source}
             onClick={() => {
               handleClose();
-              dispatch(setTrainspace());
+              dispatch(setTrainspaceData());
               router.push({ pathname: "/train", query: { source } });
             }}
           >

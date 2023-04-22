@@ -9,7 +9,7 @@ import {
 } from "../types/trainTypes";
 import { useAppDispatch } from "@/common/redux/hooks";
 import { useRouter } from "next/router";
-import { setTrainspace } from "../redux/trainspaceSlice";
+import { setTrainspaceData } from "../redux/trainspaceSlice";
 import {
   DATA_SOURCE_ARR,
   DATA_SOURCE_SETTINGS,
@@ -30,7 +30,7 @@ const CreateTrainspace = () => {
   const router = useRouter();
   const onSubmit = handleSubmit((data: BaseTrainspaceData) => {
     data.step = DATA_SOURCE_SETTINGS[data.dataSource].steps[0] as ALL_STEPS;
-    dispatch(setTrainspace(data));
+    dispatch(setTrainspaceData(data));
   });
   useEffect(() => {
     if (router.isReady && router.query.source) {

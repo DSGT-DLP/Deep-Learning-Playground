@@ -8,7 +8,12 @@ import {
   UseFormStateReturn,
   useForm,
 } from "react-hook-form";
-import { DefaultDatasetData, FileUploadData } from "../types/trainTypes";
+import {
+  BaseTrainspaceData,
+  DefaultDatasetData,
+  FileUploadData,
+  FileDatasetData,
+} from "@/features/Train/types/trainTypes";
 import {
   Button,
   FormControl,
@@ -19,9 +24,13 @@ import {
   Stack,
   Tab,
   Tabs,
+  Typography,
 } from "@mui/material";
-import { useAppSelector } from "@/common/redux/hooks";
-import { DATA_SOURCE_SETTINGS } from "../constants/trainConstants";
+import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
+import {
+  DATA_SOURCE_SETTINGS,
+  setTrainspaceDataset,
+} from "../constants/trainConstants";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   useGetDatasetFilesDataQuery,
@@ -30,16 +39,19 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { formatDate } from "@/common/utils/dateFormat";
 import prettyBytes from "pretty-bytes";
-import { FileDatasetData } from "../types/trainTypes";
+import { setTrainspaceData } from "../redux/trainspaceSlice";
 
 const DatasetStep = ({
   renderStepperButtons,
 }: {
-  renderStepperButtons: (handleStepSubmit: () => void) => React.ReactNode;
+  renderStepperButtons: (
+    submitTrainspace: (data: BaseTrainspaceData) => void
+  ) => React.ReactNode;
 }) => {
   const [currTab, setCurrTab] = React.useState("upload-dataset");
   const defaultDatasetMethods = useForm<DefaultDatasetData>();
   const uploadDatasetMethods = useForm<FileDatasetData>();
+  const dispatch = useAppDispatch();
   return (
     <Stack spacing={3}>
       <Tabs
@@ -57,8 +69,17 @@ const DatasetStep = ({
       ) : (
         <DefaultDatasetPanel methods={defaultDatasetMethods} />
       )}
-      {renderStepperButtons(() => {
-        console.log("hi");
+      {renderStepperButtons((trainspaceData) => {
+        if (currTab === "upload-dataset") {
+          uploadDatasetMethods.handleSubmit((data) => {
+            setTrainspaceDataset(trainspaceData, data);
+          })();
+        } else {
+          defaultDatasetMethods.handleSubmit((data) => {
+            setTrainspaceDataset(trainspaceData, data);
+          })();
+        }
+        dispatch(setTrainspaceData(trainspaceData));
       })}
     </Stack>
   );
@@ -75,6 +96,9 @@ const UploadDatasetPanel = ({
   const { data, refetch } = useGetDatasetFilesDataQuery();
   return (
     <>
+      {methods.formState.errors.name && (
+        <Typography>Please select a file</Typography>
+      )}
       <Stack direction={"row"} spacing={2}>
         <Button
           variant="contained"
@@ -115,6 +139,7 @@ const UploadDataGrid = ({
     <Controller
       name="name"
       control={methods.control}
+      rules={{ required: true }}
       render={({ field: { onChange, value } }) => (
         <DataGrid
           initialState={{
@@ -180,6 +205,9 @@ const DefaultDatasetPanel = ({
   return (
     <FormControl>
       <FormLabel>Choose a Default Dataset</FormLabel>
+      {methods.formState.errors.dataSetName && (
+        <Typography>Please select a default dataset</Typography>
+      )}
       <Controller
         name="dataSetName"
         control={methods.control}

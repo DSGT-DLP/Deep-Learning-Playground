@@ -8,15 +8,19 @@ export const trainspaceSlice = createSlice({
   name: "trainspace",
   initialState: {} as TrainspaceState,
   reducers: {
-    setTrainspace: (
+    setTrainspaceData: (
       state,
       { payload }: PayloadAction<BaseTrainspaceData | undefined>
     ) => {
-      state.current = payload;
+      if (!state.current) {
+        state.current = payload;
+        return;
+      }
+      state.current = { ...state.current, ...payload };
     },
   },
 });
 
-export const { setTrainspace } = trainspaceSlice.actions;
+export const { setTrainspaceData } = trainspaceSlice.actions;
 
 export default trainspaceSlice.reducer;

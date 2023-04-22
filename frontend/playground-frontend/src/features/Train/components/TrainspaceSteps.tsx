@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/common/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import { ContentCopy } from "@mui/icons-material";
 import {
   Button,
@@ -88,10 +88,15 @@ const TrainspaceSteps = () => {
             </Stepper>
             <TrainspaceStep
               step={trainspace.step as ALL_STEPS}
-              renderStepperButtons={() => (
+              renderStepperButtons={(submitTrainspace) => (
                 <Stack direction={"row"} justifyContent={"space-between"}>
-                  <Button>Previous</Button>
-                  <Button>Next</Button>
+                  <Button variant="outlined">Previous</Button>
+                  <Button
+                    variant="contained"
+                    onClick={() => handleSubmit(submitTrainspace)()}
+                  >
+                    Next
+                  </Button>
                 </Stack>
               )}
             />
@@ -107,7 +112,9 @@ const TrainspaceStep = ({
   renderStepperButtons,
 }: {
   step: ALL_STEPS;
-  renderStepperButtons: (handleStepSubmit: () => void) => React.ReactNode;
+  renderStepperButtons: (
+    submitTrainspace: (data: BaseTrainspaceData) => void
+  ) => React.ReactNode;
 }) => {
   const StepComponent = STEPS_SETTINGS[step].stepComponent;
   return <StepComponent renderStepperButtons={renderStepperButtons} />;

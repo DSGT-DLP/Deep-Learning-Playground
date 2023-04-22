@@ -1,4 +1,10 @@
-import { ALL_STEPS, DATA_SOURCE } from "@/features/Train/types/trainTypes";
+import {
+  ALL_STEPS,
+  BaseTrainspaceData,
+  DATA_SOURCE,
+  DatasetData,
+  TabularData,
+} from "@/features/Train/types/trainTypes";
 import DatasetStep from "../components/DatasetStep";
 
 export const DATA_SOURCE_ARR = [
@@ -73,7 +79,9 @@ export const STEPS_SETTINGS: {
     name: string;
     optional: boolean;
     stepComponent: React.FC<{
-      renderStepperButtons: (handleStepSubmit: () => void) => React.ReactNode;
+      renderStepperButtons: (
+        handleStepSubmit: (data: BaseTrainspaceData) => void
+      ) => React.ReactNode;
     }>;
   };
 } = {
@@ -85,4 +93,17 @@ export const STEPS_SETTINGS: {
   },
   REVIEW: { name: "Review", optional: false, stepComponent: DatasetStep },
   TRAIN: { name: "Train", optional: false, stepComponent: DatasetStep },
+};
+
+export const setTrainspaceDataset = (
+  trainspaceData: BaseTrainspaceData,
+  datasetData: DatasetData
+) => {
+  switch (trainspaceData.dataSource) {
+    case "TABULAR":
+      (trainspaceData as TabularData<"PARAMETERS">).datasetData = datasetData;
+      return;
+    default:
+      break;
+  }
 };

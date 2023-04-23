@@ -1,15 +1,13 @@
 import {
-  BaseTrainspaceData,
   DATA_SOURCE,
-  DatasetData,
-} from "@/features/Train/types/trainTypes";
-import TabularDatasetStep from "@/features/Train/features/Tabular/components/TabularDatasetStep";
-import TabularTrainspace from "../features/Tabular/components/TabularTrainspace";
-import {
-  TabularData,
+  TrainspaceData,
   TrainspaceStep,
   TrainspaceSteps,
-} from "@/features/Train/features/Tabular/types/tabularTypes";
+} from "@/features/Train/types/trainTypes";
+import TabularDatasetStep from "@/features/Train/features/Tabular/components/TabularDatasetStep";
+import TabularTrainspace from "@/features/Train/features/Tabular/components/TabularTrainspace";
+import { TABULAR_STEPS_ARR } from "@/features/Train/features/Tabular/constants/tabularConstants";
+import TabularParametersStep from "../features/Tabular/components/TabularParametersStep";
 
 export const DATA_SOURCE_ARR = [
   "TABULAR",
@@ -19,13 +17,6 @@ export const DATA_SOURCE_ARR = [
   "TEXTUAL",
   "CLASSICAL_ML",
   "OBJECT_DETECTION",
-] as const;
-
-export const TABULAR_STEPS_ARR = [
-  "DATASET",
-  "PARAMETERS",
-  "REVIEW",
-  "TRAIN",
 ] as const;
 
 export const DATA_SOURCE_SETTINGS: {
@@ -39,7 +30,7 @@ export const DATA_SOURCE_SETTINGS: {
         optional: boolean;
         stepComponent: React.FC<{
           renderStepperButtons: (
-            handleStepSubmit: (data: BaseTrainspaceData) => void
+            handleStepSubmit: (data: TrainspaceData<T>) => void
           ) => React.ReactNode;
         }>;
       };
@@ -60,7 +51,7 @@ export const DATA_SOURCE_SETTINGS: {
       PARAMETERS: {
         name: "Parameters",
         optional: false,
-        stepComponent: TabularDatasetStep,
+        stepComponent: TabularParametersStep,
       },
       REVIEW: {
         name: "Review",
@@ -123,17 +114,4 @@ export const DATA_SOURCE_SETTINGS: {
     stepsSettings: {},
     defaultDatasets: [],
   },
-};
-
-export const setTrainspaceDataset = (
-  trainspaceData: BaseTrainspaceData,
-  datasetData: DatasetData
-) => {
-  switch (trainspaceData.dataSource) {
-    case "TABULAR":
-      (trainspaceData as TabularData<"PARAMETERS">).datasetData = datasetData;
-      return;
-    default:
-      break;
-  }
 };

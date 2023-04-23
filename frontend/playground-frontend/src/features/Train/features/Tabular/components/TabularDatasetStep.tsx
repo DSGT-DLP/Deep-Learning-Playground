@@ -1,24 +1,23 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import {
-  BaseTrainspaceData,
   DefaultDatasetData,
   FileDatasetData,
 } from "@/features/Train/types/trainTypes";
 import { useAppDispatch } from "@/common/redux/hooks";
-import { setTrainspaceDataset } from "@/features/Train/constants/trainConstants";
 import { setTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
 import {
   DatasetStepTabLayout,
   DefaultDatasetPanel,
   UploadDatasetPanel,
 } from "@/features/Train/components/DatasetStepLayout";
+import { TabularData } from "../types/tabularTypes";
 
 const TabularDatasetStep = ({
   renderStepperButtons,
 }: {
   renderStepperButtons: (
-    submitTrainspace: (data: BaseTrainspaceData) => void
+    submitTrainspace: (data: TabularData) => void
   ) => React.ReactNode;
 }) => {
   const [currTab, setCurrTab] = React.useState("upload-dataset");
@@ -34,7 +33,12 @@ const TabularDatasetStep = ({
         { tabLabel: "Default Datasets", tabValue: "default-dataset" },
       ]}
       tabComponents={{
-        "upload-dataset": <UploadDatasetPanel methods={uploadDatasetMethods} />,
+        "upload-dataset": (
+          <UploadDatasetPanel
+            dataSource={"TABULAR"}
+            methods={uploadDatasetMethods}
+          />
+        ),
         "default-dataset": (
           <DefaultDatasetPanel methods={defaultDatasetMethods} />
         ),
@@ -42,14 +46,17 @@ const TabularDatasetStep = ({
       stepperButtons={renderStepperButtons((trainspaceData) => {
         if (currTab === "upload-dataset") {
           uploadDatasetMethods.handleSubmit((data) => {
-            setTrainspaceDataset(trainspaceData, data);
+            trainspaceData.datasetData = data;
+            trainspaceData.step = "PARAMETERS";
+            dispatch(setTrainspaceData(trainspaceData));
           })();
         } else {
           defaultDatasetMethods.handleSubmit((data) => {
-            setTrainspaceDataset(trainspaceData, data);
+            trainspaceData.datasetData = data;
+            trainspaceData.step = "PARAMETERS";
+            dispatch(setTrainspaceData(trainspaceData));
           })();
         }
-        dispatch(setTrainspaceData(trainspaceData));
       })}
     />
   );

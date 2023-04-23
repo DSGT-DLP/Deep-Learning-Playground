@@ -4,6 +4,7 @@ import {
   DefaultDatasetData,
   FileUploadData,
   FileDatasetData,
+  DATA_SOURCE,
 } from "@/features/Train/types/trainTypes";
 import {
   Button,
@@ -61,12 +62,14 @@ export const DatasetStepTabLayout = ({
 };
 
 export const UploadDatasetPanel = ({
+  dataSource,
   methods,
 }: {
+  dataSource: DATA_SOURCE;
   methods: UseFormReturn<FileDatasetData, unknown>;
 }) => {
   const [uploadFile] = useUploadDatasetFileMutation();
-  const { data, refetch } = useGetDatasetFilesDataQuery();
+  const { data, refetch } = useGetDatasetFilesDataQuery({ dataSource });
   return (
     <>
       {methods.formState.errors.name && (
@@ -84,9 +87,7 @@ export const UploadDatasetPanel = ({
             hidden
             onChange={(e) => {
               if (e.target.files && e.target.files[0]) {
-                console.log(e.target.files[0]);
-
-                uploadFile({ file: e.target.files[0] });
+                uploadFile({ dataSource: dataSource, file: e.target.files[0] });
               }
               e.target.value = "";
             }}

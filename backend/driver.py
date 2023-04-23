@@ -8,7 +8,7 @@ from flask import Flask, request, send_from_directory
 from backend.aws_helpers.dynamo_db_utils.trainspace_db import getAllUserTrainspaceData
 from backend.aws_helpers.s3_utils.s3_bucket_names import EXECUTION_BUCKET_NAME
 from backend.aws_helpers.s3_utils.s3_client import (
-    get_column_name,
+    get_column_names,
     get_presigned_upload_post_from_user_dataset_file,
     get_presigned_url_from_exec_file,
     get_user_dataset_file_objects,
@@ -373,7 +373,7 @@ def getUserDatasetFileUploadPresignedPostObj():
     try:
         request_data = json.loads(request.data)
         post_obj = get_presigned_upload_post_from_user_dataset_file(
-            request_data["user"]["uid"], request_data["name"]
+            request_data["user"]["uid"], request_data["data_source"], request_data["name"]
         )
         return send_success(
             {"message": "File upload success", "presigned_post_obj": post_obj}
@@ -387,7 +387,7 @@ def getUserDatasetFileUploadPresignedPostObj():
 def getUserDatasetFilesData():
     try:
         request_data = json.loads(request.data)
-        file_objects = get_user_dataset_file_objects(request_data["user"]["uid"])
+        file_objects = get_user_dataset_file_objects(request_data["user"]["uid"], request_data["data_source"])
         data = list(
             map(
                 lambda f: {
@@ -399,7 +399,6 @@ def getUserDatasetFilesData():
                 file_objects,
             )
         )
-        print(data)
         return send_success(
             {"message": "Get dataset files data success", "data": json.dumps(data)}
         )
@@ -407,6 +406,15 @@ def getUserDatasetFilesData():
         print(traceback.format_exc())
         return send_traceback_error()
 
+@app.route("/api/getColumnsFromDatasetFile", methods=["POST"])
+def getColumnsFromDatasetFile():
+    try:
+        request_data = json.loads(request.data)
+        columns = get_column_names(request_data['user']['uid'], request_data['data_source'], request_data['name'])
+        return send_success({"message": "Get columns success", "columns": json.dumps(columns)})
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
 
 @app.route("/api/upload", methods=["POST"])
 def upload():
@@ -420,16 +428,6 @@ def upload():
         file.save(upload_path)
         file.stream.close()
         print(datetime.datetime.now().isoformat() + " upload has finished its task")
-        return send_success({"message": "upload success"})
-    except Exception:
-        print(traceback.format_exc())
-        return send_traceback_error()
-
-@app.route("/api/getColumnsFromDatasetFile", methods=["POST"])
-def getColumnsFromDatasetFile():
-    try:
-        request_data = json.loads(request.data)
-        print(get_column_name(request_data['user']['uid'], request_data['name']))
         return send_success({"message": "upload success"})
     except Exception:
         print(traceback.format_exc())

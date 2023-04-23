@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { BaseTrainspaceData } from "../types/trainTypes";
+import { BaseTrainspaceData } from "@/features/Train/types/trainTypes";
 
 interface TrainspaceState {
   current?: BaseTrainspaceData;

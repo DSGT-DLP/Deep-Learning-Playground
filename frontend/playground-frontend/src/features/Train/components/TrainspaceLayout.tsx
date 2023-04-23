@@ -3,7 +3,7 @@ import { Card, Container, Grid, IconButton, Stack } from "@mui/material";
 import React from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yLight } from "react-syntax-highlighter/dist/cjs/styles/hljs";
-import { BaseTrainspaceData } from "../types/trainTypes";
+
 const TrainspaceLayout = ({
   code,
   nameField,
@@ -57,23 +57,6 @@ const TrainspaceLayout = ({
       </Grid>
     </Container>
   );
-};
-
-export const TrainspaceStep = ({
-  stepComponent,
-  renderStepperButtons,
-}: {
-  stepComponent: React.FC<{
-    renderStepperButtons: (
-      handleStepSubmit: (data: BaseTrainspaceData) => void
-    ) => React.ReactNode;
-  }>;
-  renderStepperButtons: (
-    submitTrainspace: (data: BaseTrainspaceData) => void
-  ) => React.ReactNode;
-}) => {
-  const StepComponent = stepComponent;
-  return <StepComponent renderStepperButtons={renderStepperButtons} />;
 };
 
 export default TrainspaceLayout;

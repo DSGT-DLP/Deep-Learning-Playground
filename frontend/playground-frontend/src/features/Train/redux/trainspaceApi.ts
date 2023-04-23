@@ -1,18 +1,22 @@
 import { backendApi } from "@/common/redux/backendApi";
 import { auth } from "@/common/utils/firebase";
-import { FileUploadData } from "@/features/Train/types/trainTypes";
+import { DATA_SOURCE, FileUploadData } from "@/features/Train/types/trainTypes";
 import { fetchBaseQuery } from "@reduxjs/toolkit/dist/query";
 
 const trainspaceApi = backendApi
   .enhanceEndpoints({ addTagTypes: ["UserDatasetFilesData"] })
   .injectEndpoints({
     endpoints: (builder) => ({
-      getDatasetFilesData: builder.query<FileUploadData[], void>({
-        query: () => ({
+      getDatasetFilesData: builder.query<
+        FileUploadData[],
+        { dataSource: DATA_SOURCE }
+      >({
+        query: ({ dataSource }) => ({
           url: "/api/getUserDatasetFilesData",
           method: "POST",
           body: {
             user: auth.currentUser,
+            data_source: dataSource.toLowerCase(),
           },
         }),
         providesTags: ["UserDatasetFilesData"],
@@ -31,13 +35,17 @@ const trainspaceApi = backendApi
           }));
         },
       }),
-      uploadDatasetFile: builder.mutation<null, { file: File }>({
-        queryFn: async ({ file }, _, __, baseQuery) => {
+      uploadDatasetFile: builder.mutation<
+        null,
+        { dataSource: DATA_SOURCE; file: File }
+      >({
+        queryFn: async ({ dataSource, file }, _, __, baseQuery) => {
           const postObjResponse = await baseQuery({
             url: "/api/getUserDatasetFileUploadPresignedPostObj",
             method: "POST",
             body: {
               name: file.name,
+              data_source: dataSource.toLowerCase(),
               user: auth.currentUser,
             },
           });
@@ -71,9 +79,29 @@ const trainspaceApi = backendApi
         },
         invalidatesTags: ["UserDatasetFilesData"],
       }),
+      getColumnsFromDatasetFile: builder.query<
+        string[],
+        { dataSource: DATA_SOURCE; filename: string }
+      >({
+        query: ({ dataSource, filename }) => ({
+          url: "/api/getColumnsFromDatasetFile",
+          method: "POST",
+          body: {
+            data_source: dataSource.toLowerCase(),
+            name: filename,
+            user: auth.currentUser,
+          },
+        }),
+        transformResponse: (response: { columns: string }) => {
+          return JSON.parse(response.columns);
+        },
+      }),
     }),
     overrideExisting: true,
   });
 
-export const { useGetDatasetFilesDataQuery, useUploadDatasetFileMutation } =
-  trainspaceApi;
+export const {
+  useGetDatasetFilesDataQuery,
+  useUploadDatasetFileMutation,
+  useGetColumnsFromDatasetFileQuery,
+} = trainspaceApi;

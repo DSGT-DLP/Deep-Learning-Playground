@@ -2,9 +2,7 @@ import { useAppSelector } from "@/common/redux/hooks";
 import { TabularData } from "@/features/Train/features/Tabular/types/tabularTypes";
 import { useForm } from "react-hook-form";
 import React from "react";
-import TrainspaceLayout, {
-  TrainspaceStep,
-} from "@/features/Train/components/TrainspaceLayout";
+import TrainspaceLayout from "@/features/Train/components/TrainspaceLayout";
 import {
   Button,
   Stack,
@@ -14,6 +12,7 @@ import {
   TextField,
 } from "@mui/material";
 import { DATA_SOURCE_SETTINGS } from "@/features/Train/constants/trainConstants";
+import { TrainspaceStep } from "@/features/Train/types/trainTypes";
 
 const TabularTrainspace = () => {
   const trainspace = useAppSelector(
@@ -62,12 +61,8 @@ const TabularTrainspace = () => {
         </Stepper>
       }
       trainspaceStep={
-        <TrainspaceStep
-          stepComponent={
-            DATA_SOURCE_SETTINGS[trainspace.dataSource].stepsSettings[
-              trainspace.step
-            ].stepComponent
-          }
+        <TabularTrainspaceStep
+          step={trainspace.step}
           renderStepperButtons={(submitTrainspace) => (
             <Stack direction={"row"} justifyContent={"space-between"}>
               <Button variant="outlined">Previous</Button>
@@ -83,6 +78,20 @@ const TabularTrainspace = () => {
       }
     />
   );
+};
+
+const TabularTrainspaceStep = ({
+  step,
+  renderStepperButtons,
+}: {
+  step: TrainspaceStep<"TABULAR">;
+  renderStepperButtons: (
+    submitTrainspace: (data: TabularData) => void
+  ) => React.ReactNode;
+}) => {
+  const StepComponent =
+    DATA_SOURCE_SETTINGS["TABULAR"].stepsSettings[step].stepComponent;
+  return <StepComponent renderStepperButtons={renderStepperButtons} />;
 };
 
 export default TabularTrainspace;

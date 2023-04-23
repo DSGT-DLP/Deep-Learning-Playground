@@ -35,17 +35,8 @@ export interface FileUploadData {
 }
 
 export interface DatasetData {
-  isDefaultDataSet: boolean;
-}
-
-export interface FileDatasetData extends DatasetData {
-  isDefaultDataSet: false;
+  isDefaultDataset: boolean;
   name: string;
-}
-
-export interface DefaultDatasetData extends DatasetData {
-  isDefaultDataSet: true;
-  dataSetName: string;
 }
 
 export interface ReviewData {

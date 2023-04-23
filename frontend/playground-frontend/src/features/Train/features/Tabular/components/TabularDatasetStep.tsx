@@ -1,9 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import {
-  DefaultDatasetData,
-  FileDatasetData,
-} from "@/features/Train/types/trainTypes";
+import { DatasetData } from "@/features/Train/types/trainTypes";
 import { useAppDispatch } from "@/common/redux/hooks";
 import { setTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
 import {
@@ -21,8 +18,8 @@ const TabularDatasetStep = ({
   ) => React.ReactNode;
 }) => {
   const [currTab, setCurrTab] = React.useState("upload-dataset");
-  const defaultDatasetMethods = useForm<DefaultDatasetData>();
-  const uploadDatasetMethods = useForm<FileDatasetData>();
+  const defaultDatasetMethods = useForm<DatasetData>();
+  const uploadDatasetMethods = useForm<DatasetData>();
   const dispatch = useAppDispatch();
   return (
     <DatasetStepTabLayout

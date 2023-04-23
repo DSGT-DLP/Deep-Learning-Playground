@@ -316,7 +316,7 @@ def send_columns():
         default = request_data["using_default_dataset"]
         header = get_default_dataset_header(default.upper())
         header_list = header.tolist()
-        return send_success({"columns": header_list})
+        return send_success({"columns": json.dumps(header_list)})
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()

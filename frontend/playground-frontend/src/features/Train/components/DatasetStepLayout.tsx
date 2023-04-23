@@ -1,10 +1,9 @@
 import React from "react";
 import { Controller, UseFormReturn } from "react-hook-form";
 import {
-  DefaultDatasetData,
   FileUploadData,
-  FileDatasetData,
   DATA_SOURCE,
+  DatasetData,
 } from "@/features/Train/types/trainTypes";
 import {
   Button,
@@ -66,7 +65,7 @@ export const UploadDatasetPanel = ({
   methods,
 }: {
   dataSource: DATA_SOURCE;
-  methods: UseFormReturn<FileDatasetData, unknown>;
+  methods: UseFormReturn<DatasetData, unknown>;
 }) => {
   const [uploadFile] = useUploadDatasetFileMutation();
   const { data, refetch } = useGetDatasetFilesDataQuery({ dataSource });
@@ -84,6 +83,7 @@ export const UploadDatasetPanel = ({
           Upload
           <input
             type="file"
+            accept=".csv"
             hidden
             onChange={(e) => {
               if (e.target.files && e.target.files[0]) {
@@ -107,7 +107,7 @@ export const UploadDataGrid = ({
   methods,
 }: {
   data: FileUploadData[];
-  methods: UseFormReturn<FileDatasetData, unknown>;
+  methods: UseFormReturn<DatasetData, unknown>;
 }) => {
   return (
     <Controller
@@ -144,7 +144,10 @@ export const UploadDataGrid = ({
                   <Radio
                     value={params.row.name}
                     checked={value === params.row.name}
-                    onChange={onChange}
+                    onChange={(e) => {
+                      onChange(e);
+                      methods.setValue("isDefaultDataset", false);
+                    }}
                   />
                 );
               },
@@ -172,22 +175,28 @@ export const UploadDataGrid = ({
 export const DefaultDatasetPanel = ({
   methods,
 }: {
-  methods: UseFormReturn<DefaultDatasetData, unknown>;
+  methods: UseFormReturn<DatasetData, unknown>;
 }) => {
   const trainspace = useAppSelector((state) => state.trainspace.current);
   if (!trainspace) return <></>;
   return (
     <FormControl>
       <FormLabel>Choose a Default Dataset</FormLabel>
-      {methods.formState.errors.dataSetName && (
+      {methods.formState.errors.name && (
         <Typography>Please select a default dataset</Typography>
       )}
       <Controller
-        name="dataSetName"
+        name="name"
         control={methods.control}
         rules={{ required: true }}
         render={({ field: { onChange, value } }) => (
-          <RadioGroup onChange={onChange} value={value ?? ""}>
+          <RadioGroup
+            onChange={(e) => {
+              onChange(e);
+              methods.setValue("isDefaultDataset", true);
+            }}
+            value={value ?? ""}
+          >
             {DATA_SOURCE_SETTINGS[trainspace.dataSource].defaultDatasets.map(
               (defaultDataset) => (
                 <FormControlLabel

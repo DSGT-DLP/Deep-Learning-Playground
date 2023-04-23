@@ -1,8 +1,7 @@
 import React from "react";
 import { TabularData } from "@/features/Train/features/Tabular/types/tabularTypes";
-import { useGetColumnsFromDatasetFileQuery } from "@/features/Train/redux/trainspaceApi";
+import { useGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
 import { useAppSelector } from "@/common/redux/hooks";
-import { FileDatasetData } from "@/features/Train/types/trainTypes";
 import { Typography } from "@mui/material";
 
 const TabularParametersStep = ({
@@ -16,9 +15,9 @@ const TabularParametersStep = ({
     (state) => state.trainspace.current as TabularData<"PARAMETERS"> | undefined
   );
   if (!trainspace) return <></>;
-  const { data, refetch } = useGetColumnsFromDatasetFileQuery({
+  const { data, refetch } = useGetColumnsFromDatasetQuery({
     dataSource: "TABULAR",
-    filename: (trainspace.datasetData as FileDatasetData).name,
+    dataset: trainspace.datasetData,
   });
   return <Typography>{data?.toString()}</Typography>;
 };

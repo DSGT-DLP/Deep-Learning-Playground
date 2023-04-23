@@ -1,6 +1,10 @@
 import { backendApi } from "@/common/redux/backendApi";
 import { auth } from "@/common/utils/firebase";
-import { DATA_SOURCE, FileUploadData } from "@/features/Train/types/trainTypes";
+import {
+  DATA_SOURCE,
+  DatasetData,
+  FileUploadData,
+} from "@/features/Train/types/trainTypes";
 import { fetchBaseQuery } from "@reduxjs/toolkit/dist/query";
 
 const trainspaceApi = backendApi
@@ -79,16 +83,21 @@ const trainspaceApi = backendApi
         },
         invalidatesTags: ["UserDatasetFilesData"],
       }),
-      getColumnsFromDatasetFile: builder.query<
+      getColumnsFromDataset: builder.query<
         string[],
-        { dataSource: DATA_SOURCE; filename: string }
+        { dataSource: DATA_SOURCE; dataset: DatasetData }
       >({
-        query: ({ dataSource, filename }) => ({
-          url: "/api/getColumnsFromDatasetFile",
+        query: ({ dataSource, dataset }) => ({
+          url: dataset.isDefaultDataset
+            ? "/api/defaultDataset"
+            : "/api/getColumnsFromDatasetFile",
           method: "POST",
           body: {
             data_source: dataSource.toLowerCase(),
-            name: filename,
+            name: dataset.isDefaultDataset ? undefined : dataset.name,
+            using_default_dataset: dataset.isDefaultDataset
+              ? dataset.name
+              : undefined,
             user: auth.currentUser,
           },
         }),
@@ -103,5 +112,5 @@ const trainspaceApi = backendApi
 export const {
   useGetDatasetFilesDataQuery,
   useUploadDatasetFileMutation,
-  useGetColumnsFromDatasetFileQuery,
+  useGetColumnsFromDatasetQuery,
 } = trainspaceApi;

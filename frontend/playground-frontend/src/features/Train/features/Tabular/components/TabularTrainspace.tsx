@@ -12,7 +12,7 @@ import {
   TextField,
 } from "@mui/material";
 import { DATA_SOURCE_SETTINGS } from "@/features/Train/constants/trainConstants";
-import { TrainspaceStep } from "@/features/Train/types/trainTypes";
+import { TrainspaceTypes } from "@/features/Train/types/trainTypes";
 
 const TabularTrainspace = () => {
   const trainspace = useAppSelector(
@@ -84,7 +84,7 @@ const TabularTrainspaceStep = ({
   step,
   renderStepperButtons,
 }: {
-  step: TrainspaceStep<"TABULAR">;
+  step: TrainspaceTypes["TABULAR"]["step"];
   renderStepperButtons: (
     submitTrainspace: (data: TabularData) => void
   ) => React.ReactNode;

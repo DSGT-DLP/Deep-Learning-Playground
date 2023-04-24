@@ -197,16 +197,16 @@ export const DefaultDatasetPanel = ({
             }}
             value={value ?? ""}
           >
-            {DATA_SOURCE_SETTINGS[trainspace.dataSource].defaultDatasets.map(
-              (defaultDataset) => (
-                <FormControlLabel
-                  key={defaultDataset.value}
-                  value={defaultDataset.value}
-                  control={<Radio />}
-                  label={defaultDataset.label}
-                />
-              )
-            )}
+            {DATA_SOURCE_SETTINGS[trainspace.dataSource].stepsSettings[
+              "DATASET"
+            ]["defaultDatasets"].map((defaultDataset) => (
+              <FormControlLabel
+                key={defaultDataset.value}
+                value={defaultDataset.value}
+                control={<Radio />}
+                label={defaultDataset.label}
+              />
+            ))}
           </RadioGroup>
         )}
       />

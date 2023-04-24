@@ -3,11 +3,12 @@ import {
   DatasetData,
   ReviewData,
   TrainResultsData,
-  TrainspaceStep,
+  TrainspaceTypes,
 } from "@/features/Train/types/trainTypes";
+import { TABULAR_PROBLEM_TYPES_ARR } from "@/features/Train/features/Tabular/constants/tabularConstants";
 
 export interface TabularData<
-  T extends TrainspaceStep<"TABULAR"> = TrainspaceStep<"TABULAR">
+  T extends TrainspaceTypes["TABULAR"]["step"] = TrainspaceTypes["TABULAR"]["step"]
 > extends BaseTrainspaceData {
   dataSource: "TABULAR";
   step: T;
@@ -23,7 +24,7 @@ export interface TabularData<
 export interface TabularParameterData {
   targetCol: string;
   features: string[];
-  problemType: string;
+  problemType: TABULAR_PROBLEM_TYPE;
   criterion: string;
   optimizerName: string;
   shuffle: boolean;
@@ -36,3 +37,5 @@ export interface TabularTrainResultsData extends TrainResultsData {
   dataSource: "TABULAR";
   tabularData: TabularData<"TRAIN">;
 }
+
+export type TABULAR_PROBLEM_TYPE = typeof TABULAR_PROBLEM_TYPES_ARR[number];

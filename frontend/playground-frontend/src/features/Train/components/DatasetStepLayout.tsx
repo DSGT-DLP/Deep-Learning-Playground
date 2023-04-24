@@ -18,7 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useAppSelector } from "@/common/redux/hooks";
-import { DATA_SOURCE_SETTINGS } from "@/features/Train/constants/trainConstants";
+import { ALL_STEP_SETTINGS } from "@/features/Train/constants/trainConstants";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   useGetDatasetFilesDataQuery,
@@ -197,9 +197,9 @@ export const DefaultDatasetPanel = ({
             }}
             value={value ?? ""}
           >
-            {DATA_SOURCE_SETTINGS[trainspace.dataSource].stepsSettings[
-              "DATASET"
-            ]["defaultDatasets"].map((defaultDataset) => (
+            {ALL_STEP_SETTINGS[trainspace.dataSource]["DATASET"][
+              "defaultDatasets"
+            ].map((defaultDataset) => (
               <FormControlLabel
                 key={defaultDataset.value}
                 value={defaultDataset.value}

@@ -7,8 +7,8 @@ import { useAppDispatch } from "@/common/redux/hooks";
 import { useRouter } from "next/router";
 import { setTrainspaceData } from "../redux/trainspaceSlice";
 import {
+  ALL_TRAINSPACE_SETTINGS,
   DATA_SOURCE_ARR,
-  DATA_SOURCE_SETTINGS,
 } from "../constants/trainConstants";
 const CreateTrainspace = () => {
   const {
@@ -25,7 +25,7 @@ const CreateTrainspace = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const onSubmit = handleSubmit((data: BaseTrainspaceData) => {
-    data.step = DATA_SOURCE_SETTINGS[data.dataSource].steps[0];
+    data.step = 0;
     dispatch(setTrainspaceData(data));
   });
   useEffect(() => {
@@ -79,7 +79,7 @@ const CreateTrainspace = () => {
             >
               {DATA_SOURCE_ARR.map((source) => (
                 <MenuItem key={source} value={source}>
-                  {DATA_SOURCE_SETTINGS[source].name}
+                  {ALL_TRAINSPACE_SETTINGS[source].name}
                 </MenuItem>
               ))}
             </TextField>

@@ -1,13 +1,8 @@
 import React from "react";
-import {
-  TabularData,
-  TabularParameterData,
-} from "@/features/Train/features/Tabular/types/tabularTypes";
 import { useGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
 import { useAppSelector } from "@/common/redux/hooks";
 import {
   Autocomplete,
-  AutocompleteRenderInputParams,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -15,29 +10,24 @@ import {
   RadioGroup,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
-import {
-  Controller,
-  ControllerFieldState,
-  ControllerRenderProps,
-  FieldValues,
-  UseFormStateReturn,
-  useForm,
-} from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import camelCase from "lodash.camelcase";
 import startCase from "lodash.startcase";
-import { TABULAR_PROBLEM_TYPES_ARR } from "../constants/tabularConstants";
+import { ParameterData, TrainspaceData } from "../types/tabularTypes";
+import { STEP_SETTINGS } from "../constants/tabularConstants";
 
 const TabularParametersStep = ({
   renderStepperButtons,
 }: {
   renderStepperButtons: (
-    submitTrainspace: (data: TabularData) => void
+    submitTrainspace: (data: TrainspaceData) => void
   ) => React.ReactNode;
 }) => {
+  console.log("hi");
   const trainspace = useAppSelector(
-    (state) => state.trainspace.current as TabularData<"PARAMETERS"> | undefined
+    (state) =>
+      state.trainspace.current as TrainspaceData<"PARAMETERS"> | undefined
   );
   if (!trainspace) return <></>;
   const { data, refetch } = useGetColumnsFromDatasetQuery({
@@ -47,10 +37,8 @@ const TabularParametersStep = ({
   const {
     handleSubmit,
     formState: { errors },
-    register,
     control,
-    setValue,
-  } = useForm<TabularParameterData>({
+  } = useForm<ParameterData>({
     defaultValues: {},
   });
   if (!data) return <></>;
@@ -93,14 +81,16 @@ const TabularParametersStep = ({
           control={control}
           render={({ field: { onChange, value } }) => (
             <RadioGroup row value={value} onChange={onChange}>
-              {TABULAR_PROBLEM_TYPES_ARR.map((problemType) => (
-                <FormControlLabel
-                  key={problemType}
-                  value={problemType}
-                  control={<Radio />}
-                  label={startCase(camelCase(problemType))}
-                />
-              ))}
+              {STEP_SETTINGS["PARAMETERS"]["problemTypes"].map(
+                (problemType) => (
+                  <FormControlLabel
+                    key={problemType}
+                    value={problemType}
+                    control={<Radio />}
+                    label={startCase(camelCase(problemType))}
+                  />
+                )
+              )}
             </RadioGroup>
           )}
         />

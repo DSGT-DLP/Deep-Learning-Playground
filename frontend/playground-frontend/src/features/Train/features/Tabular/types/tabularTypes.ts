@@ -1,30 +1,30 @@
 import {
   BaseTrainspaceData,
   DatasetData,
-  ReviewData,
-  TrainResultsData,
-  TrainspaceTypes,
 } from "@/features/Train/types/trainTypes";
-import { TABULAR_PROBLEM_TYPES_ARR } from "@/features/Train/features/Tabular/constants/tabularConstants";
+import {
+  STEP_SETTINGS,
+  TRAINSPACE_SETTINGS,
+} from "@/features/Train/features/Tabular/constants/tabularConstants";
 
-export interface TabularData<
-  T extends TrainspaceTypes["TABULAR"]["step"] = TrainspaceTypes["TABULAR"]["step"]
+export interface TrainspaceData<
+  T extends typeof TRAINSPACE_SETTINGS["steps"][number] = typeof TRAINSPACE_SETTINGS["steps"][number]
 > extends BaseTrainspaceData {
   dataSource: "TABULAR";
-  step: T;
+  steps: typeof TRAINSPACE_SETTINGS["steps"][number];
   datasetData: T extends "PARAMETERS" | "REVIEW" | "TRAIN"
     ? DatasetData
     : DatasetData | undefined;
   parameterData: T extends "REVIEW" | "TRAIN"
-    ? TabularParameterData
-    : TabularParameterData | undefined;
+    ? ParameterData
+    : ParameterData | undefined;
   reviewData: T extends "TRAIN" ? ReviewData : ReviewData | undefined;
 }
 
-export interface TabularParameterData {
+export interface ParameterData {
   targetCol: string;
   features: string[];
-  problemType: TABULAR_PROBLEM_TYPE;
+  problemType: typeof STEP_SETTINGS["PARAMETERS"]["problemTypes"][number];
   criterion: string;
   optimizerName: string;
   shuffle: boolean;
@@ -33,9 +33,7 @@ export interface TabularParameterData {
   batchSize: number;
 }
 
-export interface TabularTrainResultsData extends TrainResultsData {
-  dataSource: "TABULAR";
-  tabularData: TabularData<"TRAIN">;
+export interface ReviewData {
+  notificationEmail?: string;
+  notificationPhoneNumber?: string;
 }
-
-export type TABULAR_PROBLEM_TYPE = typeof TABULAR_PROBLEM_TYPES_ARR[number];

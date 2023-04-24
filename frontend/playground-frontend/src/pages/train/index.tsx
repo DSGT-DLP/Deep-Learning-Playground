@@ -5,7 +5,8 @@ import { useAppSelector } from "@/common/redux/hooks";
 import { useRouter } from "next/router";
 import { isSignedIn } from "@/common/redux/userLogin";
 import CreateTrainspace from "@/features/Train/components/CreateTrainspace";
-import { DATA_SOURCE_SETTINGS } from "@/features/Train/constants/trainConstants";
+import { ALL_TRAINSPACE_SETTINGS } from "@/features/Train/constants/trainConstants";
+import { BaseTrainspaceData } from "@/features/Train/types/trainTypes";
 
 const Trainspace = () => {
   const user = useAppSelector((state) => state.currentUser.user);
@@ -23,11 +24,7 @@ const Trainspace = () => {
     <div style={{ height: "100vh" }}>
       <NavbarMain />
       {trainspace ? (
-        <TrainspaceInner
-          trainspaceComponent={
-            DATA_SOURCE_SETTINGS[trainspace.dataSource].trainspaceComponent
-          }
-        />
+        <TrainspaceInner trainspace={trainspace} />
       ) : (
         <CreateTrainspace />
       )}
@@ -37,12 +34,12 @@ const Trainspace = () => {
 };
 
 const TrainspaceInner = ({
-  trainspaceComponent,
+  trainspace,
 }: {
-  trainspaceComponent: React.FC;
+  trainspace: BaseTrainspaceData;
 }) => {
-  const TrainspaceComponent = trainspaceComponent;
-  return <TrainspaceComponent />;
+  const Component = ALL_TRAINSPACE_SETTINGS[trainspace.dataSource].component;
+  return <Component />;
 };
 
 export default Trainspace;

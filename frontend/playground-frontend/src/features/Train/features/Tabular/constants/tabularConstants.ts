@@ -39,25 +39,74 @@ export const STEP_SETTINGS = {
       {
         label: "Mean Squared Error Loss",
         value: "MSELOSS",
-        object_name: "nn.MSELoss()",
+        objectName: "nn.MSELoss()",
         problemType: "REGRESSION",
       },
       {
         label: "Binary Cross-Entropy Loss",
         value: "BCELOSS",
-        object_name: "nn.BCELoss()",
+        objectName: "nn.BCELoss()",
         problemType: "CLASSIFICATION",
       },
       {
         label: "Cross-Entropy Loss",
         value: "CELOSS",
-        object_name: "nn.CrossEntropyLoss(reduction='mean')",
+        objectName: "nn.CrossEntropyLoss(reduction='mean')",
         problemType: "CLASSIFICATION",
       },
     ],
     optimizers: [
       { label: "Stochastic Gradient Descent", value: "SGD" },
       { label: "Adam Optimization", value: "Adam" },
+    ],
+    layers: [
+      {
+        label: "Linear",
+        value: "LINEAR",
+        objectName: "nn.Linear",
+        parameters: [
+          {
+            label: "Input Size",
+            value: "INPUT_SIZE",
+            min: 1,
+            max: 1600,
+            type: "number",
+          },
+          {
+            label: "Output Size",
+            value: "OUTPUT_SIZE",
+            min: 1,
+            max: 1600,
+            type: "number",
+          },
+        ],
+      },
+      {
+        label: "ReLU",
+        value: "RELU",
+        objectName: "nn.ReLU",
+        parameters: [],
+      },
+      {
+        label: "Tanh",
+        value: "TANH",
+        objectName: "nn.Tanh",
+        parameters: [],
+      },
+      {
+        label: "Softmax",
+        value: "SOFTMAX",
+        objectName: "nn.Softmax",
+        parameters: [
+          {
+            label: "Dimension",
+            value: "DIMENSION",
+            min: -3,
+            max: 2,
+            type: "number",
+          },
+        ],
+      },
     ],
   },
   REVIEW: {

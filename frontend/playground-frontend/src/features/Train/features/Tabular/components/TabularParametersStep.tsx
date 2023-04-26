@@ -21,7 +21,7 @@ import {
   Switch,
   TextField,
 } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
+import { Control, Controller, useFieldArray, useForm } from "react-hook-form";
 import { ParameterData, TrainspaceData } from "../types/tabularTypes";
 import { STEP_SETTINGS } from "../constants/tabularConstants";
 import {
@@ -29,6 +29,7 @@ import {
   Draggable,
   DropResult,
   Droppable,
+  DroppableProps,
 } from "react-beautiful-dnd";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -75,6 +76,21 @@ const TabularStepsInner = ({
       epochs: 5,
       batchSize: 20,
       testSize: 0.2,
+      layers: [
+        {
+          value: "LINEAR",
+          parameters: [
+            {
+              data: 10,
+              value: "INPUT_SIZE",
+            },
+          ],
+        },
+        {
+          value: "RELU",
+          parameters: [],
+        },
+      ],
     },
   });
   return (
@@ -215,49 +231,57 @@ const TabularStepsInner = ({
           )}
         />
       </FormControl>
-      <DragAndDropList
-        items={[
-          { id: "1", content: "1" },
-          { id: "2", content: "2" },
-          { id: "3", content: "3" },
-          { id: "4", content: "4" },
-          { id: "5", content: "5" },
-        ]}
-      />
+      <DragAndDropList control={control} />
     </Stack>
   );
 };
 
-interface Item {
-  id: string;
-  content: string;
-}
+const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
+  const [enabled, setEnabled] = useState(false);
+  useEffect(() => {
+    const animation = requestAnimationFrame(() => setEnabled(true));
+    return () => {
+      cancelAnimationFrame(animation);
+      setEnabled(false);
+    };
+  }, []);
+  if (!enabled) {
+    return null;
+  }
+  return <Droppable {...props}>{children}</Droppable>;
+};
 
-const DragAndDropList = ({ items }: { items: Item[] }) => {
-  const [list, setList] = useState(items);
+const DragAndDropList = ({
+  control,
+}: {
+  control: Control<ParameterData, unknown>;
+}) => {
+  const { fields, move } = useFieldArray({
+    name: "layers",
+    control: control,
+  });
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) {
       return;
     }
-
-    const newList = Array.from(list);
-    const [removed] = newList.splice(result.source.index, 1);
-    newList.splice(result.destination.index, 0, removed);
-
-    setList(newList);
+    move(result.source.index, result.destination.index);
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable">
+      <StrictModeDroppable droppableId="droppable">
         {(provided) => (
           <Stack {...provided.droppableProps} ref={provided.innerRef}>
-            {list.map((item, index) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
+            {fields.map((item, index) => (
+              <Draggable
+                key={`test[${index}]`}
+                draggableId={`item-${index}`}
+                index={index}
+              >
                 {(provided) => (
                   <Stack ref={provided.innerRef} {...provided.draggableProps}>
-                    <Card {...provided.dragHandleProps}>{item.content}</Card>
+                    <Card {...provided.dragHandleProps}>{item.value}</Card>
                     <Container>
                       <IconButton>
                         <AddIcon />
@@ -270,7 +294,7 @@ const DragAndDropList = ({ items }: { items: Item[] }) => {
             {provided.placeholder}
           </Stack>
         )}
-      </Droppable>
+      </StrictModeDroppable>
     </DragDropContext>
   );
 };

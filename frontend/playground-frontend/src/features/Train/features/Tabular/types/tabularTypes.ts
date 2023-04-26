@@ -26,11 +26,30 @@ export interface ParameterData {
   features: string[];
   problemType: (typeof STEP_SETTINGS)["PARAMETERS"]["problemTypes"][number]["value"];
   criterion: (typeof STEP_SETTINGS)["PARAMETERS"]["criterions"][number]["value"];
-  optimizerName: string;
+  optimizerName: (typeof STEP_SETTINGS)["PARAMETERS"]["optimizers"][number]["value"];
   shuffle: boolean;
   epochs: number;
   testSize: number;
   batchSize: number;
+  layers: {
+    value: (typeof STEP_SETTINGS)["PARAMETERS"]["layers"][number]["value"];
+    parameters: {
+      data: number;
+      value: (typeof STEP_SETTINGS)["PARAMETERS"]["layers"][number]["parameters"][number]["value"];
+    }[];
+  }[];
+}
+
+type LTypes = number | string | boolean;
+export interface LayerParameter<T extends LTypes = LTypes> {
+  index: number;
+  parameter_name: string;
+  min: T extends number ? number : null;
+  max: T extends number ? number : null;
+  parameter_type: T;
+  default?: T extends "number" ? number : string;
+  kwarg?: string;
+  value?: T extends "number" ? number : string;
 }
 
 export interface ReviewData {

@@ -60,9 +60,11 @@ class TrainspaceData(BaseData):
     status=["QUEUED", "STARTING", "UPLOADING", "TRAINING", "SUCCESS", "ERROR"],
 )
 class TrainspaceEnums:
-    """Class that holds the enums associated with the ExecutionDDBUtil class. It includes:
-    ExecutionEnums.Attribute - Enum that defines the schema of the execution-table. It holds the attribute names of the table
-    ExecutionEnums.Execution_Source - Enum that defines the categorical values associated with the 'execution_source' attribute
+    """Class that holds the enums associated with the TrainspaceDDBUtil class. It includes:
+    TrainspaceEnums.Attribute - Enum that defines the schema of the trainspace table. It holds the attribute names of the table
+    TrainspaceEnums.train_model - Enum that defines the categories of the train model types
+    TrainspaceEnums.step - Enum that defines the categories of the train steps
+    TrainspaceEnums.status - Enum that defines the categories of the train status
     """
 
     pass
@@ -72,16 +74,26 @@ class TrainspaceEnums:
     DataClass=TrainspaceData, EnumClass=TrainspaceEnums, partition_key=PRIMARY_KEY
 )
 class TrainspaceDDBUtil(BaseDDBUtil):
-    """Class that interacts with AWS DynamoDB to manipulate information stored in the execution-table DynamoDB table"""
+    """Class that interacts with AWS DynamoDB to manipulate information stored in the trainspace DynamoDB table"""
 
     pass
 
 
 def getTrainspaceData(trainspace_id: str) -> str:
     """
-    Retrieves an entry from the `execution-table` DynamoDB table given an `execution_id`. Example output: {"execution_id": "blah", "user_id": "blah", "name": "blah", "timestamp": "blah", "data_source": "TABULAR", "status": "QUEUED", "progress": 1}
+    Retrieves an entry from the `trainspace` DynamoDB table given an `trainspace_id`. Example output: {
+        "trainspace_id": "blah",
+        "name": "blah",
+        "training_file": "blah.txt",
+        "uid": "blah",
+        "step": "UPLOAD_FILE",
+        "status": "QUEUED",
+        "created": "2023-04-26T01:24:53Z",
+        "modified": "2023-04-26T01:24:53Z",
+        "train_model": "TABULAR",
+    }
 
-    @param execution_id: The execution_id of the entry to be retrieved
+    @param trainspace_id: The trainspace_id of the entry to be retrieved
     @return: A JSON string of the entry retrieved from the table
     """
     dynamoTable = TrainspaceDDBUtil(TRAINSPACE_TABLE_NAME, AWS_REGION)
@@ -91,9 +103,9 @@ def getTrainspaceData(trainspace_id: str) -> str:
 
 def createTrainspaceData(entryData: dict) -> str:
     """
-    Create a new entry corresponding to the given user_id.
+    Create a new entry.
 
-    @param **kwargs: execution_id and other table attributes to be created to the new entry e.g. user_id, if does not exist
+    @param **kwargs: all table attributes to be created to the new entry e.g. user_id, if does not exist
     @return: A JSON string of the entry retrieved or created from the table
     """
     if not validate_keys(entryData, REQUIRED_KEYS):
@@ -107,8 +119,9 @@ def createTrainspaceData(entryData: dict) -> str:
 
 def updateTrainspaceData(requestData: dict) -> str:
     """
-    Updates an entry from the `execution-table` DynamoDB table given an `execution_id`.
-    @param requestData: A dictionary containing the execution_id and other table attributes to be updated, with user_id as a required field
+    Updates an entry from the `trainspace` DynamoDB table given an `trainspace_id` in the requestData object, with certain required keys.
+    
+    @param requestData: A dictionary containing the trainspace_id and other table attributes to be updated, with certain required keys
     @return a success status message if the update is successful
     """
     if not validate_keys(requestData, REQUIRED_KEYS):
@@ -124,10 +137,10 @@ def updateTrainspaceData(requestData: dict) -> str:
 
 def getAllUserTrainspaceData(user_id: str) -> str:
     """
-    Retrieves an entry from the `execution-table` DynamoDB table given an `execution_id`. Example output: {"execution_id": "blah", "user_id": "blah", "name": "blah", "timestamp": "blah", "data_source": "TABULAR", "status": "QUEUED", "progress": 1}
+    Retrieves all entries from the `trainspace` DynamoDB table given an `user_id` in the form of an array in a JSON string.
 
-    @param execution_id: The execution_id of the entry to be retrieved
-    @return: A JSON string of the entry retrieved from the table
+    @param user_id: The user_id of the entry to be retrieved
+    @return: A JSON string of the entries retrieved from the table
     """
     dynamoTable = TrainspaceDDBUtil(TRAINSPACE_TABLE_NAME, AWS_REGION)
     response = dynamoTable.table.query(
@@ -178,9 +191,9 @@ def getAllUserTrainspaceData(user_id: str) -> str:
 
 def updateStatus(trainspace_id: str, status: str, entryData: dict = None) -> str:
     """
-    Updates the status of an entry from the `execution-table` DynamoDB table given an `execution_id`.
+    Updates the status of an entry from the `trainspace` DynamoDB table given an `trainspace_id`.
 
-    @param execution_id: The execution_id of the entry to be updated
+    @param trainspace_id: The trainspace_id of the entry to be updated
     @param status: The new status of the entry
     @return a success status message if the update is successful
     """

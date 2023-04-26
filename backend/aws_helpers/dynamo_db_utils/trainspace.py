@@ -120,7 +120,7 @@ def createTrainspaceData(entryData: dict) -> str:
 def updateTrainspaceData(requestData: dict) -> str:
     """
     Updates an entry from the `trainspace` DynamoDB table given an `trainspace_id` in the requestData object, with certain required keys.
-    
+
     @param requestData: A dictionary containing the trainspace_id and other table attributes to be updated, with certain required keys
     @return a success status message if the update is successful
     """

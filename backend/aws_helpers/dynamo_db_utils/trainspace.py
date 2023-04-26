@@ -81,7 +81,7 @@ class TrainspaceDDBUtil(BaseDDBUtil):
 
 def getTrainspaceData(trainspace_id: str) -> str:
     """
-    Retrieves an entry from the `trainspace` DynamoDB table given an `trainspace_id`. Example output: {
+    Retrieves an entry from the `trainspace` DynamoDB table given an `trainspace_id`. Example output:  {
         "trainspace_id": "blah",
         "name": "blah",
         "training_file": "blah.txt",
@@ -103,7 +103,17 @@ def getTrainspaceData(trainspace_id: str) -> str:
 
 def createTrainspaceData(entryData: dict) -> str:
     """
-    Create a new entry.
+    Create a new entry. Example input: {
+        "trainspace_id": "blah",
+        "name": "blah",
+        "training_file": "blah.txt",
+        "uid": "blah",
+        "step": "UPLOAD_FILE",
+        "status": "QUEUED",
+        "created": "2023-04-26T01:24:53Z",
+        "modified": "2023-04-26T01:24:53Z",
+        "train_model": "TABULAR",
+    }
 
     @param **kwargs: all table attributes to be created to the new entry e.g. user_id, if does not exist
     @return: A JSON string of the entry retrieved or created from the table
@@ -120,7 +130,7 @@ def createTrainspaceData(entryData: dict) -> str:
 def updateTrainspaceData(requestData: dict) -> str:
     """
     Updates an entry from the `trainspace` DynamoDB table given an `trainspace_id` in the requestData object, with certain required keys.
-    
+
     @param requestData: A dictionary containing the trainspace_id and other table attributes to be updated, with certain required keys
     @return a success status message if the update is successful
     """

@@ -24,8 +24,41 @@ export const STEP_SETTINGS = {
   PARAMETERS: {
     name: "Parameters",
     optional: false,
-    problemTypes: ["CLASSIFICATION", "REGRESSION"],
     component: TabularParametersStep,
+    problemTypes: [
+      { label: "Classification", value: "CLASSIFICATION" },
+      { label: "Regression", value: "REGRESSION" },
+    ],
+    criterions: [
+      {
+        label: "L1 (Absolute Error) Loss",
+        value: "L1LOSS",
+        objectName: "nn.L1Loss()",
+        problemType: "REGRESSION",
+      },
+      {
+        label: "Mean Squared Error Loss",
+        value: "MSELOSS",
+        object_name: "nn.MSELoss()",
+        problemType: "REGRESSION",
+      },
+      {
+        label: "Binary Cross-Entropy Loss",
+        value: "BCELOSS",
+        object_name: "nn.BCELoss()",
+        problemType: "CLASSIFICATION",
+      },
+      {
+        label: "Cross-Entropy Loss",
+        value: "CELOSS",
+        object_name: "nn.CrossEntropyLoss(reduction='mean')",
+        problemType: "CLASSIFICATION",
+      },
+    ],
+    optimizers: [
+      { label: "Stochastic Gradient Descent", value: "SGD" },
+      { label: "Adam Optimization", value: "Adam" },
+    ],
   },
   REVIEW: {
     name: "Review",

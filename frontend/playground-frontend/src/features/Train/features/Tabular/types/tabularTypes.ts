@@ -8,10 +8,10 @@ import {
 } from "@/features/Train/features/Tabular/constants/tabularConstants";
 
 export interface TrainspaceData<
-  T extends typeof TRAINSPACE_SETTINGS["steps"][number] = typeof TRAINSPACE_SETTINGS["steps"][number]
+  T extends (typeof TRAINSPACE_SETTINGS)["steps"][number] = (typeof TRAINSPACE_SETTINGS)["steps"][number]
 > extends BaseTrainspaceData {
   dataSource: "TABULAR";
-  steps: typeof TRAINSPACE_SETTINGS["steps"][number];
+  steps: (typeof TRAINSPACE_SETTINGS)["steps"][number];
   datasetData: T extends "PARAMETERS" | "REVIEW" | "TRAIN"
     ? DatasetData
     : DatasetData | undefined;
@@ -24,8 +24,8 @@ export interface TrainspaceData<
 export interface ParameterData {
   targetCol: string;
   features: string[];
-  problemType: typeof STEP_SETTINGS["PARAMETERS"]["problemTypes"][number];
-  criterion: string;
+  problemType: (typeof STEP_SETTINGS)["PARAMETERS"]["problemTypes"][number]["value"];
+  criterion: (typeof STEP_SETTINGS)["PARAMETERS"]["criterions"][number]["value"];
   optimizerName: string;
   shuffle: boolean;
   epochs: number;

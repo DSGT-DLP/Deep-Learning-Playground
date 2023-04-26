@@ -54,7 +54,7 @@ const TabularTrainspace = () => {
       }
       trainspaceStep={
         <TrainspaceStepInner
-          trainspace={trainspace}
+          step={trainspace.step}
           handleSubmit={handleSubmit}
         />
       }
@@ -63,15 +63,14 @@ const TabularTrainspace = () => {
 };
 
 const TrainspaceStepInner = ({
-  trainspace,
+  step,
   handleSubmit,
 }: {
-  trainspace: TrainspaceData;
+  step: number;
   handleSubmit: UseFormHandleSubmit<TrainspaceData>;
 }) => {
-  const Component =
-    STEP_SETTINGS[TRAINSPACE_SETTINGS.steps[trainspace.step]].component;
-
+  const Component = STEP_SETTINGS[TRAINSPACE_SETTINGS.steps[step]].component;
+  if (!Component) return <></>;
   return (
     <Component
       renderStepperButtons={(submitTrainspace) => (

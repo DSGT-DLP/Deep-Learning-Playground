@@ -39,10 +39,10 @@ const Login = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if (isSignedIn(user)) {
-      router.replace("/dashboard");
+    if (router.isReady && isSignedIn(user)) {
+      router.replace({ pathname: "/dashboard" });
     }
-  }, [user]);
+  }, [user, router.isReady]);
   const Title = (
     <>
       <h1 className="title mb-5">

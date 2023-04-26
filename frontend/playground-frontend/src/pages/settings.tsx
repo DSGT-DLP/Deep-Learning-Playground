@@ -135,11 +135,11 @@ const AccountSettings = () => {
   const user = useAppSelector((state) => state.currentUser.user);
   const router = useRouter();
   useEffect(() => {
-    if (!user) {
+    if (router.isReady && !user) {
       router.replace("/login");
     }
   }),
-    [user];
+    [user, router.isReady];
   if (!isSignedIn(user)) {
     return <></>;
   }

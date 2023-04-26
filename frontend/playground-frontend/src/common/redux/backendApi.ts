@@ -43,6 +43,7 @@ export const backendApi = createApi({
     prepareHeaders: async (headers) => {
       if (auth.currentUser) {
         const token = await auth.currentUser.getIdToken();
+        console.log(token);
         headers.set("Authorization", `Bearer ${token}`);
         headers.entries().next();
         return headers;

@@ -24,14 +24,23 @@ import {
 import { Control, Controller, useFieldArray, useForm } from "react-hook-form";
 import { ParameterData, TrainspaceData } from "../types/tabularTypes";
 import { STEP_SETTINGS } from "../constants/tabularConstants";
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
-  DroppableProps,
-} from "react-beautiful-dnd";
+import { CSS } from "@dnd-kit/utilities";
 import AddIcon from "@mui/icons-material/Add";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 
 const TabularParametersStep = ({
   renderStepperButtons,
@@ -89,6 +98,24 @@ const TabularStepsInner = ({
         {
           value: "RELU",
           parameters: [],
+        },
+        {
+          value: "LINEAR",
+          parameters: [
+            {
+              data: 10,
+              value: "INPUT_SIZE",
+            },
+          ],
+        },
+        {
+          value: "SOFTMAX",
+          parameters: [
+            {
+              value: "DIMENSION",
+              data: -1,
+            },
+          ],
         },
       ],
     },
@@ -231,24 +258,11 @@ const TabularStepsInner = ({
           )}
         />
       </FormControl>
-      <DragAndDropList control={control} />
+      <Stack spacing={0}>
+        <DragAndDropList control={control} />
+      </Stack>
     </Stack>
   );
-};
-
-const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
-  const [enabled, setEnabled] = useState(false);
-  useEffect(() => {
-    const animation = requestAnimationFrame(() => setEnabled(true));
-    return () => {
-      cancelAnimationFrame(animation);
-      setEnabled(false);
-    };
-  }, []);
-  if (!enabled) {
-    return null;
-  }
-  return <Droppable {...props}>{children}</Droppable>;
 };
 
 const DragAndDropList = ({
@@ -257,45 +271,54 @@ const DragAndDropList = ({
   control: Control<ParameterData, unknown>;
 }) => {
   const { fields, move } = useFieldArray({
-    name: "layers",
     control: control,
+    name: "layers",
   });
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      console.log(active.id, over.id);
 
-  const onDragEnd = (result: DropResult) => {
-    if (!result.destination) {
-      return;
+      move(
+        fields.findIndex((item) => item.id === active.id),
+        fields.findIndex((item) => item.id === over.id)
+      );
     }
-    move(result.source.index, result.destination.index);
+  };
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext items={fields} strategy={verticalListSortingStrategy}>
+        {fields.map((field) => (
+          <SortableItem key={field.id} id={field.id} value={field.value} />
+        ))}
+      </SortableContext>
+    </DndContext>
+  );
+};
+
+const SortableItem = ({ id, value }: { id: string; value: string }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition: transition,
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <StrictModeDroppable droppableId="droppable">
-        {(provided) => (
-          <Stack {...provided.droppableProps} ref={provided.innerRef}>
-            {fields.map((item, index) => (
-              <Draggable
-                key={`test[${index}]`}
-                draggableId={`item-${index}`}
-                index={index}
-              >
-                {(provided) => (
-                  <Stack ref={provided.innerRef} {...provided.draggableProps}>
-                    <Card {...provided.dragHandleProps}>{item.value}</Card>
-                    <Container>
-                      <IconButton>
-                        <AddIcon />
-                      </IconButton>
-                    </Container>
-                  </Stack>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </Stack>
-        )}
-      </StrictModeDroppable>
-    </DragDropContext>
+    <Card ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      {value}
+    </Card>
   );
 };
 

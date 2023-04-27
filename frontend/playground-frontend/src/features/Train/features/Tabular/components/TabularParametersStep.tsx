@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
 import { useAppSelector } from "@/common/redux/hooks";
 import {
@@ -33,8 +33,10 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import {
+  Active,
   DndContext,
   DragEndEvent,
+  DragOverlay,
   KeyboardSensor,
   PointerSensor,
   closestCenter,
@@ -274,6 +276,11 @@ const DragAndDropList = ({
     control: control,
     name: "layers",
   });
+  const [active, setActive] = useState<Active | null>(null);
+  const activeItem = useMemo(
+    () => fields.find((field) => field.id === active?.id),
+    [active, fields]
+  );
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -283,42 +290,69 @@ const DragAndDropList = ({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      console.log(active.id, over.id);
-
       move(
         fields.findIndex((item) => item.id === active.id),
         fields.findIndex((item) => item.id === over.id)
       );
+      setActive(null);
     }
   };
   return (
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
+      onDragStart={({ active }) => {
+        setActive(active);
+      }}
       onDragEnd={handleDragEnd}
+      onDragCancel={() => setActive(null)}
     >
       <SortableContext items={fields} strategy={verticalListSortingStrategy}>
         {fields.map((field) => (
-          <SortableItem key={field.id} id={field.id} value={field.value} />
+          <SortableItem key={field.id} id={field.id} data={field} />
         ))}
       </SortableContext>
+      <DragOverlay>
+        {activeItem ? <LayerComponent data={activeItem} /> : null}
+      </DragOverlay>
     </DndContext>
   );
 };
 
-const SortableItem = ({ id, value }: { id: string; value: string }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id });
+const LayerComponent = ({
+  data,
+}: {
+  data: ParameterData["layers"][number];
+}) => {
+  return <Card>{data.value}</Card>;
+};
+
+const SortableItem = ({
+  id,
+  data,
+}: {
+  id: string;
+  data: ParameterData["layers"][number];
+}) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    isDragging,
+    transform,
+    transition,
+  } = useSortable({ id });
 
   const style = {
+    opacity: isDragging ? 0.4 : undefined,
     transform: CSS.Transform.toString(transform),
     transition: transition,
   };
 
   return (
-    <Card ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {value}
-    </Card>
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <LayerComponent data={data} />
+    </div>
   );
 };
 

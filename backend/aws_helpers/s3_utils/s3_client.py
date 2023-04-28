@@ -116,7 +116,9 @@ def get_presigned_url_from_exec_file(bucket_name: str, exec_id: str, filename: s
     return get_presigned_url_from_bucket(bucket_name, exec_id + "/" + filename)
 
 
-def get_presigned_upload_post_from_user_dataset_file(user_id: str, data_source: str, filename: str):
+def get_presigned_upload_post_from_user_dataset_file(
+    user_id: str, data_source: str, filename: str
+):
     """
     Get the presigned url for a file stored by a user in the file upload S3 bucket.
 
@@ -124,7 +126,7 @@ def get_presigned_upload_post_from_user_dataset_file(user_id: str, data_source: 
         user_id (str): The id of the user.
         data_source (str): The data source of the object.
         filename (str): The name of the file.
-    
+
     Returns:
         A dictionary containing a boto3 presigned url post object for the file.
     """
@@ -133,13 +135,21 @@ def get_presigned_upload_post_from_user_dataset_file(user_id: str, data_source: 
     )
     return post_obj
 
+
 def get_column_names(user_id: str, data_source: str, filename: str):
     s3 = boto3.client("s3")
-    response = s3.select_object_content(Bucket=FILE_UPLOAD_BUCKET_NAME, Key=f"{user_id}/{data_source}/{filename}", ExpressionType='SQL', Expression="SELECT * FROM S3Object LIMIT 1", InputSerialization={'CSV': {"FileHeaderInfo": "NONE"}}, OutputSerialization={'CSV': {}})
+    response = s3.select_object_content(
+        Bucket=FILE_UPLOAD_BUCKET_NAME,
+        Key=f"{user_id}/{data_source}/{filename}",
+        ExpressionType="SQL",
+        Expression="SELECT * FROM S3Object LIMIT 1",
+        InputSerialization={"CSV": {"FileHeaderInfo": "NONE"}},
+        OutputSerialization={"CSV": {}},
+    )
     # Iterate over the response records to extract the header row
-    for event in response['Payload']:
-        if 'Records' in event:
-            records = event['Records']['Payload'].decode('utf-8')
+    for event in response["Payload"]:
+        if "Records" in event:
+            records = event["Records"]["Payload"].decode("utf-8")
             print(records)
-            columns = records.split('\n')[0].split(',')
+            columns = records.split("\n")[0].split(",")
     return columns

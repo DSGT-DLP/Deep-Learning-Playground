@@ -59,55 +59,51 @@ export const STEP_SETTINGS = {
       { label: "Stochastic Gradient Descent", value: "SGD" },
       { label: "Adam Optimization", value: "Adam" },
     ],
-    layers: [
-      {
+    layers: {
+      LINEAR: {
         label: "Linear",
-        value: "LINEAR",
         objectName: "nn.Linear",
         parameters: [
           {
             label: "Input Size",
-            value: "INPUT_SIZE",
             min: 1,
             max: 1600,
+            required: true,
             type: "number",
           },
           {
             label: "Output Size",
-            value: "OUTPUT_SIZE",
             min: 1,
             max: 1600,
+            required: true,
             type: "number",
           },
         ],
       },
-      {
+      RELU: {
         label: "ReLU",
-        value: "RELU",
         objectName: "nn.ReLU",
         parameters: [],
       },
-      {
+      TANH: {
         label: "Tanh",
-        value: "TANH",
         objectName: "nn.Tanh",
         parameters: [],
       },
-      {
+      SOFTMAX: {
         label: "Softmax",
-        value: "SOFTMAX",
         objectName: "nn.Softmax",
         parameters: [
           {
             label: "Dimension",
-            value: "DIMENSION",
             min: -3,
             max: 2,
+            required: true,
             type: "number",
           },
         ],
       },
-    ],
+    },
   },
   REVIEW: {
     name: "Review",

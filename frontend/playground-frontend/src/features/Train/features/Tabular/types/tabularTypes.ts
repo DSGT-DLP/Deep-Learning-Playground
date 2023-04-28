@@ -32,11 +32,8 @@ export interface ParameterData {
   testSize: number;
   batchSize: number;
   layers: {
-    value: (typeof STEP_SETTINGS)["PARAMETERS"]["layers"][number]["value"];
-    parameters: {
-      data: number;
-      value: (typeof STEP_SETTINGS)["PARAMETERS"]["layers"][number]["parameters"][number]["value"];
-    }[];
+    value: keyof (typeof STEP_SETTINGS)["PARAMETERS"]["layers"];
+    parameters: number[];
   }[];
 }
 

@@ -20,6 +20,7 @@ import {
   Stack,
   Switch,
   TextField,
+  Typography,
 } from "@mui/material";
 import { Control, Controller, useFieldArray, useForm } from "react-hook-form";
 import { ParameterData, TrainspaceData } from "../types/tabularTypes";
@@ -37,12 +38,14 @@ import {
   DndContext,
   DragEndEvent,
   DragOverlay,
+  DraggableAttributes,
   KeyboardSensor,
   PointerSensor,
   closestCenter,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 
 const TabularParametersStep = ({
   renderStepperButtons,
@@ -90,12 +93,7 @@ const TabularStepsInner = ({
       layers: [
         {
           value: "LINEAR",
-          parameters: [
-            {
-              data: 10,
-              value: "INPUT_SIZE",
-            },
-          ],
+          parameters: [10, 3],
         },
         {
           value: "RELU",
@@ -103,21 +101,11 @@ const TabularStepsInner = ({
         },
         {
           value: "LINEAR",
-          parameters: [
-            {
-              data: 10,
-              value: "INPUT_SIZE",
-            },
-          ],
+          parameters: [3, 10],
         },
         {
           value: "SOFTMAX",
-          parameters: [
-            {
-              value: "DIMENSION",
-              data: -1,
-            },
-          ],
+          parameters: [-1],
         },
       ],
     },
@@ -267,6 +255,41 @@ const TabularStepsInner = ({
   );
 };
 
+function shouldHandleEvent(element: HTMLElement | null) {
+  let cur = element;
+
+  while (cur) {
+    if (cur.dataset && cur.dataset.noDnd) {
+      return false;
+    }
+    cur = cur.parentElement;
+  }
+
+  return true;
+}
+
+export class CustomPointerSensor extends PointerSensor {
+  static activators = [
+    {
+      eventName: "onPointerDown" as const,
+      handler: ({ nativeEvent: event }: React.MouseEvent) => {
+        return shouldHandleEvent(event.target as HTMLElement);
+      },
+    },
+  ];
+}
+
+export class CustomKeyboardSensor extends KeyboardSensor {
+  static activators = [
+    {
+      eventName: "onKeyDown" as const,
+      handler: ({ nativeEvent: event }: React.KeyboardEvent<Element>) => {
+        return shouldHandleEvent(event.target as HTMLElement);
+      },
+    },
+  ];
+}
+
 const DragAndDropList = ({
   control,
 }: {
@@ -282,8 +305,8 @@ const DragAndDropList = ({
     [active, fields]
   );
   const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
+    useSensor(CustomPointerSensor),
+    useSensor(CustomKeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
@@ -308,12 +331,24 @@ const DragAndDropList = ({
       onDragCancel={() => setActive(null)}
     >
       <SortableContext items={fields} strategy={verticalListSortingStrategy}>
-        {fields.map((field) => (
-          <SortableItem key={field.id} id={field.id} data={field} />
+        {fields.map((field, index) => (
+          <SortableItem
+            key={field.id}
+            id={field.id}
+            data={field}
+            layerIndex={index}
+            control={control}
+          />
         ))}
       </SortableContext>
       <DragOverlay>
-        {activeItem ? <LayerComponent data={activeItem} /> : null}
+        {activeItem ? (
+          <LayerComponent
+            data={activeItem}
+            control={control}
+            layerIndex={fields.findIndex((item) => item.id === activeItem.id)}
+          />
+        ) : null}
       </DragOverlay>
     </DndContext>
   );
@@ -321,18 +356,74 @@ const DragAndDropList = ({
 
 const LayerComponent = ({
   data,
+  layerIndex,
+  control,
+  attributes,
+  listeners,
 }: {
   data: ParameterData["layers"][number];
+  layerIndex: number;
+  attributes?: DraggableAttributes;
+  listeners?: SyntheticListenerMap;
+  control: Control<ParameterData, unknown>;
 }) => {
-  return <Card>{data.value}</Card>;
+  return (
+    <Card
+      sx={{ p: 3 }}
+      style={{ display: "inline-block" }}
+      {...attributes}
+      {...listeners}
+    >
+      <Stack
+        direction={"row"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        spacing={3}
+      >
+        <Typography variant="h3" fontSize={18}>
+          {STEP_SETTINGS.PARAMETERS.layers[data.value].label}
+        </Typography>
+        <Stack
+          direction={"row"}
+          justifyContent={"flex-end"}
+          spacing={2}
+          divider={<Divider orientation="vertical" flexItem />}
+        >
+          {STEP_SETTINGS.PARAMETERS.layers[data.value].parameters.map(
+            (parameter, index) => (
+              <div key={index} data-no-dnd>
+                <Controller
+                  name={`layers.${layerIndex}.parameters.${index}`}
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      label={parameter.label}
+                      size={"small"}
+                      type={parameter.type}
+                      onChange={onChange}
+                      value={value}
+                    />
+                  )}
+                />
+              </div>
+            )
+          )}
+        </Stack>
+      </Stack>
+    </Card>
+  );
 };
 
 const SortableItem = ({
   id,
+  layerIndex,
   data,
+  control,
 }: {
   id: string;
+  layerIndex: number;
   data: ParameterData["layers"][number];
+  control: Control<ParameterData, unknown>;
 }) => {
   const {
     attributes,
@@ -345,13 +436,20 @@ const SortableItem = ({
 
   const style = {
     opacity: isDragging ? 0.4 : undefined,
+    margin: -2,
     transform: CSS.Transform.toString(transform),
     transition: transition,
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <LayerComponent data={data} />
+    <div ref={setNodeRef} style={style}>
+      <LayerComponent
+        data={data}
+        layerIndex={layerIndex}
+        control={control}
+        attributes={attributes}
+        listeners={listeners}
+      />
     </div>
   );
 };

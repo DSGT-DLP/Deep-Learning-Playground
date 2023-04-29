@@ -13,13 +13,15 @@ import { useGetExecutionsDataQuery } from "@/features/Dashboard/redux/dashboardA
 import TrainDoughnutChart from "@/features/Dashboard/components/TrainDoughnutChart";
 // import TrainBarChart from "@/features/Dashboard/components/TrainBarChart";
 import ActivityCalendar, {Activity, ThemeInput} from "react-activity-calendar";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 import TrainDataGrid from "@/features/Dashboard/components/TrainDataGrid";
 
 const Dashboard = () => {
   const { data, isLoading, refetch } = useGetExecutionsDataQuery();
   const calendarData:Activity[] = [
     {
-      date: "2023-01-19",
+      date: "2023-01-01",
       count: 5,
       level: 1
     }, 
@@ -74,7 +76,7 @@ const Dashboard = () => {
       level: 1
     },
     {
-      date: "2023-12-19",
+      date: "2023-12-31",
       count: 5,
       level: 1
     }
@@ -135,8 +137,17 @@ const Dashboard = () => {
             <Box>
               <TrainDoughnutChart trainSpaceDataArr={data} />
             </Box>
-            <Box>
-            <ActivityCalendar data={calendarData} theme={explicitTheme} />
+            <Box >
+            <ActivityCalendar 
+            data={calendarData} 
+            theme={explicitTheme}
+            renderBlock={(block, activity) =>
+              React.cloneElement(block, {
+                'data-tooltip-id': 'react-tooltip',
+                'data-tooltip-html': `${activity.count} activities on ${activity.date}`,
+              })
+            } />
+            <ReactTooltip id="react-tooltip" />
             </Box>
           </Flex>
 

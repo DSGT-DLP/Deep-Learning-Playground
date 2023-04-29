@@ -24,6 +24,8 @@
   },
   "homepage": "https://github.com/DSGT-DLP/Deep-Learning-Playground#readme",
   "dependencies": {
+    "@dnd-kit/sortable": "^7.0.2",
+    "@dnd-kit/utilities": "^3.2.1",
     "pretty-bytes": "^6.1.0"
   }
 }

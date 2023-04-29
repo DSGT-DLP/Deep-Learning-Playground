@@ -11,11 +11,78 @@ import { useRouter } from "next/router";
 import { isSignedIn } from "@/common/redux/userLogin";
 import { useGetExecutionsDataQuery } from "@/features/Dashboard/redux/dashboardApi";
 import TrainDoughnutChart from "@/features/Dashboard/components/TrainDoughnutChart";
-import TrainBarChart from "@/features/Dashboard/components/TrainBarChart";
+// import TrainBarChart from "@/features/Dashboard/components/TrainBarChart";
+import ActivityCalendar, {Activity, ThemeInput} from "react-activity-calendar";
 import TrainDataGrid from "@/features/Dashboard/components/TrainDataGrid";
 
 const Dashboard = () => {
   const { data, isLoading, refetch } = useGetExecutionsDataQuery();
+  const calendarData:Activity[] = [
+    {
+      date: "2023-01-19",
+      count: 5,
+      level: 1
+    }, 
+    {
+      date: "2023-02-20",
+      count: 16,
+      level: 3
+    },
+    {
+      date: "2023-03-20",
+      count: 5,
+      level: 1
+    },
+    {
+      date: "2023-04-19",
+      count: 5,
+      level: 1
+    },
+    {
+      date: "2023-05-19",
+      count: 5,
+      level: 1
+    },
+    {
+      date: "2023-06-19",
+      count: 5,
+      level: 1
+    },
+    {
+      date: "2023-07-19",
+      count: 5,
+      level: 1
+    },
+    {
+      date: "2023-08-19",
+      count: 5,
+      level: 1
+    },
+    {
+      date: "2023-09-19",
+      count: 5,
+      level: 1
+    },
+    {
+      date: "2023-10-19",
+      count: 5,
+      level: 1
+    },
+    {
+      date: "2023-11-19",
+      count: 5,
+      level: 1
+    },
+    {
+      date: "2023-12-19",
+      count: 5,
+      level: 1
+    }
+  ];
+  const explicitTheme: ThemeInput = {
+    light: ['#f0f0f0', '#c4edde', '#7ac7c4', '#f73859', '#384259'],
+    dark: ['#383838', '#4D455D', '#7DB9B6', '#F5E9CF', '#E96479'],
+  }; 
   const user = useAppSelector((state) => state.currentUser.user);
   const router = useRouter();
   useEffect(() => {
@@ -68,8 +135,8 @@ const Dashboard = () => {
             <Box>
               <TrainDoughnutChart trainSpaceDataArr={data} />
             </Box>
-            <Box height={300} width={300}>
-              <TrainBarChart trainSpaceDataArr={data} />
+            <Box>
+            <ActivityCalendar data={calendarData} theme={explicitTheme} />
             </Box>
           </Flex>
 

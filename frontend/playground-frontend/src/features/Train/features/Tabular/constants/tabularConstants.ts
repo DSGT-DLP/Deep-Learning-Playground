@@ -59,6 +59,7 @@ export const STEP_SETTINGS = {
       { label: "Stochastic Gradient Descent", value: "SGD" },
       { label: "Adam Optimization", value: "Adam" },
     ],
+    layerValues: ["LINEAR", "RELU", "TANH", "SOFTMAX"],
     layers: {
       LINEAR: {
         label: "Linear",

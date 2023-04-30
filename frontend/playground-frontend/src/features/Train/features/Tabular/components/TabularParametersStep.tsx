@@ -5,6 +5,7 @@ import {
   Autocomplete,
   Button,
   Card,
+  Chip,
   Container,
   Divider,
   FormControl,
@@ -13,22 +14,35 @@ import {
   FormLabel,
   IconButton,
   MenuItem,
+  Paper,
   Radio,
   RadioGroup,
-  Select,
   Slider,
   Stack,
   Switch,
   TextField,
   Typography,
 } from "@mui/material";
-import { Control, Controller, useFieldArray, useForm } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldArray,
+  FieldArrayPath,
+  FieldError,
+  FieldErrors,
+  FieldValues,
+  FormState,
+  RegisterOptions,
+  UseFormRegisterReturn,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
 import { ParameterData, TrainspaceData } from "../types/tabularTypes";
 import { STEP_SETTINGS } from "../constants/tabularConstants";
 import { CSS } from "@dnd-kit/utilities";
-import AddIcon from "@mui/icons-material/Add";
 import {
   SortableContext,
+  arrayMove,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
@@ -37,15 +51,19 @@ import {
   Active,
   DndContext,
   DragEndEvent,
+  DragOverEvent,
   DragOverlay,
   DraggableAttributes,
   KeyboardSensor,
   PointerSensor,
   closestCenter,
+  useDraggable,
+  useDroppable,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
 import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const TabularParametersStep = ({
   renderStepperButtons,
@@ -110,6 +128,113 @@ const TabularStepsInner = ({
       ],
     },
   });
+  const {
+    fields,
+    move: fieldsMove,
+    insert: fieldsInsert,
+    remove: fieldsRemove,
+  } = useFieldArray({
+    control: control,
+    name: "layers",
+  });
+  const [layerIdsList, setLayerIdsList] = useState<number[]>(
+    fields.map(() => Math.round(Math.random() * 9999999999999))
+  );
+  const [layerInventoryIdsMap, setLayerInventoryIdsMap] = useState<{
+    [layerValue: string]: number;
+  }>(
+    Object.fromEntries(
+      STEP_SETTINGS.PARAMETERS.layerValues.map((layerValue) => [
+        layerValue,
+        Math.round(Math.random() * 9999999999999),
+      ])
+    )
+  );
+  const [active, setActive] = useState<Active | null>(null);
+  const activeItem:
+    | (ParameterData["layers"][number] & { dragId: number })
+    | undefined = useMemo(() => {
+    if (!active) return;
+    if (active.data.current && "inventory" in active.data.current) {
+      return {
+        dragId: layerInventoryIdsMap[active.data.current.inventory.value],
+        value: active.data.current.inventory.value,
+        parameters: STEP_SETTINGS.PARAMETERS.layers[
+          active.data.current.inventory
+            .value as (typeof STEP_SETTINGS.PARAMETERS.layerValues)[number]
+        ].parameters.map(() => ""),
+      };
+    }
+    const index = layerIdsList.findIndex((id) => id === active.id);
+    if (index !== -1) {
+      return { ...fields[index], ...{ dragId: layerIdsList[index] } };
+    }
+    return;
+  }, [active, fields]);
+  const sensors = useSensors(
+    useSensor(CustomPointerSensor),
+    useSensor(CustomKeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+  const move = (from: number, to: number) => {
+    fieldsMove(from, to);
+    setLayerIdsList(arrayMove(layerIdsList, from, to));
+  };
+  const insert = (
+    index: number,
+    item: ParameterData["layers"][number],
+    id: number
+  ) => {
+    fieldsInsert(index, item);
+    setLayerIdsList([
+      ...layerIdsList.slice(0, index),
+      id,
+      ...layerIdsList.slice(index),
+    ]);
+  };
+  const remove = (index: number) => {
+    fieldsRemove(index);
+    setLayerIdsList([
+      ...layerIdsList.slice(0, index),
+      ...layerIdsList.slice(index + 1),
+    ]);
+  };
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active: activeEnd, over } = event;
+    if (activeEnd.data.current && active && active.data.current) {
+      if ("inventory" in activeEnd.data.current) {
+        if (!over) {
+          remove(layerIdsList.findIndex((id) => id === activeEnd.id));
+        }
+      } else if ("sortable" in activeEnd.data.current && over) {
+        if ("inventory" in active.data.current) {
+          layerInventoryIdsMap[active.data.current.inventory.value] =
+            Math.round(Math.random() * 9999999999999);
+          setLayerInventoryIdsMap(() => layerInventoryIdsMap);
+        }
+        if (activeEnd.id !== over.id) {
+          move(
+            layerIdsList.findIndex((id) => id === activeEnd.id),
+            layerIdsList.findIndex((id) => id === over.id)
+          );
+        }
+      }
+    }
+    setActive(null);
+  };
+  const handleDragOver = (event: DragOverEvent) => {
+    if (!activeItem) return;
+    const { active: activeOver, over } = event;
+    if (!over) return;
+    if (activeOver.data.current && "inventory" in activeOver.data.current) {
+      insert(
+        layerIdsList.findIndex((id) => id === over.id),
+        activeItem,
+        activeItem.dragId
+      );
+    }
+  };
   return (
     <Stack spacing={3}>
       <Autocomplete
@@ -248,10 +373,193 @@ const TabularStepsInner = ({
           )}
         />
       </FormControl>
-      <Stack spacing={0}>
-        <DragAndDropList control={control} />
-      </Stack>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={({ active }) => {
+          setActive(active);
+        }}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+        onDragCancel={() => setActive(null)}
+      >
+        <Paper elevation={1} style={{ backgroundColor: "transparent" }}>
+          <Stack alignItems={"center"} spacing={2} padding={2}>
+            <Typography variant="h2" fontSize={25}>
+              Layers
+            </Typography>
+            <Stack direction={"row"} spacing={3}>
+              {STEP_SETTINGS.PARAMETERS.layerValues.map((value) => (
+                <LayerInventoryComponent
+                  key={value}
+                  id={layerInventoryIdsMap[value]}
+                  value={value}
+                />
+              ))}
+            </Stack>
+          </Stack>
+        </Paper>
+        <SortableContext
+          items={layerIdsList}
+          strategy={verticalListSortingStrategy}
+        >
+          <Container>
+            <Stack spacing={0}>
+              {fields.length > 0 ? (
+                fields.map((field, index) => (
+                  <LayerComponent
+                    key={layerIdsList[index]}
+                    id={layerIdsList[index]}
+                    data={field}
+                    layerIndex={index}
+                    control={control}
+                    remove={() => remove(index)}
+                  />
+                ))
+              ) : (
+                <Card>Test</Card>
+              )}
+            </Stack>
+          </Container>
+        </SortableContext>
+        <DragOverlay style={{ width: undefined }}>
+          {activeItem ? (
+            <LayerComponent
+              id={activeItem.dragId}
+              data={activeItem}
+              control={control}
+              layerIndex={
+                "id" in activeItem
+                  ? layerIdsList.findIndex((id) => id === activeItem.dragId)
+                  : undefined
+              }
+              remove={() =>
+                remove(layerIdsList.findIndex((id) => id === activeItem.dragId))
+              }
+            />
+          ) : null}
+        </DragOverlay>
+      </DndContext>
     </Stack>
+  );
+};
+
+const LayerInventoryComponent = ({
+  id,
+  value,
+}: {
+  id: number;
+  value: (typeof STEP_SETTINGS.PARAMETERS.layerValues)[number];
+}) => {
+  const { attributes, listeners, setNodeRef } = useDraggable({
+    id: id,
+    data: {
+      inventory: {
+        value,
+      },
+    },
+  });
+  return (
+    <div ref={setNodeRef} {...attributes} {...listeners}>
+      <Card sx={{ p: 1 }} style={{ display: "inline-block" }}>
+        {STEP_SETTINGS.PARAMETERS.layers[value].label}
+      </Card>
+    </div>
+  );
+};
+
+const LayerComponent = ({
+  id,
+  data,
+  layerIndex,
+  control,
+  remove,
+}: {
+  id: number;
+  data: ParameterData["layers"][number];
+  layerIndex?: number;
+  control: Control<ParameterData, unknown>;
+  remove: () => void;
+}) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    isDragging,
+    transform,
+    transition,
+  } = useSortable({ id });
+  const style = {
+    opacity: isDragging ? 0.4 : undefined,
+    transform: CSS.Transform.toString(transform),
+    margin: -2,
+    transition: transition,
+  };
+  return (
+    <div ref={setNodeRef}>
+      <Card
+        sx={{ p: 3 }}
+        style={{ ...{ display: "inline-block" }, ...style }}
+        {...attributes}
+        {...listeners}
+      >
+        <Stack
+          direction={"row"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+          spacing={3}
+        >
+          <Typography variant="h3" fontSize={18}>
+            {STEP_SETTINGS.PARAMETERS.layers[data.value].label}
+          </Typography>
+          <Stack direction={"row"} alignItems={"center"} spacing={3}>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"flex-end"}
+              spacing={2}
+              divider={<Divider orientation="vertical" flexItem />}
+            >
+              {STEP_SETTINGS.PARAMETERS.layers[data.value].parameters.map(
+                (parameter, index) => (
+                  <div key={index} data-no-dnd>
+                    {layerIndex !== undefined ? (
+                      <Controller
+                        name={`layers.${layerIndex}.parameters.${index}`}
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { onChange, value } }) => (
+                          <TextField
+                            label={parameter.label}
+                            size={"small"}
+                            type={parameter.type}
+                            onChange={onChange}
+                            value={value}
+                            required
+                          />
+                        )}
+                      />
+                    ) : (
+                      <TextField
+                        label={parameter.label}
+                        size={"small"}
+                        type={parameter.type}
+                        required
+                      />
+                    )}
+                  </div>
+                )
+              )}
+            </Stack>
+            <div data-no-dnd>
+              <IconButton onClick={() => remove()}>
+                <DeleteIcon />
+              </IconButton>
+            </div>
+          </Stack>
+        </Stack>
+      </Card>
+    </div>
   );
 };
 
@@ -268,7 +576,7 @@ function shouldHandleEvent(element: HTMLElement | null) {
   return true;
 }
 
-export class CustomPointerSensor extends PointerSensor {
+class CustomPointerSensor extends PointerSensor {
   static activators = [
     {
       eventName: "onPointerDown" as const,
@@ -279,7 +587,7 @@ export class CustomPointerSensor extends PointerSensor {
   ];
 }
 
-export class CustomKeyboardSensor extends KeyboardSensor {
+class CustomKeyboardSensor extends KeyboardSensor {
   static activators = [
     {
       eventName: "onKeyDown" as const,
@@ -289,169 +597,5 @@ export class CustomKeyboardSensor extends KeyboardSensor {
     },
   ];
 }
-
-const DragAndDropList = ({
-  control,
-}: {
-  control: Control<ParameterData, unknown>;
-}) => {
-  const { fields, move } = useFieldArray({
-    control: control,
-    name: "layers",
-  });
-  const [active, setActive] = useState<Active | null>(null);
-  const activeItem = useMemo(
-    () => fields.find((field) => field.id === active?.id),
-    [active, fields]
-  );
-  const sensors = useSensors(
-    useSensor(CustomPointerSensor),
-    useSensor(CustomKeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      move(
-        fields.findIndex((item) => item.id === active.id),
-        fields.findIndex((item) => item.id === over.id)
-      );
-      setActive(null);
-    }
-  };
-  return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={({ active }) => {
-        setActive(active);
-      }}
-      onDragEnd={handleDragEnd}
-      onDragCancel={() => setActive(null)}
-    >
-      <SortableContext items={fields} strategy={verticalListSortingStrategy}>
-        {fields.map((field, index) => (
-          <SortableItem
-            key={field.id}
-            id={field.id}
-            data={field}
-            layerIndex={index}
-            control={control}
-          />
-        ))}
-      </SortableContext>
-      <DragOverlay>
-        {activeItem ? (
-          <LayerComponent
-            data={activeItem}
-            control={control}
-            layerIndex={fields.findIndex((item) => item.id === activeItem.id)}
-          />
-        ) : null}
-      </DragOverlay>
-    </DndContext>
-  );
-};
-
-const LayerComponent = ({
-  data,
-  layerIndex,
-  control,
-  attributes,
-  listeners,
-}: {
-  data: ParameterData["layers"][number];
-  layerIndex: number;
-  attributes?: DraggableAttributes;
-  listeners?: SyntheticListenerMap;
-  control: Control<ParameterData, unknown>;
-}) => {
-  return (
-    <Card
-      sx={{ p: 3 }}
-      style={{ display: "inline-block" }}
-      {...attributes}
-      {...listeners}
-    >
-      <Stack
-        direction={"row"}
-        justifyContent={"space-between"}
-        alignItems={"center"}
-        spacing={3}
-      >
-        <Typography variant="h3" fontSize={18}>
-          {STEP_SETTINGS.PARAMETERS.layers[data.value].label}
-        </Typography>
-        <Stack
-          direction={"row"}
-          justifyContent={"flex-end"}
-          spacing={2}
-          divider={<Divider orientation="vertical" flexItem />}
-        >
-          {STEP_SETTINGS.PARAMETERS.layers[data.value].parameters.map(
-            (parameter, index) => (
-              <div key={index} data-no-dnd>
-                <Controller
-                  name={`layers.${layerIndex}.parameters.${index}`}
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <TextField
-                      label={parameter.label}
-                      size={"small"}
-                      type={parameter.type}
-                      onChange={onChange}
-                      value={value}
-                    />
-                  )}
-                />
-              </div>
-            )
-          )}
-        </Stack>
-      </Stack>
-    </Card>
-  );
-};
-
-const SortableItem = ({
-  id,
-  layerIndex,
-  data,
-  control,
-}: {
-  id: string;
-  layerIndex: number;
-  data: ParameterData["layers"][number];
-  control: Control<ParameterData, unknown>;
-}) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    isDragging,
-    transform,
-    transition,
-  } = useSortable({ id });
-
-  const style = {
-    opacity: isDragging ? 0.4 : undefined,
-    margin: -2,
-    transform: CSS.Transform.toString(transform),
-    transition: transition,
-  };
-
-  return (
-    <div ref={setNodeRef} style={style}>
-      <LayerComponent
-        data={data}
-        layerIndex={layerIndex}
-        control={control}
-        attributes={attributes}
-        listeners={listeners}
-      />
-    </div>
-  );
-};
 
 export default TabularParametersStep;

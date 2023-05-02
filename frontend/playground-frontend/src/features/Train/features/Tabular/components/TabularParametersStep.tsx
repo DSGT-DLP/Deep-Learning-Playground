@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
-import { useAppSelector } from "@/common/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import {
   Autocomplete,
   Card,
@@ -24,7 +24,7 @@ import {
 import {
   Control,
   Controller,
-  FieldArrayWithId,
+  FieldErrors,
   useFieldArray,
   useForm,
 } from "react-hook-form";
@@ -33,7 +33,6 @@ import { STEP_SETTINGS } from "../constants/tabularConstants";
 import { CSS } from "@dnd-kit/utilities";
 import {
   SortableContext,
-  arrayMove,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
@@ -41,21 +40,18 @@ import {
 import {
   Active,
   DndContext,
-  DragEndEvent,
-  DragOverEvent,
   DragOverlay,
   closestCenter,
   useDraggable,
-  useDroppable,
   useSensors,
 } from "@dnd-kit/core";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
-  WithDndId,
   useCustomKeyboardSensor,
   useCustomPointerSensor,
 } from "@/common/utils/dndHelpers";
 import ClientOnlyPortal from "@/common/components/ClientOnlyPortal";
+import { setTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
 
 const TabularParametersStep = ({
   renderStepperButtons,
@@ -68,31 +64,22 @@ const TabularParametersStep = ({
     (state) =>
       state.trainspace.current as TrainspaceData<"PARAMETERS"> | undefined
   );
-  if (!trainspace) return <></>;
-  const { data, refetch } = useGetColumnsFromDatasetQuery({
-    dataSource: "TABULAR",
-    dataset: trainspace.datasetData,
-  });
-  if (!data) return <></>;
-
-  return <TabularStepsInner trainspace={trainspace} data={data} />;
-};
-
-const TabularStepsInner = ({
-  trainspace,
-  data,
-}: {
-  trainspace: TrainspaceData<"PARAMETERS">;
-  data: string[];
-}) => {
+  console.log("qqq", trainspace);
+  const dispatch = useAppDispatch();
+  const { data } = trainspace
+    ? useGetColumnsFromDatasetQuery({
+        dataSource: "TABULAR",
+        dataset: trainspace.datasetData,
+      })
+    : { data: undefined };
   const {
     handleSubmit,
     formState: { errors },
     control,
-    register,
-    reset,
   } = useForm<ParameterData>({
     defaultValues: {
+      targetCol: null as unknown as undefined,
+      features: [],
       problemType: "CLASSIFICATION",
       criterion: "CELOSS",
       optimizerName: "SGD",
@@ -120,36 +107,59 @@ const TabularStepsInner = ({
       ],
     },
   });
+  if (!trainspace || !data) return <></>;
   return (
     <Stack spacing={3}>
-      <Autocomplete
-        disableClearable
-        autoComplete
-        autoHighlight
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            required
-            label="Target Column"
-            placeholder="Target"
+      <Controller
+        control={control}
+        name="targetCol"
+        rules={{ required: true }}
+        render={({ field: { ref, onChange, ...field } }) => (
+          <Autocomplete
+            {...field}
+            onChange={(_, value) => onChange(value)}
+            disableClearable
+            autoComplete
+            autoHighlight
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                inputRef={ref}
+                required
+                label="Target Column"
+                placeholder="Target"
+                error={errors.targetCol ? true : false}
+              />
+            )}
+            options={data}
           />
         )}
-        options={data}
       />
-      <Autocomplete
-        multiple
-        autoComplete
-        autoHighlight
-        disableCloseOnSelect
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            required
-            label="Feature Columns"
-            placeholder="Features"
+      <Controller
+        control={control}
+        name="features"
+        rules={{ required: true }}
+        render={({ field: { ref, onChange, ...field } }) => (
+          <Autocomplete
+            {...field}
+            multiple
+            autoComplete
+            autoHighlight
+            disableCloseOnSelect
+            onChange={(_, value) => onChange(value)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                inputRef={ref}
+                required
+                label="Feature Columns"
+                placeholder="Features"
+                error={errors.features ? true : false}
+              />
+            )}
+            options={data}
           />
         )}
-        options={data}
       />
       <FormControl>
         <FormLabel>Problem Type</FormLabel>
@@ -258,15 +268,28 @@ const TabularStepsInner = ({
           )}
         />
       </FormControl>
-      <LayersDnd control={control} />
+      <LayersDnd control={control} errors={errors} />
+      {renderStepperButtons((trainspaceData) => {
+        handleSubmit((data) => {
+          dispatch(
+            setTrainspaceData({
+              ...trainspaceData,
+              ...{ parameterData: data },
+              step: 2,
+            })
+          );
+        })();
+      })}
     </Stack>
   );
 };
 
 const LayersDnd = ({
   control,
+  errors,
 }: {
   control: Control<ParameterData, unknown>;
+  errors: FieldErrors<ParameterData>;
 }) => {
   const { fields, move, insert, remove } = useFieldArray({
     control: control,
@@ -326,18 +349,16 @@ const LayersDnd = ({
         if (dndActive && dndActive.data.current && dndActiveItem) {
           if (
             "inventory" in dndActive.data.current &&
-            over &&
-            over.data.current &&
+            over?.data.current &&
             "sortable" in over.data.current
           ) {
             insert(over.data.current.sortable.index, {
               value: dndActiveItem.value,
-              parameters: dndActiveItem.parameters,
+              parameters: dndActiveItem.parameters as number[],
             });
           } else if (
             "sortable" in dndActive.data.current &&
-            over &&
-            over.data.current &&
+            over?.data.current &&
             "sortable" in over.data.current
           ) {
             move(
@@ -378,18 +399,19 @@ const LayersDnd = ({
           </Stack>
         </Stack>
       </Paper>
-      <SortableContext
-        items={
-          dndActiveItem &&
-          dndActive?.data.current &&
-          "inventory" in dndActive.data.current
-            ? [dndActiveItem, ...fields]
-            : fields
-        }
-        strategy={verticalListSortingStrategy}
-      >
-        <Container>
-          <Stack spacing={0}>
+
+      <Container>
+        <Stack spacing={0}>
+          <SortableContext
+            items={
+              dndActiveItem &&
+              dndActive?.data.current &&
+              "inventory" in dndActive.data.current
+                ? [dndActiveItem, ...fields]
+                : fields
+            }
+            strategy={verticalListSortingStrategy}
+          >
             {fields.length > 0 ? (
               [
                 dndActiveItem &&
@@ -399,7 +421,7 @@ const LayersDnd = ({
                   <LayerComponent
                     key={dndActiveItem.id}
                     id={dndActiveItem.id}
-                    data={dndActiveItem}
+                    data={dndActiveItem as ParameterData["layers"][number]}
                   />
                 ) : null,
                 ...fields.map((field, index) => (
@@ -407,9 +429,10 @@ const LayersDnd = ({
                     key={field.id}
                     id={field.id}
                     data={field}
-                    layerProps={{
+                    formProps={{
                       index: index,
                       control: control,
+                      errors: errors,
                       remove: () => remove(index),
                     }}
                   />
@@ -418,62 +441,46 @@ const LayersDnd = ({
             ) : (
               <Card>This is Unimplemented</Card>
             )}
-          </Stack>
-        </Container>
-      </SortableContext>
+          </SortableContext>
+        </Stack>
+      </Container>
+
       <ClientOnlyPortal selector="#portal">
         <DragOverlay style={{ width: undefined }}>
-          {dndActiveItem ? <LayerComponent data={dndActiveItem} /> : null}
+          {dndActiveItem ? (
+            dndActive?.data.current && "sortable" in dndActive.data.current ? (
+              <LayerComponent
+                data={dndActiveItem as ParameterData["layers"][number]}
+                formProps={{
+                  index: dndActive.data.current.sortable.index,
+                  control: control,
+                  errors: errors,
+                }}
+              />
+            ) : (
+              <LayerComponent
+                data={dndActiveItem as ParameterData["layers"][number]}
+              />
+            )
+          ) : null}
         </DragOverlay>
       </ClientOnlyPortal>
     </DndContext>
   );
 };
 
-const LayerInventoryComponent = ({
-  id,
-  value,
-}: {
-  id: number;
-  value: (typeof STEP_SETTINGS.PARAMETERS.layerValues)[number];
-}) => {
-  const { attributes, listeners, isDragging, setNodeRef } = useDraggable({
-    id: id,
-    data: {
-      inventory: {
-        value,
-      },
-    },
-  });
-
-  const style = {
-    opacity: isDragging ? 0.4 : undefined,
-  };
-  return (
-    <div ref={setNodeRef}>
-      <Card
-        sx={{ p: 1 }}
-        style={{ ...{ display: "inline-block" }, ...style }}
-        {...attributes}
-        {...listeners}
-      >
-        {STEP_SETTINGS.PARAMETERS.layers[value].label}
-      </Card>
-    </div>
-  );
-};
-
 const LayerComponent = ({
   id,
   data,
-  layerProps,
+  formProps,
 }: {
   id?: string | number;
   data: ParameterData["layers"][number];
-  layerProps?: {
+  formProps?: {
     index: number;
     control: Control<ParameterData, unknown>;
-    remove: () => void;
+    errors: FieldErrors<ParameterData>;
+    remove?: () => void;
   };
 }) => {
   const {
@@ -528,10 +535,10 @@ const LayerComponent = ({
               {STEP_SETTINGS.PARAMETERS.layers[data.value].parameters.map(
                 (parameter, index) => (
                   <div key={index} data-no-dnd>
-                    {layerProps ? (
+                    {formProps ? (
                       <Controller
-                        name={`layers.${layerProps.index}.parameters.${index}`}
-                        control={layerProps.control}
+                        name={`layers.${formProps.index}.parameters.${index}`}
+                        control={formProps.control}
                         rules={{ required: true }}
                         render={({ field: { onChange, value } }) => (
                           <TextField
@@ -541,6 +548,12 @@ const LayerComponent = ({
                             onChange={onChange}
                             value={value}
                             required
+                            error={
+                              formProps.errors.layers?.[formProps.index]
+                                ?.parameters?.[index]
+                                ? true
+                                : false
+                            }
                           />
                         )}
                       />
@@ -558,12 +571,45 @@ const LayerComponent = ({
               )}
             </Stack>
             <div data-no-dnd>
-              <IconButton onClick={layerProps?.remove}>
+              <IconButton onClick={formProps?.remove}>
                 <DeleteIcon />
               </IconButton>
             </div>
           </Stack>
         </Stack>
+      </Card>
+    </div>
+  );
+};
+
+const LayerInventoryComponent = ({
+  id,
+  value,
+}: {
+  id: number;
+  value: (typeof STEP_SETTINGS.PARAMETERS.layerValues)[number];
+}) => {
+  const { attributes, listeners, isDragging, setNodeRef } = useDraggable({
+    id: id,
+    data: {
+      inventory: {
+        value,
+      },
+    },
+  });
+
+  const style = {
+    opacity: isDragging ? 0.4 : undefined,
+  };
+  return (
+    <div ref={setNodeRef}>
+      <Card
+        sx={{ p: 1 }}
+        style={{ ...{ display: "inline-block" }, ...style }}
+        {...attributes}
+        {...listeners}
+      >
+        {STEP_SETTINGS.PARAMETERS.layers[value].label}
       </Card>
     </div>
   );

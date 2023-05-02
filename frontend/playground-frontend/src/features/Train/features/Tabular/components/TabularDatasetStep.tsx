@@ -1,9 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import {
-  BaseTrainspaceData,
-  DatasetData,
-} from "@/features/Train/types/trainTypes";
+import { DatasetData } from "@/features/Train/types/trainTypes";
 import { useAppDispatch } from "@/common/redux/hooks";
 import { setTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
 import {
@@ -46,15 +43,24 @@ const TabularDatasetStep = ({
       stepperButtons={renderStepperButtons((trainspaceData) => {
         if (currTab === "upload-dataset") {
           uploadDatasetMethods.handleSubmit((data) => {
-            trainspaceData.datasetData = data;
-            trainspaceData.step = 1;
-            dispatch(setTrainspaceData(trainspaceData));
+            dispatch(
+              setTrainspaceData({
+                ...trainspaceData,
+                ...{ datasetData: data },
+                step: 1,
+              })
+            );
           })();
         } else {
           defaultDatasetMethods.handleSubmit((data) => {
-            trainspaceData.datasetData = data;
-            trainspaceData.step = 1;
-            dispatch(setTrainspaceData(trainspaceData));
+            console.log({ ...trainspaceData, ...data, step: 1 });
+            dispatch(
+              setTrainspaceData({
+                ...trainspaceData,
+                ...{ datasetData: data },
+                step: 1,
+              })
+            );
           })();
         }
       })}

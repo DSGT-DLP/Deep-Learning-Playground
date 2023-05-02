@@ -56,5 +56,3 @@ export const useCustomPointerSensor = (options?: PointerSensorOptions) =>
  */
 export const useCustomKeyboardSensor = (options?: KeyboardSensorOptions) =>
   useSensor(CustomKeyboardSensor, options);
-
-export type WithDndId<T> = T & { dndId: number };

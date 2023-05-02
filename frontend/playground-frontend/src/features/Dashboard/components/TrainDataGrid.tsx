@@ -14,12 +14,12 @@ import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { useAppDispatch } from "@/common/redux/hooks";
-import { setTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
 import {
   ALL_TRAINSPACE_SETTINGS,
   DATA_SOURCE_ARR,
 } from "@/features/Train/constants/trainConstants";
 import { formatDate } from "@/common/utils/dateFormat";
+import { removeTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
 
 const TrainDataGrid = ({
   trainSpaceDataArr,
@@ -184,7 +184,7 @@ const NewTrainSpaceMenu = ({
             value={source}
             onClick={() => {
               handleClose();
-              dispatch(setTrainspaceData());
+              dispatch(removeTrainspaceData());
               router.push({ pathname: "/train", query: { source } });
             }}
           >

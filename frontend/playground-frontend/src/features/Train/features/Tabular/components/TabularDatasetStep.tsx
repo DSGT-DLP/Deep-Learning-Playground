@@ -2,24 +2,24 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { DatasetData } from "@/features/Train/types/trainTypes";
 import { useAppDispatch } from "@/common/redux/hooks";
-import { setTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
 import {
   DatasetStepTabLayout,
   DefaultDatasetPanel,
   UploadDatasetPanel,
 } from "@/features/Train/components/DatasetStepLayout";
 import { TrainspaceData } from "../types/tabularTypes";
+import { updateTabularTrainspaceData } from "../redux/tabularActions";
 
 const TabularDatasetStep = ({
   renderStepperButtons,
 }: {
   renderStepperButtons: (
-    submitTrainspace: (data: TrainspaceData) => void
+    submitTrainspace: (data: TrainspaceData<"DATASET">) => void
   ) => React.ReactNode;
 }) => {
   const [currTab, setCurrTab] = React.useState("upload-dataset");
-  const defaultDatasetMethods = useForm<NonNullable<DatasetData>>();
-  const uploadDatasetMethods = useForm<NonNullable<DatasetData>>();
+  const defaultDatasetMethods = useForm<DatasetData>();
+  const uploadDatasetMethods = useForm<DatasetData>();
   const dispatch = useAppDispatch();
   return (
     <DatasetStepTabLayout
@@ -44,21 +44,24 @@ const TabularDatasetStep = ({
         if (currTab === "upload-dataset") {
           uploadDatasetMethods.handleSubmit((data) => {
             dispatch(
-              setTrainspaceData({
-                ...trainspaceData,
-                ...{ datasetData: data },
-                step: 1,
+              updateTabularTrainspaceData({
+                current: {
+                  ...trainspaceData,
+                  datasetData: data,
+                },
+                stepLabel: "DATASET",
               })
             );
           })();
         } else {
           defaultDatasetMethods.handleSubmit((data) => {
-            console.log({ ...trainspaceData, ...data, step: 1 });
             dispatch(
-              setTrainspaceData({
-                ...trainspaceData,
-                ...{ datasetData: data },
-                step: 1,
+              updateTabularTrainspaceData({
+                current: {
+                  ...trainspaceData,
+                  datasetData: data,
+                },
+                stepLabel: "DATASET",
               })
             );
           })();

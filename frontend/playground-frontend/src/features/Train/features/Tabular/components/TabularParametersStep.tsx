@@ -51,20 +51,19 @@ import {
   useCustomPointerSensor,
 } from "@/common/utils/dndHelpers";
 import ClientOnlyPortal from "@/common/components/ClientOnlyPortal";
-import { setTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
+import { updateTabularTrainspaceData } from "../redux/tabularActions";
 
 const TabularParametersStep = ({
   renderStepperButtons,
 }: {
   renderStepperButtons: (
-    submitTrainspace: (data: TrainspaceData) => void
+    submitTrainspace: (data: TrainspaceData<"PARAMETERS">) => void
   ) => React.ReactNode;
 }) => {
   const trainspace = useAppSelector(
     (state) =>
       state.trainspace.current as TrainspaceData<"PARAMETERS"> | undefined
   );
-  console.log("qqq", trainspace);
   const dispatch = useAppDispatch();
   const { data } = trainspace
     ? useGetColumnsFromDatasetQuery({
@@ -272,10 +271,12 @@ const TabularParametersStep = ({
       {renderStepperButtons((trainspaceData) => {
         handleSubmit((data) => {
           dispatch(
-            setTrainspaceData({
-              ...trainspaceData,
-              ...{ parameterData: data },
-              step: 2,
+            updateTabularTrainspaceData({
+              current: {
+                ...trainspaceData,
+                parameterData: data,
+              },
+              stepLabel: "PARAMETERS",
             })
           );
         })();

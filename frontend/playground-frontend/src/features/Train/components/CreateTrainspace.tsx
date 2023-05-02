@@ -5,11 +5,11 @@ import { Controller, useForm } from "react-hook-form";
 import { BaseTrainspaceData, DATA_SOURCE } from "../types/trainTypes";
 import { useAppDispatch } from "@/common/redux/hooks";
 import { useRouter } from "next/router";
-import { setTrainspaceData } from "../redux/trainspaceSlice";
 import {
   ALL_TRAINSPACE_SETTINGS,
   DATA_SOURCE_ARR,
 } from "../constants/trainConstants";
+import { createTrainspaceData } from "../redux/trainspaceSlice";
 const CreateTrainspace = () => {
   const {
     handleSubmit,
@@ -25,7 +25,7 @@ const CreateTrainspace = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const onSubmit = handleSubmit((data: BaseTrainspaceData) => {
-    dispatch(setTrainspaceData({ ...data, step: 0 }));
+    dispatch(createTrainspaceData({ current: data }));
   });
   useEffect(() => {
     if (router.isReady && router.query.source) {

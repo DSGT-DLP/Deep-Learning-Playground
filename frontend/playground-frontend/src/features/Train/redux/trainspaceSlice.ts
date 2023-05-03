@@ -21,7 +21,7 @@ export const trainspaceSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(updateTrainspaceData, (state, { payload }) => {
-      state.current = payload;
+      state.current = { ...state.current, ...payload };
     });
   },
 });

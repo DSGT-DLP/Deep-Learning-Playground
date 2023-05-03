@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import {
@@ -55,10 +55,12 @@ import { updateTabularTrainspaceData } from "../redux/tabularActions";
 
 const TabularParametersStep = ({
   renderStepperButtons,
+  setIsModified,
 }: {
   renderStepperButtons: (
     submitTrainspace: (data: TrainspaceData<"PARAMETERS">) => void
   ) => React.ReactNode;
+  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const trainspace = useAppSelector(
     (state) =>
@@ -73,20 +75,21 @@ const TabularParametersStep = ({
     : { data: undefined };
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     control,
   } = useForm<ParameterData>({
     defaultValues: {
-      targetCol: null as unknown as undefined,
-      features: [],
-      problemType: "CLASSIFICATION",
-      criterion: "CELOSS",
-      optimizerName: "SGD",
-      shuffle: true,
-      epochs: 5,
-      batchSize: 20,
-      testSize: 0.2,
-      layers: [
+      targetCol:
+        trainspace?.parameterData?.targetCol ?? (null as unknown as undefined),
+      features: trainspace?.parameterData?.features ?? [],
+      problemType: trainspace?.parameterData?.problemType ?? "CLASSIFICATION",
+      criterion: trainspace?.parameterData?.criterion ?? "CELOSS",
+      optimizerName: trainspace?.parameterData?.optimizerName ?? "SGD",
+      shuffle: trainspace?.parameterData?.shuffle ?? true,
+      epochs: trainspace?.parameterData?.epochs ?? 5,
+      batchSize: trainspace?.parameterData?.batchSize ?? 20,
+      testSize: trainspace?.parameterData?.testSize ?? 0.2,
+      layers: trainspace?.parameterData?.layers ?? [
         {
           value: "LINEAR",
           parameters: [10, 3],
@@ -106,6 +109,9 @@ const TabularParametersStep = ({
       ],
     },
   });
+  useEffect(() => {
+    setIsModified(isDirty);
+  }, [isDirty]);
   if (!trainspace || !data) return <></>;
   return (
     <Stack spacing={3}>

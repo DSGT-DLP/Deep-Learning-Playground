@@ -23,7 +23,5 @@
     "url": "https://github.com/DSGT-DLP/Deep-Learning-Playground/issues"
   },
   "homepage": "https://github.com/DSGT-DLP/Deep-Learning-Playground#readme",
-  "dependencies": {
-    "pretty-bytes": "^6.1.0"
-  }
+  "dependencies": {}
 }

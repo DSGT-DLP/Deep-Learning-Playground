@@ -16,7 +16,7 @@ Have the following installed first:
 
 ## Recommended
 
-1. [GitKraken Pro](https://help.gitkraken.com/gitkraken-client/how-to-install/) for helping with Git commands, especially if you're new to Git
+1. [GitKraken](https://help.gitkraken.com/gitkraken-client/how-to-install/) for helping with Git commands, especially if you're new to Git
 1. [Node Version Manager](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/) for managing NodeJS versions
 
 ## To start on localhost (in order):
@@ -42,7 +42,17 @@ Have the following installed first:
 
 ## GitGuardian Pre-commit Check
 
-To protect our secrets, we use the GitGuardian ggshield pre-commit check to ensure no keys are being committed. After installing the backend, every day or so, login to GitGuardian to activate the pre-commit hook using `ggshield auth login`.
+To protect our secrets, we use the GitGuardian ggshield pre-commit check to ensure no keys are being committed. After installing the backend, run
+
+```sh
+pre-commit install
+```
+
+You should get output like "pre-commit installed at .git/hooks/pre-commit". Login to GitGuardian to activate the pre-commit hook using
+
+```sh
+ggshield auth login
+```
 
 If this command works properly, you will be redirected to an auth route in the Git Guardian website. **Sign in using your Github account**. Then, you should be all set!
 

@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Dropdown, PageHeader, Spinner } from "gestalt";
+import {
+  Box,
+  Button,
+  Flex,
+  Dropdown,
+  PageHeader,
+  Spinner,
+  Upsell,
+} from "gestalt";
 import "gestalt/dist/gestalt.css";
 import { useEffect } from "react";
 //import JSZip from "jszip";
@@ -38,7 +46,7 @@ const Dashboard = () => {
             primaryAction={{
               component: (
                 <Button
-                  color="red"
+                  color="blue"
                   size="md"
                   iconEnd="refresh"
                   text="Refresh"
@@ -59,21 +67,24 @@ const Dashboard = () => {
             }}
             dropdownAccessibilityLabel="More options"
           />
-          {data && data.length > 0 ?
-          <Flex
-            direction="row"
-            justifyContent="center"
-            alignItems="stretch"
-            width="100%"
-            wrap
-          >
-            <Box>
-              <TrainDoughnutChart trainSpaceDataArr={data} />
-            </Box>
-            <Box height={300} width={300}>
-              <TrainBarChart trainSpaceDataArr={data} />
-            </Box>
-          </Flex> : <BlankGrid />}
+          {data && data.length > 0 ? (
+            <Flex
+              direction="row"
+              justifyContent="center"
+              alignItems="stretch"
+              width="100%"
+              wrap
+            >
+              <Box>
+                <TrainDoughnutChart trainSpaceDataArr={data} />
+              </Box>
+              <Box height={300} width={300}>
+                <TrainBarChart trainSpaceDataArr={data} />
+              </Box>
+            </Flex>
+          ) : (
+            <BlankGrid />
+          )}
 
           <div
             style={{
@@ -84,7 +95,7 @@ const Dashboard = () => {
           >
             <TrainDataGrid trainSpaceDataArr={data} />
           </div>
-          
+
           {isLoading ? (
             <div className="loading">
               <Spinner show accessibilityLabel="Spinner" />
@@ -101,7 +112,20 @@ const BlankGrid = () => {
   const router = useRouter();
   return (
     <div id="blank-grid-wrapper">
-      <div id="blank-grid">
+      <Upsell
+        message="Click on train to get started."
+        // primaryAction={{
+        //   accessibilityLabel: "Button to train",
+        //   onClick:() => router.push({ pathname: "/train"}),
+        //   label: 'Train',
+        //   target: 'blank',
+        //   color:"blue",
+        // }}
+        title="You do not have any trained models yet. Create your first model!"
+      />
+      <Button color="blue" size="lg" text="Train" onClick={() => router.push({ pathname: "/train"})}/>
+
+      {/* <div id="blank-grid">
         <p>
           You haven't trained any models yet. Create your first model below!
         </p>
@@ -111,7 +135,8 @@ const BlankGrid = () => {
         >
           Train Model
         </button>
-      </div>
+        
+      </div> */}
     </div>
   );
 };

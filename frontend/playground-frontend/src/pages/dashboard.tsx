@@ -4,6 +4,7 @@ import { useEffect } from "react";
 //import JSZip from "jszip";
 //import saveAs from "file-saver";
 import React from "react";
+
 import NavbarMain from "@/common/components/NavBarMain";
 import Footer from "@/common/components/Footer";
 import { useAppSelector } from "@/common/redux/hooks";
@@ -58,6 +59,7 @@ const Dashboard = () => {
             }}
             dropdownAccessibilityLabel="More options"
           />
+          {data && data.length > 0 ?
           <Flex
             direction="row"
             justifyContent="center"
@@ -71,7 +73,7 @@ const Dashboard = () => {
             <Box height={300} width={300}>
               <TrainBarChart trainSpaceDataArr={data} />
             </Box>
-          </Flex>
+          </Flex> : <BlankGrid />}
 
           <div
             style={{
@@ -82,7 +84,7 @@ const Dashboard = () => {
           >
             <TrainDataGrid trainSpaceDataArr={data} />
           </div>
-          {data && data.length === 0 && <BlankGrid />}
+          
           {isLoading ? (
             <div className="loading">
               <Spinner show accessibilityLabel="Spinner" />
@@ -96,6 +98,7 @@ const Dashboard = () => {
 };
 
 const BlankGrid = () => {
+  const router = useRouter();
   return (
     <div id="blank-grid-wrapper">
       <div id="blank-grid">
@@ -104,7 +107,7 @@ const BlankGrid = () => {
         </p>
         <button
           id="blank-grid-button"
-          onClick={() => console.log("To be implemented")}
+          onClick={() => router.push({ pathname: "/train"})}
         >
           Train Model
         </button>

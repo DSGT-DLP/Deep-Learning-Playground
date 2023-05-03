@@ -1,7 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { TrainspaceData } from "../types/tabularTypes";
+import { Stack, Typography } from "@mui/material";
+import { useAppSelector } from "@/common/redux/hooks";
+import { updateTabularTrainspaceData } from "../redux/tabularActions";
 
-const TabularReviewStep = () => {
-  return <></>;
+const TabularReviewStep = ({
+  renderStepperButtons,
+  setIsModified,
+}: {
+  renderStepperButtons: (
+    submitTrainspace: (data: TrainspaceData<"REVIEW">) => void
+  ) => React.ReactNode;
+  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const trainspace = useAppSelector(
+    (state) => state.trainspace.current as TrainspaceData<"REVIEW"> | undefined
+  );
+  if (!trainspace) return <></>;
+  useEffect(() => {
+    setIsModified(true);
+  }, []);
+  return (
+    <Stack spacing={3}>
+      <Typography>{`Dataset: ${trainspace.datasetData.name}`}</Typography>
+      <Typography>{`Is Default?: ${trainspace.datasetData.isDefaultDataset}`}</Typography>
+      <Typography>{`Target Column: ${trainspace.parameterData.targetCol}`}</Typography>
+      <Typography>{`Feature Columns: ${trainspace.parameterData.features.join()}`}</Typography>
+      {renderStepperButtons((trainspaceData) => {
+        updateTabularTrainspaceData({
+          current: trainspaceData,
+          stepLabel: "REVIEW",
+        });
+      })}
+    </Stack>
+  );
 };
 
 export default TabularReviewStep;

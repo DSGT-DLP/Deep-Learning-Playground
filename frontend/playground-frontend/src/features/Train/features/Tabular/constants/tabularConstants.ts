@@ -5,7 +5,7 @@ import TabularTrainspace from "../components/TabularTrainspace";
 
 export const TRAINSPACE_SETTINGS = {
   name: "Tabular",
-  steps: ["DATASET", "PARAMETERS", "REVIEW", "TRAIN"],
+  steps: ["DATASET", "PARAMETERS", "REVIEW"],
   component: TabularTrainspace,
 } as const;
 
@@ -111,10 +111,5 @@ export const STEP_SETTINGS = {
     name: "Review",
     optional: false,
     component: TabularReviewStep,
-  },
-  TRAIN: {
-    name: "Train",
-    optional: false,
-    component: TabularDatasetStep,
   },
 } as const;

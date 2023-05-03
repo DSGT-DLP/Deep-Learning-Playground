@@ -113,7 +113,7 @@ const TrainspaceStepInner = ({
               handleSubmit(submitTrainspace)();
             }}
           >
-            Next
+            {step < TRAINSPACE_SETTINGS.steps.length - 1 ? "Next" : "Train"}
           </Button>
         </Stack>
       )}

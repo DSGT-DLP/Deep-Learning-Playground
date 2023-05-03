@@ -2,9 +2,7 @@
 
 Web Application where people new to Machine Learning can input a dataset and experiment around with basic Pytorch modules through a drag and drop interface
 
-> **Deployed website:** https://datasciencegt-dlp.com/ </br>
-> **GitHub repo:** https://github.com/DSGT-DLP/Deep-Learning-Playground </br>
-> **Owners:** See [CODEOWNERS](./CODEOWNERS)
+> **Deployed website:** https://datasciencegt-dlp.com/ </br> > **GitHub repo:** https://github.com/DSGT-DLP/Deep-Learning-Playground </br> > **Owners:** See [CODEOWNERS](./CODEOWNERS)
 
 # How to Run
 
@@ -12,13 +10,14 @@ Web Application where people new to Machine Learning can input a dataset and exp
 
 Have the following installed first:
 
-1. [NodeJS v18](https://nodejs.org/en/download/) (should come with NPM v9)
+1. [NodeJS v18](https://nodejs.org/en/download/) (should come with NPM v9, you must install Yarn v1.22 afterwards using NPM)
 1. [Anaconda](https://www.anaconda.com/)
 1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). After installing, type `aws configure` in your terminal and type in the credentials given in [Secrets](https://docs.google.com/spreadsheets/d/1fRndo-7u0MXghiZoMp3uBepDBW9EghcJ9IL4yS0TdD8/edit?usp=sharing)
 
 ## Recommended
 
-1. [GitKraken Pro](https://help.gitkraken.com/gitkraken-client/how-to-install/)
+1. [GitKraken Pro](https://help.gitkraken.com/gitkraken-client/how-to-install/) for helping with Git commands, especially if you're new to Git
+1. [Node Version Manager](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/) for managing NodeJS versions
 
 ## To start on localhost (in order):
 
@@ -31,7 +30,7 @@ Have the following installed first:
 | Running the Frontend                          | `yarn run startf`                                                                          |
 | Running the Backend                           | `conda activate dlplayground && python -m backend.driver`                                  |
 
-## To run in `prod` mode:
+## To run in `production` mode:
 
 - To start the frontend:
   - If you're using Unix, run `REACT_APP_MODE=prod yarn run startf` from the root of the project

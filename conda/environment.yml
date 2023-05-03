@@ -20,7 +20,7 @@ dependencies:
   - statsmodels
   - pytorch
   - black
-  - flask
+  - flask=2.2.3
   - flask-cors
   - flask-socketio
   - ruamel.yaml

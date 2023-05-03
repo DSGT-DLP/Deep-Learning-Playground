@@ -18,7 +18,8 @@ Have the following installed first:
 
 ## Recommended
 
-1. [GitKraken Pro](https://help.gitkraken.com/gitkraken-client/how-to-install/)
+1. [GitKraken Pro](https://help.gitkraken.com/gitkraken-client/how-to-install/) for helping with git commands, especially if you're new to Git
+1. [Node Version Manager](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/) for managing NodeJS versions
 
 ## To start on localhost (in order):
 
@@ -31,7 +32,7 @@ Have the following installed first:
 | Running the Frontend                          | `yarn run startf`                                                                          |
 | Running the Backend                           | `conda activate dlplayground && python -m backend.driver`                                  |
 
-## To run in `prod` mode:
+## To run in `production` mode:
 
 - To start the frontend:
   - If you're using Unix, run `REACT_APP_MODE=prod yarn run startf` from the root of the project

@@ -16,7 +16,7 @@ Have the following installed first:
 
 ## Recommended
 
-1. [GitKraken Pro](https://help.gitkraken.com/gitkraken-client/how-to-install/) for helping with Git commands, especially if you're new to Git
+1. [GitKraken](https://help.gitkraken.com/gitkraken-client/how-to-install/) for helping with Git commands, especially if you're new to Git
 1. [Node Version Manager](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/) for managing NodeJS versions
 
 ## To start on localhost (in order):

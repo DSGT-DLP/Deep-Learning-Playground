@@ -2,6 +2,7 @@
 
 import timm
 import torch.nn as nn
+import torch.optim as optim
 import torch.hub
 import torchvision
 import os
@@ -28,7 +29,7 @@ def train(
     loss_func,
     n_epochs,
     shuffle=False,
-    optimizer=Adam,
+    optimizer=optim.Adam,
     lr=1e-3,
     cut=None,
     n_classes=10,

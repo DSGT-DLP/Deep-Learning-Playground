@@ -3,6 +3,15 @@ import firebase_admin.auth
 
 
 def authenticate(token):
+    """
+    Authenticate user via firebase
+
+    Args:
+        token (str): token
+
+    Returns:
+        user: verified authenticated user
+    """
     user = None
     if token is None or not token:
         return False

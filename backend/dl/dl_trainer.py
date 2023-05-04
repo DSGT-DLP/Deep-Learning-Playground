@@ -286,15 +286,33 @@ def get_deep_predictions(model: nn.Module, test_loader):
 
 
 def train_deep_image_classification(
-    model,
-    train_loader,
-    test_loader,
-    optimizer,
-    criterion,
-    epochs,
+    model: nn.Module,
+    train_loader: torch.DataLoader,
+    test_loader: torch.DataLoader,
+    optimizer: torch.optim.Optimizer,
+    criterion: str,
+    epochs: int,
     device,
     category_list=[],
 ):
+    """
+
+    Args:
+        model (nn.Module): _description_
+        train_loader (torch.DataLoader): Train Dataset split into batches
+        test_loader (torch.DataLoader): Test Dataset split into batches
+        optimizer (torch.optim.Optimizer): Optimizer to use when training model
+        criterion(str): Loss function
+        epochs (int): number of epochs
+        device (str): cuda, cpu (what compute do you want to use for training your model)
+        category_list (list, optional): list of categories/labels for analysis purpose. Defaults to [].
+
+    Raises:
+        Exception: training fails for whatever reason
+
+    Returns:
+        auxiliary_outputs: dict showcasing the results of training per epoch of the deep image classification model
+    """
     try:
         model = model.to(device)
         train_loss = []  # accumulate training loss over each epoch

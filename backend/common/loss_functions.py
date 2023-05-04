@@ -77,6 +77,12 @@ def compute_loss(loss_function_name, output, labels):
 def compute_img_loss(criterion, pred, ground_truth, weights_counter):
     """
     Computes CE and WCE loss. pred and y are processed to different shapes supported by the corresponding functions.
+    
+    Args:
+      - criterion: A LossFunctions enum value
+      - pred: predicted value from model
+      - ground_truth: ground truth values
+      - weights_counter: weighting class with least representation in dataset with maximum weight
     """
     loss_obj = LossFunctions.get_loss_obj(LossFunctions[criterion])
 

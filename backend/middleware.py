@@ -1,4 +1,5 @@
 # middleware.py
+from typing import Any
 from werkzeug.wrappers import Request, Response, ResponseStream
 
 from backend.firebase_helpers.authenticate import authenticate
@@ -18,7 +19,17 @@ class middleware:
     def __init__(self, app, exempt_paths=[]):
         self.app = app
 
-    def __call__(self, environ, start_response):
+    def __call__(self, environ: Any, start_response: Any):
+        """
+        Function that ensures that a user is authenticated before accessing a backend flask API endpoint
+
+        Args:
+            environ (Any): 
+            start_response (Any):
+
+        Returns:
+            _type_:
+        """
         request = Request(environ)
         if (
             "Authorization" in request.headers

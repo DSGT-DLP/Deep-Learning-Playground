@@ -65,6 +65,9 @@ class errorMessage(Enum):
 def get_unzipped(zipped_file):
     """
     Creates and returns a train and valid directory path from a zipped file
+    
+    Args: 
+      zipped_file: path to a zip file
     """
 
     try:
@@ -105,6 +108,11 @@ def dataset_from_zipped(
     """
     Returns a dataset from a zipped folder applying train and  trtestansformation (if they are legal).
     Calls get_unzipped to create unzipped folder and obtain train and test directories
+    
+    Args:
+      - zipped folder: Path to a folder containing zip file
+      - train_transform: list of transformations to apply to the training dataset
+      - test_transform: list of transformations to apply to the test dataset
     """
 
     try:

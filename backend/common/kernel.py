@@ -27,7 +27,10 @@ from backend.aws_helpers.dynamo_db_utils.execution_db import updateStatus
 
 def router(msg):
     """
-    Routes the message to the appropriate training function.
+    Routes the message from the SQS Training queue to the appropriate training function.
+    
+    Args: 
+      - msg: request info from the SQS queue
     """
     print("Message received")
     execution_id = msg["execution_id"]
@@ -119,6 +122,15 @@ def router(msg):
 
 # Wrapper for dl_tabular_drive() function
 def tabular_run_route(request_data):
+    """
+    Route to run train for a tabular train request
+
+    Args:
+        request_data (json): Request metadata for tabular train
+
+    Returns:
+        train_loss_results: json encapsulating the train result
+    """
     try:
         user_arch = request_data["user_arch"]
         fileURL = request_data["file_URL"]
@@ -153,6 +165,15 @@ def tabular_run_route(request_data):
 
 # Wrapper for ml_drive() function
 def ml_run_route(request_data):
+    """
+    Route to run train for a classical ML request
+
+    Args:
+        request_data (json): Request metadata for classical ML train
+
+    Returns:
+        train_loss_results: json encapsulating the train result
+    """
     try:
         user_model = request_data["user_arch"]
         problem_type = request_data["problem_type"]
@@ -180,6 +201,15 @@ def ml_run_route(request_data):
 
 # Wrapper for dl_img_drive() function
 def img_run_route(request_data):
+    """
+    Route to run train for a image request
+
+    Args:
+        request_data (json): Request metadata for image train
+
+    Returns:
+        train_loss_results: json encapsulating the train result
+    """
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
         train_transform = request_data["train_transform"]
@@ -217,6 +247,15 @@ def img_run_route(request_data):
 
 # Wrapper for detection_img_drive() function
 def object_detection_route(request_data):
+    """
+    Route to run train for a object detection request
+
+    Args:
+        request_data (json): Request metadata for object detection train
+
+    Returns:
+        train_loss_results: json encapsulating the train result
+    """
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
         problem_type = request_data["problem_type"]

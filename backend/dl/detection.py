@@ -14,6 +14,16 @@ import csv
 
 
 def transform_image(img_file, transforms):
+    """
+    Utility function within object detection to perform transformations on an image
+
+    Args:
+        img_file (str): file path to image
+        transforms (list): sequence of transforms
+
+    Returns:
+        _type_: _description_
+    """
     img = Image.open(img_file)
     for x in transforms:
         print(x)
@@ -28,6 +38,16 @@ def transform_image(img_file, transforms):
 
 
 def yolo_detection(image):
+    """
+    Perform YOLO object detection on a single image
+
+    Args:
+        image (str): file path to image
+
+    Returns:
+        im_b64: image with boxes surrounding the detected objects
+        label_set: set of object detected labels
+    """
     feature_extractor = YolosFeatureExtractor.from_pretrained("hustvl/yolos-base")
     model = YolosForObjectDetection.from_pretrained("hustvl/yolos-base")
 
@@ -53,6 +73,18 @@ def yolo_detection(image):
 
 
 def show_bounding_boxes(image, box_sets, names, colors):
+    """
+    Utility function to show the boxes surrounding the detected objects
+
+    Args:
+        image (str): file path to image
+        box_sets (Iterable): set of boxes
+        names (list): names of objects detected
+        colors (Iterable): colors to give for a given box
+
+    Returns:
+        bytes: byte data representing the image with the objects detected in bounding box
+    """
     draw = ImageDraw.Draw(image)
     for box, color, name in zip(box_sets, cycle(colors), names):
         box = box.tolist()
@@ -70,6 +102,12 @@ def show_bounding_boxes(image, box_sets, names, colors):
 
 
 def write_to_csv(label_set):
+    """
+    Utility function to write to csv
+
+    Args:
+        label_set (dict): write labels for detected objects to csv file for user to be able to download
+    """
     if label_set:
         backend_dir = (
             ""

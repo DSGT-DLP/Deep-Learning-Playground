@@ -287,8 +287,8 @@ def get_deep_predictions(model: nn.Module, test_loader):
 
 def train_deep_image_classification(
     model: nn.Module,
-    train_loader: torch.DataLoader,
-    test_loader: torch.DataLoader,
+    train_loader: torch.utils.data.DataLoader,
+    test_loader: torch.utils.data.DataLoader,
     optimizer: torch.optim.Optimizer,
     criterion: str,
     epochs: int,

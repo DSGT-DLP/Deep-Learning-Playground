@@ -24,7 +24,7 @@ class middleware:
         Function that ensures that a user is authenticated before accessing a backend flask API endpoint
 
         Args:
-            environ (Any): 
+            environ (Any):
             start_response (Any):
 
         Returns:

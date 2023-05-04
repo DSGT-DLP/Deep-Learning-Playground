@@ -28,8 +28,8 @@ from backend.aws_helpers.dynamo_db_utils.execution_db import updateStatus
 def router(msg):
     """
     Routes the message from the SQS Training queue to the appropriate training function.
-    
-    Args: 
+
+    Args:
       - msg: request info from the SQS queue
     """
     print("Message received")

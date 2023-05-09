@@ -46,7 +46,7 @@ const TabularTrainspace = () => {
       }
       stepper={
         <Stepper
-          activeStep={Math.max(
+          activeStep={Math.min(
             trainspace.step,
             TRAINSPACE_SETTINGS.steps.length - 1
           )}

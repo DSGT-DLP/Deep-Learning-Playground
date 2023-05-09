@@ -29,6 +29,7 @@ class TrainspaceData(BaseData):
     trainspace_id: str
     uid: str
     dataset_data: str
+    step: str
     status: str
     created: str
     modified: str

@@ -18,13 +18,7 @@ PRIMARY_KEY = "trainspace_id"
 
 REQUIRED_KEYS = [
     "trainspace_id",
-    "name",
-    "training_file",
     "uid",
-    "step",
-    "status",
-    "modified",
-    "train_model",
 ]
 
 
@@ -33,10 +27,8 @@ class TrainspaceData(BaseData):
     """Data class to hold the attribute values of a record of the execution-table DynamoDB table"""
 
     trainspace_id: str
-    name: str
-    training_file: str
     uid: str
-    step: str
+    dataset_data: str
     status: str
     created: str
     modified: str

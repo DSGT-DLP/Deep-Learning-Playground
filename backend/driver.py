@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 import shutil
 
 from flask import Flask, request, send_from_directory
-from backend.aws_helpers.dynamo_db_utils.trainspace_db import getAllUserTrainspaceData
+from backend.aws_helpers.dynamo_db_utils.trainspace_db import createTrainspaceData, getAllUserTrainspaceData
 from backend.aws_helpers.s3_utils.s3_bucket_names import EXECUTION_BUCKET_NAME
 from backend.aws_helpers.s3_utils.s3_client import (
     get_column_names,
@@ -76,6 +76,17 @@ def root(path):
 def verify_backend_alive():
     return {"Status": "Backend is alive"}
 
+
+@app.route("/api/create-trainspace", methods=["POST"])
+def create_trainspace():
+    try:
+        request_data = json.loads(request.data)
+        uid = request_data["user"]["uid"]
+        trainspace_id = createTrainspaceData()
+        return {"trainspace_id": trainspace_id}
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
 
 @app.route("/api/tabular-run", methods=["POST"])
 def tabular_run():

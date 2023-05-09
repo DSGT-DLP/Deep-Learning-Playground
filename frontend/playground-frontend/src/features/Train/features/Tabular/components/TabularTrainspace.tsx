@@ -45,7 +45,12 @@ const TabularTrainspace = () => {
         />
       }
       stepper={
-        <Stepper activeStep={trainspace.step}>
+        <Stepper
+          activeStep={Math.max(
+            trainspace.step,
+            TRAINSPACE_SETTINGS.steps.length - 1
+          )}
+        >
           {TRAINSPACE_SETTINGS.steps.map((step, index) => (
             <Step key={step}>
               <StepButton onClick={() => setStep(index)}>
@@ -84,7 +89,8 @@ const TrainspaceStepInner = ({
   const Component = STEP_SETTINGS[TRAINSPACE_SETTINGS.steps[step]].component;
   const [isStepModified, setIsStepModified] = useState<boolean>(false);
   useEffect(() => {
-    setStep(trainspace.step);
+    if (trainspace.step < TRAINSPACE_SETTINGS.steps.length)
+      setStep(trainspace.step);
   }, [trainspace]);
   if (!Component) return <></>;
   return (

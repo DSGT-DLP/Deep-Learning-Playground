@@ -12,7 +12,7 @@ from backend.aws_helpers.dynamo_db_utils.base_db import (
 from backend.common.constants import TRAINSPACE_TABLE_NAME, AWS_REGION
 from boto3.dynamodb.conditions import Key
 from backend.common.utils import get_current_timestamp
-from typing import Union
+from typing import Any, Union
 
 PRIMARY_KEY = "trainspace_id"
 
@@ -21,6 +21,15 @@ REQUIRED_KEYS = [
     "uid",
 ]
 
+@dataclass
+class DatasetData(BaseData):
+    name: str
+    is_default_dataset: bool
+
+@dataclass
+class ReviewData(BaseData):
+    notification_email: Union[str, None]
+    notification_phone_number: Union[str, None]
 
 @dataclass
 class TrainspaceData(BaseData):
@@ -28,19 +37,38 @@ class TrainspaceData(BaseData):
 
     trainspace_id: str
     uid: str
-    dataset_data: str
-    step: str
-    status: str
-    created: str
-    modified: str
-    train_model: str
-    train_parameters: str = None
-    train_results: str = None
+    name: str
+    data_source: str
+    #train_parameters: str = None
+    #train_results: str = None
 
+@dataclass 
+class LayersData(BaseData):
+    value: str
+    parameters: list[Any]
+
+@dataclass
+class TabularParametersData(BaseData):
+    target_col: str
+    features: list[str]
+    problem_type: str
+    criterion: str
+    optimizer_name: str
+    shuffle: bool
+    epochs: int
+    test_size: float
+    batch_size: int
+    layers: LayersData
+
+@dataclass
+class TabularData(TrainspaceData):
+    dataset_data: DatasetData
+    parameters_data: TabularParametersData
+    review_data: ReviewData
 
 @enumclass(
     DataClass=TrainspaceData,
-    train_model=[
+    data_source=[
         "TABULAR",
         "PRETRAINED",
         "IMAGE",
@@ -49,8 +77,7 @@ class TrainspaceData(BaseData):
         "CLASSICAL_ML",
         "OBJECT_DETECTION",
     ],
-    step=["UPLOAD_FILE", "PREPROCESS", "TRAIN", "RESULTS"],
-    status=["QUEUED", "STARTING", "UPLOADING", "TRAINING", "SUCCESS", "ERROR"],
+    #status=["QUEUED", "STARTING", "UPLOADING", "TRAINING", "SUCCESS", "ERROR"],
 )
 class TrainspaceEnums:
     """Class that holds the enums associated with the ExecutionDDBUtil class. It includes:

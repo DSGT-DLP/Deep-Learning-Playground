@@ -1,17 +1,25 @@
-import { FaGithub, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
-import { COLORS, URLs } from "../../constants";
-import { IconContext } from "react-icons";
 import React from "react";
+import { COLORS, URLs } from "../../constants";
+import { LinkedIn, YouTube, Instagram, GitHub } from "@mui/icons-material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+const theme = createTheme({
+  components: {
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          fontSize: 40,
+          color: COLORS.dark_blue
+        },
+      },
+    },
+  },
+});
 
 const Footer = () => {
   return (
     <div id="footer" data-testid="footer">
-      <IconContext.Provider
-        value={{
-          color: COLORS.dark_blue,
-          size: "2.0rem",
-        }}
-      >
+      <ThemeProvider theme={theme}>
         <div
           className="footer-element"
           id="footer-socials"
@@ -23,7 +31,7 @@ const Footer = () => {
             title="Link to LinkedIn profile"
             href={URLs.linkedin}
           >
-            <FaLinkedin />
+            <LinkedIn />
           </a>
           <a
             className="foot-element"
@@ -31,7 +39,7 @@ const Footer = () => {
             data-testid="youtube-icon"
             href={URLs.youtube}
           >
-            <FaYoutube />
+            <YouTube />
           </a>
           <a
             className="foot-element"
@@ -39,7 +47,7 @@ const Footer = () => {
             data-testid="instagram-icon"
             href={URLs.instagram}
           >
-            <FaInstagram />
+            <Instagram />
           </a>
           <a
             className="foot-element"
@@ -47,10 +55,10 @@ const Footer = () => {
             data-testid="github-icon"
             href={URLs.github}
           >
-            <FaGithub />
+            <GitHub />
           </a>
         </div>
-      </IconContext.Provider>
+      </ThemeProvider>
       <div
         className="footer-element"
         id="footer-name"

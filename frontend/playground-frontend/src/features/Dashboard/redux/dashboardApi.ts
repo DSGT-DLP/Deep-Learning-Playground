@@ -14,14 +14,14 @@ const dashboardApi = backendApi.injectEndpoints({
         },
       }),
       transformResponse: (response: { record: string }) => {
-        const data = JSON.parse(response.record);
+        /*const data = JSON.parse(response.record);
         Object.entries(data).forEach(([key, value]) => {
           if (key === "created") {
             return [key, new Date(value as string)];
           }
           return [camelCase(key), value];
-        });
-        return data;
+        });*/
+        return [];
       },
     }),
   }),

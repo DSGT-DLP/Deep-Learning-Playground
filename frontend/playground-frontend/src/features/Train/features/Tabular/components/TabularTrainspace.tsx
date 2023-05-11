@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/common/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import { TrainspaceData } from "@/features/Train/features/Tabular/types/tabularTypes";
 import { UseFormHandleSubmit, useForm } from "react-hook-form";
 import React, { useEffect, useState } from "react";
@@ -15,6 +15,9 @@ import {
   TRAINSPACE_SETTINGS,
   STEP_SETTINGS,
 } from "../constants/tabularConstants";
+import { useTrainMutation } from "../redux/tabularApi";
+import { useRouter } from "next/router";
+import { removeTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
 
 const TabularTrainspace = () => {
   const trainspace = useAppSelector(
@@ -88,9 +91,21 @@ const TrainspaceStepInner = ({
 }) => {
   const Component = STEP_SETTINGS[TRAINSPACE_SETTINGS.steps[step]].component;
   const [isStepModified, setIsStepModified] = useState<boolean>(false);
+  const [train] = useTrainMutation();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   useEffect(() => {
     if (trainspace.step < TRAINSPACE_SETTINGS.steps.length)
       setStep(trainspace.step);
+    else {
+      train(trainspace)
+        .unwrap()
+        .then(({ trainspaceId }) => {
+          router.push({ pathname: `/train/${trainspaceId}` }).then(() => {
+            dispatch(removeTrainspaceData());
+          });
+        });
+    }
   }, [trainspace]);
   if (!Component) return <></>;
   return (

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { TrainspaceData } from "../types/tabularTypes";
 import { Stack, Typography } from "@mui/material";
-import { useAppSelector } from "@/common/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import { updateTabularTrainspaceData } from "../redux/tabularActions";
 
 const TabularReviewStep = ({
@@ -16,6 +16,7 @@ const TabularReviewStep = ({
   const trainspace = useAppSelector(
     (state) => state.trainspace.current as TrainspaceData<"REVIEW"> | undefined
   );
+  const dispatch = useAppDispatch();
   if (!trainspace) return <></>;
   useEffect(() => {
     setIsModified(true);
@@ -27,10 +28,15 @@ const TabularReviewStep = ({
       <Typography>{`Target Column: ${trainspace.parameterData.targetCol}`}</Typography>
       <Typography>{`Feature Columns: ${trainspace.parameterData.features.join()}`}</Typography>
       {renderStepperButtons((trainspaceData) => {
-        updateTabularTrainspaceData({
-          current: trainspaceData,
-          stepLabel: "REVIEW",
-        });
+        dispatch(
+          updateTabularTrainspaceData({
+            current: {
+              ...trainspaceData,
+              reviewData: {},
+            },
+            stepLabel: "REVIEW",
+          })
+        );
       })}
     </Stack>
   );

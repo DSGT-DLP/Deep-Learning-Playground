@@ -173,4 +173,3 @@ def object_detection_run():
                     os.remove(file_rem)
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
-

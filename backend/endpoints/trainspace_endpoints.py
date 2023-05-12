@@ -7,7 +7,10 @@ from backend.aws_helpers.dynamo_db_utils.learnmod_db import (
     UserProgressDDBUtil,
     UserProgressData,
 )
-from backend.aws_helpers.dynamo_db_utils.trainspace_db import createTrainspaceData, getAllUserTrainspaceData
+from backend.aws_helpers.dynamo_db_utils.trainspace_db import (
+    createTrainspaceData,
+    getAllUserTrainspaceData,
+)
 from backend.common.constants import (
     AWS_REGION,
     USERPROGRESS_TABLE_NAME,

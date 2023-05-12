@@ -28,12 +28,12 @@ CORS(app)
 
 app.wsgi_app = middleware(app.wsgi_app, exempt_paths=["/test/", "/", "/apidocs"])
 
-app.register_blueprint(trainspace_bp, url_prefix='/trainspace')
-app.register_blueprint(aws_bp, url_prefix='/aws')
-app.register_blueprint(dataset_bp, url_prefix='/dataset')
-app.register_blueprint(s3_bp, url_prefix='/s3')
-app.register_blueprint(test_bp, url_prefix='/test')
-app.register_blueprint(train_bp, url_prefix='/train')
+app.register_blueprint(trainspace_bp, url_prefix="/trainspace")
+app.register_blueprint(aws_bp, url_prefix="/aws")
+app.register_blueprint(dataset_bp, url_prefix="/dataset")
+app.register_blueprint(s3_bp, url_prefix="/s3")
+app.register_blueprint(test_bp, url_prefix="/test")
+app.register_blueprint(train_bp, url_prefix="/train")
 
 
 @app.route("/", methods=["GET"])

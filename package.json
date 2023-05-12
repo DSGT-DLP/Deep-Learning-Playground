@@ -8,7 +8,8 @@
     "installf": "cd frontend/playground-frontend && yarn install",
     "installb": "conda --version && cd conda && conda env create -f environment.yml && pre-commit install",
     "startf": "cd frontend/playground-frontend && yarn dev",
-    "secrets": "conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env",
+    "secrets": "eval \"$(conda shell.bash hook)\" && conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env",
+    "startb": "eval \"$(conda shell.bash hook)\" && conda activate dlplayground && python -m backend.driver",
     "secrets:deploy": "python -m backend.aws_helpers.aws_secrets_utils.build_env",
     "docker:build": "docker build -t dlp ."
   },

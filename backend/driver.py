@@ -1,3 +1,5 @@
+from dataclasses import asdict
+from decimal import Decimal
 import os
 import traceback
 import datetime
@@ -5,7 +7,16 @@ from werkzeug.utils import secure_filename
 import shutil
 
 from flask import Flask, request, send_from_directory
-from backend.aws_helpers.dynamo_db_utils.trainspace_db import getAllUserTrainspaceData
+from backend.aws_helpers.dynamo_db_utils.trainspace_db import (
+    DatasetData,
+    LayerData,
+    ReviewData,
+    TabularData,
+    TabularParametersData,
+    TrainspaceData,
+    createTrainspaceData,
+    getAllUserTrainspaceData,
+)
 from backend.aws_helpers.s3_utils.s3_bucket_names import EXECUTION_BUCKET_NAME
 from backend.aws_helpers.s3_utils.s3_client import (
     get_column_names,
@@ -17,7 +28,12 @@ from backend.middleware import middleware
 from flask_cors import CORS
 
 from backend.common.ai_drive import dl_tabular_drive, dl_img_drive, ml_drive
-from backend.common.constants import ONNX_MODEL, SAVED_MODEL_DL, UNZIPPED_DIR_NAME
+from backend.common.constants import (
+    ONNX_MODEL,
+    SAVED_MODEL_DL,
+    TRAINSPACE_TABLE_NAME,
+    UNZIPPED_DIR_NAME,
+)
 from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
@@ -45,6 +61,9 @@ from backend.dl.detection import detection_img_drive
 from backend.aws_helpers.lambda_utils.lambda_client import invoke
 
 from pathlib import Path
+
+import boto3
+import uuid
 
 init_firebase()
 
@@ -77,52 +96,76 @@ def verify_backend_alive():
     return {"Status": "Backend is alive"}
 
 
+@app.route("/api/create-trainspace", methods=["POST"])
+def create_trainspace():
+    try:
+        request_data = json.loads(request.data)
+        uid = request_data["user"]["uid"]
+        trainspace_id = createTrainspaceData()
+        return {"trainspace_id": trainspace_id}
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+
+
 @app.route("/api/tabular-run", methods=["POST"])
 def tabular_run():
     try:
         request_data = json.loads(request.data)
-
-        user_arch = request_data["user_arch"]
-        fileURL = request_data["file_URL"]
-        uid = request_data["user"]["uid"]
-        json_csv_data_str = request_data["csv_data"]
-        customModelName = request_data["custom_model_name"]
-        execution_id = request_data["execution_id"]
-
-        params = {
-            "target": request_data["target"],
-            "features": request_data["features"],
-            "problem_type": request_data["problem_type"],
-            "optimizer_name": request_data["optimizer_name"],
-            "criterion": request_data["criterion"],
-            "default": request_data["using_default_dataset"],
-            "epochs": request_data["epochs"],
-            "shuffle": request_data["shuffle"],
-            "test_size": request_data["test_size"],
-            "batch_size": request_data["batch_size"],
-        }
-
-        createUserExecutionsData(
-            {
-                "execution_id": execution_id,
-                "user_id": uid,
-                "name": customModelName,
-                "data_source": "TABULAR",
-                "status": "STARTING",
-                "timestamp": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "progress": 0,
-            }
+        id = str(uuid.uuid4())
+        tabular_data = TabularData(
+            trainspace_id=id,
+            uid=request_data["user"]["uid"],
+            name=request_data["name"],
+            data_source="TABULAR",
+            dataset_data=DatasetData(**request_data["dataset_data"]),
+            parameters_data=TabularParametersData(
+                target_col=request_data["parameters_data"]["target_col"],
+                features=request_data["parameters_data"]["features"],
+                problem_type=request_data["parameters_data"]["problem_type"],
+                criterion=request_data["parameters_data"]["criterion"],
+                optimizer_name=request_data["parameters_data"]["optimizer_name"],
+                shuffle=request_data["parameters_data"]["shuffle"],
+                epochs=request_data["parameters_data"]["epochs"],
+                test_size=request_data["parameters_data"]["test_size"],
+                batch_size=request_data["parameters_data"]["batch_size"],
+                layers=[
+                    LayerData(**layer)
+                    for layer in request_data["parameters_data"]["layers"]
+                ],
+            ),
+            review_data=ReviewData(**request_data["review_data"]),
         )
-        train_loss_results = dl_tabular_drive(
+
+        def to_decimal(o):
+            if isinstance(o, dict):
+                for k, v in o.items():
+                    if isinstance(v, float):
+                        o[k] = Decimal(str(v))
+                    else:
+                        to_decimal(v)
+            elif isinstance(o, list):
+                for v in o:
+                    to_decimal(v)
+
+        item = asdict(tabular_data)
+        to_decimal(item)
+        db = boto3.resource("dynamodb", AWS_REGION)
+        table = db.Table(TRAINSPACE_TABLE_NAME)
+        table.put_item(Item=item)
+        # createTrainspaceData(tabular_data)
+        """ train_loss_results = dl_tabular_drive(
             user_arch, fileURL, params, json_csv_data_str, customModelName
         )
         train_loss_results["user_arch"] = user_arch
         print(train_loss_results)
-        updateStatus(execution_id, "SUCCESS")
-        return send_train_results(train_loss_results)
+        updateStatus(execution_id, "SUCCESS") """
+        # return send_train_results(train_loss_results)
+        print(id)
+        return send_success({"message": "success", "trainspace_id": id})
 
     except Exception:
-        updateStatus(execution_id, "ERROR")
+        # updateStatus(execution_id, "ERROR")
         print(traceback.format_exc())
         return send_traceback_error()
 
@@ -339,8 +382,8 @@ def trainspace_table():
     try:
         request_data = json.loads(request.data)
         user_id = request_data["user"]["uid"]
-        record = getAllUserTrainspaceData(user_id)
-        return send_success({"record": record})
+        # record = getAllUserTrainspaceData(user_id)
+        return send_success({"record": ""})
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()

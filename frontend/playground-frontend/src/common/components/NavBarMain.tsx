@@ -1,11 +1,16 @@
-import { FormControlLabel, Switch } from "@mui/material";
+import AppBar from '@mui/material/AppBar';
+import { FormControlLabel, Icon, Switch } from "@mui/material";
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import MenuList from '@mui/material/Menu';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import Grid from "@mui/material/Grid";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+
 import storage from "local-storage-fallback";
 import React, { useEffect, useState } from "react";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Navbar from "react-bootstrap/Navbar";
-import { toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import GlobalStyle from "../../GlobalStyle";
 import { URLs } from "../../constants";
@@ -44,96 +49,134 @@ const NavbarMain = () => {
     }
   };
 
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleCloseUserMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <Navbar id="navbar-main" className="p-0" expand="lg">
-        <Container fluid className="ms-1 pe-0">
-          <Link href="/" passHref legacyBehavior>
-            <Navbar.Brand
+      <AppBar id="navbar-main" className="p-0" position="static">
+        <Container maxWidth="lg">
+          <Toolbar disableGutters 
+            sx={{
+              display: { xs: "flex" },
+              flexDirection: "row",
+              justifyContent: "space-between"
+            }}
+          >
+            <Icon sx={{ display: { xs: 'none', md: 'flex' }, ml: -5, mr: 1 }}>
+              <Image src={DSGTLogo} alt="DSGT Logo" width={40} height={40} />
+            </Icon>
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="/"
               className="d-flex align-items-center logo-title"
-              style={{
-                position: "relative",
+              sx={{
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: 'Lato, Arial, Helvetica, sans-serif',
+                color: 'inherit',
+                textDecoration: 'none',
               }}
             >
-              <div
-                style={{
-                  position: "relative",
-                  height: "50px",
-                  width: "50px",
-                  paddingLeft: "60px",
-                }}
-              >
-                <Image
-                  src={DSGTLogo}
-                  className="logo d-inline-block align-top me-3"
-                  alt="DSGT Logo"
-                  fill={true}
-                  style={{ objectFit: "contain", margin: "auto" }}
-                />
-              </div>
               Deep Learning Playground
-            </Navbar.Brand>
-          </Link>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ms-auto">
+            </Typography>
+
+            <Grid sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', justifyContent:'right'} }}>
+              <Grid item>
               {isSignedIn(user) ? (
-                <Link href="/train" passHref legacyBehavior>
-                  <Nav.Link>Train</Nav.Link>
-                </Link>
+                <Link href="/train" passHref className="nav-link">Train</Link>
               ) : null}
-              <Link href="/about" passHref legacyBehavior>
-                <Nav.Link>About</Nav.Link>
-              </Link>
-              <Link href="/wiki" passHref legacyBehavior>
-                <Nav.Link>Wiki</Nav.Link>
-              </Link>
-              <Link href="/feedback" passHref legacyBehavior>
-                <Nav.Link>Feedback</Nav.Link>
-              </Link>
-              <Nav.Link href={URLs.donate}>Donate</Nav.Link>
+              </Grid>
+              <Grid item>
+                <Link href="/about" passHref className="nav-link">About</Link>
+              </Grid>
+              <Grid item>
+                <Link href="/wiki" passHref className="nav-link">Wiki</Link>
+              </Grid>
+              <Grid item>
+                <Link href="/feedback" passHref className="nav-link">Feedback</Link>
+              </Grid>
+              <Grid item>
+                <Link href={URLs.donate} passHref className="nav-link">Donate</Link>
+              </Grid>
               {isSignedIn(user) ? (
-                <NavDropdown title="Account" id="basic-nav-dropdown">
-                  <Link href="/dashboard" passHref legacyBehavior>
-                    <NavDropdown.Item>Dashboard</NavDropdown.Item>
-                  </Link>
-                  <Link href="/settings" passHref legacyBehavior>
-                    <NavDropdown.Item>Settings</NavDropdown.Item>
-                  </Link>
-                  <Link href="/learn-mod" passHref legacyBehavior>
-                    <NavDropdown.Item>Learn</NavDropdown.Item>
-                  </Link>
-                  <NavDropdown.Divider />
-                  <Link href={""} passHref legacyBehavior>
-                    <NavDropdown.Item
-                      onClick={() => {
-                        dispatch(signOutUser());
-                      }}
+                <Grid item>
+                  <div>
+                      <Button 
+                      sx={{
+                        my: -0.75,
+                        mx: -1,
+                      }}>
+                        <Typography
+                          onClick={handleOpenUserMenu}
+                          className="nav-link"
+                          style={{
+                            fontFamily: 'Lato, Arial, Helvetica, sans-serif',
+                            textTransform: 'none'
+                          }}
+                        >
+                          Account <ArrowDropDownIcon />
+                        </Typography>
+                      </Button>
+                    <MenuList
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleCloseUserMenu}
                     >
-                      Log out
-                    </NavDropdown.Item>
-                  </Link>
-                </NavDropdown>
+                      <MenuItem>
+                        <Link href="/dashboard" id="basic-nav-dropdown">Dashboard</Link>
+                      </MenuItem>
+                      <MenuItem>
+                        <Link href="/settings" id="basic-nav-dropdown">Settings</Link>
+                      </MenuItem>
+                      <MenuItem divider>
+                        <Link href="/learn-mod" id="basic-nav-dropdown">Learn</Link>
+                      </MenuItem>
+                      <Link href={""} passHref id="basic-nav-dropdown">
+                        <MenuItem
+                          onClick={() => {
+                            dispatch(signOutUser());
+                          }}
+                        >
+                          <Typography sx={{fontFamily:'Lato, Arial, Helvetica, sans-serif'}}>Log out</Typography>
+                        </MenuItem>
+                      </Link>
+                    </MenuList>
+                  </div>
+                </Grid>
               ) : (
-                <Link href="/login" passHref legacyBehavior>
-                  <Nav.Link>Log in</Nav.Link>
-                </Link>
+                <Link href="/login" passHref className="nav-link">Log in</Link>
               )}
-            </Nav>
-          </Navbar.Collapse>
+            </Grid>
+            <FormControlLabel
+              style={{
+                marginLeft: "auto",
+                marginRight: 0,
+                flexDirection: "row-reverse"
+              }}
+              control={
+              <Switch
+                  id="mode-switch"
+                  onChange={toggleTheme}
+                  checked={theme.checked}
+                ></Switch>
+              }
+              label={`${theme.mode === "dark" ? "🌙" : "☀️"}`}
+            />
+          </Toolbar>
         </Container>
-        <FormControlLabel
-          control={
-            <Switch
-              id="mode-switch"
-              onChange={toggleTheme}
-              checked={theme.checked}
-            ></Switch>
-          }
-          label={`${theme.mode === "dark" ? "🌙" : "☀️"}`}
-        />
-      </Navbar>
+      </AppBar>
     </ThemeProvider>
   );
 };

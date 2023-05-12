@@ -21,15 +21,18 @@ REQUIRED_KEYS = [
     "uid",
 ]
 
+
 @dataclass
 class DatasetData(BaseData):
     name: str
     is_default_dataset: bool
 
+
 @dataclass
 class ReviewData(BaseData):
     notification_email: Union[str, None]
     notification_phone_number: Union[str, None]
+
 
 @dataclass
 class TrainspaceData(BaseData):
@@ -39,13 +42,15 @@ class TrainspaceData(BaseData):
     uid: str
     name: str
     data_source: str
-    #train_parameters: str = None
-    #train_results: str = None
+    # train_parameters: str = None
+    # train_results: str = None
 
-@dataclass 
-class LayersData(BaseData):
+
+@dataclass
+class LayerData(BaseData):
     value: str
     parameters: list[Any]
+
 
 @dataclass
 class TabularParametersData(BaseData):
@@ -58,13 +63,15 @@ class TabularParametersData(BaseData):
     epochs: int
     test_size: float
     batch_size: int
-    layers: LayersData
+    layers: list[LayerData]
+
 
 @dataclass
 class TabularData(TrainspaceData):
     dataset_data: DatasetData
     parameters_data: TabularParametersData
     review_data: ReviewData
+
 
 @enumclass(
     DataClass=TrainspaceData,
@@ -77,7 +84,7 @@ class TabularData(TrainspaceData):
         "CLASSICAL_ML",
         "OBJECT_DETECTION",
     ],
-    #status=["QUEUED", "STARTING", "UPLOADING", "TRAINING", "SUCCESS", "ERROR"],
+    # status=["QUEUED", "STARTING", "UPLOADING", "TRAINING", "SUCCESS", "ERROR"],
 )
 class TrainspaceEnums:
     """Class that holds the enums associated with the ExecutionDDBUtil class. It includes:
@@ -109,20 +116,17 @@ def getTrainspaceData(trainspace_id: str) -> str:
     return json.dumps(record.__dict__)
 
 
-def createTrainspaceData(entryData: dict) -> str:
+def createTrainspaceData(trainspace_data: TrainspaceData) -> None:
     """
     Create a new entry corresponding to the given user_id.
 
     @param **kwargs: execution_id and other table attributes to be created to the new entry e.g. user_id, if does not exist
     @return: A JSON string of the entry retrieved or created from the table
     """
-    if not validate_keys(entryData, REQUIRED_KEYS):
-        raise ValueError(f"Missing keys {REQUIRED_KEYS} in request body")
 
     dynamoTable = TrainspaceDDBUtil(TRAINSPACE_TABLE_NAME, AWS_REGION)
-    newRecord = TrainspaceData(**entryData)
-    dynamoTable.create_record(newRecord)
-    return json.dumps(newRecord.__dict__)
+    dynamoTable.create_record(trainspace_data)
+    # return json.dumps(trainspace_data.__dict__)
 
 
 def updateTrainspaceData(requestData: dict) -> str:

@@ -9,7 +9,7 @@
     "@dnd-kit/sortable": "^7.0.2",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
-    "@mui/icons-material": "^5.8.4",
+    "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.9.3",
     "@mui/x-data-grid": "^6.0.4",
     "@reduxjs/toolkit": "^1.8.5",

@@ -9,8 +9,8 @@ import Spacer from "@/common/components/Spacer";
 import ReCAPTCHA from "react-google-recaptcha";
 
 import { COLORS, GENERAL_STYLES } from "../constants";
-//import { toast } from "react-toastify";
-//import { sendToBackend } from "../helper_functions/TalkWithBackend";
+import { toast } from "react-toastify";
+import { sendToBackend } from "../components_old/helper_functions/TalkWithBackend";
 //import { InlineWidget } from "react-calendly";
 import NavbarMain from "@/common/components/NavBarMain";
 import Footer from "@/common/components/Footer";
@@ -60,7 +60,7 @@ const Feedback = () => {
   const [feedback, setFeedback] = useState("");
   const [recaptcha, setRecaptcha] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [successful] = useState(false);
+  const [successful, setSuccessful] = useState(false);
 
   const onClickSubmit = async () => {
     setSubmitted(true);
@@ -70,10 +70,9 @@ const Feedback = () => {
       email.trim() &&
       feedback.trim()
     ) {
-      /*
       setSuccessful(
         await send_feedback_mail(firstName, lastName, email, feedback)
-      );*/
+      );
     }
   };
 
@@ -171,25 +170,23 @@ const Feedback = () => {
   );
 };
 
-/*
 const send_feedback_mail = async (
   firstName: string,
   lastName: string,
   email: string,
   feedback: string
 ) => {
-  
   const emailResult = await sendToBackend("sendEmail", {
     email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
     subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
     body_text: feedback,
   });
-
+  console.log("email" + process.env.REACT_APP_FEEDBACK_EMAIL);
   if (!emailResult.success) {
     toast.error(emailResult.message);
   }
   return emailResult.success;
-};*/
+};
 
 export default Feedback;
 

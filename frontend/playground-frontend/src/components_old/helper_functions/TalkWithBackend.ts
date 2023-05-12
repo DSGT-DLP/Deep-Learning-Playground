@@ -2,7 +2,7 @@ import axios from "axios";
 import sha256 from "crypto-js/sha256";
 import { toast } from "react-toastify";
 import { EXPECTED_FAILURE_HTTP_CODES, ROUTE_DICT } from "../../constants";
-import { auth } from "../../firebase";
+import { auth } from "../../common/utils/firebase";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function uploadToBackend(data: { [key: string]: any }) {

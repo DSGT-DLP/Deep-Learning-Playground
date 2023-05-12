@@ -24,7 +24,5 @@
     "url": "https://github.com/DSGT-DLP/Deep-Learning-Playground/issues"
   },
   "homepage": "https://github.com/DSGT-DLP/Deep-Learning-Playground#readme",
-  "dependencies": {
-    "@mui/icons-material": "^5.11.16"
-  }
+  "dependencies": {}
 }

@@ -73,7 +73,7 @@ const NavbarMain = () => {
             }}
           >
             <Icon sx={{ display: { xs: 'none', md: 'flex' }, ml: -5, mr: 1 }}>
-              <Image src={DSGTLogo} alt="DSGT Logo" width={40} height={80} />
+              <Image src={DSGTLogo} alt="DSGT Logo" width={40} height={40} />
             </Icon>
             <Typography
               variant="h6"

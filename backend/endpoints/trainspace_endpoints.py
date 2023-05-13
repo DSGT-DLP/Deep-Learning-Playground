@@ -22,7 +22,7 @@ from backend.endpoints.utils import send_traceback_error, send_success
 trainspace_bp = Blueprint("trainspace", __name__)
 
 
-@trainspace_bp.route("/api/create-trainspace", methods=["POST"])
+@trainspace_bp.route("/create-trainspace", methods=["POST"])
 def create_trainspace():
     try:
         request_data = json.loads(request.data)
@@ -34,7 +34,7 @@ def create_trainspace():
         return send_traceback_error()
 
 
-@trainspace_bp.route("/api/getTrainspaceData", methods=["POST"])
+@trainspace_bp.route("/getTrainspaceData", methods=["POST"])
 def trainspace_table():
     try:
         request_data = json.loads(request.data)
@@ -46,7 +46,7 @@ def trainspace_table():
         return send_traceback_error()
 
 
-@trainspace_bp.route("/api/getUserProgressData", methods=["POST"])
+@trainspace_bp.route("/getUserProgressData", methods=["POST"])
 def getUserProgressData():
     dynamoTable = UserProgressDDBUtil(USERPROGRESS_TABLE_NAME, AWS_REGION)
     user_id = json.loads(request.data)["user_id"]
@@ -59,7 +59,7 @@ def getUserProgressData():
         return "{}"
 
 
-@trainspace_bp.route("/api/updateUserProgressData", methods=["POST"])
+@trainspace_bp.route("/updateUserProgressData", methods=["POST"])
 def updateUserProgressData():
     requestData = json.loads(request.data)
     uid = requestData["user_id"]

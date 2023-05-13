@@ -10,12 +10,19 @@ from fastai.data.core import DataLoaders
 from fastai.learner import save_model
 from fastai.vision.learner import has_pool_type
 from fastai.vision.learner import _update_first_layer
+from fastai.vision.learner import vision_learner
+from fastai.vision.learner import create_head
 from fastai.vision.all import *
 from fastai.callback.progress import CSVLogger
 from wwf.vision.timm import *
 from torchvision.models import *
 from torchvision import models
 from fastai.callback.hook import num_features_model
+from fastai.vision.models.utils import apply_init
+from fastai.learner import Learner
+from fastai.basics import default_split
+from fastai.basics import get_c
+
 
 from backend.common.dataset import dataset_from_zipped
 from backend.common.constants import DEFAULT_TRANSFORM, SAVED_MODEL_DL
@@ -28,7 +35,7 @@ def train(
     loss_func,
     n_epochs,
     shuffle=False,
-    optimizer=Adam,
+    optimizer=torch.optim.Adam,
     lr=1e-3,
     cut=None,
     n_classes=10,

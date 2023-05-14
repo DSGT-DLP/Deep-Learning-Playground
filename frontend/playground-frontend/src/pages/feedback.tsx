@@ -10,10 +10,11 @@ import ReCAPTCHA from "react-google-recaptcha";
 
 import { COLORS, GENERAL_STYLES } from "../constants";
 import { toast } from "react-toastify";
-import { sendToBackend } from "../components_old/helper_functions/TalkWithBackend";
+//import { sendToBackend } from "../components_old/helper_functions/TalkWithBackend";
 //import { InlineWidget } from "react-calendly";
 import NavbarMain from "@/common/components/NavBarMain";
 import Footer from "@/common/components/Footer";
+import { useLazySendFeedbackDataQuery } from "@/features/Feedback/redux/feedbackApi";
 
 //const CALENDLY_URL = "https://calendly.com/dlp-dsgt/30min";
 
@@ -61,6 +62,7 @@ const Feedback = () => {
   const [recaptcha, setRecaptcha] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [successful, setSuccessful] = useState(false);
+  const [sendFeedback, { data }] = useLazySendFeedbackDataQuery();
 
   const onClickSubmit = async () => {
     setSubmitted(true);
@@ -70,9 +72,16 @@ const Feedback = () => {
       email.trim() &&
       feedback.trim()
     ) {
-      setSuccessful(
-        await send_feedback_mail(firstName, lastName, email, feedback)
-      );
+      const emailResult = await sendFeedback({
+        email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
+        subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
+        body_text: feedback,
+      });
+      if (!emailResult.isSuccess) {
+        toast.error(emailResult.data.message);
+      }
+      console.log(emailResult);
+      setSuccessful(emailResult.isSuccess);
     }
   };
 
@@ -168,24 +177,6 @@ const Feedback = () => {
       <Footer />
     </>
   );
-};
-
-const send_feedback_mail = async (
-  firstName: string,
-  lastName: string,
-  email: string,
-  feedback: string
-) => {
-  const emailResult = await sendToBackend("sendEmail", {
-    email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
-    subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
-    body_text: feedback,
-  });
-  console.log("email" + process.env.REACT_APP_FEEDBACK_EMAIL);
-  if (!emailResult.success) {
-    toast.error(emailResult.message);
-  }
-  return emailResult.success;
 };
 
 export default Feedback;

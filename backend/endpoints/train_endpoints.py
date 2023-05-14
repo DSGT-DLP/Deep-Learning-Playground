@@ -26,7 +26,12 @@ from backend.common.constants import (
 )
 from backend.common.utils import *
 from backend.dl.detection import detection_img_drive
-from backend.endpoints.utils import send_detection_results, send_success, send_traceback_error, send_train_results
+from backend.endpoints.utils import (
+    send_detection_results,
+    send_success,
+    send_traceback_error,
+    send_train_results,
+)
 
 import boto3
 
@@ -37,7 +42,7 @@ train_bp = Blueprint("train", __name__)
 def tabular_run():
     """
     API Endpoint in order to train a DL Model for tabular datasets
-    
+
     Params:
      - uid: Unique User id
      - name: Name of Trainspace Data the user specifies
@@ -54,7 +59,7 @@ def tabular_run():
           - batch_size: How big should each "batch" of the dataset be. This is for training in batch during the epoch
           - layers: Architecture of Model
      - review_data: <fill in description here>
-     
+
     Results:
       - 200: Training successful. Show result page
       - 400: Error in training of model. Could come from problems with the user's request or on the server side
@@ -123,7 +128,7 @@ def tabular_run():
 def img_run():
     """
     API Endpoint to train an image model via Pytorch
-    
+
     Params:
       - train_transform: Sequence of image transformations to apply to train set
       - test_transform: Sequence of image transformations to apply to test set
@@ -137,7 +142,7 @@ def img_run():
       - custom_model_name: User specified name of model for their convenience
       - uid: unique user id
       - execution_id: Execution Id to keep track of user's training requests
-    
+
     Results:
       - 200: Image DL model trained successfully
       - 400: Error happened in model training. Could be on user side or server side
@@ -193,8 +198,8 @@ def img_run():
 @train_bp.route("/object-detection", methods=["POST"])
 def object_detection_run():
     """
-    API Endpoint for running object detection models. 
-    
+    API Endpoint for running object detection models.
+
     Params:
       - problem_type: What class of object detection problems the user wants to play with
       - detection_type: What object detection algorithm does the user want to play with (eg: AWS Rekognition, YOLOV3, etc)

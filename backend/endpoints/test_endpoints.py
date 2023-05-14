@@ -7,10 +7,10 @@ test_bp = Blueprint("test", __name__)
 def verify_backend_alive():
     """
     Dummy API endpoint to verify that you can make a simple backend API request
-    
+
     Params:
      - None
-     
+
     Results:
      - 200: you can see the JSON {"Status": "Backend is alive"}
      - 400: something went wrong in getting the result

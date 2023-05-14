@@ -58,7 +58,7 @@ def send_error(message: str):
 def send_train_results(train_loss_results: dict):
     """
     Wrapper function to send results of a user's training request (successful one)
-    
+
     Params:
       - train_loss_results: dict containing info about training results + stats
     """
@@ -74,7 +74,7 @@ def send_train_results(train_loss_results: dict):
 def send_detection_results(object_detection_results: dict):
     """
     Wrapper function to send success message for object detection requests
-    
+
 
     Args:
      - object_detection_results (dict): object detection results

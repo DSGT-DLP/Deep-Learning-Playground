@@ -17,10 +17,10 @@ dataset_bp = Blueprint("dataset", __name__)
 def send_columns():
     """
     API Endpint to send columns of a user selected default dataset (eg: IRIS, California Housing, Wine, etc)
-    
+
     Params:
-      - using_default_dataset: boolean indicating if a user selected a default dataset 
-    
+      - using_default_dataset: boolean indicating if a user selected a default dataset
+
     Results:
       - 200: Columns of default dataset retrieved successfully
       - 400: Something went wrong in retrieving columns of user selected default dataset
@@ -43,15 +43,15 @@ def send_columns():
 def getColumnsFromDatasetFile():
     """
     API Endpoint to retrieve columns from a user uploaded dataset file (eg: column names for a CSV file)
-    
-    
+
+
     Methodology: Given the dataset file, go to S3 and run a basic SQL query to get the column names
-    
+
     Params:
       - uid: user id
       - data_source: What type of training was the user running (eg: TABULAR, PRETRAINED, OBJECT_DETECTION, IMAGE, etc)
       - name: Name of dataset file
-    
+
     Results:
       - 200: Columns retrieved successfully from S3
       - 400: Something went wrong in retrieving the columns. Maybe on the client side or server side

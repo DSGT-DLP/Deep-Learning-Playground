@@ -26,12 +26,12 @@ trainspace_bp = Blueprint("trainspace", __name__)
 def create_trainspace():
     """
     API Endpoint to create a "trainspace". Trainspace is a new concept/data structure
-    we introduce to track user's training requests. Concept similar to execution_id. 
-    
-    
+    we introduce to track user's training requests. Concept similar to execution_id.
+
+
     Params:
       - uid: Unique User id
-    
+
     Results:
       - 200: Trainspace created successfully
       - 400: Error in creating trainspace
@@ -50,12 +50,12 @@ def create_trainspace():
 def trainspace_table():
     """
     API Endpoint to identify all trainspaces for a given user id
-    
+
     This endpoint will go into the trainspace Dynamo DB and query by user id all trainspace data objects
-    
+
     Params:
       - uid: Unique User id
-      
+
     Results:
       - 200: Able to query and retrieve trainspace objects belonging to a user
       - 400: Error in querying trainspace data for a given uid. Could be on the client side or server side
@@ -74,11 +74,11 @@ def trainspace_table():
 def getUserProgressData():
     """
     Utility function to get user progress data for the Learning Modules feature
-    of DLP. 
-    
+    of DLP.
+
     Params:
       - uid: Unique User id
-      
+
     Results:
       - 200: Able to query and load user progress data for a given user that visits the Learning Modules surface on DLP
       - 400: Error in retrieving this data
@@ -99,7 +99,7 @@ def updateUserProgressData():
     """
     API Endpoint to update user progress data as the user progresses through the Learning Modules feature. We can identify
     here if a user gets a question correct or not and update that progress within Dynamo Db
-    
+
     Params:
       - user_id: Unique User id
       - moduleId: What module did the user interact with

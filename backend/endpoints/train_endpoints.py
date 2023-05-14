@@ -46,7 +46,7 @@ def tabular_run():
     Params:
      - uid: Unique User id
      - name: Name of Trainspace Data the user specifies
-     - dataset_data: Dataset that is used for training the model
+     - dataset_data: DatasetData instance
      - parameters_data:
           - target_col: Target col to predict/classify
           - features: Input columns to the model
@@ -58,7 +58,7 @@ def tabular_run():
           - test_size: What percentage of your dataset should be dedicated for testing the performance of the model
           - batch_size: How big should each "batch" of the dataset be. This is for training in batch during the epoch
           - layers: Architecture of Model
-     - review_data: <fill in description here>
+     - review_data: ReviewData instance
 
     Results:
       - 200: Training successful. Show result page

@@ -7,11 +7,11 @@ const dashboardApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({
     getExecutionsData: builder.query<TrainResultsData[], void>({
       query: () => ({
-        url: "/api/getTrainspaceData",
-        method: "POST",
-        body: {
+        url: "/api/test/",
+        method: "GET",
+        /*body: {
           user: auth.currentUser,
-        },
+        },*/
       }),
       transformResponse: (response: { record: string }) => {
         /*const data = JSON.parse(response.record);
@@ -25,6 +25,7 @@ const dashboardApi = backendApi.injectEndpoints({
       },
     }),
   }),
+  overrideExisting: true,
 });
 
 export const { useGetExecutionsDataQuery } = dashboardApi;

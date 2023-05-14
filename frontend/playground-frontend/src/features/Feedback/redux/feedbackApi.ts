@@ -7,7 +7,7 @@ const feedbackApi = backendApi.injectEndpoints({
       query: (args) => {
         const { email_address, subject, body_text } = args;
         return {
-        url: "/aws/sendEmail",
+        url: "/api/aws/sendEmail",
         method: "POST",
         body: {
           user: auth.currentUser,

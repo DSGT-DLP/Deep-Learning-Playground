@@ -68,16 +68,20 @@ const Feedback = () => {
       email.trim() &&
       feedback.trim()
     ) {
-      const emailResult = await sendFeedback({
-        email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
-        subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
-        body_text: feedback,
-      });
-      if (!emailResult.isSuccess) {
-        toast.error(emailResult.data.message);
+      if (recaptcha != "") {
+        const emailResult = await sendFeedback({
+          email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
+          subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
+          body_text: feedback,
+        });
+        if (!emailResult.isSuccess) {
+          toast.error(emailResult.data.message);
+        }
+        console.log(emailResult);
+        setSuccessful(emailResult.isSuccess);
+      } else {
+        toast.error("Please complete the ReCAPTCHA");
       }
-      console.log(emailResult);
-      setSuccessful(emailResult.isSuccess);
     }
   };
 

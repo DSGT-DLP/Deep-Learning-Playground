@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Blueprint, Flask, send_from_directory
 from flask_cors import CORS
 
 from backend.common.utils import *
@@ -26,14 +26,20 @@ app = Flask(
 )
 CORS(app)
 
-app.wsgi_app = middleware(app.wsgi_app, exempt_paths=["/test/", "/", "/apidocs"])
+app.wsgi_app = middleware(
+    app.wsgi_app, exempt_paths=["/api/test/", "/", "/api/apidocs"]
+)
 
-app.register_blueprint(trainspace_bp, url_prefix="/trainspace")
-app.register_blueprint(aws_bp, url_prefix="/aws")
-app.register_blueprint(dataset_bp, url_prefix="/dataset")
-app.register_blueprint(s3_bp, url_prefix="/s3")
-app.register_blueprint(test_bp, url_prefix="/test")
-app.register_blueprint(train_bp, url_prefix="/train")
+app_bp = Blueprint("api", __name__)
+
+app_bp.register_blueprint(trainspace_bp, url_prefix="/trainspace")
+app_bp.register_blueprint(aws_bp, url_prefix="/aws")
+app_bp.register_blueprint(dataset_bp, url_prefix="/dataset")
+app_bp.register_blueprint(s3_bp, url_prefix="/s3")
+app_bp.register_blueprint(test_bp, url_prefix="/test")
+app_bp.register_blueprint(train_bp, url_prefix="/train")
+
+app.register_blueprint(app_bp, url_prefix="/api")
 
 
 @app.route("/", methods=["GET"])

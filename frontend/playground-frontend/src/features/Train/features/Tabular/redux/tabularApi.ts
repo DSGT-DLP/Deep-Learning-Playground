@@ -6,7 +6,7 @@ const tabularApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({
     train: builder.mutation<{ trainspaceId: string }, TrainspaceData<"TRAIN">>({
       query: (trainspaceData) => ({
-        url: "/api/tabular-run",
+        url: "/api/train/tabular-run",
         method: "POST",
         body: {
           user: auth.currentUser,

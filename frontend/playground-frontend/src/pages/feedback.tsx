@@ -77,7 +77,6 @@ const Feedback = () => {
         if (!emailResult.isSuccess) {
           toast.error(emailResult.data.message);
         }
-        console.log(emailResult);
         setSuccessful(emailResult.isSuccess);
       } else {
         toast.error("Please complete the ReCAPTCHA");

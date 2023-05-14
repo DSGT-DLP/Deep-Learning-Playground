@@ -1,6 +1,6 @@
 // @flow
 import React, { useState } from "react";
-//import type { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import EmailInput from "@/common/components/EmailInput";
 import TitleText from "@/common/components/TitleText";
@@ -10,15 +10,12 @@ import ReCAPTCHA from "react-google-recaptcha";
 
 import { COLORS, GENERAL_STYLES } from "../constants";
 import { toast } from "react-toastify";
-//import { sendToBackend } from "../components_old/helper_functions/TalkWithBackend";
-//import { InlineWidget } from "react-calendly";
+import { InlineWidget } from "react-calendly";
 import NavbarMain from "@/common/components/NavBarMain";
-import Footer from "@/common/components/Footer";
 import { useLazySendFeedbackDataQuery } from "@/features/Feedback/redux/feedbackApi";
 
-//const CALENDLY_URL = "https://calendly.com/dlp-dsgt/30min";
+const CALENDLY_URL = "https://calendly.com/dlp-dsgt/30min";
 
-/*
 function renderSuccessfulFeedbackSubmit(): ReactNode {
   return (
     <>
@@ -52,7 +49,7 @@ function renderSuccessfulFeedbackSubmit(): ReactNode {
       </div>
     </>
   );
-}*/
+}
 
 const Feedback = () => {
   const [email, setEmail] = useState("");
@@ -63,7 +60,6 @@ const Feedback = () => {
   const [submitted, setSubmitted] = useState(false);
   const [successful, setSuccessful] = useState(false);
   const [sendFeedback, { data }] = useLazySendFeedbackDataQuery();
-
   const onClickSubmit = async () => {
     setSubmitted(true);
     if (
@@ -89,9 +85,8 @@ const Feedback = () => {
     <>
       <NavbarMain />
       {successful ? (
-        <></>
+        <>{renderSuccessfulFeedbackSubmit()}</>
       ) : (
-        //renderSuccessfulFeedbackSubmit()
         <>
           <div id="header-section">
             <h1 className="header">Deep Learning Playground Feedback</h1>
@@ -174,7 +169,6 @@ const Feedback = () => {
           </div>
         </>
       )}
-      <Footer />
     </>
   );
 };

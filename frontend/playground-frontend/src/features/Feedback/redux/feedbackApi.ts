@@ -7,7 +7,7 @@ const feedbackApi = backendApi.injectEndpoints({
       query: (args) => {
         const { email_address, subject, body_text } = args;
         return {
-        url: "/api/sendEmail",
+        url: "/aws/sendEmail",
         method: "POST",
         body: {
           user: auth.currentUser,
@@ -19,6 +19,7 @@ const feedbackApi = backendApi.injectEndpoints({
       },
     }),
   }),
+  overrideExisting: true
 });
 
 export const { useLazySendFeedbackDataQuery } = feedbackApi;

@@ -18,7 +18,7 @@ const theme = createTheme({
 
 const Footer = () => {
   return (
-    <div id="footer" data-testid="footer" className="flex-wrapper">
+    <div id="footer" data-testid="footer">
       <ThemeProvider theme={theme}>
         <div
           className="footer-element"

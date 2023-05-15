@@ -30,69 +30,71 @@ const Dashboard = () => {
   return (
     <>
       <NavbarMain />
-      <div id="dashboard">
-        <>
-          <PageHeader
-            maxWidth="85%"
-            title="Dashboard"
-            primaryAction={{
-              component: (
-                <Button
-                  color="red"
-                  size="md"
-                  iconEnd="refresh"
-                  text="Refresh"
-                  onClick={() => {
-                    refetch();
-                  }}
-                />
-              ),
-              dropdownItems: [
-                <Dropdown.Item
-                  key="refresh"
-                  option={{ value: "refresh", label: "Refresh" }}
-                  onSelect={() => {
-                    refetch();
-                  }}
-                />,
-              ],
-            }}
-            dropdownAccessibilityLabel="More options"
-          />
-          {data && data.length > 0 ?
-          <Flex
-            direction="row"
-            justifyContent="center"
-            alignItems="stretch"
-            width="100%"
-            wrap
-          >
-            <Box>
-              <TrainDoughnutChart trainSpaceDataArr={data} />
-            </Box>
-            <Box height={300} width={300}>
-              <TrainBarChart trainSpaceDataArr={data} />
-            </Box>
-          </Flex> : <BlankGrid />}
+      <div className="flex-wrapper">
+        <div id="dashboard">
+          <>
+            <PageHeader
+              maxWidth="85%"
+              title="Dashboard"
+              primaryAction={{
+                component: (
+                  <Button
+                    color="red"
+                    size="md"
+                    iconEnd="refresh"
+                    text="Refresh"
+                    onClick={() => {
+                      refetch();
+                    }}
+                  />
+                ),
+                dropdownItems: [
+                  <Dropdown.Item
+                    key="refresh"
+                    option={{ value: "refresh", label: "Refresh" }}
+                    onSelect={() => {
+                      refetch();
+                    }}
+                  />,
+                ],
+              }}
+              dropdownAccessibilityLabel="More options"
+            />
+            {data && data.length > 0 ?
+            <Flex
+              direction="row"
+              justifyContent="center"
+              alignItems="stretch"
+              width="100%"
+              wrap
+            >
+              <Box>
+                <TrainDoughnutChart trainSpaceDataArr={data} />
+              </Box>
+              <Box height={300} width={300}>
+                <TrainBarChart trainSpaceDataArr={data} />
+              </Box>
+            </Flex> : <BlankGrid />}
 
-          <div
-            style={{
-              minWidth: "900px",
-              width: "75%",
-              margin: "auto",
-            }}
-          >
-            <TrainDataGrid trainSpaceDataArr={data} />
-          </div>
-          
-          {isLoading ? (
-            <div className="loading">
-              <Spinner show accessibilityLabel="Spinner" />
+            <div
+              style={{
+                minWidth: "900px",
+                width: "75%",
+                margin: "auto",
+              }}
+            >
+              <TrainDataGrid trainSpaceDataArr={data} />
             </div>
-          ) : null}
-        </>
+            
+            {isLoading ? (
+              <div className="loading">
+                <Spinner show accessibilityLabel="Spinner" />
+              </div>
+            ) : null}
+          </>
+        </div>
+        <Footer />
       </div>
-      <Footer />
     </>
   );
 };

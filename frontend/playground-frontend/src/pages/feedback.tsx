@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { InlineWidget } from "react-calendly";
 import NavbarMain from "@/common/components/NavBarMain";
 import { useLazySendFeedbackDataQuery } from "@/features/Feedback/redux/feedbackApi";
+import Footer from "@/common/components/Footer";
 
 const CALENDLY_URL = "https://calendly.com/dlp-dsgt/30min";
 
@@ -172,6 +173,7 @@ const Feedback = () => {
           </div>
         </>
       )}
+      <Footer />
     </>
   );
 };

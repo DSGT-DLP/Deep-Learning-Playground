@@ -24,6 +24,18 @@ trainspace_bp = Blueprint("trainspace", __name__)
 
 @trainspace_bp.route("/create-trainspace", methods=["POST"])
 def create_trainspace():
+    """
+    API Endpoint to create a "trainspace". Trainspace is a new concept/data structure
+    we introduce to track user's training requests. Concept similar to execution_id.
+
+
+    Params:
+      - uid: Unique User id
+
+    Results:
+      - 200: Trainspace created successfully
+      - 400: Error in creating trainspace
+    """
     try:
         request_data = json.loads(request.data)
         uid = request_data["user"]["uid"]
@@ -36,6 +48,18 @@ def create_trainspace():
 
 @trainspace_bp.route("/getTrainspaceData", methods=["POST"])
 def trainspace_table():
+    """
+    API Endpoint to identify all trainspaces for a given user id
+
+    This endpoint will go into the trainspace Dynamo DB and query by user id all trainspace data objects
+
+    Params:
+      - uid: Unique User id
+
+    Results:
+      - 200: Able to query and retrieve trainspace objects belonging to a user
+      - 400: Error in querying trainspace data for a given uid. Could be on the client side or server side
+    """
     try:
         request_data = json.loads(request.data)
         user_id = request_data["user"]["uid"]
@@ -48,6 +72,17 @@ def trainspace_table():
 
 @trainspace_bp.route("/getUserProgressData", methods=["POST"])
 def getUserProgressData():
+    """
+    Utility function to get user progress data for the Learning Modules feature
+    of DLP.
+
+    Params:
+      - uid: Unique User id
+
+    Results:
+      - 200: Able to query and load user progress data for a given user that visits the Learning Modules surface on DLP
+      - 400: Error in retrieving this data
+    """
     dynamoTable = UserProgressDDBUtil(USERPROGRESS_TABLE_NAME, AWS_REGION)
     user_id = json.loads(request.data)["user_id"]
     print(user_id)
@@ -61,6 +96,20 @@ def getUserProgressData():
 
 @trainspace_bp.route("/updateUserProgressData", methods=["POST"])
 def updateUserProgressData():
+    """
+    API Endpoint to update user progress data as the user progresses through the Learning Modules feature. We can identify
+    here if a user gets a question correct or not and update that progress within Dynamo Db
+
+    Params:
+      - user_id: Unique User id
+      - moduleId: What module did the user interact with
+      - sectionId: What section within the module did the user interact with
+      - questionId: What question did the user interact with
+
+    Results:
+      - 200: Dynamo DB update successful
+      - 400: Something went wrong in updating the user progress in learning modules
+    """
     requestData = json.loads(request.data)
     uid = requestData["user_id"]
     moduleID = str(requestData["moduleID"])

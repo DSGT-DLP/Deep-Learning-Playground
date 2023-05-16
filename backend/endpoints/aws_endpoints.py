@@ -19,6 +19,20 @@ aws_bp = Blueprint("aws", __name__)
 
 @aws_bp.route("/sendEmail", methods=["POST"])
 def send_email_route():
+    """
+    API Endpoint to send email notification via AWS SES.
+
+    This endpoint applies for users submitting the feedback form
+
+    Request Data:
+      - email_address: email address of the sender
+      - subject: Subject line of email
+      - body_text: Content of the email
+
+    Results:
+      - 200: Feedback form submitted successfully
+      - 400: Error in submitting feedback form
+    """
     # extract data
     request_data = json.loads(request.data)
     required_params = ["email_address", "subject", "body_text"]
@@ -47,6 +61,18 @@ def send_email_route():
 
 @aws_bp.route("/sendUserCodeEval", methods=["POST"])
 def send_user_code_eval():
+    """
+    API Endpoint that sends a user's custom data preprocessing code to an AWS lambda endpoint
+    that executes it
+
+    Params:
+     - data: Dataset the user wants to preprocess
+     - codeSnippet: preprocessing code
+
+    Results:
+     - 200: Preprocessing done successfully
+     - 400: Something went wrong in preprocessing the data with the user supplied code
+    """
     try:
         request_data = json.loads(request.data)
         data = request_data["data"]
@@ -77,6 +103,13 @@ def writeToQueue() -> str:
     """
     API Endpoint to write training request to SQS queue to be serviced by
     ECS Fargate training cluster
+
+    Params:
+      - JSON that contains information about the user's individual training request
+
+    Results:
+      - 200: Training request added to SQS Queue successfully
+      - 400: Something went wrong in adding user's training request to the queue
 
     """
     try:

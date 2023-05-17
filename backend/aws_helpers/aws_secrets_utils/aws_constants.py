@@ -9,7 +9,7 @@ ENV_KEYS = [
 ]
 
 FINAL_ENV_PATH = os.path.abspath(
-    os.path.join(os.getcwd(), "frontend", "playground-frontend", ".env")
+    os.path.join(os.getcwd(), "frontend", ".env")
 )
 
 SECRET_NAME = "frontend_env"

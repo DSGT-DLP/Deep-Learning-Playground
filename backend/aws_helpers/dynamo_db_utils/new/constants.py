@@ -1,9 +1,9 @@
 ALL_DYANMODB_TABLES = {
-    "TRAINSPACE": {
-        "partition_key": "uid",
-        "gsi": None
+    "trainspace": {
+        "partition_key": "trainspace_id",
+        "gsi": "uid"
     },
-    "DLP-FILE-UPLOAD-TABLE": {
+    "dlp-file-upload-table": {
         "partition_key": "s3_uri",
         "gsi": "uid"
     }

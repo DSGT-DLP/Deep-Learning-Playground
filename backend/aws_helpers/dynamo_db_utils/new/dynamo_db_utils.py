@@ -113,4 +113,4 @@ if __name__ == "__main__":
     # print(delete_dynamo_item("trainspace", {"trainspace_id": "blah"}))
     # exit()
     print(update_dynamo_item("trainspace", 
-                                      {"trainspace_id": "blah", "uid": "bleh", "created": datetime.now().isoformat()}))
+                                      {"trainspace_id": "blah", "created": datetime.now().isoformat()}))

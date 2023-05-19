@@ -51,7 +51,5 @@ if __name__ == "__main__":
     print(1)
     # print(getTrainspaceData("blah"))
     # exit()
-    print(updateTrainspaceData(
-                                      {
-                                          "trainspace_id": "blah",
+    print(updateStatus("blah", "TRAINING", {
                                           "created": datetime.now().isoformat()}))

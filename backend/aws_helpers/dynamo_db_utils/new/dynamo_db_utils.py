@@ -80,23 +80,36 @@ def update_dynamo_item(
         dict: Item from DynamoDB table in JSON format
 
     Raises:
-        ValueError: If table_name is not a valid table name
+        ValueError: If table_name is not a valid table name or if the partition key is in the update_items
         Exception: If DynamoDB get_item call fails for any reason, e.g., item not found
     """
+    # Validation steps
+    if table_name not in ALL_DYANMODB_TABLES.keys():
+        raise ValueError("Invalid table name: " + table_name)
+    partition_key = ALL_DYANMODB_TABLES[table_name]['partition_key']
+    if update_items.get(partition_key) is not None:
+        raise ValueError("update_items cannot have the partition key: " + partition_key)
+    
+    PREFIX = "#dlp__"
+
     # create update expression
-    update_expression = "SET " + ', '.join([f"{key} = :{key}" for key in update_items.keys()])
+    update_expression = "SET " + ', '.join([f"{PREFIX}{key} = :{key}" for key in update_items.keys()])
 
     # create expression attribute values
     expression_attribute_values = {f":{key}": value for key, value in update_items.items()}
 
-    print(keys, update_expression, expression_attribute_values)
+    # create expression attribute names to prevent reserved words error
+    expression_attribute_names = {f"{PREFIX}{key}": key for key in update_items.keys()}
+
+    print(323, update_expression, expression_attribute_values, expression_attribute_names)
 
     # Create item
     table = dynamodb.Table(table_name)
     response = table.update_item(
         Key=keys, 
         UpdateExpression=update_expression,
-        ExpressionAttributeValues=expression_attribute_values
+        ExpressionAttributeValues=expression_attribute_values,
+        ExpressionAttributeNames=expression_attribute_names
     )
     if (response['ResponseMetadata']['HTTPStatusCode'] != 200):
         raise Exception("Failed to delete item")

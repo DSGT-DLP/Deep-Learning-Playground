@@ -1,12 +1,12 @@
 import ImageDatasetStep from "../components/ImageDatasetStep";
 import ImageParametersStep from "../components/ImageParametersStep";
-// import ImageReviewStep from "../components/ImageReviewStep";
-// import ImageTrainspace from "../components/ImageTrainspace";
+import ImageReviewStep from "../components/ImageReviewStep";
+import ImageTrainspace from "../components/ImageTrainspace";
 
 export const TRAINSPACE_SETTINGS = {
   name: "Image",
   steps: ["DATASET", "PARAMETERS", "REVIEW"],
-//   component: ImageTrainspace,
+  component: ImageTrainspace,
 } as const;
 
 export const STEP_SETTINGS = {
@@ -238,6 +238,6 @@ export const STEP_SETTINGS = {
   REVIEW: {
     name: "Review",
     optional: false,
-    // component: ImageReviewStep,
+    component: ImageReviewStep,
   },
 } as const;

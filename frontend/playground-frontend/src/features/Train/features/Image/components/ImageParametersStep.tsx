@@ -67,12 +67,6 @@ const ImageParametersStep = ({
         state.trainspace.current as TrainspaceData<"PARAMETERS"> | undefined
     );
     const dispatch = useAppDispatch();
-    const { data } = trainspace
-      ? useGetColumnsFromDatasetQuery({
-          dataSource: "IMAGE",
-          dataset: trainspace.datasetData,
-        })
-      : { data: undefined };
     const {
       handleSubmit,
       formState: { errors, isDirty },
@@ -113,80 +107,9 @@ const ImageParametersStep = ({
     useEffect(() => {
       setIsModified(isDirty);
     }, [isDirty]);
-    if (!trainspace || !data) return <></>;
+    if (!trainspace) return <></>;
     return (
       <Stack spacing={3}>
-        <Controller
-          control={control}
-          name="targetCol"
-          rules={{ required: true }}
-          render={({ field: { ref, onChange, ...field } }) => (
-            <Autocomplete
-              {...field}
-              onChange={(_, value) => onChange(value)}
-              disableClearable
-              autoComplete
-              autoHighlight
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  inputRef={ref}
-                  required
-                  label="Target Column"
-                  placeholder="Target"
-                  error={errors.targetCol ? true : false}
-                />
-              )}
-              options={data}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="features"
-          rules={{ required: true }}
-          render={({ field: { ref, onChange, ...field } }) => (
-            <Autocomplete
-              {...field}
-              multiple
-              autoComplete
-              autoHighlight
-              disableCloseOnSelect
-              onChange={(_, value) => onChange(value)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  inputRef={ref}
-                  required
-                  label="Feature Columns"
-                  placeholder="Features"
-                  error={errors.features ? true : false}
-                />
-              )}
-              options={data}
-            />
-          )}
-        />
-        <FormControl>
-          <FormLabel>Problem Type</FormLabel>
-          <Controller
-            name="problemType"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
-              <RadioGroup row value={value} onChange={onChange}>
-                {STEP_SETTINGS["PARAMETERS"].problemTypes.map((problemType) => (
-                  <FormControlLabel
-                    key={problemType.value}
-                    value={problemType.value}
-                    control={<Radio />}
-                    label={problemType.label}
-                  />
-                ))}
-              </RadioGroup>
-            )}
-          />
-        </FormControl>
         <Controller
           name="criterion"
           control={control}
@@ -256,29 +179,12 @@ const ImageParametersStep = ({
             />
           )}
         />
-        <FormControl>
-          <FormLabel>Test Size</FormLabel>
-          <Controller
-            name="testSize"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
-              <Slider
-                step={0.01}
-                value={value}
-                onChange={onChange}
-                min={0}
-                max={1}
-                valueLabelDisplay="auto"
-              />
-            )}
-          />
-        </FormControl>
+        //Train and Test Transforms
         <LayersDnd control={control} errors={errors} />
         {renderStepperButtons((trainspaceData) => {
           handleSubmit((data) => {
             dispatch(
-              updateTabularTrainspaceData({
+              updateImageTrainspaceData({
                 current: {
                   ...trainspaceData,
                   parameterData: data,

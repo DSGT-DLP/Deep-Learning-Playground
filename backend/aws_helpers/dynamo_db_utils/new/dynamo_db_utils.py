@@ -1,9 +1,8 @@
 import boto3
 from backend.aws_helpers.dynamo_db_utils.new.constants import ALL_DYANMODB_TABLES
-import random
 from datetime import datetime
 
-dynamodb = boto3.client('dynamodb')
+dynamodb = boto3.resource('dynamodb')
 
 class DynamoDbUtils():
     def __init__(self):
@@ -11,7 +10,7 @@ class DynamoDbUtils():
 
     def get_item(self, table_name: str, partition_key: str) -> dict:
         """
-        Get item from DynamoDB table by key
+        Get item from DynamoDB table by key, raises exception if item does not exist
 
         Args:
             table_name (str): Name of DynamoDB table
@@ -30,18 +29,19 @@ class DynamoDbUtils():
         
         # Get item
         item_key = {
-            ALL_DYANMODB_TABLES[table_name]['partition_key']: {'S': partition_key}
+            ALL_DYANMODB_TABLES[table_name]['partition_key']: partition_key
         }
-        response = dynamodb.get_item(TableName=table_name, Key=item_key)
+        table = dynamodb.Table(table_name)
+        response = table.get_item(Key=item_key)
         if response.get('Item') is None:
             raise Exception("Item not found")
         
         return response['Item']
     
 
-    def create_item(self, table_name: str, input_item: dict) -> dict:
+    def create_item(self, table_name: str, input_item: dict) -> bool:
         """
-        Get item from DynamoDB table by key
+        Creates item in DynamoDB table, replaces item if partition_key already exists
 
         Args:
             table_name (str): Name of DynamoDB table
@@ -60,23 +60,36 @@ class DynamoDbUtils():
         if input_item.get(ALL_DYANMODB_TABLES[table_name]['partition_key']) is None:
             raise ValueError("Item must have the partition key")
 
-        item = dict()
-        for key in input_item.keys():
-            value = input_item[key]
-            if type(value) == str:
-                item[key] = {'S': value}
-            elif type(value) == float or type(value) == int:
-                item[key] = {'N': value}
-            else:
-                raise ValueError("Only number and strings accepted for dynamoDB. Invalid value for key: " + key)
+        item = { k: v for k, v in input_item.items() }
         # Create item
-        response = dynamodb.put_item(TableName=table_name, Item=item)
-        return response
+        table = dynamodb.Table(table_name)
+        response = table.put_item(Item=item)
+        if (response['ResponseMetadata']['HTTPStatusCode'] != 200):
+            raise Exception("Failed to delete item")
+        return True
+    
 
+    def update_item(self, table_name: str, input_item: dict) -> bool:
+        """
+        Updates item in DynamoDB table, creates if partition_key does not exist
+
+        Args:
+            table_name (str): Name of DynamoDB table
+            input_item (dict): object to insert into table in the form of a dictionary e.g. {'id': 'fesd', 'name': 'bob'}. Values can only be strings or numbers
+        
+        Returns:
+            dict: Item from DynamoDB table in JSON format
+
+        Raises:
+            ValueError: If table_name is not a valid table name
+            Exception: If DynamoDB get_item call fails for any reason, e.g., item not found
+        """
+        return self.create_item(table_name, input_item)
+    
 
     def delete_item(self, table_name: str, partition_key: str) -> bool:
         """
-        Delete item from DynamoDB table by key
+        Deletes item from DynamoDB table by key, does nothing if item does not exist
 
         Args:
             table_name (str): Name of DynamoDB table
@@ -95,9 +108,10 @@ class DynamoDbUtils():
         
         # Delete item
         item_key = {
-            ALL_DYANMODB_TABLES[table_name]['partition_key']: {'S': partition_key}
+            ALL_DYANMODB_TABLES[table_name]['partition_key']: partition_key
         }
-        response = dynamodb.delete_item(TableName=table_name, Key=item_key)
+        table = dynamodb.Table(table_name)
+        response = table.delete_item(Key=item_key)
         if (response['ResponseMetadata']['HTTPStatusCode'] != 200):
             raise Exception("Failed to delete item")
         return True
@@ -106,5 +120,6 @@ class DynamoDbUtils():
 
 if __name__ == "__main__":
     print(1)
-    print(DynamoDbUtils().create_item("trainspace", 
-                                      {"trainspace_id": str(random.random()), "uid": "bleh", "created": datetime.now().isoformat()}))
+    # print(DynamoDbUtils().update_item("trainspace", "bla"))
+    print(DynamoDbUtils().update_item("trainspace", 
+                                      {"trainspace_id": "blah", "uid": "bleh", "created": datetime.now().isoformat()}))

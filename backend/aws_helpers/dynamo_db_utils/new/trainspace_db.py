@@ -49,7 +49,7 @@ def updateStatus(trainspace_id: str, status: str, entryData: dict = None) -> str
 
 if __name__ == "__main__":
     print(1)
-    # print(getTrainspaceData("blah"))
-    # exit()
+    print(getAllUserTrainspaceData("bleh"))
+    exit()
     print(updateStatus("blah", "TRAINING", {
                                           "created": datetime.now().isoformat()}))

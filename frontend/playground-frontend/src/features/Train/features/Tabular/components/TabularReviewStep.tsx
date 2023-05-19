@@ -3,8 +3,10 @@ import { TrainspaceData } from "../types/tabularTypes";
 import { Stack, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import { updateTabularTrainspaceData } from "../redux/tabularActions";
-import TitleText from "@/common/components/TitleText";
+import { ReviewData } from "../types/tabularTypes";
+import { useForm } from "react-hook-form";
 import { TextField } from "@mui/material";
+import { Controller } from "react-hook-form";
 
 const TabularReviewStep = ({
   renderStepperButtons,
@@ -15,11 +17,14 @@ const TabularReviewStep = ({
   ) => React.ReactNode;
   setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [email, setEmail] = React.useState("");
-  const [phoneNumber, setPhoneNumber] = React.useState("");
   const trainspace = useAppSelector(
     (state) => state.trainspace.current as TrainspaceData<"REVIEW"> | undefined
   );
+  const {
+    handleSubmit,
+    formState: { errors, isDirty },
+    control,
+  } = useForm<ReviewData>();
   const dispatch = useAppDispatch();
   if (!trainspace) return <></>;
   useEffect(() => {
@@ -31,24 +36,32 @@ const TabularReviewStep = ({
       <Typography>{`Is Default?: ${trainspace.datasetData.isDefaultDataset}`}</Typography>
       <Typography>{`Target Column: ${trainspace.parameterData.targetCol}`}</Typography>
       <Typography>{`Feature Columns: ${trainspace.parameterData.features.join()}`}</Typography>
-      <TextField
-        label="Phone Number"
-        onChange={(e) => setPhoneNumber(e.target.value)}
+      <Controller
+        control={control}
+        name="notificationPhoneNumber"
+        render={({ field: { onChange } }) => (
+          <TextField label="Phone Number" onChange={onChange} />
+        )}
       />
-      <TextField
-        label="Email Address"
-        onChange={(e) => setEmail(e.target.value)}
+      <Controller
+        control={control}
+        name="notificationEmail"
+        render={({ field: { onChange } }) => (
+          <TextField label="Email Address" onChange={onChange} />
+        )}
       />
       {renderStepperButtons((trainspaceData) => {
-        dispatch(
-          updateTabularTrainspaceData({
-            current: {
-              ...trainspaceData,
-              reviewData: {},
-            },
-            stepLabel: "REVIEW",
-          })
-        );
+        handleSubmit((data) => {
+          dispatch(
+            updateTabularTrainspaceData({
+              current: {
+                ...trainspaceData,
+                reviewData: data,
+              },
+              stepLabel: "REVIEW",
+            })
+          );
+        })();
       })}
     </Stack>
   );

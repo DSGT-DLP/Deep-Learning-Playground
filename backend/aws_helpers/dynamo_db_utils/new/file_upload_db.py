@@ -32,7 +32,7 @@ def getTrainspaceData(trainspace_id: str) -> dict[str, str or int]:
     @param execution_id: The execution_id of the entry to be retrieved
     @return: A JSON string of the entry retrieved from the table
     """
-    record = get_dynamo_item_by_id(TABLE_NAME, trainspace_id)
+    record = get_dynamo_item_by_id(TABLE_NAME, {"trainspace_id": trainspace_id})
     return record
 
 
@@ -82,18 +82,7 @@ def createTrainspaceData(trainspace_data: TrainspaceData) -> bool:
 
 if __name__ == "__main__":
     print(1)
-    print(2, getTrainspaceData("e4d46926-1eaa-42b0-accb-41a3912038e4"))
+    print(2, getAllUserTrainspaceData("e4d46926-1eaa-42b0-accb-41a3912038e4"))
     print(3, getAllUserTrainspaceData("efds"))
     print(4, updateStatus("blah", "QUEUED", {"created": datetime.now().isoformat()}))
-    print(5, createTrainspaceData(
-        TrainspaceData(
-            trainspace_id=str(random.random()),
-            created=datetime.now().isoformat(),
-            data_source="TABULAR",
-            dataset_data={ "name" : { "S" : "IRIS" }, "is_default_dataset" : { "BOOL" : True } },
-            name=str(random.random()),
-            parameters_data={ "features" : { "L" : [ { "S" : "sepal length (cm)" }, { "S" : "sepal width (cm)" }, { "S" : "petal length (cm)" }, { "S" : "petal width (cm)" } ] }, "criterion" : { "S" : "CELOSS" }, "batch_size" : { "N" : "20" }, "test_size" : { "N" : "0.2" }, "target_col" : { "S" : "target" }, "layers" : { "L" : [ { "M" : { "value" : { "S" : "LINEAR" }, "parameters" : { "L" : [ { "N" : "10" }, { "N" : "3" } ] } } }, { "M" : { "value" : { "S" : "RELU" }, "parameters" : { "L" : [  ] } } }, { "M" : { "value" : { "S" : "LINEAR" }, "parameters" : { "L" : [ { "N" : "3" }, { "N" : "10" } ] } } }, { "M" : { "value" : { "S" : "SOFTMAX" }, "parameters" : { "L" : [ { "N" : "-1" } ] } } } ] }, "problem_type" : { "S" : "CLASSIFICATION" }, "shuffle" : { "BOOL" : True }, "epochs" : { "N" : "5" }, "optimizer_name" : { "S" : "SGD" } },
-            review_data={ "notification_phone_number" : { "NULL" : True }, "notification_email" : { "NULL" : True } },
-            status="QUEUED",
-            uid="bleh"
-        )))
+    print(5, createTrainspaceData(TrainspaceData(str(random.random()), "bleh", "bleh", "bleh")))

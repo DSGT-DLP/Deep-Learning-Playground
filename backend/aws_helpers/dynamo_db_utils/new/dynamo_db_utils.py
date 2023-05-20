@@ -215,7 +215,7 @@ if __name__ == "__main__":
         5,
         update_dynamo_item(
             "trainspace",
-            {"trainspace_id": "blah"},
+            {"uid": "ergsdf"},
             {"uid": "blah", "created": datetime.now().isoformat()},
         ),
     )

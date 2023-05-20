@@ -16,7 +16,7 @@ const trainspaceApi = backendApi
         { dataSource: DATA_SOURCE }
       >({
         query: ({ dataSource }) => ({
-          url: "/api/getUserDatasetFilesData",
+          url: "/api/s3/getUserDatasetFilesData",
           method: "POST",
           body: {
             user: auth.currentUser,
@@ -45,7 +45,7 @@ const trainspaceApi = backendApi
       >({
         queryFn: async ({ dataSource, file }, _, __, baseQuery) => {
           const postObjResponse = await baseQuery({
-            url: "/api/getUserDatasetFileUploadPresignedPostObj",
+            url: "/api/s3/getUserDatasetFileUploadPresignedPostObj",
             method: "POST",
             body: {
               name: file.name,
@@ -89,8 +89,8 @@ const trainspaceApi = backendApi
       >({
         query: ({ dataSource, dataset }) => ({
           url: dataset.isDefaultDataset
-            ? "/api/defaultDataset"
-            : "/api/getColumnsFromDatasetFile",
+            ? "/api/dataset/defaultDataset"
+            : "/api/dataset/getColumnsFromDatasetFile",
           method: "POST",
           body: {
             data_source: dataSource.toLowerCase(),

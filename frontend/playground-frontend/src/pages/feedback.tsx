@@ -1,6 +1,6 @@
 // @flow
 import React, { useState } from "react";
-//import type { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import EmailInput from "@/common/components/EmailInput";
 import TitleText from "@/common/components/TitleText";
@@ -9,15 +9,14 @@ import Spacer from "@/common/components/Spacer";
 import ReCAPTCHA from "react-google-recaptcha";
 
 import { COLORS, GENERAL_STYLES } from "../constants";
-//import { toast } from "react-toastify";
-//import { sendToBackend } from "../helper_functions/TalkWithBackend";
-//import { InlineWidget } from "react-calendly";
+import { toast } from "react-toastify";
+import { InlineWidget } from "react-calendly";
 import NavbarMain from "@/common/components/NavBarMain";
+import { useLazySendFeedbackDataQuery } from "@/features/Feedback/redux/feedbackApi";
 import Footer from "@/common/components/Footer";
 
-//const CALENDLY_URL = "https://calendly.com/dlp-dsgt/30min";
+const CALENDLY_URL = "https://calendly.com/dlp-dsgt/30min";
 
-/*
 function renderSuccessfulFeedbackSubmit(): ReactNode {
   return (
     <>
@@ -51,7 +50,7 @@ function renderSuccessfulFeedbackSubmit(): ReactNode {
       </div>
     </>
   );
-}*/
+}
 
 const Feedback = () => {
   const [email, setEmail] = useState("");
@@ -60,8 +59,8 @@ const Feedback = () => {
   const [feedback, setFeedback] = useState("");
   const [recaptcha, setRecaptcha] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [successful] = useState(false);
-
+  const [successful, setSuccessful] = useState(false);
+  const [sendFeedback, { data }] = useLazySendFeedbackDataQuery();
   const onClickSubmit = async () => {
     setSubmitted(true);
     if (
@@ -70,10 +69,19 @@ const Feedback = () => {
       email.trim() &&
       feedback.trim()
     ) {
-      /*
-      setSuccessful(
-        await send_feedback_mail(firstName, lastName, email, feedback)
-      );*/
+      if (recaptcha != "") {
+        const emailResult = await sendFeedback({
+          email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
+          subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
+          body_text: feedback,
+        });
+        if (!emailResult.isSuccess) {
+          toast.error(emailResult.data.message);
+        }
+        setSuccessful(emailResult.isSuccess);
+      } else {
+        toast.error("Please complete the ReCAPTCHA");
+      }
     }
   };
 
@@ -81,9 +89,8 @@ const Feedback = () => {
     <>
       <NavbarMain />
       {successful ? (
-        <></>
+        <>{renderSuccessfulFeedbackSubmit()}</>
       ) : (
-        //renderSuccessfulFeedbackSubmit()
         <>
           <div id="header-section">
             <h1 className="header">Deep Learning Playground Feedback</h1>
@@ -170,26 +177,6 @@ const Feedback = () => {
     </>
   );
 };
-
-/*
-const send_feedback_mail = async (
-  firstName: string,
-  lastName: string,
-  email: string,
-  feedback: string
-) => {
-  
-  const emailResult = await sendToBackend("sendEmail", {
-    email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
-    subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,
-    body_text: feedback,
-  });
-
-  if (!emailResult.success) {
-    toast.error(emailResult.message);
-  }
-  return emailResult.success;
-};*/
 
 export default Feedback;
 

@@ -1,9 +1,10 @@
 import Footer from "@/common/components/Footer";
 import NavbarMain from "@/common/components/NavBarMain";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { Data, XAxisName, YAxisName } from "plotly.js";
 import React from "react";
-import Plot from "react-plotly.js";
+const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
 const TrainSpace = () => {
   const { train_space_id } = useRouter().query;
@@ -178,6 +179,7 @@ const TrainSpace = () => {
         }}
         config={{ responsive: true }}
       />
+
       <Plot
         data={[
           {

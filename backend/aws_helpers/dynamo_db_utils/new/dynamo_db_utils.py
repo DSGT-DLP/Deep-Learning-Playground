@@ -54,10 +54,12 @@ def get_dynamo_items_by_gsi(table_name: str, gsi_value: int or str) -> dict:
     # Validation steps
     if table_name not in ALL_DYANMODB_TABLES.keys():
         raise ValueError("Invalid table name: " + table_name)
+    gsi_key = ALL_DYANMODB_TABLES[table_name].get("gsi")
+    if gsi_key is None:
+        raise Exception("Table does not have a GSI")
 
     # Make query params
     PREFIX = "#dlp__"
-    gsi_key = ALL_DYANMODB_TABLES[table_name]["gsi"]
 
     # create update expression
     key_condition_expression = f"{PREFIX}{gsi_key} = :{gsi_key}"

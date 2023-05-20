@@ -46,7 +46,7 @@ def updateTrainspaceData(trainspace_id: str, requestData: dict) -> bool:
     return update_dynamo_item(TABLE_NAME, trainspace_id, requestData)
 
 
-def getAllUserTrainspaceData(user_id: str) -> dict:
+def getAllUserTrainspaceData(user_id: str) -> list[dict]:
     """
     Retrieves an entry from the `execution-table` DynamoDB table given an `execution_id`. Example output: {"execution_id": "blah", "user_id": "blah", "name": "blah", "timestamp": "blah", "data_source": "TABULAR", "status": "QUEUED", "progress": 1}
 

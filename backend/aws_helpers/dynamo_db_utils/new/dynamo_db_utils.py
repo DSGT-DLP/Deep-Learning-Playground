@@ -36,20 +36,20 @@ def get_dynamo_item_by_id(table_name: str, partition_key_value: str) -> dict:
     return response["Item"]
 
 
-def get_dynamo_items_by_gsi(table_name: str, gsi_value: int or str) -> dict:
+def get_dynamo_items_by_gsi(table_name: str, gsi_value: int or str) -> list[dict]:
     """
-    Get items from DynamoDB table that match all keys, raises exception if item does not exist
+    Get items from DynamoDB table that match the given GSI value, returns [] if no items match
 
     Args:
         table_name (str): Name of DynamoDB table
-        keys (dict): Keys of item to match
+        gsi_value (int or str): Value of GSI to match
 
     Returns:
-        dict: One item from DynamoDB table in JSON format
+        list[dict]: One array containing all matching items from DynamoDB table in JSON format
 
     Raises:
         ValueError: If table_name is not a valid table name
-        Exception: If DynamoDB get_item call fails for any reason, e.g., item not found
+        Exception: If DynamoDB get_item call fails for any reason
     """
     # Validation steps
     if table_name not in ALL_DYANMODB_TABLES.keys():
@@ -78,8 +78,6 @@ def get_dynamo_items_by_gsi(table_name: str, gsi_value: int or str) -> dict:
         ExpressionAttributeValues=expression_attribute_values,
         ExpressionAttributeNames=expression_attribute_names,
     )
-    if response.get("Items") is None:
-        raise Exception("Item not found")
 
     return response["Items"]
 
@@ -93,7 +91,7 @@ def create_dynamo_item(table_name: str, input_item: dict) -> bool:
         input_item (dict): object to insert into table in the form of a dictionary e.g. {'id': 'fesd', 'name': 'bob'}.
 
     Returns:
-        dict: Item from DynamoDB table in JSON format
+        bool: True if item was created successfully
 
     Raises:
         ValueError: If table_name is not a valid table name, or the input dict is missing the partition key or gsi key (if it exists)
@@ -125,11 +123,11 @@ def update_dynamo_item(
 
     Args:
         table_name (str): Name of DynamoDB table
-        filters (dict): dict containing filtering columns and values to match in the form of a dictionary e.g. {'id': 'fesd'}
-        update_object (dict): dict containing the columns and values to update into table in the form of a dictionary e.g. {'name': 'bob'}
+        partition_key_value (str): Value of partition key to match
+        update_object (dict): dict containing the columns and values to update into table in the form of a dictionary e.g. {'name': 'bob'}, must not contain partition key
 
     Returns:
-        dict: Item from DynamoDB table in JSON format
+        bool: True if item was updated successfully
 
     Raises:
         ValueError: If table_name is not a valid table name
@@ -177,7 +175,7 @@ def delete_dynamo_item(table_name: str, partition_key_value: str or int) -> bool
 
     Args:
         table_name (str): Name of DynamoDB table
-        key (str): Key of item to delete
+        partition_key_value (str): Partition key value of item to delete
 
     Returns:
         true if the item was created successfully

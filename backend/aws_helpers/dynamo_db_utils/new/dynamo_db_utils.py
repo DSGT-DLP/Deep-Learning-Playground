@@ -116,7 +116,7 @@ def create_dynamo_item(table_name: str, input_item: dict) -> bool:
 
 
 def update_dynamo_item(
-    table_name: str, filters: dict[str, str or int], update_object: dict
+    table_name: str, partition_key_value: str or int, update_object: dict
 ) -> bool:
     """
     Updates item in DynamoDB table, creates if partition_key does not exist
@@ -156,9 +156,10 @@ def update_dynamo_item(
     expression_attribute_names = {f"{PREFIX}{key}": key for key in update_object.keys()}
 
     # Create item
+    partition_key = ALL_DYANMODB_TABLES[table_name]["partition_key"]
     table = dynamodb.Table(table_name)
     response = table.update_item(
-        Key=filters,
+        Key={partition_key: partition_key_value},
         UpdateExpression=update_expression,
         ExpressionAttributeValues=expression_attribute_values,
         ExpressionAttributeNames=expression_attribute_names,
@@ -215,7 +216,7 @@ if __name__ == "__main__":
         5,
         update_dynamo_item(
             "trainspace",
-            {"uid": "ergsdf"},
+            "0.6637985062827166",
             {"uid": "blah", "created": datetime.now().isoformat()},
         ),
     )

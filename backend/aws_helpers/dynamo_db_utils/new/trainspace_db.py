@@ -1,7 +1,13 @@
-from backend.aws_helpers.dynamo_db_utils.new.dynamo_db_utils import get_dynamo_item, create_dynamo_item, update_dynamo_item, delete_dynamo_item
+from backend.aws_helpers.dynamo_db_utils.new.dynamo_db_utils import (
+    get_dynamo_item_by_id,
+    create_dynamo_item,
+    update_dynamo_item,
+    delete_dynamo_item,
+)
 from datetime import datetime
 
-TABLE_NAME = 'trainspace'
+TABLE_NAME = "trainspace"
+
 
 def getTrainspaceData(trainspace_id: str) -> dict[str, str or int]:
     """
@@ -10,7 +16,7 @@ def getTrainspaceData(trainspace_id: str) -> dict[str, str or int]:
     @param execution_id: The execution_id of the entry to be retrieved
     @return: A JSON string of the entry retrieved from the table
     """
-    record = get_dynamo_item(TABLE_NAME, {'trainspace_id': trainspace_id})
+    record = get_dynamo_item_by_id(TABLE_NAME, {"trainspace_id": trainspace_id})
     return record
 
 
@@ -20,7 +26,7 @@ def updateTrainspaceData(trainspace_id: str, requestData: dict) -> bool:
     @param requestData: A dictionary containing the execution_id and other table attributes to be updated, with user_id as a required field
     @return a success status message if the update is successful
     """
-    return update_dynamo_item(TABLE_NAME, {'trainspace_id': trainspace_id},requestData)
+    return update_dynamo_item(TABLE_NAME, {"trainspace_id": trainspace_id}, requestData)
 
 
 def getAllUserTrainspaceData(user_id: str) -> dict[str, str or int]:
@@ -30,8 +36,9 @@ def getAllUserTrainspaceData(user_id: str) -> dict[str, str or int]:
     @param execution_id: The execution_id of the entry to be retrieved
     @return: A JSON string of the entry retrieved from the table
     """
-    response = get_dynamo_item(TABLE_NAME, {'uid': user_id})
+    response = get_dynamo_item_by_id(TABLE_NAME, {"uid": user_id})
     return response
+
 
 def updateStatus(trainspace_id: str, status: str, entryData: dict = None) -> str:
     """
@@ -43,7 +50,7 @@ def updateStatus(trainspace_id: str, status: str, entryData: dict = None) -> str
     """
     if entryData is None:
         entryData = {}
-    entryData['status'] = status
+    entryData["status"] = status
     return updateTrainspaceData(trainspace_id, entryData)
 
 
@@ -51,5 +58,4 @@ if __name__ == "__main__":
     print(1)
     print(getAllUserTrainspaceData("bleh"))
     exit()
-    print(updateStatus("blah", "TRAINING", {
-                                          "created": datetime.now().isoformat()}))
+    print(updateStatus("blah", "TRAINING", {"created": datetime.now().isoformat()}))

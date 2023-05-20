@@ -12,7 +12,7 @@ TABLE_NAME = "userprogress_table"
 
 @dataclass
 class UserProgressData:
-    """Data class to hold the attribute values of a record of the execution-table DynamoDB table"""
+    """Data class to hold the attribute values of a record of the userprogress-table DynamoDB table"""
 
     uid: str
     progressData: dict
@@ -20,7 +20,7 @@ class UserProgressData:
 
 def getUserProgressData(uid: str) -> dict:
     """
-    Retrieves an entry from the `execution-table` DynamoDB table given an `uid`. Example output: {"uid": "blah", "uid": "blah", "name": "blah", "timestamp": "blah", "data_source": "TABULAR", "status": "QUEUED", "progress": 1}
+    Retrieves an entry from the `userprogress-table` DynamoDB table given an `uid`.
 
     @param uid: The uid of the entry to be retrieved
     @return: A JSON string of the entry retrieved from the table
@@ -31,19 +31,21 @@ def getUserProgressData(uid: str) -> dict:
 
 def updateUserProgressData(uid: str, requestData: dict) -> bool:
     """
-    Updates an entry from the `execution-table` DynamoDB table given an `uid`.
-    @param requestData: A dictionary containing the uid and other table attributes to be updated, with uid as a required field
-    @return a success status message if the update is successful
+    Updates an entry from the `userprogress-table` DynamoDB table given an `uid`.
+
+    @param uid: The uid of the entry to be updated
+    @param requestData: A dictionary containing the other table attributes to be updated, not including uid
+    @return True if the update is successful
     """
     return update_dynamo_item(TABLE_NAME, uid, requestData)
 
 
 def createUserProgressData(execution_data: UserProgressData) -> bool:
     """
-    Create a new entry corresponding to the given uid.
+    Create a new entry or replaces an existing entry table according to the `uid`.
 
-    @param **kwargs: uid and other table attributes to be created to the new entry e.g. uid, if does not exist
-    @return: A JSON string of the entry retrieved or created from the table
+    @param execution_data: uid and other table attributes to be created or updated if the entry already exists
+    @return: True if the creation or update is successful
     """
 
     return create_dynamo_item(TABLE_NAME, execution_data.__dict__)

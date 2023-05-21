@@ -1,5 +1,8 @@
 import Footer from "@/common/components/Footer";
 import NavbarMain from "@/common/components/NavBarMain";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { Data, XAxisName, YAxisName } from "plotly.js";
@@ -91,147 +94,180 @@ const TrainSpace = () => {
   return (
     <div style={{ height: "100vh" }}>
       <NavbarMain />
-      <h1>{train_space_id}</h1>
-      <Plot
-        data={[
-          {
-            name: "Train accuracy",
-            x: data.dl_results.map((x) => x.epoch),
-            y: data.dl_results.map((x) => x["train_acc"]),
-            type: "scatter",
-            mode: "markers",
-            marker: { color: "red", size: 10 },
-          },
-          {
-            name: "Test accuracy",
-            x: data.dl_results.map((x) => x.epoch),
-            y: data.dl_results.map((x) => x["val/test acc"]),
-            type: "scatter",
-            mode: "markers",
-            marker: { color: "blue", size: 10 },
-          },
-        ]}
-        layout={{
-          width: 750,
-          height: 500,
-          xaxis: { title: "Epoch Number" },
-          yaxis: { title: "Accuracy" },
-          title: "Train vs. Test Accuracy for your Deep Learning Model",
-          showlegend: true,
-        }}
-        config={{ responsive: true }}
-      />
-      <Plot
-        data={[
-          {
-            name: "Train loss",
-            x: data.dl_results.map((x) => x.epoch),
-            y: data.dl_results.map((x) => x.train_loss),
-            type: "scatter",
-            mode: "markers",
-            marker: { color: "red", size: 10 },
-          },
-          {
-            name: "Test loss",
-            x: data.dl_results.map((x) => x.epoch),
-            y: data.dl_results.map((x) => x.test_loss),
-            type: "scatter",
-            mode: "markers",
-            marker: { color: "blue", size: 10 },
-          },
-        ]}
-        layout={{
-          width: 750,
-          height: 500,
-          xaxis: { title: "Epoch Number" },
-          yaxis: { title: "Loss" },
-          title: "Train vs. Test Loss for your Deep Learning Model",
-          showlegend: true,
-        }}
-        config={{ responsive: true }}
-      />
-      <Plot
-        data={[
-          {
-            name: "baseline",
-            x: [0, 1],
-            y: [0, 1],
-            type: "scatter",
-            marker: { color: "grey" },
-            line: {
-              dash: "dash",
-            },
-          },
-          ...(data.auxiliary_outputs.AUC_ROC_curve_data.map((x) => ({
-            name: `(AUC: ${x[2]})`,
-            x: x[0] as number[],
-            y: x[1] as number[],
-            type: "scatter",
-          })) as Data[]),
-        ]}
-        layout={{
-          width: 750,
-          height: 500,
-          xaxis: { title: "False Positive Rate" },
-          yaxis: { title: "True Positive Rate" },
-          title: "AUC/ROC Curves for your Deep Learning Model",
-          showlegend: true,
-        }}
-        config={{ responsive: true }}
-      />
-
-      <Plot
-        data={[
-          {
-            z: data.auxiliary_outputs.confusion_matrix,
-            type: "heatmap",
-            colorscale: [
-              [0, "#e6f6fe"],
-              [1, "#003058"],
-            ],
-          },
-        ]}
-        layout={{
-          title: "Confusion Matrix (Last Epoch)",
-          xaxis: {
-            title: "Predicted",
-          },
-          yaxis: {
-            title: "Actual",
-            autorange: "reversed",
-          },
-          showlegend: true,
-          width: 750,
-          height: 750,
-          annotations: data.auxiliary_outputs.confusion_matrix
-            .map((row, i) =>
-              row.map((_, j) => ({
-                xref: "x1" as XAxisName,
-                yref: "y1" as YAxisName,
-                x: j,
-                y:
-                  (i + data.auxiliary_outputs.confusion_matrix.length - 1) %
-                  data.auxiliary_outputs.confusion_matrix.length,
-                text: data.auxiliary_outputs.confusion_matrix[
-                  (i + data.auxiliary_outputs.confusion_matrix.length - 1) %
-                    data.auxiliary_outputs.confusion_matrix.length
-                ][j].toString(),
-                font: {
-                  color:
-                    data.auxiliary_outputs.confusion_matrix[
-                      (i + data.auxiliary_outputs.confusion_matrix.length - 1) %
-                        data.auxiliary_outputs.confusion_matrix.length
-                    ][j] > 0
-                      ? "white"
-                      : "black",
-                },
-                showarrow: false,
-              }))
-            )
-            .flat(),
-        }}
-      />
-      {/*<Footer />*/}
+      <Container>
+        <h1>{train_space_id}</h1>
+        <Grid container spacing={2}>
+          <Grid item>
+            <Paper>
+              <Plot
+                data={[
+                  {
+                    name: "Train accuracy",
+                    x: data.dl_results.map((x) => x.epoch),
+                    y: data.dl_results.map((x) => x["train_acc"]),
+                    type: "scatter",
+                    mode: "markers",
+                    marker: { color: "red", size: 10 },
+                  },
+                  {
+                    name: "Test accuracy",
+                    x: data.dl_results.map((x) => x.epoch),
+                    y: data.dl_results.map((x) => x["val/test acc"]),
+                    type: "scatter",
+                    mode: "markers",
+                    marker: { color: "blue", size: 10 },
+                  },
+                ]}
+                layout={{
+                  height: 350,
+                  width: 525,
+                  xaxis: { title: "Epoch Number" },
+                  yaxis: { title: "Accuracy" },
+                  title: "Train vs. Test Accuracy for your Deep Learning Model",
+                  showlegend: true,
+                  paper_bgcolor: "rgba(0,0,0,0)",
+                  plot_bgcolor: "rgba(0,0,0,0)",
+                }}
+                config={{ responsive: true }}
+              />
+            </Paper>
+          </Grid>
+          <Grid item>
+            <Paper>
+              <Plot
+                data={[
+                  {
+                    name: "Train loss",
+                    x: data.dl_results.map((x) => x.epoch),
+                    y: data.dl_results.map((x) => x.train_loss),
+                    type: "scatter",
+                    mode: "markers",
+                    marker: { color: "red", size: 10 },
+                  },
+                  {
+                    name: "Test loss",
+                    x: data.dl_results.map((x) => x.epoch),
+                    y: data.dl_results.map((x) => x.test_loss),
+                    type: "scatter",
+                    mode: "markers",
+                    marker: { color: "blue", size: 10 },
+                  },
+                ]}
+                layout={{
+                  height: 350,
+                  width: 525,
+                  xaxis: { title: "Epoch Number" },
+                  yaxis: { title: "Loss" },
+                  title: "Train vs. Test Loss for your Deep Learning Model",
+                  showlegend: true,
+                  paper_bgcolor: "rgba(0,0,0,0)",
+                  plot_bgcolor: "rgba(0,0,0,0)",
+                }}
+                config={{ responsive: true }}
+              />
+            </Paper>
+          </Grid>
+          <Grid item>
+            <Paper>
+              <Plot
+                data={[
+                  {
+                    name: "baseline",
+                    x: [0, 1],
+                    y: [0, 1],
+                    type: "scatter",
+                    marker: { color: "grey" },
+                    line: {
+                      dash: "dash",
+                    },
+                  },
+                  ...(data.auxiliary_outputs.AUC_ROC_curve_data.map((x) => ({
+                    name: `(AUC: ${x[2]})`,
+                    x: x[0] as number[],
+                    y: x[1] as number[],
+                    type: "scatter",
+                  })) as Data[]),
+                ]}
+                layout={{
+                  height: 350,
+                  width: 525,
+                  xaxis: { title: "False Positive Rate" },
+                  yaxis: { title: "True Positive Rate" },
+                  title: "AUC/ROC Curves for your Deep Learning Model",
+                  showlegend: true,
+                  paper_bgcolor: "rgba(0,0,0,0)",
+                  plot_bgcolor: "rgba(0,0,0,0)",
+                }}
+                config={{ responsive: true }}
+              />
+            </Paper>
+          </Grid>
+          <Grid item>
+            <Paper>
+              <Plot
+                data={[
+                  {
+                    z: data.auxiliary_outputs.confusion_matrix,
+                    type: "heatmap",
+                    colorscale: [
+                      [0, "#e6f6fe"],
+                      [1, "#003058"],
+                    ],
+                  },
+                ]}
+                layout={{
+                  height: 525,
+                  width: 525,
+                  title: "Confusion Matrix (Last Epoch)",
+                  xaxis: {
+                    title: "Predicted",
+                  },
+                  yaxis: {
+                    title: "Actual",
+                    autorange: "reversed",
+                  },
+                  showlegend: true,
+                  annotations: data.auxiliary_outputs.confusion_matrix
+                    .map((row, i) =>
+                      row.map((_, j) => ({
+                        xref: "x1" as XAxisName,
+                        yref: "y1" as YAxisName,
+                        x: j,
+                        y:
+                          (i +
+                            data.auxiliary_outputs.confusion_matrix.length -
+                            1) %
+                          data.auxiliary_outputs.confusion_matrix.length,
+                        text: data.auxiliary_outputs.confusion_matrix[
+                          (i +
+                            data.auxiliary_outputs.confusion_matrix.length -
+                            1) %
+                            data.auxiliary_outputs.confusion_matrix.length
+                        ][j].toString(),
+                        font: {
+                          color:
+                            data.auxiliary_outputs.confusion_matrix[
+                              (i +
+                                data.auxiliary_outputs.confusion_matrix.length -
+                                1) %
+                                data.auxiliary_outputs.confusion_matrix.length
+                            ][j] > 0
+                              ? "white"
+                              : "black",
+                        },
+                        showarrow: false,
+                      }))
+                    )
+                    .flat(),
+                  paper_bgcolor: "rgba(0,0,0,0)",
+                  plot_bgcolor: "rgba(0,0,0,0)",
+                }}
+              />
+            </Paper>
+          </Grid>
+        </Grid>
+      </Container>
+      <Footer />
     </div>
   );
 };

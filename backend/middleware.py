@@ -31,6 +31,7 @@ class middleware:
 
     def __call__(self, environ, start_response):
         request = Request(environ)
+
         if request.path in SWAGGER_UI_ROUTES or request.path in self.exempt_paths:
             print("in exempt paths")
             return self.app(environ, start_response)

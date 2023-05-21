@@ -1,0 +1,34 @@
+# .github/workflows/large-diffs.yml
+name: Large Diffs
+
+on:
+  pull_request:
+    types: [opened, edited]
+
+jobs:
+  check-diff-size:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Check diff size
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=$(echo "${{ github.event.pull_request.url }}" | cut -d/ -f7)
+          DIFF=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER.diff")
+          LINES=$(echo "$DIFF" | wc -l)
+          if [ $LINES -gt 1000 ]; then
+            MESSAGE=":warning: Large diff detected ($LINES lines). Would recommend splitting your PR into smaller chunks if possible"
+            URL=$(echo "${{ github.event.pull_request.url }}" | cut -d/ -f5-7)
+            curl -H "Authorization: token $GITHUB_TOKEN" -X POST -d "{\"body\": \"$MESSAGE\"}" "https://api.github.com/repos/$URL/issues/$PR_NUMBER/comments"
+          fi

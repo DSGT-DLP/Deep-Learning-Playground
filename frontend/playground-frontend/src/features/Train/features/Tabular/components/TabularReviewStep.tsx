@@ -7,6 +7,7 @@ import { ReviewData } from "../types/tabularTypes";
 import { useForm } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
+import { GENERAL_STYLES } from "@/constants";
 
 const TabularReviewStep = ({
   renderStepperButtons,
@@ -39,17 +40,37 @@ const TabularReviewStep = ({
       <Controller
         control={control}
         name="notificationPhoneNumber"
+        rules={{
+          pattern: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
+        }}
         render={({ field: { onChange } }) => (
-          <TextField label="Phone Number" onChange={onChange} />
+          <TextField
+            label="Phone Number"
+            onChange={onChange}
+            error={!!errors.notificationPhoneNumber}
+          />
         )}
       />
+      {!!errors.notificationPhoneNumber && (
+        <p style={GENERAL_STYLES.error_text}>
+          Please enter a valid phone number
+        </p>
+      )}
       <Controller
         control={control}
         name="notificationEmail"
+        rules={{ pattern: /^\S+@\S+\.\S+$/ }}
         render={({ field: { onChange } }) => (
-          <TextField label="Email Address" onChange={onChange} />
+          <TextField
+            label="Email Address"
+            onChange={onChange}
+            error={!!errors.notificationEmail}
+          />
         )}
       />
+      {!!errors.notificationEmail && (
+        <p style={GENERAL_STYLES.error_text}>Please enter a valid email</p>
+      )}
       {renderStepperButtons((trainspaceData) => {
         handleSubmit((data) => {
           dispatch(

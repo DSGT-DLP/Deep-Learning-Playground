@@ -77,6 +77,8 @@ const TabularDatasetStep = ({
                 current: {
                   ...trainspaceData,
                   datasetData: data,
+                  parameterData: undefined,
+                  reviewData: undefined,
                 },
                 stepLabel: "DATASET",
               })
@@ -89,6 +91,8 @@ const TabularDatasetStep = ({
                 current: {
                   ...trainspaceData,
                   datasetData: data,
+                  parameterData: undefined,
+                  reviewData: undefined,
                 },
                 stepLabel: "DATASET",
               })

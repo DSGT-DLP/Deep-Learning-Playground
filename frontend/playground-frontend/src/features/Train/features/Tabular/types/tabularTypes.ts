@@ -8,10 +8,11 @@ import {
 } from "@/features/Train/features/Tabular/constants/tabularConstants";
 
 export interface TrainspaceData<
-  T extends (typeof TRAINSPACE_SETTINGS)["steps"][number] = (typeof TRAINSPACE_SETTINGS)["steps"][number]
+  T extends (typeof TRAINSPACE_SETTINGS)["steps"][number] | "TRAIN" =
+    | (typeof TRAINSPACE_SETTINGS)["steps"][number]
+    | "TRAIN"
 > extends BaseTrainspaceData {
   dataSource: "TABULAR";
-  steps: (typeof TRAINSPACE_SETTINGS)["steps"][number];
   datasetData: T extends "PARAMETERS" | "REVIEW" | "TRAIN"
     ? DatasetData
     : DatasetData | undefined;
@@ -19,6 +20,12 @@ export interface TrainspaceData<
     ? ParameterData
     : ParameterData | undefined;
   reviewData: T extends "TRAIN" ? ReviewData : ReviewData | undefined;
+}
+
+export interface TrainspaceResultsData extends TrainspaceData<"TRAIN"> {
+  trainspaceId: string;
+  created: Date;
+  status: string;
 }
 
 export interface ParameterData {

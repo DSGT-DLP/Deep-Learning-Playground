@@ -281,6 +281,7 @@ const TabularParametersStep = ({
               current: {
                 ...trainspaceData,
                 parameterData: data,
+                reviewData: undefined,
               },
               stepLabel: "PARAMETERS",
             })

@@ -6,6 +6,7 @@ import {
   PageHeader,
   Spinner,
   Upsell,
+  Icon,
 } from "gestalt";
 import "gestalt/dist/gestalt.css";
 import { useEffect } from "react";
@@ -38,36 +39,37 @@ const Dashboard = () => {
   return (
     <>
       <NavbarMain />
-      <div id="dashboard">
-        <>
-          <PageHeader
-            maxWidth="85%"
-            title="Dashboard"
-            primaryAction={{
-              component: (
-                <Button
-                  color="blue"
-                  size="md"
-                  iconEnd="refresh"
-                  text="Refresh"
-                  onClick={() => {
-                    refetch();
-                  }}
-                />
-              ),
-              dropdownItems: [
-                <Dropdown.Item
-                  key="refresh"
-                  option={{ value: "refresh", label: "Refresh" }}
-                  onSelect={() => {
-                    refetch();
-                  }}
-                />,
-              ],
-            }}
-            dropdownAccessibilityLabel="More options"
-          />
-          {data && data.length > 0 ? (
+      <div className="flex-wrapper">
+        <div id="dashboard">
+          <>
+            <PageHeader
+              maxWidth="85%"
+              title="Dashboard"
+              primaryAction={{
+                component: (
+                  <Button
+                    color="red"
+                    size="md"
+                    iconEnd="refresh"
+                    text="Refresh"
+                    onClick={() => {
+                      refetch();
+                    }}
+                  />
+                ),
+                dropdownItems: [
+                  <Dropdown.Item
+                    key="refresh"
+                    option={{ value: "refresh", label: "Refresh" }}
+                    onSelect={() => {
+                      refetch();
+                    }}
+                  />,
+                ],
+              }}
+              dropdownAccessibilityLabel="More options"
+            />
+            {data && data.length > 0 ?
             <Flex
               direction="row"
               justifyContent="center"
@@ -81,29 +83,27 @@ const Dashboard = () => {
               <Box height={300} width={300}>
                 <TrainBarChart trainSpaceDataArr={data} />
               </Box>
-            </Flex>
-          ) : (
-            <BlankGrid />
-          )}
+            </Flex> : <BlankGrid />}
 
-          <div
-            style={{
-              minWidth: "900px",
-              width: "75%",
-              margin: "auto",
-            }}
-          >
-            <TrainDataGrid trainSpaceDataArr={data} />
-          </div>
-
-          {isLoading ? (
-            <div className="loading">
-              <Spinner show accessibilityLabel="Spinner" />
+            <div
+              style={{
+                minWidth: "900px",
+                width: "75%",
+                margin: "auto",
+              }}
+            >
+              <TrainDataGrid trainSpaceDataArr={data} />
             </div>
-          ) : null}
-        </>
+            
+            {isLoading ? (
+              <div className="loading">
+                <Spinner show accessibilityLabel="Spinner" />
+              </div>
+            ) : null}
+          </>
+        </div>
+        <Footer />
       </div>
-      <Footer />
     </>
   );
 };
@@ -113,30 +113,17 @@ const BlankGrid = () => {
   return (
     <div id="blank-grid-wrapper">
       <Upsell
+        imageData={{component: <Icon icon="info-circle" accessibilityLabel="" color="default" size={32}/>}}
         message="Click on train to get started."
-        // primaryAction={{
-        //   accessibilityLabel: "Button to train",
-        //   onClick:() => router.push({ pathname: "/train"}),
-        //   label: 'Train',
-        //   target: 'blank',
-        //   color:"blue",
-        // }}
+        primaryAction={{
+          accessibilityLabel: "Button to train",
+          onClick:() => router.push({ pathname: "/train"}),
+          label: 'Train',
+          target: 'blank',
+        }}
         title="You do not have any trained models yet. Create your first model!"
       />
-      <Button color="blue" size="lg" text="Train" onClick={() => router.push({ pathname: "/train"})}/>
 
-      {/* <div id="blank-grid">
-        <p>
-          You haven't trained any models yet. Create your first model below!
-        </p>
-        <button
-          id="blank-grid-button"
-          onClick={() => router.push({ pathname: "/train"})}
-        >
-          Train Model
-        </button>
-        
-      </div> */}
     </div>
   );
 };

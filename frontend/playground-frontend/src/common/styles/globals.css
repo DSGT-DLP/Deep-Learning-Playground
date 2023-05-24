@@ -1,0 +1,1018 @@
+@charset "UTF-8";
+/* 
+Theme Name:   DSGT Deep Learning Playground
+Text Domain:  datasciencegt-dlp
+Version:      1.0
+License:      MIT
+License URI:  https://opensource.org/licenses/MIT
+Description:  A deep learning playground to provoke appease and calamity
+Author:       See CODEOWNDERS
+Author URI:   https://datasciencegt.org/
+*/
+
+/* -------------------------------------------------------------------------- */
+/*	Root
+/* -------------------------------------------------------------------------- */
+
+:root {
+  --primary: #003058;
+  --secondary: #b3a36a;
+  --tertiary: #cd7bff;
+  --half-translucent: rgba(255, 255, 255, 0.5);
+  --hi-translucent: rgba(255, 255, 255, 0.8);
+  --whitehover: #f7f7f7;
+  --footer-dark-blue: #00233f;
+  --layer: #cd7bff;
+  --dark-grey: #d3d3d3;
+  --input: #e2e2e2;
+  --add-layer: #f2ecff;
+
+  --footer-height: 190px;
+}
+
+html,
+body {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	General HTML
+/* -------------------------------------------------------------------------- */
+
+* {
+  font-family: "Lato", "Arial", "Helvetica", sans-serif;
+}
+
+h2 {
+  font-size: calc(0.7rem + 0.9vw);
+}
+
+#app {
+  height: 100%;
+  position: relative;
+}
+
+#app-router {
+  min-height: calc(100vh - 190px);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: black;
+}
+img {
+  display: block;
+  height: auto;
+}
+input {
+  border-width: 0.5px;
+  border-color: var(--tertiary);
+  border-radius: 20px;
+  padding: 5px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	General DLP Styles
+/* -------------------------------------------------------------------------- */
+
+.sections {
+  margin: auto;
+  background-color: #f6f6ff;
+  width: 50%;
+  padding: 1rem;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 0;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--secondary);
+}
+
+.navbar-toggler.collapsed {
+  border: none;
+}
+
+input.form-control {
+  border-color: var(--tertiary);
+}
+
+.loading {
+  margin-block: 10%;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	Navbar
+/* -------------------------------------------------------------------------- */
+
+#header-section {
+  box-sizing: content-box;
+  position: static;
+  padding: 30px;
+  background-color: var(--secondary);
+  text-align: center;
+  color: white;
+}
+
+#navbar-main {
+  color: white;
+  background-color: var(--primary);
+}
+
+#navbar-main .logo-title .logo {
+  height: 40px;
+  aspect-ratio: 1;
+}
+
+#navbar-main .logo-title {
+  color: white;
+}
+
+#navbar-main .logo-title:hover,
+#navbar-main .logo-title:focus {
+  color: var(--secondary);
+}
+
+#navbar-main .nav-link {
+  color: white;
+  font-size: large;
+  padding: 1rem;
+}
+
+#navbar-main .nav-link:hover,
+#navbar-main .nav-link:focus {
+  background-color: white;
+  color: var(--primary);
+}
+
+#basic-nav-dropdown {
+  color: black;
+  text-decoration: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	Home and Image Models
+/* -------------------------------------------------------------------------- */
+
+#train-tabular-data,
+#image-models,
+#ml-models {
+  padding: 30px 20px;
+}
+
+#train-tabular-data h2,
+#image-models h2,
+#ml-models h2 {
+  font-weight: bold;
+}
+
+.model-name-input {
+  max-width: 400px;
+}
+
+.input-container {
+  background-color: var(--input);
+  width: 230px;
+  height: 90px;
+  padding: 10px;
+  margin-right: 20px;
+  margin-block: 10px;
+}
+
+.layer-box {
+  width: 160px;
+  height: 90px;
+}
+
+.add-new-layer-bin {
+  font-weight: 1000;
+  color: white;
+  font-size: 3rem;
+  color: var(--tertiary);
+  margin-right: 20px;
+  margin-block: 10px;
+}
+
+#train-button {
+  width: 160px;
+  height: 90px;
+  margin-block: 10px;
+}
+
+.layer-choice {
+  background-color: var(--add-layer);
+  margin-right: 30px;
+  margin-block: 10px;
+  width: 250px;
+  position: relative;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--tertiary);
+}
+
+.layer-info {
+  font-size: 18;
+}
+
+.info {
+  color: black;
+}
+
+#train-tabular-data input[type="file"],
+#image-models input[type="file"],
+#ml-models input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  cursor: pointer;
+}
+
+textarea#code-snippet-text {
+  width: 100%;
+}
+
+#csvRender_caption {
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Deep Learning Parameters */
+
+.response-container {
+  height: 50;
+  width: 170;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: content-box;
+}
+
+.inputText {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+  text-align: center;
+  font-size: 18;
+  font-weight: bold;
+}
+
+.queryText {
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  font-size: 18;
+  margin: 0;
+}
+
+.responseText {
+  color: black;
+  text-align: center;
+  font-size: 18;
+}
+
+.responseDropDownButton {
+  border: none;
+  font-size: 18;
+  cursor: pointer;
+}
+
+/* Added Layer */
+
+.added-layer-container {
+  margin-right: 20px;
+  margin-block: 10px;
+  width: 160px;
+}
+
+.added-layer-container .layer-container {
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  position: relative;
+  background-color: var(--tertiary);
+}
+
+.added-layer-container .layer-container .delete-layer {
+  position: absolute;
+  top: 5%;
+  right: 2%;
+  border: none;
+  font-size: 0.75rem;
+  background-color: transparent;
+}
+
+.added-layer-container .input-box {
+  width: 100%;
+  margin-top: 10px;
+  padding: 5%;
+  background-color: white;
+}
+
+.added-layer-container .layer-param-container {
+  padding-block: 7px;
+  border-bottom: 0.5px solid lightgrey;
+}
+
+.added-layer-container .layer-param-container .layer-param-input-box {
+  border-color: var(--tertiary);
+  border-radius: 0.375rem;
+  border: 0.5px solid var(--tertiary);
+}
+
+.added-layer-container
+  .layer-param-container
+  .layer-param-input-box.free-response {
+  width: 35%;
+}
+
+.added-layer-container .layer-param-container .param_name {
+  width: 60%;
+  margin-block: auto;
+  font-size: 15;
+  font-weight: bold;
+}
+
+/* Code Snippet */
+
+#code-snippet-div {
+  position: relative;
+}
+
+#code-snippet-clipboard {
+  background-color: #ececec;
+  border-radius: 4px;
+  border-style: none;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  cursor: pointer;
+}
+
+#code-snippet-clipboard:hover,
+#code-snippet-clipboard:focus {
+  background-color: #fcfcfc;
+}
+
+#code-snippet-clipboard:active {
+  background-color: var(--tertiary);
+}
+
+/* -------------------------------------------------------------------------- */
+/*	Dashboard
+/* -------------------------------------------------------------------------- */
+
+#blank-grid-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#blank-grid {
+  border: 2px solid black;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+}
+
+#blank-grid p {
+  font-size: large;
+}
+
+#blank-grid-button {
+  border: 2px solid black;
+  background-color: transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: medium;
+}
+
+.grid-status-display {
+  border: 2px solid black;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  font-size: medium;
+}
+
+.grid-status-display-gray {
+  background-color: #b7b7b7;
+}
+
+.grid-status-display-yellow {
+  background-color: #b3a36a;
+}
+
+.grid-status-display-green {
+  background-color: #7cd992;
+}
+
+.grid-status-display-blue {
+  background-color: #2ab5f6;
+  cursor: pointer;
+}
+
+.dashboard-header {
+  font-weight: bold !important;
+}
+
+.row-style {
+  font-weight: normal !important;
+}
+
+#dashboard #loading {
+  margin-block: 10%;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	About and Wiki
+/* -------------------------------------------------------------------------- */
+
+#wiki p,
+#wiki li,
+#about p,
+#about li {
+  font-size: 1.2rem;
+}
+
+.sections {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  hyphens: auto;
+  word-spacing: -0.05em;
+}
+.tech-row-content {
+  width: auto;
+  min-height: 3em;
+  padding: 0.5em;
+  margin: 1em;
+  display: inline-block;
+}
+img.tech-img-content {
+  float: left;
+  margin-right: 10px;
+  max-width: 10%;
+  max-height: 100%;
+  cursor: pointer;
+}
+textarea {
+  border-width: 0.5px;
+  border-color: var(--tertiary);
+  border-radius: 10px;
+  padding: 5px;
+  resize: none;
+}
+
+.collapsed-layer li {
+  list-style-type: "▶  ";
+}
+
+.expanded-layer li {
+  list-style-type: "▼  ";
+}
+
+.layer-info-button {
+  border: none;
+  background: none;
+  padding-left: 0;
+  cursor: pointer;
+  font-size: medium;
+  font-weight: 550;
+  text-decoration: underline;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.layer-info-button:hover {
+  color: var(--tertiary);
+}
+
+.layer-outer-button {
+  border: none;
+  background: none;
+  padding-left: 0;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.layer-outer-button:hover {
+  color: var(--tertiary);
+}
+
+/* -------------------------------------------------------------------------- */
+/*	Wiki
+/* -------------------------------------------------------------------------- */
+
+.wiki-content {
+  font-size: medium;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	Learning Modules
+/* -------------------------------------------------------------------------- */
+
+.classes {
+  width: 55%;
+}
+
+#learningBody {
+  display: flex;
+  justify-content: space-around;
+  position: relative;
+}
+
+.class {
+  border-radius: 1rem;
+  border: 1px solid black;
+  background-color: var(--whitehover);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 5px;
+}
+
+.classHeader {
+  margin: 0;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+}
+
+#classBar {
+  margin-left: 3rem;
+}
+
+#classTitle {
+  margin-left: 3.3rem;
+  font-size: 1.4rem;
+}
+
+.circleWrap {
+  width: 45%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.circleFill {
+  margin-top: 0.3rem;
+  margin-right: 2.5rem;
+  width: 5.3rem;
+  height: 5.3rem;
+  border-radius: 50%;
+  border: 1px solid #cdcbd0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circleInFill {
+  width: 77%;
+  height: 77%;
+  background-color: var(--dark-grey);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.textInCircle {
+  font-size: 1rem;
+}
+
+.progressBar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.progressContainer {
+  margin-top: 1.2rem;
+  margin-right: 0.5rem;
+  padding: 2px;
+  border: 3px solid var(--primary);
+  height: 0.5rem;
+}
+
+.progressContainer .progressFill {
+  height: 100%;
+  background-color: var(--primary);
+}
+
+.classBody {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#classBodyText {
+  font-size: 1.2rem;
+}
+
+.classBodyRight {
+  width: 40%;
+}
+
+#subClassBar {
+  margin-top: 0.7rem;
+  width: 100%;
+}
+
+#classBtn {
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10rem;
+  border: 1px solid black;
+  color: var(--primary);
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: 0.15rem;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  margin-bottom: 1rem;
+}
+
+#classBtn:hover {
+  cursor: pointer;
+  background-color: darken((var(--footer-dark-blue), 10%));
+}
+
+.classFooter {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.learningContentDiv {
+  background-color: #f6f6ff;
+  width: 50%;
+  padding: 1rem;
+  text-align: justify;
+  text-justify: inter-word;
+  margin-right: auto;
+}
+
+.contentParagraph {
+  margin-left: 2%;
+  margin-left: 2%;
+  margin-top: 1%;
+  margin-right: 1%;
+}
+
+.submitButton {
+  margin: 5px;
+}
+
+.learnImg {
+  max-width: 100%;
+  height: auto;
+  max-height: 400px;
+}
+
+#imageContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.captionText {
+  font-size: 8pt;
+  margin: 0px;
+}
+
+.attributionLink {
+  font-size: 8pt;
+  margin: 0px;
+}
+
+#subsectionChangeContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #b3a36a;
+}
+
+.sideBar {
+  background-color: #003058;
+  margin-right: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+.sideBarModule {
+  background-color: #003058;
+  list-style: none;
+  padding: 5px;
+}
+
+.sideBarSubsection {
+  border: #00233f;
+  border-style: solid;
+  border-width: 1px;
+  list-style: none;
+  padding: 5px;
+}
+
+.sideBarSubsection:hover {
+  background-color: #2ab5f6;
+}
+
+#sideBarToggleButton {
+  background-color: #003058;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  color: white;
+  font-weight: bold;
+}
+
+#FinalAccuracyDisplay {
+  color: #cd7bff;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	Login
+/* -------------------------------------------------------------------------- */
+
+/* Login */
+
+.login-button {
+  height: 50px;
+  width: 175px;
+  border-radius: 0.375rem;
+}
+
+.login-button img {
+  max-height: 70%;
+  margin-inline: auto;
+}
+
+.login-button.google {
+  background-color: white;
+}
+
+.login-button.github {
+  background-color: #171515;
+}
+
+.login-button.email {
+  background-color: var(--primary);
+}
+
+#login-page {
+  background-color: var(--primary);
+  height: max(90vh, 900px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+#login-page .description {
+  color: darkgray;
+  font-size: larger;
+}
+
+#login-page h1.title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 3.2rem;
+  background: -webkit-linear-gradient(var(--tertiary), white);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#login-page .main-container {
+  width: min(800px, 90%);
+}
+
+#login-page .main-container .form-container {
+  color: black;
+  font-weight: bold;
+  border-radius: 0.375rem;
+  width: 60%;
+  margin-inline: auto;
+  background-color: var(--half-translucent);
+}
+
+#login-page .main-container .form-container .form-label {
+  font-size: larger;
+}
+
+#login-page .main-container .form-container .email-buttons {
+  width: 50%;
+  margin-inline: auto;
+}
+
+#login-page .main-container .reCaptcha {
+  display: inline-block;
+}
+
+#login-page .main-container .form-container .welcome-back {
+  font-size: large;
+}
+
+#login-page .main-container .form-container #sign-up {
+  text-decoration: none;
+}
+
+#login-page .main-container .form-container input {
+  margin-inline: auto;
+}
+
+/* Login Popup */
+
+#login-popup {
+  position: absolute;
+  left: 50vw;
+  top: 50vh;
+  z-index: 50;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 10px;
+}
+
+#page-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+#login-popup-h1 {
+  color: var(--primary);
+  font-size: x-large;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	Forgot
+/* -------------------------------------------------------------------------- */
+#forgot-page {
+  background-color: var(--primary);
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+#forgot-page .main-container {
+  width: min(800px, 90%);
+}
+
+#forgot-page .main-container .form-container {
+  color: black;
+  font-weight: bold;
+  border-radius: 0.375rem;
+  width: 60%;
+  margin-inline: auto;
+  background-color: var(--half-translucent);
+}
+
+#forgot-page .main-container h3 {
+  font-size: medium;
+}
+
+#forgot-page .main-container .forgotPasswordLink {
+  margin-right: 50px;
+  /* text-indent: 60px; */
+}
+#forgot-page .main-container .buttons {
+  width: 50%;
+  height: 50px;
+  font-size: medium;
+  margin-inline: auto;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	Footer
+/* -------------------------------------------------------------------------- */
+
+.flex-wrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#footer .footer-element {
+  margin: 0;
+  position: static;
+  background-color: var(--primary);
+  color: white;
+  display: flex;
+  justify-content: center;
+}
+
+#footer .copyright {
+  margin-block: auto;
+  color: white;
+}
+
+#footer #footer-socials {
+  padding: 0.75rem;
+  margin: auto;
+  align-items: center;
+  height: calc(15 / 19 * var(--footer-height));
+}
+
+#footer #footer-name {
+  background-color: var(--footer-dark-blue);
+  text-align: center;
+  color: var(--dark-grey);
+  font-size: small;
+  height: calc(4 / 19 * var(--footer-height));
+}
+
+#footer .foot-element {
+  margin-inline: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 50%;
+  height: 50px;
+  aspect-ratio: 1;
+}
+
+#footer .foot-element:hover,
+#footer .foot-element:focus {
+  background-color: var(--secondary);
+}
+
+#footer .foot-element > a {
+  display: flex;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	1. Loader (Animated)
+/*  Reference: https://www.w3schools.com/howto/howto_css_loader.asp
+/* -------------------------------------------------------------------------- */
+
+.loader {
+  margin-left: 10px;
+  margin-top: 10px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid var(--primary);
+  width: 90px;
+  height: 90px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

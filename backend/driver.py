@@ -1,16 +1,4 @@
-import os
-import traceback
-import datetime
-from werkzeug.utils import secure_filename
-import shutil
-
-from flask import Flask, request, send_from_directory
-from backend.aws_helpers.s3_utils.s3_bucket_names import EXECUTION_BUCKET_NAME
-from backend.aws_helpers.s3_utils.s3_client import (
-    get_presigned_url_from_exec_file,
-    write_to_bucket,
-)
-from backend.middleware import middleware
+from flask import Blueprint, Flask, send_from_directory
 from flask_cors import CORS
 from flasgger import Swagger
 from flasgger.utils import swag_from
@@ -20,27 +8,14 @@ from backend.common.default_datasets import get_default_dataset_header
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
-from backend.aws_helpers.dynamo_db_utils.learnmod_db import (
-    UserProgressDDBUtil,
-    UserProgressData,
-)
-from backend.aws_helpers.sqs_utils.sqs_client import add_to_training_queue
-from backend.aws_helpers.dynamo_db_utils.execution_db import (
-    ExecutionDDBUtil,
-    ExecutionData,
-    createUserExecutionsData,
-    getAllUserExecutionsData,
-    updateStatus,
-)
-from backend.common.constants import (
-    EXECUTION_TABLE_NAME,
-    AWS_REGION,
-    USERPROGRESS_TABLE_NAME,
-    POINTS_PER_QUESTION,
-)
-from backend.dl.detection import detection_img_drive
+from backend.middleware import middleware
 
-from backend.aws_helpers.lambda_utils.lambda_client import invoke
+from backend.endpoints.trainspace_endpoints import trainspace_bp
+from backend.endpoints.aws_endpoints import aws_bp
+from backend.endpoints.dataset_endpoints import dataset_bp
+from backend.endpoints.s3_edpoints import s3_bp
+from backend.endpoints.test_endpoints import test_bp
+from backend.endpoints.train_endpoints import train_bp
 
 init_firebase()
 

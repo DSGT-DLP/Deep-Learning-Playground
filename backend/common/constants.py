@@ -40,6 +40,8 @@ SENDER = "DSGT Playground <dsgtplayground@gmail.com>"
 AWS_REGION = "us-west-2"
 EXECUTION_TABLE_NAME = "execution-table"
 USERPROGRESS_TABLE_NAME = "userprogress_table"
+FILE_UPLOAD_TABLE_NAME = "dlp-file-upload-table"
+TRAINSPACE_TABLE_NAME = "trainspace"
 CHARSET = "utf-8"
 TENSOR_ONLY_TRANSFORMS = [
     transforms.LinearTransformation,

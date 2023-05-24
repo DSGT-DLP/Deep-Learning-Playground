@@ -1,6 +1,9 @@
+import datetime
 import boto3
 import os
 import shutil
+
+from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
 
 """
 This file contains wrappers to interface with S3 buckets through 
@@ -62,5 +65,91 @@ def get_presigned_url_from_bucket(bucket_name: str, bucket_path: str):
     )
 
 
+def get_presigned_upload_post_from_bucket(bucket_name: str, object_name: str):
+    """
+    Generate a presigned URL to upload a file to an S3 bucket
+
+    Args:
+        bucket_name (str): The name of the S3 bucket.
+        object_name (str): The name of the object to upload.
+    """
+    s3 = boto3.client("s3")
+    return s3.generate_presigned_post(bucket_name, object_name)
+
+
+def get_objects_in_folder(bucket_name: str, folder_prefix: str):
+    """
+    Get the object data for all objects in a specified folder in an S3 bucket.
+
+    Args:
+        bucket_name (str): The name of the S3 bucket.
+        folder_prefix (str): The prefix of the folder in the S3 bucket.
+
+    Returns:
+        A list of dictionaries containing data for each object in the folder.
+    """
+    # Create an S3 client
+    s3 = boto3.client("s3")
+
+    # List all objects in the specified folder
+    objects = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_prefix)
+    if not "Contents" in objects:
+        return []
+    return objects["Contents"]
+
+
+def get_user_dataset_file_objects(user_id: str, data_source: str):
+    """
+    Get the object data for all objects stored by a user in an S3 bucket.
+
+    Args:
+        user_id (str): The id of the user.
+        data_source (str): The data source of the objects.
+
+    Returns:
+        A list of dictionaries containing data for each object stored by the user.
+    """
+    return get_objects_in_folder(FILE_UPLOAD_BUCKET_NAME, f"{user_id}/{data_source}")
+
+
 def get_presigned_url_from_exec_file(bucket_name: str, exec_id: str, filename: str):
     return get_presigned_url_from_bucket(bucket_name, exec_id + "/" + filename)
+
+
+def get_presigned_upload_post_from_user_dataset_file(
+    user_id: str, data_source: str, filename: str
+):
+    """
+    Get the presigned url for a file stored by a user in the file upload S3 bucket.
+
+    Args:
+        user_id (str): The id of the user.
+        data_source (str): The data source of the object.
+        filename (str): The name of the file.
+
+    Returns:
+        A dictionary containing a boto3 presigned url post object for the file.
+    """
+    post_obj = get_presigned_upload_post_from_bucket(
+        FILE_UPLOAD_BUCKET_NAME, f"{user_id}/{data_source}/{filename}"
+    )
+    return post_obj
+
+
+def get_column_names(user_id: str, data_source: str, filename: str):
+    s3 = boto3.client("s3")
+    response = s3.select_object_content(
+        Bucket=FILE_UPLOAD_BUCKET_NAME,
+        Key=f"{user_id}/{data_source}/{filename}",
+        ExpressionType="SQL",
+        Expression="SELECT * FROM S3Object LIMIT 1",
+        InputSerialization={"CSV": {"FileHeaderInfo": "NONE"}},
+        OutputSerialization={"CSV": {}},
+    )
+    # Iterate over the response records to extract the header row
+    for event in response["Payload"]:
+        if "Records" in event:
+            records = event["Records"]["Payload"].decode("utf-8")
+            print(records)
+            columns = records.split("\n")[0].split(",")
+    return columns

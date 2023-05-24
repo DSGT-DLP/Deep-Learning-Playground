@@ -25,7 +25,7 @@ SWAGGER_UI_ROUTES = [
 
 
 class middleware:
-    def __init__(self, app, exempt_paths=[]):
+    def __init__(self, app, exempt_paths=None):
         self.app = app
         self.exempt_paths = exempt_paths
 

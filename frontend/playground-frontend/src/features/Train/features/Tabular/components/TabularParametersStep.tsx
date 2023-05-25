@@ -75,8 +75,10 @@ const TabularParametersStep = ({
     : { data: undefined };
   const {
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, dirtyFields },
     control,
+    getValues,
+    watch
   } = useForm<ParameterData>({
     defaultValues: {
       targetCol:
@@ -109,10 +111,14 @@ const TabularParametersStep = ({
       ],
     },
   });
+
   useEffect(() => {
     setIsModified(isDirty);
   }, [isDirty]);
   if (!trainspace || !data) return <></>;
+  const targetCol = watch("targetCol");
+  const features = watch("features")
+
   return (
     <Stack spacing={3}>
       <Controller
@@ -136,7 +142,7 @@ const TabularParametersStep = ({
                 error={errors.targetCol ? true : false}
               />
             )}
-            options={data}
+            options={data.filter(col => !features.includes(col))}
           />
         )}
       />
@@ -162,7 +168,8 @@ const TabularParametersStep = ({
                 error={errors.features ? true : false}
               />
             )}
-            options={data}
+            
+            options={data.filter(col => col!== targetCol)}
           />
         )}
       />

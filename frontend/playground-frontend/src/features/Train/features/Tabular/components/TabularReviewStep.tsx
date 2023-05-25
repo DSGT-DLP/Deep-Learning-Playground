@@ -3,6 +3,11 @@ import { TrainspaceData } from "../types/tabularTypes";
 import { Stack, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import { updateTabularTrainspaceData } from "../redux/tabularActions";
+import { ReviewData } from "../types/tabularTypes";
+import { useForm } from "react-hook-form";
+import { TextField } from "@mui/material";
+import { Controller } from "react-hook-form";
+import { GENERAL_STYLES } from "@/constants";
 
 const TabularReviewStep = ({
   renderStepperButtons,
@@ -16,6 +21,11 @@ const TabularReviewStep = ({
   const trainspace = useAppSelector(
     (state) => state.trainspace.current as TrainspaceData<"REVIEW"> | undefined
   );
+  const {
+    handleSubmit,
+    formState: { errors, isDirty },
+    control,
+  } = useForm<ReviewData>();
   const dispatch = useAppDispatch();
   if (!trainspace) return <></>;
   useEffect(() => {
@@ -27,16 +37,52 @@ const TabularReviewStep = ({
       <Typography>{`Is Default?: ${trainspace.datasetData.isDefaultDataset}`}</Typography>
       <Typography>{`Target Column: ${trainspace.parameterData.targetCol}`}</Typography>
       <Typography>{`Feature Columns: ${trainspace.parameterData.features.join()}`}</Typography>
+      <Controller
+        control={control}
+        name="notificationPhoneNumber"
+        rules={{
+          pattern: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
+        }}
+        render={({ field: { onChange } }) => (
+          <TextField
+            label="Phone Number"
+            onChange={onChange}
+            error={!!errors.notificationPhoneNumber}
+          />
+        )}
+      />
+      {!!errors.notificationPhoneNumber && (
+        <p style={GENERAL_STYLES.error_text}>
+          Please enter a valid phone number
+        </p>
+      )}
+      <Controller
+        control={control}
+        name="notificationEmail"
+        rules={{ pattern: /^\S+@\S+\.\S+$/ }}
+        render={({ field: { onChange } }) => (
+          <TextField
+            label="Email Address"
+            onChange={onChange}
+            error={!!errors.notificationEmail}
+          />
+        )}
+      />
+      {!!errors.notificationEmail && (
+        <p style={GENERAL_STYLES.error_text}>Please enter a valid email</p>
+      )}
       {renderStepperButtons((trainspaceData) => {
-        dispatch(
-          updateTabularTrainspaceData({
-            current: {
-              ...trainspaceData,
-              reviewData: {},
-            },
-            stepLabel: "REVIEW",
-          })
-        );
+        handleSubmit((data) => {
+          dispatch(
+            updateTabularTrainspaceData({
+              current: {
+                ...trainspaceData,
+                reviewData: data,
+              },
+              stepLabel: "REVIEW",
+            })
+          );
+        })();
       })}
     </Stack>
   );

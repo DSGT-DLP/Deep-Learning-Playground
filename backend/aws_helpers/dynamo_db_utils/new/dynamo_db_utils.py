@@ -196,29 +196,3 @@ def delete_dynamo_item(table_name: str, partition_key_value: Union[int, str]) ->
     if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
         raise Exception("Failed to delete item")
     return True
-
-
-if __name__ == "__main__":
-    print(1)
-    print(2, get_dynamo_item_by_id("trainspace", "blah"))
-    print(3, get_dynamo_items_by_gsi("trainspace", "bleh"))
-    print(
-        4,
-        create_dynamo_item(
-            "trainspace",
-            {
-                "trainspace_id": str(random.random()),
-                "uid": "bleh",
-                "created": datetime.now().isoformat(),
-            },
-        ),
-    )
-    print(
-        5,
-        update_dynamo_item(
-            "trainspace",
-            "0.6637985062827166",
-            {"uid": "blah", "created": datetime.now().isoformat()},
-        ),
-    )
-    print(6, delete_dynamo_item("trainspace", "ergsdf"))

@@ -83,21 +83,3 @@ def createExecutionData(execution_data: ExecutionData) -> bool:
     """
 
     return create_dynamo_item(TABLE_NAME, execution_data.__dict__)
-
-
-if __name__ == "__main__":
-    print(1)
-    # print(2, getAllUserExecutionData("8hDeAbdZ9Lg301QFGdEYYeAq4Kw2"))
-    # print(3, getExecutionData("exfddc9ad2666d31cae1790167aefc9aa34eb5d06a28e1805e8fa8881845d463a8"))
-    # print(3, updateExecutionData("exfddc9ad2666d31cae1790167aefc9aa34eb5d06a28e1805e8fa8881845d463a8", {
-    #     "timestamp": datetime.now().isoformat(),
-    # }))
-    # print(4, createExecutionData(
-    #     ExecutionData(
-    #         execution_id=str(random.random()),
-    #         data_source='TABULAR',
-    #         name='hola',
-    #         status='QUEUED',
-    #         timestamp=str(datetime.now().isoformat()),
-    #         user_id='bleh'
-    # )))

@@ -52,7 +52,7 @@ def createFileUploadData(file_upload_data: FileUploadData) -> bool:
     return create_dynamo_item(TABLE_NAME, file_upload_data.__dict__)
 
 
-def getAllUserFileUploadData(uid: str) -> str:
+def getAllUserFileUploadData(uid: str) -> list[dict]:
     """
     Retrieves an entry from the `dlp-file-upload-table` DynamoDB table given an `uid`. Example output: {"execution_id": "blah", "user_id": "blah", "name": "blah", "timestamp": "blah", "data_source": "TABULAR", "status": "QUEUED", "progress": 1}
     @param uid: The user_id of the entry to be retrieved

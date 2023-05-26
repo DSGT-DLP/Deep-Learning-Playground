@@ -75,9 +75,8 @@ const TabularParametersStep = ({
     : { data: undefined };
   const {
     handleSubmit,
-    formState: { errors, isDirty, dirtyFields },
+    formState: { errors, isDirty },
     control,
-    getValues,
     watch
   } = useForm<ParameterData>({
     defaultValues: {
@@ -117,7 +116,7 @@ const TabularParametersStep = ({
   }, [isDirty]);
   if (!trainspace || !data) return <></>;
   const targetCol = watch("targetCol");
-  const features = watch("features")
+  const features = watch("features");
 
   return (
     <Stack spacing={3}>

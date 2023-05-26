@@ -53,9 +53,8 @@ def createUserProgressData(execution_data: UserProgressData) -> bool:
 
 if __name__ == "__main__":
     print(1)
-    print(2, getAllUserUserProgressData("e4d46926-1eaa-42b0-accb-41a3912038e4"))
-    print(3, getAllUserUserProgressData("efds"))
-    print(4, updateStatus("blah", "QUEUED", {"created": datetime.now().isoformat()}))
+    print(2, getUserProgressData("e4d46926-1eaa-42b0-accb-41a3912038e4"))
+    print(3, getUserProgressData("efds"))
     print(
         5,
         createUserProgressData(

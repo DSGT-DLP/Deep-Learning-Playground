@@ -2,6 +2,7 @@ import boto3
 from backend.aws_helpers.dynamo_db_utils.new.constants import ALL_DYANMODB_TABLES
 import random
 from datetime import datetime
+from typing import Union
 
 dynamodb = boto3.resource("dynamodb")
 
@@ -36,7 +37,7 @@ def get_dynamo_item_by_id(table_name: str, partition_key_value: str) -> dict:
     return response["Item"]
 
 
-def get_dynamo_items_by_gsi(table_name: str, gsi_value: int or str) -> list[dict]:
+def get_dynamo_items_by_gsi(table_name: str, gsi_value: Union[int, str]) -> list[dict]:
     """
     Get items from DynamoDB table that match the given GSI value, returns [] if no items match
 
@@ -73,7 +74,7 @@ def get_dynamo_items_by_gsi(table_name: str, gsi_value: int or str) -> list[dict
     # Get items
     table = dynamodb.Table(table_name)
     response = table.query(
-        IndexName="uid",
+        IndexName=gsi_key,
         KeyConditionExpression=key_condition_expression,
         ExpressionAttributeValues=expression_attribute_values,
         ExpressionAttributeNames=expression_attribute_names,
@@ -169,7 +170,7 @@ def update_dynamo_item(
     return True
 
 
-def delete_dynamo_item(table_name: str, partition_key_value: str or int) -> bool:
+def delete_dynamo_item(table_name: str, partition_key_value: Union[int, str]) -> bool:
     """
     Deletes item from DynamoDB table by matching given keys, does nothing if item does not exist
 

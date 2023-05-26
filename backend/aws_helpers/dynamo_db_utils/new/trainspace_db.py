@@ -59,7 +59,7 @@ def getAllUserTrainspaceData(user_id: str) -> list[dict]:
     return response
 
 
-def updateStatus(trainspace_id: str, status: str, entryData: dict = None) -> str:
+def updateStatus(trainspace_id: str, status: str, entryData: dict = None) -> bool:
     """
     Updates the status of a trainspace entry in the `trainspace` DynamoDB table given a `trainspace_id`. Also updates the entry with the given entryData if provided.
 

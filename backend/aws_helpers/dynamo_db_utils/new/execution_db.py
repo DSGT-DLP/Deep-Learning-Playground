@@ -17,13 +17,13 @@ class ExecutionData:
 
     execution_id: str
     data_source: str
-    metadata: dict
     name: str
-    progress: int
-    results: dict
     status: str
     timestamp: str
     user_id: str
+    progress: int = 0
+    results: dict = None
+    metadata: dict = None
 
 
 def getExecutionData(execution_id: str) -> dict:
@@ -87,12 +87,17 @@ def createExecutionData(execution_data: ExecutionData) -> bool:
 
 if __name__ == "__main__":
     print(1)
-    print(2, getAllUserExecutionData("e4d46926-1eaa-42b0-accb-41a3912038e4"))
-    print(3, getAllUserExecutionData("efds"))
-    print(4, updateStatus("blah", "QUEUED", {"created": datetime.now().isoformat()}))
-    print(
-        5,
-        createExecutionData(
-            ExecutionData(str(random.random()), "bleh", "bleh", "bleh")
-        ),
-    )
+    # print(2, getAllUserExecutionData("8hDeAbdZ9Lg301QFGdEYYeAq4Kw2"))
+    # print(3, getExecutionData("exfddc9ad2666d31cae1790167aefc9aa34eb5d06a28e1805e8fa8881845d463a8"))
+    # print(3, updateExecutionData("exfddc9ad2666d31cae1790167aefc9aa34eb5d06a28e1805e8fa8881845d463a8", {
+    #     "timestamp": datetime.now().isoformat(),
+    # }))
+    # print(4, createExecutionData(
+    #     ExecutionData(
+    #         execution_id=str(random.random()),
+    #         data_source='TABULAR',
+    #         name='hola',
+    #         status='QUEUED',
+    #         timestamp=str(datetime.now().isoformat()),
+    #         user_id='bleh'
+    # )))

@@ -5,7 +5,7 @@ import random
 from datetime import datetime
 from typing import Union
 
-dynamodb = boto3.resource("dynamodb", region=AWS_REGION)
+dynamodb = boto3.resource("dynamodb", region_name=AWS_REGION)
 
 
 def get_dynamo_item_by_id(table_name: str, partition_key_value: str) -> dict:

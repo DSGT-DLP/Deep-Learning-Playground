@@ -1,4 +1,4 @@
-from backend.aws_helpers.dynamo_db_utils.new.dynamo_db_utils import (
+from backend.aws_helpers.dynamo_db_utils.dynamo_db_utils import (
     create_dynamo_item,
     get_dynamo_item_by_id,
     update_dynamo_item,

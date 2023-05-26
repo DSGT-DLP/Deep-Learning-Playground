@@ -1,5 +1,5 @@
 import boto3
-from backend.aws_helpers.dynamo_db_utils.new.constants import ALL_DYANMODB_TABLES
+from backend.aws_helpers.dynamo_db_utils.constants import ALL_DYANMODB_TABLES
 import random
 from datetime import datetime
 from typing import Union

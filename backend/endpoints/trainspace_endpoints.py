@@ -2,18 +2,18 @@ import traceback
 
 from flask import Blueprint
 from flask import request
+import uuid
 
-from backend.aws_helpers.dynamo_db_utils.learnmod_db import (
-    UserProgressDDBUtil,
+from backend.aws_helpers.dynamo_db_utils.userprogress_db import (
     UserProgressData,
+    createUserProgressData,
 )
 from backend.aws_helpers.dynamo_db_utils.trainspace_db import (
+    TrainspaceData,
     createTrainspaceData,
     getAllUserTrainspaceData,
 )
 from backend.common.constants import (
-    AWS_REGION,
-    USERPROGRESS_TABLE_NAME,
     POINTS_PER_QUESTION,
 )
 from backend.common.utils import *
@@ -39,7 +39,8 @@ def create_trainspace():
     try:
         request_data = json.loads(request.data)
         uid = request_data["user"]["uid"]
-        trainspace_id = createTrainspaceData()
+        trainspace_id = str(uuid.uuid4())
+        trainspace_id = createTrainspaceData(TrainspaceData(trainspace_id, uid))
         return {"trainspace_id": trainspace_id}
     except Exception:
         print(traceback.format_exc())
@@ -83,15 +84,14 @@ def getUserProgressData():
       - 200: Able to query and load user progress data for a given user that visits the Learning Modules surface on DLP
       - 400: Error in retrieving this data
     """
-    dynamoTable = UserProgressDDBUtil(USERPROGRESS_TABLE_NAME, AWS_REGION)
     user_id = json.loads(request.data)["user_id"]
     print(user_id)
     try:
-        return dynamoTable.get_record(user_id).progressData
+        return getUserProgressData(user_id).progressData
     except ValueError:
-        newRecord = UserProgressData(user_id, "{}")
-        dynamoTable.create_record(newRecord)
-        return "{}"
+        newRecord = UserProgressData(user_id, {})
+        createUserProgressData(newRecord)
+        return {}
 
 
 @trainspace_bp.route("/updateUserProgressData", methods=["POST"])
@@ -115,10 +115,9 @@ def updateUserProgressData():
     moduleID = str(requestData["moduleID"])
     sectionID = str(requestData["sectionID"])
     questionID = str(requestData["questionID"])
-    dynamoTable = UserProgressDDBUtil(USERPROGRESS_TABLE_NAME, AWS_REGION)
 
     # get most recent user progress data
-    updatedRecord = json.loads(dynamoTable.get_record(uid).progressData)
+    updatedRecord = getUserProgressData(uid).progressData
 
     if moduleID not in updatedRecord:
         updatedRecord[moduleID] = {
@@ -145,5 +144,5 @@ def updateUserProgressData():
 
     updatedRecordAsString = json.dumps(updatedRecord)
 
-    dynamoTable.update_record(uid, progressData=updatedRecordAsString)
+    updateUserProgressData(uid, {"progressData": updatedRecordAsString})
     return '{"status": "success"}'

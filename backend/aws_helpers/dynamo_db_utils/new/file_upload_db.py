@@ -15,6 +15,7 @@ class FileUploadData:
     """Data class to hold the attribute values of a record of the dlp-file-upload-table DynamoDB table"""
 
     s3_uri: str
+    uid: str
 
 
 def getFileUploadData(s3_uri: str) -> dict:
@@ -48,3 +49,10 @@ def createFileUploadData(file_upload_data: FileUploadData) -> bool:
     """
 
     return create_dynamo_item(TABLE_NAME, file_upload_data.__dict__)
+
+
+if __name__ == "__main__":
+    print(0)
+    # print(1, getFileUploadData("test011"))
+    # print(2, updateFileUploadData("test011", {"s3_uri": "test02"}))
+    # print(3, createFileUploadData(FileUploadData("test012", "bleh")))

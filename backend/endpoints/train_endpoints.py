@@ -77,7 +77,6 @@ def tabular_run():
             print(traceback.format_exc())
             return send_traceback_error()
 
-
         """ train_loss_results = dl_tabular_drive(
             user_arch, fileURL, params, json_csv_data_str, customModelName
         )
@@ -85,7 +84,6 @@ def tabular_run():
         print(train_loss_results)
         updateStatus(execution_id, "SUCCESS") """
         # return send_train_results(train_loss_results)
-
 
     except Exception:
         # updateStatus(execution_id, "ERROR")

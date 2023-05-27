@@ -23,6 +23,10 @@ jobs:
       with:
         python-version: 3.9
     
+    - name: get conda prefix
+      run: |
+        echo ${{ env.CONDA_PREFIX }}
+    
     - name: Cache Conda environment
       uses: actions/cache@v3
       with:

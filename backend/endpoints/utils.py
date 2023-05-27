@@ -19,7 +19,7 @@ def createExecution(entryData: dict) -> dict:
     @return: A JSON string of the entry created in the table
     """
     try:
-        entryData = ExecutionData(
+        entryData: ExecutionData = ExecutionData(
             execution_id=entryData["execution_id"],
             user_id=entryData["user"]["uid"],
             name=entryData["custom_model_name"],

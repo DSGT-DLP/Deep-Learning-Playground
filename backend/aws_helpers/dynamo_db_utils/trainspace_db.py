@@ -1,3 +1,4 @@
+from backend.aws_helpers.dynamo_db_utils.constants import TRAINSPACE_TABLE_NAME
 from backend.aws_helpers.dynamo_db_utils.dynamo_db_utils import (
     create_dynamo_item,
     get_dynamo_item_by_id,
@@ -8,7 +9,7 @@ import random
 from datetime import datetime
 from dataclasses import dataclass
 
-TABLE_NAME = "trainspace"
+TABLE_NAME = TRAINSPACE_TABLE_NAME
 
 
 @dataclass

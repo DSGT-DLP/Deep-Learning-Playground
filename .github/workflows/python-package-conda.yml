@@ -62,7 +62,7 @@ jobs:
       if: steps.check-cache.outputs.cache-restored != 'true'
       uses: actions/cache@v3
       with:
-        path: ${{ env.CONDA_PREFIX }}
+        path: $CONDA
         key: ${{ runner.os }}-conda-${{ hashFiles('conda/environment.yml') }}
     
     - name: Formatting Fixes

@@ -112,14 +112,14 @@ def updateOneUserProgressData():
       - 200: Dynamo DB update successful
       - 400: Something went wrong in updating the user progress in learning modules
     """
-    requestData = json.loads(request.data)
-    uid = requestData["user_id"]
-    moduleID = str(requestData["moduleID"])
-    sectionID = str(requestData["sectionID"])
-    questionID = str(requestData["questionID"])
-
-    # get most recent user progress data
     try:
+        requestData = json.loads(request.data)
+        uid = requestData["user_id"]
+        moduleID = str(requestData["moduleID"])
+        sectionID = str(requestData["sectionID"])
+        questionID = str(requestData["questionID"])
+
+        # get most recent user progress data
         updatedRecord = getAllUserProgressData(uid)["progressData"]
     except ValueError:
         print(traceback.format_exc())

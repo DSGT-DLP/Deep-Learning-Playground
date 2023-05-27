@@ -4,6 +4,7 @@ on:
     branches:
       - "main"
       - "prod-deploy"
+      - "python-build-check-speedup"
   pull_request:
     paths:
       - 'backend/**'
@@ -21,11 +22,35 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: 3.9
+    
+    - name: Cache Conda environment
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.CONDA_PREFIX }}
+        key: ${{ runner.os }}-conda-${{ hashFiles('conda/environment.yml') }}
+    
+    - name: Restore Conda environment from cache
+      id: restore-cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.CONDA_PREFIX }}
+        key: ${{ runner.os }}-conda-${{ hashFiles('conda/environment.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-conda-
+          ${{ runner.os }}-
+
+
     - name: Add conda to system path
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         echo $CONDA/bin >> $GITHUB_PATH
+    
+    - name: Check if cache restored
+      run: |
+        echo "::set-output name=cache-restored::${{ steps.restore-cache.outputs.cache-hit }}"
+
     - name: Install dependencies
+      if: steps.check-cache.outputs.cache-restored != 'true'
       run: |
         cd conda && ls
         ls
@@ -33,6 +58,14 @@ jobs:
         conda init bash
         source $(conda info --base)/etc/profile.d/conda.sh
         conda activate dlplayground
+
+    - name: Cache installed Conda environment
+      if: steps.check-cache.outputs.cache-restored != 'true'
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.CONDA_PREFIX }}
+        key: ${{ runner.os }}-conda-${{ hashFiles('conda/environment.yml') }}
+    
     - name: Formatting Fixes
       run: |
         conda init bash

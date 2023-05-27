@@ -72,16 +72,29 @@ def get_dynamo_items_by_gsi(table_name: str, gsi_value: Union[int, str]) -> list
     # create expression attribute names to prevent reserved words error
     expression_attribute_names = {f"{PREFIX}{gsi_key}": gsi_key}
 
-    # Get items
+    # initialize response items
+    response_items = []
     table = dynamodb.Table(table_name)
-    response = table.query(
-        IndexName=gsi_key,
-        KeyConditionExpression=key_condition_expression,
-        ExpressionAttributeValues=expression_attribute_values,
-        ExpressionAttributeNames=expression_attribute_names,
-    )
+    has_more_items = True
+    last_evaluated_key = None
 
-    return response["Items"]
+    # Get items through pagination
+    while has_more_items:
+        query_params = {
+            "IndexName": gsi_key,
+            "KeyConditionExpression": key_condition_expression,
+            "ExpressionAttributeValues": expression_attribute_values,
+            "ExpressionAttributeNames": expression_attribute_names,
+        }
+        if last_evaluated_key is not None:
+            query_params["ExclusiveStartKey"] = last_evaluated_key
+
+        response = table.query(**query_params)
+        response_items.extend(response["Items"])
+        last_evaluated_key = response.get("LastEvaluatedKey")
+        has_more_items = last_evaluated_key is not None
+
+    return response_items
 
 
 def create_dynamo_item(table_name: str, input_item: dict) -> bool:

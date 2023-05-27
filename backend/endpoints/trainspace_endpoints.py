@@ -8,6 +8,7 @@ from backend.aws_helpers.dynamo_db_utils.userprogress_db import (
     UserProgressData,
     createUserProgressData,
     getAllUserProgressData,
+    updateUserProgressData,
 )
 from backend.aws_helpers.dynamo_db_utils.trainspace_db import (
     TrainspaceData,
@@ -95,8 +96,8 @@ def getUserProgressData():
         return {}
 
 
-@trainspace_bp.route("/updateUserProgressData", methods=["POST"])
-def updateUserProgressData():
+@trainspace_bp.route("/updateOneUserProgressData", methods=["POST"])
+def updateOneUserProgressData():
     """
     API Endpoint to update user progress data as the user progresses through the Learning Modules feature. We can identify
     here if a user gets a question correct or not and update that progress within Dynamo Db

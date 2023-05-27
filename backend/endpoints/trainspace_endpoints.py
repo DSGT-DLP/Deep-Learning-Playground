@@ -7,6 +7,7 @@ import uuid
 from backend.aws_helpers.dynamo_db_utils.userprogress_db import (
     UserProgressData,
     createUserProgressData,
+    getAllUserProgressData,
 )
 from backend.aws_helpers.dynamo_db_utils.trainspace_db import (
     TrainspaceData,
@@ -87,7 +88,7 @@ def getUserProgressData():
     user_id = json.loads(request.data)["user_id"]
     print(user_id)
     try:
-        return getUserProgressData(user_id).progressData
+        return getAllUserProgressData(user_id)["progressData"]
     except ValueError:
         newRecord = UserProgressData(user_id, {})
         createUserProgressData(newRecord)
@@ -117,7 +118,11 @@ def updateUserProgressData():
     questionID = str(requestData["questionID"])
 
     # get most recent user progress data
-    updatedRecord = getUserProgressData(uid).progressData
+    try:
+        updatedRecord = getAllUserProgressData(uid)["progressData"]
+    except ValueError:
+        print(traceback.format_exc())
+        return send_traceback_error()
 
     if moduleID not in updatedRecord:
         updatedRecord[moduleID] = {

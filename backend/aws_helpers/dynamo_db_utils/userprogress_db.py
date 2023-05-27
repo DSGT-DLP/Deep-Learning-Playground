@@ -19,7 +19,7 @@ class UserProgressData:
     progressData: dict
 
 
-def getUserProgressData(uid: str) -> dict:
+def getAllUserProgressData(uid: str) -> dict:
     """
     Retrieves an entry from the `userprogress-table` DynamoDB table given an `uid`.
 

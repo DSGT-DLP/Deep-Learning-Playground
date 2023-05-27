@@ -140,7 +140,7 @@ if __name__ == "__main__":
 ```py
 if __name__ == "__main__":
     print(1)
-    print(2, getUserProgressData("LTLZSmoEnYQc9Kx7xJ3Zygwojro2"))
+    print(2, getAllUserProgressData("LTLZSmoEnYQc9Kx7xJ3Zygwojro2"))
     print(3, createUserProgressData(UserProgressData("bleh", {"hola": 1})))
     print(4, updateUserProgressData("bleh", {"progressData": {"hola": 2}}))
 ```

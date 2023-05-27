@@ -2,7 +2,7 @@ import traceback
 
 from backend.aws_helpers.dynamo_db_utils.execution_db import (
     ExecutionData,
-    createUserExecutionsData,
+    createExecutionData,
 )
 from backend.common.utils import *
 
@@ -28,7 +28,7 @@ def createExecution(entryData: dict) -> dict:
         progress=0,
     )
     try:
-        createUserExecutionsData(entryData)
+        createExecutionData(entryData)
         return {"success": True, "message": "Successfully created execution entry"}
     except Exception as e:
         print(traceback.format_exc())

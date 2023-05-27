@@ -46,7 +46,7 @@ jobs:
 
     - name: Check if cache restored
       run: |
-        echo "::set-output name=cache-restored::${{ steps.restore-cache.outputs.cache-hit }}"
+        echo "cache-restored=${{ steps.restore-cache.outputs.cache-hit }}" >> $GITHUB_ENV
 
     - name: Install dependencies
       if: steps.check-cache.outputs.cache-restored != 'true'

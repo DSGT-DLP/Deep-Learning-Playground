@@ -17,13 +17,13 @@ class TrainspaceData:
 
     trainspace_id: str
     uid: str
-    created: str = None
-    data_source: str = None
+    created: str = ""
+    data_source: str = ""
     dataset_data: dict = None
-    name: str = None
+    name: str = ""
     parameters_data: dict = None
-    review_data: str = None
-    status: str = None
+    review_data: str = ""
+    status: str = ""
 
 
 def getTrainspaceData(trainspace_id: str) -> dict:

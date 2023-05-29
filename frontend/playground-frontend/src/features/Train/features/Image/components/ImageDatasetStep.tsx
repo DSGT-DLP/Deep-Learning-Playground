@@ -63,6 +63,7 @@ const ImageDatasetStep = ({
             <UploadDatasetPanel
               dataSource={"IMAGE"}
               methods={uploadDatasetMethods}
+              acceptedTypes={".zip"}
             />
           ),
           "default-dataset": (

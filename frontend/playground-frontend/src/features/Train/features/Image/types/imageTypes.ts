@@ -38,8 +38,14 @@ export interface ParameterData {
     value: keyof (typeof STEP_SETTINGS)["PARAMETERS"]["layers"];
     parameters: number[];
   }[];
-  trainTransforms: string[];
-  testTransforms: string[];
+  trainTransforms: {
+    value: keyof (typeof STEP_SETTINGS)["PARAMETERS"]["transforms"];
+    parameters: number[];
+  }[];
+  testTransforms: {
+    value: keyof (typeof STEP_SETTINGS)["PARAMETERS"]["transforms"];
+    parameters: number[];
+  }[];
 }
 
 type LTypes = number | string | boolean;

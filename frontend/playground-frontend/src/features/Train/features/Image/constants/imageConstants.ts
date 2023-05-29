@@ -220,11 +220,11 @@ export const STEP_SETTINGS = {
         objectName: "transforms.Resize",
         parameters: [
           {
-            label: "(H, W)",
+            label: "Height",
             min: 1,
             max: 1000,
             required: true,
-            type: "tuple",
+            type: "number",
           },
         ],
       },

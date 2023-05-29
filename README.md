@@ -89,7 +89,7 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 2. Then in a separate terminal, start the frontend development server. After installing the prerequisites above, run the shortcut above or run the following commands:
 
    ```
-   cd frontend\playground-frontend
+   cd frontend
    yarn install
    yarn start
    ```

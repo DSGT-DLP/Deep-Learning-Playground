@@ -171,10 +171,10 @@ node_modules/
 .pnp.js
 
 # testing
-frontend/playground-frontend/coverage
+frontend/coverage
 
 # production
-frontend/playground-frontend/build
+frontend/build
 
 # misc
 .DS_Store
@@ -189,10 +189,10 @@ yarn-error.log*
 .next
 
 # Results / output files
-frontend/playground-frontend/src/backend_outputs/*
-!frontend/playground-frontend/src/backend_outputs/model.pt
-!frontend/playground-frontend/src/backend_outputs/model.pkl
-!frontend/playground-frontend/src/backend_outputs/my_deep_learning_model.onnx
+frontend/src/backend_outputs/*
+!frontend/src/backend_outputs/model.pt
+!frontend/src/backend_outputs/model.pkl
+!frontend/src/backend_outputs/my_deep_learning_model.onnx
 
 # Terraform Files
 dlp-terraform/.terraform

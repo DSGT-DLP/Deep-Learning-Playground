@@ -388,17 +388,29 @@ export const currentUserSlice = createSlice({
         state.user = payload;
       }
     );
+    builder.addCase(registerViaEmailAndPassword.rejected, (state) => {
+      state.user = undefined;
+    });
     builder.addCase(signOutUser.fulfilled, (state) => {
       state.user = undefined;
     });
     builder.addCase(signInViaEmailAndPassword.pending, (state) => {
       state.user = "pending";
     });
+    builder.addCase(signInViaEmailAndPassword.rejected, (state) => {
+      state.user = undefined;
+    });
     builder.addCase(signInViaGoogleRedirect.pending, (state) => {
       state.user = "pending";
     });
+    builder.addCase(signInViaGoogleRedirect.rejected, (state) => {
+      state.user = undefined;
+    });
     builder.addCase(signInViaGithubRedirect.pending, (state) => {
       state.user = "pending";
+    });
+    builder.addCase(signInViaGithubRedirect.rejected, (state) => {
+      state.user = undefined;
     });
     builder.addCase(fetchUserProgressData.pending, (state) => {
       state.userProgressData = undefined;

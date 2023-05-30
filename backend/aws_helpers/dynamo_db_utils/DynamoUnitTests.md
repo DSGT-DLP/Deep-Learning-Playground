@@ -1,11 +1,13 @@
 # Unit tests for Dynamo DB Files
+
 The following are some unit tests for the current dynamo Db util files for each of these tables:
 
 ## dynamo_db_utils.py
+
 ```py
 if __name__ == "__main__":
     print(1)
-    print(2, get_dynamo_item_by_id("trainspace", "blah"))
+    print(2, get_dynamo_item_by_key("trainspace", "blah"))
     print(3, get_dynamo_items_by_gsi("trainspace", "bleh"))
     print(
         4,
@@ -30,6 +32,7 @@ if __name__ == "__main__":
 ```
 
 ## execution_db.py
+
 ```py
 if __name__ == "__main__":
     print(1)
@@ -50,6 +53,7 @@ if __name__ == "__main__":
 ```
 
 ## file_upload_db.py
+
 ```py
 if __name__ == "__main__":
     print(0)
@@ -60,6 +64,7 @@ if __name__ == "__main__":
 ```
 
 ## trainspace.py
+
 ```py
 if __name__ == "__main__":
     print(1)
@@ -137,6 +142,7 @@ if __name__ == "__main__":
 ```
 
 ## userprogress_db.py
+
 ```py
 if __name__ == "__main__":
     print(1)

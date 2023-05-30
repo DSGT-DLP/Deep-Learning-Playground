@@ -1,7 +1,7 @@
 from backend.aws_helpers.dynamo_db_utils.constants import TRAINSPACE_TABLE_NAME
 from backend.aws_helpers.dynamo_db_utils.dynamo_db_utils import (
     create_dynamo_item,
-    get_dynamo_item_by_id,
+    get_dynamo_item_by_key,
     get_dynamo_items_by_gsi,
     update_dynamo_item,
 )
@@ -34,7 +34,7 @@ def getTrainspaceData(trainspace_id: str) -> dict:
     @param trainspace_id: The trainspace_id of the entry to be retrieved
     @return: A JSON string of the entry retrieved from the table
     """
-    record = get_dynamo_item_by_id(TABLE_NAME, trainspace_id)
+    record = get_dynamo_item_by_key(TABLE_NAME, trainspace_id)
     return record
 
 

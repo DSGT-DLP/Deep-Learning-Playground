@@ -1,7 +1,7 @@
 from backend.aws_helpers.dynamo_db_utils.constants import USERPROGRESS_TABLE_NAME
 from backend.aws_helpers.dynamo_db_utils.dynamo_db_utils import (
     create_dynamo_item,
-    get_dynamo_item_by_id,
+    get_dynamo_item_by_key,
     update_dynamo_item,
 )
 import random
@@ -26,7 +26,7 @@ def getAllUserProgressData(uid: str) -> dict:
     @param uid: The uid of the entry to be retrieved
     @return: A JSON string of the entry retrieved from the table
     """
-    record = get_dynamo_item_by_id(TABLE_NAME, uid)
+    record = get_dynamo_item_by_key(TABLE_NAME, uid)
     return record
 
 

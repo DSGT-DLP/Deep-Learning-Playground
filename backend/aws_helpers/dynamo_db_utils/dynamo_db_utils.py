@@ -8,9 +8,9 @@ from typing import Union
 dynamodb = boto3.resource("dynamodb", region_name=AWS_REGION)
 
 
-def get_dynamo_item_by_id(table_name: str, partition_key_value: str) -> dict:
+def get_dynamo_item_by_key(table_name: str, partition_key_value: str) -> dict:
     """
-    Get item from DynamoDB table that match all keys, raises exception if item does not exist
+    Get item from DynamoDB table that match the partition key, raises exception if item does not exist
 
     Args:
         table_name (str): Name of DynamoDB table

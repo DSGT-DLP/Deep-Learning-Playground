@@ -1,7 +1,7 @@
 from backend.aws_helpers.dynamo_db_utils.constants import FILE_UPLOAD_TABLE_NAME
 from backend.aws_helpers.dynamo_db_utils.dynamo_db_utils import (
     create_dynamo_item,
-    get_dynamo_item_by_id,
+    get_dynamo_item_by_key,
     get_dynamo_items_by_gsi,
     update_dynamo_item,
 )
@@ -27,7 +27,7 @@ def getFileUploadData(s3_uri: str) -> dict:
     @param s3_uri: The s3_uri of the entry to be retrieved
     @return: A JSON string of the entry retrieved from the table
     """
-    record = get_dynamo_item_by_id(TABLE_NAME, s3_uri)
+    record = get_dynamo_item_by_key(TABLE_NAME, s3_uri)
     return record
 
 

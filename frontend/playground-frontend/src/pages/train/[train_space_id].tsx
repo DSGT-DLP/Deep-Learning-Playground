@@ -1,12 +1,14 @@
 import Footer from "@/common/components/Footer";
 import NavbarMain from "@/common/components/NavBarMain";
+import { useAppSelector } from "@/common/redux/hooks";
+import { isSignedIn } from "@/common/redux/userLogin";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { Data, XAxisName, YAxisName } from "plotly.js";
-import React from "react";
+import React, { useEffect } from "react";
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
 const TrainSpace = () => {
@@ -91,6 +93,16 @@ const TrainSpace = () => {
     },
     status: 200,
   };
+  const user = useAppSelector((state) => state.currentUser.user);
+  const router = useRouter();
+  useEffect(() => {
+    if (router.isReady && !user) {
+      router.replace({ pathname: "/login" });
+    }
+  }, [user, router.isReady]);
+  if (!isSignedIn(user)) {
+    return <></>;
+  }
   return (
     <div style={{ height: "100vh" }}>
       <NavbarMain />

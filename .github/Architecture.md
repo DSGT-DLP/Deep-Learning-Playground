@@ -35,7 +35,7 @@
 ## Frontend Architecture
 
 ```
-📦playground-frontend
+📦frontend
  ┣ 📂layer_docs
  ┃ ┣ 📜Linear.md - Doc for Linear layer
  ┃ ┣ 📜ReLU.md - Doc for ReLU later

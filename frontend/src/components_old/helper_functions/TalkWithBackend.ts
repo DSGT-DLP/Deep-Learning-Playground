@@ -129,20 +129,20 @@ export async function sendEmail(
   // send email if provided
   const attachments = [
     // we will not create constant values for the source files because the constants cannot be used in Home
-    "./frontend/playground-frontend/src/backend_outputs/my_deep_learning_model.onnx",
-    "./frontend/playground-frontend/src/backend_outputs/model.pt",
-    "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_loss_plot.png",
+    "./frontend/src/backend_outputs/my_deep_learning_model.onnx",
+    "./frontend/src/backend_outputs/model.pt",
+    "./frontend/src/backend_outputs/visualization_output/my_loss_plot.png",
   ];
 
   if (problemType === "classification") {
     attachments.push(
-      "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_accuracy_plot.png"
+      "./frontend/src/backend_outputs/visualization_output/my_accuracy_plot.png"
     );
     attachments.push(
-      "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_confusion_matrix.png"
+      "./frontend/src/backend_outputs/visualization_output/my_confusion_matrix.png"
     );
     attachments.push(
-      "./frontend/playground-frontend/src/backend_outputs/visualization_output/my_AUC_ROC_Curve.png"
+      "./frontend/src/backend_outputs/visualization_output/my_AUC_ROC_Curve.png"
     );
   }
 

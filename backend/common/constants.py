@@ -5,19 +5,21 @@ CSV_FILE_NAME = "data.csv"
 CSV_FILE_PATH = f"{os.path.join(os.getcwd(), 'backend', CSV_FILE_NAME)}"
 DEEP_LEARNING_RESULT_CSV_PATH = f"./backend/dl_results.csv"
 TENSORBOARD_LOG = "runs/user_experiment"
-ONNX_MODEL = (
-    "./frontend/src/backend_outputs/my_deep_learning_model.onnx"
-)
+ONNX_MODEL = "./frontend/src/backend_outputs/my_deep_learning_model.onnx"
 LOSS_VIZ = "./frontend/src/backend_outputs/visualization_output/my_loss_plot.png"
 ACC_VIZ = "./frontend/src/backend_outputs/visualization_output/my_accuracy_plot.png"
-CONFUSION_VIZ = "./frontend/src/backend_outputs/visualization_output/my_confusion_matrix.png"
+CONFUSION_VIZ = (
+    "./frontend/src/backend_outputs/visualization_output/my_confusion_matrix.png"
+)
 AUC_ROC_VIZ = "./frontend/src/backend_outputs/visualization_output/my_AUC_ROC_Curve.png"
 SAVED_MODEL_DL = "./frontend/src/backend_outputs/model.pt"
 SAVED_MODEL_ML = "./frontend/src/backend_outputs/model.pkl"
 TRAIN_TIME_CSV = "epoch_times.csv"
 NETRON_URL = "https://netron.app/"
 OPEN_FILE_BUTTON = "open-file-button"
-CLASSICAL_ML_CONFUSION_MATRIX = "./frontend/src/backend_outputs/visualization_output/confusion_matrix.png"
+CLASSICAL_ML_CONFUSION_MATRIX = (
+    "./frontend/src/backend_outputs/visualization_output/confusion_matrix.png"
+)
 CLASSICAL_ML_RESULT_CSV_PATH = f"ml_results.csv"
 IMAGE_DETECTION_RESULT_CSV_PATH = f"detection_results.csv"
 EPOCH = "epoch"

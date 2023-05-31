@@ -1,4 +1,13 @@
-import { Box, Button, Flex, Dropdown, PageHeader, Spinner } from "gestalt";
+import {
+  Box,
+  Button,
+  Flex,
+  Dropdown,
+  PageHeader,
+  Spinner,
+  Upsell,
+  Icon,
+} from "gestalt";
 import "gestalt/dist/gestalt.css";
 import { useEffect } from "react";
 //import JSZip from "jszip";
@@ -103,17 +112,18 @@ const BlankGrid = () => {
   const router = useRouter();
   return (
     <div id="blank-grid-wrapper">
-      <div id="blank-grid">
-        <p>
-          You haven't trained any models yet. Create your first model below!
-        </p>
-        <button
-          id="blank-grid-button"
-          onClick={() => router.push({ pathname: "/train"})}
-        >
-          Train Model
-        </button>
-      </div>
+      <Upsell
+        imageData={{component: <Icon icon="info-circle" accessibilityLabel="" color="default" size={32}/>}}
+        message="Click on train to get started."
+        primaryAction={{
+          accessibilityLabel: "Button to train",
+          onClick:() => router.push({ pathname: "/train"}),
+          label: 'Train',
+          target: 'blank',
+        }}
+        title="You do not have any trained models yet. Create your first model!"
+      />
+
     </div>
   );
 };

@@ -745,14 +745,6 @@ export const POSSIBLE_TRANSFORMS: PossibleTransform[] = [
         max: 1000,
         parameter_type: "number",
       } as LayerParameter<"number">,
-      // size: {
-      //   index: 0,
-      //   parameter_name: "(H, W)",
-      //   min: 1,
-      //   max: 1000,
-      //   default: "(32, 32)",
-      //   parameter_type: "tuple",
-      // } as LayerParameter<"tuple">,
     },
     label: "Resize",
     value: "Resize",
@@ -925,14 +917,6 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
         max: 1000,
         parameter_type: "number",
       } as LayerParameter<"number">,
-      // size: {
-      //   index: 0,
-      //   parameter_name: "(H, W)",
-      //   min: 1,
-      //   max: 1000,
-      //   default: "(32, 32)",
-      //   parameter_type: "tuple",
-      // } as LayerParameter<"tuple">,
     },
     tooltip_info: (
       <>

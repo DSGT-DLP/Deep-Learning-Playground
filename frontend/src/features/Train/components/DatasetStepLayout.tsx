@@ -88,7 +88,7 @@ export const UploadDatasetPanel = ({
             accept={acceptedTypes}
             hidden
             onChange={(e) => {
-              if (e.target.files && e.target.files[0]) {
+              if (e.target.files && e.target.files[0] ) {
                 uploadFile({ dataSource: dataSource, file: e.target.files[0] });
               }
               e.target.value = "";

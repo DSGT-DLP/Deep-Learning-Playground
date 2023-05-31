@@ -474,8 +474,6 @@ const ImageParametersStep = ({
                 direction={"row"}
                 alignItems={"center"}
                 justifyContent={"flex-end"}
-                // maxWidth={"300px"}
-                // sx={{ overflowWrap: 'normal', gap: 1 }}
                 spacing={2}
                 divider={<Divider orientation="vertical" flexItem />}
               >
@@ -483,15 +481,10 @@ const ImageParametersStep = ({
                   (parameter, index) => (
                     <div key={index} data-no-dnd>
                       {formProps ? (
-                        // <div style={{maxWidth: "500px", overflow: "auto"}}>
-                        // <Container sx={{ overflowWrap: ""}}>
                         <Controller
                           name={`layers.${formProps.index}.parameters.${index}`}
                           control={formProps.control}
                           rules={{ required: true }}
-                          // sx={{ overflow: 'auto' }}
-                          // style={{maxWidth: "500px"}}
-                          // style={{ flexWrap: 'wrap' }}
                           render={({ field: { onChange, value } }) => (
                             <TextField
                               label={parameter.label}
@@ -510,11 +503,8 @@ const ImageParametersStep = ({
                             />
                           )}
                         />
-                        // </Container>
-                        // </div>
                       ) : (
                         <TextField
-                          // min-width={122}
                           label={parameter.label}
                           size={"small"}
                           type={parameter.type}

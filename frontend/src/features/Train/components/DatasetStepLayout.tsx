@@ -63,9 +63,11 @@ export const DatasetStepTabLayout = ({
 export const UploadDatasetPanel = ({
   dataSource,
   methods,
+  acceptedTypes,
 }: {
   dataSource: DATA_SOURCE;
   methods: UseFormReturn<DatasetData, unknown>;
+  acceptedTypes: string;
 }) => {
   const [uploadFile] = useUploadDatasetFileMutation();
   const { data, refetch } = useGetDatasetFilesDataQuery({ dataSource });
@@ -83,7 +85,7 @@ export const UploadDatasetPanel = ({
           Upload
           <input
             type="file"
-            accept=".csv"
+            accept={acceptedTypes}
             hidden
             onChange={(e) => {
               if (e.target.files && e.target.files[0]) {

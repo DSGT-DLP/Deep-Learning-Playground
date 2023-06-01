@@ -90,6 +90,10 @@ export const UploadDatasetPanel = ({
             onChange={(e) => {
               if (e.target.files && e.target.files[0]) {
                 uploadFile({ dataSource: dataSource, file: e.target.files[0] });
+                // if(e.target.files[0].type.match({acceptedTypes}) == null) {
+                //   alert('Files can only be of type ' + acceptedTypes + '.');
+                //   return;
+                // }
               }
               e.target.value = "";
             }}
@@ -98,6 +102,11 @@ export const UploadDatasetPanel = ({
         <Button variant="outlined" onClick={() => refetch()}>
           Refresh
         </Button>
+      </Stack>
+      <Stack>
+        <Typography variant="h4" fontSize={12} marginTop={-2.7}>
+          Please only select type: {acceptedTypes}.
+        </Typography>
       </Stack>
       {data && <UploadDataGrid data={data} methods={methods} />}
     </>

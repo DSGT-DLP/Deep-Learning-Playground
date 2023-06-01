@@ -26,6 +26,7 @@ import {
 } from "@/features/Train/redux/trainspaceApi";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { formatDate } from "@/common/utils/dateFormat";
+import { toast } from "react-toastify";
 import prettyBytes from "pretty-bytes";
 
 export const DatasetStepTabLayout = ({
@@ -89,11 +90,15 @@ export const UploadDatasetPanel = ({
             hidden
             onChange={(e) => {
               if (e.target.files && e.target.files[0]) {
-                uploadFile({ dataSource: dataSource, file: e.target.files[0] });
-                // if(e.target.files[0].type.match({acceptedTypes}) == null) {
-                //   alert('Files can only be of type ' + acceptedTypes + '.');
-                //   return;
-                // }
+                if(e.target.files[0].type.match(acceptedTypes) == null) {
+                  toast.error('Files can only be of type ' + acceptedTypes + '.', 
+                  {position: toast.POSITION.TOP_CENTER, autoClose: 2000});
+                  return;
+                } else {
+                  uploadFile({ dataSource: dataSource, file: e.target.files[0] });
+                  toast.success('File uploaded successfully!', 
+                  {position: toast.POSITION.TOP_CENTER, autoClose: 2000});
+                }
               }
               e.target.value = "";
             }}

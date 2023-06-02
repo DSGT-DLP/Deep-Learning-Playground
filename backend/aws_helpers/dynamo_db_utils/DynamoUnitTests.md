@@ -52,17 +52,6 @@ if __name__ == "__main__":
     )))
 ```
 
-## file_upload_db.py
-
-```py
-if __name__ == "__main__":
-    print(0)
-    print(1, getFileUploadData("test011"))
-    print(2, updateFileUploadData("test011", {"s3_uri": "test02"}))
-    print(3, createFileUploadData(FileUploadData("test012", "bleh")))
-    print(5, getAllUserFileUploadData("bleh"))
-```
-
 ## trainspace.py
 
 ```py

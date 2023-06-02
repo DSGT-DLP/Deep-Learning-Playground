@@ -2,7 +2,6 @@ def test_all_imports():
     import backend.aws_helpers.aws_rekognition_utils.rekognition_client
     import backend.aws_helpers.aws_secrets_utils.build_env
     import backend.aws_helpers.dynamo_db_utils.execution_db
-    import backend.aws_helpers.dynamo_db_utils.file_upload_db
     import backend.aws_helpers.dynamo_db_utils.trainspace_db
     import backend.aws_helpers.dynamo_db_utils.userprogress_db
     import backend.aws_helpers.lambda_utils.lambda_client

@@ -60,7 +60,7 @@ export const STEP_SETTINGS = {
       { label: "Stochastic Gradient Descent", value: "SGD" },
       { label: "Adam Optimization", value: "Adam" },
     ],
-    layerValues: ["LINEAR", "RELU", "TANH", "SOFTMAX"],
+    layerValues: ["LINEAR", "RELU", "TANH", "SOFTMAX", "SIGMOID", "LOGSOFTMAX"],
     layers: {
       LINEAR: {
         label: "Linear",
@@ -105,6 +105,24 @@ export const STEP_SETTINGS = {
           },
         ],
       },
+      SIGMOID: {
+        label: "Sigmoid",
+        objectName: "nn.Sigmoid",
+        parameters: [],
+      },
+      LOGSOFTMAX: {
+        label: "LogSoftmax",
+        objectName: "nn.LogSoftmax",
+        parameters: [
+          {
+            label: "Dimension",
+            min: -3,
+            max: 2,
+            required: true,
+            type: "number",
+          },
+        ],
+      }
     },
   },
   REVIEW: {

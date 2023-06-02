@@ -22,7 +22,7 @@ else:
 
 app = Flask(
     __name__,
-    static_folder=os.path.join(os.getcwd(), "frontend", "playground-frontend", "build"),
+    static_folder=os.path.join(os.getcwd(), "frontend", "build"),
 )
 CORS(app)
 

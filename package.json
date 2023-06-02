@@ -4,10 +4,10 @@
   "description": "Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules through a drag and drop interface.",
   "main": "index.tsx",
   "scripts": {
-    "build:prod": "cd frontend/playground-frontend && yarn install && REACT_APP_MODE=prod yarn run build",
-    "installf": "cd frontend/playground-frontend && yarn install",
+    "build:prod": "cd frontend && yarn install && REACT_APP_MODE=prod yarn run build",
+    "installf": "cd frontend && yarn install",
     "installb": "conda --version && cd conda && conda env create -f environment.yml && pre-commit install",
-    "startf": "cd frontend/playground-frontend && yarn dev",
+    "startf": "cd frontend && yarn dev",
     "secrets": "eval \"$(conda shell.bash hook)\" && conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env",
     "startb": "eval \"$(conda shell.bash hook)\" && conda activate dlplayground && python -m backend.driver",
     "secrets:deploy": "python -m backend.aws_helpers.aws_secrets_utils.build_env",

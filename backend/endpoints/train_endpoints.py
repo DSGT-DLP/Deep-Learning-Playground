@@ -61,7 +61,7 @@ def tabular_run():
         tabular_data = TrainspaceData(
             trainspace_id=id,
             uid=request_data["user"]["uid"],
-            created=request_data["created"],
+            created=get_current_timestamp(),
             data_source="TABULAR",
             dataset_data=request_data["dataset_data"],
             name=request_data["name"],

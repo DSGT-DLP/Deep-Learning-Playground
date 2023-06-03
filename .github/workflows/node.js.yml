@@ -26,5 +26,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
+      - run: yarn lint
+        working-directory: ./frontend
       - run: yarn install
         working-directory: ./frontend

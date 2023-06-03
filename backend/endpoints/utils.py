@@ -1,7 +1,8 @@
 import traceback
 
 from backend.aws_helpers.dynamo_db_utils.execution_db import (
-    createUserExecutionsData,
+    ExecutionData,
+    createExecutionData,
 )
 from backend.common.utils import *
 
@@ -17,16 +18,21 @@ def createExecution(entryData: dict) -> dict:
 
     @return: A JSON string of the entry created in the table
     """
-    entryData = {
-        "execution_id": entryData["execution_id"],
-        "user_id": entryData["user"]["uid"],
-        "name": entryData["custom_model_name"],
-        "data_source": entryData["data_source"],
-        "status": "QUEUED",
-        "timestamp": get_current_timestamp(),
-        "progress": 0,
-    }
-    createUserExecutionsData(entryData)
+    try:
+        entryData: ExecutionData = ExecutionData(
+            execution_id=entryData["execution_id"],
+            user_id=entryData["user"]["uid"],
+            name=entryData["custom_model_name"],
+            data_source=entryData["data_source"],
+            status="QUEUED",
+            timestamp=get_current_timestamp(),
+            progress=0,
+        )
+        createExecutionData(entryData)
+        return {"success": True, "message": "Successfully created execution entry"}
+    except Exception as e:
+        print(traceback.format_exc())
+        return {"success": False, "message": "Error in creating execution entry"}
 
 
 def send_success(results: dict):

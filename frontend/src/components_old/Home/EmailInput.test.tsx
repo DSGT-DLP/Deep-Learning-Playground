@@ -21,8 +21,9 @@ describe("EmailInput_function", () => {
     const input = getByPlaceholderText("someone@example.com");
     fireEvent.change(input, { target: { value: "test@test.com" } });
     fireEvent.blur(input);
-    waitFor(() => {expect(getByText("Please enter a valid email")).toBeInTheDocument();})
-    
+    waitFor(() => {
+      expect(getByText("Please enter a valid email")).toBeInTheDocument();
+    });
   });
 
   // Tests that the component behaves correctly when an empty email is entered. tags: [happy path]
@@ -46,7 +47,9 @@ describe("EmailInput_function", () => {
     const input = getByPlaceholderText("someone@example.com");
     fireEvent.change(input, { target: { value: "test" } });
     fireEvent.blur(input);
-    waitFor(() => {expect(getByText("Please enter a valid email")).toBeInTheDocument();});
+    waitFor(() => {
+      expect(getByText("Please enter a valid email")).toBeInTheDocument();
+    });
   });
 
   // Tests that the component behaves correctly when an email with more than 255 characters is entered. tags: [edge case]
@@ -59,6 +62,8 @@ describe("EmailInput_function", () => {
     const longEmail = "a".repeat(256) + "@test.com";
     fireEvent.change(input, { target: { value: longEmail } });
     fireEvent.blur(input);
-    waitFor(() => {expect(getByText("Please enter a valid email")).toBeInTheDocument();});
+    waitFor(() => {
+      expect(getByText("Please enter a valid email")).toBeInTheDocument();
+    });
   });
 });

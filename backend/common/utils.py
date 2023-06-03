@@ -329,11 +329,11 @@ def make_directory(filepath: str):
 
 def get_current_timestamp() -> str:
     """
-    Returns the current UTC timestamp in the format 2022-12-31T17:59:59Z
+    Returns the current UTC timestamp in the format 2023-06-02T00:39:08.331891Z
 
-    :return: current UTC timestamp in the format 2022-12-31T17:59:59Z
+    :return: current UTC timestamp in the format 2023-06-02T00:39:08.331891Z
     """
-    return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.utcnow().isoformat() + "Z"
 
 
 def get_current_unix_time() -> int:

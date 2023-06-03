@@ -80,7 +80,7 @@ const App = ({ Component, pageProps }: AppProps) => {
       <Provider store={store}>
         <FirebaseAuthState />
         <Component {...pageProps} />
-        <ToastContainer />
+        <ToastContainer autoClose={2000} />
       </Provider>
     </>
   );

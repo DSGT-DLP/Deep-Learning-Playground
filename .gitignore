@@ -161,6 +161,10 @@ unzipped_data/
 backend/dl_results.csv
 backend/detection_results.csv 
 
+# Bearer Token Script
+backend/firebase_helpers/bearer.py
+backend/firebase_helpers/firebase_creds.json
+
 # --------------------------------------------------------------------------
 #	Frontend
 # --------------------------------------------------------------------------

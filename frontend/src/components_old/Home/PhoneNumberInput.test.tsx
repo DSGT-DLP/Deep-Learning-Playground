@@ -58,7 +58,7 @@ describe("PhoneNumberInput_function", () => {
   // Tests that the error message is styled using the general_styles constant. tags: [general behavior]
   it("test_error_message_styling", () => {
     const { getByPlaceholderText, getByText } = render(
-      <PhoneNumberInput setPhoneNumber={() => {}} />
+      <PhoneNumberInput setPhoneNumber={() => undefined} />
     );
     const input = getByPlaceholderText("+16785552057");
     fireEvent.blur(input, { target: { value: "invalid" } });

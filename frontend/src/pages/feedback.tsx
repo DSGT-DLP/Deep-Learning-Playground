@@ -60,7 +60,7 @@ const Feedback = () => {
   const [recaptcha, setRecaptcha] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [successful, setSuccessful] = useState(false);
-  const [sendFeedback, { data }] = useLazySendFeedbackDataQuery();
+  const [sendFeedback] = useLazySendFeedbackDataQuery();
   const onClickSubmit = async () => {
     setSubmitted(true);
     if (
@@ -69,7 +69,7 @@ const Feedback = () => {
       email.trim() &&
       feedback.trim()
     ) {
-      if (recaptcha != "") {
+      if (recaptcha !== "") {
         const emailResult = await sendFeedback({
           email_address: process.env.REACT_APP_FEEDBACK_EMAIL,
           subject: "FEEDBACK - " + firstName + " " + lastName + " " + email,

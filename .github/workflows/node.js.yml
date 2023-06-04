@@ -28,3 +28,6 @@ jobs:
           cache: "yarn"
       - run: yarn install
         working-directory: ./frontend
+      - run: yarn lint
+        working-directory: ./frontend
+      # future: add yarn build once build errors are resolved

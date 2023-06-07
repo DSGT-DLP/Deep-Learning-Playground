@@ -1,6 +1,7 @@
 import os
 from flask import Blueprint, Flask, send_from_directory, redirect
 from flask_cors import CORS
+from backendCore.endpoints.sqs import sqs_bp
 
 PORT = os.getenv("PORT")
 if PORT is not None:
@@ -14,8 +15,14 @@ app = Flask(
 )
 CORS(app)
 
+app_bp = Blueprint("api", __name__)
 
-@app.route("/test")
+app_bp.register_blueprint(sqs_bp, url_prefix="/sqs")
+
+app.register_blueprint(app_bp, url_prefix="/api")
+
+
+@app.route("/test", methods=["GET", "PORT"])
 def test():
     return {"result": "200 Backend surface test successful"}
 

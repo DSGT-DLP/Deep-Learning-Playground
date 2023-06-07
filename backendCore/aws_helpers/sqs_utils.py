@@ -1,14 +1,7 @@
 import boto3
-import json
-from botocore.exceptions import ClientError
-from backend.aws_helpers.sqs_utils.constants import TRAINING_QUEUE
 from backend.common.constants import AWS_REGION
-
-"""
-Wrapper to interface with AWS SQS (Simple Queue Service)
-
-Helpful Resource: https://www.learnaws.org/2020/12/17/aws-sqs-boto3-guide/
-"""
+import json
+from backendCore.aws_helpers.constants import TRAINING_QUEUE
 
 sqs_client = boto3.client("sqs", region_name=AWS_REGION)
 
@@ -61,38 +54,3 @@ def delete_message(queue_name, receipt_handle):
     )
     status_code = response["ResponseMetadata"]["HTTPStatusCode"]
     return json.loads(json.dumps({"status_code": status_code}))
-
-
-def receive_message(queue_name=TRAINING_QUEUE):
-    """
-    Utility function to receive message from SQS queue in order to process
-
-    Args:
-        queue_name (str): name of SQS queue
-
-    """
-
-    queue_url = get_queue_url(queue_name)
-    response = sqs_client.receive_message(
-        QueueUrl=queue_url, MaxNumberOfMessages=1, WaitTimeSeconds=10
-    )
-
-    messages = response.get("Messages", [])
-    if len(messages) == 0:
-        return json.loads("{}")  # no messages received
-
-    message_body = json.loads(messages[0]["Body"])
-    receipt_handle = messages[0]["ReceiptHandle"]
-
-    # delete received message for safety purposes
-    delete_result = delete_message(queue_name, receipt_handle)
-    if delete_result["status_code"] == 200:
-        return message_body
-    return json.loads("{}")
-
-
-def receive_training_queue_message():
-    """
-    Convenient utility function to receive message from training queue
-    """
-    return receive_message(TRAINING_QUEUE)

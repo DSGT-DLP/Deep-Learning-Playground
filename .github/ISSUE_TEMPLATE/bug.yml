@@ -1,6 +1,6 @@
 name: 🐞 Bug Report Form
 description: File a bug report
-title: "[Bug]: "
+title: "[BUG]: "
 labels: ["bug"]
 body:
   - type: markdown

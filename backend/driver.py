@@ -18,7 +18,7 @@ PORT = os.getenv("PORT")
 if PORT is not None:
     PORT = int(PORT)
 else:
-    PORT = 8000
+    PORT = 8001
 
 app = Flask(
     __name__,

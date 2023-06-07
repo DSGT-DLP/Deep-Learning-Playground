@@ -1,0 +1,30 @@
+import os
+from flask import Blueprint, Flask, send_from_directory, redirect
+from flask_cors import CORS
+
+PORT = os.getenv("PORT")
+if PORT is not None:
+    PORT = int(PORT)
+else:
+    PORT = 8000
+
+app = Flask(
+    __name__,
+    static_folder=os.path.join(os.getcwd(), "frontend", "build"),
+)
+CORS(app)
+
+
+@app.route("/test")
+def test():
+    return {"result": "200 Backend surface test successful"}
+
+
+@app.route("/")
+def root():
+    return "Backend surface running"
+
+
+if __name__ == "__main__":
+    print("Backend surface starting")
+    app.run(debug=True, host="0.0.0.0", port=PORT)

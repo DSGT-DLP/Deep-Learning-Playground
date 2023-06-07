@@ -26,6 +26,7 @@ import {
 } from "@/features/Train/redux/trainspaceApi";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { formatDate } from "@/common/utils/dateFormat";
+import { toast } from "react-toastify";
 import prettyBytes from "pretty-bytes";
 
 export const DatasetStepTabLayout = ({
@@ -63,9 +64,11 @@ export const DatasetStepTabLayout = ({
 export const UploadDatasetPanel = ({
   dataSource,
   methods,
+  acceptedTypes,
 }: {
   dataSource: DATA_SOURCE;
   methods: UseFormReturn<DatasetData, unknown>;
+  acceptedTypes: string;
 }) => {
   const [uploadFile] = useUploadDatasetFileMutation();
   const { data, refetch } = useGetDatasetFilesDataQuery({ dataSource });
@@ -83,11 +86,17 @@ export const UploadDatasetPanel = ({
           Upload
           <input
             type="file"
-            accept=".csv"
+            accept={acceptedTypes}
             hidden
             onChange={(e) => {
               if (e.target.files && e.target.files[0]) {
-                uploadFile({ dataSource: dataSource, file: e.target.files[0] });
+                if(e.target.files[0].type.match(acceptedTypes) == null) {
+                  toast.error('Files can only be of type ' + acceptedTypes + '.');
+                  return;
+                } else {
+                  uploadFile({ dataSource: dataSource, file: e.target.files[0] });
+                  toast.success('File uploaded successfully!');
+                }
               }
               e.target.value = "";
             }}
@@ -96,6 +105,11 @@ export const UploadDatasetPanel = ({
         <Button variant="outlined" onClick={() => refetch()}>
           Refresh
         </Button>
+      </Stack>
+      <Stack>
+        <Typography variant="h4" fontSize={12} marginTop={-2.7}>
+          Please only select type: {acceptedTypes}.
+        </Typography>
       </Stack>
       {data && <UploadDataGrid data={data} methods={methods} />}
     </>

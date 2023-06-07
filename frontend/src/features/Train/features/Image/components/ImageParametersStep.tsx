@@ -1221,4 +1221,4 @@ const ImageParametersStep = ({
     );
   };
 
-  export default ImageParametersStep;
+export default ImageParametersStep;

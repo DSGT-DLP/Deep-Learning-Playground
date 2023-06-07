@@ -226,6 +226,13 @@ export const STEP_SETTINGS = {
             required: true,
             type: "number",
           },
+          {
+            label: "Width",
+            min: 1,
+            max: 1000,
+            required: true,
+            type: "number",
+          },
         ],
       },
       TO_TENSOR: {

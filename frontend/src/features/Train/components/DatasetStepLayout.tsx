@@ -91,13 +91,11 @@ export const UploadDatasetPanel = ({
             onChange={(e) => {
               if (e.target.files && e.target.files[0]) {
                 if(e.target.files[0].type.match(acceptedTypes) == null) {
-                  toast.error('Files can only be of type ' + acceptedTypes + '.', 
-                  {position: toast.POSITION.TOP_CENTER, autoClose: 2000});
+                  toast.error('Files can only be of type ' + acceptedTypes + '.');
                   return;
                 } else {
                   uploadFile({ dataSource: dataSource, file: e.target.files[0] });
-                  toast.success('File uploaded successfully!', 
-                  {position: toast.POSITION.TOP_CENTER, autoClose: 2000});
+                  toast.success('File uploaded successfully!');
                 }
               }
               e.target.value = "";

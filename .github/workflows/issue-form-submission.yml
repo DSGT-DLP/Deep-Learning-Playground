@@ -1,0 +1,85 @@
+name: Comment on Issue
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  comment-on-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment on Issue
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = context.issue.number;
+            const labels = context.payload.issue.labels.map(label => label.name);
+            
+            const isBugRequest = labels.includes('bug');
+            const isFeatureRequest = labels.includes('enhancement');
+            const defaultBranch = "nextjs"
+            
+            if (isBugRequest) {
+              const branchName = `bug-${issueNumber}`;
+              
+              const branchSetupInstructions = `
+              Hello @${{ github.actor }}! Thank you for submitting the Bug Request Form. We appreciate your contribution. :wave:
+              
+              We will look into it and provide a response as soon as possible.
+              
+              To work on this bug request, you can follow these branch setup instructions:
+              
+              1. Checkout the main branch:
+                 git checkout ${defaultBranch}
+               
+              2. Pull the latest changes from the remote main branch:
+                 git pull origin ${defaultBranch}
+               
+              3. Create a new branch specific to this bug request using the issue number:
+                 git checkout -b ${branchName}
+              
+              Feel free to make the necessary changes in this branch and submit a pull request when you're ready.
+              
+              Best regards,
+              Deep Learning Playground (DLP) Team
+              `;
+              
+              github.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: branchSetupInstructions
+              });
+            } else if (isFeatureRequest) {
+              const branchName = `feature-${issueNumber}`;
+              
+              const branchSetupInstructions = `
+              Hello @${{ github.actor }}! Thank you for submitting the Feature Request Form. We appreciate your contribution. :wave:
+              
+              We will look into it and provide a response as soon as possible.
+              
+              To work on this feature request, you can follow these branch setup instructions:
+              
+              1. Checkout the main branch:
+                 git checkout ${defaultBranch}
+               
+              2. Pull the latest changes from the remote main branch:
+                 git pull origin ${defaultBranch}
+               
+              3. Create a new branch specific to this feature request using the issue number:
+                 git checkout -b ${branchName}
+              
+              Feel free to make the necessary changes in this branch and submit a pull request when you're ready.
+              
+              Best regards,
+              Deep Learning Playground (DLP) Team
+              `;
+              
+              github.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: branchSetupInstructions
+              });
+            }

@@ -9,12 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Comment on Issue
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { Octokit } = require('@octokit/rest');
-            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
             const issueNumber = context.issue.number;
             const labels = context.payload.issue.labels.map(label => label.name);
             
@@ -47,7 +45,7 @@ jobs:
               Deep Learning Playground (DLP) Team
               `;
               
-              octokit.issues.createComment({
+              github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
@@ -78,7 +76,7 @@ jobs:
               Deep Learning Playground (DLP) Team
               `;
               
-              octokit.issues.createComment({
+              github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,

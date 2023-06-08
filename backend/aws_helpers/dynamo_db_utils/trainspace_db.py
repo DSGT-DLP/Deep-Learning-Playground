@@ -65,6 +65,11 @@ class TabularParametersData(BaseData):
     batch_size: int
     layers: list[LayerData]
 
+@dataclass
+class DetectionParametersData(BaseData):
+    detection_type: str
+    detection_problem_type: str
+    transforms: list[LayerData]
 
 @dataclass
 class TabularData(TrainspaceData):

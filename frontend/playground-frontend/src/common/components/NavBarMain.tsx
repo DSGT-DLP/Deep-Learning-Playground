@@ -107,13 +107,6 @@ const NavbarMain = () => {
                 ) : null}
               </Grid>
               <Grid item>
-                {isSignedIn(user) ? (
-                  <Link href="/detect" passHref className="nav-link">
-                    Detect
-                  </Link>
-                ) : null}
-              </Grid>
-              <Grid item>
                 <Link href="/about" passHref className="nav-link">
                   About
                 </Link>

@@ -1,40 +1,20 @@
-import { backendApi } from "@/common/redux/backendApi";
+import { updateTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
 import { TrainspaceData } from "../types/detectionTypes";
-import { auth } from "@/common/utils/firebase";
+import { TRAINSPACE_SETTINGS } from "../constants/detectionConstants";
 
-const tabularApi = backendApi.injectEndpoints({
-  endpoints: (builder) => ({
-    train: builder.mutation<{ trainspaceId: string }, TrainspaceData<"TRAIN">>({
-      query: (trainspaceData) => ({
-        url: "/api/train/tabular-run",
-        method: "POST",
-        body: {
-          user: auth.currentUser,
-          name: trainspaceData.name,
-          dataset_data: {
-            name: trainspaceData.datasetData.name,
-            is_default_dataset: trainspaceData.datasetData.isDefaultDataset,
-          },
-          parameters_data: {
-            detection_problem_type: trainspaceData.parameterData.problemType,
-
-          },
-          review_data: {
-            notification_email:
-              trainspaceData.reviewData.notificationEmail ?? null,
-            notification_phone_number:
-              trainspaceData.reviewData.notificationPhoneNumber ?? null,
-          },
-        },
-      }),
-      transformResponse: (response: { trainspace_id: string }) => {
-        return {
-          trainspaceId: response.trainspace_id,
-        };
-      },
-    }),
-  }),
-  overrideExisting: true,
-});
-
-export const { useTrainMutation } = tabularApi;
+export const updateDetectionTrainspaceData = <
+  T extends (typeof TRAINSPACE_SETTINGS)["steps"][number]
+>({
+  current,
+  stepLabel,
+}: {
+  current: TrainspaceData<T>;
+  stepLabel: T;
+}) =>
+  updateTrainspaceData({
+    ...current,
+    ...{
+      step:
+        TRAINSPACE_SETTINGS.steps.findIndex((step) => step === stepLabel) + 1,
+    },
+  });

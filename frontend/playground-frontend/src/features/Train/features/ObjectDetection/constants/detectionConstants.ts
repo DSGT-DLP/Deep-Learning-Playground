@@ -1,8 +1,8 @@
 
 import { grayscale } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import TabularDatasetStep from "../components/DetectionImageStep";
-import DParametersStep from "../components/DetectionParametersStep";
-import TabularReviewStep from "../components/DetectionReviewStep";
+import DetectionImageStep from "../components/DetectionImageStep";
+import DetectionParametersStep from "../components/DetectionParametersStep";
+import DetectionReviewStep from "../components/DetectionReviewStep";
 import TabularTrainspace from "../components/DetectionTrainspace";
 import React from "react";
 
@@ -13,6 +13,11 @@ export const TRAINSPACE_SETTINGS = {
 } as const;
 
 export const STEP_SETTINGS = {
+  IMAGE: {
+    name: "Image",
+    optional: false,
+    component: DetectionImageStep,
+  },
   PARAMETERS: {
     name: "Parameters",
     optional: false,

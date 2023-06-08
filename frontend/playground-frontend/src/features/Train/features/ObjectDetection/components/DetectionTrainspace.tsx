@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
-import { TrainspaceData } from "@/features/Train/features/Tabular/types/tabularTypes";
+import { TrainspaceData } from "@/features/Train/features/ObjectDetection/types/detectionTypes";
 import { UseFormHandleSubmit, useForm } from "react-hook-form";
 import React, { useEffect, useState } from "react";
 import TrainspaceLayout from "@/features/Train/components/TrainspaceLayout";
@@ -91,7 +91,7 @@ const TrainspaceStepInner = ({
 }) => {
   const Component = STEP_SETTINGS[TRAINSPACE_SETTINGS.steps[step]].component;
   const [isStepModified, setIsStepModified] = useState<boolean>(false);
-  const [train] = useTrainMutation();
+  const [train] = useDetectionMutation();
   const dispatch = useAppDispatch();
   const router = useRouter();
   useEffect(() => {

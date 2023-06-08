@@ -6,12 +6,13 @@ import { useLazySendUploadDataQuery } from "../redux/uploadApi";
 
 const DetectionImageStep = () => {
   const [sendUploadData, { data }] = useLazySendUploadDataQuery();
-  const dataURLtoFile = (
-    dataurl: string | undefined,
-    filename: string | undefined
-  ) => {
+  const dataURLtoFile = (dataurl: string, filename: string) => {
     const arr = dataurl.split(",");
-    const mime = arr[0].match(/:(.*?);/)[1];
+    if (arr.length === 0) {
+      return new File([""], filename);
+    }
+    const matched = arr[0].match(/:(.*?);/);
+    const mime = matched ? matched[1] : undefined;
     const bstr = atob(arr[1]);
     let n = bstr.length;
     const u8arr = new Uint8Array(n);
@@ -24,7 +25,7 @@ const DetectionImageStep = () => {
   return (
     <FilerobotImageEditor
       source="https://scaleflex.airstore.io/demo/stephen-walker-unsplash.jpg"
-      onSave={(editedImageObject) => {
+      onSave={(editedImageObject: any) => {
         const file = dataURLtoFile(
           editedImageObject.imageBase64,
           editedImageObject.fullName
@@ -41,17 +42,18 @@ const DetectionImageStep = () => {
           {
             titleKey: "classicTv",
             descriptionKey: "4:3",
-            ratio: 4 / 3,
+            ratio: (4 / 3).toString(),
           },
           {
             titleKey: "cinemascope",
             descriptionKey: "21:9",
-            ratio: 21 / 9,
+            ratio: (21 / 9).toString(),
           },
         ],
         presetsFolders: [
           {
-            titleKey: "socialMedia", // will be translated into Social Media as backend contains this translation key
+            titleKey: "socialMedia",
+
             // icon: Social, // optional, Social is a React Function component. Possible (React Function component, string or HTML Element)
             groups: [
               {
@@ -78,6 +80,8 @@ const DetectionImageStep = () => {
       tabsIds={[TABS.ADJUST, TABS.ANNOTATE, TABS.WATERMARK]} // or {['Adjust', 'Annotate', 'Watermark']}
       defaultTabId={TABS.ANNOTATE} // or 'Annotate'
       defaultToolId={TOOLS.TEXT} // or 'Text'
+      savingPixelRatio={0}
+      previewPixelRatio={0}
     />
   );
 };

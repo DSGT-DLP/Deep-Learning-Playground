@@ -32,18 +32,18 @@ jobs:
               
               1. Checkout the main branch:
 
-                \`\`\`shell
+                \`\`\`
                  git checkout ${defaultBranch}
                 \`\`\`
 
               2. Pull the latest changes from the remote main branch:
 
-                \`\`\`shell
+                \`\`\`
                  git pull origin ${defaultBranch}
                 \`\`\`
 
               3. Create a new branch specific to this bug request using the issue number:
-                \`\`\`shell
+                \`\`\`
                  git checkout -b ${branchName}
                 \`\`\`
 
@@ -71,19 +71,19 @@ jobs:
               
               1. Checkout the main branch:
 
-                \`\`\`shell 
+                \`\`\`
                  git checkout ${defaultBranch}
                 \`\`\`
 
               2. Pull the latest changes from the remote main branch:
 
-                \`\`\`shell
+                \`\`\`
                  git pull origin ${defaultBranch}
                 \`\`\`
 
               3. Create a new branch specific to this feature request using the issue number:
-              
-                \`\`\`shell
+
+                \`\`\`
                  git checkout -b ${branchName}
                 \`\`\`
               

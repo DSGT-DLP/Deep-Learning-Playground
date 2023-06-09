@@ -146,17 +146,25 @@ export const DEFAULT_TRANSFORMS = Object.freeze([
     display_name: "Resize",
     object_name: "transforms.Resize",
     parameters: {
-      size: {
+      height: {
         index: 0,
-        parameter_name: "(H, W)",
-        value: "(32, 32)",
+        parameter_name: "Height",
+        value: 32,
         min: 1,
         max: 1000,
-        parameter_type: "text",
+        parameter_type: "number",
       },
-    },
+      width: {
+        index: 1,
+        parameter_name: "Width",
+        value: 32,
+        min: 1,
+        max: 1000,
+        parameter_type: "number",
+      },
     label: "Resize",
     value: "R",
+    },
   },
 ]);
 
@@ -291,13 +299,21 @@ export const DEFAULT_DETECTION_TRANSFORMS = Object.freeze([
     display_name: "Resize",
     object_name: "transforms.Resize",
     parameters: {
-      size: {
+      height: {
         index: 0,
-        parameter_name: "(H, W)",
-        value: "(512, 512)",
+        parameter_name: "Height",
+        value: 32,
         min: 1,
         max: 1000,
-        parameter_type: "tuple",
+        parameter_type: "number",
+      },
+      width: {
+        index: 1,
+        parameter_name: "Width",
+        value: 32,
+        min: 1,
+        max: 1000,
+        parameter_type: "number",
       },
     },
     label: "Resize",

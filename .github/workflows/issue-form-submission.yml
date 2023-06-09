@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Comment on Issue
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -31,21 +31,29 @@ jobs:
               To work on this bug request, you can follow these branch setup instructions:
               
               1. Checkout the main branch:
+
+                \`\`\`
                  git checkout ${defaultBranch}
-               
+                \`\`\`
+
               2. Pull the latest changes from the remote main branch:
+
+                \`\`\`
                  git pull origin ${defaultBranch}
-               
+                \`\`\`
+
               3. Create a new branch specific to this bug request using the issue number:
+                \`\`\`
                  git checkout -b ${branchName}
-              
+                \`\`\`
+
               Feel free to make the necessary changes in this branch and submit a pull request when you're ready.
               
               Best regards,
               Deep Learning Playground (DLP) Team
               `;
               
-              github.issues.createComment({
+              github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
@@ -62,13 +70,22 @@ jobs:
               To work on this feature request, you can follow these branch setup instructions:
               
               1. Checkout the main branch:
+
+                \`\`\`
                  git checkout ${defaultBranch}
-               
+                \`\`\`
+
               2. Pull the latest changes from the remote main branch:
+
+                \`\`\`
                  git pull origin ${defaultBranch}
-               
+                \`\`\`
+
               3. Create a new branch specific to this feature request using the issue number:
+
+                \`\`\`
                  git checkout -b ${branchName}
+                \`\`\`
               
               Feel free to make the necessary changes in this branch and submit a pull request when you're ready.
               
@@ -76,7 +93,7 @@ jobs:
               Deep Learning Playground (DLP) Team
               `;
               
-              github.issues.createComment({
+              github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,

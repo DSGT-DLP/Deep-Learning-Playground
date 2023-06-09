@@ -1,9 +1,9 @@
-import traceback
-
 from flask import Blueprint
 from flask import request
 import json
+from backendCore.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData, createTrainspaceData
 from backendCore.aws_helpers.sqs_utils import add_to_queue, add_to_training_queue
+import uuid
 
 from backendCore.endpoints.utils import send_success, send_traceback_error, send_error
 
@@ -32,17 +32,17 @@ def writeToQueue() -> str:
         if status_code != 200:
             return send_error("Your training request couldn't be added to the queue")
         else:
-            # TODO add to dynamoDB trainspace
-            # do you mean createTrainspaceData endpoint???? yeah, need to copy the dynamo code
-
             request_data = json.loads(request.data)
-        uid = request_data["user"]["uid"]
-        trainspace_id = str(uuid.uuid4())
-        trainspace_id = createTrainspaceData(TrainspaceData(trainspace_id, uid))
-        return {"trainspace_id": trainspace_id}
-            # createExecution(queue_data)
-            return send_success(
-                {"message": "Successfully added your training request to the queue"}
-            )
+            uid = request_data["user"]["uid"]
+            trainspace_id = str(uuid.uuid4())
+            create_success = createTrainspaceData(TrainspaceData(trainspace_id, uid))
+            
+            if create_success:
+                return send_success(
+                    {"message": "Successfully added your training request to the queue", "trainspace_id": trainspace_id}
+                )
+            else:
+                return send_error("Data queued but failed to create trainspace")
+    
     except Exception:
         return send_error("Failed to queue data")

@@ -17,7 +17,7 @@ CORS(app)
 
 app_bp = Blueprint("api", __name__)
 
-app_bp.register_blueprint(sqs_bp, url_prefix="/sqs")
+app_bp.register_blueprint(sqs_bp, url_prefix="/sqs") 
 
 app.register_blueprint(app_bp, url_prefix="/api")
 

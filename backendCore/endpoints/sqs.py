@@ -15,7 +15,7 @@ def add_to_queue():
     queue_name = request_data["queue_name"]
     body = request_data["body"]
 
-    print("Adding to queue: " + queue_name, body)
+    print("Adding to queue: ", queue_name, body)
 
     try:
         return send_success({"message": "Sent email to "})

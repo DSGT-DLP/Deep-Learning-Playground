@@ -3,22 +3,46 @@ import traceback
 from flask import Blueprint
 from flask import request
 import json
+from backendCore.aws_helpers.sqs_utils import add_to_queue, add_to_training_queue
 
-from backendCore.endpoints.utils import send_success, send_traceback_error
+from backendCore.endpoints.utils import send_success, send_traceback_error, send_error
 
 sqs_bp = Blueprint("sqs", __name__)
 
 
-@sqs_bp.route("/queue", methods=["POST"])
-def add_to_queue():
-    request_data = json.loads(request.data)
-    queue_name = request_data["queue_name"]
-    body = request_data["body"]
+@sqs_bp.route("/writeToQueue", methods=["POST"])
+def writeToQueue() -> str:
+    """
+    API Endpoint to write training request to SQS queue to be serviced by
+    ECS Fargate training cluster
 
-    print("Adding to queue: ", queue_name, body)
+    Params:
+      - JSON that contains information about the user's individual training request
 
+    Results:
+      - 200: Training request added to SQS Queue successfully
+      - 400: Something went wrong in adding user's training request to the queue
+
+    """
     try:
-        return send_success({"message": "Sent email to "})
+        queue_data = json.loads(request.data)
+        queue_send_outcome = add_to_training_queue(queue_data)
+        print(f"sqs outcome: {queue_send_outcome}")
+        status_code = queue_send_outcome["ResponseMetadata"]["HTTPStatusCode"]
+        if status_code != 200:
+            return send_error("Your training request couldn't be added to the queue")
+        else:
+            # TODO add to dynamoDB trainspace
+            # do you mean createTrainspaceData endpoint???? yeah, need to copy the dynamo code
+
+            request_data = json.loads(request.data)
+        uid = request_data["user"]["uid"]
+        trainspace_id = str(uuid.uuid4())
+        trainspace_id = createTrainspaceData(TrainspaceData(trainspace_id, uid))
+        return {"trainspace_id": trainspace_id}
+            # createExecution(queue_data)
+            return send_success(
+                {"message": "Successfully added your training request to the queue"}
+            )
     except Exception:
-        print(traceback.format_exc())
-        return send_traceback_error()
+        return send_error("Failed to queue data")

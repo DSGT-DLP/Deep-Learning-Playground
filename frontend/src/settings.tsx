@@ -731,14 +731,20 @@ export const POSSIBLE_TRANSFORMS: PossibleTransform[] = [
     display_name: "Resize",
     object_name: "transforms.Resize",
     parameters: {
-      size: {
+      height: {
         index: 0,
-        parameter_name: "(H, W)",
+        parameter_name: "Height",
         min: 1,
         max: 1000,
-        default: "(32, 32)",
-        parameter_type: "tuple",
-      } as LayerParameter<"tuple">,
+        parameter_type: "number",
+      } as LayerParameter<"number">,
+      width: {
+        index: 1,
+        parameter_name: "Width",
+        min: 1,
+        max: 1000,
+        parameter_type: "number",
+      } as LayerParameter<"number">,
     },
     label: "Resize",
     value: "Resize",
@@ -897,14 +903,20 @@ export const DETECTION_TRANSFORMS: DetectionTransform[] = [
     display_name: "Resize",
     object_name: "transforms.Resize",
     parameters: {
-      size: {
+      height: {
         index: 0,
-        parameter_name: "(H, W)",
+        parameter_name: "Height",
         min: 1,
         max: 1000,
-        default: "(32, 32)",
-        parameter_type: "tuple",
-      } as LayerParameter<"tuple">,
+        parameter_type: "number",
+      } as LayerParameter<"number">,
+      width: {
+        index: 1,
+        parameter_name: "Width",
+        min: 1,
+        max: 1000,
+        parameter_type: "number",
+      } as LayerParameter<"number">,
     },
     tooltip_info: (
       <>

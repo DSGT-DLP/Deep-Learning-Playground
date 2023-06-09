@@ -63,6 +63,7 @@ const TabularDatasetStep = ({
           <UploadDatasetPanel
             dataSource={"TABULAR"}
             methods={uploadDatasetMethods}
+            acceptedTypes={".csv"}
           />
         ),
         "default-dataset": (

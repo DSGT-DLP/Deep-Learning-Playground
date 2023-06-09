@@ -1,15 +1,17 @@
-name: Feature Request
+name: 🚀 Feature Request Form
 description: File a feature request
+title: "[FEATURE]: "
+labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        :wave Thank you for taking the time to file a feature request.
+        👋 Thank you for taking the time to file a feature request.
         
         ---
 
         To ensure that our development team can address your request, we need as much information/detail on the proposal. Before opening a feature request, please search for the request in the existing issues
-        and upvote it :thumbsup. 
+        and upvote it 👍. 
   - type: input
     id: feature_name
     attributes:

@@ -62,7 +62,7 @@ def updateTrainspaceDataInDb():
         if success:
             return send_success({"message": "Trainspace updated", "success": success})
         else:
-            return send_error({"message": "Trainspace not updated", "success": success})
+            return send_error("Trainspace not updated")
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
@@ -117,7 +117,7 @@ def updateStatusInDb():
         if success:
             return send_success({"message": "Updated status", "success": success})
         else:
-            return send_error({"message": "Status not updated", "success": success})
+            return send_error("Status not updated")
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
@@ -144,7 +144,7 @@ def createTrainspaceDataInDb():
         if success:
             return send_success({"message": "Trainspace created", "success": success})
         else:
-            return send_error({"message": "Trainspace not created", "success": success})
+            return send_error("Trainspace not created")
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()

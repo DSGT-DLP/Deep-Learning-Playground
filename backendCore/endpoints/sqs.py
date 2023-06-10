@@ -1,7 +1,10 @@
 from flask import Blueprint
 from flask import request
 import json
-from backendCore.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData, createTrainspaceData
+from backendCore.aws_helpers.dynamo_db_utils.trainspace_db import (
+    TrainspaceData,
+    createTrainspaceData,
+)
 from backendCore.aws_helpers.sqs_utils import add_to_queue, add_to_training_queue
 import uuid
 
@@ -36,13 +39,16 @@ def writeToQueue() -> str:
             uid = request_data["user"]["uid"]
             trainspace_id = str(uuid.uuid4())
             create_success = createTrainspaceData(TrainspaceData(trainspace_id, uid))
-            
+
             if create_success:
                 return send_success(
-                    {"message": "Successfully added your training request to the queue", "trainspace_id": trainspace_id}
+                    {
+                        "message": "Successfully added your training request to the queue",
+                        "trainspace_id": trainspace_id,
+                    }
                 )
             else:
                 return send_error("Data queued but failed to create trainspace")
-    
+
     except Exception:
         return send_error("Failed to queue data")

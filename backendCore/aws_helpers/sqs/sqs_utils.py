@@ -1,5 +1,5 @@
 import boto3
-from backend.common.constants import AWS_REGION
+from backendCore.common.constants import AWS_REGION
 import json
 from backendCore.aws_helpers.sqs.constants import TRAINING_QUEUE
 

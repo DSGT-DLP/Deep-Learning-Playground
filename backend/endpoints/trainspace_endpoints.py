@@ -89,7 +89,6 @@ def getUserProgressData():
 
     try:
         user_id = json.loads(request.args)["user_id"]
-        print(user_id)
         return getAllUserProgressData(user_id)["progressData"]
     except ValueError:
         newRecord = UserProgressData(user_id, {})

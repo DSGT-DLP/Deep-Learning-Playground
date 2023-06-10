@@ -1,11 +1,14 @@
 from flask import Blueprint
 from flask import request
 import json
-from backendCore.aws_helpers.dynamo_db_utils.trainspace_db import (
+from backendCore.aws_helpers.dynamo_db.trainspace_db import (
     TrainspaceData,
     createTrainspaceData,
 )
-from backendCore.aws_helpers.sqs_utils import add_to_queue, add_to_training_queue
+from backendCore.aws_helpers.sqs.sqs_utils import (
+    add_to_queue,
+    add_to_training_queue,
+)
 import uuid
 
 from backendCore.endpoints.utils import send_success, send_traceback_error, send_error

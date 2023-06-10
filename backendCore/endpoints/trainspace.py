@@ -4,7 +4,7 @@ from flask import Blueprint
 from flask import request
 import json
 
-from backendCore.aws_helpers.dynamo_db_utils.trainspace_db import (
+from backendCore.aws_helpers.dynamo_db.trainspace_db import (
     createTrainspaceData,
     getAllUserTrainspaceData,
     getTrainspaceData,

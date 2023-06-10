@@ -2,6 +2,7 @@ import os
 from flask import Blueprint, Flask, send_from_directory, redirect
 from flask_cors import CORS
 from backendCore.endpoints.sqs import sqs_bp
+from backendCore.endpoints.trainspace import trainspace_bp
 
 PORT = os.getenv("PORT")
 if PORT is not None:
@@ -18,6 +19,7 @@ CORS(app)
 app_bp = Blueprint("api", __name__)
 
 app_bp.register_blueprint(sqs_bp, url_prefix="/sqs") 
+app_bp.register_blueprint(trainspace_bp, url_prefix="/trainspace") 
 
 app.register_blueprint(app_bp, url_prefix="/api")
 

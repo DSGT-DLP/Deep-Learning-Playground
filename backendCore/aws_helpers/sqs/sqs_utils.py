@@ -1,7 +1,7 @@
 import boto3
 from backend.common.constants import AWS_REGION
 import json
-from backendCore.aws_helpers.constants import TRAINING_QUEUE
+from backendCore.aws_helpers.sqs.constants import TRAINING_QUEUE
 
 sqs_client = boto3.client("sqs", region_name=AWS_REGION)
 

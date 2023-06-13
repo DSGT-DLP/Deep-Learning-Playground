@@ -89,12 +89,49 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 2. Then in a separate terminal, start the frontend development server. After installing the prerequisites above, run the shortcut above or run the following commands:
 
    ```
-   cd frontend\playground-frontend
+   cd frontend
    yarn install
    yarn start
    ```
 
 3. Then, go to http://localhost:3000/
+
+# Tmux Instructions
+
+## Windows Installation
+
+1. [Install WSL](https://code.visualstudio.com/docs/remote/wsl) and make sure you get the Ubuntu distro
+
+2. Open the Ubuntu terminal
+
+3. [Install NodeJS](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04)
+
+4. Installing AWS:
+   Type `sudo apt install unzip`.
+   Follow these [instructions](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html).
+   Type `aws configure` and enter secrets.
+
+5. Navigate to project directory.
+   Type `yarn run installf`.
+   If your NodeJS is outdated, follow these [instructions](https://www.hostingadvice.com/how-to/update-node-js-latest-version/).
+   If you're running into Conda issues visit [this page](https://github.com/conda/conda/issues/11919).
+
+6. Enter these commands:
+
+```
+yarn run installb
+conda activate dlplayground && cd conda && conda env update -f environment.yml
+conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env
+```
+
+## Mac Installation
+
+1. Type `brew install tmux`
+
+## Running the script
+
+1. Type `./tmux-script.sh`
+2. Visit [cheatsheet website](https://gist.github.com/MohamedAlaa/2961058)
 
 ## Frontend Architecture
 

@@ -22,12 +22,12 @@ else:
 
 app = Flask(
     __name__,
-    static_folder=os.path.join(os.getcwd(), "frontend", "playground-frontend", "build"),
+    static_folder=os.path.join(os.getcwd(), "frontend", "build"),
 )
 CORS(app)
 
 app.wsgi_app = middleware(
-    app.wsgi_app, exempt_paths=["/api/test/", "/", "/api/apidocs"]
+    app.wsgi_app, exempt_paths=["/api/test", "/api/test/", "/", "/api/apidocs"]
 )
 
 app_bp = Blueprint("api", __name__)

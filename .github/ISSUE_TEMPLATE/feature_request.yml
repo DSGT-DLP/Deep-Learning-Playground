@@ -1,0 +1,38 @@
+name: 🚀 Feature Request Form
+description: File a feature request
+title: "[FEATURE]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        👋 Thank you for taking the time to file a feature request.
+        
+        ---
+
+        To ensure that our development team can address your request, we need as much information/detail on the proposal. Before opening a feature request, please search for the request in the existing issues
+        and upvote it 👍. 
+  - type: input
+    id: feature_name
+    attributes:
+      label: Feature Name
+      description: "One Line Summary of the proposed feature"
+      placeholder: "Request for an Awesome Feature"
+    validations:
+      required: true  
+  - type: input
+    id: author
+    attributes:
+      label: Your Name
+      description: "Author of Proposal"
+      placeholder: "Octocat"
+    validations:
+      required: true
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Description
+      description: "Please provide a description of your proposed feature"
+      placeholder: "Description of my awesome feature"
+    validations:
+      required: true

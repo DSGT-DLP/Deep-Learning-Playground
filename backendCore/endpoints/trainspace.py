@@ -1,10 +1,12 @@
 import traceback
+import uuid
 
 from flask import Blueprint
 from flask import request
 import json
 
 from backendCore.aws_helpers.dynamo_db.trainspace_db import (
+    TrainspaceData,
     createTrainspaceData,
     getAllUserTrainspaceData,
     getTrainspaceData,
@@ -141,6 +143,33 @@ def createTrainspaceDataInDb():
         trainspace_data = request_data["trainspace_data"]
 
         success = createTrainspaceData(trainspace_data)
+        if success:
+            return send_success({"message": "Trainspace created", "success": success})
+        else:
+            return send_error("Trainspace not created")
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+
+
+@trainspace_bp.route("/tabular", methods=["POST"])
+def tabular():
+    try:
+        request_data = json.loads(request.data)
+        trainspace_data = request_data["trainspace_data"]
+        tid = uuid.uuid4()
+        uid = request_data["user"]["uid"]
+        success = createTrainspaceData(
+            TrainspaceData(
+                trainspace_id=tid,
+                uid=uid,
+                data_source="TABULAR",
+                dataset_data=trainspace_data["dataset_data"],
+                name=trainspace_data["name"],
+                parameters_data=["parameters_data"],
+                review_data=["review_data"],
+            )
+        )
         if success:
             return send_success({"message": "Trainspace created", "success": success})
         else:

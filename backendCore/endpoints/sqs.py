@@ -18,7 +18,7 @@ sqs_bp = Blueprint("sqs", __name__)
 
 
 @sqs_bp.route("/writeToQueue", methods=["POST"])
-def writeToQueue() -> tuple[str, Union(Literal[200], Literal[400])]:
+def writeToQueue() -> tuple[str, Literal[200, 400]]:
     """
     API Endpoint to write training request to SQS queue to be serviced by
     ECS Fargate training cluster

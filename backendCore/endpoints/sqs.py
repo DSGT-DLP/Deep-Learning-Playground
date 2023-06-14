@@ -1,4 +1,4 @@
-from typing import Literal, Union
+from typing import Literal, Tuple, Union
 from flask import Blueprint
 from flask import request
 import json
@@ -18,7 +18,7 @@ sqs_bp = Blueprint("sqs", __name__)
 
 
 @sqs_bp.route("/writeToQueue", methods=["POST"])
-def writeToQueue() -> tuple[str, Literal[200, 400]]:
+def writeToQueue() -> Tuple[str, Literal[200, 400]]:
     """
     API Endpoint to write training request to SQS queue to be serviced by
     ECS Fargate training cluster

@@ -31,27 +31,31 @@ def writeToQueue() -> str:
 
     """
     try:
-        queue_data = json.loads(request.data)
-        queue_send_outcome = add_to_training_queue(queue_data)
+        # add to SQS queue
+        request_data = json.loads(request.data)
+        trainspace_id = str(uuid.uuid4())
+        request_data["trainspace_id"] = trainspace_id
+        queue_send_outcome = add_to_training_queue(request_data)
         print(f"sqs outcome: {queue_send_outcome}")
         status_code = queue_send_outcome["ResponseMetadata"]["HTTPStatusCode"]
+
+        # exit if queue send failed
         if status_code != 200:
             return send_error("Your training request couldn't be added to the queue")
-        else:
-            request_data = json.loads(request.data)
-            uid = request_data["user"]["uid"]
-            trainspace_id = str(uuid.uuid4())
-            create_success = createTrainspaceData(TrainspaceData(trainspace_id, uid))
 
-            if create_success:
-                return send_success(
-                    {
-                        "message": "Successfully added your training request to the queue",
-                        "trainspace_id": trainspace_id,
-                    }
-                )
-            else:
-                return send_error("Data queued but failed to create trainspace")
+        # add to DynamoDB
+        uid = request_data["user"]["uid"]
+        create_success = createTrainspaceData(TrainspaceData(trainspace_id, uid))
+
+        if create_success:
+            return send_success(
+                {
+                    "message": "Successfully added your training request to the queue",
+                    "trainspace_id": trainspace_id,
+                }
+            )
+        else:
+            return send_error("Data queued but failed to create trainspace")
 
     except Exception:
         return send_error("Failed to queue data")

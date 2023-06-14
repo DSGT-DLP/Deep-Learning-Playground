@@ -2,7 +2,11 @@ name: "Terraform Validation"
 
 on:
   push:
+    paths:
+      - "dlp-terraform/**"
   pull_request:
+    paths:
+      - "dlp-terraform/**"
 
 permissions:
   contents: read

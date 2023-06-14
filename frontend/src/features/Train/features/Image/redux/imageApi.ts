@@ -11,6 +11,7 @@ const imageApi = backendApi.injectEndpoints({
         body: {
           user: auth.currentUser,
           name: trainspaceData.name,
+          data_source: trainspaceData.dataSource,
           dataset_data: {
             name: trainspaceData.datasetData.name,
             is_default_dataset: trainspaceData.datasetData.isDefaultDataset,

@@ -28,6 +28,7 @@ dependencies:
   - python-dotenv
   - transformers
   - pre-commit
+  - flasgger
   - pip:
       - torchvision
       - timm

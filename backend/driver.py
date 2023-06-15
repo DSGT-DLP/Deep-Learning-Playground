@@ -1,6 +1,9 @@
 from flask import Blueprint, Flask, send_from_directory
 from flask_cors import CORS
 
+from flasgger import Swagger
+from flasgger.utils import swag_from
+
 from backend.common.utils import *
 from backend.firebase_helpers.firebase import init_firebase
 from backend.middleware import middleware
@@ -26,8 +29,28 @@ app = Flask(
 )
 CORS(app)
 
+app.config["SWAGGER"] = {
+    "title": "DLP API",
+    "uiversion": 3,
+    "host": "localhost:8000",
+    "openapi": "3.0.2",
+    "basePath": "/",
+}
+
+swagger = Swagger(app)
+
 app.wsgi_app = middleware(
-    app.wsgi_app, exempt_paths=["/api/test", "/api/test/", "/", "/api/apidocs"]
+    app.wsgi_app,
+    exempt_paths=[
+        "/test",
+        "/",
+        "/apidocs",
+        "/flasgger_static/swagger-ui.css",
+        "/flasgger_static/swagger-ui-bundle.js",
+        "/flasgger_static/swagger-ui-standalone-preset.js",
+        "/flasgger_static/lib/jquery.min.js",
+        "/flasgger_static/favicon-32x32.png",
+    ],
 )
 
 app_bp = Blueprint("api", __name__)

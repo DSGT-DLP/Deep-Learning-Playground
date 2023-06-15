@@ -2,6 +2,7 @@ import traceback
 
 from flask import Blueprint
 from flask import request
+from flasgger.utils import swag_from
 
 from backend.aws_helpers.s3_utils.s3_client import (
     get_column_names,
@@ -14,6 +15,7 @@ dataset_bp = Blueprint("dataset", __name__)
 
 
 @dataset_bp.route("/defaultDataset", methods=["POST"])
+@swag_from("../openapi/dataset.openapi.yaml")
 def send_columns():
     """
     API Endpint to send columns of a user selected default dataset (eg: IRIS, California Housing, Wine, etc)
@@ -40,6 +42,7 @@ def send_columns():
 
 
 @dataset_bp.route("/getColumnsFromDatasetFile", methods=["POST"])
+@swag_from("../")
 def getColumnsFromDatasetFile():
     """
     API Endpoint to retrieve columns from a user uploaded dataset file (eg: column names for a CSV file)

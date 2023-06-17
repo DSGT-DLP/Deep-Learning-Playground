@@ -7,7 +7,7 @@ post:
     content:
       application/json:
         schema:
-          type: string
+          type: object
           required:
             - using_default_dataset
           properties:

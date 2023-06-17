@@ -21,23 +21,23 @@ tags:
   - name: trainspace
     description: Everything about trainspace
 servers:
-  - url: https://example.com/api/v1
+  - url: http://localhost:8000
 paths:
-  /dataset/defaultDataset:
+  /api/dataset/defaultDataset:
     $ref: paths/dataset/defaultDataset.yaml
-  /dataset/getColumnsFromDatasetFile:
+  /api/dataset/getColumnsFromDatasetFile:
     $ref: paths/dataset/getColumnsFromDatasetFile.yaml
-  /s3/getExecutionsFilesPresignedUrls:
+  /api/s3/getExecutionsFilesPresignedUrls:
     $ref: paths/s3/getExecutionsFilesPresignedUrls.yaml
-  /s3/getSignedUploadUrl:
+  /api/s3/getSignedUploadUrl:
     $ref: paths/s3/getSignedUploadUrl.yaml
-  /s3/getUserDatasetFilesData:
+  /api/s3/getUserDatasetFilesData:
     $ref: paths/s3/getUserDatasetFilesData.yaml
-  /test:
+  /api/test:
     $ref: paths/test/none.yaml
-  /trainspace/create-trainspace:
+  /api/trainspace/create-trainspace:
     $ref: paths/trainspace/create-trainspace.yaml
-  /trainspace/getTrainspaceData:
+  /api/trainspace/getTrainspaceData:
     $ref: paths/trainspace/getTrainspaceData.yaml
 # components:
 #   securitySchemes:

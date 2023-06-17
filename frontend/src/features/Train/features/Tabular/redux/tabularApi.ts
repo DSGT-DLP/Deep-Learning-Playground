@@ -9,7 +9,6 @@ const tabularApi = backendApi.injectEndpoints({
         url: "/api/train/tabular-run",
         method: "POST",
         body: {
-          user: auth.currentUser,
           name: trainspaceData.name,
           data_source: trainspaceData.dataSource,
           dataset_data: {

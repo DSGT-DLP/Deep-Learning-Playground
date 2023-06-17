@@ -19,7 +19,6 @@ const trainspaceApi = backendApi
           url: "/api/s3/getUserDatasetFilesData",
           method: "POST",
           body: {
-            user: auth.currentUser,
             data_source: dataSource.toLowerCase(),
           },
         }),
@@ -50,7 +49,6 @@ const trainspaceApi = backendApi
             body: {
               name: file.name,
               data_source: dataSource.toLowerCase(),
-              user: auth.currentUser,
             },
           });
           if (postObjResponse.error) {
@@ -98,7 +96,6 @@ const trainspaceApi = backendApi
             using_default_dataset: dataset.isDefaultDataset
               ? dataset.name
               : undefined,
-            user: auth.currentUser,
           },
         }),
         transformResponse: (response: { columns: string }) => {

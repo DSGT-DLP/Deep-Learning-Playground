@@ -10,7 +10,6 @@ const feedbackApi = backendApi.injectEndpoints({
           url: "/api/aws/sendEmail",
           method: "POST",
           body: {
-            user: auth.currentUser,
             email_address: email_address,
             subject: subject,
             body_text: body_text,

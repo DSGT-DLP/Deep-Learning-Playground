@@ -43,6 +43,10 @@ tags:
     description: Everything about dataset
   - name: s3
     description: Everything about s3
+  - name: test
+    description: Test API endpoints
+  - name: trainspace
+    description: Everything about trainspace
 servers:
   - url: https://example.com/api/v1
 paths:

@@ -1,5 +1,7 @@
 post:
   description: API Endpoint to identify all trainspaces for a given user id.
+  tags:
+    - trainspace
   requestBody:
     content:
       application/json:

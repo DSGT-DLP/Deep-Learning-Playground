@@ -1,5 +1,7 @@
 get:
   summary: A simple endpoint to test if our backend is alive
+  tags:
+    - test
   responses:
     200:
       description: Test Backend alive

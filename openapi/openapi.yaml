@@ -41,9 +41,9 @@ info:
 servers:
   - url: https://example.com/api/v1
 paths:
-  /defaultDataset:
+  /dataset/defaultDataset:
     $ref: paths/defaultDataset.yaml
-  /getColumnsFromDatasetFile:
+  /dataset/getColumnsFromDatasetFile:
     $ref: paths/getColumnsFromDatasetFile.yaml
 # components:
 #   securitySchemes:

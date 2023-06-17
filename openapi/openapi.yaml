@@ -42,9 +42,21 @@ servers:
   - url: https://example.com/api/v1
 paths:
   /dataset/defaultDataset:
-    $ref: paths/defaultDataset.yaml
+    $ref: paths/dataset/defaultDataset.yaml
   /dataset/getColumnsFromDatasetFile:
-    $ref: paths/getColumnsFromDatasetFile.yaml
+    $ref: paths/dataset/getColumnsFromDatasetFile.yaml
+  /s3/getExecutionsFilesPresignedUrls:
+    $ref: paths/s3/getExecutionsFilesPresignedUrls.yaml
+  /s3/getSignedUploadUrl:
+    $ref: paths/s3/getSignedUploadUrl.yaml
+  /s3/getUserDatasetFilesData:
+    $ref: paths/s3/getUserDatasetFilesData.yaml
+  /test:
+    $ref: paths/test/none.yaml
+  /trainspace/create-trainspace:
+    $ref: paths/trainspace/create-trainspace.yaml
+  /trainspace/getTrainspaceData:
+    $ref: paths/trainspace/getTrainspaceData.yaml
 # components:
 #   securitySchemes:
 #     main_auth:

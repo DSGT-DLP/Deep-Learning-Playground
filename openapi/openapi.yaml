@@ -21,7 +21,7 @@ tags:
   - name: trainspace
     description: Everything about trainspace
 servers:
-  - url: https://example.com/api/v1
+  - url: http://localhost:8000
 paths:
   /api/dataset/defaultDataset:
     $ref: paths/dataset/defaultDataset.yaml

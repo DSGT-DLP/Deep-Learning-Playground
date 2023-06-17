@@ -1,4 +1,5 @@
 post:
+  summary: Create Trainspace
   description: API Endpoint to create a "trainspace". Trainspace is a new concept/data structure we introduce to track user's training requests. Concept similar to execution_id.
   tags:
     - trainspace

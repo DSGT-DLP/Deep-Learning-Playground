@@ -1,4 +1,5 @@
 post:
+  summary: Get Signed Upload URL
   description: Endpoint to upload files to S3
   tags:
     - s3

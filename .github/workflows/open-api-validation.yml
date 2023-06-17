@@ -1,0 +1,39 @@
+name: OpenAPI Schema Validation
+
+on:
+  push:
+    paths:
+      - "openapi/**"
+  pull_request:
+    paths:
+      - "openapi/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check file extensions
+        run: |
+          shopt -s globstar
+          for file in openapi/*.yaml; do
+            if [[ ! "$file" =~ \.yaml$ ]]; then
+              echo "Error: $file does not have the .yml extension"
+              exit 1
+            fi
+          done
+      - name: Validate OpenAPI files
+        run: |
+          yarn add swagger-cli
+          for file in openapi/*.yaml
+          do
+            echo "Validating $file"
+            yarn swagger-cli validate $file --no-color || exit 1
+          done

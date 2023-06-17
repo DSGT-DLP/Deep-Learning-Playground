@@ -1,0 +1,49 @@
+post:
+  description: "API Endpoint to retrieve columns from a user uploaded dataset file (eg: column names for a CSV file)"
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: string
+          required:
+            - uid
+            - data_source
+            - name
+          properties:
+            uid:
+              type: string
+              description: User Id
+            data_source:
+              type: string
+              description: "What type of training was the user running (eg: TABULAR, PRETRAINED, OBJECT_DETECTION, IMAGE, etc)"
+            name:
+              type: string
+              description: Name of dataset file
+          example:
+            uid: "1234"
+            data_source: "TABULAR"
+            name: "data.csv"
+    required: true
+  responses:
+    "200":
+      description: Columns Fetched Successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              columns:
+                type: array
+                example: [col1, col2, col3]
+    "400":
+      description: Dataset columns weren't selected properly. This is usually something wrong with your code
+    "401":
+      description: User is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User is not authenticated"

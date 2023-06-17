@@ -1,0 +1,86 @@
+openapi: "3.0.0"
+info:
+  title: DLP API
+  description: API endpoints for the Deep Learning Playground Project
+  version: "1.0.0"
+paths:
+  /api/trainspace/create-trainspace:
+    post:
+      description:  API Endpoint to create a "trainspace". Trainspace is a new concept/data structure we introduce to track user's training requests. Concept similar to execution_id.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - uid
+              properties:
+                uid:
+                  type: string
+                  description: User ID
+              example:
+                uid: '1234'
+        required: true
+      responses:
+        "200":
+          description: Trainspace created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Trainspace Creation successful"
+        "400":
+          description: Trainspace Creation didn't go through successfully. This is usually something wrong with your code
+        "401":
+          description: User is not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User is not authenticated"
+  /api/trainspace/getTrainspaceData:
+    post:
+      description:  API Endpoint to identify all trainspaces for a given user id.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - uid
+              properties:
+                uid:
+                  type: string
+                  description: User ID
+              example:
+                uid: '1234'
+        required: true
+      responses:
+        "200":
+          description: Able to query and retrieve trainspace objects belonging to a user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Trainspace Retrieval Successful"
+        "400":
+          description: Trainspace Retrieval didn't go through successfully. This is usually something wrong with your code
+        "401":
+          description: User is not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User is not authenticated"

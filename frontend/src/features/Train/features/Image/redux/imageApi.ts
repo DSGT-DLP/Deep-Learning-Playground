@@ -1,6 +1,5 @@
 import { backendApi } from "@/common/redux/backendApi";
 import { TrainspaceData } from "../types/imageTypes";
-import { auth } from "@/common/utils/firebase";
 
 const imageApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({

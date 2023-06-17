@@ -1,5 +1,4 @@
 import { backendApi } from "@/common/redux/backendApi";
-import { auth } from "@/common/utils/firebase";
 import {
   DATA_SOURCE,
   DatasetData,

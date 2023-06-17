@@ -1,6 +1,5 @@
 import { backendApi } from "@/common/redux/backendApi";
 import { TrainspaceData } from "../types/tabularTypes";
-import { auth } from "@/common/utils/firebase";
 
 const tabularApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({

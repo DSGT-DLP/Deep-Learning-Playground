@@ -38,13 +38,6 @@ info:
     implementation logic. Similar to what
     interfaces have done for lower-level programming, OpenAPI removes the
     guesswork in calling the service.
-tags:
-  - name: Dataset
-    description: Dataset
-  - name: s3
-    description: s3
-  - name: Test
-    description: Test
 servers:
   - url: https://example.com/api/v1
 paths:

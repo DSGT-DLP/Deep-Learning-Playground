@@ -1,4 +1,5 @@
 post:
+  summary: Default dataset
   description: Endpoint to get user selected default dataset for training
   requestBody:
     content:

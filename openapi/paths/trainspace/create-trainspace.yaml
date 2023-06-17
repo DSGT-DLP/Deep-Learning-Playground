@@ -1,0 +1,41 @@
+post:
+  description: API Endpoint to create a "trainspace". Trainspace is a new concept/data structure we introduce to track user's training requests. Concept similar to execution_id.
+  tags:
+    - trainspace
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - uid
+          properties:
+            uid:
+              type: string
+              description: User ID
+          example:
+            uid: "1234"
+    required: true
+  responses:
+    "200":
+      description: Trainspace created successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Trainspace Creation successful"
+    "400":
+      description: Trainspace Creation didn't go through successfully. This is usually something wrong with your code
+    "401":
+      description: User is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User is not authenticated"

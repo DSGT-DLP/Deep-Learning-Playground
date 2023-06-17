@@ -1,0 +1,41 @@
+post:
+  description: API Endpoint to use S3 Presigned URLs to retrieve result files from S3 given an execution id
+  tags:
+    - s3
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - exec_id
+          properties:
+            exec_id:
+              type: string
+              description: The execution id
+          example:
+            exec_id: "1234"
+    required: true
+  responses:
+    "200":
+      description: Result files for your execution fetched successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Result file fetch successful"
+    "400":
+      description: Result file fetch didn't go through successfully. This is usually something wrong with your code
+    "401":
+      description: User is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User is not authenticated"

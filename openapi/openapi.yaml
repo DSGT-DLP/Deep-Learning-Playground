@@ -1,19 +1,15 @@
 openapi: 3.1.0
 info:
   version: 1.0.0
-  title: Deep Learning Playground API
-  termsOfService: https://example.com/terms/
+  title: Deep Learning Playground Backend API
   contact:
-    email: contact@example.com
-    url: http://example.com/contact
+    email: dlp@datasciencegt.org
+    url: https://github.com/DSGT-DLP/Deep-Learning-Playground
   license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  x-logo:
-    url: https://redocly.github.io/openapi-template/logo.png
+    name: MIT
+    url: https://github.com/DSGT-DLP/Deep-Learning-Playground/blob/nextjs/README.md
   description: >
-    This is an **example** API to demonstrate features of the OpenAPI
-    specification.
+    Deep Learning Playground Backend API specifications
 
 tags:
   - name: dataset

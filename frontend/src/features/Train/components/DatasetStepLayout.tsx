@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Controller, UseFormReturn } from "react-hook-form";
 import {
   FileUploadData,
@@ -16,6 +17,7 @@ import {
   Tab,
   Tabs,
   Typography,
+  Paper,
 } from "@mui/material";
 import { useAppSelector } from "@/common/redux/hooks";
 import { ALL_STEP_SETTINGS } from "@/features/Train/constants/trainConstants";
@@ -90,12 +92,17 @@ export const UploadDatasetPanel = ({
             hidden
             onChange={(e) => {
               if (e.target.files && e.target.files[0]) {
-                if(e.target.files[0].type.match(acceptedTypes) == null) {
-                  toast.error('Files can only be of type ' + acceptedTypes + '.');
+                if (e.target.files[0].type.match(acceptedTypes) == null) {
+                  toast.error(
+                    "Files can only be of type " + acceptedTypes + "."
+                  );
                   return;
                 } else {
-                  uploadFile({ dataSource: dataSource, file: e.target.files[0] });
-                  toast.success('File uploaded successfully!');
+                  uploadFile({
+                    dataSource: dataSource,
+                    file: e.target.files[0],
+                  });
+                  toast.success("File uploaded successfully!");
                 }
               }
               e.target.value = "";
@@ -110,6 +117,13 @@ export const UploadDatasetPanel = ({
         <Typography variant="h4" fontSize={12} marginTop={-2.7}>
           Please only select type: {acceptedTypes}.
         </Typography>
+      </Stack>
+      <Stack>
+        <Paper elevation={3}>
+          <Typography variant="h4" fontSize={12} marginTop={-2.7}>
+            File will be deleted after 5 days
+          </Typography>
+        </Paper>
       </Stack>
       {data && <UploadDataGrid data={data} methods={methods} />}
     </>

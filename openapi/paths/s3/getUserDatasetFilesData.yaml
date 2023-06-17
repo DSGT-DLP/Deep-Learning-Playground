@@ -1,5 +1,7 @@
 post:
   description: API Endpoint to retrieve all user dataset files uploaded in S3
+  tags:
+    - s3
   requestBody:
     content:
       application/json:

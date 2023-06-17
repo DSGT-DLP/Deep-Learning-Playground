@@ -1,5 +1,7 @@
 post:
   description: Endpoint to upload files to S3
+  tags:
+    - s3
   requestBody:
     content:
       application/json:

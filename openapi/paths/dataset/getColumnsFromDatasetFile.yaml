@@ -1,6 +1,8 @@
 post:
   summary: Get columns from dataset file
   description: "API Endpoint to retrieve columns from a user uploaded dataset file (eg: column names for a CSV file)"
+  tags:
+    - dataset
   requestBody:
     content:
       application/json:

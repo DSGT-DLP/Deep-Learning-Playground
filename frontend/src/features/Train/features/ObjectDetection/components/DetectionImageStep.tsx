@@ -3,8 +3,22 @@ import FilerobotImageEditor, {
   TOOLS,
 } from "react-filerobot-image-editor";
 import { useLazySendUploadDataQuery } from "../redux/uploadApi";
+import {
+  DatasetStepTabLayout,
+  DefaultDatasetPanel,
+  UploadDatasetPanel,
+} from "@/features/Train/components/DatasetStepLayout";
+import { useForm } from "react-hook-form";
 
-const DetectionImageStep = () => {
+const DetectionImageStep = ({
+  renderStepperButtons,
+  setIsModified,
+}: {
+  renderStepperButtons: (
+    submitTrainspace: (data: TrainspaceData<"DATASET">) => void
+  ) => React.ReactNode;
+  setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [sendUploadData, { data }] = useLazySendUploadDataQuery();
   const dataURLtoFile = (dataurl: string, filename: string) => {
     const arr = dataurl.split(",");

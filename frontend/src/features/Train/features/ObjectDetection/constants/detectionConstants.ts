@@ -7,7 +7,7 @@ import TabularTrainspace from "../components/DetectionTrainspace";
 import React from "react";
 
 export const TRAINSPACE_SETTINGS = {
-  name: "Tabular",
+  name: "Detection",
   steps: ["IMAGE", "PARAMETERS", "REVIEW"],
   component: TabularTrainspace,
 } as const;

@@ -26,7 +26,7 @@ class TrainspaceData:
     review_data: str = ""
     status: str = ""
 
-
+"""
 @dataclass
 class LayerData(BaseData):
     value: str
@@ -72,10 +72,7 @@ class TabularData(TrainspaceData):
     ],
     # status=["QUEUED", "STARTING", "UPLOADING", "TRAINING", "SUCCESS", "ERROR"],
 )
-class TrainspaceEnums:
-    """Class that holds the enums associated with the ExecutionDDBUtil class. It includes:
-    ExecutionEnums.Attribute - Enum that defines the schema of the execution-table. It holds the attribute names of the table
-    ExecutionEnums.Execution_Source - Enum that defines the categorical values associated with the 'execution_source' attribute
+"""
 def getTrainspaceData(trainspace_id: str) -> dict:
     """
     Retrieves an entry from the `trainspace` DynamoDB table given an `trainspace_id`. Example output: {"trainspace_id": "blah", "user_id": "blah", "name": "blah", "timestamp": "blah", "data_source": "TABULAR", "status": "QUEUED", "progress": 1}

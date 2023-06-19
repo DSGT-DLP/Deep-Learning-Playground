@@ -39,8 +39,8 @@ def create_trainspace():
       - 400: Error in creating trainspace
     """
     try:
-        request_args = json.loads(request.args)
-        uid = request_args["user"]["uid"]
+        # request_args = json.loads(request.args)
+        uid = request.environ["user"]["uid"]
         trainspace_id = str(uuid.uuid4())
         trainspace_id = createTrainspaceData(TrainspaceData(trainspace_id, uid))
         return {"trainspace_id": trainspace_id}
@@ -64,8 +64,8 @@ def trainspace_table():
       - 400: Error in querying trainspace data for a given uid. Could be on the client side or server side
     """
     try:
-        request_args = json.loads(request.args)
-        user_id = request_args["user"]["uid"]
+        # request_args = json.loads(request.args)
+        user_id = request.environ["user"]["uid"]
         record = getAllUserTrainspaceData(user_id)
         return send_success({"record": record})
     except Exception:
@@ -88,7 +88,8 @@ def getUserProgressData():
     """
 
     try:
-        user_id = json.loads(request.args)["user_id"]
+        # user_id = json.loads(request.args)["user_id"]
+        user_id = request.environ["user"]["uid"]
         return getAllUserProgressData(user_id)["progressData"]
     except ValueError:
         newRecord = UserProgressData(user_id, {})
@@ -114,7 +115,7 @@ def updateOneUserProgressData():
     """
     try:
         requestData = json.loads(request.data)
-        uid = requestData["user_id"]
+        uid = request.environ["user_id"]
         moduleID = str(requestData["moduleID"])
         sectionID = str(requestData["sectionID"])
         questionID = str(requestData["questionID"])

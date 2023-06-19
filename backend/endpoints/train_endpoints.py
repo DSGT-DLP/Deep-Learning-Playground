@@ -128,7 +128,7 @@ def img_run():
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
         customModelName = request_data["custom_model_name"]
-        uid = request_data["user"]["uid"]
+        uid = request.environ["user"]["uid"]
         execution_id = request_data["execution_id"]
         train_loss_results = dl_img_drive(
             train_transform,

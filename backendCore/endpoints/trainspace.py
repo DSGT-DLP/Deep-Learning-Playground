@@ -171,7 +171,13 @@ def tabular():
             )
         )
         if success:
-            return send_success({"message": "Trainspace created", "success": success})
+            return send_success(
+                {
+                    "message": "Trainspace created",
+                    "success": success,
+                    "trainspace_id": tid,
+                }
+            )
         else:
             return send_error("Trainspace not created")
     except Exception:

@@ -3,7 +3,10 @@ import { TrainspaceData } from "../types/tabularTypes";
 
 const tabularApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({
-    train: builder.mutation<{ trainspaceId: string }, TrainspaceData<"TRAIN">>({
+    trainTabular: builder.mutation<
+      { trainspaceId: string },
+      TrainspaceData<"TRAIN">
+    >({
       query: (trainspaceData) => ({
         url: "/api/train/tabular-run",
         method: "POST",
@@ -44,4 +47,4 @@ const tabularApi = backendApi.injectEndpoints({
   overrideExisting: true,
 });
 
-export const { useTrainMutation } = tabularApi;
+export const { useTrainTabularMutation } = tabularApi;

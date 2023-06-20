@@ -60,7 +60,7 @@ def tabular_run():
         id = str(uuid.uuid4())
         tabular_data = TrainspaceData(
             trainspace_id=id,
-            uid= request.environ["user"]["uid"],
+            uid=request.environ["user"]["uid"],
             created=get_current_timestamp(),
             data_source="TABULAR",
             dataset_data=request_data["dataset_data"],

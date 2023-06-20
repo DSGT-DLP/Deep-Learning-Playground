@@ -1,5 +1,4 @@
 import { backendApi } from "@/common/redux/backendApi";
-import { auth } from "@/common/utils/firebase";
 
 const feedbackApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,10 +9,9 @@ const feedbackApi = backendApi.injectEndpoints({
           url: "/api/aws/sendEmail",
           method: "POST",
           body: {
-            user: auth.currentUser,
-            email_address: email_address,
-            subject: subject,
-            body_text: body_text,
+            email_address,
+            subject,
+            body_text,
           },
         };
       },

@@ -59,7 +59,7 @@ def getColumnsFromDatasetFile():
     try:
         request_data = json.loads(request.data)
         columns = get_column_names(
-            request_data["user"]["uid"],
+            request.environ["user"]["uid"],
             request_data["data_source"],
             request_data["name"],
         )

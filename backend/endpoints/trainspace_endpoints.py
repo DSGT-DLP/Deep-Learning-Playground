@@ -39,7 +39,6 @@ def create_trainspace():
       - 400: Error in creating trainspace
     """
     try:
-        # request_args = json.loads(request.args)
         uid = request.environ["user"]["uid"]
         trainspace_id = str(uuid.uuid4())
         trainspace_id = createTrainspaceData(TrainspaceData(trainspace_id, uid))
@@ -64,7 +63,6 @@ def trainspace_table():
       - 400: Error in querying trainspace data for a given uid. Could be on the client side or server side
     """
     try:
-        # request_args = json.loads(request.args)
         user_id = request.environ["user"]["uid"]
         record = getAllUserTrainspaceData(user_id)
         return send_success({"record": record})
@@ -88,7 +86,6 @@ def getUserProgressData():
     """
 
     try:
-        # user_id = json.loads(request.args)["user_id"]
         user_id = request.environ["user"]["uid"]
         return getAllUserProgressData(user_id)["progressData"]
     except ValueError:

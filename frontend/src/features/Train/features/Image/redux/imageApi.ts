@@ -4,7 +4,10 @@ import { auth } from "@/common/utils/firebase";
 
 const imageApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({
-    train: builder.mutation<{ trainspaceId: string }, TrainspaceData<"TRAIN">>({
+    trainImage: builder.mutation<
+      { trainspaceId: string },
+      TrainspaceData<"TRAIN">
+    >({
       query: (trainspaceData) => ({
         url: "/api/train/img-run",
         method: "POST",
@@ -44,4 +47,4 @@ const imageApi = backendApi.injectEndpoints({
   overrideExisting: true,
 });
 
-export const { useTrainMutation } = imageApi;
+export const { useTrainImageMutation } = imageApi;

@@ -1,7 +1,11 @@
+import random
 import pandas as pd
 import datetime
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris, fetch_california_housing
+from backend.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
+from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
+from backend.aws_helpers.s3_utils.s3_client import read_from_bucket
 
 from backend.common.constants import ONNX_MODEL, CSV_FILE_NAME
 from backend.common.dataset import read_dataset, loader_from_zipped
@@ -21,13 +25,7 @@ from backend.ml.ml_trainer import train_classical_ml_model
 from backend.ml.ml_model_parser import get_object_ml
 
 
-def dl_tabular_drive(
-    user_arch: list,
-    fileURL: str,
-    params: dict,
-    json_csv_data_str: str = "",
-    customModelName: str = None,
-):
+def dl_tabular_drive(trainspace_data: TrainspaceData):
     """
     Driver function/entrypoint into backend for deep learning model. Onnx file is generated containing model architecture for user to visualize in netron.app
     Args:
@@ -54,12 +52,17 @@ def dl_tabular_drive(
         epochs (int, optional): number of epochs/rounds to run model on
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
     """
-    target = params.get("target", None)
+    params = trainspace_data["parameters_data"]
+    target = params.get("target_col", None)
     features = params.get("features", None)
     problem_type = params["problem_type"]
     optimizer_name = params["optimizer_name"]
     criterion = params["criterion"]
-    default = params.get("default", None)
+    default = (
+        trainspace_data["dataset_data"]["name"]
+        if trainspace_data["dataset_data"].get("is_default_dataset")
+        else None
+    )
     epochs = params.get("epochs", 5)
     shuffle = params.get("shuffle", True)
     test_size = params.get("test_size", 0.2)
@@ -67,12 +70,12 @@ def dl_tabular_drive(
 
     category_list = []
     if not default:
-        if fileURL:
-            read_dataset(fileURL)
-        elif json_csv_data_str:
-            pass
-        else:
+        fileURL = trainspace_data["dataset_data"]["name"]
+        filename = str(random.random())[2:10] + fileURL.split("/")[-1]
+        fileContents = read_from_bucket(FILE_UPLOAD_BUCKET_NAME, fileURL, )
+        if not fileURL:    
             raise ValueError("Need a file input")
+        
 
     if default and problem_type.upper() == "CLASSIFICATION":
         X, y, category_list = get_default_dataset(default.upper(), target, features)

@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-/*
-import {
-  signInWithPassword,
-  registerWithPassword,
-  signInWithGoogle,
-  signInWithGithub,
-  getRedirectResultFromFirebase,
-} from "../../firebase";*/
-/* import { setCurrentUser } from "../../redux/userLogin"; */
+import { auth } from "@/common/utils/firebase";
+import { sendSignInLinkToEmail, signInWithCustomToken } from "firebase/auth";
+
 import GoogleLogo from "/public/images/logos/google.png";
 import GithubLogo from "/public/images/logos/github.png";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -38,11 +32,15 @@ const Login = () => {
   const user = useAppSelector((state) => state.currentUser.user);
   const router = useRouter();
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     if (router.isReady && isSignedIn(user)) {
       router.replace({ pathname: "/dashboard" });
     }
   }, [user, router.isReady]);
+
+  console.log(router.query);
+
   const Title = (
     <>
       <h1 className="title mb-5">
@@ -102,9 +100,67 @@ const Login = () => {
           />
         </Button>
       </div>
+      <div className="d-flex justify-content-center mb-5">
+        <Button
+          variant="outline-light"
+          className="login-button passwordless custom-button"
+          onClick={async () => {
+            try {
+              const email = prompt("Enter your email address:");
+              if (email) {
+                const actionCodeSettings = {
+                  url: "http://localhost:3000/dashboard",
+                  handleCodeInApp: true,
+                };
+                await sendSignInLinkToEmail(
+                  auth,
+                  email,
+                  actionCodeSettings
+                ).then(() => {
+                  const apiKey = router.query["apiKey"];
+                  console.log("finished send sign in link to email");
+                  // signInWithCustomToken(auth, "apiKey")
+                  //   .then((userCredential) => {
+                  //     // Signed in
+                  //     const user = userCredential.user;
+                  //     // ...
+                  //   })
+                  //   .catch((error) => {
+                  //     const errorCode = error.code;
+                  //     const errorMessage = error.message;
+                  //     // ...
+                  //   });
+
+                  // // fetch(
+                  // //   `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${apiKey}`,
+                  // //   { method: "POST" }
+                  // // )
+                  // //   .then((res) => res.json())
+                  // //   .then((d) => {
+                  // //     console.log(d);
+                  // //   });
+                });
+
+                //firebase.auth().signInWithCustomToken(token).catch(function(error) {
+
+                //window.localStorage.setItem("emailForSignIn", email);
+
+                toast.success("Sign-in link sent to your email!", {
+                  position: toast.POSITION.TOP_CENTER,
+                });
+              }
+            } catch (e) {
+              toast.error((e as { message: string }).message, {
+                position: toast.POSITION.TOP_CENTER,
+              });
+            }
+          }}
+        >
+          Sign in with Email Link
+        </Button>
+      </div>
     </>
   );
-
   const EmailPasswordInput = (
     <>
       {isRegistering && (
@@ -199,9 +255,11 @@ const Login = () => {
       </div>
     </>
   );
+
   if (user !== undefined) {
     return <></>;
   }
+
   return (
     <>
       <NavbarMain />

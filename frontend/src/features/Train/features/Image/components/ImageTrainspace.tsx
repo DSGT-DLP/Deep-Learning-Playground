@@ -15,7 +15,7 @@ import {
   TRAINSPACE_SETTINGS,
   STEP_SETTINGS,
 } from "../constants/imageConstants";
-import { useTrainMutation } from "../redux/imageApi";
+import { useTrainImageMutation } from "../redux/imageApi";
 import { useRouter } from "next/router";
 import { removeTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
 
@@ -91,7 +91,7 @@ const TrainspaceStepInner = ({
 }) => {
   const Component = STEP_SETTINGS[TRAINSPACE_SETTINGS.steps[step]].component;
   const [isStepModified, setIsStepModified] = useState<boolean>(false);
-  const [train] = useTrainMutation();
+  const [train] = useTrainImageMutation();
   const dispatch = useAppDispatch();
   const router = useRouter();
   useEffect(() => {

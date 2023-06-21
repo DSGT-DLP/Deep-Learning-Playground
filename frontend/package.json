@@ -40,6 +40,7 @@
     "firebase": "^9.9.3",
     "gestalt": "^101.3.9",
     "gestalt-datepicker": "^101.3.9",
+    "jest": "^29.5.0",
     "jszip": "^3.10.1",
     "local-storage-fallback": "^4.1.2",
     "lodash.camelcase": "^4.3.0",
@@ -77,7 +78,7 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "test": "react-scripts test"
+    "test": "jest --watch"
   },
   "browserslist": {
     "production": [

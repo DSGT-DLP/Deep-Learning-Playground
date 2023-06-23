@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { auth } from "@/common/utils/firebase";
-import { sendSignInLinkToEmail, signInWithCustomToken } from "firebase/auth";
-
+import { signInWithCustomToken } from "firebase/auth";
+import { Magic } from "magic-sdk";
 import GoogleLogo from "/public/images/logos/google.png";
 import GithubLogo from "/public/images/logos/github.png";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -22,6 +22,7 @@ import Link from "next/link";
 import Footer from "@/common/components/Footer";
 import { SerializedError } from "@reduxjs/toolkit";
 import { useRouter } from "next/router";
+import { httpsCallable } from "firebase/functions";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -108,42 +109,22 @@ const Login = () => {
             try {
               const email = prompt("Enter your email address:");
               if (email) {
-                const actionCodeSettings = {
-                  url: "http://localhost:3000/dashboard",
-                  handleCodeInApp: true,
-                };
-                await sendSignInLinkToEmail(
-                  auth,
-                  email,
-                  actionCodeSettings
-                ).then(() => {
-                  const apiKey = router.query["apiKey"];
-                  console.log("finished send sign in link to email");
-                  // signInWithCustomToken(auth, "apiKey")
-                  //   .then((userCredential) => {
-                  //     // Signed in
-                  //     const user = userCredential.user;
-                  //     // ...
-                  //   })
-                  //   .catch((error) => {
-                  //     const errorCode = error.code;
-                  //     const errorMessage = error.message;
-                  //     // ...
-                  //   });
+                const didToken = await magic.auth.loginWithEmailOTP({ email });
 
-                  // // fetch(
-                  // //   `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${apiKey}`,
-                  // //   { method: "POST" }
-                  // // )
-                  // //   .then((res) => res.json())
-                  // //   .then((d) => {
-                  // //     console.log(d);
-                  // //   });
-                });
-
-                //firebase.auth().signInWithCustomToken(token).catch(function(error) {
-
-                //window.localStorage.setItem("emailForSignIn", email);
+                // if didToken is not null, query the backend to find the UID of the user
+                // **********
+                // https://firebase.google.com/docs/auth/admin/manage-users
+                // getAuth()
+                // .getUserByEmail(email)
+                // .then((userRecord) => {
+                //   // See the UserRecord reference doc for the contents of userRecord.
+                //   console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
+                // })
+                // .catch((error) => {
+                //   console.log('Error fetching user data:', error);
+                // });
+                // **********
+                // and sign in by changing the redux
 
                 toast.success("Sign-in link sent to your email!", {
                   position: toast.POSITION.TOP_CENTER,
@@ -282,3 +263,7 @@ const Login = () => {
 };
 
 export default Login;
+
+const magic = new Magic("pk_live_4572C928C88C9F0F", {
+  network: "mainnet",
+});

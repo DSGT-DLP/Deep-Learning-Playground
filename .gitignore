@@ -208,3 +208,6 @@ dlp-terraform/**/.terraform/
 
 # SSH keys
 dlp-ssh.key
+
+# Firebase Admin key
+backend/dlp-firebase-admin.json

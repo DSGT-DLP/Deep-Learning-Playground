@@ -10,6 +10,7 @@ import {
   StepButton,
   Stepper,
   TextField,
+  Alert,
 } from "@mui/material";
 import {
   TRAINSPACE_SETTINGS,
@@ -91,7 +92,7 @@ const TrainspaceStepInner = ({
 }) => {
   const Component = STEP_SETTINGS[TRAINSPACE_SETTINGS.steps[step]].component;
   const [isStepModified, setIsStepModified] = useState<boolean>(false);
-  const [train] = useTrainMutation();
+  const [train, {error}] = useTrainMutation();
   const dispatch = useAppDispatch();
   const router = useRouter();
   useEffect(() => {
@@ -113,13 +114,18 @@ const TrainspaceStepInner = ({
       renderStepperButtons={(submitTrainspace) => (
         <Stack
           direction={"row"}
-          justifyContent={step > 0 ? "space-between" : "end"}
+          justifyContent={step > 0 ? "space-between" : "space-between"}
         >
           {step > 0 ? (
             <Button variant="outlined" onClick={() => setStep(step - 1)}>
               Previous
             </Button>
-          ) : null}
+          ) : null} 
+          {
+          error ? (
+            <Alert severity="error" margin-left="3rem">There was an error in your request. Please try again.</Alert> 
+          ) : null
+          }
           <Button
             variant={
               step < trainspace.step && !isStepModified && !isModified

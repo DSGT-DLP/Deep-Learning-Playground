@@ -2,6 +2,8 @@ import datetime
 import boto3
 import os
 import shutil
+import pandas as pd
+import io
 
 from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
 
@@ -46,6 +48,21 @@ def read_from_bucket(
     shutil.move(
         f"{os.getcwd()}/{output_file_name}", f"{output_file_path}/{output_file_name}"
     )
+
+
+def read_df_from_bucket(bucket_name: str, bucket_path: str):
+    """
+    Given S3 URI, read the file from the S3 bucket
+
+    Args:
+        bucket_name (str): name of s3 bucket
+        bucket_path (str): path within s3 bucket where the file resides
+
+    """
+    s3 = boto3.client("s3")
+    obj = s3.get_object(Bucket=bucket_name, Key=bucket_path)
+    df = pd.read_csv(io.BytesIO(obj["Body"].read()))
+    return df
 
 
 def get_presigned_url_from_bucket(bucket_name: str, bucket_path: str):

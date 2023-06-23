@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris, fetch_california_housing
 from backend.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
 from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
-from backend.aws_helpers.s3_utils.s3_client import read_from_bucket
+from backend.aws_helpers.s3_utils.s3_client import read_df_from_bucket
 
 from backend.common.constants import ONNX_MODEL, CSV_FILE_NAME
 from backend.common.dataset import read_dataset, loader_from_zipped
@@ -53,6 +53,7 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
     """
     params = trainspace_data["parameters_data"]
+
     target = params.get("target_col", None)
     features = params.get("features", None)
     problem_type = params["problem_type"]
@@ -68,23 +69,21 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
     test_size = params.get("test_size", 0.2)
     batch_size = params.get("batch_size", 20)
 
+    user_arch = params["layers"]
+
     category_list = []
     if not default:
-        fileURL = trainspace_data["dataset_data"]["name"]
-        filename = str(random.random())[2:10] + fileURL.split("/")[-1]
-        fileContents = read_from_bucket(FILE_UPLOAD_BUCKET_NAME, fileURL, )
-        if not fileURL:    
-            raise ValueError("Need a file input")
-        
+        filename = trainspace_data["dataset_data"]["name"]
+        uid = trainspace_data["uid"]
+        input_df = read_df_from_bucket(
+            FILE_UPLOAD_BUCKET_NAME, f"{uid}/tabular/${filename}"
+        )
 
     if default and problem_type.upper() == "CLASSIFICATION":
         X, y, category_list = get_default_dataset(default.upper(), target, features)
     elif default and problem_type.upper() == "REGRESSION":
         X, y, discard = get_default_dataset(default.upper(), target, features)
     else:
-        if json_csv_data_str:
-            input_df = pd.read_json(json_csv_data_str, orient="records")
-
         y = input_df[target]
         X = input_df[features]
 
@@ -127,9 +126,7 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
     )
     if problem_type.upper() == "CLASSIFICATION" and not default:
         category_list = []
-        json_data = json.loads(json_csv_data_str)
-        pandas_data = pd.DataFrame.from_dict(json_data)
-        target_categories = pandas_data[target]
+        target_categories = input_df[target]
         for category in target_categories:
             if category not in category_list:
                 category_list.append(category)

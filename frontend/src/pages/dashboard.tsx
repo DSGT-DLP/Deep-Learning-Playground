@@ -60,21 +60,24 @@ const Dashboard = () => {
               }}
               dropdownAccessibilityLabel="More options"
             />
-            {data && data.length > 0 ?
-            <Flex
-              direction="row"
-              justifyContent="center"
-              alignItems="stretch"
-              width="100%"
-              wrap
-            >
-              <Box>
-                <TrainDoughnutChart trainSpaceDataArr={data} />
-              </Box>
-              <Box height={300} width={300}>
-                <TrainBarChart trainSpaceDataArr={data} />
-              </Box>
-            </Flex> : <BlankGrid />}
+            {data && data.length > 0 ? (
+              <Flex
+                direction="row"
+                justifyContent="center"
+                alignItems="stretch"
+                width="100%"
+                wrap
+              >
+                <Box>
+                  <TrainDoughnutChart trainSpaceDataArr={data} />
+                </Box>
+                <Box height={300} width={300}>
+                  <TrainBarChart trainSpaceDataArr={data} />
+                </Box>
+              </Flex>
+            ) : (
+              <BlankGrid />
+            )}
 
             <div
               style={{
@@ -85,7 +88,7 @@ const Dashboard = () => {
             >
               <TrainDataGrid trainSpaceDataArr={data} />
             </div>
-            
+
             {isLoading ? (
               <div className="loading">
                 <Spinner show accessibilityLabel="Spinner" />
@@ -109,7 +112,7 @@ const BlankGrid = () => {
         </p>
         <button
           id="blank-grid-button"
-          onClick={() => router.push({ pathname: "/train"})}
+          onClick={() => router.push({ pathname: "/train" })}
         >
           Train Model
         </button>

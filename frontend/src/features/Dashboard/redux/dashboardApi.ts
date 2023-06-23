@@ -1,7 +1,5 @@
 import { backendApi } from "@/common/redux/backendApi";
 import { TrainResultsData } from "@/features/Train/types/trainTypes";
-import { auth } from "@/common/utils/firebase";
-import camelCase from "lodash.camelcase";
 
 const dashboardApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({

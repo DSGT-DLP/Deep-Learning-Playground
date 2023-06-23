@@ -39,8 +39,7 @@ def create_trainspace():
       - 400: Error in creating trainspace
     """
     try:
-        request_data = json.loads(request.data)
-        uid = request_data["user"]["uid"]
+        uid = request.environ["user"]["uid"]
         trainspace_id = str(uuid.uuid4())
         trainspace_id = createTrainspaceData(TrainspaceData(trainspace_id, uid))
         return {"trainspace_id": trainspace_id}
@@ -49,7 +48,7 @@ def create_trainspace():
         return send_traceback_error()
 
 
-@trainspace_bp.route("/getTrainspaceData", methods=["POST"])
+@trainspace_bp.route("/getTrainspaceData", methods=["GET"])
 def trainspace_table():
     """
     API Endpoint to identify all trainspaces for a given user id
@@ -64,8 +63,7 @@ def trainspace_table():
       - 400: Error in querying trainspace data for a given uid. Could be on the client side or server side
     """
     try:
-        request_data = json.loads(request.data)
-        user_id = request_data["user"]["uid"]
+        user_id = request.environ["user"]["uid"]
         record = getAllUserTrainspaceData(user_id)
         return send_success({"record": record})
     except Exception:
@@ -73,7 +71,7 @@ def trainspace_table():
         return send_traceback_error()
 
 
-@trainspace_bp.route("/getUserProgressData", methods=["POST"])
+@trainspace_bp.route("/getUserProgressData", methods=["GET"])
 def getUserProgressData():
     """
     Utility function to get user progress data for the Learning Modules feature
@@ -86,9 +84,9 @@ def getUserProgressData():
       - 200: Able to query and load user progress data for a given user that visits the Learning Modules surface on DLP
       - 400: Error in retrieving this data
     """
-    user_id = json.loads(request.data)["user_id"]
-    print(user_id)
+
     try:
+        user_id = request.environ["user"]["uid"]
         return getAllUserProgressData(user_id)["progressData"]
     except ValueError:
         newRecord = UserProgressData(user_id, {})
@@ -114,7 +112,7 @@ def updateOneUserProgressData():
     """
     try:
         requestData = json.loads(request.data)
-        uid = requestData["user_id"]
+        uid = request.environ["user_id"]
         moduleID = str(requestData["moduleID"])
         sectionID = str(requestData["sectionID"])
         questionID = str(requestData["questionID"])

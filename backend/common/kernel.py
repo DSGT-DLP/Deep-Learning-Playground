@@ -30,7 +30,7 @@ def router(msg):
     Routes the message to the appropriate training function.
     """
     print("Message received")
-    execution_id = msg["execution_id"]
+    request_data = json.loads(msg)
     print(f"{execution_id} is marked as STARTING")
     entryData = {
         "execution_id": msg["execution_id"],

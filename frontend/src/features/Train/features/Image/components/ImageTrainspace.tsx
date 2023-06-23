@@ -16,7 +16,7 @@ import {
   TRAINSPACE_SETTINGS,
   STEP_SETTINGS,
 } from "../constants/imageConstants";
-import { useTrainMutation } from "../redux/imageApi";
+import { useTrainImageMutation } from "../redux/imageApi";
 import { useRouter } from "next/router";
 import { removeTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
 

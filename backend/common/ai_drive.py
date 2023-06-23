@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris, fetch_california_housing
 from backend.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
 from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
-from backend.aws_helpers.s3_utils.s3_client import read_df_from_bucket
+from backend.aws_helpers.s3_utils.s3_client import read_df_from_bucket, read_from_bucket
 
 from backend.common.constants import ONNX_MODEL, CSV_FILE_NAME
 from backend.common.dataset import read_dataset, loader_from_zipped
@@ -145,25 +145,32 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
     return train_loss_results
 
 
-def dl_img_drive(
-    train_transform,
-    test_transform,
-    user_arch,
-    criterion,
-    optimizer_name,
-    default,
-    epochs,
-    batch_size,
-    shuffle,
-    IMAGE_UPLOAD_FOLDER,
-):
-    print(user_arch)
+def dl_img_drive(trainspace_data: TrainspaceData):
+    params = trainspace_data["parameters_data"]
+
+    optimizer_name = params["optimizer_name"]
+    criterion = params["criterion"]
+    default = (
+        trainspace_data["dataset_data"]["name"]
+        if trainspace_data["dataset_data"].get("is_default_dataset")
+        else None
+    )
+    epochs = params.get("epochs", 5)
+    shuffle = params.get("shuffle", True)
+    batch_size = params.get("batch_size", 20)
+
+    user_arch = params["layers"]
+
     model = DLModel(parse_deep_user_architecture(user_arch))
 
     train_transform = parse_deep_user_architecture(train_transform)
     test_transform = parse_deep_user_architecture(test_transform)
 
     if not default:
+        read_from_bucket(
+            FILE_UPLOAD_BUCKET_NAME,
+            
+        )
         for x in os.listdir(IMAGE_UPLOAD_FOLDER):
             if x != ".gitkeep":
                 zip_file = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)

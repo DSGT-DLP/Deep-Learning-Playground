@@ -13,7 +13,6 @@ import backend.aws_helpers.sqs_utils.sqs_client as sqs_helper
 import backend.aws_helpers.s3_utils.s3_client as s3_helper
 from backend.common.utils import *
 from backend.aws_helpers.s3_utils.s3_bucket_names import (
-    FILE_UPLOAD_BUCKET_NAME,
     EXECUTION_BUCKET_NAME,
 )
 from backend.common.constants import (
@@ -35,13 +34,13 @@ def router(msg):
     Routes the message to the appropriate training function.
     """
     print("Message received")
-    trainspace_id = msg["trainspace_id"]
     request_data = json.loads(msg)
+    trainspace_id = request_data["trainspace_id"]
     print(f"{trainspace_id} is marked as STARTING")
     entryData = {"timestamp": get_current_timestamp()}
-    updateStatus(trainspace_id, TrainStatus.STARTING, entryData=msg)
-    if msg["route"] == "tabular-run":
-        result = tabular_run_route(msg)
+    updateStatus(trainspace_id, TrainStatus.STARTING, entryData=request_data)
+    if request_data["route"] == "tabular-run":
+        result = tabular_run_route(request_data)
         if result[1] != 200:
             print("Error in tabular run route: result is", result)
             updateStatus(trainspace_id, TrainStatus.ERROR)
@@ -63,8 +62,8 @@ def router(msg):
             EXECUTION_BUCKET_NAME,
             f"{trainspace_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
         )
-    elif msg["route"] == "ml-run":
-        result = ml_run_route(msg)
+    elif request_data["route"] == "ml-run":
+        result = ml_run_route(request_data)
         if result[1] != 200:
             updateStatus(trainspace_id, TrainStatus.ERROR, entryData=entryData)
             return
@@ -75,9 +74,9 @@ def router(msg):
             EXECUTION_BUCKET_NAME,
             f"{trainspace_id}/{os.path.basename(SAVED_MODEL_ML)}",
         )
-    elif msg["route"] == "img-run":
+    elif request_data["route"] == "img-run":
         print("Running Img run route")
-        result = img_run_route(msg)
+        result = img_run_route(request_data)
         print(result)
         if result[1] != 200:
             updateStatus(trainspace_id, TrainStatus.ERROR, entryData=entryData)
@@ -101,8 +100,8 @@ def router(msg):
             f"{trainspace_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
         )
         print("img run result files successfully uploaded to s3")
-    elif msg["route"] == "object-detection":
-        result = object_detection_route(msg)
+    elif request_data["route"] == "object-detection":
+        result = object_detection_route(request_data)
         if result[1] != 200:
             updateStatus(trainspace_id, TrainStatus.ERROR, entryData=entryData)
             return

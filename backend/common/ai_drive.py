@@ -50,7 +50,7 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
         epochs (int, optional): number of epochs/rounds to run model on
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
     """
-    params = trainspace_data["parameters_data"]
+    params = trainspace_data.parameters_data
 
     target = params.get("target_col", None)
     features = params.get("features", None)
@@ -58,8 +58,8 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
     optimizer_name = params["optimizer_name"]
     criterion = params["criterion"]
     default = (
-        trainspace_data["dataset_data"]["name"]
-        if trainspace_data["dataset_data"].get("is_default_dataset")
+        trainspace_data.dataset_data["name"]
+        if trainspace_data.dataset_data.get("is_default_dataset")
         else None
     )
     epochs = params.get("epochs", 5)
@@ -71,8 +71,8 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
 
     category_list = []
     if not default:
-        filename = trainspace_data["dataset_data"]["name"]
-        uid = trainspace_data["uid"]
+        filename = trainspace_data.dataset_data["name"]
+        uid = trainspace_data.uid
         input_df = read_df_from_bucket(
             FILE_UPLOAD_BUCKET_NAME, f"{uid}/tabular/{filename}"
         )
@@ -149,8 +149,8 @@ def dl_img_drive(trainspace_data: TrainspaceData):
     optimizer_name = params["optimizer_name"]
     criterion = params["criterion"]
     default = (
-        trainspace_data["dataset_data"]["name"]
-        if trainspace_data["dataset_data"].get("is_default_dataset")
+        trainspace_data.dataset_data["name"]
+        if trainspace_data.dataset_data.get("is_default_dataset")
         else None
     )
     epochs = params.get("epochs", 5)
@@ -167,8 +167,8 @@ def dl_img_drive(trainspace_data: TrainspaceData):
     test_transform = parse_deep_user_architecture(test_transform)
 
     if not default:
-        uid = trainspace_data["uid"]
-        filename = trainspace_data["dataset_data"]["name"]
+        uid = trainspace_data.uid
+        filename = trainspace_data.dataset_data["name"]
         read_from_bucket(
             FILE_UPLOAD_BUCKET_NAME,
             f"{uid}/img/{filename}",
@@ -218,8 +218,8 @@ def ml_drive(trainspace_data: TrainspaceData):
     features = params.get("features", None)
     problem_type = params["problem_type"]
     default = (
-        trainspace_data["dataset_data"]["name"]
-        if trainspace_data["dataset_data"].get("is_default_dataset")
+        trainspace_data.dataset_data["name"]
+        if trainspace_data.dataset_data.get("is_default_dataset")
         else None
     )
     shuffle = params.get("shuffle", True)
@@ -229,8 +229,8 @@ def ml_drive(trainspace_data: TrainspaceData):
 
     try:
         if not default:
-            filename = trainspace_data["dataset_data"]["name"]
-            uid = trainspace_data["uid"]
+            filename = trainspace_data.dataset_data["name"]
+            uid = trainspace_data.uid
             input_df = read_df_from_bucket(
                 FILE_UPLOAD_BUCKET_NAME, f"{uid}/classical_ml/{filename}"
             )

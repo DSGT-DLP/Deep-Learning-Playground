@@ -39,7 +39,8 @@ def router(msg):
     print(f"{trainspace_id} is marked as STARTING")
     entryData = {"timestamp": get_current_timestamp()}
     updateStatus(trainspace_id, TrainStatus.STARTING, entryData=request_data)
-    if request_data["route"] == "tabular-run":
+    data_source = request_data["data_source"]
+    if data_source == "TABULAR":
         result = tabular_run_route(request_data)
         if result[1] != 200:
             print("Error in tabular run route: result is", result)
@@ -62,7 +63,7 @@ def router(msg):
             EXECUTION_BUCKET_NAME,
             f"{trainspace_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
         )
-    elif request_data["route"] == "ml-run":
+    elif data_source == "CLASSICAL_ML":
         result = ml_run_route(request_data)
         if result[1] != 200:
             updateStatus(trainspace_id, TrainStatus.ERROR, entryData=entryData)
@@ -74,7 +75,7 @@ def router(msg):
             EXECUTION_BUCKET_NAME,
             f"{trainspace_id}/{os.path.basename(SAVED_MODEL_ML)}",
         )
-    elif request_data["route"] == "img-run":
+    elif data_source == "IMAGE":
         print("Running Img run route")
         result = img_run_route(request_data)
         print(result)
@@ -100,7 +101,7 @@ def router(msg):
             f"{trainspace_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
         )
         print("img run result files successfully uploaded to s3")
-    elif request_data["route"] == "object-detection":
+    elif data_source == "OBJECT_DETECTION":
         result = object_detection_route(request_data)
         if result[1] != 200:
             updateStatus(trainspace_id, TrainStatus.ERROR, entryData=entryData)

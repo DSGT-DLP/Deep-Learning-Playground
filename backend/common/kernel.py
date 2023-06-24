@@ -211,11 +211,11 @@ def send_traceback_error():
     return send_error(traceback.format_exc(limit=1))
 
 
-def empty_message(message):
+def empty_message(message: dict) -> bool:
     """
     Returns if JSON is empty
     """
-    return json.dumps(message) == "{}"
+    return not bool(message)
 
 
 # Polls for messages from the SQS queue, and handles them.

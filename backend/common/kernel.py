@@ -217,19 +217,20 @@ def empty_message(message: dict) -> bool:
     return not bool(message)
 
 
-# Polls for messages from the SQS queue, and handles them.
-while True:
-    # Get message from queue
-    print("Polling for messages...\n")
-    msg = sqs_helper.receive_message()
+if __name__ == "__main__":
+    # Polls for messages from the SQS queue, and handles them.
+    while True:
+        # Get message from queue
+        print("Polling for messages...\n")
+        msg = sqs_helper.receive_message()
 
-    if not empty_message(msg):
-        print(msg)
-        # Handle data
-        router(msg)
-    else:
-        # No message found
-        print("No message found")
+        if not empty_message(msg):
+            print(msg)
+            # Handle data
+            router(msg)
+        else:
+            # No message found
+            print("No message found")
 
-    # Check again
-    time.sleep(1)
+        # Check again
+        time.sleep(1)

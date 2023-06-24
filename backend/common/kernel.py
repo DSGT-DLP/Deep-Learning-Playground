@@ -64,7 +64,7 @@ def router(msg):
             f"{trainspace_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
         )
     elif data_source == "CLASSICAL_ML":
-        result = ml_run_route(TrainspaceData(**request_data))
+        result = ml_run_route(request_data)
         if result[1] != 200:
             updateStatus(trainspace_id, TrainStatus.ERROR.name)
             return

@@ -33,12 +33,16 @@ paths:
     $ref: paths/s3/getSignedUploadUrl.yaml
   /api/s3/getUserDatasetFilesData:
     $ref: paths/s3/getUserDatasetFilesData.yaml
+  /api/s3/getUserDatasetFileUploadPresignedPostObj:
+    $ref: paths/s3/getUserDatasetFileUploadPresignedPostObj.yaml
   /api/test:
     $ref: paths/test/none.yaml
   /api/trainspace/create-trainspace:
     $ref: paths/trainspace/create-trainspace.yaml
   /api/trainspace/getTrainspaceData:
     $ref: paths/trainspace/getTrainspaceData.yaml
+  /api/trainspace/tabular-run:
+    $ref: paths/trainspace/tabular-run.yaml
 # components:
 #   securitySchemes:
 #     main_auth:

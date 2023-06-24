@@ -17,6 +17,7 @@ from backend.aws_helpers.s3_utils.s3_bucket_names import (
     EXECUTION_BUCKET_NAME,
 )
 from backend.common.constants import (
+    IMAGE_FILE_DOWNLOAD_TMP_PATH,
     UNZIPPED_DIR_NAME,
     ONNX_MODEL,
     SAVED_MODEL_DL,
@@ -128,24 +129,10 @@ def tabular_run_route(trainspace_data: TrainspaceData):
 
 
 # Wrapper for ml_drive() function
-def ml_run_route(request_data):
+def ml_run_route(trainspace_data: TrainspaceData):
     try:
-        user_model = request_data["user_arch"]
-        problem_type = request_data["problem_type"]
-        target = request_data["target"]
-        uid = request_data["user"]["uid"]
-        features = request_data["features"]
-        default = request_data["using_default_dataset"]
-        shuffle = request_data["shuffle"]
+        train_loss_results = ml_drive(trainspace_data)
 
-        train_loss_results = ml_drive(
-            user_model=user_model,
-            problem_type=problem_type,
-            target=target,
-            features=features,
-            default=default,
-            shuffle=shuffle,
-        )
         print(train_loss_results)
         return send_train_results(train_loss_results)
 
@@ -155,33 +142,9 @@ def ml_run_route(request_data):
 
 
 # Wrapper for dl_img_drive() function
-def img_run_route(request_data):
-    IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
+def img_run_route(trainspace_data: TrainspaceData):
     try:
-        train_transform = request_data["train_transform"]
-        test_transform = request_data["test_transform"]
-        user_arch = request_data["user_arch"]
-        criterion = request_data["criterion"]
-        optimizer_name = request_data["optimizer_name"]
-        default = request_data["using_default_dataset"]
-        epochs = request_data["epochs"]
-        batch_size = request_data["batch_size"]
-        shuffle = request_data["shuffle"]
-        uid = request_data["user"]["uid"]
-        customModelName = request_data["custom_model_name"]
-
-        train_loss_results = dl_img_drive(
-            train_transform,
-            test_transform,
-            user_arch,
-            criterion,
-            optimizer_name,
-            default,
-            epochs,
-            batch_size,
-            shuffle,
-            IMAGE_UPLOAD_FOLDER,
-        )
+        train_loss_results = dl_img_drive(trainspace_data)
 
         print("training successfully finished")
         return send_train_results(train_loss_results)
@@ -190,30 +153,28 @@ def img_run_route(request_data):
         print(traceback.format_exc())
         return send_traceback_error()
 
+    finally:
+        filename = trainspace_data["dataset_data"]["name"]
+        zip_file = os.path.join(IMAGE_FILE_DOWNLOAD_TMP_PATH, filename)
 
-# Wrapper for  function
-def object_detection_route(request_data):
-    IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
+        os.remove(zip_file)
+        if os.path.exists(UNZIPPED_DIR_NAME):
+            shutil.rmtree(UNZIPPED_DIR_NAME)
+
+
+# Wrapper for detection_img_drive function
+def object_detection_route(trainspace_data: TrainspaceData):
     try:
-        problem_type = request_data["problem_type"]
-        detection_type = request_data["detection_type"]
-        uid = request_data["user"]["uid"]
-        transforms = request_data["transforms"]
-        image = detection_img_drive(
-            IMAGE_UPLOAD_FOLDER, detection_type, problem_type, transforms
-        )
+        image = detection_img_drive(trainspace_data)
         return send_detection_results(image)
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()
     finally:
-        for x in os.listdir(IMAGE_UPLOAD_FOLDER):
-            if x != ".gitkeep":
-                file_rem = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
-                if os.path.isdir(file_rem):
-                    shutil.rmtree(file_rem)
-                else:
-                    os.remove(file_rem)
+        filename = trainspace_data["dataset_data"]["name"]
+        zip_file = os.path.join(IMAGE_FILE_DOWNLOAD_TMP_PATH, filename)
+
+        os.remove(zip_file)
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
 

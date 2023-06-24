@@ -3,7 +3,11 @@ import json
 import traceback
 import os
 import shutil
-from backend.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
+from backend.aws_helpers.dynamo_db_utils.constants import TrainStatus
+from backend.aws_helpers.dynamo_db_utils.trainspace_db import (
+    TrainspaceData,
+    updateStatus,
+)
 
 import backend.aws_helpers.sqs_utils.sqs_client as sqs_helper
 import backend.aws_helpers.s3_utils.s3_client as s3_helper
@@ -23,7 +27,6 @@ from backend.common.constants import (
 from backend.common.utils import csv_to_json
 from backend.common.ai_drive import dl_tabular_drive, ml_drive, dl_img_drive
 from backend.dl.detection import detection_img_drive
-from backend.aws_helpers.dynamo_db_utils.execution_db import updateStatus
 
 
 def router(msg):
@@ -34,88 +37,80 @@ def router(msg):
     trainspace_id = msg["trainspace_id"]
     request_data = json.loads(msg)
     print(f"{trainspace_id} is marked as STARTING")
-    entryData = {
-        "execution_id": msg["execution_id"],
-        "user_id": msg["user"]["uid"],
-        "name": msg["custom_model_name"],
-        "data_source": msg["data_source"],
-        "status": "STARTING",
-        "timestamp": get_current_timestamp(),
-        "progress": 0,
-    }
-    updateStatus(execution_id=execution_id, status="STARTING", entryData=entryData)
+    entryData = {"timestamp": get_current_timestamp()}
+    updateStatus(trainspace_id, TrainStatus.STARTING, entryData=msg)
     if msg["route"] == "tabular-run":
         result = tabular_run_route(msg)
         if result[1] != 200:
             print("Error in tabular run route: result is", result)
-            updateStatus(execution_id=execution_id, status="ERROR", entryData=entryData)
+            updateStatus(trainspace_id, TrainStatus.ERROR)
             return
 
-        updateStatus(execution_id=execution_id, status="SUCCESS", entryData=entryData)
+        updateStatus(trainspace_id, TrainStatus.SUCCESS)
         s3_helper.write_to_bucket(
             SAVED_MODEL_DL,
             EXECUTION_BUCKET_NAME,
-            f"{execution_id}/{os.path.basename(SAVED_MODEL_DL)}",
+            f"{trainspace_id}/{os.path.basename(SAVED_MODEL_DL)}",
         )
         s3_helper.write_to_bucket(
             ONNX_MODEL,
             EXECUTION_BUCKET_NAME,
-            f"{execution_id}/{os.path.basename(ONNX_MODEL)}",
+            f"{trainspace_id}/{os.path.basename(ONNX_MODEL)}",
         )
         s3_helper.write_to_bucket(
             DEEP_LEARNING_RESULT_CSV_PATH,
             EXECUTION_BUCKET_NAME,
-            f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
+            f"{trainspace_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
         )
     elif msg["route"] == "ml-run":
         result = ml_run_route(msg)
         if result[1] != 200:
-            updateStatus(execution_id=execution_id, status="ERROR", entryData=entryData)
+            updateStatus(trainspace_id, TrainStatus.ERROR, entryData=entryData)
             return
 
-        updateStatus(execution_id=execution_id, status="SUCCESS", entryData=entryData)
+        updateStatus(trainspace_id, TrainStatus.SUCCESS, entryData=entryData)
         s3_helper.write_to_bucket(
             SAVED_MODEL_ML,
             EXECUTION_BUCKET_NAME,
-            f"{execution_id}/{os.path.basename(SAVED_MODEL_ML)}",
+            f"{trainspace_id}/{os.path.basename(SAVED_MODEL_ML)}",
         )
     elif msg["route"] == "img-run":
         print("Running Img run route")
         result = img_run_route(msg)
         print(result)
         if result[1] != 200:
-            updateStatus(execution_id=execution_id, status="ERROR", entryData=entryData)
+            updateStatus(trainspace_id, TrainStatus.ERROR, entryData=entryData)
             return
 
-        updateStatus(execution_id=execution_id, status="SUCCESS", entryData=entryData)
+        updateStatus(trainspace_id, TrainStatus.SUCCESS, entryData=entryData)
         print("execution id status updated after img run complete")
         s3_helper.write_to_bucket(
             SAVED_MODEL_DL,
             EXECUTION_BUCKET_NAME,
-            f"{execution_id}/{os.path.basename(SAVED_MODEL_DL)}",
+            f"{trainspace_id}/{os.path.basename(SAVED_MODEL_DL)}",
         )
         s3_helper.write_to_bucket(
             ONNX_MODEL,
             EXECUTION_BUCKET_NAME,
-            f"{execution_id}/{os.path.basename(ONNX_MODEL)}",
+            f"{trainspace_id}/{os.path.basename(ONNX_MODEL)}",
         )
         s3_helper.write_to_bucket(
             DEEP_LEARNING_RESULT_CSV_PATH,
             EXECUTION_BUCKET_NAME,
-            f"{execution_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
+            f"{trainspace_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
         )
         print("img run result files successfully uploaded to s3")
     elif msg["route"] == "object-detection":
         result = object_detection_route(msg)
         if result[1] != 200:
-            updateStatus(execution_id=execution_id, status="ERROR", entryData=entryData)
+            updateStatus(trainspace_id, TrainStatus.ERROR, entryData=entryData)
             return
 
-        updateStatus(execution_id=execution_id, status="SUCCESS", entryData=entryData)
+        updateStatus(trainspace_id, TrainStatus.SUCCESS, entryData=entryData)
         s3_helper.write_to_bucket(
             IMAGE_DETECTION_RESULT_CSV_PATH,
             EXECUTION_BUCKET_NAME,
-            f"{execution_id}/{os.path.basename(IMAGE_DETECTION_RESULT_CSV_PATH)}",
+            f"{trainspace_id}/{os.path.basename(IMAGE_DETECTION_RESULT_CSV_PATH)}",
         )
 
 
@@ -196,7 +191,7 @@ def img_run_route(request_data):
         return send_traceback_error()
 
 
-# Wrapper for detection_img_drive() function
+# Wrapper for  function
 def object_detection_route(request_data):
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:

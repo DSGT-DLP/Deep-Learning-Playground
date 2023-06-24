@@ -70,18 +70,17 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
     user_arch = params["layers"]
 
     category_list = []
-    if not default:
-        filename = trainspace_data.dataset_data["name"]
-        uid = trainspace_data.uid
-        input_df = read_df_from_bucket(
-            FILE_UPLOAD_BUCKET_NAME, f"{uid}/tabular/{filename}"
-        )
 
     if default and problem_type.upper() == "CLASSIFICATION":
         X, y, category_list = get_default_dataset(default.upper(), target, features)
     elif default and problem_type.upper() == "REGRESSION":
         X, y, discard = get_default_dataset(default.upper(), target, features)
     else:
+        filename = trainspace_data.dataset_data["name"]
+        uid = trainspace_data.uid
+        input_df = read_df_from_bucket(
+            FILE_UPLOAD_BUCKET_NAME, f"{uid}/tabular/{filename}"
+        )
         y = input_df[target]
         X = input_df[features]
 
@@ -228,19 +227,17 @@ def ml_drive(trainspace_data: TrainspaceData):
     user_model = params["layers"][0]
 
     try:
-        if not default:
-            filename = trainspace_data.dataset_data["name"]
-            uid = trainspace_data.uid
-            input_df = read_df_from_bucket(
-                FILE_UPLOAD_BUCKET_NAME, f"{uid}/classical_ml/{filename}"
-            )
-
         if default and problem_type.upper() == "CLASSIFICATION":
             X, y, target_names = get_default_dataset(default.upper(), target, features)
             print(y.head())
         elif default and problem_type.upper() == "REGRESSION":
             X, y, target_names = get_default_dataset(default.upper(), target, features)
         else:
+            filename = trainspace_data.dataset_data["name"]
+            uid = trainspace_data.uid
+            input_df = read_df_from_bucket(
+                FILE_UPLOAD_BUCKET_NAME, f"{uid}/classical_ml/{filename}"
+            )
             input_df[target] = input_df[target].astype("category").cat.codes
             y = input_df[target]
             X = input_df[features]

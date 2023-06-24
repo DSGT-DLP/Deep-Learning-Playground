@@ -1,0 +1,56 @@
+post:
+  summary: Tabular Run
+  description: API Endpoint to train a Deep Learning (DL) Model for tabular datasets.
+  tags:
+    - train
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - uid
+            - name
+            - dataset_data
+            - parameters_data:
+                - target_col
+                - features
+                - problem_type
+                - criterion
+                - optimizer_name
+                - shuffle
+                - epochs
+                - test_size
+                - batch_size
+                - layers
+                - review_data
+          properties:
+            uid:
+              type: string
+              description: User ID
+          example:
+            uid: "1234"
+    required: true
+  responses:
+    "200":
+      description: Training successful. Shows the results page.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Training successful"
+    "400":
+      description: Error in training of model. Could come from problems with the user's request or on the server side.
+    "401":
+      description: User is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User is not authenticated"

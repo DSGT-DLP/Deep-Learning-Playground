@@ -1,13 +1,11 @@
-import random
 import pandas as pd
-import datetime
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris, fetch_california_housing
 from backend.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
 from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
 from backend.aws_helpers.s3_utils.s3_client import read_df_from_bucket, read_from_bucket
 
-from backend.common.constants import ONNX_MODEL, CSV_FILE_NAME
+from backend.common.constants import IMAGE_FILE_DOWNLOAD_TMP_PATH, ONNX_MODEL
 from backend.common.dataset import read_dataset, loader_from_zipped
 from backend.common.default_datasets import (
     get_default_dataset,
@@ -76,7 +74,7 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
         filename = trainspace_data["dataset_data"]["name"]
         uid = trainspace_data["uid"]
         input_df = read_df_from_bucket(
-            FILE_UPLOAD_BUCKET_NAME, f"{uid}/tabular/${filename}"
+            FILE_UPLOAD_BUCKET_NAME, f"{uid}/tabular/{filename}"
         )
 
     if default and problem_type.upper() == "CLASSIFICATION":
@@ -158,6 +156,8 @@ def dl_img_drive(trainspace_data: TrainspaceData):
     epochs = params.get("epochs", 5)
     shuffle = params.get("shuffle", True)
     batch_size = params.get("batch_size", 20)
+    train_transform = params["train_transform"]
+    test_transform = params["test_transform"]
 
     user_arch = params["layers"]
 
@@ -167,14 +167,15 @@ def dl_img_drive(trainspace_data: TrainspaceData):
     test_transform = parse_deep_user_architecture(test_transform)
 
     if not default:
+        uid = trainspace_data["uid"]
+        filename = trainspace_data["dataset_data"]["name"]
         read_from_bucket(
             FILE_UPLOAD_BUCKET_NAME,
-            
+            f"{uid}/img/{filename}",
+            filename,
+            IMAGE_FILE_DOWNLOAD_TMP_PATH,
         )
-        for x in os.listdir(IMAGE_UPLOAD_FOLDER):
-            if x != ".gitkeep":
-                zip_file = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
-                break
+        zip_file = os.path.join(IMAGE_FILE_DOWNLOAD_TMP_PATH, filename)
         train_loader, test_loader = loader_from_zipped(
             zip_file, batch_size, shuffle, train_transform, test_transform
         )
@@ -198,17 +199,7 @@ def dl_img_drive(trainspace_data: TrainspaceData):
     return train_loss_results
 
 
-def ml_drive(
-    user_model,
-    problem_type,
-    target=None,
-    features=None,
-    default=False,
-    test_size=0.2,
-    shuffle=True,
-    json_csv_data_str="",
-    fileURL="",
-):
+def ml_drive(trainspace_data: TrainspaceData):
     """
     Driver function/endpoint into backend for training a classical ML model (eg: SVC, SVR, DecisionTree, Naive Bayes, etc)
 
@@ -217,18 +208,32 @@ def ml_drive(
         problem_type (str): "classification" or "regression" problem
         target (str, optional): name of target column. Defaults to None.
         features (list, optional): list of columns in dataframe for the feature based on user selection. Defaults to None.
-        default (bool, optional): use the iris dataset for default classifiction or california housing for default regression. Defaults to False.
+        default (bool, optional): use the iris dataset for default classification or california housing for default regression. Defaults to False.
         test_size (float, optional): size of test set in train/test split (percentage). Defaults to 0.2.
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
     """
+    params = trainspace_data["parameters_data"]
+
+    target = params.get("target_col", None)
+    features = params.get("features", None)
+    problem_type = params["problem_type"]
+    default = (
+        trainspace_data["dataset_data"]["name"]
+        if trainspace_data["dataset_data"].get("is_default_dataset")
+        else None
+    )
+    shuffle = params.get("shuffle", True)
+    test_size = params.get("test_size", 0.2)
+
+    user_model = params["layers"][0]
+
     try:
         if not default:
-            if fileURL:
-                read_dataset(fileURL)
-            elif json_csv_data_str:
-                pass
-            else:
-                raise ValueError("Need a file input")
+            filename = trainspace_data["dataset_data"]["name"]
+            uid = trainspace_data["uid"]
+            input_df = read_df_from_bucket(
+                FILE_UPLOAD_BUCKET_NAME, f"{uid}/classical_ml/{filename}"
+            )
 
         if default and problem_type.upper() == "CLASSIFICATION":
             X, y, target_names = get_default_dataset(default.upper(), target, features)
@@ -236,12 +241,9 @@ def ml_drive(
         elif default and problem_type.upper() == "REGRESSION":
             X, y, target_names = get_default_dataset(default.upper(), target, features)
         else:
-            if json_csv_data_str:
-                input_df = pd.read_json(json_csv_data_str, orient="records")
-                input_df[target] = input_df[target].astype("category").cat.codes
-                y = input_df[target]
-                X = input_df[features]
-                print(input_df.head())
+            input_df[target] = input_df[target].astype("category").cat.codes
+            y = input_df[target]
+            X = input_df[features]
 
         if shuffle and problem_type.upper() == "CLASSIFICATION":
             X_train, X_test, y_train, y_test = train_test_split(

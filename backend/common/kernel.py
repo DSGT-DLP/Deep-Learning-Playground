@@ -3,6 +3,7 @@ import json
 import traceback
 import os
 import shutil
+from backend.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
 
 import backend.aws_helpers.sqs_utils.sqs_client as sqs_helper
 import backend.aws_helpers.s3_utils.s3_client as s3_helper
@@ -30,8 +31,9 @@ def router(msg):
     Routes the message to the appropriate training function.
     """
     print("Message received")
+    trainspace_id = msg["trainspace_id"]
     request_data = json.loads(msg)
-    print(f"{execution_id} is marked as STARTING")
+    print(f"{trainspace_id} is marked as STARTING")
     entryData = {
         "execution_id": msg["execution_id"],
         "user_id": msg["user"]["uid"],
@@ -118,30 +120,9 @@ def router(msg):
 
 
 # Wrapper for dl_tabular_drive() function
-def tabular_run_route(request_data):
+def tabular_run_route(trainspace_data: TrainspaceData):
     try:
-        user_arch = request_data["user_arch"]
-        fileURL = request_data["file_URL"]
-        uid = request_data["user"]["uid"]
-        json_csv_data_str = request_data["csv_data"]
-        customModelName = request_data["custom_model_name"]
-
-        params = {
-            "target": request_data["target"],
-            "features": request_data["features"],
-            "problem_type": request_data["problem_type"],
-            "optimizer_name": request_data["optimizer_name"],
-            "criterion": request_data["criterion"],
-            "default": request_data["using_default_dataset"],
-            "epochs": request_data["epochs"],
-            "shuffle": request_data["shuffle"],
-            "test_size": request_data["test_size"],
-            "batch_size": request_data["batch_size"],
-        }
-
-        train_loss_results = dl_tabular_drive(
-            user_arch, fileURL, params, json_csv_data_str, customModelName
-        )
+        train_loss_results = dl_tabular_drive(trainspace_data)
 
         print(train_loss_results)
         return send_train_results(train_loss_results)

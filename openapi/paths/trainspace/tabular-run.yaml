@@ -17,11 +17,9 @@ post:
             uid:
               type: string
               description: User ID
-              example: "1234"
             name:
               type: string
               description: Name of the trainspace
-              example: "My trainspace"
             dataset_data:
               type: object
               description: DatasetData instance
@@ -41,21 +39,17 @@ post:
                 target_col:
                   type: string
                   description: Target column
-                  example: "target"
                 features:
                   type: array
                   description: Features
                   items:
                     type: string
-                  example: ["col1", "col2", "col3"]
                 problem_type:
                   type: string
                   description: Problem type
-                  example: "classification"
                 criterion:
                   type: string
                   description: Criterion
-                  example: "CELOSS"
                 optimizer_name:
                   type: string
                   description: Optimizer name
@@ -63,29 +57,18 @@ post:
                 shuffle:
                   type: boolean
                   description: Shuffle
-                  example: true
                 epochs:
                   type: integer
                   description: Epochs
-                  example: 10
                 test_size:
                   type: number
                   description: Test size
-                  example: 0.2
                 batch_size:
                   type: integer
                   description: Batch size
-                  example: 20
                 layers:
                   type: array
                   description: Layers
-                  example:
-                    [
-                      "nn.Linear(4, 10)",
-                      "nn.ReLU()",
-                      "nn.Linear(10, 3)",
-                      "nn.Softmax()",
-                    ]
               required:
                 - target_col
                 - features
@@ -99,6 +82,27 @@ post:
                 - layers
           example:
             uid: "1234"
+            name: "My trainspace"
+            dataset_data:
+              name: "data.csv"
+              is_default_dataset: false
+            parameters_data:
+              target_col: "target"
+              features: ["col1", "col2", "col3"]
+              problem_type: "classification"
+              criterion: "CELOSS"
+              optimizer_name: "SGD"
+              shuffle: true
+              epochs: 10
+              test_size: 0.2
+              batch_size: 20
+              layers:
+                [
+                  "nn.Linear(4, 10)",
+                  "nn.ReLU()",
+                  "nn.Linear(10, 3)",
+                  "nn.Softmax()",
+                ]
     required: true
   responses:
     "200":

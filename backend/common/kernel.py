@@ -172,9 +172,9 @@ def object_detection_route(trainspace_data: TrainspaceData):
         return send_traceback_error()
     finally:
         filename = trainspace_data.dataset_data["name"]
-        zip_file = os.path.join(IMAGE_FILE_DOWNLOAD_TMP_PATH, filename)
+        img_file = os.path.join(IMAGE_FILE_DOWNLOAD_TMP_PATH, filename)
 
-        os.remove(zip_file)
+        os.remove(img_file)
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
 

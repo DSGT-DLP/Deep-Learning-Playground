@@ -84,6 +84,13 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
         y = input_df[target]
         X = input_df[features]
 
+        if problem_type.upper() == "CLASSIFICATION" and not default:
+            category_list = []
+            target_categories = input_df[target]
+            for category in target_categories:
+                if category not in category_list:
+                    category_list.append(category)
+
     if len(y) * test_size < batch_size or len(y) * (1 - test_size) < batch_size:
         raise ValueError("reduce batch size, not enough values in dataframe")
 
@@ -121,12 +128,7 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
         y_test_tensor,
         batch_size=batch_size,
     )
-    if problem_type.upper() == "CLASSIFICATION" and not default:
-        category_list = []
-        target_categories = input_df[target]
-        for category in target_categories:
-            if category not in category_list:
-                category_list.append(category)
+
     train_loss_results = train_deep_model(
         model,
         train_loader,

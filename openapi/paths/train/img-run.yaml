@@ -87,17 +87,24 @@ post:
             parameters_data:
               problem_type: "classification"
               criterion: "CELOSS"
-              optimizer_name: "SGD"
+              optimizer_name: "ADAM"
               shuffle: true
               epochs: 10
               test_size: 0.2
               batch_size: 20
               layers:
                 [
-                  "nn.Linear(4, 10)",
-                  "nn.ReLU()",
-                  "nn.Linear(10, 3)",
-                  "nn.Softmax()",
+                  "nn.Conv2d(1, 5, 3, 1, 1)",
+                  "nn.MaxPool2d(3, 1)",
+                  "nn.Flatten()",
+                  "nn.Linear(500, 10)",
+                  "nn.Sigmoid()",
+                ]
+              train_transform:
+                [
+                  "torchvision.transforms.Grayscale()",
+                  "torchvision.transforms.toTensor()",
+                  "torchvision.transforms.Resize((32, 32))",
                 ]
     required: true
   responses:

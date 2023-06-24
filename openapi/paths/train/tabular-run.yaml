@@ -98,10 +98,10 @@ post:
               batch_size: 20
               layers:
                 [
-                  "nn.Linear(4, 10)",
-                  "nn.ReLU()",
                   "nn.Linear(10, 3)",
-                  "nn.Softmax()",
+                  "nn.ReLU()",
+                  "nn.Linear(3, 10)",
+                  "nn.Softmax(-1)",
                 ]
     required: true
   responses:

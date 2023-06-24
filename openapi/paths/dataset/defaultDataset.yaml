@@ -20,7 +20,7 @@ post:
   responses:
     "200":
       description: Dataset selected successfully
-      content: test content
+      content:
         application/json:
           schema:
             type: object

@@ -12,7 +12,81 @@ post:
             - uid
             - name
             - dataset_data
-            - parameters_data:
+            - parameters_data
+          properties:
+            uid:
+              type: string
+              description: User ID
+              example: "1234"
+            name:
+              type: string
+              description: Name of the trainspace
+              example: "My trainspace"
+            dataset_data:
+              type: object
+              description: DatasetData instance
+              example:
+                name: "data.csv"
+                is_default_dataset: false
+              properties:
+                name:
+                  type: string
+                  description: Name of the dataset file
+                is_default_dataset:
+                  type: boolean
+                  description: Whether the dataset is a built-in dataset
+            parameters_data:
+              type: object
+              properties:
+                target_col:
+                  type: string
+                  description: Target column
+                  example: "target"
+                features:
+                  type: array
+                  description: Features
+                  items:
+                    type: string
+                  example: ["col1", "col2", "col3"]
+                problem_type:
+                  type: string
+                  description: Problem type
+                  example: "classification"
+                criterion:
+                  type: string
+                  description: Criterion
+                  example: "CELOSS"
+                optimizer_name:
+                  type: string
+                  description: Optimizer name
+                  example: "SGD"
+                shuffle:
+                  type: boolean
+                  description: Shuffle
+                  example: true
+                epochs:
+                  type: integer
+                  description: Epochs
+                  example: 10
+                test_size:
+                  type: number
+                  description: Test size
+                  example: 0.2
+                batch_size:
+                  type: integer
+                  description: Batch size
+                  example: 20
+                layers:
+                  type: array
+                  description: Layers
+                  example:
+                    [
+                      "nn.Linear(4, 10)",
+                      "nn.ReLU()",
+                      "nn.Linear(10, 3)",
+                      "nn.Softmax()",
+                    ]
+              required:
                 - target_col
                 - features
                 - problem_type
@@ -23,11 +97,6 @@ post:
                 - test_size
                 - batch_size
                 - layers
-                - review_data
-          properties:
-            uid:
-              type: string
-              description: User ID
           example:
             uid: "1234"
     required: true

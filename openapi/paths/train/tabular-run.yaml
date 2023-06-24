@@ -1,0 +1,129 @@
+post:
+  summary: Tabular Run
+  description: API Endpoint to train a Deep Learning (DL) Model for tabular datasets.
+  tags:
+    - train
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - uid
+            - name
+            - dataset_data
+            - parameters_data
+          properties:
+            uid:
+              type: string
+              description: User ID
+            name:
+              type: string
+              description: Name of the trainspace
+            dataset_data:
+              type: object
+              description: DatasetData instance
+              example:
+                name: "data.csv"
+                is_default_dataset: false
+              properties:
+                name:
+                  type: string
+                  description: Name of the dataset file
+                is_default_dataset:
+                  type: boolean
+                  description: Whether the dataset is a built-in dataset
+            parameters_data:
+              type: object
+              properties:
+                target_col:
+                  type: string
+                  description: Target column to predict/classify
+                features:
+                  type: array
+                  description: Input columns to the model
+                  items:
+                    type: string
+                problem_type:
+                  type: string
+                  description: Classification or regression problem
+                criterion:
+                  type: string
+                  description: Loss function to use
+                optimizer_name:
+                  type: string
+                  description: What optimizer should the model use during gradient descent
+                  example: "SGD"
+                shuffle:
+                  type: boolean
+                  description: Should the rows be shuffled or order be maintained?
+                epochs:
+                  type: integer
+                  description: How many epochs/iterations do we train model for
+                test_size:
+                  type: number
+                  description: What percentage of your dataset should be dedicated for testing the performance of the model
+                batch_size:
+                  type: integer
+                  description: How big should each "batch" of the dataset be. This is for training in batch during the epoch
+                layers:
+                  type: array
+                  description: Architecture of Model
+              required:
+                - target_col
+                - features
+                - problem_type
+                - criterion
+                - optimizer_name
+                - shuffle
+                - epochs
+                - test_size
+                - batch_size
+                - layers
+          example:
+            uid: "1234"
+            name: "My trainspace"
+            dataset_data:
+              name: "data.csv"
+              is_default_dataset: false
+            parameters_data:
+              target_col: "target"
+              features: ["col1", "col2", "col3"]
+              problem_type: "classification"
+              criterion: "CELOSS"
+              optimizer_name: "SGD"
+              shuffle: true
+              epochs: 10
+              test_size: 0.2
+              batch_size: 20
+              layers:
+                [
+                  "nn.Linear(4, 10)",
+                  "nn.ReLU()",
+                  "nn.Linear(10, 3)",
+                  "nn.Softmax()",
+                ]
+    required: true
+  responses:
+    "200":
+      description: Training successful. Shows the results page.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Training successful"
+    "400":
+      description: Error in training of model. Could come from problems with the user's request or on the server side.
+    "401":
+      description: User is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User is not authenticated"

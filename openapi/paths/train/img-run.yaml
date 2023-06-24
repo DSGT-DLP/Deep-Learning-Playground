@@ -1,6 +1,6 @@
 post:
-  summary: Tabular Run
-  description: API Endpoint to train a Deep Learning (DL) Model for tabular datasets.
+  summary: Image Run
+  description: API Endpoint to train an image model via Pytorch.
   tags:
     - train
   requestBody:
@@ -36,42 +36,38 @@ post:
             parameters_data:
               type: object
               properties:
-                target_col:
-                  type: string
-                  description: Target column
-                features:
-                  type: array
-                  description: Features
-                  items:
-                    type: string
                 problem_type:
                   type: string
-                  description: Problem type
+                  description: Classification or Regression problem
                 criterion:
                   type: string
-                  description: Criterion
+                  description: Loss function
                 optimizer_name:
                   type: string
-                  description: Optimizer name
+                  description: What optimizer should the model use during gradient descent
                   example: "SGD"
                 shuffle:
                   type: boolean
-                  description: Shuffle
+                  description: Should the data be shuffled around before training?
                 epochs:
                   type: integer
-                  description: Epochs
+                  description: How many epochs/iterations to run the model
                 test_size:
                   type: number
-                  description: Test size
+                  description: What percentage of your dataset should be dedicated for testing the performance of the model
                 batch_size:
                   type: integer
-                  description: Batch size
+                  description: How big should each "batch" of the dataset be. This is for training in batch during the epoch
                 layers:
                   type: array
-                  description: Layers
+                  description: Architecture of Model
+                train_transform:
+                  type: array
+                  description: The image transformations you want to apply to the training data
+                test_transform:
+                  type: array
+                  description: The image transformations you want to apply to the testing data
               required:
-                - target_col
-                - features
                 - problem_type
                 - criterion
                 - optimizer_name
@@ -80,15 +76,15 @@ post:
                 - test_size
                 - batch_size
                 - layers
+                - train_transform
+                - test_transform
           example:
             uid: "1234"
             name: "My trainspace"
             dataset_data:
-              name: "data.csv"
+              name: "data.zip"
               is_default_dataset: false
             parameters_data:
-              target_col: "target"
-              features: ["col1", "col2", "col3"]
               problem_type: "classification"
               criterion: "CELOSS"
               optimizer_name: "SGD"
@@ -106,7 +102,7 @@ post:
     required: true
   responses:
     "200":
-      description: Training successful. Shows the results page.
+      description: Image DL model trained successfully. Shows the results page.
       content:
         application/json:
           schema:

@@ -41,8 +41,10 @@ paths:
     $ref: paths/trainspace/create-trainspace.yaml
   /api/trainspace/getTrainspaceData:
     $ref: paths/trainspace/getTrainspaceData.yaml
-  /api/trainspace/tabular-run:
-    $ref: paths/trainspace/tabular-run.yaml
+  /api/train/img-run:
+    $ref: paths/train/img-run.yaml
+  /api/train/tabular-run:
+    $ref: paths/train/tabular-run.yaml
 # components:
 #   securitySchemes:
 #     main_auth:

@@ -1,6 +1,6 @@
 post:
-  summary: Get User Dataset file upload presigned post object
-  description: API Endpoint to use S3 Presigned URLs to upload dataset files to S3 given the user ID, the data source, and the file name
+  summary: Get User Dataset file - Upload Presigned Post Object
+  description: API Endpoint to use S3 Presigned URLs to upload dataset files to S3 given the user ID, the data source, and the file name.
   tags:
     - s3
   requestBody:

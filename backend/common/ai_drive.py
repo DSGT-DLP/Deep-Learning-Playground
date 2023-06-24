@@ -144,7 +144,7 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
 
 
 def dl_img_drive(trainspace_data: TrainspaceData):
-    params = trainspace_data["parameters_data"]
+    params = trainspace_data.parameters_data
 
     optimizer_name = params["optimizer_name"]
     criterion = params["criterion"]
@@ -212,7 +212,7 @@ def ml_drive(trainspace_data: TrainspaceData):
         test_size (float, optional): size of test set in train/test split (percentage). Defaults to 0.2.
         shuffle (bool, optional): should the dataset be shuffled prior to train/test split
     """
-    params = trainspace_data["parameters_data"]
+    params = trainspace_data.parameters_data
 
     target = params.get("target_col", None)
     features = params.get("features", None)

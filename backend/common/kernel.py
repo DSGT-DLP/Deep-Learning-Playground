@@ -34,12 +34,12 @@ def router(msg):
     Routes the message to the appropriate training function.
     """
     print("Message received")
-    request_data = json.loads(msg)
-    trainspace_id = request_data["trainspace_id"]
+    request_data = TrainspaceData(**(json.loads(msg)))
+    trainspace_id = request_data.trainspace_id
     print(f"{trainspace_id} is marked as STARTING")
-    entryData = {"timestamp": get_current_timestamp()}
-    updateStatus(trainspace_id, TrainStatus.STARTING, entryData=request_data)
-    data_source = request_data["data_source"]
+    updateStatus(trainspace_id, TrainStatus.STARTING)
+    data_source = request_data.data_source
+
     if data_source == "TABULAR":
         result = tabular_run_route(request_data)
         if result[1] != 200:
@@ -64,12 +64,12 @@ def router(msg):
             f"{trainspace_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
         )
     elif data_source == "CLASSICAL_ML":
-        result = ml_run_route(request_data)
+        result = ml_run_route(TrainspaceData(**request_data))
         if result[1] != 200:
-            updateStatus(trainspace_id, TrainStatus.ERROR, entryData=entryData)
+            updateStatus(trainspace_id, TrainStatus.ERROR)
             return
 
-        updateStatus(trainspace_id, TrainStatus.SUCCESS, entryData=entryData)
+        updateStatus(trainspace_id, TrainStatus.SUCCESS)
         s3_helper.write_to_bucket(
             SAVED_MODEL_ML,
             EXECUTION_BUCKET_NAME,
@@ -80,10 +80,10 @@ def router(msg):
         result = img_run_route(request_data)
         print(result)
         if result[1] != 200:
-            updateStatus(trainspace_id, TrainStatus.ERROR, entryData=entryData)
+            updateStatus(trainspace_id, TrainStatus.ERROR)
             return
 
-        updateStatus(trainspace_id, TrainStatus.SUCCESS, entryData=entryData)
+        updateStatus(trainspace_id, TrainStatus.SUCCESS)
         print("execution id status updated after img run complete")
         s3_helper.write_to_bucket(
             SAVED_MODEL_DL,
@@ -104,10 +104,10 @@ def router(msg):
     elif data_source == "OBJECT_DETECTION":
         result = object_detection_route(request_data)
         if result[1] != 200:
-            updateStatus(trainspace_id, TrainStatus.ERROR, entryData=entryData)
+            updateStatus(trainspace_id, TrainStatus.ERROR)
             return
 
-        updateStatus(trainspace_id, TrainStatus.SUCCESS, entryData=entryData)
+        updateStatus(trainspace_id, TrainStatus.SUCCESS)
         s3_helper.write_to_bucket(
             IMAGE_DETECTION_RESULT_CSV_PATH,
             EXECUTION_BUCKET_NAME,

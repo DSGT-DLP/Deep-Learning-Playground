@@ -1,3 +1,7 @@
+from backend.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
+from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
+from backend.aws_helpers.s3_utils.s3_client import read_from_bucket
+from backend.common.constants import IMAGE_FILE_DOWNLOAD_TMP_PATH
 from transformers import YolosFeatureExtractor, YolosForObjectDetection
 import torch
 import torchvision
@@ -87,11 +91,20 @@ def write_to_csv(label_set):
             writer.writerows(label_set)
 
 
-def detection_img_drive(IMAGE_UPLOAD_FOLDER, detection_type, problem_type, transforms):
-    for x in os.listdir(IMAGE_UPLOAD_FOLDER):
-        if x != ".gitkeep":
-            img_file = os.path.join(os.path.abspath(IMAGE_UPLOAD_FOLDER), x)
-            break
+def detection_img_drive(trainspace_data: TrainspaceData):
+    uid = trainspace_data.uid
+    filename = trainspace_data.dataset_data["name"]
+    read_from_bucket(
+        FILE_UPLOAD_BUCKET_NAME,
+        f"{uid}/object_detection/{filename}",
+        filename,
+        IMAGE_FILE_DOWNLOAD_TMP_PATH,
+    )
+    img_file = os.path.join(IMAGE_FILE_DOWNLOAD_TMP_PATH, filename)
+    transforms = trainspace_data.dataset_data["transforms"]
+    detection_type = trainspace_data.dataset_data["detection_type"]
+    problem_type = trainspace_data.dataset_data["problem_type"]
+
     image = transform_image(img_file, transforms)
     if detection_type == "rekognition":
         im_b64, label_set = rekognition_detection(image, problem_type)

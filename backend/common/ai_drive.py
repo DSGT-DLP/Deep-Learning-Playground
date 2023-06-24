@@ -172,7 +172,7 @@ def dl_img_drive(trainspace_data: TrainspaceData):
         filename = trainspace_data.dataset_data["name"]
         read_from_bucket(
             FILE_UPLOAD_BUCKET_NAME,
-            f"{uid}/img/{filename}",
+            f"{uid}/image/{filename}",
             filename,
             IMAGE_FILE_DOWNLOAD_TMP_PATH,
         )

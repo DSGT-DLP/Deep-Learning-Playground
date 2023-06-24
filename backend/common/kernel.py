@@ -171,7 +171,7 @@ def object_detection_route(trainspace_data: TrainspaceData):
         print(traceback.format_exc())
         return send_traceback_error()
     finally:
-        filename = trainspace_data["dataset_data"]["name"]
+        filename = trainspace_data.dataset_data["name"]
         zip_file = os.path.join(IMAGE_FILE_DOWNLOAD_TMP_PATH, filename)
 
         os.remove(zip_file)

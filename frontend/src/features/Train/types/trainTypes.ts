@@ -37,3 +37,7 @@ export interface DatasetData {
   isDefaultDataset: boolean;
   name: string;
 }
+
+export interface ImageUploadData {
+  name: string;
+}

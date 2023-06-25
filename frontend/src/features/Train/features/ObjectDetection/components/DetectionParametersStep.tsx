@@ -383,7 +383,10 @@ const LayerComponent = ({
           spacing={3}
         >
           <Typography variant="h3" fontSize={18}>
-            {STEP_SETTINGS.PARAMETERS.detectionTransforms[data.value].label}
+            {
+              STEP_SETTINGS.PARAMETERS.detectionTransforms[data.value]
+                .display_name
+            }
           </Typography>
           <Stack direction={"row"} alignItems={"center"} spacing={3}>
             <Stack

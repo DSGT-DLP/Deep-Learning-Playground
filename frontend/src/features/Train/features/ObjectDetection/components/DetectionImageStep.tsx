@@ -2,24 +2,40 @@ import FilerobotImageEditor, {
   TABS,
   TOOLS,
 } from "react-filerobot-image-editor";
+import { UploadImagePanel } from "@/features/Train/components/ImageUploadLayout";
+import React, { useEffect } from "react";
+import { TrainspaceData } from "../types/detectionTypes";
 import { useLazySendUploadDataQuery } from "../redux/uploadApi";
+import { Stack } from "@mui/material";
+import { updateDetectionTrainspaceData } from "../redux/detectionActions";
+import { useForm, Controller } from "react-hook-form";
+import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
+import { ImageUploadData } from "@/features/Train/types/trainTypes";
 import {
-  DatasetStepTabLayout,
-  DefaultDatasetPanel,
-  UploadDatasetPanel,
-} from "@/features/Train/components/DatasetStepLayout";
-import { useForm } from "react-hook-form";
+  useGetDatasetFilesDataQuery,
+  useUploadDatasetFileMutation,
+} from "@/features/Train/redux/trainspaceApi";
 
 const DetectionImageStep = ({
   renderStepperButtons,
   setIsModified,
 }: {
   renderStepperButtons: (
-    submitTrainspace: (data: TrainspaceData<"DATASET">) => void
+    submitTrainspace: (data: TrainspaceData<"IMAGE">) => void
   ) => React.ReactNode;
   setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [sendUploadData, { data }] = useLazySendUploadDataQuery();
+  const trainspace = useAppSelector(
+    (state) => state.trainspace.current as TrainspaceData | undefined
+  );
+  const {
+    handleSubmit,
+    formState: { errors, isDirty },
+    control,
+  } = useForm<ImageData>();
+  const [uploadFile] = useUploadDatasetFileMutation();
+  const uploadImageMethods = useForm<ImageUploadData>();
+  const dispatch = useAppDispatch();
   const dataURLtoFile = (dataurl: string, filename: string) => {
     const arr = dataurl.split(",");
     if (arr.length === 0) {
@@ -37,66 +53,25 @@ const DetectionImageStep = ({
     return new File([u8arr], filename, { type: mime });
   };
   return (
-    <FilerobotImageEditor
-      source="https://scaleflex.airstore.io/demo/stephen-walker-unsplash.jpg"
-      onSave={(editedImageObject: any) => {
-        const file = dataURLtoFile(
-          editedImageObject.imageBase64,
-          editedImageObject.fullName
-        );
-        sendUploadData(file);
-      }}
-      annotationsCommon={{
-        fill: "#ff0000",
-      }}
-      Text={{ text: "Filerobot..." }}
-      Rotate={{ angle: 90, componentType: "slider" }}
-      Crop={{
-        presetsItems: [
-          {
-            titleKey: "classicTv",
-            descriptionKey: "4:3",
-            ratio: (4 / 3).toString(),
-          },
-          {
-            titleKey: "cinemascope",
-            descriptionKey: "21:9",
-            ratio: (21 / 9).toString(),
-          },
-        ],
-        presetsFolders: [
-          {
-            titleKey: "socialMedia",
-
-            // icon: Social, // optional, Social is a React Function component. Possible (React Function component, string or HTML Element)
-            groups: [
-              {
-                titleKey: "facebook",
-                items: [
-                  {
-                    titleKey: "profile",
-                    width: 180,
-                    height: 180,
-                    descriptionKey: "fbProfileSize",
-                  },
-                  {
-                    titleKey: "coverPhoto",
-                    width: 820,
-                    height: 312,
-                    descriptionKey: "fbCoverPhotoSize",
-                  },
-                ],
+    <Stack spacing={3}>
+      <UploadImagePanel
+        dataSource={"OBJECT_DETECTION"}
+        methods={uploadImageMethods}
+      />
+      {renderStepperButtons((trainspaceData) => {
+        uploadImageMethods.handleSubmit((data) => {
+          dispatch(
+            updateDetectionTrainspaceData({
+              current: {
+                ...trainspaceData,
+                imageData: data,
               },
-            ],
-          },
-        ],
-      }}
-      tabsIds={[TABS.ADJUST, TABS.ANNOTATE, TABS.WATERMARK]} // or {['Adjust', 'Annotate', 'Watermark']}
-      defaultTabId={TABS.ANNOTATE} // or 'Annotate'
-      defaultToolId={TOOLS.TEXT} // or 'Text'
-      savingPixelRatio={0}
-      previewPixelRatio={0}
-    />
+              stepLabel: "IMAGE",
+            })
+          );
+        })();
+      })}
+    </Stack>
   );
 };
 

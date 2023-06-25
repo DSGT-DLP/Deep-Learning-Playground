@@ -1,7 +1,7 @@
 import {
     BaseTrainspaceData,
-    DatasetData,
     FileUploadData,
+    ImageUploadData,
   } from "@/features/Train/types/trainTypes";
   import {
     STEP_SETTINGS,
@@ -13,10 +13,10 @@ import {
       | (typeof TRAINSPACE_SETTINGS)["steps"][number]
       | "TRAIN"
   > extends BaseTrainspaceData {
-    dataSource: "TABULAR";
+    dataSource: "IMAGE";
     imageData: T extends "PARAMETERS" | "REVIEW" | "TRAIN"
-      ? FileUploadData
-      : FileUploadData| undefined;
+      ? ImageUploadData
+      : ImageUploadData| undefined;
     parameterData: T extends "REVIEW" | "TRAIN"
       ? ParameterData
       : ParameterData | undefined;

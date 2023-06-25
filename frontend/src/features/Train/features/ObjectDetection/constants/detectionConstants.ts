@@ -34,7 +34,7 @@ export const STEP_SETTINGS = {
     detectionTransforms: {
       RandomHorizontalFlip: {
         display_name: "Random Horizontal Flip",
-        object_name: "transforms.RandomHorizontalFlip",
+        objectName: "transforms.RandomHorizontalFlip",
         parameters: [
           {
             label: "probability",
@@ -51,7 +51,7 @@ export const STEP_SETTINGS = {
     
       ToTensor: {
         display_name: "To Tensor",
-        object_name: "transforms.ToTensor",
+        objectName: "transforms.ToTensor",
         parameters: [],
         label: "To Tensor",
         value: "ToTensor",
@@ -59,7 +59,7 @@ export const STEP_SETTINGS = {
 
       RandomVerticalFlip: {
         display_name: "Random Vertical Flip",
-        object_name: "transforms.RandomVerticalFlip",
+        objectName: "transforms.RandomVerticalFlip",
         parameters: [
           {
             label: "probability",
@@ -75,16 +75,21 @@ export const STEP_SETTINGS = {
       },
       Resize: {
         display_name: "Resize",
-        object_name: "transforms.Resize",
+        objectName: "transforms.Resize",
         parameters: [
           {
-            label: "size",
-            index: 0,
-            parameter_name: "(H, W)",
+            label: "Height",
             min: 1,
             max: 1000,
-            default: "(32, 32)",
-            type: "tuple",
+            required: true,
+            type: "number",
+          },
+          {
+            label: "Width",
+            min: 1,
+            max: 1000,
+            required: true,
+            type: "number",
           },
         ],
         label: "Resize",
@@ -92,7 +97,7 @@ export const STEP_SETTINGS = {
       },
       GaussianBlur: {
         display_name: "Gaussian Blur",
-        object_name: "transforms.GaussianBlur",
+        objectName: "transforms.GaussianBlur",
         parameters: [
           {
             label: "kernel size",
@@ -108,14 +113,14 @@ export const STEP_SETTINGS = {
       },
       Grayscale: {
         display_name: "Grayscale",
-        object_name: "transforms.Grayscale",
+        objectName: "transforms.Grayscale",
         parameters: [],
         label: "Grayscale",
         value: "Grayscale",
       },
       Normalize: {
         display_name: "Normalize",
-        object_name: "transforms.Normalize",
+        objectName: "transforms.Normalize",
         parameters: [
           {
             label: "mean",
@@ -141,7 +146,7 @@ export const STEP_SETTINGS = {
       },
       AdjustContrast: {
         display_name: "AdjustContrast",
-        object_name: "transforms.functional.adjust_contrast",
+        objectName: "transforms.functional.adjust_contrast",
         transform_type: "functional",
         parameters: [
           {
@@ -159,7 +164,7 @@ export const STEP_SETTINGS = {
       },
       AdjustBrightness: {
         display_name: "AdjustBrightness",
-        object_name: "transforms.functional.adjust_brightness",
+        objectName: "transforms.functional.adjust_brightness",
         transform_type: "functional",
         parameters: [
           {
@@ -177,7 +182,7 @@ export const STEP_SETTINGS = {
       },
       Affine: {
         display_name: "Affine",
-        object_name: "transforms.functional.affine",
+        objectName: "transforms.functional.affine",
         transform_type: "functional",
         parameters: [
           {

@@ -17,7 +17,7 @@ const detectionApi = backendApi.injectEndpoints({
           parameters_data: {
             problem_type: trainspaceData.parameterData.detectionType,
             detection_problem_type: trainspaceData.parameterData.detectionProblemType,
-            layers: trainspaceData.parameterData.transforms,
+            transforms: trainspaceData.parameterData.transforms,
           },
           review_data: {
             notification_email:

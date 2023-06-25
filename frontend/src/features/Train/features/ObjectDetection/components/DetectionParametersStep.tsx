@@ -7,6 +7,7 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  Grid,
   IconButton,
   Paper,
   Radio,
@@ -47,6 +48,7 @@ import {
 import ClientOnlyPortal from "@/common/components/ClientOnlyPortal";
 import { updateDetectionTrainspaceData } from "../redux/detectionActions";
 import { id } from "date-fns/locale";
+import { string } from "prop-types";
 
 const DetectionParametersStep = ({
   renderStepperButtons,
@@ -61,6 +63,9 @@ const DetectionParametersStep = ({
     (state) =>
       state.trainspace.current as TrainspaceData<"PARAMETERS"> | undefined
   );
+  const [detectionType, setDetectionType] = React.useState<string>(
+    trainspace?.parameterData?.detectionType ?? "rekognition"
+  );
   const dispatch = useAppDispatch();
   const {
     handleSubmit,
@@ -71,7 +76,16 @@ const DetectionParametersStep = ({
       detectionType: trainspace?.parameterData?.detectionType ?? "rekognition",
       detectionProblemType:
         trainspace?.parameterData?.detectionProblemType ?? "labels",
-      transforms: trainspace?.parameterData?.transforms ?? [],
+      transforms: trainspace?.parameterData?.transforms ?? [
+        {
+          value: "Resize",
+          parameters: [256, 256],
+        },
+        {
+          value: "Grayscale",
+          parameters: [],
+        },
+      ],
     },
   });
   useEffect(() => {
@@ -87,7 +101,14 @@ const DetectionParametersStep = ({
           control={control}
           rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
-            <RadioGroup row value={value} onChange={onChange}>
+            <RadioGroup
+              row
+              value={value}
+              onChange={(e) => {
+                onChange(e);
+                setDetectionType(e.target.value);
+              }}
+            >
               {STEP_SETTINGS["PARAMETERS"].detectionTypes.map(
                 (detectionType) => (
                   <FormControlLabel
@@ -102,28 +123,31 @@ const DetectionParametersStep = ({
           )}
         />
       </FormControl>
-      <FormControl>
-        <FormLabel>Detection Problem Type</FormLabel>
-        <Controller
-          name="detectionProblemType"
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { onChange, value } }) => (
-            <RadioGroup row value={value} onChange={onChange}>
-              {STEP_SETTINGS["PARAMETERS"].detectionProblemTypes.map(
-                (detectionProblemType) => (
-                  <FormControlLabel
-                    key={detectionProblemType.value}
-                    value={detectionProblemType.value}
-                    control={<Radio />}
-                    label={detectionProblemType.label}
-                  />
-                )
-              )}
-            </RadioGroup>
-          )}
-        />
-      </FormControl>
+      {detectionType === "rekognition" && (
+        <FormControl>
+          <FormLabel>Detection Problem Type</FormLabel>
+          <Controller
+            name="detectionProblemType"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, value } }) => (
+              <RadioGroup row value={value} onChange={onChange}>
+                {STEP_SETTINGS["PARAMETERS"].detectionProblemTypes.map(
+                  (detectionProblemType) => (
+                    <FormControlLabel
+                      key={detectionProblemType.value}
+                      value={detectionProblemType.value}
+                      control={<Radio />}
+                      label={detectionProblemType.label}
+                    />
+                  )
+                )}
+              </RadioGroup>
+            )}
+          />
+        </FormControl>
+      )}
+
       <LayersDnd control={control} errors={errors} />
       {renderStepperButtons((trainspaceData) => {
         handleSubmit((data) => {
@@ -247,17 +271,19 @@ const LayersDnd = ({
       <Paper elevation={1} style={{ backgroundColor: "transparent" }}>
         <Stack alignItems={"center"} spacing={2} padding={2}>
           <Typography variant="h2" fontSize={25}>
-            Layers
+            Transforms
           </Typography>
-          <Stack direction={"row"} spacing={3}>
+          <Grid container spacing={3}>
             {STEP_SETTINGS.PARAMETERS.detectionTransformValues.map((value) => (
-              <LayerInventoryComponent
-                id={layerInvIds[value]}
-                key={value}
-                value={value}
-              />
+              <Grid item key={value}>
+                <LayerInventoryComponent
+                  id={layerInvIds[value]}
+                  key={value}
+                  value={value}
+                />
+              </Grid>
             ))}
-          </Stack>
+          </Grid>
         </Stack>
       </Paper>
 

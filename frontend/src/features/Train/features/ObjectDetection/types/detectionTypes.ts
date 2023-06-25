@@ -1,6 +1,5 @@
 import {
     BaseTrainspaceData,
-    FileUploadData,
     ImageUploadData,
   } from "@/features/Train/types/trainTypes";
   import {

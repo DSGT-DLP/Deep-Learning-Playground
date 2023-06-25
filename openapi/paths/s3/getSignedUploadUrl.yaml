@@ -1,0 +1,52 @@
+post:
+  summary: Get Signed Upload URL
+  description: Endpoint to upload files to S3
+  tags:
+    - s3
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - version
+            - filename
+            - file
+          properties:
+            version:
+              type: integer
+              description: The file version
+            filename:
+              type: string
+              description: The name of the file
+            file:
+              type: object
+              description: the file
+          example:
+            version: 2
+            filename: "file"
+            file: { "col1": [val1, val2], "col2": [val3, val4] }
+    required: true
+  responses:
+    "200":
+      description: Data uploaded successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Upload successful"
+    "400":
+      description: Upload didn't go through successfully. This is usually something wrong with your code
+    "401":
+      description: User is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User is not authenticated"

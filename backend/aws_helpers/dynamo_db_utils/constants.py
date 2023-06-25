@@ -1,3 +1,5 @@
+from enum import Enum
+
 EXECUTION_TABLE_NAME = "execution-table"
 USERPROGRESS_TABLE_NAME = "userprogress_table"
 TRAINSPACE_TABLE_NAME = "trainspace"
@@ -9,3 +11,8 @@ ALL_DYANMODB_TABLES = {
         "partition_key": "uid",
     },
 }
+
+
+TrainStatus = Enum(
+    "TrainStatus", ["QUEUED", "STARTING", "UPLOADING", "TRAINING", "SUCCESS", "ERROR"]
+)

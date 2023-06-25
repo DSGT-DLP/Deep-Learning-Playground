@@ -1,4 +1,7 @@
-from backend.aws_helpers.dynamo_db_utils.constants import TRAINSPACE_TABLE_NAME
+from backend.aws_helpers.dynamo_db_utils.constants import (
+    TRAINSPACE_TABLE_NAME,
+    TrainStatus,
+)
 from backend.aws_helpers.dynamo_db_utils.dynamo_db_utils import (
     create_dynamo_item,
     get_dynamo_item_by_key,
@@ -24,7 +27,7 @@ class TrainspaceData:
     name: str = ""
     parameters_data: dict = None
     review_data: str = ""
-    status: str = ""
+    status: TrainStatus = TrainStatus.QUEUED
 
 """
 @dataclass

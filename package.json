@@ -6,7 +6,7 @@
   "scripts": {
     "build:prod": "cd frontend && yarn install && REACT_APP_MODE=prod yarn run build",
     "installf": "cd frontend && yarn install",
-    "installb": "conda --version && cd conda && conda env create -f environment.yml && pre-commit install",
+    "installb": "conda --version && cd conda && if conda env list | grep -q 'dlplayground'; then conda env update -f environment.yml --prune; else conda env create -f environment.yml; fi && ggshield auth login && pre-commit install",
     "startf": "cd frontend && yarn dev",
     "secrets": "eval \"$(conda shell.bash hook)\" && conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env",
     "startb": "eval \"$(conda shell.bash hook)\" && conda activate dlplayground && python -m backend.driver",

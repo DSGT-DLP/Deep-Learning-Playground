@@ -1,0 +1,43 @@
+post:
+  summary: Get User Dataset Files
+  description: API Endpoint to retrieve all user dataset files uploaded in S3
+  tags:
+    - s3
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - uid
+            - data_source
+          properties:
+            uid:
+              type: string
+              description: User ID
+            data_source:
+              type: string
+              description: "What type of training was the user running (eg: TABULAR, PRETRAINED, OBJECT_DETECTION, IMAGE, etc)"
+  responses:
+    "200":
+      description: User Dataset files for user fetched successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "User Dataset file fetch successful"
+    "400":
+      description: User Dataset files for user wasn't fetched successfully. This is usually something wrong with your code
+    "401":
+      description: User is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User is not authenticated"

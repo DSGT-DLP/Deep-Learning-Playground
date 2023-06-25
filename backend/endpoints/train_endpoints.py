@@ -60,7 +60,7 @@ def tabular_run():
         id = str(uuid.uuid4())
         tabular_data = TrainspaceData(
             trainspace_id=id,
-            uid=request_data["user"]["uid"],
+            uid=request.environ["user"]["uid"],
             created=get_current_timestamp(),
             data_source="TABULAR",
             dataset_data=request_data["dataset_data"],
@@ -128,7 +128,7 @@ def img_run():
         batch_size = request_data["batch_size"]
         shuffle = request_data["shuffle"]
         customModelName = request_data["custom_model_name"]
-        uid = request_data["user"]["uid"]
+        uid = request.environ["user"]["uid"]
         execution_id = request_data["execution_id"]
         train_loss_results = dl_img_drive(
             train_transform,

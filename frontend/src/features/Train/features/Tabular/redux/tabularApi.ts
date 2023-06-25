@@ -1,16 +1,18 @@
 import { backendApi } from "@/common/redux/backendApi";
 import { TrainspaceData } from "../types/tabularTypes";
-import { auth } from "@/common/utils/firebase";
 
 const tabularApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({
-    train: builder.mutation<{ trainspaceId: string }, TrainspaceData<"TRAIN">>({
+    trainTabular: builder.mutation<
+      { trainspaceId: string },
+      TrainspaceData<"TRAIN">
+    >({
       query: (trainspaceData) => ({
         url: "/api/train/tabular-run",
         method: "POST",
         body: {
-          user: auth.currentUser,
           name: trainspaceData.name,
+          data_source: trainspaceData.dataSource,
           dataset_data: {
             name: trainspaceData.datasetData.name,
             is_default_dataset: trainspaceData.datasetData.isDefaultDataset,
@@ -45,4 +47,4 @@ const tabularApi = backendApi.injectEndpoints({
   overrideExisting: true,
 });
 
-export const { useTrainMutation } = tabularApi;
+export const { useTrainTabularMutation } = tabularApi;

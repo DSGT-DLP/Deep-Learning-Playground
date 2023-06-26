@@ -1,5 +1,3 @@
-from dataclasses import asdict
-from decimal import Decimal
 import shutil
 import traceback
 import uuid
@@ -57,7 +55,10 @@ def tabular_run():
     """
     try:
         request_data = json.loads(request.data)
+        print("hello")
+        print(request_data)
         id = str(uuid.uuid4())
+        print(request.environ["user"]["uid"])
         tabular_data = TrainspaceData(
             trainspace_id=id,
             uid=request.environ["user"]["uid"],
@@ -175,6 +176,41 @@ def object_detection_run():
     Returns:
         _type_: _description_
     """
+    try:
+        request_data = json.loads(request.data)
+        id = str(uuid.uuid4())
+        detection_data = TrainspaceData(
+            trainspace_id=id,
+            uid=request.environ["user"]["uid"],
+            created=get_current_timestamp(),
+            data_source="OBJECT_DETECTION",
+            dataset_data=request_data["image_data"],
+            name=request_data["name"],
+            parameters_data=request_data["parameters_data"],
+            review_data=request_data["review_data"],
+        )
+
+        try:
+            createTrainspaceData(detection_data)
+            print(id)
+            return send_success({"message": "success", "trainspace_id": id})
+        except Exception:
+            print(traceback.format_exc())
+            return send_traceback_error()
+
+        """ train_loss_results = dl_tabular_drive(
+            user_arch, fileURL, params, json_csv_data_str, customModelName
+        )
+        train_loss_results["user_arch"] = user_arch
+        print(train_loss_results)
+        updateStatus(execution_id, "SUCCESS") """
+        # return send_train_results(train_loss_results)
+
+    except Exception:
+        # updateStatus(execution_id, "ERROR")
+        print(traceback.format_exc())
+        return send_traceback_error()
+    """
     IMAGE_UPLOAD_FOLDER = "./backend/image_data_uploads"
     try:
         request_data = json.loads(request.data)
@@ -198,3 +234,4 @@ def object_detection_run():
                     os.remove(file_rem)
         if os.path.exists(UNZIPPED_DIR_NAME):
             shutil.rmtree(UNZIPPED_DIR_NAME)
+            """

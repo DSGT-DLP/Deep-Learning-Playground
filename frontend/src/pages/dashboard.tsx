@@ -39,7 +39,7 @@ const Dashboard = () => {
               primaryAction={{
                 component: (
                   <Button
-                    color="red"
+                    color="blue"
                     size="md"
                     iconEnd="refresh"
                     text="Refresh"
@@ -104,17 +104,42 @@ const Dashboard = () => {
 
 const BlankGrid = () => {
   const router = useRouter();
+
   return (
     <div id="blank-grid-wrapper">
-      <div id="blank-grid">
-        <p>
-          You haven't trained any models yet. Create your first model below!
+      <div
+        id="blank-grid"
+        style={{
+          backgroundColor: "#001F3F",
+          padding: "20px",
+          borderRadius: "4px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          color: "#FFFFFF",
+          fontWeight: "bold",
+          position: "relative",
+        }}
+      >
+        <p style={{ color: "#FFFFFF" }}>
+          Introducing Quick TrainSpace: The beginner-friendly way to understand
+          your data and train models with ease!
         </p>
         <button
           id="blank-grid-button"
           onClick={() => router.push({ pathname: "/train" })}
+          style={{
+            backgroundColor: "#FFFFFF",
+            color: "#001F3F",
+            padding: "10px 20px",
+            borderRadius: "4px",
+            fontWeight: "bold",
+            cursor: "pointer",
+            border: "none",
+            outline: "none",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+            transition: "background-color 0.3s ease",
+          }}
         >
-          Train Model
+          Use Quick TrainSpace today!
         </button>
       </div>
     </div>

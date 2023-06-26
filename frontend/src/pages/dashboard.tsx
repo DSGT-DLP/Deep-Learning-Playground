@@ -139,7 +139,7 @@ const BlankGrid = () => {
             transition: "background-color 0.3s ease",
           }}
         >
-          Use Quick TrainSpace today!
+          Use Quick TrainSpace!
         </button>
       </div>
     </div>

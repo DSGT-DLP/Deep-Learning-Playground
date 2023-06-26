@@ -26,6 +26,7 @@ class TrainspaceData:
     review_data: str = ""
     status: str = ""
 
+
 """
 @dataclass
 class LayerData(BaseData):
@@ -73,6 +74,8 @@ class TabularData(TrainspaceData):
     # status=["QUEUED", "STARTING", "UPLOADING", "TRAINING", "SUCCESS", "ERROR"],
 )
 """
+
+
 def getTrainspaceData(trainspace_id: str) -> dict:
     """
     Retrieves an entry from the `trainspace` DynamoDB table given an `trainspace_id`. Example output: {"trainspace_id": "blah", "user_id": "blah", "name": "blah", "timestamp": "blah", "data_source": "TABULAR", "status": "QUEUED", "progress": 1}

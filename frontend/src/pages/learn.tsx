@@ -3,6 +3,7 @@ import getContent from "../features/LearnMod/LearningModulesContent";
 import { useAppSelector } from "@/common/redux/hooks";
 import NavbarMain from "@/common/components/NavBarMain";
 import Footer from "@/common/components/Footer";
+import React from "react";
 //import { fetchUserProgressData } from "../../redux/userLogin";
 
 const LearnMod = () => {

@@ -1,6 +1,8 @@
 import ClassCard from "../features/LearnMod/ClassCard";
 import getContent from "../features/LearnMod/LearningModulesContent";
 import { useAppSelector } from "@/common/redux/hooks";
+import NavbarMain from "@/common/components/NavBarMain";
+import Footer from "@/common/components/Footer";
 //import { fetchUserProgressData } from "../../redux/userLogin";
 
 const LearnMod = () => {
@@ -26,6 +28,7 @@ const LearnMod = () => {
   }
   return (
     <>
+      <NavbarMain />
       <div id="header-section">
         <h1 className="headers">Your learning modules, {user.displayName}</h1>
       </div>
@@ -47,6 +50,7 @@ const LearnMod = () => {
           })}
         </div>
       </div>
+      <Footer />
     </>
   );
 };

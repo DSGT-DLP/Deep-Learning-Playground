@@ -10,6 +10,8 @@ import {
 } from "../features/LearnMod/LearningModulesContent";
 import Exercise from "../features/LearnMod/Exercise";
 import Router, { withRouter } from "next/router";
+import NavbarMain from "@/common/components/NavBarMain";
+import Footer from "@/common/components/Footer";
 
 const LearnContent = () => {
   const [moduleContent, setModuleContent] = useState<ModuleType>(
@@ -50,6 +52,7 @@ const LearnContent = () => {
   }
   return (
     <>
+      <NavbarMain />
       <div id="header-section">
         <h1 className="headers">{moduleContent.title}</h1>
       </div>
@@ -126,6 +129,7 @@ const LearnContent = () => {
           Next
         </button>
       </div>
+      <Footer />
     </>
   );
 };

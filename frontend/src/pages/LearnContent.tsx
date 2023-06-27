@@ -9,7 +9,7 @@ import {
   ModuleType,
 } from "../features/LearnMod/LearningModulesContent";
 import Exercise from "../features/LearnMod/Exercise";
-import Router, { withRouter } from "next/router";
+import Router from "next/router";
 import NavbarMain from "@/common/components/NavBarMain";
 import Footer from "@/common/components/Footer";
 

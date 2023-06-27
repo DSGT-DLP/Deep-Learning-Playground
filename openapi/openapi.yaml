@@ -20,6 +20,8 @@ tags:
     description: Test API endpoints
   - name: trainspace
     description: Everything about trainspace
+  - name: train
+    description: Everything about train endpoints
 servers:
   - url: http://localhost:8000
 paths:

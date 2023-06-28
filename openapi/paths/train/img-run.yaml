@@ -1,0 +1,132 @@
+post:
+  summary: Image Run
+  description: API Endpoint to train an image model via Pytorch.
+  tags:
+    - train
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - uid
+            - name
+            - dataset_data
+            - parameters_data
+          properties:
+            uid:
+              type: string
+              description: User ID
+            name:
+              type: string
+              description: Name of the trainspace
+            dataset_data:
+              type: object
+              description: DatasetData instance
+              example:
+                name: "data.csv"
+                is_default_dataset: false
+              properties:
+                name:
+                  type: string
+                  description: Name of the dataset file
+                is_default_dataset:
+                  type: boolean
+                  description: Whether the dataset is a built-in dataset
+            parameters_data:
+              type: object
+              properties:
+                problem_type:
+                  type: string
+                  description: Classification or Regression problem
+                criterion:
+                  type: string
+                  description: Loss function
+                optimizer_name:
+                  type: string
+                  description: What optimizer should the model use during gradient descent
+                  example: "SGD"
+                shuffle:
+                  type: boolean
+                  description: Should the data be shuffled around before training?
+                epochs:
+                  type: integer
+                  description: How many epochs/iterations to run the model
+                test_size:
+                  type: number
+                  description: What percentage of your dataset should be dedicated for testing the performance of the model
+                batch_size:
+                  type: integer
+                  description: How big should each "batch" of the dataset be. This is for training in batch during the epoch
+                layers:
+                  type: array
+                  description: Architecture of Model
+                train_transform:
+                  type: array
+                  description: The image transformations you want to apply to the training data
+                test_transform:
+                  type: array
+                  description: The image transformations you want to apply to the testing data
+              required:
+                - problem_type
+                - criterion
+                - optimizer_name
+                - shuffle
+                - epochs
+                - test_size
+                - batch_size
+                - layers
+                - train_transform
+                - test_transform
+          example:
+            uid: "1234"
+            name: "My trainspace"
+            dataset_data:
+              name: "data.zip"
+              is_default_dataset: false
+            parameters_data:
+              problem_type: "classification"
+              criterion: "CELOSS"
+              optimizer_name: "ADAM"
+              shuffle: true
+              epochs: 10
+              test_size: 0.2
+              batch_size: 20
+              layers:
+                [
+                  "nn.Conv2d(1, 5, 3, 1, 1)",
+                  "nn.MaxPool2d(3, 1)",
+                  "nn.Flatten()",
+                  "nn.Linear(500, 10)",
+                  "nn.Sigmoid()",
+                ]
+              train_transform:
+                [
+                  "torchvision.transforms.Grayscale()",
+                  "torchvision.transforms.toTensor()",
+                  "torchvision.transforms.Resize((32, 32))",
+                ]
+    required: true
+  responses:
+    "200":
+      description: Image DL model trained successfully. Shows the results page.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Training successful"
+    "400":
+      description: Error in training of model. Could come from problems with the user's request or on the server side.
+    "401":
+      description: User is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User is not authenticated"

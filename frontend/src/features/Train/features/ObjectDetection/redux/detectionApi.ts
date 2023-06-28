@@ -4,7 +4,10 @@ import { auth } from "@/common/utils/firebase";
 
 const detectionApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({
-    detection: builder.mutation<{ trainspaceId: string }, TrainspaceData<"TRAIN">>({
+    detection: builder.mutation<
+      { trainspaceId: string },
+      TrainspaceData<"TRAIN">
+    >({
       query: (trainspaceData) => ({
         url: "/api/train/object-detection",
         method: "POST",
@@ -16,8 +19,9 @@ const detectionApi = backendApi.injectEndpoints({
             name: trainspaceData.datasetData.name,
           },
           parameters_data: {
-            problem_type: trainspaceData.parameterData.detectionType,
-            detection_problem_type: trainspaceData.parameterData.detectionProblemType,
+            detection_type: trainspaceData.parameterData.detectionType,
+            detection_problem_type:
+              trainspaceData.parameterData.detectionProblemType,
             transforms: trainspaceData.parameterData.transforms,
           },
           review_data: {

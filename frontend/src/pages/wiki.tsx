@@ -182,7 +182,7 @@ const Wiki = () => {
               <Image
                 src={dropout_dg}
                 alt="Dropout diagram"
-                style={{ maxHeight: 200, marginInline: "auto" }}
+                style={{ maxHeight: 200, maxWidth: 400, marginInline: "auto" }}
               />
 
               <h5>Documentation</h5>
@@ -312,7 +312,7 @@ const Wiki = () => {
               <Image
                 src={sigmoid_eq}
                 alt="Sigmoid plot"
-                style={{ maxHeight: 300, marginInline: "auto" }}
+                style={{ maxHeight: 300, maxWidth: 500, marginInline: "auto" }}
               />
 
               <h5>Documentation</h5>
@@ -361,7 +361,7 @@ const Wiki = () => {
               <Image
                 src={softmax_eq}
                 alt="Softmax equation"
-                style={{ maxHeight: 200, marginInline: "auto" }}
+                style={{ maxHeight: 200, maxWidth: 500, marginInline: "auto" }}
               />
 
               <p>

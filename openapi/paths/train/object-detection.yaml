@@ -1,6 +1,6 @@
 post:
   summary: Create Trainspace
-  description: API Endpoint to create an object-detection trainspace. 
+  description: API Endpoint to create an object-detection trainspace.
   tags:
     - trainspace
   requestBody:
@@ -37,20 +37,29 @@ post:
                 detectionProblemType:
                   type: string
                   description: Type of detection problem
-                transforms: 
+                transforms:
                   type: array
                   description: Transforms to apply to the image
                   items:
                     type: string
                     description: Transform to apply to the image
                     example: "RandomHorizontalFlip"
-    required: true
           example:
             uid: "1234"
-            dataset_data: { "name" : "image.jpg"}
+            dataset_data: { "name": "image.jpg" }
             name: "trainspace"
-            review_data: { "notification_phone_number" : "1234567890", "notification_email" : "123@123.com"}
-            parameters_data: { "detection_type" : "yolo", "detection_problem_type" : "labels", "transforms" : []}         
+            review_data:
+              {
+                "notification_phone_number": "1234567890",
+                "notification_email": "123@123.com",
+              }
+            parameters_data:
+              {
+                "detection_type": "yolo",
+                "detection_problem_type": "labels",
+                "transforms": [],
+              }
+    required: true
   responses:
     "200":
       description: Trainspace created successfully

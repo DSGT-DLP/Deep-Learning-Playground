@@ -85,7 +85,6 @@ const NavbarMain = () => {
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
-                fontFamily: "Lato, Arial, Helvetica, sans-serif",
                 color: "inherit",
                 textDecoration: "none",
               }}
@@ -172,13 +171,7 @@ const NavbarMain = () => {
                             dispatch(signOutUser());
                           }}
                         >
-                          <Typography
-                            sx={{
-                              fontFamily: "Lato, Arial, Helvetica, sans-serif",
-                            }}
-                          >
-                            Log out
-                          </Typography>
+                          <Typography>Log out</Typography>
                         </MenuItem>
                       </Link>
                     </MenuList>

@@ -38,7 +38,7 @@ const DetectionImageStep = ({
             updateDetectionTrainspaceData({
               current: {
                 ...trainspaceData,
-                imageData: data,
+                datasetData: data,
               },
               stepLabel: "IMAGE",
             })

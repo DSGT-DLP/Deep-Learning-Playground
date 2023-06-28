@@ -55,10 +55,7 @@ def tabular_run():
     """
     try:
         request_data = json.loads(request.data)
-        print("hello")
-        print(request_data)
         id = str(uuid.uuid4())
-        print(request.environ["user"]["uid"])
         tabular_data = TrainspaceData(
             trainspace_id=id,
             uid=request.environ["user"]["uid"],
@@ -184,7 +181,7 @@ def object_detection_run():
             uid=request.environ["user"]["uid"],
             created=get_current_timestamp(),
             data_source="OBJECT_DETECTION",
-            dataset_data=request_data["image_data"],
+            dataset_data=request_data["dataset_data"],
             name=request_data["name"],
             parameters_data=request_data["parameters_data"],
             review_data=request_data["review_data"],

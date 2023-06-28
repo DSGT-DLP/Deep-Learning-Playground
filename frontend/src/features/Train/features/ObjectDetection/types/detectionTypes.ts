@@ -12,8 +12,8 @@ import {
       | (typeof TRAINSPACE_SETTINGS)["steps"][number]
       | "TRAIN"
   > extends BaseTrainspaceData {
-    dataSource: "IMAGE";
-    imageData: T extends "PARAMETERS" | "REVIEW" | "TRAIN"
+    dataSource: "OBJECT_DETECTION";
+    datasetData: T extends "PARAMETERS" | "REVIEW" | "TRAIN"
       ? ImageUploadData
       : ImageUploadData| undefined;
     parameterData: T extends "REVIEW" | "TRAIN"

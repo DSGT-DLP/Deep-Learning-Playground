@@ -11,8 +11,9 @@ const detectionApi = backendApi.injectEndpoints({
         body: {
           user: auth.currentUser,
           name: trainspaceData.name,
-          image_data: {
-            name: trainspaceData.imageData.name,
+          data_source: trainspaceData.dataSource,
+          dataset_data: {
+            name: trainspaceData.datasetData.name,
           },
           parameters_data: {
             problem_type: trainspaceData.parameterData.detectionType,

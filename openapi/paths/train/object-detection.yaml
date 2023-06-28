@@ -31,19 +31,26 @@ post:
               type: object
               description: Parameters for the detection
               properties:
-                detectionType:
+                problem_type:
                   type: string
                   description: Type of detection
-                detectionProblemType:
+                detection_problem_type:
                   type: string
                   description: Type of detection problem
                 transforms:
                   type: array
                   description: Transforms to apply to the image
                   items:
-                    type: string
+                    type: object
                     description: Transform to apply to the image
-                    example: "RandomHorizontalFlip"
+                    properties:
+                      value:
+                        type: string
+                        description: Type of transform to apply
+                      parameters:
+                        type: array
+                        description: Parameters for the transform
+
           example:
             uid: "1234"
             dataset_data: { "name": "image.jpg" }
@@ -55,9 +62,9 @@ post:
               }
             parameters_data:
               {
-                "detection_type": "yolo",
+                "problem_type": "rekognition",
                 "detection_problem_type": "labels",
-                "transforms": [],
+                "transforms": [{ "value": "Resize", "parameters": [100, 100] }],
               }
     required: true
   responses:

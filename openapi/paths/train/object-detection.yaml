@@ -30,6 +30,20 @@ post:
             parameters_data:
               type: object
               description: Parameters for the detection
+              properties:
+                detectionType:
+                  type: string
+                  description: Type of detection
+                detectionProblemType:
+                  type: string
+                  description: Type of detection problem
+                transforms: 
+                  type: array
+                  description: Transforms to apply to the image
+                  items:
+                    type: string
+                    description: Transform to apply to the image
+                    example: "RandomHorizontalFlip"
     required: true
           example:
             uid: "1234"

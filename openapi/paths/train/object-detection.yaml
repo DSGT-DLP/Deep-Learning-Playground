@@ -2,7 +2,7 @@ post:
   summary: Create Trainspace
   description: API Endpoint to create an object-detection trainspace.
   tags:
-    - trainspace
+    - train
   requestBody:
     content:
       application/json:

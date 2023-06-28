@@ -1,0 +1,57 @@
+post:
+  summary: Update One User Progress Data
+  description: API Endpoint to update user progress data as the user progresses through the Learning Modules feature. We can identify here if a user gets a question correct or not and update that progress within Dynamo DB.
+  tags:
+    - trainspace
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - uid
+            - moduleID
+            - questionID
+            - sectionID
+          properties:
+            uid:
+              type: string
+              description: User ID
+            moduleID:
+              type: string
+              description: Module ID
+            questionID:
+              type: string
+              description: Question ID
+            sectionID:
+              type: string
+              description: Section ID
+          example:
+            uid: "1234"
+            moduleID: "1"
+            questionID: "1"
+            sectionID: "1"
+    required: true
+  responses:
+    "200":
+      description: Dynamo DB update successful
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Dynamo DB Update Successful"
+    "400":
+      description: Something went wrong in updating the user progress in learning modules.
+    "401":
+      description: User is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User is not authenticated"

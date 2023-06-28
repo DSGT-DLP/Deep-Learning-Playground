@@ -1,0 +1,42 @@
+post:
+  summary: Get User Progress Data
+  description: Utility function to get user progress data for the Learning Modules feature of DLP.
+  tags:
+    - trainspace
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - uid
+          properties:
+            uid:
+              type: string
+              description: User ID
+          example:
+            uid: "1234"
+    required: true
+  responses:
+    "200":
+      description: Able to query and load user progress data for a given user that visits the Learning Modules surface on DLP
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "User Progress Data Retrieval Successful"
+    "400":
+      description: Error in retrieving this data.
+    "401":
+      description: User is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User is not authenticated"

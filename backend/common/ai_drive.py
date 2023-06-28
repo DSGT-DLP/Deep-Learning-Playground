@@ -74,7 +74,7 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
     if default and problem_type.upper() == "CLASSIFICATION":
         X, y, category_list = get_default_dataset(default.upper(), target, features)
     elif default and problem_type.upper() == "REGRESSION":
-        X, y, discard = get_default_dataset(default.upper(), target, features)
+        X, y = get_default_dataset(default.upper(), target, features)
     else:
         filename = trainspace_data.dataset_data["name"]
         uid = trainspace_data.uid

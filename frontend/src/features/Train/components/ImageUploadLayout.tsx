@@ -17,6 +17,7 @@ import FilerobotImageEditor, {
   TABS,
   TOOLS,
 } from "react-filerobot-image-editor";
+import React from "react";
 
 const dataURLtoFile = (dataurl: string, filename: string) => {
   const arr = dataurl.split(",");
@@ -57,7 +58,7 @@ export const UploadImagePanel = ({
               editedImageObject.imageBase64,
               editedImageObject.fullName
             );
-            uploadFile({ dataSource: dataSource, file: file });
+            uploadFile({ dataSource, file });
           }}
           annotationsCommon={{
             fill: "#ff0000",

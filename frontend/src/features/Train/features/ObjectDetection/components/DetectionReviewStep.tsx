@@ -39,7 +39,7 @@ const TabularReviewStep = ({
         control={control}
         name="notificationPhoneNumber"
         rules={{
-          pattern: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
+          pattern: /^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
         }}
         render={({ field: { onChange } }) => (
           <TextField

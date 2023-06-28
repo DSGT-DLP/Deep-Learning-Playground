@@ -1,0 +1,61 @@
+post:
+  summary: Get User Dataset file - Upload Presigned Post Object
+  description: API Endpoint to use S3 Presigned URLs to upload dataset files to S3 given the user ID, the data source, and the file name.
+  tags:
+    - s3
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - uid
+            - data_source
+            - name
+          properties:
+            uid:
+              type: string
+              description: The unique user ID
+            data_source:
+              type: string
+              description: "What type of training was the user running (eg: TABULAR, PRETRAINED, OBJECT_DETECTION, IMAGE, etc)"
+            name:
+              type: string
+              description: The dataset file name
+          example:
+            uid: "1234"
+            data_source: "TABULAR"
+            file_name: "data.csv"
+    required: true
+  responses:
+    "200":
+      description: Presigned URLs fetched successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Presigned URL fetch successful"
+              presigned_post_obj:
+                type: string
+                example: "{'url': 'https://cloudberry-examples.s3.amazonaws.com/', 
+                'fields': {
+                  'key': 'uploads/image.jpg', 
+                  'AWSAccessKeyId': 'AKIALGKOKBY37F5FZF4I', 
+                  'policy': 'eyJleHBpcmF0aW9uIjogIjIwMTgtMDctMTNUMDI6Mzg6MTBaIiwgImNvbmRpdGlvbnMiOiBbWyJjb250ZW50LWxlbmd0aC1yYW5nZSIsIDEsIDEwNDg1NzldLCB7ImJ1Y2tldCI6ICJjbG91ZGJlcnJ5LWV4YW1wbGVzIn0sIHsia2V5IjogInVwbG9hZHMvaW1hZ2UuanBnIn1dfQ==', 
+                  'signature': 'ZY7Orehfdzg+ToJJXhYuV/XyK5o='}}"
+
+    "400":
+      description: Presigned URL fetch didn't go through successfully. This is usually something wrong with your code
+    "401":
+      description: User is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User is not authenticated"

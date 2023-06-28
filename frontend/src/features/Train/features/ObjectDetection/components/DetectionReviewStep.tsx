@@ -23,7 +23,7 @@ const TabularReviewStep = ({
   );
   const {
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors },
     control,
   } = useForm<ReviewData>();
   const dispatch = useAppDispatch();

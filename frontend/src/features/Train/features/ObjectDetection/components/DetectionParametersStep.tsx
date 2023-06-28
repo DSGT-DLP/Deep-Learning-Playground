@@ -47,8 +47,6 @@ import {
 } from "@/common/utils/dndHelpers";
 import ClientOnlyPortal from "@/common/components/ClientOnlyPortal";
 import { updateDetectionTrainspaceData } from "../redux/detectionActions";
-import { id } from "date-fns/locale";
-import { string } from "prop-types";
 
 const DetectionParametersStep = ({
   renderStepperButtons,

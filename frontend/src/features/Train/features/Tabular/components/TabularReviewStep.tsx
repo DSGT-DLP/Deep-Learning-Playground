@@ -23,7 +23,7 @@ const TabularReviewStep = ({
   );
   const {
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors },
     control,
   } = useForm<ReviewData>();
   const dispatch = useAppDispatch();
@@ -41,7 +41,7 @@ const TabularReviewStep = ({
         control={control}
         name="notificationPhoneNumber"
         rules={{
-          // ref: https://stackoverflow.com/a/16699507/11031425 
+          // ref: https://stackoverflow.com/a/16699507/11031425
           pattern: /^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
         }}
         render={({ field: { onChange } }) => (

@@ -1,10 +1,7 @@
-
-import { grayscale } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import DetectionImageStep from "../components/DetectionImageStep";
 import DetectionParametersStep from "../components/DetectionParametersStep";
 import DetectionReviewStep from "../components/DetectionReviewStep";
 import TabularTrainspace from "../components/DetectionTrainspace";
-import React from "react";
 
 export const TRAINSPACE_SETTINGS = {
   name: "Detection",

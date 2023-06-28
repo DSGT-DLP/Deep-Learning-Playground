@@ -20,7 +20,7 @@ const DetectionImageStep = ({
     (state) => state.trainspace.current as TrainspaceData | undefined
   );
   const uploadImageMethods = useForm<ImageUploadData>({
-    defaultValues: trainspace?.imageData,
+    defaultValues: trainspace?.datasetData,
   });
   useEffect(() => {
     setIsModified(uploadImageMethods.formState.isDirty);

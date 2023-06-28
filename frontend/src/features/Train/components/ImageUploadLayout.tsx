@@ -1,33 +1,17 @@
-import React from "react";
-import { Controller, UseFormReturn } from "react-hook-form";
 import {
-  FileUploadData,
   DATA_SOURCE,
-  DatasetData,
+  FileUploadData,
   ImageUploadData,
 } from "@/features/Train/types/trainTypes";
-import {
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  Stack,
-  Tab,
-  Tabs,
-  Typography,
-} from "@mui/material";
-import { useAppSelector } from "@/common/redux/hooks";
-import { ALL_STEP_SETTINGS } from "@/features/Train/constants/trainConstants";
-import { DataGrid } from "@mui/x-data-grid";
+import { Button, Radio, Stack, Typography } from "@mui/material";
+import { Controller, UseFormReturn } from "react-hook-form";
+
+import { formatDate } from "@/common/utils/dateFormat";
 import {
   useGetDatasetFilesDataQuery,
   useUploadDatasetFileMutation,
 } from "@/features/Train/redux/trainspaceApi";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { formatDate } from "@/common/utils/dateFormat";
-import { toast } from "react-toastify";
+import { DataGrid } from "@mui/x-data-grid";
 import prettyBytes from "pretty-bytes";
 import FilerobotImageEditor, {
   TABS,

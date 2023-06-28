@@ -1,5 +1,5 @@
 post:
-  summary: Create Trainspace
+  summary: Object Detection
   description: API Endpoint to create an object-detection trainspace.
   tags:
     - train

@@ -115,7 +115,7 @@ const LearnContent = () => {
                 );
               }
               if (contentComponent.sectionType === "exercise") {
-                return <Exercise />;
+                return <Exercise key={index} />;
               }
             }
           )}

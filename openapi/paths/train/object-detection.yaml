@@ -27,6 +27,13 @@ post:
             review_data:
               type: object
               description: Phone number and email of the user
+              properties:
+                notification_phone_number:
+                  type: string
+                  description: Phone number of the user
+                notification_email:
+                  type: string
+                  description: Email of the user
             parameters_data:
               type: object
               description: Parameters for the detection

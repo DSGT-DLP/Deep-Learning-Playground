@@ -1,0 +1,68 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Deep Learning Playground Backend API
+  contact:
+    email: dlp@datasciencegt.org
+    url: https://github.com/DSGT-DLP/Deep-Learning-Playground
+  license:
+    name: MIT
+    url: https://github.com/DSGT-DLP/Deep-Learning-Playground/blob/nextjs/LICENSE
+  description: >
+    Deep Learning Playground Backend API specifications
+
+tags:
+  - name: dataset
+    description: Everything about dataset
+  - name: s3
+    description: Everything about s3
+  - name: test
+    description: Test API endpoints
+  - name: trainspace
+    description: Everything about trainspace
+servers:
+  - url: http://localhost:8000
+paths:
+  /api/dataset/defaultDataset:
+    $ref: paths/dataset/defaultDataset.yaml
+  /api/dataset/getColumnsFromDatasetFile:
+    $ref: paths/dataset/getColumnsFromDatasetFile.yaml
+  /api/s3/getExecutionsFilesPresignedUrls:
+    $ref: paths/s3/getExecutionsFilesPresignedUrls.yaml
+  /api/s3/getSignedUploadUrl:
+    $ref: paths/s3/getSignedUploadUrl.yaml
+  /api/s3/getUserDatasetFilesData:
+    $ref: paths/s3/getUserDatasetFilesData.yaml
+  /api/s3/getUserDatasetFileUploadPresignedPostObj:
+    $ref: paths/s3/getUserDatasetFileUploadPresignedPostObj.yaml
+  /api/test:
+    $ref: paths/test/none.yaml
+  /api/trainspace/create-trainspace:
+    $ref: paths/trainspace/create-trainspace.yaml
+  /api/trainspace/getTrainspaceData:
+    $ref: paths/trainspace/getTrainspaceData.yaml
+  /api/trainspace/getUserProgressData:
+    $ref: paths/trainspace/getUserProgressData.yaml
+  /api/trainspace/updateOneUserProgressData:
+    $ref: paths/trainspace/updateOneUserProgressData.yaml
+  /api/train/img-run:
+    $ref: paths/train/img-run.yaml
+  /api/train/tabular-run:
+    $ref: paths/train/tabular-run.yaml
+# components:
+#   securitySchemes:
+#     main_auth:
+#       type: oauth2
+#       flows:
+#         implicit:
+#           authorizationUrl: http://example.com/api/oauth/dialog
+#           scopes:
+#             read:users: read users info
+#             write:users: modify or remove users
+#     api_key:
+#       type: apiKey
+#       in: header
+#       name: api_key
+#     basic_auth:
+#       type: http
+#       scheme: basic

@@ -1,6 +1,5 @@
 import { backendApi } from "@/common/redux/backendApi";
 import { TrainspaceData } from "../types/imageTypes";
-import { auth } from "@/common/utils/firebase";
 
 const imageApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -12,7 +11,6 @@ const imageApi = backendApi.injectEndpoints({
         url: "/api/train/img-run",
         method: "POST",
         body: {
-          user: auth.currentUser,
           name: trainspaceData.name,
           data_source: trainspaceData.dataSource,
           dataset_data: {

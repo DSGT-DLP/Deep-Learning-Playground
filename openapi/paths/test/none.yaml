@@ -1,0 +1,16 @@
+get:
+  summary: Test Backend alive
+  description: A simple endpoint to test if our backend is alive
+  tags:
+    - test
+  responses:
+    200:
+      description: Test Backend alive
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Status:
+                type: string
+                example: "Backend is alive"

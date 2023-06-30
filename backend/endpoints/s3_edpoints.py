@@ -98,7 +98,7 @@ def getUserDatasetFileUploadPresignedPostObj():
     try:
         request_data = json.loads(request.data)
         post_obj = get_presigned_upload_post_from_user_dataset_file(
-            request_data["user"]["uid"],
+            request.environ["user"]["uid"],
             request_data["data_source"],
             request_data["name"],
         )
@@ -126,7 +126,7 @@ def getUserDatasetFilesData():
     try:
         request_data = json.loads(request.data)
         file_objects = get_user_dataset_file_objects(
-            request_data["user"]["uid"], request_data["data_source"]
+            request.environ["user"]["uid"], request_data["data_source"]
         )
         data = list(
             map(

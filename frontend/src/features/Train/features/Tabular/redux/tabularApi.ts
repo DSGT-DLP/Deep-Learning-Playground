@@ -1,6 +1,5 @@
 import { backendApi } from "@/common/redux/backendApi";
 import { TrainspaceData } from "../types/tabularTypes";
-import { auth } from "@/common/utils/firebase";
 
 const tabularApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -12,7 +11,6 @@ const tabularApi = backendApi.injectEndpoints({
         url: "/api/train/tabular-run",
         method: "POST",
         body: {
-          user: auth.currentUser,
           name: trainspaceData.name,
           data_source: trainspaceData.dataSource,
           dataset_data: {

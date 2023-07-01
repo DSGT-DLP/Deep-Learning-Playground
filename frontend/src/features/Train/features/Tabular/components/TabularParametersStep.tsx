@@ -77,7 +77,7 @@ const TabularParametersStep = ({
     handleSubmit,
     formState: { errors, isDirty },
     control,
-    watch
+    watch,
   } = useForm<ParameterData>({
     defaultValues: {
       targetCol:
@@ -93,7 +93,7 @@ const TabularParametersStep = ({
       layers: trainspace?.parameterData?.layers ?? [
         {
           value: "LINEAR",
-          parameters: [10, 3],
+          parameters: [4, 10],
         },
         {
           value: "RELU",
@@ -101,7 +101,7 @@ const TabularParametersStep = ({
         },
         {
           value: "LINEAR",
-          parameters: [3, 10],
+          parameters: [10, 3],
         },
         {
           value: "SOFTMAX",
@@ -141,7 +141,7 @@ const TabularParametersStep = ({
                 error={errors.targetCol ? true : false}
               />
             )}
-            options={data.filter(col => !features.includes(col))}
+            options={data.filter((col) => !features.includes(col))}
           />
         )}
       />
@@ -167,8 +167,7 @@ const TabularParametersStep = ({
                 error={errors.features ? true : false}
               />
             )}
-            
-            options={data.filter(col => col!== targetCol)}
+            options={data.filter((col) => col !== targetCol)}
           />
         )}
       />

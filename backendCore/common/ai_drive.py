@@ -5,6 +5,7 @@ import csv
 import numpy as np
 import pandas as pd
 
+from sklearn.datasets import *
 from sklearn.model_selection import train_test_split
 import torch
 from torch.autograd import Variable

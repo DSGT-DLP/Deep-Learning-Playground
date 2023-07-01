@@ -13,6 +13,7 @@ from backendCore.aws_helpers.dynamo_db.trainspace_db import (
     updateStatus,
     updateTrainspaceData,
 )
+from backendCore.common.ai_drive import dl_tabular_drive
 from backendCore.endpoints.utils import send_traceback_error, send_success, send_error
 
 trainspace_bp = Blueprint("trainspace", __name__)
@@ -156,30 +157,31 @@ def createTrainspaceDataInDb():
 def tabular():
     try:
         request_data = json.loads(request.data)
-        trainspace_data = request_data["trainspace_data"]
-        tid = uuid.uuid4()
-        uid = request_data["user"]["uid"]
-        success = createTrainspaceData(
-            TrainspaceData(
-                trainspace_id=tid,
-                uid=uid,
-                data_source="TABULAR",
-                dataset_data=trainspace_data["dataset_data"],
-                name=trainspace_data["name"],
-                parameters_data=["parameters_data"],
-                review_data=["review_data"],
+        print(
+            dl_tabular_drive(
+                request_data["user_arch"],
+                "",
+                {
+                    "target": request_data["target"],
+                    "features": request_data["features"],
+                    "problem_type": request_data["problem_type"],
+                    "optimizer_name": request_data["optimizer_name"],
+                    "criterion": request_data["criterion"],
+                    "default": request_data["default"],
+                    "epochs": request_data["epochs"],
+                    "shuffle": request_data["shuffle"],
+                    "test_size": request_data["test_size"],
+                    "batch_size": request_data["batch_size"],
+                },
+                None,
+                request_data["name"],
             )
         )
-        if success:
-            return send_success(
-                {
-                    "message": "Trainspace created",
-                    "success": success,
-                    "trainspace_id": tid,
-                }
-            )
-        else:
-            return send_error("Trainspace not created")
+        return send_success(
+            {
+                "message": "Trainspace trained",
+            }
+        )
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()

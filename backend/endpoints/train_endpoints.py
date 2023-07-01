@@ -6,6 +6,9 @@ import uuid
 
 from flask import Blueprint
 from flask import request
+from backend.aws_helpers.dynamo_db_utils.dynamo_db_utils import (
+    create_dynamo_item_from_obj,
+)
 
 from backend.aws_helpers.dynamo_db_utils.trainspace_db import (
     TrainspaceData,
@@ -70,7 +73,7 @@ def tabular_run():
         )
 
         try:
-            createTrainspaceData(tabular_data)
+            create_dynamo_item_from_obj("trainspace", tabular_data)
             print(id)
             return send_success({"message": "success", "trainspace_id": id})
         except Exception:

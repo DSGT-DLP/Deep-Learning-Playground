@@ -1,3 +1,4 @@
+from copy import deepcopy
 from decimal import Decimal
 import boto3
 from backend.aws_helpers.dynamo_db_utils.constants import ALL_DYANMODB_TABLES
@@ -111,8 +112,9 @@ def to_decimal(o):
 
 
 def create_dynamo_item_from_obj(table_name: str, obj: object) -> bool:
-    to_decimal(obj.__dict__)
-    return create_dynamo_item(table_name, obj.__dict__)
+    obj_dict = deepcopy(obj.__dict__)
+    to_decimal(obj_dict)
+    return create_dynamo_item(table_name, obj_dict)
 
 
 def create_dynamo_item(table_name: str, input_item: dict) -> bool:

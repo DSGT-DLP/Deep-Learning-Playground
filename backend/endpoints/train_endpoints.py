@@ -1,3 +1,4 @@
+import asyncio
 from dataclasses import asdict
 from decimal import Decimal
 import shutil
@@ -26,6 +27,7 @@ from backend.endpoints.utils import (
     send_traceback_error,
     send_train_results,
 )
+import aiohttp
 
 import boto3
 
@@ -75,6 +77,33 @@ def tabular_run():
         try:
             create_dynamo_item_from_obj("trainspace", tabular_data)
             print(id)
+
+            async def run():
+                async with aiohttp.ClientSession(json_serialize=json.dumps) as session:
+                    async with session.post(
+                        "http://localhost:8001/api/trainspace/tabular",
+                        json={
+                            "target": request_data["parameters_data"]["target_col"],
+                            "features": request_data["parameters_data"]["features"],
+                            "problem_type": request_data["parameters_data"][
+                                "problem_type"
+                            ],
+                            "criterion": request_data["parameters_data"]["criterion"],
+                            "default": request_data["dataset_data"]["name"],
+                            "optimizer_name": request_data["parameters_data"][
+                                "optimizer_name"
+                            ],
+                            "shuffle": request_data["parameters_data"]["shuffle"],
+                            "epochs": request_data["parameters_data"]["epochs"],
+                            "test_size": request_data["parameters_data"]["test_size"],
+                            "batch_size": request_data["parameters_data"]["batch_size"],
+                            "user_arch": request_data["parameters_data"]["layers"],
+                            "name": request_data["name"],
+                        },
+                    ) as response:
+                        print(await response.json(content_type=None))
+
+            asyncio.run(run())
             return send_success({"message": "success", "trainspace_id": id})
         except Exception:
             print(traceback.format_exc())

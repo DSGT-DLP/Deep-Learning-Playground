@@ -53,7 +53,7 @@ export const UploadImagePanel = ({
       <Stack direction={"row"} spacing={2}>
         <FilerobotImageEditor
           source="https://scaleflex.airstore.io/demo/stephen-walker-unsplash.jpg"
-          onSave={(editedImageObject: any) => {
+          onSave={(editedImageObject: unknown) => {
             const file = dataURLtoFile(
               editedImageObject.imageBase64,
               editedImageObject.fullName

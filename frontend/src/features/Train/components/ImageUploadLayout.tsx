@@ -5,7 +5,7 @@ import {
 } from "@/features/Train/types/trainTypes";
 import { Button, Radio, Stack, Typography } from "@mui/material";
 import { Controller, UseFormReturn } from "react-hook-form";
-
+import dynamic from "next/dynamic";
 import { formatDate } from "@/common/utils/dateFormat";
 import {
   useGetDatasetFilesDataQuery,
@@ -13,11 +13,28 @@ import {
 } from "@/features/Train/redux/trainspaceApi";
 import { DataGrid } from "@mui/x-data-grid";
 import prettyBytes from "pretty-bytes";
-import FilerobotImageEditor, {
-  TABS,
-  TOOLS,
-} from "react-filerobot-image-editor";
 import React from "react";
+
+const FilerobotImageEditor = dynamic(
+  () => import("react-filerobot-image-editor"),
+  {
+    ssr: false,
+  }
+);
+
+const TABS = dynamic(
+  () => import("react-filerobot-image-editor").then((lib) => lib.TABS),
+  {
+    ssr: false,
+  }
+);
+
+const TOOLS = dynamic(
+  () => import("react-filerobot-image-editor").then((lib) => lib.TOOLS),
+  {
+    ssr: false,
+  }
+);
 
 const dataURLtoFile = (dataurl: string, filename: string) => {
   const arr = dataurl.split(",");

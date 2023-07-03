@@ -23,20 +23,28 @@ export const STEP_SETTINGS = {
       { label: "Rekognition", value: "rekognition" },
       { label: "YOLO", value: "yolo" },
     ],
-    detectionProblemTypes : [
+    detectionProblemTypes: [
       { label: "Labels", value: "labels" },
       { label: "Celebrities", value: "celebrities" },
     ],
-    detectionTransformValues: ["RandomHorizontalFlip", "ToTensor", "RandomVerticalFlip", "Resize", "GaussianBlur", "Grayscale", "Normalize", "AdjustContrast", "AdjustBrightness", "Affine"],
+    detectionTransformValues: [
+      "RandomHorizontalFlip",
+      "ToTensor",
+      "RandomVerticalFlip",
+      "Resize",
+      "GaussianBlur",
+      "Grayscale",
+      "Normalize",
+      "AdjustContrast",
+      "AdjustBrightness",
+      "Affine",
+    ],
     detectionTransforms: {
       RandomHorizontalFlip: {
-        display_name: "Random Horizontal Flip",
         objectName: "transforms.RandomHorizontalFlip",
         parameters: [
           {
             label: "probability",
-            index: 0,
-            parameter_name: "prob",
             min: 0,
             max: 1,
             type: "number",
@@ -45,9 +53,8 @@ export const STEP_SETTINGS = {
         label: "Random Horizontal Flip",
         value: "RandomHorizontalFlip",
       },
-    
+
       ToTensor: {
-        display_name: "To Tensor",
         objectName: "transforms.ToTensor",
         parameters: [],
         label: "To Tensor",
@@ -55,13 +62,10 @@ export const STEP_SETTINGS = {
       },
 
       RandomVerticalFlip: {
-        display_name: "Random Vertical Flip",
         objectName: "transforms.RandomVerticalFlip",
         parameters: [
           {
             label: "probability",
-            index: 0,
-            parameter_name: "prob",
             min: 0,
             max: 1,
             type: "number",
@@ -71,7 +75,6 @@ export const STEP_SETTINGS = {
         value: "RandomVerticalFlip",
       },
       Resize: {
-        display_name: "Resize",
         objectName: "transforms.Resize",
         parameters: [
           {
@@ -93,13 +96,10 @@ export const STEP_SETTINGS = {
         value: "Resize",
       },
       GaussianBlur: {
-        display_name: "Gaussian Blur",
         objectName: "transforms.GaussianBlur",
         parameters: [
           {
             label: "kernel size",
-            index: 0,
-            parameter_name: "kernel size",
             min: 1,
             max: 1000,
             type: "number",
@@ -109,20 +109,16 @@ export const STEP_SETTINGS = {
         value: "GaussianBlur",
       },
       Grayscale: {
-        display_name: "Grayscale",
         objectName: "transforms.Grayscale",
         parameters: [],
         label: "Grayscale",
         value: "Grayscale",
       },
       Normalize: {
-        display_name: "Normalize",
         objectName: "transforms.Normalize",
         parameters: [
           {
             label: "mean",
-            index: 0,
-            parameter_name: "mean",
             min: -1000,
             max: 1000,
             default: 0,
@@ -130,8 +126,6 @@ export const STEP_SETTINGS = {
           },
           {
             label: "std",
-            index: 1,
-            parameter_name: "std",
             min: -1000,
             max: 1000,
             default: 1,
@@ -142,14 +136,11 @@ export const STEP_SETTINGS = {
         value: "Normalize",
       },
       AdjustContrast: {
-        display_name: "AdjustContrast",
         objectName: "transforms.functional.adjust_contrast",
         transform_type: "functional",
         parameters: [
           {
             label: "contrast_factor",
-            index: 0,
-            parameter_name: "contrast_factor",
             min: 0,
             max: 10000,
             default: 0,
@@ -160,14 +151,11 @@ export const STEP_SETTINGS = {
         value: "AdjustContrast",
       },
       AdjustBrightness: {
-        display_name: "AdjustBrightness",
         objectName: "transforms.functional.adjust_brightness",
         transform_type: "functional",
         parameters: [
           {
             label: "brightness_factor",
-            index: 0,
-            parameter_name: "brightness_factor",
             min: 0,
             max: 10000,
             default: 0,
@@ -178,14 +166,11 @@ export const STEP_SETTINGS = {
         value: "AdjustBrightness",
       },
       Affine: {
-        display_name: "Affine",
         objectName: "transforms.functional.affine",
         transform_type: "functional",
         parameters: [
           {
             label: "angle",
-            index: 0,
-            parameter_name: "angle",
             min: -180,
             max: 180,
             default: 0,
@@ -193,8 +178,6 @@ export const STEP_SETTINGS = {
           },
           {
             label: "translate",
-            index: 1,
-            parameter_name: "translate",
             min: -1000,
             max: 1000,
             default: "(0, 0)",
@@ -202,8 +185,6 @@ export const STEP_SETTINGS = {
           },
           {
             label: "scale",
-            index: 2,
-            parameter_name: "scale",
             min: 0,
             max: 1000,
             default: 1,
@@ -211,8 +192,6 @@ export const STEP_SETTINGS = {
           },
           {
             label: "shear",
-            index: 3,
-            parameter_name: "shear",
             min: -180,
             max: 180,
             default: "(0, 0)",

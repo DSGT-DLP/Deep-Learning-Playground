@@ -137,7 +137,6 @@ export const STEP_SETTINGS = {
       },
       AdjustContrast: {
         objectName: "transforms.functional.adjust_contrast",
-        transform_type: "functional",
         parameters: [
           {
             label: "contrast_factor",
@@ -152,7 +151,6 @@ export const STEP_SETTINGS = {
       },
       AdjustBrightness: {
         objectName: "transforms.functional.adjust_brightness",
-        transform_type: "functional",
         parameters: [
           {
             label: "brightness_factor",
@@ -167,7 +165,6 @@ export const STEP_SETTINGS = {
       },
       Affine: {
         objectName: "transforms.functional.affine",
-        transform_type: "functional",
         parameters: [
           {
             label: "angle",

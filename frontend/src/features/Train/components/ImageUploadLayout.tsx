@@ -70,7 +70,7 @@ export const UploadImagePanel = ({
       <Stack direction={"row"} spacing={2}>
         <FilerobotImageEditor
           source="https://scaleflex.airstore.io/demo/stephen-walker-unsplash.jpg"
-          onSave={(editedImageObject: unknown) => {
+          onSave={(editedImageObject) => {
             const file = dataURLtoFile(
               editedImageObject.imageBase64,
               editedImageObject.fullName
@@ -128,10 +128,10 @@ export const UploadImagePanel = ({
           savingPixelRatio={0}
           previewPixelRatio={0}
         />
-        <Button variant="outlined" onClick={() => refetch()}>
-          Refresh
-        </Button>
       </Stack>
+      <Button variant="outlined" onClick={() => refetch()}>
+        Refresh
+      </Button>
       {data && <UploadDataGrid data={data} methods={methods} />}
     </>
   );

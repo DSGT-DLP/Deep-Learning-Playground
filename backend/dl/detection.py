@@ -1,6 +1,6 @@
 from backend.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
 from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
-from backend.aws_helpers.s3_utils.s3_client import read_from_bucket
+from backend.aws_helpers.s3_utils.s3_client import make_train_bucket_path, read_from_bucket
 from backend.common.constants import IMAGE_FILE_DOWNLOAD_TMP_PATH
 from transformers import YolosFeatureExtractor, YolosForObjectDetection
 import torch
@@ -96,7 +96,7 @@ def detection_img_drive(trainspace_data: TrainspaceData):
     filename = trainspace_data.dataset_data["name"]
     read_from_bucket(
         FILE_UPLOAD_BUCKET_NAME,
-        f"{uid}/object_detection/{filename}",
+        make_train_bucket_path(trainspace_data),
         filename,
         IMAGE_FILE_DOWNLOAD_TMP_PATH,
     )

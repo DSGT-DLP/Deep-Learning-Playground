@@ -3,7 +3,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris, fetch_california_housing
 from backend.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
 from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
-from backend.aws_helpers.s3_utils.s3_client import read_df_from_bucket, read_from_bucket
+from backend.aws_helpers.s3_utils.s3_client import (
+    make_train_bucket_path,
+    read_df_from_bucket,
+    read_from_bucket,
+)
 
 from backend.common.constants import IMAGE_FILE_DOWNLOAD_TMP_PATH, ONNX_MODEL
 from backend.common.dataset import read_dataset, loader_from_zipped
@@ -76,10 +80,8 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
     elif default and problem_type.upper() == "REGRESSION":
         X, y = get_default_dataset(default.upper(), target, features)
     else:
-        filename = trainspace_data.dataset_data["name"]
-        uid = trainspace_data.uid
         input_df = read_df_from_bucket(
-            FILE_UPLOAD_BUCKET_NAME, f"{uid}/tabular/{filename}"
+            FILE_UPLOAD_BUCKET_NAME, make_train_bucket_path(trainspace_data)
         )
         y = input_df[target]
         X = input_df[features]
@@ -172,7 +174,7 @@ def dl_img_drive(trainspace_data: TrainspaceData):
         filename = trainspace_data.dataset_data["name"]
         read_from_bucket(
             FILE_UPLOAD_BUCKET_NAME,
-            f"{uid}/image/{filename}",
+            make_train_bucket_path(trainspace_data),
             filename,
             IMAGE_FILE_DOWNLOAD_TMP_PATH,
         )
@@ -235,10 +237,8 @@ def ml_drive(trainspace_data: TrainspaceData):
         elif default and problem_type.upper() == "REGRESSION":
             X, y, target_names = get_default_dataset(default.upper(), target, features)
         else:
-            filename = trainspace_data.dataset_data["name"]
-            uid = trainspace_data.uid
             input_df = read_df_from_bucket(
-                FILE_UPLOAD_BUCKET_NAME, f"{uid}/classical_ml/{filename}"
+                FILE_UPLOAD_BUCKET_NAME, make_train_bucket_path(trainspace_data)
             )
             input_df[target] = input_df[target].astype("category").cat.codes
             y = input_df[target]

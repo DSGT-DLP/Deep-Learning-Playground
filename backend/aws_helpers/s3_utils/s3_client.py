@@ -1,4 +1,4 @@
-import datetime
+from backend.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
 import boto3
 import os
 import shutil
@@ -30,7 +30,7 @@ def write_to_bucket(file_path: str, bucket_name: str, bucket_path: str):
 
 def read_from_bucket(
     bucket_name: str, bucket_path: str, output_file_name: str, output_file_path: str
-):
+) -> None:
     """
     Given S3 URI, read the file from the S3 bucket
 
@@ -50,9 +50,9 @@ def read_from_bucket(
     )
 
 
-def read_df_from_bucket(bucket_name: str, bucket_path: str):
+def read_df_from_bucket(bucket_name: str, bucket_path: str) -> pd.DataFrame:
     """
-    Given S3 URI, read the file from the S3 bucket
+    Given S3 URI, read the file from the S3 bucket and return a pandas dataframe
 
     Args:
         bucket_name (str): name of s3 bucket
@@ -64,6 +64,21 @@ def read_df_from_bucket(bucket_name: str, bucket_path: str):
     df = pd.read_csv(io.BytesIO(obj["Body"].read()))
     return df
 
+
+def make_train_bucket_path(trainspace_data: TrainspaceData) -> str:
+    """
+    Given a TrainspaceData object, return the path to the bucket where the training data will be stored
+
+    Args:
+        trainspace_data (TrainspaceData): object containing data about the training data
+
+    Returns:
+        bucket_path (str): path to bucket where training data will be stored
+    """
+    uid = trainspace_data.uid
+    data_source = trainspace_data.data_source.lower()
+    filename = trainspace_data.dataset_data["name"]
+    return f"{uid}/{data_source}/{filename}"
 
 def get_presigned_url_from_bucket(bucket_name: str, bucket_path: str):
     """

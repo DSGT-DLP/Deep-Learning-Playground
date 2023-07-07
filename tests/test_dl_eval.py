@@ -3,6 +3,7 @@ import pytest
 import torch.nn as nn
 from backend.dl.dl_eval import compute_correct, compute_accuracy
 
+
 def test_compute_correct():
     # Create dummy tensors
     predicted = torch.tensor([[0.1, 0.2, 0.7], [0.3, 0.4, 0.3]])
@@ -13,6 +14,7 @@ def test_compute_correct():
 
     # Check if the number of correct predictions is correct
     assert correct == 2
+
 
 def test_compute_accuracy():
     # Create dummy tensors

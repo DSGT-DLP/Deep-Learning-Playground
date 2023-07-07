@@ -208,7 +208,7 @@ def ml_drive(trainspace_data: TrainspaceData):
 
     Args:
         user_model (str): What ML model and parameters does the user want
-        problem_type (str): "classification" or "regression" problem
+        problem_type (str): "CLASSIFICATION" or "REGRESSION" problem
         target (str, optional): name of target column. Defaults to None.
         features (list, optional): list of columns in dataframe for the feature based on user selection. Defaults to None.
         default (bool, optional): use the iris dataset for default classification or california housing for default regression. Defaults to False.

@@ -228,6 +228,9 @@ def ml_drive(trainspace_data: TrainspaceData):
     shuffle = params.get("shuffle", True)
     test_size = params.get("test_size", 0.2)
 
+    if len(params["layers"]) != 1:
+        raise Exception("Only one layer is supported for classical ML models")
+
     user_model = params["layers"][0]
 
     try:

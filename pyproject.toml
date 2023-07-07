@@ -2,7 +2,7 @@
 name = "deep-learning-playground"
 version = "0.1.0"
 description = "Web Application where people new to Deep Learning can input a dataset and toy around with basic Pytorch modules without writing any code"
-authors = ["Your Name <you@example.com>"]
+authors = ["DSGT-DLP <dlp@datasciencegt.org>"]
 license = "MIT"
 readme = "README.md"
 packages = [{include = "deep_learning_playground"}]

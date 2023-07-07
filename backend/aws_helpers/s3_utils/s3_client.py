@@ -80,6 +80,7 @@ def make_train_bucket_path(trainspace_data: TrainspaceData) -> str:
     filename = trainspace_data.dataset_data["name"]
     return f"{uid}/{data_source}/{filename}"
 
+
 def get_presigned_url_from_bucket(bucket_name: str, bucket_path: str):
     """
     Given S3 URI, read the file from the S3 bucket

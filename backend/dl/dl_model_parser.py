@@ -49,7 +49,6 @@ def parse_deep_user_architecture(layers):
     return converted_data
 
 
-
 if __name__ == "__main__":
     print("starting")
     print(

@@ -21,6 +21,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import InfoIcon from "@mui/icons-material/Info";
 import {
   Control,
   Controller,
@@ -53,6 +56,31 @@ import {
 import ClientOnlyPortal from "@/common/components/ClientOnlyPortal";
 import { updateTabularTrainspaceData } from "../redux/tabularActions";
 
+const HtmlTooltip = styled(
+  ({
+    className,
+    title,
+    children,
+    ...props
+  }: {
+    className?: string;
+    children: React.ReactElement;
+    title: React.ReactNode;
+  }) => (
+    <Tooltip title={title} {...props} classes={{ popper: className }}>
+      {children}
+    </Tooltip>
+  )
+)(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "rgba(255, 255, 255, 0.95)",
+    color: "rgba(0, 0, 0, 0.87)",
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: "none",
+  },
+}));
+
 const TabularParametersStep = ({
   renderStepperButtons,
   setIsModified,
@@ -77,7 +105,7 @@ const TabularParametersStep = ({
     handleSubmit,
     formState: { errors, isDirty },
     control,
-    watch
+    watch,
   } = useForm<ParameterData>({
     defaultValues: {
       targetCol:
@@ -141,7 +169,7 @@ const TabularParametersStep = ({
                 error={errors.targetCol ? true : false}
               />
             )}
-            options={data.filter(col => !features.includes(col))}
+            options={data.filter((col) => !features.includes(col))}
           />
         )}
       />
@@ -167,8 +195,7 @@ const TabularParametersStep = ({
                 error={errors.features ? true : false}
               />
             )}
-            
-            options={data.filter(col => col!== targetCol)}
+            options={data.filter((col) => col !== targetCol)}
           />
         )}
       />
@@ -535,6 +562,19 @@ const LayerComponent = ({
           alignItems={"center"}
           spacing={3}
         >
+          <HtmlTooltip
+            title={
+              <React.Fragment>
+                <Typography color="inherit">
+                  {STEP_SETTINGS.PARAMETERS.layers[data.value].label}
+                </Typography>
+                {STEP_SETTINGS.PARAMETERS.layers[data.value].description}
+              </React.Fragment>
+            }
+          >
+            <InfoIcon>Info</InfoIcon>
+          </HtmlTooltip>
+
           <Typography variant="h3" fontSize={18}>
             {STEP_SETTINGS.PARAMETERS.layers[data.value].label}
           </Typography>

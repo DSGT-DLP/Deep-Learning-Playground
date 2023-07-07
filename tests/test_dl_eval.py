@@ -27,7 +27,7 @@ def test_compute_accuracy():
     # Check if the accuracy is correct
     assert accuracy == 1
     
-     # Test case: Accuracy of 0
+    # Test case: Accuracy of 0
     predicted_none_correct = torch.tensor([[0.9, 0.1, 0.0], [0.7, 0.2, 0.1]])
     actual_none_correct = torch.tensor([2, 1])
     accuracy_none_correct = compute_accuracy(predicted_none_correct, actual_none_correct)

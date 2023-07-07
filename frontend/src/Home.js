@@ -45,7 +45,7 @@ const Home = () => {
 
   // input responses
   const [customModelName, setCustomModelName] = useState(
-    `Model ${new Date().toLocaleString()}`
+    `Model ${new Date().toLocaleString()}`,
   );
   const [fileURL, setFileURL] = useState("");
   const [notificationPhoneNumber, setNotificationPhoneNumber] = useState();
@@ -55,11 +55,11 @@ const Home = () => {
   const [features, setFeatures] = useState([]);
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
   const [criterion, setCriterion] = useState(
-    problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0]
+    problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0],
   );
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
   const [usingDefaultDataset, setUsingDefaultDataset] = useState(
-    DEFAULT_DATASETS[0]
+    DEFAULT_DATASETS[0],
   );
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [epochs, setEpochs] = useState(5);
@@ -69,7 +69,7 @@ const Home = () => {
     uploadedColumns.map((e, i) => ({
       label: e.name,
       value: i,
-    }))
+    })),
   );
   const [activeColumns, setActiveColumns] = useState([]);
   const [beginnerMode, setBeginnerMode] = useState(true);
@@ -151,7 +151,7 @@ const Home = () => {
     {
       queryText: "Criterion",
       options: CRITERIONS.filter((crit) =>
-        crit.problem_type.includes(problemType.value)
+        crit.problem_type.includes(problemType.value),
       ),
       onChange: setCriterion,
       defaultValue: criterion,
@@ -193,7 +193,7 @@ const Home = () => {
 
   useEffect(() => {
     setCriterion(
-      problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0]
+      problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0],
     );
     setInputKey((e) => e + 1);
   }, [problemType]);
@@ -356,7 +356,7 @@ const Home = () => {
         problemType={problemType}
       />
     ),
-    [dlpBackendResponse, problemType]
+    [dlpBackendResponse, problemType],
   );
 
   return (

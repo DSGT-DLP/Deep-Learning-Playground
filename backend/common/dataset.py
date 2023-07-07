@@ -103,7 +103,7 @@ def dataset_from_zipped(
     zipped_folder, train_transform=DEFAULT_TRANSFORM, test_transform=DEFAULT_TRANSFORM
 ):
     """
-    Returns a dataset from a zipped folder applying train and transformation (if they are legal).
+    Returns a dataset from a zipped folder applying train and test transformation (if they are legal).
     Calls get_unzipped to create unzipped folder and obtain train and test directories
     """
 

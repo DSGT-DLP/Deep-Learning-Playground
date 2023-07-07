@@ -26,7 +26,6 @@ def test_compute_accuracy():
 
     # Check if the accuracy is correct
     assert accuracy == 1
-<<<<<<< HEAD
     
      # Test case: Accuracy of 0
     predicted_none_correct = torch.tensor([[0.9, 0.1, 0.0], [0.7, 0.2, 0.1]])
@@ -39,5 +38,3 @@ def test_compute_accuracy():
     actual_mixed = torch.tensor([0,0])
     accuracy_mixed = compute_accuracy(predicted_mixed, actual_mixed)
     assert accuracy_mixed == 0.5
-=======
->>>>>>> 848-unit-tests-for-dl_eval

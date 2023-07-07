@@ -1,0 +1,102 @@
+post:
+  summary: Object Detection
+  description: API Endpoint to create an object-detection trainspace.
+  tags:
+    - train
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - uid
+            - dataset_data
+            - name
+            - parameters_data
+            - review_data
+          properties:
+            uid:
+              type: string
+              description: User ID
+            dataset_data:
+              type: object
+              description: Image to run detection on
+            name:
+              type: string
+              description: Name of the trainspace
+            review_data:
+              type: object
+              description: Phone number and email of the user
+              properties:
+                notification_phone_number:
+                  type: string
+                  description: Phone number of the user
+                notification_email:
+                  type: string
+                  description: Email of the user
+            parameters_data:
+              type: object
+              description: Parameters for the detection
+              properties:
+                detection_type:
+                  type: string
+                  description: Type of detection
+                detection_problem_type:
+                  type: string
+                  description: Type of detection problem
+                transforms:
+                  type: array
+                  description: Transforms to apply to the image
+                  items:
+                    type: object
+                    description: Transform to apply to the image
+                    properties:
+                      value:
+                        type: string
+                        description: Type of transform to apply
+                      parameters:
+                        type: array
+                        description: Parameters for the transform
+
+          example:
+            uid: "1234"
+            dataset_data: { "name": "image.jpg" }
+            name: "trainspace"
+            review_data:
+              {
+                "notification_phone_number": "1234567890",
+                "notification_email": "123@123.com",
+              }
+            parameters_data:
+              {
+                "problem_type": "rekognition",
+                "detection_problem_type": "labels",
+                "transforms": [{ "value": "Resize", "parameters": [100, 100] }],
+              }
+    required: true
+  responses:
+    "200":
+      description: Trainspace created successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "success"
+              trainspace_id:
+                type: string
+                example: "1234"
+    "400":
+      description: Trainspace Creation didn't go through successfully. This is usually something wrong with your code
+    "401":
+      description: User is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User is not authenticated"

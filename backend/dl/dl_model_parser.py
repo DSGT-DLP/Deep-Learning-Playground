@@ -9,6 +9,16 @@ from torch.autograd import Variable
 import torchvision.transforms as transforms
 
 
+LAYERS_NN_MAPPING = {
+    "LINEAR": nn.Linear,
+    "RELU": nn.ReLU,
+    "TANH": nn.Tanh,
+    "SOFTMAX": nn.Softmax,
+    "SIGMOID": nn.Sigmoid,
+    "LOGSOFTMAX": nn.LogSoftmax,
+}
+
+
 def parse_deep_user_architecture(layers):
     """
     Given a list of user_models in a certain order,
@@ -29,10 +39,12 @@ def parse_deep_user_architecture(layers):
     for item in layers:
         value = item['value']
         parameters = item['parameters']
+
+        if value not in LAYERS_NN_MAPPING:
+            raise Exception(f"Layer ${value} not supported")
         
-        if value == 'LINEAR':
-            linear_layer = nn.Linear(*parameters)
-            converted_data.append(linear_layer)
+        linear_layer = LAYERS_NN_MAPPING[value](*parameters)
+        converted_data.append(linear_layer)
 
     return converted_data
 

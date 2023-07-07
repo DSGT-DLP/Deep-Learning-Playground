@@ -8,7 +8,7 @@ from backend.aws_helpers.dynamo_db_utils.trainspace_db import (
     TrainspaceData,
     updateStatus,
 )
-
+import logger
 import backend.aws_helpers.sqs_utils.sqs_client as sqs_helper
 import backend.aws_helpers.s3_utils.s3_client as s3_helper
 from backend.common.utils import *

@@ -37,12 +37,12 @@ def parse_deep_user_architecture(layers):
     converted_data = []
 
     for item in layers:
-        value = item['value']
-        parameters = item['parameters']
+        value = item["value"]
+        parameters = item["parameters"]
 
         if value not in LAYERS_NN_MAPPING:
             raise Exception(f"Layer ${value} not supported")
-        
+
         linear_layer = LAYERS_NN_MAPPING[value](*parameters)
         converted_data.append(linear_layer)
 

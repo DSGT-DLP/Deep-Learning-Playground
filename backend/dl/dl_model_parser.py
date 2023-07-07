@@ -27,15 +27,14 @@ def parse_deep_user_architecture(layers):
     converted_data = []
 
     for item in layers:
-        value = item['value']
-        parameters = item['parameters']
-        
-        if value == 'LINEAR':
+        value = item["value"]
+        parameters = item["parameters"]
+
+        if value == "LINEAR":
             linear_layer = nn.Linear(*parameters)
             converted_data.append(linear_layer)
 
     return converted_data
-
 
 
 if __name__ == "__main__":

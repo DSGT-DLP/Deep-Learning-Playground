@@ -1,3 +1,9 @@
+
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import TabularDatasetStep from "../components/TabularDatasetStep";
 import TabularParametersStep from "../components/TabularParametersStep";
 import TabularReviewStep from "../components/TabularReviewStep";
@@ -61,6 +67,7 @@ export const STEP_SETTINGS = {
       { label: "Adam Optimization", value: "Adam" },
     ],
     layerValues: ["LINEAR", "RELU", "TANH", "SOFTMAX", "SIGMOID", "LOGSOFTMAX"],
+
     layers: {
       LINEAR: {
         label: "Linear",
@@ -81,16 +88,19 @@ export const STEP_SETTINGS = {
             type: "number",
           },
         ],
+        description: "A linear layer performs a mathematical operation called linear transformation on a set of input values. It applies a combination of scaling and shifting to the input values, resulting in a new set of transformed values as output."
       },
       RELU: {
         label: "ReLU",
         objectName: "nn.ReLU",
         parameters: [],
+        description: "ReLU, short for Rectified Linear Unit, is an activation function that acts like a filter that selectively allows positive numbers to pass through unchanged, while converting negative numbers to zero."
       },
       TANH: {
         label: "Tanh",
         objectName: "nn.Tanh",
         parameters: [],
+        description: "The tanh function maps input numbers to a range between -1 and 1, emphasizing values close to zero while diminishing the impact of extremely large or small numbers, making it useful for capturing complex patterns in data."
       },
       SOFTMAX: {
         label: "Softmax",
@@ -104,11 +114,13 @@ export const STEP_SETTINGS = {
             type: "number",
           },
         ],
+        description: "The softmax function takes a set of numbers as input and converts them into a probability distribution, assigning higher probabilities to larger numbers and lower probabilities to smaller numbers, making it useful for multi-class classification tasks."
       },
       SIGMOID: {
         label: "Sigmoid",
         objectName: "nn.Sigmoid",
         parameters: [],
+        description: "The sigmoid function takes any input number and squeezes it to a range between 0 and 1, effectively converting it into a probability-like value, often used for binary classification tasks and as an activation function in neural networks."
       },
       LOGSOFTMAX: {
         label: "LogSoftmax",
@@ -122,6 +134,7 @@ export const STEP_SETTINGS = {
             type: "number",
           },
         ],
+        description: "The logsoftmax function converts a set of numbers into a probability distribution using the softmax function, and then applies a logarithm to the resulting probabilities. It is commonly used for multi-class classification tasks as an activation function and to calculate the logarithmic loss during neural network training."
       }
     },
   },

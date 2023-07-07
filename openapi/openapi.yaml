@@ -20,6 +20,8 @@ tags:
     description: Test API endpoints
   - name: trainspace
     description: Everything about trainspace
+  - name: train
+    description: Everything about train endpoints
 servers:
   - url: http://localhost:8000
 paths:
@@ -41,6 +43,8 @@ paths:
     $ref: paths/trainspace/create-trainspace.yaml
   /api/trainspace/getTrainspaceData:
     $ref: paths/trainspace/getTrainspaceData.yaml
+  /api/train/object-detection:
+    $ref: paths/train/object-detection.yaml
   /api/trainspace/getUserProgressData:
     $ref: paths/trainspace/getUserProgressData.yaml
   /api/trainspace/updateOneUserProgressData:

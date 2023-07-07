@@ -28,7 +28,7 @@ import FilerobotImageEditor, {
 
 const ObjectDetection = () => {
   const [customModelName, setCustomModelName] = useState(
-    `Model ${new Date().toLocaleString()}`
+    `Model ${new Date().toLocaleString()}`,
   );
   const [problemType, setProblemType] = useState("");
   const [detectionType, setDetectionType] = useState("");
@@ -37,7 +37,7 @@ const ObjectDetection = () => {
   const [inputKey, setInputKey] = useState(0);
   const [uploadFile, setUploadFile] = useState(null);
   const [imageTransforms, setImageTransforms] = useState(
-    DEFAULT_DETECTION_TRANSFORMS
+    DEFAULT_DETECTION_TRANSFORMS,
   );
 
   const input_responses = {
@@ -71,7 +71,7 @@ const ObjectDetection = () => {
         choice="objectdetection"
       />
     ),
-    [dlpBackendResponse, OBJECT_DETECTION_PROBLEM_TYPES[0]]
+    [dlpBackendResponse, OBJECT_DETECTION_PROBLEM_TYPES[0]],
   );
 
   const onClick = () => {
@@ -126,7 +126,7 @@ const ObjectDetection = () => {
         onSave={(editedImageObject) => {
           const file = dataURLtoFile(
             editedImageObject.imageBase64,
-            editedImageObject.fullName
+            editedImageObject.fullName,
           );
           setUploadFile(file);
         }}

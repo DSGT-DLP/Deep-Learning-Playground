@@ -26,7 +26,6 @@ class CustomFormatter(logging.Formatter):
         return formatter.format(record)
 
 
-# create logger with 'spam_application'
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 

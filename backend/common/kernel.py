@@ -8,7 +8,7 @@ from backend.aws_helpers.dynamo_db_utils.trainspace_db import (
     TrainspaceData,
     updateStatus,
 )
-import logger
+import logging
 import backend.aws_helpers.sqs_utils.sqs_client as sqs_helper
 import backend.aws_helpers.s3_utils.s3_client as s3_helper
 from backend.common.utils import *
@@ -17,6 +17,7 @@ from backend.aws_helpers.s3_utils.s3_bucket_names import (
 )
 from backend.common.constants import (
     IMAGE_FILE_DOWNLOAD_TMP_PATH,
+    LOGGER_FORMAT,
     UNZIPPED_DIR_NAME,
     ONNX_MODEL,
     SAVED_MODEL_DL,
@@ -28,22 +29,24 @@ from backend.common.utils import csv_to_json
 from backend.common.ai_drive import dl_tabular_drive, ml_drive, dl_img_drive
 from backend.dl.detection import detection_img_drive
 
+logging.basicConfig(level=logging.DEBUG, format=LOGGER_FORMAT)
+logger = logging.getLogger()
 
 def router(msg):
     """
     Routes the message to the appropriate training function.
     """
-    print("Message received")
+    logger.info("Message received")
     request_data = TrainspaceData(**(json.loads(msg)))
     trainspace_id = request_data.trainspace_id
-    print(f"{trainspace_id} is marked as STARTING")
+    logger.info(f"{trainspace_id} is marked as STARTING")
     updateStatus(trainspace_id, TrainStatus.STARTING.name)
     data_source = request_data.data_source
 
     if data_source == "TABULAR":
         result = tabular_run_route(request_data)
         if result[1] != 200:
-            print("Error in tabular run route: result is", result)
+            logger.warn("Error in tabular run route: result is", result)
             updateStatus(trainspace_id, TrainStatus.ERROR.name)
             return
 
@@ -76,15 +79,15 @@ def router(msg):
             f"{trainspace_id}/{os.path.basename(SAVED_MODEL_ML)}",
         )
     elif data_source == "IMAGE":
-        print("Running Img run route")
+        logger.info("Running Img run route")
         result = img_run_route(request_data)
-        print(result)
+        logger.info(result)
         if result[1] != 200:
             updateStatus(trainspace_id, TrainStatus.ERROR.name)
             return
 
         updateStatus(trainspace_id, TrainStatus.SUCCESS.name)
-        print("execution id status updated after img run complete")
+        logger.info("execution id status updated after img run complete")
         s3_helper.write_to_bucket(
             SAVED_MODEL_DL,
             EXECUTION_BUCKET_NAME,
@@ -100,7 +103,7 @@ def router(msg):
             EXECUTION_BUCKET_NAME,
             f"{trainspace_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
         )
-        print("img run result files successfully uploaded to s3")
+        logger.info("img run result files successfully uploaded to s3")
     elif data_source == "OBJECT_DETECTION":
         result = object_detection_route(request_data)
         if result[1] != 200:
@@ -120,11 +123,11 @@ def tabular_run_route(trainspace_data: TrainspaceData):
     try:
         train_loss_results = dl_tabular_drive(trainspace_data)
 
-        print(train_loss_results)
+        logger.info(train_loss_results)
         return send_train_results(train_loss_results)
 
     except Exception:
-        print(traceback.format_exc())
+        logger.warn(traceback.format_exc())
         return send_traceback_error()
 
 
@@ -133,11 +136,11 @@ def ml_run_route(trainspace_data: TrainspaceData):
     try:
         train_loss_results = ml_drive(trainspace_data)
 
-        print(train_loss_results)
+        logger.info(train_loss_results)
         return send_train_results(train_loss_results)
 
     except Exception:
-        print(traceback.format_exc())
+        logger.warn(traceback.format_exc())
         return send_traceback_error()
 
 
@@ -146,11 +149,11 @@ def img_run_route(trainspace_data: TrainspaceData):
     try:
         train_loss_results = dl_img_drive(trainspace_data)
 
-        print("training successfully finished")
+        logger.info("training successfully finished")
         return send_train_results(train_loss_results)
 
     except Exception:
-        print(traceback.format_exc())
+        logger.warn(traceback.format_exc())
         return send_traceback_error()
 
     finally:
@@ -168,7 +171,7 @@ def object_detection_route(trainspace_data: TrainspaceData):
         image = detection_img_drive(trainspace_data)
         return send_detection_results(image)
     except Exception:
-        print(traceback.format_exc())
+        logger.warn(traceback.format_exc())
         return send_traceback_error()
     finally:
         filename = trainspace_data.dataset_data["name"]
@@ -222,16 +225,17 @@ if __name__ == "__main__":
     # Polls for messages from the SQS queue, and handles them.
     while True:
         # Get message from queue
-        print("Polling for messages...\n")
-        msg = sqs_helper.receive_message()
+        logger.info("Polling for messages...\n")
+        # msg = sqs_helper.receive_message()
+        msg = {}
 
         if not empty_message(msg):
-            print(msg)
+            logger.info(msg)
             # Handle data
             router(msg)
         else:
             # No message found
-            print("No message found")
+            logger.info("No message found")
 
         # Check again
         time.sleep(1)

@@ -56,3 +56,5 @@ PIL_ONLY_TRANSFORMS = [transforms.RandomChoice, transforms.RandomOrder]
 POINTS_PER_QUESTION = 10
 
 IMAGE_FILE_DOWNLOAD_TMP_PATH = os.path.abspath("backend/tmp/image_file_downloads")
+
+LOGGER_FORMAT = "%(asctime)s %(name)s:%(filename)-5s:%(levelname)-5s - %(message)s"

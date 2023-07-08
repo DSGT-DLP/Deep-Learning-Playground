@@ -21,7 +21,6 @@ from backend.common.utils import *
 from backend.dl.dl_model import DLModel
 from backend.dl.dl_model_parser import parse_deep_user_architecture
 from backend.dl.dl_trainer import train_deep_model, train_deep_image_classification
-from backend.dl.dl_model_parser import get_object
 
 from backend.ml.ml_trainer import train_classical_ml_model
 from backend.ml.ml_model_parser import get_object_ml

@@ -243,6 +243,7 @@ def empty_message(message: dict) -> bool:
     """
     return not bool(message)
 
+
 def main():
     # Polls for messages from the SQS queue, and handles them.
     while True:
@@ -261,8 +262,9 @@ def main():
         # Check again
         time.sleep(1)
 
+
 if __name__ == "__main__":
-     main()
+    main()
 if __name__ == "__main__":
     # Polls for messages from the SQS queue, and handles them.
     while True:

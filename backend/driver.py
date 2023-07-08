@@ -12,10 +12,8 @@ from backend.endpoints.dataset_endpoints import dataset_bp
 from backend.endpoints.s3_edpoints import s3_bp
 from backend.endpoints.test_endpoints import test_bp
 from backend.endpoints.train_endpoints import train_bp
-import logging
+from backend.dlp_logging import logger
 
-logging.basicConfig(level=logging.DEBUG, format=LOGGER_FORMAT)
-logger = logging.getLogger()
 
 init_firebase()
 
@@ -57,4 +55,5 @@ def root(path):
 
 if __name__ == "__main__":
     logger.info("Backend starting")
+    logger.debug("Debug mode enabled")
     app.run(debug=True, host="0.0.0.0", port=PORT)

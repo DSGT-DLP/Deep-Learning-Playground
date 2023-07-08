@@ -9,7 +9,11 @@ from backend.aws_helpers.s3_utils.s3_client import (
     read_from_bucket,
 )
 import logging
-from backend.common.constants import IMAGE_FILE_DOWNLOAD_TMP_PATH, LOGGER_FORMAT, ONNX_MODEL
+from backend.common.constants import (
+    IMAGE_FILE_DOWNLOAD_TMP_PATH,
+    LOGGER_FORMAT,
+    ONNX_MODEL,
+)
 from backend.common.dataset import read_dataset, loader_from_zipped
 from backend.common.default_datasets import (
     get_default_dataset,
@@ -28,6 +32,7 @@ from backend.ml.ml_model_parser import get_object_ml
 
 logging.basicConfig(level=logging.DEBUG, format=LOGGER_FORMAT)
 logger = logging.getLogger()
+
 
 def dl_tabular_drive(trainspace_data: TrainspaceData):
     """

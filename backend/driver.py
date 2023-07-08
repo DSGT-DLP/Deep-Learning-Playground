@@ -1,3 +1,4 @@
+from backend.common.constants import LOGGER_FORMAT
 from flask import Blueprint, Flask, send_from_directory
 from flask_cors import CORS
 
@@ -11,6 +12,10 @@ from backend.endpoints.dataset_endpoints import dataset_bp
 from backend.endpoints.s3_edpoints import s3_bp
 from backend.endpoints.test_endpoints import test_bp
 from backend.endpoints.train_endpoints import train_bp
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format=LOGGER_FORMAT)
+logger = logging.getLogger()
 
 init_firebase()
 
@@ -51,5 +56,5 @@ def root(path):
 
 
 if __name__ == "__main__":
-    print("Backend starting")
+    logger.info("Backend starting")
     app.run(debug=True, host="0.0.0.0", port=PORT)

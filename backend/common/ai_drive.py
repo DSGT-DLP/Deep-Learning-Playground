@@ -8,8 +8,8 @@ from backend.aws_helpers.s3_utils.s3_client import (
     read_df_from_bucket,
     read_from_bucket,
 )
-
-from backend.common.constants import IMAGE_FILE_DOWNLOAD_TMP_PATH, ONNX_MODEL
+import logging
+from backend.common.constants import IMAGE_FILE_DOWNLOAD_TMP_PATH, LOGGER_FORMAT, ONNX_MODEL
 from backend.common.dataset import read_dataset, loader_from_zipped
 from backend.common.default_datasets import (
     get_default_dataset,
@@ -25,6 +25,9 @@ from backend.dl.dl_trainer import train_deep_model, train_deep_image_classificat
 from backend.ml.ml_trainer import train_classical_ml_model
 from backend.ml.ml_model_parser import get_object_ml
 
+
+logging.basicConfig(level=logging.DEBUG, format=LOGGER_FORMAT)
+logger = logging.getLogger()
 
 def dl_tabular_drive(trainspace_data: TrainspaceData):
     """
@@ -99,7 +102,7 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
         # label encode the categorical values to numbers
         y = y.astype("category")
         y = y.cat.codes
-        print(y.head())
+        logger.info(y.head())
 
     # Convert to tensor
     if shuffle and problem_type.upper() == "CLASSIFICATION":
@@ -117,11 +120,11 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
     )
     # Build the Deep Learning model that the user wants
     model = DLModel(parse_deep_user_architecture(user_arch))
-    print(f"model: {model}")
+    logger.info(f"model: {model}")
 
     optimizer = get_optimizer(model, optimizer_name=optimizer_name, learning_rate=0.05)
 
-    print(f"loss criterion: {criterion}")
+    logger.info(f"loss criterion: {criterion}")
     train_loader, test_loader = get_dataloaders(
         X_train_tensor,
         y_train_tensor,
@@ -186,7 +189,7 @@ def dl_img_drive(trainspace_data: TrainspaceData):
             default, train_transform, test_transform, batch_size, shuffle
         )
 
-    print("got data loaders")
+    logger.info("got data loaders")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(
@@ -235,7 +238,7 @@ def ml_drive(trainspace_data: TrainspaceData):
     try:
         if default and problem_type.upper() == "CLASSIFICATION":
             X, y, target_names = get_default_dataset(default.upper(), target, features)
-            print(y.head())
+            logger.info(y.head())
         elif default and problem_type.upper() == "REGRESSION":
             X, y, target_names = get_default_dataset(default.upper(), target, features)
         else:

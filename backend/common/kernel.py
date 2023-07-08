@@ -32,6 +32,7 @@ from backend.dl.detection import detection_img_drive
 logging.basicConfig(level=logging.DEBUG, format=LOGGER_FORMAT)
 logger = logging.getLogger()
 
+
 def router(msg):
     """
     Routes the message to the appropriate training function.

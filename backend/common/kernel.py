@@ -243,6 +243,7 @@ def empty_message(message: dict) -> bool:
     """
     return not bool(message)
 
+
 def main():
     # Polls for messages from the SQS queue, and handles them.
     while True:

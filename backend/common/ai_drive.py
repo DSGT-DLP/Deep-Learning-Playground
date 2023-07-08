@@ -68,11 +68,9 @@ def dl_tabular_drive(trainspace_data: TrainspaceData):
     problem_type = params["problem_type"]
     optimizer_name = params["optimizer_name"]
     criterion = params["criterion"]
-    default = (
-        trainspace_data.dataset_data["name"]
-        if trainspace_data.dataset_data.get("is_default_dataset")
-        else None
-    )
+    default = None
+    if trainspace_data.dataset_data.get("is_default_dataset"):
+        default = trainspace_data.dataset_data["name"]
     epochs = params.get("epochs", 5)
     shuffle = params.get("shuffle", True)
     test_size = params.get("test_size", 0.2)

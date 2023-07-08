@@ -95,7 +95,6 @@ def write_to_csv(label_set):
 
 
 def detection_img_drive(trainspace_data: TrainspaceData):
-    uid = trainspace_data.uid
     filename = trainspace_data.dataset_data["name"]
     read_from_bucket(
         FILE_UPLOAD_BUCKET_NAME,
@@ -104,9 +103,9 @@ def detection_img_drive(trainspace_data: TrainspaceData):
         IMAGE_FILE_DOWNLOAD_TMP_PATH,
     )
     img_file = os.path.join(IMAGE_FILE_DOWNLOAD_TMP_PATH, filename)
-    transforms = trainspace_data.dataset_data["transforms"]
-    detection_type = trainspace_data.dataset_data["detection_type"]
-    problem_type = trainspace_data.dataset_data["problem_type"]
+    transforms = trainspace_data.parameters_data["transforms"]
+    detection_type = trainspace_data.parameters_data["detection_type"]
+    problem_type = trainspace_data.parameters_data["problem_type"]
 
     image = transform_image(img_file, transforms)
     if detection_type == "rekognition":

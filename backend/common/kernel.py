@@ -32,6 +32,7 @@ from backend.dl.detection import detection_img_drive
 logging.basicConfig(level=logging.DEBUG, format=LOGGER_FORMAT)
 logger = logging.getLogger()
 
+
 def router(msg):
     """
     Routes the message to the appropriate training function.
@@ -44,82 +45,104 @@ def router(msg):
     data_source = request_data.data_source
 
     if data_source == "TABULAR":
-        result = tabular_run_route(request_data)
-        if result[1] != 200:
-            logger.warn("Error in tabular run route: result is", result)
-            updateStatus(trainspace_id, TrainStatus.ERROR.name)
-            return
-
-        updateStatus(trainspace_id, TrainStatus.SUCCESS.name)
-        s3_helper.write_to_bucket(
-            SAVED_MODEL_DL,
-            EXECUTION_BUCKET_NAME,
-            f"{trainspace_id}/{os.path.basename(SAVED_MODEL_DL)}",
-        )
-        s3_helper.write_to_bucket(
-            ONNX_MODEL,
-            EXECUTION_BUCKET_NAME,
-            f"{trainspace_id}/{os.path.basename(ONNX_MODEL)}",
-        )
-        s3_helper.write_to_bucket(
-            DEEP_LEARNING_RESULT_CSV_PATH,
-            EXECUTION_BUCKET_NAME,
-            f"{trainspace_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
-        )
+        _process_tabular(request_data, trainspace_id)
     elif data_source == "CLASSICAL_ML":
-        result = ml_run_route(request_data)
-        if result[1] != 200:
-            updateStatus(trainspace_id, TrainStatus.ERROR.name)
-            return
-
-        updateStatus(trainspace_id, TrainStatus.SUCCESS.name)
-        s3_helper.write_to_bucket(
-            SAVED_MODEL_ML,
-            EXECUTION_BUCKET_NAME,
-            f"{trainspace_id}/{os.path.basename(SAVED_MODEL_ML)}",
-        )
+        _process_classical_ml(request_data, trainspace_id)
     elif data_source == "IMAGE":
-        logger.info("Running Img run route")
-        result = img_run_route(request_data)
-        logger.info(result)
-        if result[1] != 200:
-            updateStatus(trainspace_id, TrainStatus.ERROR.name)
-            return
-
-        updateStatus(trainspace_id, TrainStatus.SUCCESS.name)
-        logger.info("execution id status updated after img run complete")
-        s3_helper.write_to_bucket(
-            SAVED_MODEL_DL,
-            EXECUTION_BUCKET_NAME,
-            f"{trainspace_id}/{os.path.basename(SAVED_MODEL_DL)}",
-        )
-        s3_helper.write_to_bucket(
-            ONNX_MODEL,
-            EXECUTION_BUCKET_NAME,
-            f"{trainspace_id}/{os.path.basename(ONNX_MODEL)}",
-        )
-        s3_helper.write_to_bucket(
-            DEEP_LEARNING_RESULT_CSV_PATH,
-            EXECUTION_BUCKET_NAME,
-            f"{trainspace_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
-        )
-        logger.info("img run result files successfully uploaded to s3")
+        _process_img(request_data, trainspace_id)
     elif data_source == "OBJECT_DETECTION":
-        result = object_detection_route(request_data)
-        if result[1] != 200:
-            updateStatus(trainspace_id, TrainStatus.ERROR.name)
-            return
+        _process_obj_detection(request_data, trainspace_id)
 
-        updateStatus(trainspace_id, TrainStatus.SUCCESS.name)
-        s3_helper.write_to_bucket(
-            IMAGE_DETECTION_RESULT_CSV_PATH,
-            EXECUTION_BUCKET_NAME,
-            f"{trainspace_id}/{os.path.basename(IMAGE_DETECTION_RESULT_CSV_PATH)}",
-        )
+
+def _process_tabular(request_data: TrainspaceData, trainspace_id: str):
+    logger.info("Running tabular run route")
+    result = _tabular_run_route(request_data)
+    if result[1] != 200:
+        logger.warn("Error in tabular run route: result is", result)
+        updateStatus(trainspace_id, TrainStatus.ERROR.name)
+        return
+
+    updateStatus(trainspace_id, TrainStatus.SUCCESS.name)
+    s3_helper.write_to_bucket(
+        SAVED_MODEL_DL,
+        EXECUTION_BUCKET_NAME,
+        f"{trainspace_id}/{os.path.basename(SAVED_MODEL_DL)}",
+    )
+    s3_helper.write_to_bucket(
+        ONNX_MODEL,
+        EXECUTION_BUCKET_NAME,
+        f"{trainspace_id}/{os.path.basename(ONNX_MODEL)}",
+    )
+    s3_helper.write_to_bucket(
+        DEEP_LEARNING_RESULT_CSV_PATH,
+        EXECUTION_BUCKET_NAME,
+        f"{trainspace_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
+    )
+
+
+def _process_classical_ml(request_data: TrainspaceData, trainspace_id: str):
+    logger.info("Running classical ML run route")
+    result = _ml_run_route(request_data)
+    if result[1] != 200:
+        logger.warn("Error in tabular classical ml route: result is", result)
+        updateStatus(trainspace_id, TrainStatus.ERROR.name)
+        return
+
+    updateStatus(trainspace_id, TrainStatus.SUCCESS.name)
+    s3_helper.write_to_bucket(
+        SAVED_MODEL_ML,
+        EXECUTION_BUCKET_NAME,
+        f"{trainspace_id}/{os.path.basename(SAVED_MODEL_ML)}",
+    )
+
+
+def _process_img(request_data: TrainspaceData, trainspace_id: str):
+    logger.info("Running Img run route")
+    result = _img_run_route(request_data)
+    logger.info(result)
+    if result[1] != 200:
+        logger.warn("Error in img route: result is", result)
+        updateStatus(trainspace_id, TrainStatus.ERROR.name)
+        return
+
+    updateStatus(trainspace_id, TrainStatus.SUCCESS.name)
+    logger.info("execution id status updated after img run complete")
+    s3_helper.write_to_bucket(
+        SAVED_MODEL_DL,
+        EXECUTION_BUCKET_NAME,
+        f"{trainspace_id}/{os.path.basename(SAVED_MODEL_DL)}",
+    )
+    s3_helper.write_to_bucket(
+        ONNX_MODEL,
+        EXECUTION_BUCKET_NAME,
+        f"{trainspace_id}/{os.path.basename(ONNX_MODEL)}",
+    )
+    s3_helper.write_to_bucket(
+        DEEP_LEARNING_RESULT_CSV_PATH,
+        EXECUTION_BUCKET_NAME,
+        f"{trainspace_id}/{os.path.basename(DEEP_LEARNING_RESULT_CSV_PATH)}",
+    )
+    logger.info("img run result files successfully uploaded to s3")
+
+
+def _process_obj_detection(request_data: TrainspaceData, trainspace_id: str):
+    logger.info("Running object detection run route")
+    result = _object_detection_route(request_data)
+    if result[1] != 200:
+        logger.warn("Error in tabular object detection route: result is", result)
+        updateStatus(trainspace_id, TrainStatus.ERROR.name)
+        return
+
+    updateStatus(trainspace_id, TrainStatus.SUCCESS.name)
+    s3_helper.write_to_bucket(
+        IMAGE_DETECTION_RESULT_CSV_PATH,
+        EXECUTION_BUCKET_NAME,
+        f"{trainspace_id}/{os.path.basename(IMAGE_DETECTION_RESULT_CSV_PATH)}",
+    )
 
 
 # Wrapper for dl_tabular_drive() function
-def tabular_run_route(trainspace_data: TrainspaceData):
+def _tabular_run_route(trainspace_data: TrainspaceData):
     try:
         train_loss_results = dl_tabular_drive(trainspace_data)
 
@@ -132,7 +155,7 @@ def tabular_run_route(trainspace_data: TrainspaceData):
 
 
 # Wrapper for ml_drive() function
-def ml_run_route(trainspace_data: TrainspaceData):
+def _ml_run_route(trainspace_data: TrainspaceData):
     try:
         train_loss_results = ml_drive(trainspace_data)
 
@@ -145,7 +168,7 @@ def ml_run_route(trainspace_data: TrainspaceData):
 
 
 # Wrapper for dl_img_drive() function
-def img_run_route(trainspace_data: TrainspaceData):
+def _img_run_route(trainspace_data: TrainspaceData):
     try:
         train_loss_results = dl_img_drive(trainspace_data)
 
@@ -166,7 +189,7 @@ def img_run_route(trainspace_data: TrainspaceData):
 
 
 # Wrapper for detection_img_drive function
-def object_detection_route(trainspace_data: TrainspaceData):
+def _object_detection_route(trainspace_data: TrainspaceData):
     try:
         image = detection_img_drive(trainspace_data)
         return send_detection_results(image)

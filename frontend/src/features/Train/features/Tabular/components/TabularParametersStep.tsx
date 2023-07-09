@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
+import { useLazyGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import {
   Autocomplete,
@@ -53,28 +53,33 @@ import {
 } from "@/common/utils/dndHelpers";
 import ClientOnlyPortal from "@/common/components/ClientOnlyPortal";
 import { updateTabularTrainspaceData } from "../redux/tabularActions";
+import { Button } from "gestalt";
 
 const TabularParametersStep = ({
   renderStepperButtons,
   setIsModified,
+  setStep,
 }: {
   renderStepperButtons: (
     submitTrainspace: (data: TrainspaceData<"PARAMETERS">) => void
   ) => React.ReactNode;
   setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   const trainspace = useAppSelector(
     (state) =>
       state.trainspace.current as TrainspaceData<"PARAMETERS"> | undefined
   );
   const dispatch = useAppDispatch();
-  const { data } = trainspace
-    ? useGetColumnsFromDatasetQuery({
-        dataSource: "TABULAR",
+  const [getColumns, { data, error }] = useLazyGetColumnsFromDatasetQuery();
+  useEffect(() => {
+    trainspace &&
+      getColumns({
+        dataSource: trainspace.dataSource,
         dataset: trainspace.datasetData,
-      })
-    : { data: undefined };
-  console.log("hello" + data);
+      });
+  }, []);
+  //console.log("hello" + data);
   const {
     handleSubmit,
     formState: { errors, isDirty },
@@ -119,68 +124,93 @@ const TabularParametersStep = ({
   if (!trainspace) return <></>;
   const targetCol = watch("targetCol");
   const features = watch("features");
-  console.log("asad");
   return (
     <Stack spacing={3}>
-      <Controller
-        control={control}
-        name="targetCol"
-        rules={{ required: true }}
-        render={({ field: { ref, onChange, ...field } }) => (
-          <Autocomplete
-            {...field}
-            onChange={(_, value) => onChange(value)}
-            disableClearable
-            autoComplete
-            autoHighlight
-            renderInput={(params) =>
-              data ? (
-                <TextField
-                  {...params}
-                  inputRef={ref}
-                  required
-                  label="Target Column"
-                  placeholder="Target"
-                  error={errors.targetCol ? true : false}
-                />
-              ) : (
-                <Skeleton variant="rectangular" />
-              )
+      {error ? (
+        <>
+          <Typography variant="h2" fontSize={25}>
+            Error Occurred!
+          </Typography>
+          <Button
+            text="Retry"
+            onClick={() =>
+              getColumns({
+                dataSource: "TABULAR",
+                dataset: trainspace.datasetData,
+              })
             }
-            options={data ? data.filter((col) => !features.includes(col)) : []}
           />
-        )}
-      />
-      <Controller
-        control={control}
-        name="features"
-        rules={{ required: true }}
-        render={({ field: { ref, onChange, ...field } }) => (
-          <Autocomplete
-            {...field}
-            multiple
-            autoComplete
-            autoHighlight
-            disableCloseOnSelect
-            onChange={(_, value) => onChange(value)}
-            renderInput={(params) =>
-              data ? (
-                <TextField
-                  {...params}
-                  inputRef={ref}
-                  required
-                  label="Feature Columns"
-                  placeholder="Features"
-                  error={errors.features ? true : false}
-                />
-              ) : (
-                <Skeleton variant="rectangular" />
-              )
-            }
-            options={data ? data.filter((col) => col !== targetCol) : []}
+          <Button text="Reupload" onClick={() => setStep(0)} />
+        </>
+      ) : (
+        <>
+          <Controller
+            control={control}
+            name="targetCol"
+            rules={{ required: true }}
+            render={({ field: { ref, onChange, ...field } }) => (
+              <Autocomplete
+                {...field}
+                onChange={(_, value) => onChange(value)}
+                disableClearable
+                autoComplete
+                autoHighlight
+                renderInput={(params) =>
+                  data ? (
+                    <TextField
+                      {...params}
+                      inputRef={ref}
+                      required
+                      label="Target Column"
+                      placeholder="Target"
+                      error={errors.targetCol ? true : false}
+                    />
+                  ) : (
+                    <Skeleton variant="rectangular">
+                      <TextField />
+                    </Skeleton>
+                  )
+                }
+                options={
+                  data ? data.filter((col) => !features.includes(col)) : []
+                }
+              />
+            )}
           />
-        )}
-      />
+          <Controller
+            control={control}
+            name="features"
+            rules={{ required: true }}
+            render={({ field: { ref, onChange, ...field } }) => (
+              <Autocomplete
+                {...field}
+                multiple
+                autoComplete
+                autoHighlight
+                disableCloseOnSelect
+                onChange={(_, value) => onChange(value)}
+                renderInput={(params) =>
+                  data ? (
+                    <TextField
+                      {...params}
+                      inputRef={ref}
+                      required
+                      label="Feature Columns"
+                      placeholder="Features"
+                      error={errors.features ? true : false}
+                    />
+                  ) : (
+                    <Skeleton variant="rectangular">
+                      <TextField />
+                    </Skeleton>
+                  )
+                }
+                options={data ? data.filter((col) => col !== targetCol) : []}
+              />
+            )}
+          />
+        </>
+      )}
       <FormControl>
         <FormLabel>Problem Type</FormLabel>
         <Controller

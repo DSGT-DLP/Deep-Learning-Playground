@@ -139,6 +139,7 @@ const TrainspaceStepInner = ({
         </Stack>
       )}
       setIsModified={setIsStepModified}
+      setStep={setStep}
     />
   );
 };

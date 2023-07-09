@@ -4,14 +4,13 @@ import {
   DatasetData,
   FileUploadData,
 } from "@/features/Train/types/trainTypes";
-import { selectPageDown } from "@codemirror/commands";
-import { StyledEngineProvider } from "@mui/material";
 import { fetchBaseQuery } from "@reduxjs/toolkit/dist/query";
-import { wait } from "@testing-library/user-event/dist/utils";
 
+/*
 function sleep(ms: number | undefined) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+*/
 
 const trainspaceApi = backendApi
   .enhanceEndpoints({ addTagTypes: ["UserDatasetFilesData"] })
@@ -92,7 +91,7 @@ const trainspaceApi = backendApi
         { dataSource: DATA_SOURCE; dataset: DatasetData }
       >({
         queryFn: async ({ dataSource, dataset }, _, __, baseQuery) => {
-          await sleep(10000);
+          //await sleep(10000);
           const postObjResponse = await baseQuery({
             url: dataset.isDefaultDataset
               ? "/api/dataset/defaultDataset"
@@ -109,7 +108,14 @@ const trainspaceApi = backendApi
           if (postObjResponse.error) {
             return { error: postObjResponse.error };
           }
-          return { data: JSON.parse(postObjResponse.data.columns) };
+          const postObj = postObjResponse.data as {
+            presigned_post_obj: { columns: string };
+          };
+          return {
+            data: JSON.parse(
+              postObj.presigned_post_obj.columns
+            ) /*, error: "asdasd" */,
+          };
         },
       }),
     }),
@@ -119,5 +125,5 @@ const trainspaceApi = backendApi
 export const {
   useGetDatasetFilesDataQuery,
   useUploadDatasetFileMutation,
-  useGetColumnsFromDatasetQuery,
+  useLazyGetColumnsFromDatasetQuery,
 } = trainspaceApi;

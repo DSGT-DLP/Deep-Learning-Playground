@@ -35,7 +35,7 @@ pyrebase4 = "*"
 moto = "*"
 docker = "*"
 ggshield = "*"
-
+black = "*"
 
 [tool.poetry.dev-dependencies]
 python = ">=3.9"

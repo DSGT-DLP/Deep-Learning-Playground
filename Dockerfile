@@ -22,9 +22,11 @@ RUN aws configure set region $AWS_REGION
 RUN aws configure set aws_access_key_id $AWS_DEPLOY_ACCESS_KEY_ID
 RUN aws configure set aws_secret_access_key $AWS_DEPLOY_SECRET_ACCESS_KEY
 
-COPY requirements.txt .
+# Install Poetry and project dependencies
+RUN curl -sSL https://install.python-poetry.org | python -
+COPY pyproject.toml poetry.lock ./
+RUN poetry install --no-interaction --no-ansi --no-root
 
-RUN python -m pip install -r requirements.txt
 
 COPY . .
 

@@ -1,0 +1,43 @@
+name: Python Package (Poetry)
+
+on:
+  push:
+    branches:
+      - main
+      - prod-deploy
+  pull_request:
+    paths:
+      - 'backend/**'
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.9
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python -
+        source $HOME/.poetry/env
+    - name: Install dependencies
+      run: poetry install
+    - name: Formatting Fixes
+      run: poetry run black ./
+    - name: Check that requirements.txt exists
+      id: check_files
+      run: test -f requirements.txt || echo "::set-output name=files_exists::false"
+    - name: Automatic requirements.txt for Python Projects
+      if: steps.check_files.outputs.files_exists == 'false'
+      run: |
+        poetry export -f requirements.txt --output requirements.txt --without-hashes
+        git config --global user.name ${{ secrets.DLP_HELPER_USERNAME }}
+        git config --global user.email ${{ secrets.DLP_HELPER_EMAIL }}
+        git add requirements.txt
+        git commit -m "Generate requirements.txt using Poetry"
+        git push
+    - name: Test with pytest
+      run: poetry run pytest tests

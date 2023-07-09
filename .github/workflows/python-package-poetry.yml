@@ -5,10 +5,10 @@ on:
     branches:
       - main
       - prod-deploy
-      - poetry-setup
   pull_request:
     paths:
       - "backend/**"
+      - pyproject.toml
 
 jobs:
   test:

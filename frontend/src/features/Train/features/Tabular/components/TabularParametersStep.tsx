@@ -20,6 +20,7 @@ import {
   Switch,
   TextField,
   Typography,
+  Skeleton,
 } from "@mui/material";
 import {
   Control,
@@ -73,11 +74,12 @@ const TabularParametersStep = ({
         dataset: trainspace.datasetData,
       })
     : { data: undefined };
+  console.log("hello" + data);
   const {
     handleSubmit,
     formState: { errors, isDirty },
     control,
-    watch
+    watch,
   } = useForm<ParameterData>({
     defaultValues: {
       targetCol:
@@ -114,10 +116,10 @@ const TabularParametersStep = ({
   useEffect(() => {
     setIsModified(isDirty);
   }, [isDirty]);
-  if (!trainspace || !data) return <></>;
+  if (!trainspace) return <></>;
   const targetCol = watch("targetCol");
   const features = watch("features");
-
+  console.log("asad");
   return (
     <Stack spacing={3}>
       <Controller
@@ -131,17 +133,21 @@ const TabularParametersStep = ({
             disableClearable
             autoComplete
             autoHighlight
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                inputRef={ref}
-                required
-                label="Target Column"
-                placeholder="Target"
-                error={errors.targetCol ? true : false}
-              />
-            )}
-            options={data.filter(col => !features.includes(col))}
+            renderInput={(params) =>
+              data ? (
+                <TextField
+                  {...params}
+                  inputRef={ref}
+                  required
+                  label="Target Column"
+                  placeholder="Target"
+                  error={errors.targetCol ? true : false}
+                />
+              ) : (
+                <Skeleton variant="rectangular" />
+              )
+            }
+            options={data ? data.filter((col) => !features.includes(col)) : []}
           />
         )}
       />
@@ -157,18 +163,21 @@ const TabularParametersStep = ({
             autoHighlight
             disableCloseOnSelect
             onChange={(_, value) => onChange(value)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                inputRef={ref}
-                required
-                label="Feature Columns"
-                placeholder="Features"
-                error={errors.features ? true : false}
-              />
-            )}
-            
-            options={data.filter(col => col!== targetCol)}
+            renderInput={(params) =>
+              data ? (
+                <TextField
+                  {...params}
+                  inputRef={ref}
+                  required
+                  label="Feature Columns"
+                  placeholder="Features"
+                  error={errors.features ? true : false}
+                />
+              ) : (
+                <Skeleton variant="rectangular" />
+              )
+            }
+            options={data ? data.filter((col) => col !== targetCol) : []}
           />
         )}
       />

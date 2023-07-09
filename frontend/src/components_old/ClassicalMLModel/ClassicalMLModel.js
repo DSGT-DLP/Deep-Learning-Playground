@@ -31,11 +31,11 @@ import DataTable from "react-data-table-component";
 
 const ClassicalMLModel = () => {
   const [customModelName, setCustomModelName] = useState(
-    `Model ${new Date().toLocaleString()}`
+    `Model ${new Date().toLocaleString()}`,
   );
   const [addedLayers, setAddedLayers] = useState([]);
   const [usingDefaultDataset, setUsingDefaultDataset] = useState(
-    DEFAULT_DATASETS[0]
+    DEFAULT_DATASETS[0],
   );
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [email, setEmail] = useState("");
@@ -56,7 +56,7 @@ const ClassicalMLModel = () => {
     uploadedColumns.map((e, i) => ({
       label: e.name,
       value: i,
-    }))
+    })),
   );
   const input_responses = {
     shuffle: shuffle?.value,
@@ -138,7 +138,7 @@ const ClassicalMLModel = () => {
         choice="classicalml"
       />
     ),
-    [dlpBackendResponse, PROBLEM_TYPES[0]]
+    [dlpBackendResponse, PROBLEM_TYPES[0]],
   );
 
   const onClick = () => {

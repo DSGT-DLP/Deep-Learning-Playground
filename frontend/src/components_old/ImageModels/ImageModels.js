@@ -38,7 +38,7 @@ import {
 
 const ImageModels = () => {
   const [customModelName, setCustomModelName] = useState(
-    `Model ${new Date().toLocaleString()}`
+    `Model ${new Date().toLocaleString()}`,
   );
   const [addedLayers, setAddedLayers] = useState(DEFAULT_IMG_LAYERS);
   const [trainTransforms, setTrainTransforms] = useState(DEFAULT_TRANSFORMS);
@@ -121,7 +121,7 @@ const ImageModels = () => {
         problemType={PROBLEM_TYPES[0]}
       />
     ),
-    [dlpBackendResponse, PROBLEM_TYPES[0]]
+    [dlpBackendResponse, PROBLEM_TYPES[0]],
   );
 
   const onClick = () => {

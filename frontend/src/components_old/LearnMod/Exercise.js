@@ -40,11 +40,11 @@ const Exercise = (props) => {
   const [features, setFeatures] = useState([]);
   const [problemType, setProblemType] = useState(PROBLEM_TYPES[0]);
   const [criterion, setCriterion] = useState(
-    problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0]
+    problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0],
   );
   const [optimizerName, setOptimizerName] = useState(OPTIMIZER_NAMES[0]);
   const [usingDefaultDataset, setUsingDefaultDataset] = useState(
-    DEFAULT_DATASETS[0]
+    DEFAULT_DATASETS[0],
   );
   const [shuffle, setShuffle] = useState(BOOL_OPTIONS[1]);
   const [epochs, setEpochs] = useState(5);
@@ -54,7 +54,7 @@ const Exercise = (props) => {
     uploadedColumns.map((e, i) => ({
       label: e.name,
       value: i,
-    }))
+    })),
   );
   const [activeColumns, setActiveColumns] = useState([]);
   const [finalAccuracy, setFinalAccuracy] = useState("");
@@ -128,7 +128,7 @@ const Exercise = (props) => {
     {
       queryText: "Criterion",
       options: CRITERIONS.filter((crit) =>
-        crit.problem_type.includes(problemType.value)
+        crit.problem_type.includes(problemType.value),
       ),
       onChange: setCriterion,
       defaultValue: criterion,
@@ -182,7 +182,7 @@ const Exercise = (props) => {
 
   useEffect(() => {
     setCriterion(
-      problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0]
+      problemType === PROBLEM_TYPES[0] ? CRITERIONS[3] : CRITERIONS[0],
     );
     setInputKey((e) => e + 1);
   }, [problemType]);
@@ -220,7 +220,7 @@ const Exercise = (props) => {
   useEffect(() => {
     if (dlpBackendResponse != null) {
       setFinalAccuracy(
-        dlpBackendResponse["dl_results"][epochs - 1]["train_acc"]
+        dlpBackendResponse["dl_results"][epochs - 1]["train_acc"],
       );
     }
 
@@ -303,7 +303,7 @@ const Exercise = (props) => {
         />
       </div>
     ),
-    [dlpBackendResponse, problemType]
+    [dlpBackendResponse, problemType],
   );
 
   return (

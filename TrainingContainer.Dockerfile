@@ -2,7 +2,7 @@ FROM python:3.9-slim
 
 WORKDIR /
 
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml  ./
 RUN pip install poetry && poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi --no-root
 COPY . .
 ARG TARGETARCH 

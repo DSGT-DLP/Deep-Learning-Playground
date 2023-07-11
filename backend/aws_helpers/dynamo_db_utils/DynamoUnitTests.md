@@ -107,6 +107,40 @@ if __name__ == "__main__":
             )
         ),
     )
+    data = {
+        "trainspace_id": "000033",
+        "uid": "00001",
+        "name": "My Trainspace",
+        "data_source": "TABULAR",
+        "dataset_data": {"name": "IRIS", "is_default_dataset": True},
+        "parameters_data": {
+            "target_col": "target",
+            "features": [
+                "sepal length (cm)",
+                "sepal width (cm)",
+                "petal length (cm)",
+                "petal width (cm)",
+            ],
+            "problem_type": "CLASSIFICATION",
+            "criterion": "CELOSS",
+            "optimizer_name": "SGD",
+            "shuffle": True,
+            "epochs": 5,
+            "test_size": 0.2,
+            "batch_size": 20,
+            "layers": [
+                {"value": "LINEAR", "parameters": [10, 3]},
+                {"value": "RELU", "parameters": []},
+                {"value": "LINEAR", "parameters": [3, 10]},
+                {"value": "SOFTMAX", "parameters": [-1]},
+            ],
+        },
+        "review_data": {
+            "notification_email": "afarisdurrani@gmail.com",
+            "notification_phone_number": "",
+        },
+    }
+    print(6, TrainspaceData(**(data)))
 ```
 
 ## userprogress_db.py

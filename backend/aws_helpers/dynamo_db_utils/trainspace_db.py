@@ -27,7 +27,7 @@ class TrainspaceData:
     name: str = ""
     parameters_data: dict = None
     review_data: str = ""
-    status: TrainStatus = TrainStatus.QUEUED
+    status: str = TrainStatus.QUEUED.name
 
 
 def getTrainspaceData(trainspace_id: str) -> dict:

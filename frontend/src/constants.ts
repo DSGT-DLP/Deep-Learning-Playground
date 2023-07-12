@@ -320,20 +320,3 @@ export const DEFAULT_DETECTION_TRANSFORMS = Object.freeze([
     value: "R",
   },
 ]);
-
-// must be in the same order as the enum in the backend: backend/aws_helpers/dynamo_db_utils/execution_db.py
-export type DATA_SOURCE =
-  | "TABULAR"
-  | "PRETRAINED"
-  | "IMAGE"
-  | "AUDIO"
-  | "TEXTUAL"
-  | "CLASSICAL_ML"
-  | "OBJECT_DETECTION";
-export type EXECUTION_STATUS =
-  | "QUEUED"
-  | "STARTING"
-  | "UPLOADING"
-  | "TRAINING"
-  | "SUCCESS"
-  | "ERROR";

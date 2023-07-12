@@ -41,12 +41,12 @@ def updateUserProgressData(uid: str, requestData: dict) -> bool:
     return update_dynamo_item(TABLE_NAME, uid, requestData)
 
 
-def createUserProgressData(execution_data: UserProgressData) -> bool:
+def createUserProgressData(user_progress_data: UserProgressData) -> bool:
     """
     Create a new entry or replaces an existing entry table according to the `uid`.
 
-    @param execution_data: uid and other table attributes to be created or updated if the entry already exists
+    @param user_progress_data: uid and other table attributes to be created or updated if the entry already exists
     @return: True if the creation or update is successful
     """
 
-    return create_dynamo_item(TABLE_NAME, execution_data.__dict__)
+    return create_dynamo_item(TABLE_NAME, user_progress_data.__dict__)

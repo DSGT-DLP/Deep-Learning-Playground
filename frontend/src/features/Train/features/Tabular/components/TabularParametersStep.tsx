@@ -21,6 +21,7 @@ import {
   TextField,
   Typography,
   Skeleton,
+  Button,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
@@ -56,7 +57,6 @@ import {
 } from "@/common/utils/dndHelpers";
 import ClientOnlyPortal from "@/common/components/ClientOnlyPortal";
 import { updateTabularTrainspaceData } from "../redux/tabularActions";
-import { Button } from "gestalt";
 
 const HtmlTooltip = styled(
   ({
@@ -107,7 +107,6 @@ const TabularParametersStep = ({
         dataset: trainspace.datasetData,
       });
   }, []);
-  //console.log("hello" + data);
   const {
     handleSubmit,
     formState: { errors, isDirty },
@@ -156,19 +155,20 @@ const TabularParametersStep = ({
     <Stack spacing={3}>
       {error ? (
         <>
-          <Typography variant="h2" fontSize={25}>
+          <Typography variant="h2" fontSize={25} textAlign={"center"}>
             Error Occurred!
           </Typography>
           <Button
-            text="Retry"
             onClick={() =>
               getColumns({
                 dataSource: "TABULAR",
                 dataset: trainspace.datasetData,
               })
             }
-          />
-          <Button text="Reupload" onClick={() => setStep(0)} />
+          >
+            Retry
+          </Button>
+          <Button onClick={() => setStep(0)}>Reupload</Button>
         </>
       ) : (
         <>
@@ -194,8 +194,8 @@ const TabularParametersStep = ({
                       error={errors.targetCol ? true : false}
                     />
                   ) : (
-                    <Skeleton variant="rectangular">
-                      <TextField />
+                    <Skeleton width="100%">
+                      <TextField fullWidth />
                     </Skeleton>
                   )
                 }
@@ -228,8 +228,8 @@ const TabularParametersStep = ({
                       error={errors.features ? true : false}
                     />
                   ) : (
-                    <Skeleton variant="rectangular">
-                      <TextField />
+                    <Skeleton width="100%">
+                      <TextField fullWidth />
                     </Skeleton>
                   )
                 }

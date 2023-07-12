@@ -6,12 +6,6 @@ import {
 } from "@/features/Train/types/trainTypes";
 import { fetchBaseQuery } from "@reduxjs/toolkit/dist/query";
 
-/*
-function sleep(ms: number | undefined) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-*/
-
 const trainspaceApi = backendApi
   .enhanceEndpoints({ addTagTypes: ["UserDatasetFilesData"] })
   .injectEndpoints({
@@ -90,32 +84,21 @@ const trainspaceApi = backendApi
         string[],
         { dataSource: DATA_SOURCE; dataset: DatasetData }
       >({
-        queryFn: async ({ dataSource, dataset }, _, __, baseQuery) => {
-          //await sleep(10000);
-          const postObjResponse = await baseQuery({
-            url: dataset.isDefaultDataset
-              ? "/api/dataset/defaultDataset"
-              : "/api/dataset/getColumnsFromDatasetFile",
-            method: "POST",
-            body: {
-              data_source: dataSource.toLowerCase(),
-              name: dataset.isDefaultDataset ? undefined : dataset.name,
-              using_default_dataset: dataset.isDefaultDataset
-                ? dataset.name
-                : undefined,
-            },
-          });
-          if (postObjResponse.error) {
-            return { error: postObjResponse.error };
-          }
-          const postObj = postObjResponse.data as {
-            presigned_post_obj: { columns: string };
-          };
-          return {
-            data: JSON.parse(
-              postObj.presigned_post_obj.columns
-            ) /*, error: "asdasd" */,
-          };
+        query: ({ dataSource, dataset }) => ({
+          url: dataset.isDefaultDataset
+            ? "/api/dataset/defaultDataset"
+            : "/api/dataset/getColumnsFromDatasetFile",
+          method: "POST",
+          body: {
+            data_source: dataSource.toLowerCase(),
+            name: dataset.isDefaultDataset ? undefined : dataset.name,
+            using_default_dataset: dataset.isDefaultDataset
+              ? dataset.name
+              : undefined,
+          },
+        }),
+        transformResponse: (response: { columns: string }) => {
+          return JSON.parse(response.columns);
         },
       }),
     }),

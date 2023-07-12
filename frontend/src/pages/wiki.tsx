@@ -1,15 +1,4 @@
 import React, { useState } from "react";
-import DEMO_VIDEO from "frontend/public/images/demo_video.gif";
-import softmax_eq from "frontend/public/images/wiki_images/softmax_equation.png";
-import tanh_eq from "frontend/public/images/wiki_images/tanh_equation.png";
-import tanh_plot from "frontend/public/images/wiki_images/tanh_plot.png";
-import sigmoid_eq from "frontend/public/images/wiki_images/sigmoid_equation.png";
-import dropout_dg from "frontend/public/images/wiki_images/dropout_diagram.png";
-import conv2dgif from "frontend/public/images/wiki_images/conv2d.gif";
-import conv2dgif2 from "frontend/public/images/wiki_images/conv2d2.gif";
-import maxpool2dgif from "frontend/public/images/wiki_images/maxpool2d.gif";
-import avgmaxpoolgif from "frontend/public/images/wiki_images/avgpool_maxpool.gif";
-import batchnorm from "frontend/public/images/wiki_images/batchnorm_diagram.png";
 import Image from "next/image";
 import NavbarMain from "@/common/components/NavBarMain";
 import Footer from "@/common/components/Footer";
@@ -180,9 +169,10 @@ const Wiki = () => {
 
               <p> Below is the dropout layer in action (notice the X marks) </p>
               <Image
-                src={dropout_dg}
+                src={"/images/wiki_images/dropout_diagram.png"}
                 alt="Dropout diagram"
-                style={{ maxHeight: 200, maxWidth: 400, marginInline: "auto" }}
+                width={400}
+                height={200}
               />
 
               <h5>Documentation</h5>
@@ -256,9 +246,11 @@ const Wiki = () => {
               <p>The Tanh formula is:</p>
 
               <Image
-                src={tanh_eq}
+                src={"/images/wiki_images/tanh_equation.png"}
                 alt="Tanh equation"
-                style={{ maxHeight: 200, marginInline: "auto" }}
+                width={200}
+                height={50}
+                style={{ marginInline: "auto" }}
               />
 
               <p>
@@ -268,8 +260,10 @@ const Wiki = () => {
               </p>
 
               <Image
-                src={tanh_plot}
+                src={"/images/wiki_images/tanh_plot.png"}
                 alt="Tanh plot"
+                width={400}
+                height={300}
                 style={{ maxHeight: 300, marginInline: "auto" }}
               />
 
@@ -310,8 +304,10 @@ const Wiki = () => {
 
               <p> Plot and Equation of the sigmoid function is shown below</p>
               <Image
-                src={sigmoid_eq}
+                src={"/images/wiki_images/sigmoid_equation.png"}
                 alt="Sigmoid plot"
+                width={200}
+                height={200}
                 style={{ maxHeight: 300, maxWidth: 500, marginInline: "auto" }}
               />
 
@@ -359,9 +355,10 @@ const Wiki = () => {
               <p>The Softmax formula is:</p>
 
               <Image
-                src={softmax_eq}
+                src={"/images/wiki_images/softmax_equation.png"}
                 alt="Softmax equation"
-                style={{ maxHeight: 200, maxWidth: 500, marginInline: "auto" }}
+                width={500}
+                height={200}
               />
 
               <p>
@@ -413,14 +410,18 @@ const Wiki = () => {
               <p>Helpful gifs to understand conv2d</p>
 
               <Image
-                src={conv2dgif}
+                src={"/images/wiki_images/conv2d.gif"}
                 alt="Conv 2d gif #1"
+                width={200}
+                height={200}
                 style={{ maxHeight: 400, marginInline: "auto" }}
               />
 
               <Image
-                src={conv2dgif2}
+                src={"/images/wiki_images/conv2d2.gif"}
                 alt="Conv 2d gif #2"
+                width={500}
+                height={500}
                 style={{ maxHeight: 500, marginInline: "auto" }}
               />
 
@@ -452,8 +453,10 @@ const Wiki = () => {
               <p>Max pool in action</p>
 
               <Image
-                src={maxpool2dgif}
+                src={"/images/wiki_images/maxpool2d.gif"}
                 alt="Max pool 2d gif"
+                width={200}
+                height={200}
                 style={{ maxHeight: 400, marginInline: "auto" }}
               />
 
@@ -486,8 +489,10 @@ const Wiki = () => {
               <p>Adaptive Avg Pool and Max Pool 2d in action</p>
 
               <Image
-                src={avgmaxpoolgif}
+                src={"/images/wiki_images/avgpool_maxpool.gif"}
                 alt="Max pool and Avg pool side by side"
+                width={500}
+                height={500}
                 style={{ maxHeight: 400, marginInline: "auto" }}
               />
 
@@ -528,8 +533,10 @@ const Wiki = () => {
               </p>
 
               <Image
-                src={batchnorm}
+                src={"/images/wiki_images/batchnorm_diagram.png"}
                 alt="Batch norm 2d"
+                width={500}
+                height={500}
                 style={{ maxHeight: 400, marginInline: "auto" }}
               />
 
@@ -605,9 +612,11 @@ const Wiki = () => {
         <div className="sections">
           <h2>Live Demo</h2>
           <Image
-            src={DEMO_VIDEO}
+            src={"/images/demo_video.gif"}
             alt="GIF showing a demo of the playground"
             loading="lazy"
+            width={500}
+            height={500}
             style={{ width: "100%" }}
           />
         </div>

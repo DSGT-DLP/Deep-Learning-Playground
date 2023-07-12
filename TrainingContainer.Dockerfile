@@ -2,9 +2,9 @@ FROM python:3.9-slim
 
 WORKDIR /
 
-COPY requirements.txt .
-RUN apt-get update -y && apt-get install -y gcc && apt-get install -y curl && apt-get install -y unzip
-RUN pip install -r requirements.txt
+COPY pyproject.toml  ./
+RUN pip install poetry && poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi --no-root
+
 COPY . .
 ARG TARGETARCH
 

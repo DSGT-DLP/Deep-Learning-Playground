@@ -11,13 +11,14 @@ Web Application where people new to Machine Learning can input a dataset and exp
 Have the following installed first:
 
 1. [NodeJS v18](https://nodejs.org/en/download/) (should come with NPM v9, you must install Yarn v1.22 afterwards using NPM)
-1. [Anaconda](https://www.anaconda.com/)
+1. [Poetry](https://python-poetry.org/)
 1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). After installing, type `aws configure` in your terminal and type in the credentials given in [Secrets](https://docs.google.com/spreadsheets/d/1fRndo-7u0MXghiZoMp3uBepDBW9EghcJ9IL4yS0TdD8/edit?usp=sharing)
 
 ## Recommended
 
 1. [GitKraken](https://help.gitkraken.com/gitkraken-client/how-to-install/) for helping with Git commands, especially if you're new to Git
 1. [Node Version Manager](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/) for managing NodeJS versions
+1. [pyenv](https://github.com/pyenv/pyenv) for managing python versions
 
 ## To start on localhost (in order):
 
@@ -25,10 +26,10 @@ Have the following installed first:
 | --------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | Install (one-time) / Update Frontend Packages | `yarn run installf`                                                                        |
 | Install Backend Packages (one-time)           | `yarn run installb`                                                                        |
-| Update Backend Packages                       | `conda activate dlplayground && cd conda && conda env update -f environment.yml`           |
-| Get secrets                                   | `conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env` |
+| Update Backend Packages                       | `poetry install`           |
+| Get secrets                                   | `poetry run python -m backend.aws_helpers.aws_secrets_utils.build_env` |
 | Running the Frontend                          | `yarn run startf`                                                                          |
-| Running the Backend                           | `conda activate dlplayground && python -m backend.driver`                                  |
+| Running the Backend                           | `poetry run python -m backend.driver`                                                                    |
 
 ## To run in `production` mode:
 
@@ -58,15 +59,15 @@ If this command works properly, you will be redirected to an auth route in the G
 
 # Further Details: Backend
 
-## Conda Env Setup
+## Poetry Env Setup
 
-- `conda env create -f environment.yml` in the `/conda` directory
+- `poetry install` in the project root directory
 
-- Updating an environment: `conda env update -f environment.yml` in the `/conda` directory
+- Updating dependencies: `poetry update`
 
 ## Backend Infrastructure
 
-`python -m backend.driver` from the `~/Deep-Learning-Playground` directory
+`poetry run python -m backend.driver` from the `~/Deep-Learning-Playground` directory
 
 The backend supports training of a deep learning model and/or a classical ML model
 
@@ -114,14 +115,14 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 5. Navigate to project directory.
    Type `yarn run installf`.
    If your NodeJS is outdated, follow these [instructions](https://www.hostingadvice.com/how-to/update-node-js-latest-version/).
-   If you're running into Conda issues visit [this page](https://github.com/conda/conda/issues/11919).
+
 
 6. Enter these commands:
 
 ```
 yarn run installb
-conda activate dlplayground && cd conda && conda env update -f environment.yml
-conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env
+poetry install
+poetry run python -m backend.aws_helpers.aws_secrets_utils.build_env
 ```
 
 ## Mac Installation

@@ -2,8 +2,10 @@ FROM python:3.9-slim
 
 WORKDIR /
 
-COPY pyproject.toml  ./
-RUN pip install poetry && poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi --no-root
+# Install Poetry and project dependencies
+RUN curl -sSL https://install.python-poetry.org | python -
+COPY pyproject.toml ./
+RUN poetry install --no-interaction --no-ansi --no-root
 
 COPY . .
 ARG TARGETARCH
@@ -27,4 +29,4 @@ RUN aws configure set aws_secret_access_key $AWS_DEPLOY_SECRET_ACCESS_KEY
 
 ENV SQS_QUEUE_URL='https://sqs.us-west-2.amazonaws.com/521654603461/dlp-training-queue'
 
-CMD python -m backend.common.kernel
+CMD poetry run python -m backend.common.kernel

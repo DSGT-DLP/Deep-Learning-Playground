@@ -7,12 +7,7 @@ from backend.aws_helpers.lambda_utils.lambda_client import invoke
 from backend.aws_helpers.sqs_utils.sqs_client import add_to_training_queue
 from backend.common.email_notifier import send_email
 from backend.common.utils import *
-from backend.endpoints.utils import (
-    send_error,
-    send_success,
-    send_traceback_error,
-    createExecution,
-)
+from backend.endpoints.utils import send_error, send_success, send_traceback_error
 
 aws_bp = Blueprint("aws", __name__)
 
@@ -96,33 +91,3 @@ def send_user_code_eval():
         print("error")
         print("Last element: ", send_traceback_error()[0])
         return send_traceback_error()
-
-
-@aws_bp.route("/writeToQueue", methods=["POST"])
-def writeToQueue() -> str:
-    """
-    API Endpoint to write training request to SQS queue to be serviced by
-    ECS Fargate training cluster
-
-    Params:
-      - JSON that contains information about the user's individual training request
-
-    Results:
-      - 200: Training request added to SQS Queue successfully
-      - 400: Something went wrong in adding user's training request to the queue
-
-    """
-    try:
-        queue_data = json.loads(request.data)
-        queue_send_outcome = add_to_training_queue(queue_data)
-        print(f"sqs outcome: {queue_send_outcome}")
-        status_code = queue_send_outcome["ResponseMetadata"]["HTTPStatusCode"]
-        if status_code != 200:
-            return send_error("Your training request couldn't be added to the queue")
-        else:
-            createExecution(queue_data)
-            return send_success(
-                {"message": "Successfully added your training request to the queue"}
-            )
-    except Exception:
-        return send_error("Failed to queue data")

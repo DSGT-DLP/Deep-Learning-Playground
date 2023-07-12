@@ -11,10 +11,19 @@ from backend.dl.dl_model_parser import *
     "user_model,expected",
     [
         (
-            ["nn.Linear(10,40)", "nn.Linear(40,3)"],
+            [
+                {"value": "LINEAR", "parameters": [10, 40]},
+                {"value": "LINEAR", "parameters": [40, 3]},
+            ],
             [nn.Linear(10, 40), nn.Linear(40, 3)],
         ),
-        (["nn.Linear(0,0)", "nn.Linear(0,0)"], [nn.Linear(0, 0), nn.Linear(0, 0)]),
+        (
+            [
+                {"value": "LINEAR", "parameters": [0, 0]},
+                {"value": "LINEAR", "parameters": [0, 0]},
+            ],
+            [nn.Linear(0, 0), nn.Linear(0, 0)],
+        ),
     ],
 )
 def test_parse_user_architecture(user_model, expected):

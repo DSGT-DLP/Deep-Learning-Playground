@@ -32,6 +32,7 @@ dependencies:
       - torchvision
       - timm
       - wwf
+      - logger
       - fastai==2.7.4
       - firebase_admin
       - pyrebase4

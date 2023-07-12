@@ -38,7 +38,7 @@ DEFAULT_DATASETS = {
     "WINE": "load_wine()",
 }
 UNZIPPED_DIR_NAME = "unzipped_data"
-SENDER = "DSGT Playground <dsgtplayground@gmail.com>"
+SENDER = "DSGT Deep Learning Playground <dlp@datasciencegt.org>"
 AWS_REGION = "us-west-2"
 
 CHARSET = "utf-8"
@@ -54,3 +54,7 @@ DEFAULT_TRANSFORM = [transforms.Resize((256, 256)), transforms.ToTensor()]
 PIL_ONLY_TRANSFORMS = [transforms.RandomChoice, transforms.RandomOrder]
 
 POINTS_PER_QUESTION = 10
+
+IMAGE_FILE_DOWNLOAD_TMP_PATH = os.path.abspath("backend/tmp/image_file_downloads")
+
+LOGGER_FORMAT = "%(asctime)s %(name)s:%(filename)-5s:%(levelname)-5s - %(message)s"

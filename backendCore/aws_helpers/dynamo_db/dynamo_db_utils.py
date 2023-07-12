@@ -1,9 +1,11 @@
+from decimal import Decimal
 import boto3
 from backendCore.aws_helpers.dynamo_db.constants import ALL_DYANMODB_TABLES
 from backendCore.common.constants import AWS_REGION
 import random
 from datetime import datetime
 from typing import Union
+import json
 
 dynamodb = boto3.resource("dynamodb", region_name=AWS_REGION)
 
@@ -124,6 +126,7 @@ def create_dynamo_item(table_name: str, input_item: dict) -> bool:
 
     # Create item
     table = dynamodb.Table(table_name)
+    input_item = json.loads(json.dumps(input_item), parse_float=Decimal)
     response = table.put_item(Item=input_item)
     if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
         raise Exception("Failed to delete item")

@@ -108,5 +108,5 @@ const trainspaceApi = backendApi
 export const {
   useGetDatasetFilesDataQuery,
   useUploadDatasetFileMutation,
-  useGetColumnsFromDatasetQuery,
+  useLazyGetColumnsFromDatasetQuery,
 } = trainspaceApi;

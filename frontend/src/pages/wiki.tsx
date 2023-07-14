@@ -3,6 +3,19 @@ import Image from "next/image";
 import NavbarMain from "@/common/components/NavBarMain";
 import Footer from "@/common/components/Footer";
 
+//Image paths
+const DROPOUT_DIAGRAM_PATH = "/images/wiki_images/dropout_diagram.png";
+const TANH_EQUATION_PATH = "/images/wiki_images/tanh_equation.png";
+const TANH_PLOT_PATH = "/images/wiki_images/tanh_plot.png";
+const SIGMOID_EQUATION_PATH = "/images/wiki_images/sigmoid_equation.png";
+const SOFTMAX_EQUATION_PATH = "/images/wiki_images/softmax_equation.png";
+const CONV2D_GIF_PATH = "/images/wiki_images/conv2d.gif";
+const CONV2D2_GIF_PATH = "/images/wiki_images/conv2d2.gif";
+const MAXPOOL2D_GIF_PATH = "/images/wiki_images/maxpool2d.gif";
+const AVGPOOL_MAXPOOL_GIF_PATH = "/images/wiki_images/avgpool_maxpool.gif";
+const BATCHNORM_DIAGRAM_PATH = "/images/wiki_images/batchnorm_diagram.png";
+const DEMO_VIDEO_PATH = "/images/demo_video.gif";
+
 const displayChange = (
   display: DisplayValue,
   setdisplay: React.Dispatch<React.SetStateAction<DisplayValue>>
@@ -169,7 +182,7 @@ const Wiki = () => {
 
               <p> Below is the dropout layer in action (notice the X marks) </p>
               <Image
-                src={"/images/wiki_images/dropout_diagram.png"}
+                src={DROPOUT_DIAGRAM_PATH}
                 alt="Dropout diagram"
                 width={400}
                 height={200}
@@ -246,7 +259,7 @@ const Wiki = () => {
               <p>The Tanh formula is:</p>
 
               <Image
-                src={"/images/wiki_images/tanh_equation.png"}
+                src={TANH_EQUATION_PATH}
                 alt="Tanh equation"
                 width={200}
                 height={50}
@@ -260,7 +273,7 @@ const Wiki = () => {
               </p>
 
               <Image
-                src={"/images/wiki_images/tanh_plot.png"}
+                src={TANH_PLOT_PATH}
                 alt="Tanh plot"
                 width={400}
                 height={300}
@@ -304,7 +317,7 @@ const Wiki = () => {
 
               <p> Plot and Equation of the sigmoid function is shown below</p>
               <Image
-                src={"/images/wiki_images/sigmoid_equation.png"}
+                src={SIGMOID_EQUATION_PATH}
                 alt="Sigmoid plot"
                 width={200}
                 height={200}
@@ -355,7 +368,7 @@ const Wiki = () => {
               <p>The Softmax formula is:</p>
 
               <Image
-                src={"/images/wiki_images/softmax_equation.png"}
+                src={SOFTMAX_EQUATION_PATH}
                 alt="Softmax equation"
                 width={500}
                 height={200}
@@ -410,7 +423,7 @@ const Wiki = () => {
               <p>Helpful gifs to understand conv2d</p>
 
               <Image
-                src={"/images/wiki_images/conv2d.gif"}
+                src={CONV2D_GIF_PATH}
                 alt="Conv 2d gif #1"
                 width={200}
                 height={200}
@@ -418,7 +431,7 @@ const Wiki = () => {
               />
 
               <Image
-                src={"/images/wiki_images/conv2d2.gif"}
+                src={CONV2D2_GIF_PATH}
                 alt="Conv 2d gif #2"
                 width={500}
                 height={500}
@@ -453,7 +466,7 @@ const Wiki = () => {
               <p>Max pool in action</p>
 
               <Image
-                src={"/images/wiki_images/maxpool2d.gif"}
+                src={MAXPOOL2D_GIF_PATH}
                 alt="Max pool 2d gif"
                 width={200}
                 height={200}
@@ -489,7 +502,7 @@ const Wiki = () => {
               <p>Adaptive Avg Pool and Max Pool 2d in action</p>
 
               <Image
-                src={"/images/wiki_images/avgpool_maxpool.gif"}
+                src={AVGPOOL_MAXPOOL_GIF_PATH}
                 alt="Max pool and Avg pool side by side"
                 width={500}
                 height={500}
@@ -533,7 +546,7 @@ const Wiki = () => {
               </p>
 
               <Image
-                src={"/images/wiki_images/batchnorm_diagram.png"}
+                src={BATCHNORM_DIAGRAM_PATH}
                 alt="Batch norm 2d"
                 width={500}
                 height={500}
@@ -612,7 +625,7 @@ const Wiki = () => {
         <div className="sections">
           <h2>Live Demo</h2>
           <Image
-            src={"/images/demo_video.gif"}
+            src={DEMO_VIDEO_PATH}
             alt="GIF showing a demo of the playground"
             loading="lazy"
             width={500}

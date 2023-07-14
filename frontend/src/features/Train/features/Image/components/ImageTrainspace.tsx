@@ -142,7 +142,7 @@ const TrainspaceStepInner = ({
                 setStep(step + 1);
                 return;
               }
-              if (step == TRAINSPACE_SETTINGS.steps.length - 1) {
+              if (step === TRAINSPACE_SETTINGS.steps.length - 1) {
                 setIsButtonClicked(true);
               }
 

@@ -74,8 +74,6 @@ If this command works properly, you will be redirected to an auth route in the G
 
 - Verify the installation using `pyenv --version`
 
-- pyenv version control: `pyenv install -v 3.9.17`
-
 - If you encounter any issues related to Python versions or missing import modules (no modules named "x"), you can solve by: 
 `export CONFIGURE_OPTS="--with-openssl=$(brew --prefix openssl)"`
 `pyenv install -v 3.9.17`

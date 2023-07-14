@@ -19,8 +19,8 @@ RUN poetry --version
 # Copy the project files
 COPY pyproject.toml poetry.lock ./
 
-# Install dependencies
-RUN poetry install --no-interaction --no-ansi --no-root
+# Install prod dependencies
+RUN poetry install --no-interaction --no-ansi --no-root --no-dev
 
 # Copy the rest of the project
 COPY . .

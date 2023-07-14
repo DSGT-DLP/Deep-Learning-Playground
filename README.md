@@ -61,7 +61,7 @@ If this command works properly, you will be redirected to an auth route in the G
 
 ## Poetry Env Setup
 
-- `poetry install` in the project root directory
+- `poetry install` in the project root directory (this installs both dev and prod dependencies)
 
 - Updating dependencies: `poetry update`
 

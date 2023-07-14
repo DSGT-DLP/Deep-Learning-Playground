@@ -65,6 +65,21 @@ If this command works properly, you will be redirected to an auth route in the G
 
 - Updating dependencies: `poetry update`
 
+# pyenv setup
+- To install pyenv, a python version management tool, you can use the following command via homebrew: `brew install pyenv`
+
+- Installing python version: `pyenv install 3.9.17`
+
+- Set the global python version: `pyenv global 3.9.17`
+
+- Verify the installation using `pyenv --version`
+
+- pyenv version control: `pyenv install -v 3.9.17`
+
+- If you encounter any issues related to Python versions or missing import modules (no modules named "x"), you can solve by: 
+`export CONFIGURE_OPTS="--with-openssl=$(brew --prefix openssl)"`
+`pyenv install -v 3.9.17`
+
 ## Backend Infrastructure
 
 `poetry run python -m backend.driver` from the `~/Deep-Learning-Playground` directory

@@ -1,5 +1,5 @@
-from aws_helpers.dynamo_db_utils.constants import USERPROGRESS_TABLE_NAME
-from aws_helpers.dynamo_db_utils.dynamo_db_utils import (
+from backend.aws_helpers.dynamo_db_utils.constants import USERPROGRESS_TABLE_NAME
+from backend.aws_helpers.dynamo_db_utils.dynamo_db_utils import (
     create_dynamo_item,
     get_dynamo_item_by_key,
     update_dynamo_item,

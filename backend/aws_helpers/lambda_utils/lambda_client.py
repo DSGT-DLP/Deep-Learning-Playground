@@ -1,6 +1,6 @@
 import boto3
 import json
-from common.constants import AWS_REGION
+from backend.common.constants import AWS_REGION
 
 client = boto3.client("lambda", region_name=AWS_REGION)
 

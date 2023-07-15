@@ -1,8 +1,8 @@
 from decimal import Decimal
 import json
 import boto3
-from aws_helpers.dynamo_db_utils.constants import ALL_DYANMODB_TABLES
-from common.constants import AWS_REGION
+from backend.aws_helpers.dynamo_db_utils.constants import ALL_DYANMODB_TABLES
+from backend.common.constants import AWS_REGION
 import random
 from datetime import datetime
 from typing import Union

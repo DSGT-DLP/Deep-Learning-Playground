@@ -7,17 +7,17 @@ import uuid
 from flask import Blueprint
 from flask import request
 
-from aws_helpers.dynamo_db_utils.trainspace_db import (
+from backend.aws_helpers.dynamo_db_utils.trainspace_db import (
     TrainspaceData,
     createTrainspaceData,
 )
-from common.ai_drive import dl_tabular_drive, dl_img_drive, ml_drive
-from common.constants import (
+from backend.common.ai_drive import dl_tabular_drive, dl_img_drive, ml_drive
+from backend.common.constants import (
     UNZIPPED_DIR_NAME,
 )
-from common.utils import *
-from dl.detection import detection_img_drive
-from endpoints.utils import (
+from backend.common.utils import *
+from backend.dl.detection import detection_img_drive
+from backend.endpoints.utils import (
     send_detection_results,
     send_success,
     send_traceback_error,

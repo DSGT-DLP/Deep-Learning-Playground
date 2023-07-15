@@ -6,7 +6,7 @@ import os
 from typing import Union
 from enum import Enum
 
-from constants import UNZIPPED_DIR_NAME
+from backend.common.constants import UNZIPPED_DIR_NAME
 
 
 class LossFunctions(Enum):

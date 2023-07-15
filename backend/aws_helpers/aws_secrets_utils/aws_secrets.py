@@ -4,7 +4,7 @@ import json
 from botocore.exceptions import ClientError
 from typing import Union
 
-from common.constants import AWS_REGION
+from backend.common.constants import AWS_REGION
 
 client = boto3.client("secretsmanager", region_name=AWS_REGION)
 

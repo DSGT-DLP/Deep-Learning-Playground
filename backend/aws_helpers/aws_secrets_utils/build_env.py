@@ -10,8 +10,8 @@ from botocore.exceptions import ClientError
 from typing import Dict
 import sys
 
-from aws_helpers.aws_secrets_utils import aws_secrets
-from aws_helpers.aws_secrets_utils import aws_constants
+from backend.aws_helpers.aws_secrets_utils import aws_secrets
+from backend.aws_helpers.aws_secrets_utils import aws_constants
 
 
 def get_secret():

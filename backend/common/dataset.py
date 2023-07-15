@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader
 from zipfile import ZipFile, is_zipfile
 from os import mkdir, path
 
-from constants import *
+from common.constants import *
 
 
 def read_dataset(url):

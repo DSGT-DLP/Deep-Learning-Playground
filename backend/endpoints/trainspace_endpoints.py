@@ -4,22 +4,22 @@ from flask import Blueprint
 from flask import request
 import uuid
 
-from aws_helpers.dynamo_db_utils.userprogress_db import (
+from backend.aws_helpers.dynamo_db_utils.userprogress_db import (
     UserProgressData,
     createUserProgressData,
     getAllUserProgressData,
     updateUserProgressData,
 )
-from aws_helpers.dynamo_db_utils.trainspace_db import (
+from backend.aws_helpers.dynamo_db_utils.trainspace_db import (
     TrainspaceData,
     createTrainspaceData,
     getAllUserTrainspaceData,
 )
-from common.constants import (
+from backend.common.constants import (
     POINTS_PER_QUESTION,
 )
-from common.utils import *
-from endpoints.utils import send_traceback_error, send_success
+from backend.common.utils import *
+from backend.endpoints.utils import send_traceback_error, send_success
 
 trainspace_bp = Blueprint("trainspace", __name__)
 

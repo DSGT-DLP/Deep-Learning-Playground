@@ -2,8 +2,8 @@ import boto3
 import json
 import firebase_admin
 
-from common.constants import AWS_REGION
-from aws_helpers.aws_secrets_utils import aws_secrets
+from backend.common.constants import AWS_REGION
+from backend.aws_helpers.aws_secrets_utils import aws_secrets
 
 
 def get_secret():

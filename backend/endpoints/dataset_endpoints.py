@@ -3,12 +3,12 @@ import traceback
 from flask import Blueprint
 from flask import request
 
-from aws_helpers.s3_utils.s3_client import (
+from backend.aws_helpers.s3_utils.s3_client import (
     get_column_names,
 )
-from common.default_datasets import get_default_dataset_header
-from common.utils import *
-from endpoints.utils import send_success, send_traceback_error
+from backend.common.default_datasets import get_default_dataset_header
+from backend.common.utils import *
+from backend.endpoints.utils import send_success, send_traceback_error
 
 dataset_bp = Blueprint("dataset", __name__)
 

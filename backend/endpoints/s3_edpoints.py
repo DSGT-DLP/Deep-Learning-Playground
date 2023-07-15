@@ -6,8 +6,8 @@ from flask import Blueprint
 from flask import request
 from werkzeug.utils import secure_filename
 
-from aws_helpers.s3_utils.s3_bucket_names import EXECUTION_BUCKET_NAME
-from aws_helpers.s3_utils.s3_client import (
+from backend.aws_helpers.s3_utils.s3_bucket_names import EXECUTION_BUCKET_NAME
+from backend.aws_helpers.s3_utils.s3_client import (
     get_presigned_upload_post_from_user_dataset_file,
     get_presigned_url_from_exec_file,
     get_user_dataset_file_objects,

@@ -10,6 +10,7 @@ import {
   DATA_SOURCE_ARR,
 } from "../constants/trainConstants";
 import { createTrainspaceData } from "../redux/trainspaceSlice";
+import TabularDnd from "../features/Tabular/components/TabularDnd";
 const CreateTrainspace = () => {
   const {
     handleSubmit,
@@ -41,6 +42,7 @@ const CreateTrainspace = () => {
       justifyContent="center"
       style={{ minHeight: "100vh" }}
     >
+      <TabularDnd />
       <Grid item>
         <Typography variant="h1" fontSize={50}>
           Create a Trainspace

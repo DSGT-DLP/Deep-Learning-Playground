@@ -57,15 +57,25 @@ import { STEP_SETTINGS } from "../constants/tabularConstants";
 import { updateTabularTrainspaceData } from "../redux/tabularActions";
 import { ParameterData, TrainspaceData } from "../types/tabularTypes";
 
-import 'reactflow/dist/style.css';
+import "reactflow/dist/style.css";
 import TabularDnd from "./TabularDnd";
 import { useLazyGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
 
 const initialNodes = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: '1' }, nodesDraggable: true},
-  { id: '2', position: { x: 0, y: 100 }, data: { label: '2' }, nodesDraggable: true },
+  {
+    id: "1",
+    position: { x: 0, y: 0 },
+    data: { label: "1" },
+    nodesDraggable: true,
+  },
+  {
+    id: "2",
+    position: { x: 0, y: 100 },
+    data: { label: "2" },
+    nodesDraggable: true,
+  },
 ];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
 const HtmlTooltip = styled(
   ({
@@ -355,8 +365,8 @@ const TabularParametersStep = ({
           )}
         />
       </FormControl>
-      <TabularDnd/>
       <LayersDnd control={control} errors={errors} />
+      <TabularDnd />
       {renderStepperButtons((trainspaceData) => {
         handleSubmit((data) => {
           dispatch(
@@ -374,27 +384,6 @@ const TabularParametersStep = ({
     </Stack>
   );
 };
-
-// const TabularDnd = () => {
-//   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-//   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-//   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
-//   return (
-//     <div style={{ width: '100vw', height: '100vh' }}>
-//       <ReactFlow
-//         nodes={nodes}
-//         edges={edges}
-//         onNodesChange={onNodesChange}
-//         onEdgesChange={onEdgesChange}
-//         onConnect={onConnect}
-//       >
-//         <Controls />
-//         <MiniMap />
-//         <Background variant="dots" gap={12} size={1} />
-//       </ReactFlow>
-//     </div>
-//   )
-// }
 
 const LayersDnd = ({
   control,

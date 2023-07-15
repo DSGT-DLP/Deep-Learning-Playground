@@ -61,7 +61,6 @@ export const STEP_SETTINGS = {
       { label: "Adam Optimization", value: "Adam" },
     ],
     layerValues: ["LINEAR", "RELU", "TANH", "SOFTMAX", "SIGMOID", "LOGSOFTMAX"],
-
     layers: {
       LINEAR: {
         label: "Linear",

@@ -5,7 +5,7 @@ import shutil
 import pandas as pd
 import io
 
-from aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
+from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
 
 """
 This file contains wrappers to interface with S3 buckets through 

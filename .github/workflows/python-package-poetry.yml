@@ -24,7 +24,7 @@ jobs:
         id: setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9.17'
+          python-version: "3.9.17"
       #----------------------------------------------
       #  -----  install & configure poetry  -----
       #----------------------------------------------
@@ -49,7 +49,7 @@ jobs:
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root
+        run: cd backend && poetry install --no-interaction --no-root
 
       #----------------------------------------------
       #              run test suite
@@ -58,4 +58,3 @@ jobs:
         run: |
           source .venv/bin/activate
           pytest tests
-          

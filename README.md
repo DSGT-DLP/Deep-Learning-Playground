@@ -87,10 +87,6 @@ If this command works properly, you will be redirected to an auth route in the G
 - Run `pyenv install 3.9.13`
 - Set global version by running `pyenv global 3.9.13`
 
-
-
-
-
 ## Backend Infrastructure
 
 `poetry run python -m backend.driver` from the `~/Deep-Learning-Playground` directory

@@ -6,7 +6,7 @@
   "scripts": {
     "build:prod": "cd frontend && yarn install && REACT_APP_MODE=prod yarn run build",
     "installf": "cd frontend && yarn install",
-    "installb": "poetry install && ggshield auth login && pre-commit install",
+    "installb": "poetry install && poetry shell && ggshield auth login && pre-commit install",
     "startf": "cd frontend && yarn dev",
     "secrets": "poetry run python -m backend.aws_helpers.aws_secrets_utils.build_env",
     "startb": "poetry run python -m backend.driver",

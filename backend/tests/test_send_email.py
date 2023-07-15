@@ -1,5 +1,5 @@
 import pytest
-from backend.common import email_notifier as em
+from common import email_notifier as em
 import json
 
 SUCCESS_EMAIL = "Email sent! Message ID:"
@@ -33,7 +33,7 @@ def test_send_email_success(email, subject, body_text):
             "karkir0003@outlook.com",
             "subject",
             "body",
-            ["frontend/layer_docs/softmax_equation.png"],
+            ["../frontend/layer_docs/softmax_equation.png"],
         )
     ],
 )

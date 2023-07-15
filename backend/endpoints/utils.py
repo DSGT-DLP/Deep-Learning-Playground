@@ -1,6 +1,6 @@
 import traceback
 
-from backend.common.utils import *
+from common.utils import *
 
 
 def send_success(results: dict):

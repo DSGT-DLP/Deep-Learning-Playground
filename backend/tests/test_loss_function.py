@@ -1,7 +1,7 @@
 import pytest
 import torch
 import torch.nn as nn
-from backend.common.loss_functions import compute_loss, LossFunctions
+from common.loss_functions import compute_loss, LossFunctions
 
 
 """

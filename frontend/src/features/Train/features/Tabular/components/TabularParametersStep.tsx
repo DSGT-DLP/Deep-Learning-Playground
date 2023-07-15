@@ -1,8 +1,29 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
+import ClientOnlyPortal from "@/common/components/ClientOnlyPortal";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import {
+  useCustomKeyboardSensor,
+  useCustomPointerSensor,
+} from "@/common/utils/dndHelpers";
+import {
+  Active,
+  DndContext,
+  DragOverlay,
+  closestCenter,
+  useDraggable,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import DeleteIcon from "@mui/icons-material/Delete";
+import InfoIcon from "@mui/icons-material/Info";
+import {
   Autocomplete,
+  Button,
   Card,
   Container,
   Divider,
@@ -15,17 +36,16 @@ import {
   Paper,
   Radio,
   RadioGroup,
+  Skeleton,
   Slider,
   Stack,
   Switch,
   TextField,
   Typography,
-  Skeleton,
-  Button,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
-import InfoIcon from "@mui/icons-material/Info";
+import { styled } from "@mui/material/styles";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Control,
   Controller,
@@ -33,41 +53,13 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import { ParameterData, TrainspaceData } from "../types/tabularTypes";
 import { STEP_SETTINGS } from "../constants/tabularConstants";
-import { CSS } from "@dnd-kit/utilities";
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import {
-  Active,
-  DndContext,
-  DragOverlay,
-  closestCenter,
-  useDraggable,
-  useSensors,
-} from "@dnd-kit/core";
-import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  useCustomKeyboardSensor,
-  useCustomPointerSensor,
-} from "@/common/utils/dndHelpers";
-import ClientOnlyPortal from "@/common/components/ClientOnlyPortal";
 import { updateTabularTrainspaceData } from "../redux/tabularActions";
-import ReactFlow, {
-  MiniMap,
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
-  addEdge,
-} from 'reactflow';
+import { ParameterData, TrainspaceData } from "../types/tabularTypes";
 
 import 'reactflow/dist/style.css';
 import TabularDnd from "./TabularDnd";
+import { useLazyGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
 
 const initialNodes = [
   { id: '1', position: { x: 0, y: 0 }, data: { label: '1' }, nodesDraggable: true},

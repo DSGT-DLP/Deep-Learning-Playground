@@ -165,9 +165,6 @@ backend/detection_results.csv
 backend/firebase_helpers/bearer.py
 backend/firebase_helpers/firebase_creds.json
 
-#Poetry
-poetry.lock
-
 # --------------------------------------------------------------------------
 #	Frontend
 # --------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-from aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
+from backend.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
 import boto3
 import os
 import shutil

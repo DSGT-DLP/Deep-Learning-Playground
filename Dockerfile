@@ -25,10 +25,10 @@ RUN aws configure set aws_secret_access_key $AWS_DEPLOY_SECRET_ACCESS_KEY
 # Install Poetry and project (prod) dependencies
 RUN curl -sSL https://install.python-poetry.org | python -
 COPY pyproject.toml ./
-RUN poetry install --no-interaction --no-ansi --no-root --no-dev
+RUN cd backend && poetry install --no-interaction --no-ansi --no-root --no-dev
 
 COPY . .
 
 RUN poetry run yarn run secrets
 RUN yarn run build:prod
-CMD poetry run python -m backend.driver
+RUN yarn run startb

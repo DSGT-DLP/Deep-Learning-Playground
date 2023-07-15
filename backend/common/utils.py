@@ -1,4 +1,4 @@
-from backend.common.constants import (
+from common.constants import (
     LOSS_VIZ,
     ACC_VIZ,
     TRAIN_TIME_CSV,

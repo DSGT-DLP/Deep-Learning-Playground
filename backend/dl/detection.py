@@ -1,22 +1,22 @@
-from backend.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
-from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
-from backend.aws_helpers.s3_utils.s3_client import (
+from aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
+from aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
+from aws_helpers.s3_utils.s3_client import (
     make_train_bucket_path,
     read_from_bucket,
 )
-from backend.common.constants import IMAGE_FILE_DOWNLOAD_TMP_PATH
+from common.constants import IMAGE_FILE_DOWNLOAD_TMP_PATH
 from transformers import YolosFeatureExtractor, YolosForObjectDetection
 import torch
 import torchvision
 import io
 import base64
 from PIL import Image, ImageDraw
-from backend.aws_helpers.aws_rekognition_utils.rekognition_client import (
+from aws_helpers.aws_rekognition_utils.rekognition_client import (
     rekognition_detection,
 )
 import os
 from itertools import cycle
-from backend.dl.dl_model_parser import parse_deep_user_architecture
+from dl.dl_model_parser import parse_deep_user_architecture
 import csv
 
 

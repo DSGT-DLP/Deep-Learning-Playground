@@ -29,6 +29,6 @@ RUN poetry install --no-interaction --no-ansi --no-root --no-dev
 
 COPY . .
 
-RUN poetry run yarn run secrets:deploy
+RUN poetry run yarn run secrets
 RUN yarn run build:prod
 CMD poetry run python -m backend.driver

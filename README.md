@@ -22,14 +22,14 @@ Have the following installed first:
 
 ## To start on localhost (in order):
 
-| Action                                        | Command                                                                                    |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Install (one-time) / Update Frontend Packages | `yarn run installf`                                                                        |
-| Install Backend Packages (one-time)           | `yarn run installb`                                                                        |
-| Update Backend Packages                       | `poetry install`           |
-| Get secrets                                   | `poetry run python -m backend.aws_helpers.aws_secrets_utils.build_env` |
-| Running the Frontend                          | `yarn run startf`                                                                          |
-| Running the Backend                           | `poetry run python -m backend.driver`                                                                    |
+| Action                                        | Command                        |
+| --------------------------------------------- | ------------------------------ |
+| Install (one-time) / Update Frontend Packages | `yarn run installf`            |
+| Install Backend Packages (one-time)           | `yarn run installb`            |
+| Update Backend Packages                       | `cd backend && poetry install` |
+| Get secrets                                   | `yarn run secrets`             |
+| Running the Frontend                          | `yarn run startf`              |
+| Running the Backend                           | `yarn run startb`              |
 
 ## To run in `production` mode:
 
@@ -68,7 +68,9 @@ If this command works properly, you will be redirected to an auth route in the G
 - If you encounter any error related to "ChefBuildError", downgrade your poetry version to 1.3.2 by running `pip install poetry==1.3.2` before doing `poetry install` (See related github issue [here](https://github.com/python-poetry/poetry/issues/7611))
 
 ## pyenv setup
+
 ### Mac Instructions
+
 - To install pyenv, a python version management tool, you can use the following command via homebrew: `brew install pyenv`
 
 - Installing python version: `pyenv install 3.9.17`
@@ -77,11 +79,12 @@ If this command works properly, you will be redirected to an auth route in the G
 
 - Verify the installation using `pyenv --version`
 
-- If you encounter any issues related to Python versions or missing import modules (no modules named "x"), you can solve by: 
-`export CONFIGURE_OPTS="--with-openssl=$(brew --prefix openssl)"`
-`pyenv install -v 3.9.17`
+- If you encounter any issues related to Python versions or missing import modules (no modules named "x"), you can solve by:
+  `export CONFIGURE_OPTS="--with-openssl=$(brew --prefix openssl)"`
+  `pyenv install -v 3.9.17`
 
 ### Windows instructions
+
 - Open up Windows Powershell as Administrator
 - Follow the setup instructions for pyenv [here](https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell)
 - Run `pyenv install 3.9.13`
@@ -89,7 +92,7 @@ If this command works properly, you will be redirected to an auth route in the G
 
 ## Backend Infrastructure
 
-`poetry run python -m backend.driver` from the `~/Deep-Learning-Playground` directory
+`poetry run python driver.py` from the `~/Deep-Learning-Playground` directory
 
 The backend supports training of a deep learning model and/or a classical ML model
 
@@ -138,13 +141,11 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
    Type `yarn run installf`.
    If your NodeJS is outdated, follow these [instructions](https://www.hostingadvice.com/how-to/update-node-js-latest-version/).
 
-
 6. Enter these commands:
 
 ```
 yarn run installb
-poetry install
-poetry run python -m backend.aws_helpers.aws_secrets_utils.build_env
+yarn run secrets
 ```
 
 ## Mac Installation
@@ -165,4 +166,3 @@ See [Architecture.md](./.github/Architecture.md)
 Deep Learning Playground is MIT licensed, as found in the [LICENSE](./LICENSE) file.
 
 Deep Learning Playground documentation is Creative Commons licensed, as found in the [LICENSE-docs](./.github/LICENSE-docs) file.
-

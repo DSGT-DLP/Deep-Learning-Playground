@@ -1,34 +1,34 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris, fetch_california_housing
-from backend.aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
-from backend.aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
-from backend.aws_helpers.s3_utils.s3_client import (
+from aws_helpers.dynamo_db_utils.trainspace_db import TrainspaceData
+from aws_helpers.s3_utils.s3_bucket_names import FILE_UPLOAD_BUCKET_NAME
+from aws_helpers.s3_utils.s3_client import (
     make_train_bucket_path,
     read_df_from_bucket,
     read_from_bucket,
 )
 
-from backend.common.constants import (
+from common.constants import (
     IMAGE_FILE_DOWNLOAD_TMP_PATH,
     LOGGER_FORMAT,
     ONNX_MODEL,
 )
-from backend.common.dataset import read_dataset, loader_from_zipped
-from backend.common.default_datasets import (
+from common.dataset import read_dataset, loader_from_zipped
+from common.default_datasets import (
     get_default_dataset,
     get_img_default_dataset_loaders,
 )
-from backend.common.optimizer import get_optimizer
-from backend.common.utils import *
+from common.optimizer import get_optimizer
+from common.utils import *
 
-from backend.dl.dl_model import DLModel
-from backend.dl.dl_model_parser import parse_deep_user_architecture
-from backend.dl.dl_trainer import train_deep_model, train_deep_image_classification
+from dl.dl_model import DLModel
+from dl.dl_model_parser import parse_deep_user_architecture
+from dl.dl_trainer import train_deep_model, train_deep_image_classification
 
-from backend.ml.ml_trainer import train_classical_ml_model
-from backend.ml.ml_model_parser import get_object_ml
-from backend.dlp_logging import logger
+from ml.ml_trainer import train_classical_ml_model
+from ml.ml_model_parser import get_object_ml
+from dlp_logging import logger
 
 
 def dl_tabular_drive(trainspace_data: TrainspaceData):

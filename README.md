@@ -61,7 +61,7 @@ If this command works properly, you will be redirected to an auth route in the G
 
 ## Poetry Env Setup
 
-- `poetry install` in the project root directory (this installs both dev and prod dependencies)
+- `poetry install` in the project root directory (this installs both dev and prod dependencies). Make sure you run `pip install poetry` prior to running this command
 
 - Updating dependencies: `poetry update`
 

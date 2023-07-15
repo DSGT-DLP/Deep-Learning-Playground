@@ -65,7 +65,10 @@ If this command works properly, you will be redirected to an auth route in the G
 
 - Updating dependencies: `poetry update`
 
-# pyenv setup
+- If you encounter any error related to "ChefBuildError", downgrade your poetry version to 1.3.2 by running `pip install poetry==1.3.2` before doing `poetry install` (See related github issue [here](https://github.com/python-poetry/poetry/issues/7611))
+
+## pyenv setup
+### Mac Instructions
 - To install pyenv, a python version management tool, you can use the following command via homebrew: `brew install pyenv`
 
 - Installing python version: `pyenv install 3.9.17`
@@ -77,6 +80,16 @@ If this command works properly, you will be redirected to an auth route in the G
 - If you encounter any issues related to Python versions or missing import modules (no modules named "x"), you can solve by: 
 `export CONFIGURE_OPTS="--with-openssl=$(brew --prefix openssl)"`
 `pyenv install -v 3.9.17`
+
+### Windows instructions
+- Open up Windows Powershell as Administrator
+- Follow the setup instructions for pyenv [here](https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell)
+- Run `pyenv install 3.9.13`
+- Set global version by running `pyenv global 3.9.13`
+
+
+
+
 
 ## Backend Infrastructure
 

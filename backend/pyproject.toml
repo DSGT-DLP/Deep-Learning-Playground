@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "dlp-backend"
+version = "0.1.0"
+description = "Main Backend for Deep Learning Playground"
+authors = ["DSGT-DLP <dlp@datasciencegt.org>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "dlp_backend"}]
+
+[tool.poetry.dependencies]
+python = ">=3.9, <3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

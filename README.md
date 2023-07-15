@@ -142,3 +142,4 @@ See [Architecture.md](./.github/Architecture.md)
 Deep Learning Playground is MIT licensed, as found in the [LICENSE](./LICENSE) file.
 
 Deep Learning Playground documentation is Creative Commons licensed, as found in the [LICENSE-docs](./.github/LICENSE-docs) file.
+

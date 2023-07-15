@@ -13,6 +13,8 @@ directory, last_part = os.path.split(cwd)
 
 directory_without_last_part = directory
 
-FINAL_ENV_PATH = os.path.abspath(os.path.join(directory_without_last_part, "frontend", ".env"))
+FINAL_ENV_PATH = os.path.abspath(
+    os.path.join(directory_without_last_part, "frontend", ".env")
+)
 
 SECRET_NAME = "frontend_env"

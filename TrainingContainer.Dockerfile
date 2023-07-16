@@ -17,13 +17,16 @@ RUN apt-get install -y unzip
 RUN poetry --version
 
 # Copy the project files
-COPY pyproject.toml poetry.lock ./
+COPY backend/pyproject.toml backend/poetry.lock ./backend/
+
+# Change working directory to the backend subdirectory
+WORKDIR /backend
 
 # Install prod dependencies
 RUN poetry install --no-interaction --no-ansi --no-root --no-dev
 
 # Copy the rest of the project
-COPY . .
+COPY backend/ ./
 
 ARG TARGETARCH
 
@@ -46,4 +49,7 @@ RUN aws configure set aws_secret_access_key $AWS_DEPLOY_SECRET_ACCESS_KEY
 
 ENV SQS_QUEUE_URL='https://sqs.us-west-2.amazonaws.com/521654603461/dlp-training-queue'
 
-CMD poetry run python -m backend.common.kernel
+# Set the working directory to /backend
+WORKDIR /backend
+
+CMD poetry run python -m common.kernel

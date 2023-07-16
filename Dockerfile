@@ -28,11 +28,10 @@ COPY backend/pyproject.toml backend/poetry.lock ./backend/
 WORKDIR /backend
 RUN poetry install --no-interaction --no-ansi --no-root --no-dev
 
-COPY . .
-
-# Copy back to the root directory
+# Switch back to root directory
 WORKDIR /
+COPY . .
 
 RUN yarn run secrets
 RUN yarn run build:prod
-RUN yarn run startb
+CMD yarn run startb

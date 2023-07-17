@@ -1,8 +1,8 @@
-from backendCore.aws_helpers.dynamo_db.constants import (
+from aws_helpers.dynamo_db.constants import (
     TRAINSPACE_TABLE_NAME,
     TrainStatus,
 )
-from backendCore.aws_helpers.dynamo_db.dynamo_db_utils import (
+from aws_helpers.dynamo_db.dynamo_db_utils import (
     create_dynamo_item,
     get_dynamo_item_by_key,
     get_dynamo_items_by_gsi,

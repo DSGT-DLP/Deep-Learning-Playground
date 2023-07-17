@@ -2,7 +2,7 @@ import os
 from torchvision.transforms import transforms
 
 CSV_FILE_NAME = "data.csv"
-CSV_FILE_PATH = f"{os.path.join(os.getcwd(), 'backend', CSV_FILE_NAME)}"
+CSV_FILE_PATH = f"{os.path.join(os.getcwd(), CSV_FILE_NAME)}"
 DEEP_LEARNING_RESULT_CSV_PATH = f"./backend/dl_results.csv"
 TENSORBOARD_LOG = "runs/user_experiment"
 ONNX_MODEL = "./frontend/src/backend_outputs/my_deep_learning_model.onnx"

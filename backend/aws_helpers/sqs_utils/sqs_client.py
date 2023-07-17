@@ -1,8 +1,8 @@
 import boto3
 import json
 from botocore.exceptions import ClientError
-from backend.aws_helpers.sqs_utils.constants import TRAINING_QUEUE
-from backend.common.constants import AWS_REGION
+from aws_helpers.sqs_utils.constants import TRAINING_QUEUE
+from common.constants import AWS_REGION
 
 """
 Wrapper to interface with AWS SQS (Simple Queue Service)

@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.datasets import *
 from enum import Enum
-from backend.common.constants import DEFAULT_DATASETS
+from common.constants import DEFAULT_DATASETS
 import torchvision
 import torch
 

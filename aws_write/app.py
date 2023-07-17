@@ -1,8 +1,8 @@
 import os
 from flask import Blueprint, Flask, send_from_directory, redirect
 from flask_cors import CORS
-from backendCore.endpoints.sqs import sqs_bp
-from backendCore.endpoints.trainspace import trainspace_bp
+from endpoints.sqs import sqs_bp
+from endpoints.trainspace import trainspace_bp
 
 PORT = os.getenv("PORT")
 if PORT is not None:

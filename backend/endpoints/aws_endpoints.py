@@ -3,11 +3,11 @@ import traceback
 from flask import Blueprint
 from flask import request
 
-from backend.aws_helpers.lambda_utils.lambda_client import invoke
-from backend.aws_helpers.sqs_utils.sqs_client import add_to_training_queue
-from backend.common.email_notifier import send_email
-from backend.common.utils import *
-from backend.endpoints.utils import send_error, send_success, send_traceback_error
+from aws_helpers.lambda_utils.lambda_client import invoke
+from aws_helpers.sqs_utils.sqs_client import add_to_training_queue
+from common.email_notifier import send_email
+from common.utils import *
+from endpoints.utils import send_error, send_success, send_traceback_error
 
 aws_bp = Blueprint("aws", __name__)
 

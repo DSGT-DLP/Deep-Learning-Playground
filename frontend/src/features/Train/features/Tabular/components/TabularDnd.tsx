@@ -31,6 +31,7 @@ import { styled } from "@mui/material/styles";
 import { Controller } from "react-hook-form";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InfoIcon from "@mui/icons-material/Info";
+import HtmlTooltip from "@/common/components/HtmlTooltip";
 
 type ALL_LAYERS = keyof typeof STEP_SETTINGS.PARAMETERS.layers;
 
@@ -85,7 +86,10 @@ export default function TabularDnd() {
                         x: Math.random() * 50,
                         y: Math.random() * 50,
                       },
-                      data: { label: value, value: value },
+                      data: {
+                        label: STEP_SETTINGS.PARAMETERS.layers[value].label,
+                        value: value,
+                      },
                     },
                   ])
                 }
@@ -121,27 +125,15 @@ function TextUpdaterNode({
   data: NodeData;
   isConnectable: boolean;
 }) {
-  const onChange = useCallback((evt) => {
-    console.log(evt.target.value);
-  }, []);
-
   return (
-    <div
-      style={{
-        height: "50px",
-        border: "1px solid #eee",
-        padding: "5px",
-        borderRadius: "5px",
-        background: "white",
-      }}
-    >
+    <>
       <Handle
         type="target"
         position={Position.Top}
         isConnectable={isConnectable}
       />
       <div>
-        <Card sx={{ p: 3 }} style={{ display: "inline-block" }}>
+        <Card sx={{ p: 3 }}>
           <Stack
             direction={"row"}
             justifyContent={"space-between"}
@@ -175,43 +167,18 @@ function TextUpdaterNode({
                 {STEP_SETTINGS.PARAMETERS.layers[data.value].parameters.map(
                   (parameter, index) => (
                     <div key={index} data-no-dnd>
-                      {formProps ? (
-                        <Controller
-                          name={`layers.${formProps.index}.parameters.${index}`}
-                          control={formProps.control}
-                          rules={{ required: true }}
-                          render={({ field: { onChange, value } }) => (
-                            <TextField
-                              label={parameter.label}
-                              size={"small"}
-                              type={parameter.type}
-                              onChange={onChange}
-                              value={value}
-                              required
-                              error={
-                                formProps.errors.layers?.[formProps.index]
-                                  ?.parameters?.[index]
-                                  ? true
-                                  : false
-                              }
-                            />
-                          )}
-                        />
-                      ) : (
-                        <TextField
-                          label={parameter.label}
-                          size={"small"}
-                          type={parameter.type}
-                          value={""}
-                          required
-                        />
-                      )}
+                      <TextField
+                        label={parameter.label}
+                        size="small"
+                        type={parameter.type}
+                        required
+                      />
                     </div>
                   )
                 )}
               </Stack>
               <div data-no-dnd>
-                <IconButton onClick={formProps?.remove}>
+                <IconButton>
                   <DeleteIcon />
                 </IconButton>
               </div>
@@ -225,31 +192,6 @@ function TextUpdaterNode({
         id="b"
         isConnectable={isConnectable}
       />
-    </div>
+    </>
   );
 }
-
-const HtmlTooltip = styled(
-  ({
-    className,
-    title,
-    children,
-    ...props
-  }: {
-    className?: string;
-    children: React.ReactElement;
-    title: React.ReactNode;
-  }) => (
-    <Tooltip title={title} {...props} classes={{ popper: className }}>
-      {children}
-    </Tooltip>
-  )
-)(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "rgba(255, 255, 255, 0.95)",
-    color: "rgba(0, 0, 0, 0.87)",
-    maxWidth: 220,
-    fontSize: theme.typography.pxToRem(12),
-    border: "none",
-  },
-}));

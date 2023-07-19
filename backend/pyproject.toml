@@ -17,7 +17,6 @@ pandas = "*"
 matplotlib = "*"
 seaborn = "*"
 mypy = "*"
-pytest = "*"
 scikit-learn = "*"
 scipy = "1.7.3"
 pyyaml = "*"
@@ -38,11 +37,11 @@ psutil = "^5.9.5"
 logger = "^1.4"
 flask-cors = "^4.0.0"
 
-[tool.poetry.dev-dependencies]
-python = ">=3.9"
-flake8 = "*"
-jupyter = "*"
-pytest = "*"
+[tool.poetry.group.dev.dependencies]
+python = ">=3.9, <3.10"
+pytest = "^7.4.0"
+flake8 = "^6.0.0"
+jupyter = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core"]

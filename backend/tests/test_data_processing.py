@@ -3,8 +3,8 @@
 from urllib.error import URLError
 import pytest
 import csv
-from backend.common.constants import *
-from backend.common.dataset import *
+from common.constants import *
+from common.dataset import *
 import filecmp
 
 

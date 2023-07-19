@@ -11,24 +11,25 @@ Web Application where people new to Machine Learning can input a dataset and exp
 Have the following installed first:
 
 1. [NodeJS v18](https://nodejs.org/en/download/) (should come with NPM v9, you must install Yarn v1.22 afterwards using NPM)
-1. [Anaconda](https://www.anaconda.com/)
+1. [Poetry](https://python-poetry.org/)
 1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). After installing, type `aws configure` in your terminal and type in the credentials given in [Secrets](https://docs.google.com/spreadsheets/d/1fRndo-7u0MXghiZoMp3uBepDBW9EghcJ9IL4yS0TdD8/edit?usp=sharing)
 
 ## Recommended
 
 1. [GitKraken](https://help.gitkraken.com/gitkraken-client/how-to-install/) for helping with Git commands, especially if you're new to Git
 1. [Node Version Manager](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/) for managing NodeJS versions
+1. [pyenv](https://github.com/pyenv/pyenv) for managing python versions
 
 ## To start on localhost (in order):
 
-| Action                                        | Command                                                                                    |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Install (one-time) / Update Frontend Packages | `yarn run installf`                                                                        |
-| Install Backend Packages (one-time)           | `yarn run installb`                                                                        |
-| Update Backend Packages                       | `conda activate dlplayground && cd conda && conda env update -f environment.yml`           |
-| Get secrets                                   | `conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env` |
-| Running the Frontend                          | `yarn run startf`                                                                          |
-| Running the Backend                           | `conda activate dlplayground && python -m backend.driver`                                  |
+| Action                                        | Command                        |
+| --------------------------------------------- | ------------------------------ |
+| Install (one-time) / Update Frontend Packages | `yarn run installf`            |
+| Install Backend Packages (one-time)           | `yarn run installb`            |
+| Update Backend Packages                       | `cd backend && poetry install` |
+| Get secrets                                   | `yarn run secrets`             |
+| Running the Frontend                          | `yarn run startf`              |
+| Running the Backend                           | `yarn run startb`              |
 
 ## To run in `production` mode:
 
@@ -58,15 +59,40 @@ If this command works properly, you will be redirected to an auth route in the G
 
 # Further Details: Backend
 
-## Conda Env Setup
+## Poetry Env Setup
 
-- `conda env create -f environment.yml` in the `/conda` directory
+- `poetry install` in the project root directory (this installs both dev and prod dependencies). Make sure you run `pip install poetry` prior to running this command
 
-- Updating an environment: `conda env update -f environment.yml` in the `/conda` directory
+- Updating dependencies: `poetry update`
+
+- If you encounter any error related to "ChefBuildError", downgrade your poetry version to 1.3.2 by running `pip install poetry==1.3.2` before doing `poetry install` (See related github issue [here](https://github.com/python-poetry/poetry/issues/7611))
+
+## pyenv setup
+
+### Mac Instructions
+
+- To install pyenv, a python version management tool, you can use the following command via homebrew: `brew install pyenv`
+
+- Installing python version: `pyenv install 3.9.17`
+
+- Set the global python version: `pyenv global 3.9.17`
+
+- Verify the installation using `pyenv --version`
+
+- If you encounter any issues related to Python versions or missing import modules (no modules named "x"), you can solve by:
+  `export CONFIGURE_OPTS="--with-openssl=$(brew --prefix openssl)"`
+  `pyenv install -v 3.9.17`
+
+### Windows instructions
+
+- Open up Windows Powershell as Administrator
+- Follow the setup instructions for pyenv [here](https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell)
+- Run `pyenv install 3.9.13`
+- Set global version by running `pyenv global 3.9.13`
 
 ## Backend Infrastructure
 
-`python -m backend.driver` from the `~/Deep-Learning-Playground` directory
+`poetry run python driver.py` from the `~/Deep-Learning-Playground` directory
 
 The backend supports training of a deep learning model and/or a classical ML model
 
@@ -114,14 +140,12 @@ To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Ex
 5. Navigate to project directory.
    Type `yarn run installf`.
    If your NodeJS is outdated, follow these [instructions](https://www.hostingadvice.com/how-to/update-node-js-latest-version/).
-   If you're running into Conda issues visit [this page](https://github.com/conda/conda/issues/11919).
 
 6. Enter these commands:
 
 ```
 yarn run installb
-conda activate dlplayground && cd conda && conda env update -f environment.yml
-conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env
+yarn run secrets
 ```
 
 ## Mac Installation

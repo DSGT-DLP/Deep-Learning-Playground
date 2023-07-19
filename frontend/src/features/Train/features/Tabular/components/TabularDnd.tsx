@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -35,6 +35,7 @@ interface NodeData {
     | (typeof STEP_SETTINGS.PARAMETERS.layers)[ALL_LAYERS]["label"]
     | "Start";
   value: ALL_LAYERS | "root";
+  parameters?: number[];
 }
 
 const initialNodes: Node<NodeData>[] = [
@@ -52,12 +53,28 @@ const initialNodes: Node<NodeData>[] = [
   },
 ];
 const initialEdges: Edge[] = [{ id: "e1-2", source: "1", target: "2" }];
+const nodeTypes = { textUpdater: TextUpdaterNode };
 
 export default function TabularDnd() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const nodeTypes = useMemo(() => ({ textUpdater: TextUpdaterNode }), []);
+  console.log(43, nodes);
+
+  const onChange = useCallback(
+    (args: { id: string; newValue: number; parameterIndex: number }) => {
+      setNodes((nds) =>
+        nds.map((node) => {
+          if (node.id !== args.id) return node;
+          if (!node.data.parameters) return node;
+
+          node.data.parameters[args.parameterIndex] = args.newValue;
+          return node;
+        })
+      );
+    },
+    []
+  );
 
   return (
     <>
@@ -85,6 +102,7 @@ export default function TabularDnd() {
                       data: {
                         label: STEP_SETTINGS.PARAMETERS.layers[value].label,
                         value: value,
+                        onChange: onChange,
                       },
                     },
                   ])
@@ -114,16 +132,17 @@ export default function TabularDnd() {
   );
 }
 
-function TextUpdaterNode({
-  data,
-  isConnectable,
-}: {
+interface TextUpdaterNodeProps {
   data: {
     label: (typeof STEP_SETTINGS.PARAMETERS.layers)[ALL_LAYERS]["label"];
     value: ALL_LAYERS;
+    onChange: (e: unknown) => void;
   };
   isConnectable: boolean;
-}) {
+}
+
+function TextUpdaterNode(props: TextUpdaterNodeProps) {
+  const { data, isConnectable } = props;
   return (
     <>
       <Handle
@@ -165,14 +184,14 @@ function TextUpdaterNode({
               >
                 {STEP_SETTINGS.PARAMETERS.layers[data.value].parameters.map(
                   (parameter, index) => (
-                    <div key={index} data-no-dnd>
-                      <TextField
-                        label={parameter.label}
-                        size="small"
-                        type={parameter.type}
-                        required
-                      />
-                    </div>
+                    <TextField
+                      onBlur={data.onChange}
+                      key={index}
+                      label={parameter.label}
+                      size="small"
+                      type={parameter.type}
+                      required
+                    />
                   )
                 )}
               </Stack>

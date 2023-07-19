@@ -120,22 +120,10 @@ const TabularParametersStep = ({
       batchSize: trainspace?.parameterData?.batchSize ?? 20,
       testSize: trainspace?.parameterData?.testSize ?? 0.2,
       layers: trainspace?.parameterData?.layers ?? [
-        {
-          value: "LINEAR",
-          parameters: [10, 3],
-        },
-        {
-          value: "RELU",
-          parameters: [],
-        },
-        {
-          value: "LINEAR",
-          parameters: [3, 10],
-        },
-        {
-          value: "SOFTMAX",
-          parameters: [-1],
-        },
+        { value: "LINEAR", parameters: [10, 3] },
+        { value: "RELU", parameters: [] },
+        { value: "LINEAR", parameters: [3, 10] },
+        { value: "SOFTMAX", parameters: [-1] },
       ],
     },
   });

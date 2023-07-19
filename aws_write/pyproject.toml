@@ -10,7 +10,7 @@ packages = [{include = "dlp_aws_write"}]
 [tool.poetry.dependencies]
 python = ">=3.9, <3.10"
 boto3 = "*"
-flask = "2.2.3"
+flask = "2.2.5"
 flask-cors = "*"
 
 [tool.poetry.dev-dependencies]

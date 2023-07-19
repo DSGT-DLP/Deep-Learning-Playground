@@ -1,55 +1,52 @@
+import HtmlTooltip from "@/common/components/HtmlTooltip";
+import DeleteIcon from "@mui/icons-material/Delete";
+import InfoIcon from "@mui/icons-material/Info";
 import {
-  Stack,
-  Paper,
-  Typography,
   Button,
-  Tooltip,
-  tooltipClasses,
-  IconButton,
   Card,
-  TextField,
   Divider,
+  IconButton,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import ReactFlow, {
-  MiniMap,
-  Controls,
   Background,
-  useNodesState,
-  useEdgesState,
-  addEdge,
   BackgroundVariant,
-  Handle,
-  Position,
-  NodeTypes,
-  Node,
+  Controls,
   Edge,
+  Handle,
+  MiniMap,
+  Node,
+  Position,
+  addEdge,
+  useEdgesState,
+  useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { STEP_SETTINGS } from "../constants/tabularConstants";
-import { styled } from "@mui/material/styles";
-import { Controller } from "react-hook-form";
-import DeleteIcon from "@mui/icons-material/Delete";
-import InfoIcon from "@mui/icons-material/Info";
-import HtmlTooltip from "@/common/components/HtmlTooltip";
 
 type ALL_LAYERS = keyof typeof STEP_SETTINGS.PARAMETERS.layers;
 
 interface NodeData {
-  label: (typeof STEP_SETTINGS.PARAMETERS.layers)[ALL_LAYERS]["label"];
-  value: ALL_LAYERS;
+  label:
+    | (typeof STEP_SETTINGS.PARAMETERS.layers)[ALL_LAYERS]["label"]
+    | "Start";
+  value: ALL_LAYERS | "root";
 }
 
 const initialNodes: Node<NodeData>[] = [
   {
-    id: `LINEAR-${Math.random() * 100}`,
-    type: "textUpdater",
+    id: `root`,
+    type: "input",
     position: { x: 0, y: 0 },
-    data: { label: "Linear", value: "LINEAR" },
+    data: { label: "Start", value: "root" },
   },
   {
     id: `RELU-${Math.random() * 100}`,
-    type: "input",
+    type: "textUpdater",
     position: { x: 0, y: 100 },
     data: { label: "ReLU", value: "RELU" },
   },
@@ -59,8 +56,6 @@ const initialEdges: Edge[] = [{ id: "e1-2", source: "1", target: "2" }];
 export default function TabularDnd() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-  console.log(nodes);
 
   const nodeTypes = useMemo(() => ({ textUpdater: TextUpdaterNode }), []);
 
@@ -82,6 +77,7 @@ export default function TabularDnd() {
                     ...cur,
                     {
                       id: `${value}-${Math.random() * 100}`,
+                      type: "textUpdater",
                       position: {
                         x: Math.random() * 50,
                         y: Math.random() * 50,
@@ -122,7 +118,10 @@ function TextUpdaterNode({
   data,
   isConnectable,
 }: {
-  data: NodeData;
+  data: {
+    label: (typeof STEP_SETTINGS.PARAMETERS.layers)[ALL_LAYERS]["label"];
+    value: ALL_LAYERS;
+  };
   isConnectable: boolean;
 }) {
   return (
@@ -135,9 +134,9 @@ function TextUpdaterNode({
       <div>
         <Card sx={{ p: 3 }}>
           <Stack
-            direction={"row"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
             spacing={3}
           >
             <HtmlTooltip
@@ -156,11 +155,11 @@ function TextUpdaterNode({
             <Typography variant="h3" fontSize={18}>
               {STEP_SETTINGS.PARAMETERS.layers[data.value].label}
             </Typography>
-            <Stack direction={"row"} alignItems={"center"} spacing={3}>
+            <Stack direction="row" alignItems="center" spacing={3}>
               <Stack
-                direction={"row"}
-                alignItems={"center"}
-                justifyContent={"flex-end"}
+                direction="row"
+                alignItems="center"
+                justifyContent="flex-end"
                 spacing={2}
                 divider={<Divider orientation="vertical" flexItem />}
               >
@@ -177,11 +176,6 @@ function TextUpdaterNode({
                   )
                 )}
               </Stack>
-              <div data-no-dnd>
-                <IconButton>
-                  <DeleteIcon />
-                </IconButton>
-              </div>
             </Stack>
           </Stack>
         </Card>

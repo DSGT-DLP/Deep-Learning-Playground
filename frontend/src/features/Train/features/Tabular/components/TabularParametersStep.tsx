@@ -60,6 +60,7 @@ import { ParameterData, TrainspaceData } from "../types/tabularTypes";
 import "reactflow/dist/style.css";
 import TabularDnd from "./TabularDnd";
 import { useLazyGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
+import HtmlTooltip from "@/common/components/HtmlTooltip";
 
 const initialNodes = [
   {
@@ -76,31 +77,6 @@ const initialNodes = [
   },
 ];
 const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
-
-const HtmlTooltip = styled(
-  ({
-    className,
-    title,
-    children,
-    ...props
-  }: {
-    className?: string;
-    children: React.ReactElement;
-    title: React.ReactNode;
-  }) => (
-    <Tooltip title={title} {...props} classes={{ popper: className }}>
-      {children}
-    </Tooltip>
-  )
-)(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "rgba(255, 255, 255, 0.95)",
-    color: "rgba(0, 0, 0, 0.87)",
-    maxWidth: 220,
-    fontSize: theme.typography.pxToRem(12),
-    border: "none",
-  },
-}));
 
 const TabularParametersStep = ({
   renderStepperButtons,
@@ -632,7 +608,7 @@ const LayerComponent = ({
               </React.Fragment>
             }
           >
-            <InfoIcon>Info</InfoIcon>
+            <InfoIcon />
           </HtmlTooltip>
 
           <Typography variant="h3" fontSize={18}>

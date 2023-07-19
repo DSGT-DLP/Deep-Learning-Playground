@@ -30,12 +30,19 @@ import { STEP_SETTINGS } from "../constants/tabularConstants";
 
 type ALL_LAYERS = keyof typeof STEP_SETTINGS.PARAMETERS.layers;
 
+interface OnChangeArgs {
+  id: string;
+  newValue: number;
+  parameterIndex: number;
+}
+
 interface NodeData {
   label:
     | (typeof STEP_SETTINGS.PARAMETERS.layers)[ALL_LAYERS]["label"]
     | "Start";
   value: ALL_LAYERS | "root";
   parameters?: number[];
+  onChange: (args: OnChangeArgs) => void;
 }
 
 const initialNodes: Node<NodeData>[] = [
@@ -59,22 +66,19 @@ export default function TabularDnd() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  console.log(43, nodes);
+  console.log(nodes);
 
-  const onChange = useCallback(
-    (args: { id: string; newValue: number; parameterIndex: number }) => {
-      setNodes((nds) =>
-        nds.map((node) => {
-          if (node.id !== args.id) return node;
-          if (!node.data.parameters) return node;
+  const onChange = useCallback((args: OnChangeArgs) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id !== args.id) return node;
+        if (!node.data.parameters) return node;
 
-          node.data.parameters[args.parameterIndex] = args.newValue;
-          return node;
-        })
-      );
-    },
-    []
-  );
+        node.data.parameters[args.parameterIndex] = args.newValue;
+        return node;
+      })
+    );
+  }, []);
 
   return (
     <>
@@ -103,6 +107,9 @@ export default function TabularDnd() {
                         label: STEP_SETTINGS.PARAMETERS.layers[value].label,
                         value: value,
                         onChange: onChange,
+                        parameters: STEP_SETTINGS.PARAMETERS.layers[
+                          value
+                        ].parameters.map(() => 0),
                       },
                     },
                   ])
@@ -133,16 +140,14 @@ export default function TabularDnd() {
 }
 
 interface TextUpdaterNodeProps {
-  data: {
-    label: (typeof STEP_SETTINGS.PARAMETERS.layers)[ALL_LAYERS]["label"];
-    value: ALL_LAYERS;
-    onChange: (e: unknown) => void;
-  };
+  data: NodeData;
   isConnectable: boolean;
 }
 
 function TextUpdaterNode(props: TextUpdaterNodeProps) {
   const { data, isConnectable } = props;
+  const layer = STEP_SETTINGS.PARAMETERS.layers[data.value as ALL_LAYERS];
+
   return (
     <>
       <Handle
@@ -172,7 +177,7 @@ function TextUpdaterNode(props: TextUpdaterNodeProps) {
             </HtmlTooltip>
 
             <Typography variant="h3" fontSize={18}>
-              {STEP_SETTINGS.PARAMETERS.layers[data.value].label}
+              {layer.label}
             </Typography>
             <Stack direction="row" alignItems="center" spacing={3}>
               <Stack
@@ -182,18 +187,17 @@ function TextUpdaterNode(props: TextUpdaterNodeProps) {
                 spacing={2}
                 divider={<Divider orientation="vertical" flexItem />}
               >
-                {STEP_SETTINGS.PARAMETERS.layers[data.value].parameters.map(
-                  (parameter, index) => (
-                    <TextField
-                      onBlur={data.onChange}
-                      key={index}
-                      label={parameter.label}
-                      size="small"
-                      type={parameter.type}
-                      required
-                    />
-                  )
-                )}
+                {layer.parameters.map((parameter, index) => (
+                  <TextField
+                    onBlur={data.onChange}
+                    key={index}
+                    label={parameter.label}
+                    defaultValue={data.parameters?.[index]}
+                    size="small"
+                    type={parameter.type}
+                    required
+                  />
+                ))}
               </Stack>
             </Stack>
           </Stack>

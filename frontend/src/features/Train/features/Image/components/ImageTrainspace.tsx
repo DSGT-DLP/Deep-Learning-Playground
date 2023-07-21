@@ -10,6 +10,7 @@ import {
   StepButton,
   Stepper,
   TextField,
+  CircularProgress 
 } from "@mui/material";
 import {
   TRAINSPACE_SETTINGS,
@@ -92,6 +93,7 @@ const TrainspaceStepInner = ({
   const Component = STEP_SETTINGS[TRAINSPACE_SETTINGS.steps[step]].component;
   const [isStepModified, setIsStepModified] = useState<boolean>(false);
   const [train] = useTrainImageMutation();
+  const[isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
   useEffect(() => {
@@ -120,6 +122,15 @@ const TrainspaceStepInner = ({
               Previous
             </Button>
           ) : null}
+          {isButtonClicked ? 
+            <Button disabled variant={
+                step < trainspace.step && !isStepModified && !isModified
+                  ? "outlined"
+                  : "contained"
+              }
+            >
+              {step < TRAINSPACE_SETTINGS.steps.length - 1 ? "Next" : "Train"}
+            </Button> : 
           <Button
             variant={
               step < trainspace.step && !isStepModified && !isModified
@@ -131,11 +142,19 @@ const TrainspaceStepInner = ({
                 setStep(step + 1);
                 return;
               }
+              if (step === TRAINSPACE_SETTINGS.steps.length - 1) {
+                setIsButtonClicked(true);
+              }
+
               handleSubmit(submitTrainspace)();
             }}
           >
             {step < TRAINSPACE_SETTINGS.steps.length - 1 ? "Next" : "Train"}
           </Button>
+      }
+      {
+        isButtonClicked ? <CircularProgress/> : null
+      }
         </Stack>
       )}
       setIsModified={setIsStepModified}

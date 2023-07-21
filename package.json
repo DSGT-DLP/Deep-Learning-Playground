@@ -6,11 +6,12 @@
   "scripts": {
     "build:prod": "cd frontend && yarn install && REACT_APP_MODE=prod yarn run build",
     "installf": "cd frontend && yarn install",
-    "installb": "conda --version && cd conda && if conda env list | grep -q 'dlplayground'; then conda env update -f environment.yml --prune; else conda env create -f environment.yml; fi && ggshield auth login && pre-commit install",
+    "installb": "cd backend && poetry install && poetry shell && ggshield auth login && pre-commit install",
+    "installa": "cd aws_write && poetry install && poetry shell && ggshield auth login && pre-commit install",
     "startf": "cd frontend && yarn dev",
-    "secrets": "eval \"$(conda shell.bash hook)\" && conda activate dlplayground && python -m backend.aws_helpers.aws_secrets_utils.build_env",
-    "startb": "eval \"$(conda shell.bash hook)\" && conda activate dlplayground && python -m backend.driver",
-    "secrets:deploy": "python -m backend.aws_helpers.aws_secrets_utils.build_env",
+    "secrets": "cd backend && poetry run python -m aws_helpers.aws_secrets_utils.build_env",
+    "startb": "cd backend && poetry run python driver.py",
+    "starta": "cd aws_write && poetry run python app.py",
     "docker:build": "docker build -t dlp ."
   },
   "repository": {

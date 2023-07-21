@@ -11,19 +11,19 @@ from sklearn.metrics import (
     mean_absolute_percentage_error,
     mean_squared_error,
 )
-from backend.common.constants import (
+from common.constants import (
     CLASSICAL_ML_CONFUSION_MATRIX,
     CLASSICAL_ML_RESULT_CSV_PATH,
     SAVED_MODEL_ML,
 )
-from backend.common.utils import (
+from common.utils import (
     generate_acc_plot,
     generate_loss_plot,
     generate_train_time_csv,
     generate_confusion_matrix,
     generate_AUC_ROC_CURVE,
 )
-from backend.common.utils import ProblemType
+from common.utils import ProblemType
 import pickle
 
 

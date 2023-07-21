@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
+import { useLazyGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
 import { styled } from "@mui/material/styles";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";

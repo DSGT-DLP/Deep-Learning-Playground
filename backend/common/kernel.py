@@ -3,18 +3,18 @@ import json
 import traceback
 import os
 import shutil
-from backend.aws_helpers.dynamo_db_utils.constants import TrainStatus
-from backend.aws_helpers.dynamo_db_utils.trainspace_db import (
+from aws_helpers.dynamo_db_utils.constants import TrainStatus
+from aws_helpers.dynamo_db_utils.trainspace_db import (
     TrainspaceData,
     updateStatus,
 )
-import backend.aws_helpers.sqs_utils.sqs_client as sqs_helper
-import backend.aws_helpers.s3_utils.s3_client as s3_helper
-from backend.common.utils import *
-from backend.aws_helpers.s3_utils.s3_bucket_names import (
+import aws_helpers.sqs_utils.sqs_client as sqs_helper
+import aws_helpers.s3_utils.s3_client as s3_helper
+from common.utils import *
+from aws_helpers.s3_utils.s3_bucket_names import (
     EXECUTION_BUCKET_NAME,
 )
-from backend.common.constants import (
+from common.constants import (
     IMAGE_FILE_DOWNLOAD_TMP_PATH,
     LOGGER_FORMAT,
     UNZIPPED_DIR_NAME,
@@ -24,10 +24,10 @@ from backend.common.constants import (
     DEEP_LEARNING_RESULT_CSV_PATH,
     IMAGE_DETECTION_RESULT_CSV_PATH,
 )
-from backend.common.utils import csv_to_json
-from backend.common.ai_drive import dl_tabular_drive, ml_drive, dl_img_drive
-from backend.dl.detection import detection_img_drive
-from backend.dlp_logging import logger
+from common.utils import csv_to_json
+from common.ai_drive import dl_tabular_drive, ml_drive, dl_img_drive
+from dl.detection import detection_img_drive
+from dlp_logging import logger
 
 
 def router(msg):

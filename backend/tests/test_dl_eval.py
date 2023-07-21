@@ -1,7 +1,7 @@
 import torch
 import pytest
 import torch.nn as nn
-from backend.dl.dl_eval import compute_correct, compute_accuracy
+from dl.dl_eval import compute_correct, compute_accuracy
 
 
 @pytest.mark.parametrize(

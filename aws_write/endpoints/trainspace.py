@@ -4,14 +4,14 @@ from flask import Blueprint
 from flask import request
 import json
 
-from backendCore.aws_helpers.dynamo_db.trainspace_db import (
+from aws_helpers.dynamo_db.trainspace_db import (
     createTrainspaceData,
     getAllUserTrainspaceData,
     getTrainspaceData,
     updateStatus,
     updateTrainspaceData,
 )
-from backendCore.endpoints.utils import send_traceback_error, send_success, send_error
+from endpoints.utils import send_traceback_error, send_success, send_error
 
 trainspace_bp = Blueprint("trainspace", __name__)
 

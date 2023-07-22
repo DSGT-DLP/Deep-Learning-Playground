@@ -221,7 +221,5 @@ function TextUpdaterNode(props: TextUpdaterNodeProps) {
 }
 
 export function exportLayers(): ParameterData["layers"][] | undefined {
-  
-  
   return [];
 }

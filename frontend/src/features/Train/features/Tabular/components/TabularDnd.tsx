@@ -26,6 +26,7 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { STEP_SETTINGS } from "../constants/tabularConstants";
+import { ParameterData } from "../types/tabularTypes";
 
 type ALL_LAYERS = keyof typeof STEP_SETTINGS.PARAMETERS.layers;
 
@@ -49,6 +50,7 @@ const initialNodes: Node<NodeData>[] = [
     id: `root`,
     type: "input",
     position: { x: 0, y: 0 },
+    deletable: false,
     data: {
       label: "Start",
       value: "root",
@@ -83,11 +85,16 @@ export default function TabularDnd() {
           <Typography variant="h2" fontSize={25}>
             Layers
           </Typography>
-          <Stack direction="row" gap={1} flexWrap="wrap" >
+          <Stack
+            direction="row"
+            gap={1}
+            flexWrap="wrap"
+            justifyContent="space-between"
+          >
             {STEP_SETTINGS.PARAMETERS.layerValues.map((value) => (
               <Button
                 key={value}
-                variant="contained"
+                variant="outlined"
                 color="primary"
                 onClick={() =>
                   setNodes((cur) => [
@@ -117,7 +124,7 @@ export default function TabularDnd() {
           </Stack>
         </Stack>
       </Paper>
-      <div style={{ width: "100%", height: "50vh" }}>
+      <div style={{ width: "100%", height: 500 }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -127,7 +134,6 @@ export default function TabularDnd() {
           nodeTypes={nodeTypes}
         >
           <Controls />
-          <MiniMap />
           <Background gap={12} size={1} variant={BackgroundVariant.Dots} />
         </ReactFlow>
       </div>
@@ -212,4 +218,10 @@ function TextUpdaterNode(props: TextUpdaterNodeProps) {
       />
     </>
   );
+}
+
+export function exportLayers(): ParameterData["layers"][] | undefined {
+  
+  
+  return [];
 }

@@ -43,8 +43,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
-import { styled } from "@mui/material/styles";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Control,
@@ -57,26 +55,10 @@ import { STEP_SETTINGS } from "../constants/tabularConstants";
 import { updateTabularTrainspaceData } from "../redux/tabularActions";
 import { ParameterData, TrainspaceData } from "../types/tabularTypes";
 
+import HtmlTooltip from "@/common/components/HtmlTooltip";
+import { useLazyGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
 import "reactflow/dist/style.css";
 import TabularDnd from "./TabularDnd";
-import { useLazyGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
-import HtmlTooltip from "@/common/components/HtmlTooltip";
-
-const initialNodes = [
-  {
-    id: "1",
-    position: { x: 0, y: 0 },
-    data: { label: "1" },
-    nodesDraggable: true,
-  },
-  {
-    id: "2",
-    position: { x: 0, y: 100 },
-    data: { label: "2" },
-    nodesDraggable: true,
-  },
-];
-const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
 const TabularParametersStep = ({
   renderStepperButtons,

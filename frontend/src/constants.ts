@@ -17,7 +17,6 @@ export const URLs = Object.freeze({
   github: "https://github.com/DSGT-DLP/Deep-Learning-Playground",
 });
 
-
 export const GENERAL_STYLES = Object.freeze({
   p: {
     fontWeight: "bold",

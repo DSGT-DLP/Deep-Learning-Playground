@@ -12,7 +12,6 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import storage from "local-storage-fallback";
 import React, { useEffect, useState } from "react";
 import { ThemeProvider } from "styled-components";
-import GlobalStyle from "../../GlobalStyle";
 import { URLs } from "../../constants";
 import DSGTLogo from "/public/images/logos/dlp_branding/dlp-logo.png";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
@@ -62,7 +61,6 @@ const NavbarMain = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <GlobalStyle />
       <AppBar id="navbar-main" className="p-0" position="static">
         <Container maxWidth="lg">
           <Toolbar disableGutters 

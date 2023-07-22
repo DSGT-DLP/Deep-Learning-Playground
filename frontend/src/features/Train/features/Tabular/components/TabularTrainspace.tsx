@@ -10,6 +10,7 @@ import {
   StepButton,
   Stepper,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 import {
   TRAINSPACE_SETTINGS,
@@ -91,9 +92,22 @@ const TrainspaceStepInner = ({
 }) => {
   const Component = STEP_SETTINGS[TRAINSPACE_SETTINGS.steps[step]].component;
   const [isStepModified, setIsStepModified] = useState<boolean>(false);
+  const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
   const [train] = useTrainTabularMutation();
   const dispatch = useAppDispatch();
   const router = useRouter();
+
+  let trainbuttontext: string | JSX.Element;
+  if (isButtonClicked) {
+    trainbuttontext = <CircularProgress />;
+  } else {
+    if (step < TRAINSPACE_SETTINGS.steps.length - 1) {
+      trainbuttontext = "Next";
+    } else {
+      trainbuttontext = "Train";
+    }
+  }
+
   useEffect(() => {
     if (trainspace.step < TRAINSPACE_SETTINGS.steps.length)
       setStep(trainspace.step);
@@ -120,22 +134,40 @@ const TrainspaceStepInner = ({
               Previous
             </Button>
           ) : null}
-          <Button
-            variant={
-              step < trainspace.step && !isStepModified && !isModified
-                ? "outlined"
-                : "contained"
-            }
-            onClick={() => {
-              if (step < trainspace.step && !isStepModified && !isModified) {
-                setStep(step + 1);
-                return;
+
+          {isButtonClicked ? (
+            <Button
+              disabled
+              variant={
+                step < trainspace.step && !isStepModified && !isModified
+                  ? "outlined"
+                  : "contained"
               }
-              handleSubmit(submitTrainspace)();
-            }}
-          >
-            {step < TRAINSPACE_SETTINGS.steps.length - 1 ? "Next" : "Train"}
-          </Button>
+            >
+              {trainbuttontext}
+            </Button>
+          ) : (
+            <Button
+              variant={
+                step < trainspace.step && !isStepModified && !isModified
+                  ? "outlined"
+                  : "contained"
+              }
+              onClick={() => {
+                if (step < trainspace.step && !isStepModified && !isModified) {
+                  setStep(step + 1);
+                  return;
+                }
+                if (step === TRAINSPACE_SETTINGS.steps.length - 1) {
+                  setIsButtonClicked(true);
+                }
+
+                handleSubmit(submitTrainspace)();
+              }}
+            >
+              {trainbuttontext}
+            </Button>
+          )}
         </Stack>
       )}
       setIsModified={setIsStepModified}

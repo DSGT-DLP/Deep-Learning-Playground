@@ -1,17 +1,15 @@
 import HtmlTooltip from "@/common/components/HtmlTooltip";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InfoIcon from "@mui/icons-material/Info";
 import {
   Button,
   Card,
   Divider,
-  IconButton,
   Paper,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -20,6 +18,7 @@ import ReactFlow, {
   Handle,
   MiniMap,
   Node,
+  NodeTypes,
   Position,
   addEdge,
   useEdgesState,
@@ -50,23 +49,20 @@ const initialNodes: Node<NodeData>[] = [
     id: `root`,
     type: "input",
     position: { x: 0, y: 0 },
-    data: { label: "Start", value: "root" },
-  },
-  {
-    id: `RELU-${Math.random() * 100}`,
-    type: "textUpdater",
-    position: { x: 0, y: 100 },
-    data: { label: "ReLU", value: "RELU" },
+    data: {
+      label: "Start",
+      value: "root",
+      parameters: [],
+      onChange: () => undefined,
+    },
   },
 ];
 const initialEdges: Edge[] = [{ id: "e1-2", source: "1", target: "2" }];
-const nodeTypes = { textUpdater: TextUpdaterNode };
+const nodeTypes: NodeTypes = { textUpdater: TextUpdaterNode };
 
 export default function TabularDnd() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-  console.log(nodes);
 
   const onChange = useCallback((args: OnChangeArgs) => {
     setNodes((nds) =>
@@ -140,12 +136,13 @@ export default function TabularDnd() {
 }
 
 interface TextUpdaterNodeProps {
+  id: string;
   data: NodeData;
   isConnectable: boolean;
 }
 
 function TextUpdaterNode(props: TextUpdaterNodeProps) {
-  const { data, isConnectable } = props;
+  const { data, isConnectable, id } = props;
   const layer = STEP_SETTINGS.PARAMETERS.layers[data.value as ALL_LAYERS];
 
   return (
@@ -166,10 +163,8 @@ function TextUpdaterNode(props: TextUpdaterNodeProps) {
             <HtmlTooltip
               title={
                 <React.Fragment>
-                  <Typography color="inherit">
-                    {STEP_SETTINGS.PARAMETERS.layers[data.value].label}
-                  </Typography>
-                  {STEP_SETTINGS.PARAMETERS.layers[data.value].description}
+                  <Typography color="inherit">{layer.label}</Typography>
+                  {layer.description}
                 </React.Fragment>
               }
             >
@@ -189,7 +184,13 @@ function TextUpdaterNode(props: TextUpdaterNodeProps) {
               >
                 {layer.parameters.map((parameter, index) => (
                   <TextField
-                    onBlur={data.onChange}
+                    onBlur={(e) =>
+                      data.onChange({
+                        id: id,
+                        newValue: Number(e.target.value),
+                        parameterIndex: index,
+                      })
+                    }
                     key={index}
                     label={parameter.label}
                     defaultValue={data.parameters?.[index]}

@@ -83,7 +83,7 @@ export default function TabularDnd() {
           <Typography variant="h2" fontSize={25}>
             Layers
           </Typography>
-          <Stack direction="row" spacing={3}>
+          <Stack direction="row" gap={1} flexWrap="wrap" >
             {STEP_SETTINGS.PARAMETERS.layerValues.map((value) => (
               <Button
                 key={value}

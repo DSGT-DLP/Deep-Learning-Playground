@@ -6,20 +6,14 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import InfoIcon from "@mui/icons-material/Info";
 
 import {
-  Autocomplete,
   Card,
   Container,
   Divider,
-  FormControl,
   FormControlLabel,
   FormGroup,
-  FormLabel,
   IconButton,
   MenuItem,
   Paper,
-  Radio,
-  RadioGroup,
-  Slider,
   Stack,
   Switch,
   TextField,

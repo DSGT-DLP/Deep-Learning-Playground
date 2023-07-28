@@ -17,7 +17,6 @@ import {
   Tab,
   Tabs,
   Typography,
-  Paper,
   Alert,
 } from "@mui/material";
 import { useAppSelector } from "@/common/redux/hooks";

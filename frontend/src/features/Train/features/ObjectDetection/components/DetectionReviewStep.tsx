@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { TrainspaceData } from "../types/tabularTypes";
+import { TrainspaceData } from "../types/detectionTypes";
 import { Stack, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
-import { updateTabularTrainspaceData } from "../redux/tabularActions";
-import { ReviewData } from "../types/tabularTypes";
+import { updateDetectionTrainspaceData } from "../redux/detectionActions";
+import { ReviewData } from "../types/detectionTypes";
 import { useForm } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
@@ -33,15 +33,12 @@ const TabularReviewStep = ({
   }, []);
   return (
     <Stack spacing={3}>
-      <Typography>{`Dataset: ${trainspace.datasetData.name}`}</Typography>
-      <Typography>{`Is Default?: ${trainspace.datasetData.isDefaultDataset}`}</Typography>
-      <Typography>{`Target Column: ${trainspace.parameterData.targetCol}`}</Typography>
-      <Typography>{`Feature Columns: ${trainspace.parameterData.features.join()}`}</Typography>
+      <Typography>{`Detection Type: ${trainspace.parameterData.detectionType}`}</Typography>
+      <Typography>{`Detection Problem Type: ${trainspace.parameterData.detectionProblemType}`}</Typography>
       <Controller
         control={control}
         name="notificationPhoneNumber"
         rules={{
-          // ref: https://stackoverflow.com/a/16699507/11031425
           pattern: /^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
         }}
         render={({ field: { onChange } }) => (
@@ -75,7 +72,7 @@ const TabularReviewStep = ({
       {renderStepperButtons((trainspaceData) => {
         handleSubmit((data) => {
           dispatch(
-            updateTabularTrainspaceData({
+            updateDetectionTrainspaceData({
               current: {
                 ...trainspaceData,
                 reviewData: data,

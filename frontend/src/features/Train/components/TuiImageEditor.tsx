@@ -16,6 +16,8 @@ const ReactImageEditor = React.forwardRef((props, ref) => (
   <ReactImageEditorWrapper {...props} editorRef={ref} />
 ));
 
+ReactImageEditor.displayName = "ReactImageEditor";
+
 const dataURLtoFile = (dataurl: string, filename: string) => {
   const arr = dataurl.split(",");
   if (arr.length === 0) {
@@ -39,7 +41,7 @@ const TuiImageEditor = ({ dataSource }: { dataSource: DATA_SOURCE }) => {
   const [fileType, setFileType] = React.useState("jpeg");
   const [uploadFile] = useUploadDatasetFileMutation();
   const uploadImage = (filename: string) => {
-    const data = tui.current.getInstance().toDataURL({ fileType: fileType });
+    const data = tui.current.getInstance().toDataURL({ fileType });
     const file = dataURLtoFile(data, filename);
     uploadFile({ dataSource, file });
   };

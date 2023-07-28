@@ -30,7 +30,7 @@ const TrainspaceLayout = ({
         alignItems={"stretch"}
         sx={{ height: "100%" }}
       >
-        {dataSource != "OBJECT_DETECTION" ? (
+        {dataSource !== "OBJECT_DETECTION" ? (
           <Grid item sm={5}>
             <Card style={{ height: "75vh", position: "sticky", top: "12.5vh" }}>
               <SyntaxHighlighter

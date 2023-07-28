@@ -3,7 +3,7 @@ import {
   FileUploadData,
   ImageUploadData,
 } from "@/features/Train/types/trainTypes";
-import { Button, Radio, Stack, Typography } from "@mui/material";
+import { Button, Radio, Typography } from "@mui/material";
 import { Controller, UseFormReturn } from "react-hook-form";
 import { formatDate } from "@/common/utils/dateFormat";
 import { useGetDatasetFilesDataQuery } from "@/features/Train/redux/trainspaceApi";
@@ -24,7 +24,7 @@ export const UploadImagePanel = ({
     <>
       <TuiImageEditor dataSource={dataSource} />
       {methods.formState.errors.name && (
-        <Typography>Please select a file</Typography>
+        <Typography color={"red"}>Please select a file</Typography>
       )}
       <Button variant="outlined" onClick={() => refetch()}>
         Refresh

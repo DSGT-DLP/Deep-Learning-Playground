@@ -28,43 +28,27 @@ import "reactflow/dist/style.css";
 import { STEP_SETTINGS } from "../constants/tabularConstants";
 import { ParameterData } from "../types/tabularTypes";
 
-type ALL_LAYERS = keyof typeof STEP_SETTINGS.PARAMETERS.layers;
-
-interface OnChangeArgs {
-  id: string;
-  newValue: number;
-  parameterIndex: number;
+interface TabularDndProps {
+  exportLayers?: (layers: ParameterData["layers"][]) => void;
 }
 
-interface NodeData {
-  label:
-    | (typeof STEP_SETTINGS.PARAMETERS.layers)[ALL_LAYERS]["label"]
-    | "Start";
-  value: ALL_LAYERS | "root";
-  parameters?: number[];
-  onChange: (args: OnChangeArgs) => void;
-}
-
-const initialNodes: Node<NodeData>[] = [
-  {
-    id: `root`,
-    type: "input",
-    position: { x: 0, y: 0 },
-    deletable: false,
-    data: {
-      label: "Start",
-      value: "root",
-      parameters: [],
-      onChange: () => undefined,
-    },
-  },
-];
-const initialEdges: Edge[] = [{ id: "e1-2", source: "1", target: "2" }];
-const nodeTypes: NodeTypes = { textUpdater: TextUpdaterNode };
-
-export default function TabularDnd() {
+export default function TabularDnd(props: TabularDndProps) {
+  const { exportLayers } = props;
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  export function handleExportLayers(): ParameterData["layers"][] | undefined {
+    const layers: ParameterData["layers"][] = [];
+
+    const directedEdges: Record<string, Node<NodeData>> = {};
+
+    edges.forEach((edge) => {
+      const sourceNode = nodes.find((node) => node.id === edge.source);
+      const targetNode = nodes.find((node) => node.id === edge.target);
+      directedEdges[sourceNode] = targetNode;
+
+    return [];
+  }
 
   const onChange = useCallback((args: OnChangeArgs) => {
     setNodes((nds) =>
@@ -220,6 +204,36 @@ function TextUpdaterNode(props: TextUpdaterNodeProps) {
   );
 }
 
-export function exportLayers(): ParameterData["layers"][] | undefined {
-  return [];
+type ALL_LAYERS = keyof typeof STEP_SETTINGS.PARAMETERS.layers;
+
+interface OnChangeArgs {
+  id: string;
+  newValue: number;
+  parameterIndex: number;
 }
+
+interface NodeData {
+  label:
+    | (typeof STEP_SETTINGS.PARAMETERS.layers)[ALL_LAYERS]["label"]
+    | "Start";
+  value: ALL_LAYERS | "root";
+  parameters?: number[];
+  onChange: (args: OnChangeArgs) => void;
+}
+
+const initialNodes: Node<NodeData>[] = [
+  {
+    id: `root`,
+    type: "input",
+    position: { x: 0, y: 0 },
+    deletable: false,
+    data: {
+      label: "Start",
+      value: "root",
+      parameters: [],
+      onChange: () => undefined,
+    },
+  },
+];
+const initialEdges: Edge[] = [{ id: "e1-2", source: "1", target: "2" }];
+const nodeTypes: NodeTypes = { textUpdater: TextUpdaterNode };

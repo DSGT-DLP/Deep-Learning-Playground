@@ -35,6 +35,7 @@ const TabularTrainspace = () => {
   return (
     <TrainspaceLayout
       code={`#Code to train your model locally\nprint("Hello World")`}
+      dataSource={trainspace.dataSource}
       nameField={
         <TextField
           id="filled-basic"

@@ -5,53 +5,12 @@ import {
 } from "@/features/Train/types/trainTypes";
 import { Button, Radio, Stack, Typography } from "@mui/material";
 import { Controller, UseFormReturn } from "react-hook-form";
-import dynamic from "next/dynamic";
 import { formatDate } from "@/common/utils/dateFormat";
-import {
-  useGetDatasetFilesDataQuery,
-  useUploadDatasetFileMutation,
-} from "@/features/Train/redux/trainspaceApi";
+import { useGetDatasetFilesDataQuery } from "@/features/Train/redux/trainspaceApi";
 import { DataGrid } from "@mui/x-data-grid";
 import prettyBytes from "pretty-bytes";
 import React from "react";
-
-const FilerobotImageEditor = dynamic(
-  () => import("react-filerobot-image-editor"),
-  {
-    ssr: false,
-  }
-);
-
-const TABS = dynamic(
-  () => import("react-filerobot-image-editor").then((lib) => lib.TABS),
-  {
-    ssr: false,
-  }
-);
-
-const TOOLS = dynamic(
-  () => import("react-filerobot-image-editor").then((lib) => lib.TOOLS),
-  {
-    ssr: false,
-  }
-);
-
-const dataURLtoFile = (dataurl: string, filename: string) => {
-  const arr = dataurl.split(",");
-  if (arr.length === 0) {
-    return new File([""], filename);
-  }
-  const matched = arr[0].match(/:(.*?);/);
-  const mime = matched ? matched[1] : undefined;
-  const bstr = atob(arr[1]);
-  let n = bstr.length;
-  const u8arr = new Uint8Array(n);
-  while (n) {
-    u8arr[n - 1] = bstr.charCodeAt(n - 1);
-    n -= 1; // to make eslint happy
-  }
-  return new File([u8arr], filename, { type: mime });
-};
+import TuiImageEditor from "./TuiImageEditor";
 
 export const UploadImagePanel = ({
   dataSource,
@@ -60,75 +19,13 @@ export const UploadImagePanel = ({
   dataSource: DATA_SOURCE;
   methods: UseFormReturn<ImageUploadData, unknown>;
 }) => {
-  const [uploadFile] = useUploadDatasetFileMutation();
   const { data, refetch } = useGetDatasetFilesDataQuery({ dataSource });
   return (
     <>
+      <TuiImageEditor dataSource={dataSource} />
       {methods.formState.errors.name && (
         <Typography>Please select a file</Typography>
       )}
-      <Stack direction={"row"} spacing={2}>
-        <FilerobotImageEditor
-          source="https://scaleflex.airstore.io/demo/stephen-walker-unsplash.jpg"
-          onSave={(editedImageObject) => {
-            const file = dataURLtoFile(
-              editedImageObject.imageBase64,
-              editedImageObject.fullName
-            );
-            uploadFile({ dataSource, file });
-          }}
-          annotationsCommon={{
-            fill: "#ff0000",
-          }}
-          Text={{ text: "Filerobot..." }}
-          Rotate={{ angle: 90, componentType: "slider" }}
-          Crop={{
-            presetsItems: [
-              {
-                titleKey: "classicTv",
-                descriptionKey: "4:3",
-                ratio: (4 / 3).toString(),
-              },
-              {
-                titleKey: "cinemascope",
-                descriptionKey: "21:9",
-                ratio: (21 / 9).toString(),
-              },
-            ],
-            presetsFolders: [
-              {
-                titleKey: "socialMedia",
-
-                // icon: Social, // optional, Social is a React Function component. Possible (React Function component, string or HTML Element)
-                groups: [
-                  {
-                    titleKey: "facebook",
-                    items: [
-                      {
-                        titleKey: "profile",
-                        width: 180,
-                        height: 180,
-                        descriptionKey: "fbProfileSize",
-                      },
-                      {
-                        titleKey: "coverPhoto",
-                        width: 820,
-                        height: 312,
-                        descriptionKey: "fbCoverPhotoSize",
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          }}
-          tabsIds={[TABS.ADJUST, TABS.ANNOTATE, TABS.WATERMARK]} // or {['Adjust', 'Annotate', 'Watermark']}
-          defaultTabId={TABS.ANNOTATE} // or 'Annotate'
-          defaultToolId={TOOLS.TEXT} // or 'Text'
-          savingPixelRatio={0}
-          previewPixelRatio={0}
-        />
-      </Stack>
       <Button variant="outlined" onClick={() => refetch()}>
         Refresh
       </Button>

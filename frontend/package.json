@@ -15,6 +15,7 @@
     "@reduxjs/toolkit": "^1.8.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^13.5.0",
+    "@toast-ui/react-image-editor": "^3.15.2",
     "@types/crypto-js": "^4.1.1",
     "@types/file-saver": "^2.0.5",
     "@types/gestalt": "^101.0.0",

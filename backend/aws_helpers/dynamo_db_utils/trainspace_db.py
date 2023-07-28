@@ -1,8 +1,8 @@
-from backend.aws_helpers.dynamo_db_utils.constants import (
+from aws_helpers.dynamo_db_utils.constants import (
     TRAINSPACE_TABLE_NAME,
     TrainStatus,
 )
-from backend.aws_helpers.dynamo_db_utils.dynamo_db_utils import (
+from aws_helpers.dynamo_db_utils.dynamo_db_utils import (
     create_dynamo_item,
     get_dynamo_item_by_key,
     get_dynamo_items_by_gsi,
@@ -27,7 +27,7 @@ class TrainspaceData:
     name: str = ""
     parameters_data: dict = None
     review_data: str = ""
-    # status: TrainStatus = TrainStatus.QUEUED
+    status: str = TrainStatus.QUEUED.name
 
 
 def getTrainspaceData(trainspace_id: str) -> dict:

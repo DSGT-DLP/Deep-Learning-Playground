@@ -28,8 +28,43 @@ import Link from "next/link";
 import Footer from "@/common/components/Footer";
 import { SerializedError } from "@reduxjs/toolkit";
 import { useRouter } from "next/router";
+import CircularProgress from "@mui/material/CircularProgress";
+
+const LoadingOverlay = () => {
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        zIndex: 9999,
+        color: "#fff",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress color="primary" size={80} />
+        <p style={{ marginTop: 10, fontSize: 16 }}>
+          Loading... Please wait a moment
+        </p>
+      </div>
+    </div>
+  );
+};
 
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [fullName, setFullName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -65,6 +100,7 @@ const Login = () => {
             position: "relative",
           }}
           onClick={async () => {
+            setIsLoading(true);
             try {
               await dispatch(signInViaGoogleRedirect()).unwrap();
             } catch (e) {
@@ -72,6 +108,7 @@ const Login = () => {
                 position: toast.POSITION.TOP_CENTER,
               });
             }
+            setIsLoading(false);
           }}
         >
           <Image
@@ -85,6 +122,7 @@ const Login = () => {
           className="login-button github"
           style={{ position: "relative" }}
           onClick={async () => {
+            setIsLoading(true);
             try {
               await dispatch(signInViaGithubRedirect()).unwrap();
             } catch (e) {
@@ -92,6 +130,7 @@ const Login = () => {
                 position: toast.POSITION.TOP_CENTER,
               });
             }
+            setIsLoading(false);
           }}
         >
           <Image
@@ -157,6 +196,7 @@ const Login = () => {
           className="mb-2"
           onClick={async () => {
             if (isRegistering) {
+              setIsLoading(true);
               try {
                 await dispatch(
                   registerViaEmailAndPassword({
@@ -174,7 +214,9 @@ const Login = () => {
                   position: toast.POSITION.TOP_CENTER,
                 });
               }
+              setIsLoading(false);
             } else {
+              setIsLoading(true);
               try {
                 await dispatch(
                   signInViaEmailAndPassword({ email, password })
@@ -184,6 +226,7 @@ const Login = () => {
                   position: toast.POSITION.TOP_CENTER,
                 });
               }
+              setIsLoading(false);
             }
           }}
         >
@@ -199,9 +242,19 @@ const Login = () => {
       </div>
     </>
   );
+  if (isLoading) {
+    return (
+      <>
+        <NavbarMain />
+        <LoadingOverlay /> {/* Display the loading overlay */}
+      </>
+    );
+  }
+
   if (user !== undefined) {
     return <></>;
   }
+
   return (
     <>
       <NavbarMain />

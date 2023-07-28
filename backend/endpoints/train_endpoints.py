@@ -11,17 +11,17 @@ from backend.aws_helpers.dynamo_db_utils.dynamo_db_utils import (
     create_dynamo_item_from_obj,
 )
 
-from backend.aws_helpers.dynamo_db_utils.trainspace_db import (
+from aws_helpers.dynamo_db_utils.trainspace_db import (
     TrainspaceData,
     createTrainspaceData,
 )
-from backend.common.ai_drive import dl_tabular_drive, dl_img_drive, ml_drive
-from backend.common.constants import (
+from common.ai_drive import dl_tabular_drive, dl_img_drive, ml_drive
+from common.constants import (
     UNZIPPED_DIR_NAME,
 )
-from backend.common.utils import *
-from backend.dl.detection import detection_img_drive
-from backend.endpoints.utils import (
+from common.utils import *
+from dl.detection import detection_img_drive
+from endpoints.utils import (
     send_detection_results,
     send_success,
     send_traceback_error,

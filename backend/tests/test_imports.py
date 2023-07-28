@@ -1,0 +1,20 @@
+def test_all_imports():
+    import aws_helpers.aws_rekognition_utils.rekognition_client
+    import aws_helpers.aws_secrets_utils.build_env
+    import aws_helpers.dynamo_db_utils.trainspace_db
+    import aws_helpers.dynamo_db_utils.userprogress_db
+    import aws_helpers.lambda_utils.lambda_client
+    import aws_helpers.s3_utils.s3_client
+    import aws_helpers.sqs_utils.sqs_client
+    import common.constants
+    import common.dataset
+    import common.default_datasets
+    import common.email_notifier
+    import common.loss_functions
+    import common.optimizer
+    import common.utils
+    import dl.dl_eval
+    import dl.dl_model
+    import dl.dl_model_parser
+    import dl.dl_trainer
+    import ml.ml_trainer

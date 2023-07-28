@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import DEMO_VIDEO from "/public/images/demo_video.gif";
-import softmax_eq from "/public/images/wiki_images/softmax_equation.png";
-import tanh_eq from "/public/images/wiki_images/tanh_equation.png";
-import tanh_plot from "/public/images/wiki_images/tanh_plot.png";
-import sigmoid_eq from "/public/images/wiki_images/sigmoid_equation.png";
-import dropout_dg from "/public/images/wiki_images/dropout_diagram.png";
-import conv2dgif from "/public/images/wiki_images/conv2d.gif";
-import conv2dgif2 from "/public/images/wiki_images/conv2d2.gif";
-import maxpool2dgif from "/public/images/wiki_images/maxpool2d.gif";
-import avgmaxpoolgif from "/public/images/wiki_images/avgpool_maxpool.gif";
-import batchnorm from "/public/images/wiki_images/batchnorm_diagram.png";
 import Image from "next/image";
 import NavbarMain from "@/common/components/NavBarMain";
 import Footer from "@/common/components/Footer";
+
+//Image paths
+const DROPOUT_DIAGRAM_PATH = "/images/wiki_images/dropout_diagram.png";
+const TANH_EQUATION_PATH = "/images/wiki_images/tanh_equation.png";
+const TANH_PLOT_PATH = "/images/wiki_images/tanh_plot.png";
+const SIGMOID_EQUATION_PATH = "/images/wiki_images/sigmoid_equation.png";
+const SOFTMAX_EQUATION_PATH = "/images/wiki_images/softmax_equation.png";
+const CONV2D_GIF_PATH = "/images/wiki_images/conv2d.gif";
+const CONV2D2_GIF_PATH = "/images/wiki_images/conv2d2.gif";
+const MAXPOOL2D_GIF_PATH = "/images/wiki_images/maxpool2d.gif";
+const AVGPOOL_MAXPOOL_GIF_PATH = "/images/wiki_images/avgpool_maxpool.gif";
+const BATCHNORM_DIAGRAM_PATH = "/images/wiki_images/batchnorm_diagram.png";
+const DEMO_VIDEO_PATH = "/images/demo_video.gif";
 
 const displayChange = (
   display: DisplayValue,
@@ -180,9 +182,10 @@ const Wiki = () => {
 
               <p> Below is the dropout layer in action (notice the X marks) </p>
               <Image
-                src={dropout_dg}
+                src={DROPOUT_DIAGRAM_PATH}
                 alt="Dropout diagram"
-                style={{ maxHeight: 200, maxWidth: 400, marginInline: "auto" }}
+                width={400}
+                height={200}
               />
 
               <h5>Documentation</h5>
@@ -256,9 +259,11 @@ const Wiki = () => {
               <p>The Tanh formula is:</p>
 
               <Image
-                src={tanh_eq}
+                src={TANH_EQUATION_PATH}
                 alt="Tanh equation"
-                style={{ maxHeight: 200, marginInline: "auto" }}
+                width={200}
+                height={50}
+                style={{ marginInline: "auto" }}
               />
 
               <p>
@@ -268,8 +273,10 @@ const Wiki = () => {
               </p>
 
               <Image
-                src={tanh_plot}
+                src={TANH_PLOT_PATH}
                 alt="Tanh plot"
+                width={400}
+                height={300}
                 style={{ maxHeight: 300, marginInline: "auto" }}
               />
 
@@ -310,8 +317,10 @@ const Wiki = () => {
 
               <p> Plot and Equation of the sigmoid function is shown below</p>
               <Image
-                src={sigmoid_eq}
+                src={SIGMOID_EQUATION_PATH}
                 alt="Sigmoid plot"
+                width={200}
+                height={200}
                 style={{ maxHeight: 300, maxWidth: 500, marginInline: "auto" }}
               />
 
@@ -359,9 +368,10 @@ const Wiki = () => {
               <p>The Softmax formula is:</p>
 
               <Image
-                src={softmax_eq}
+                src={SOFTMAX_EQUATION_PATH}
                 alt="Softmax equation"
-                style={{ maxHeight: 200, maxWidth: 500, marginInline: "auto" }}
+                width={500}
+                height={200}
               />
 
               <p>
@@ -413,14 +423,18 @@ const Wiki = () => {
               <p>Helpful gifs to understand conv2d</p>
 
               <Image
-                src={conv2dgif}
+                src={CONV2D_GIF_PATH}
                 alt="Conv 2d gif #1"
+                width={200}
+                height={200}
                 style={{ maxHeight: 400, marginInline: "auto" }}
               />
 
               <Image
-                src={conv2dgif2}
+                src={CONV2D2_GIF_PATH}
                 alt="Conv 2d gif #2"
+                width={500}
+                height={500}
                 style={{ maxHeight: 500, marginInline: "auto" }}
               />
 
@@ -452,8 +466,10 @@ const Wiki = () => {
               <p>Max pool in action</p>
 
               <Image
-                src={maxpool2dgif}
+                src={MAXPOOL2D_GIF_PATH}
                 alt="Max pool 2d gif"
+                width={200}
+                height={200}
                 style={{ maxHeight: 400, marginInline: "auto" }}
               />
 
@@ -486,8 +502,10 @@ const Wiki = () => {
               <p>Adaptive Avg Pool and Max Pool 2d in action</p>
 
               <Image
-                src={avgmaxpoolgif}
+                src={AVGPOOL_MAXPOOL_GIF_PATH}
                 alt="Max pool and Avg pool side by side"
+                width={500}
+                height={500}
                 style={{ maxHeight: 400, marginInline: "auto" }}
               />
 
@@ -528,8 +546,10 @@ const Wiki = () => {
               </p>
 
               <Image
-                src={batchnorm}
+                src={BATCHNORM_DIAGRAM_PATH}
                 alt="Batch norm 2d"
+                width={500}
+                height={500}
                 style={{ maxHeight: 400, marginInline: "auto" }}
               />
 
@@ -605,9 +625,11 @@ const Wiki = () => {
         <div className="sections">
           <h2>Live Demo</h2>
           <Image
-            src={DEMO_VIDEO}
+            src={DEMO_VIDEO_PATH}
             alt="GIF showing a demo of the playground"
             loading="lazy"
+            width={500}
+            height={500}
             style={{ width: "100%" }}
           />
         </div>

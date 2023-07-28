@@ -101,8 +101,10 @@ export const UploadDatasetPanel = ({
                   uploadFile({
                     dataSource: dataSource,
                     file: e.target.files[0],
-                  });
-                  toast.success("File uploaded successfully!");
+                  })
+                    .unwrap()
+                    .then(() => toast.success("File uploaded successfully!"))
+                    .catch(() => toast.error("File upload failed"));
                 }
               }
               e.target.value = "";

@@ -31,27 +31,6 @@ if __name__ == "__main__":
     print(6, delete_dynamo_item("trainspace", "ergsdf"))
 ```
 
-## execution_db.py
-
-```py
-if __name__ == "__main__":
-    print(1)
-    print(2, getAllUserExecutionData("8hDeAbdZ9Lg301QFGdEYYeAq4Kw2"))
-    print(3, getExecutionData("exfddc9ad2666d31cae1790167aefc9aa34eb5d06a28e1805e8fa8881845d463a8"))
-    print(3, updateExecutionData("exfddc9ad2666d31cae1790167aefc9aa34eb5d06a28e1805e8fa8881845d463a8", {
-        "timestamp": datetime.now().isoformat(),
-    }))
-    print(4, createExecutionData(
-        ExecutionData(
-            execution_id=str(random.random()),
-            data_source='TABULAR',
-            name='hola',
-            status='QUEUED',
-            timestamp=str(datetime.now().isoformat()),
-            user_id='bleh'
-    )))
-```
-
 ## trainspace.py
 
 ```py
@@ -128,6 +107,40 @@ if __name__ == "__main__":
             )
         ),
     )
+    data = {
+        "trainspace_id": "000033",
+        "uid": "00001",
+        "name": "My Trainspace",
+        "data_source": "TABULAR",
+        "dataset_data": {"name": "IRIS", "is_default_dataset": True},
+        "parameters_data": {
+            "target_col": "target",
+            "features": [
+                "sepal length (cm)",
+                "sepal width (cm)",
+                "petal length (cm)",
+                "petal width (cm)",
+            ],
+            "problem_type": "CLASSIFICATION",
+            "criterion": "CELOSS",
+            "optimizer_name": "SGD",
+            "shuffle": True,
+            "epochs": 5,
+            "test_size": 0.2,
+            "batch_size": 20,
+            "layers": [
+                {"value": "LINEAR", "parameters": [10, 3]},
+                {"value": "RELU", "parameters": []},
+                {"value": "LINEAR", "parameters": [3, 10]},
+                {"value": "SOFTMAX", "parameters": [-1]},
+            ],
+        },
+        "review_data": {
+            "notification_email": "afarisdurrani@gmail.com",
+            "notification_phone_number": "",
+        },
+    }
+    print(6, TrainspaceData(**(data)))
 ```
 
 ## userprogress_db.py

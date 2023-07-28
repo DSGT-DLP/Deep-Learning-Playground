@@ -1,7 +1,7 @@
 # middleware.py
 from werkzeug.wrappers import Request, Response, ResponseStream
 
-from backend.firebase_helpers.authenticate import authenticate
+from firebase_helpers.authenticate import authenticate
 import json
 
 

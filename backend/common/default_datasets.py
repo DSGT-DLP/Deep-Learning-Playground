@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.datasets import *
 from enum import Enum
-from backend.common.constants import DEFAULT_DATASETS
+from common.constants import DEFAULT_DATASETS
 import torchvision
 import torch
 
@@ -62,7 +62,7 @@ def get_default_dataset(dataset, target=None, features=None):
             target_names = []
             try:
                 target_names = list(raw_data["target_names"])
-            except:
+            except Exception:
                 pass
             default_dataset = pd.DataFrame(
                 data=np.c_[raw_data["data"], raw_data["target"]],

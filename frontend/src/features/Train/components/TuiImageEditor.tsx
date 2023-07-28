@@ -46,15 +46,15 @@ const TuiImageEditor = ({ dataSource }: { dataSource: DATA_SOURCE }) => {
   return (
     <Stack alignItems="center" spacing={3}>
       <ReactImageEditor
-        editorRef={tui}
+        ref={tui}
         includeUI={{
           loadImage: {
             path: "",
           },
-          menu: ["shape", "filter"],
+          menu: ["shape", "filter", "text", "mask", "icon", "draw", "crop"],
           initMenu: "",
           uiSize: {
-            width: "1000px",
+            width: "1200px",
             height: "700px",
           },
           menuBarPosition: "bottom",

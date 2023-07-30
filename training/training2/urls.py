@@ -22,15 +22,13 @@ from ninja import NinjaAPI, Path, Schema
 from numpy import ndarray
 import pandas as pd
 from sklearn.utils import Bunch
+import torch
 from torch.utils.data import DataLoader
 from training2.dataset import SklearnDatasetCreator
+from training2.dl_model import DLModel, LayerParams
+from training2.optimizer import getOptimizer
 
 api = NinjaAPI()
-
-
-class Layer(Schema):
-    value: str
-    parameters: list[str]
 
 
 class TabularParams(Schema):
@@ -44,7 +42,7 @@ class TabularParams(Schema):
     epochs: int
     test_size: float
     batch_size: int
-    user_arch: Layer
+    user_arch: list[LayerParams]
 
 
 @api.post("/tabular")
@@ -54,18 +52,24 @@ def tabularTrain(request, tabularParams: TabularParams):
             tabularParams.default, tabularParams.test_size, tabularParams.shuffle
         )
         train_loader = DataLoader(
-            dataCreator.getTrainDataset(),
+            dataCreator.createTrainDataset(),
             batch_size=tabularParams.batch_size,
             shuffle=False,
             drop_last=True,
         )
 
         test_loader = DataLoader(
-            dataCreator.getTestDataset(),
+            dataCreator.createTestDataset(),
             batch_size=tabularParams.batch_size,
             shuffle=False,
             drop_last=True,
         )
+
+        model = DLModel.fromLayerParamsList(tabularParams.user_arch)
+
+        optimizer = getOptimizer(model, tabularParams.optimizer_name, 0.05)
+
+        # criterion =
 
     return tabularParams
 

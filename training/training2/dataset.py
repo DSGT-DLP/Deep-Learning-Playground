@@ -1,0 +1,82 @@
+from abc import ABC, abstractmethod
+from typing import Callable, Union, cast
+
+from numpy import ndarray
+from sklearn.model_selection import train_test_split
+from sklearn.utils import Bunch
+from sklearn.conftest import fetch_california_housing
+from sklearn.datasets import load_breast_cancer, load_diabetes, load_iris
+from torch.utils.data import TensorDataset
+import numpy as np
+import pandas as pd
+import torch
+from torch.utils.data import Dataset
+from torch.autograd import Variable
+
+
+class TrainTestDatasetCreator(ABC):
+    "Creator that creates train and test PyTorch datasets"
+
+    @abstractmethod
+    def getTrainDataset(self) -> Dataset:
+        pass
+
+    @abstractmethod
+    def getTestDataset(self) -> Dataset:
+        pass
+
+
+class SklearnDatasetCreator(TrainTestDatasetCreator):
+    DEFAULT_DATASETS: dict[
+        str, Callable[[], Union[Bunch, tuple[Bunch, tuple], tuple[ndarray, ndarray]]]
+    ] = {
+        "IRIS": load_iris,
+        "BREAST_CANCER": load_breast_cancer,
+        "CALIFORNIA_HOUSING": fetch_california_housing,
+        "DIABETES": load_diabetes,
+    }
+
+    def __init__(
+        self, X: pd.DataFrame, y: pd.Series, test_size: float, shuffle: bool
+    ) -> None:
+        super().__init__()
+        self.X_train, self.X_test, self.y_train, self.y_test = cast(
+            tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series],
+            train_test_split(X, y, test_size=test_size, shuffle=shuffle),
+        )
+
+    @classmethod
+    def fromDefault(cls, name: str, test_size: float, shuffle: bool):
+        raw_data = cls.DEFAULT_DATASETS[name]()
+        default_dataset = pd.DataFrame(
+            data=np.c_[raw_data["data"], raw_data["target"]],  # type: ignore
+            columns=raw_data["feature_names"] + ["target"],  # type: ignore
+        )
+        # remove any empty lines
+        default_dataset.dropna(how="all", inplace=True)
+
+        y = default_dataset["target"]
+        X = default_dataset.drop("target", axis=1)
+        return cls(X, y, test_size, shuffle)
+
+    def getTrainDataset(self) -> Dataset:
+        X_train_tensor = Variable(torch.Tensor(self.X_train.to_numpy()))
+        X_train_tensor = torch.reshape(
+            X_train_tensor, (X_train_tensor.size()[0], 1, X_train_tensor.size()[1])
+        )
+        X_train_tensor.requires_grad_(True)
+
+        y_train_tensor = Variable(torch.Tensor(self.y_train.to_numpy()))
+        y_train_tensor = torch.reshape(y_train_tensor, (y_train_tensor.size()[0], 1))
+        return TensorDataset(X_train_tensor, y_train_tensor)
+
+    def getTestDataset(self) -> Dataset:
+        X_test_tensor = Variable(torch.Tensor(self.X_test.to_numpy()))
+        X_test_tensor = torch.reshape(
+            X_test_tensor, (X_test_tensor.size()[0], 1, X_test_tensor.size()[1])
+        )
+        X_test_tensor.requires_grad_(True)
+
+        y_test_tensor = Variable(torch.Tensor(self.y_test.to_numpy()))
+        y_test_tensor = torch.reshape(y_test_tensor, (y_test_tensor.size()[0], 1))
+        return TensorDataset(X_test_tensor, y_test_tensor)

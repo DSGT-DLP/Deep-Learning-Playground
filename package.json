@@ -6,9 +6,9 @@
   "scripts": {
     "build:prod": "cd frontend && yarn install && REACT_APP_MODE=prod yarn run build",
     "installf": "cd frontend && yarn install",
-    "installb": "poetry config virtualenvs.in-project true && cd backend && poetry env remove --all && cd .. && yarn updateb",
+    "installb": "poetry config virtualenvs.in-project true && cd backend && poetry env remove --all && pyenv local 3.9 && cd .. && yarn updateb",
     "updateb": "cd backend && poetry install --no-root && poetry run ggshield auth login && poetry run pre-commit install",
-    "installa": "poetry config virtualenvs.in-project true && cd aws_write && poetry env remove --all && cd .. && yarn updatea",
+    "installa": "poetry config virtualenvs.in-project true && cd aws_write && poetry env remove --all && pyenv local 3.9 && cd .. && yarn updatea",
     "updatea": "cd aws_write && poetry install --no-root && poetry run ggshield auth login && poetry run pre-commit install",
     "startf": "cd frontend && yarn dev",
     "secrets": "cd backend && poetry run python -m aws_helpers.aws_secrets_utils.build_env",

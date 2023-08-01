@@ -5,7 +5,7 @@ from numpy import ndarray
 from sklearn.model_selection import train_test_split
 from sklearn.utils import Bunch
 from sklearn.conftest import fetch_california_housing
-from sklearn.datasets import load_breast_cancer, load_diabetes, load_iris
+from sklearn.datasets import load_breast_cancer, load_diabetes, load_iris, load_wine
 from torch.utils.data import TensorDataset
 import numpy as np
 import pandas as pd
@@ -34,6 +34,7 @@ class SklearnDatasetCreator(TrainTestDatasetCreator):
         "BREAST_CANCER": load_breast_cancer,
         "CALIFORNIA_HOUSING": fetch_california_housing,
         "DIABETES": load_diabetes,
+        "WINE": load_wine,
     }
 
     def __init__(

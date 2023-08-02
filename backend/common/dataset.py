@@ -20,6 +20,7 @@ from io import BytesIO
 
 FILE_UPLOAD_BUCKET_NAME = "dlp-upload-bucket"
 
+
 def read_dataset(url):
     """
     Given a url to a CSV dataset, read it and build temporary csv file
@@ -30,7 +31,7 @@ def read_dataset(url):
     try:
         r = requests.get(url).text
         csv_data = StringIO(r)
-        
+
         # Define the name of the temporary CSV file
         csv_file_name = "data.csv"
 
@@ -38,15 +39,17 @@ def read_dataset(url):
         csv_data_bytes = csv_data.getvalue().encode("utf-8")
 
         # Upload the temporary CSV file to the file upload S3 bucket
-        s3 = boto3.client('s3')
-        s3.upload_fileobj(BytesIO(csv_data_bytes), FILE_UPLOAD_BUCKET_NAME, csv_file_name)
-
+        s3 = boto3.client("s3")
+        s3.upload_fileobj(
+            BytesIO(csv_data_bytes), FILE_UPLOAD_BUCKET_NAME, csv_file_name
+        )
 
     except Exception as e:
         traceback.print_exc()
         raise Exception(
             "Reading Dataset from URL and uploading to S3 failed. Please check the validity of the URL."
         )
+
 
 def read_local_csv_file(file_path):
     """

@@ -21,6 +21,7 @@ from aws_helpers.s3_utils.s3_client import write_to_bucket
 
 FILE_UPLOAD_BUCKET_NAME = "dlp-upload-bucket"
 
+
 def read_dataset(url):
     """
     Given a url to a CSV dataset, read it and build a temporary csv file
@@ -46,6 +47,7 @@ def read_dataset(url):
         raise Exception(
             "Reading Dataset from URL and uploading to S3 failed. Please check the validity of the URL."
         )
+
 
 def read_local_csv_file(file_path):
     """

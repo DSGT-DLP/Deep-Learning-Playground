@@ -9,6 +9,7 @@ from common.dataset import read_dataset
 
 # Define the S3 bucket name
 S3_BUCKET_NAME = "dlp-upload-bucket"
+S3_REGION = "us-west-2"
 
 @pytest.mark.parametrize(
     "url,path_to_file",
@@ -27,7 +28,7 @@ S3_BUCKET_NAME = "dlp-upload-bucket"
 def test_dataset_url_reading(url, path_to_file):
     try:
         # Create the S3 bucket before running the test
-        s3 = boto3.client("s3")
+        s3 = boto3.client("s3", region_name=S3_REGION)
         s3.create_bucket(Bucket=S3_BUCKET_NAME)
 
         # Call read_dataset, which should upload the CSV to the mock S3 bucket

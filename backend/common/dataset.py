@@ -11,9 +11,14 @@ from enum import Enum
 from torch.utils.data import DataLoader
 from zipfile import ZipFile, is_zipfile
 from os import mkdir, path
-
+import boto3
+from botocore.exceptions import ClientError
+from io import StringIO
 from common.constants import *
+import requests
+from io import BytesIO
 
+FILE_UPLOAD_BUCKET_NAME = "dlp-upload-bucket"
 
 def read_dataset(url):
     """
@@ -23,18 +28,25 @@ def read_dataset(url):
         url (str): URL to dataset
     """
     try:
-        r = request.urlopen(url).read().decode("utf8").split("\n")
-        reader = csv.reader(r)
-        with open(CSV_FILE_PATH, mode="w", newline="") as f:
-            csvwriter = csv.writer(f)
-            for line in reader:
-                csvwriter.writerow(line)
+        r = requests.get(url).text
+        csv_data = StringIO(r)
+        
+        # Define the name of the temporary CSV file
+        csv_file_name = "data.csv"
+
+        # Encode the StringIO object as bytes before uploading to S3
+        csv_data_bytes = csv_data.getvalue().encode("utf-8")
+
+        # Upload the temporary CSV file to the file upload S3 bucket
+        s3 = boto3.client('s3')
+        s3.upload_fileobj(BytesIO(csv_data_bytes), FILE_UPLOAD_BUCKET_NAME, csv_file_name)
+
+
     except Exception as e:
         traceback.print_exc()
         raise Exception(
-            "Reading Dataset from URL failed. Might want to check the validity of the URL"
+            "Reading Dataset from URL and uploading to S3 failed. Please check the validity of the URL."
         )
-
 
 def read_local_csv_file(file_path):
     """

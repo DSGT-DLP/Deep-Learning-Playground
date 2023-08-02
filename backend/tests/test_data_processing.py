@@ -9,14 +9,19 @@ from common.dataset import read_dataset
 
 # Define the S3 bucket name
 S3_BUCKET_NAME = "dlp-upload-bucket"
-S3_REGION = "us-west-2" 
+S3_REGION = "us-west-2"
+
 
 @pytest.fixture
 def s3_client():
     with mock_s3():
         s3 = boto3.client("s3", region_name=S3_REGION)
-        s3.create_bucket(Bucket=S3_BUCKET_NAME, CreateBucketConfiguration={"LocationConstraint": S3_REGION})
+        s3.create_bucket(
+            Bucket=S3_BUCKET_NAME,
+            CreateBucketConfiguration={"LocationConstraint": S3_REGION},
+        )
         yield s3
+
 
 @pytest.mark.parametrize(
     "url,path_to_file",
@@ -48,6 +53,7 @@ def test_dataset_url_reading(url, path_to_file, s3_client):
 
     except Exception as e:
         pytest.fail(str(e))
+
 
 @pytest.mark.parametrize(
     "url,path_to_file",

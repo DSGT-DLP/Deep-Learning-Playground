@@ -41,6 +41,9 @@ def read_dataset(url):
         # Upload the temporary CSV file to the file upload S3 bucket
         write_to_bucket(BytesIO(csv_data_bytes), FILE_UPLOAD_BUCKET_NAME, csv_file_name)
 
+        # Remove the local temporary CSV file after uploading
+        os.remove(csv_file_name)
+        
     except Exception as e:
         traceback.print_exc()
         raise Exception(

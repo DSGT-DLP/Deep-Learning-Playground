@@ -36,20 +36,22 @@ def read_dataset(url):
         # Define the name of the temporary CSV file
         csv_file_name = "data.csv"
 
-        # Encode the StringIO object as bytes before uploading to S3
-        csv_data_bytes = csv_data.getvalue().encode("utf-8")
+        # Write the StringIO data to a local temporary file
+        with open(csv_file_name, mode="w", encoding="utf-8") as f:
+            f.write(csv_data.getvalue())
 
         # Upload the temporary CSV file to the file upload S3 bucket
-        write_to_bucket(BytesIO(csv_data_bytes), FILE_UPLOAD_BUCKET_NAME, csv_file_name)
+        write_to_bucket(csv_file_name, FILE_UPLOAD_BUCKET_NAME, csv_file_name)
 
         # Remove the local temporary CSV file after uploading
         os.remove(csv_file_name)
-        
+
     except Exception as e:
         traceback.print_exc()
         raise Exception(
             "Reading Dataset from URL and uploading to S3 failed. Please check the validity of the URL."
         )
+
 
 
 def read_local_csv_file(file_path):

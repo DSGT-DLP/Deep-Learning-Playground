@@ -24,9 +24,11 @@ import pandas as pd
 from sklearn.utils import Bunch
 import torch
 from torch.utils.data import DataLoader
+from training2.criterion import getCriterionHandler
 from training2.dataset import SklearnDatasetCreator
 from training2.dl_model import DLModel, LayerParams
 from training2.optimizer import getOptimizer
+from training2.trainer import ClassificationTrainer, Trainer
 
 api = NinjaAPI()
 
@@ -37,6 +39,7 @@ class TabularParams(Schema):
     name: str
     problem_type: Literal["CLASSIFICATION", "REGRESSION"]
     default: Optional[str]
+    criterion: str
     optimizer_name: str
     shuffle: bool
     epochs: int
@@ -68,8 +71,29 @@ def tabularTrain(request, tabularParams: TabularParams):
         model = DLModel.fromLayerParamsList(tabularParams.user_arch)
 
         optimizer = getOptimizer(model, tabularParams.optimizer_name, 0.05)
-
-        # criterion =
+        criterionHandler = getCriterionHandler(tabularParams.criterion)
+        if tabularParams.problem_type == "CLASSIFICATION":
+            trainer = ClassificationTrainer(
+                train_loader,
+                test_loader,
+                model,
+                optimizer,
+                criterionHandler,
+                tabularParams.epochs,
+            )
+            for epoch_result in trainer:
+                print(epoch_result)
+        else:
+            trainer = Trainer(
+                train_loader,
+                test_loader,
+                model,
+                optimizer,
+                criterionHandler,
+                tabularParams.epochs,
+            )
+            for epoch_result in trainer:
+                print(epoch_result)
 
     return tabularParams
 

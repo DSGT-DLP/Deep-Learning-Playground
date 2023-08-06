@@ -1,5 +1,5 @@
-from backend.aws_helpers.dynamo_db_utils.constants import USERPROGRESS_TABLE_NAME
-from backend.aws_helpers.dynamo_db_utils.dynamo_db_utils import (
+from aws_helpers.dynamo_db_utils.constants import USERPROGRESS_TABLE_NAME
+from aws_helpers.dynamo_db_utils.dynamo_db_utils import (
     create_dynamo_item,
     get_dynamo_item_by_key,
     update_dynamo_item,
@@ -41,12 +41,12 @@ def updateUserProgressData(uid: str, requestData: dict) -> bool:
     return update_dynamo_item(TABLE_NAME, uid, requestData)
 
 
-def createUserProgressData(execution_data: UserProgressData) -> bool:
+def createUserProgressData(user_progress_data: UserProgressData) -> bool:
     """
     Create a new entry or replaces an existing entry table according to the `uid`.
 
-    @param execution_data: uid and other table attributes to be created or updated if the entry already exists
+    @param user_progress_data: uid and other table attributes to be created or updated if the entry already exists
     @return: True if the creation or update is successful
     """
 
-    return create_dynamo_item(TABLE_NAME, execution_data.__dict__)
+    return create_dynamo_item(TABLE_NAME, user_progress_data.__dict__)

@@ -70,7 +70,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         />
         <meta
           name="author"
-          content="See CODEOWNERS in https://github.com/karkir0003/Deep-Learning-Playground"
+          content="See CODEOWNERS in https://github.com/DSGT-DLP/Deep-Learning-Playground"
         />
         <link rel="apple-touch-icon" href="/dlp-logo.png" />
         <link rel="manifest" href="/manifest.json" />

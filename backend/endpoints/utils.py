@@ -1,38 +1,6 @@
 import traceback
 
-from backend.aws_helpers.dynamo_db_utils.execution_db import (
-    ExecutionData,
-    createExecutionData,
-)
-from backend.common.utils import *
-
-
-def createExecution(entryData: dict) -> dict:
-    """
-    Creates an entry in the `execution-table` DynamoDB table given an `execution_id`. If does not exist, create a new entry corresponding to the given user_id.
-
-    E.g.
-    POST request to http://localhost:8000/api/createExecution with body
-    {"execution_id": "fsdh", "user_id": "fweadshas"}
-    will create a new entry with the given execution_id and other attributes present e.g. user_id (user_id must be present upon creating a new entry)
-
-    @return: A JSON string of the entry created in the table
-    """
-    try:
-        entryData: ExecutionData = ExecutionData(
-            execution_id=entryData["execution_id"],
-            user_id=entryData["user"]["uid"],
-            name=entryData["custom_model_name"],
-            data_source=entryData["data_source"],
-            status="QUEUED",
-            timestamp=get_current_timestamp(),
-            progress=0,
-        )
-        createExecutionData(entryData)
-        return {"success": True, "message": "Successfully created execution entry"}
-    except Exception as e:
-        print(traceback.format_exc())
-        return {"success": False, "message": "Error in creating execution entry"}
+from common.utils import *
 
 
 def send_success(results: dict):

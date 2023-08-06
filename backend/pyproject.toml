@@ -1,0 +1,49 @@
+[tool.poetry]
+name = "dlp-backend"
+version = "0.1.0"
+description = "Main Backend for Deep Learning Playground's Training Services"
+authors = ["DSGT-DLP <dlp@datasciencegt.org>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "dlp_backend"}]
+
+# Try not directly edit this file! Use `poetry add` and `poetry remove` instead.
+
+[tool.poetry.dependencies]
+python = ">=3.9, <3.10"
+flask-socketio = "*"
+numpy = "*"
+pandas = "*"
+matplotlib = "*"
+seaborn = "*"
+mypy = "*"
+scikit-learn = "*"
+scipy = "1.7.3"
+pyyaml = "*"
+statsmodels = "*"
+torch = "*"
+transformers = "*"
+pre-commit = "*"
+torchvision = "*"
+timm = "*"
+wwf = "*"
+fastai = "==2.7.4"
+firebase_admin = "*"
+pyrebase4 = "*"
+moto = "*"
+ggshield = "*"
+psutil = "^5.9.5"
+logger = "^1.4"
+flask-cors = "^4.0.0"
+
+[tool.poetry.group.dev.dependencies]
+python = ">=3.9, <3.10"
+pytest = "^7.4.0"
+flake8 = "^6.0.0"
+jupyter = "^1.0.0"
+black = "^23.7.0"
+moto = "^4.1.14"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

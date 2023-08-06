@@ -1,4 +1,4 @@
-from backend.common.constants import (
+from common.constants import (
     LOSS_VIZ,
     ACC_VIZ,
     TRAIN_TIME_CSV,
@@ -268,7 +268,7 @@ def generate_AUC_ROC_CURVE(labels_last_epoch, y_pred_last_epoch, category_list=[
         make_directory(AUC_ROC_VIZ)
         plt.savefig(AUC_ROC_VIZ)
 
-    except:
+    except Exception:
         return []
 
     return plot_data, categoryList

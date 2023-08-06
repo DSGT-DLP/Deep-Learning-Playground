@@ -11,28 +11,45 @@ from enum import Enum
 from torch.utils.data import DataLoader
 from zipfile import ZipFile, is_zipfile
 from os import mkdir, path
+import boto3
+from botocore.exceptions import ClientError
+from io import StringIO
+from common.constants import *
+import requests
+from io import BytesIO
+from aws_helpers.s3_utils.s3_client import write_to_bucket
 
-from backend.common.constants import *
+FILE_UPLOAD_BUCKET_NAME = "dlp-upload-bucket"
 
 
 def read_dataset(url):
     """
-    Given a url to a CSV dataset, read it and build temporary csv file
+    Given a url to a CSV dataset, read it and build a temporary csv file
 
     Args:
         url (str): URL to dataset
     """
     try:
-        r = request.urlopen(url).read().decode("utf8").split("\n")
-        reader = csv.reader(r)
-        with open(CSV_FILE_PATH, mode="w", newline="") as f:
-            csvwriter = csv.writer(f)
-            for line in reader:
-                csvwriter.writerow(line)
+        r = requests.get(url).text
+        csv_data = StringIO(r)
+
+        # Define the name of the temporary CSV file
+        csv_file_name = "data.csv"
+
+        # Write the StringIO data to a local temporary file
+        with open(csv_file_name, mode="w", encoding="utf-8") as f:
+            f.write(csv_data.getvalue())
+
+        # Upload the temporary CSV file to the file upload S3 bucket
+        write_to_bucket(csv_file_name, FILE_UPLOAD_BUCKET_NAME, csv_file_name)
+
+        # Remove the local temporary CSV file after uploading
+        os.remove(csv_file_name)
+
     except Exception as e:
         traceback.print_exc()
         raise Exception(
-            "Reading Dataset from URL failed. Might want to check the validity of the URL"
+            "Reading Dataset from URL and uploading to S3 failed. Please check the validity of the URL."
         )
 
 
@@ -103,7 +120,7 @@ def dataset_from_zipped(
     zipped_folder, train_transform=DEFAULT_TRANSFORM, test_transform=DEFAULT_TRANSFORM
 ):
     """
-    Returns a dataset from a zipped folder applying train and  trtestansformation (if they are legal).
+    Returns a dataset from a zipped folder applying train and test transformation (if they are legal).
     Calls get_unzipped to create unzipped folder and obtain train and test directories
     """
 

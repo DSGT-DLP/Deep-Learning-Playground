@@ -1,6 +1,8 @@
+from decimal import Decimal
+import json
 import boto3
-from backend.aws_helpers.dynamo_db_utils.constants import ALL_DYANMODB_TABLES
-from backend.common.constants import AWS_REGION
+from aws_helpers.dynamo_db_utils.constants import ALL_DYANMODB_TABLES
+from common.constants import AWS_REGION
 import random
 from datetime import datetime
 from typing import Union
@@ -119,6 +121,7 @@ def create_dynamo_item(table_name: str, input_item: dict) -> bool:
     if input_item.get(partition_key) is None:
         raise ValueError("Item must have the partition key: " + partition_key)
     gsi_key = ALL_DYANMODB_TABLES[table_name].get("gsi")
+    input_item = json.loads(json.dumps(input_item), parse_float=Decimal)
     if gsi_key and input_item.get(gsi_key) is None:
         raise ValueError("Item must have the gsi key: " + gsi_key)
 

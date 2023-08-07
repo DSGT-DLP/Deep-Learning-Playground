@@ -58,7 +58,10 @@ const LearnContent = () => {
       </div>
       <div id="learningBody">
         <ModulesSideBar />
-        <div className="learningContentDiv">
+        <div
+          className="learningContentDiv"
+          style={{ minHeight: "calc(100vh - 470px)" }}
+        >
           <h2>{moduleContent.subClasses[subSection].title}</h2>
           {moduleContent.subClasses[subSection].content.map(
             (contentComponent: ContentType, index: number) => {
@@ -121,6 +124,7 @@ const LearnContent = () => {
           )}
         </div>
       </div>
+
       <div id="subsectionChangeContainer">
         <button className="class" onClick={onPreviousClick}>
           Previous

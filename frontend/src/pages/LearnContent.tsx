@@ -21,9 +21,6 @@ const LearnContent = () => {
     parseInt(Router.query.subsection)
   );
   const user = useAppSelector((state) => state.currentUser.user);
-  console.log("hi");
-  console.log(moduleContent.subClasses[1]);
-  console.log(subSection);
   useEffect(() => {
     setSubSection(parseInt(Router.query.subsection));
     setModuleContent(JSON.parse(Router.query.moduleContent) as ModuleType);

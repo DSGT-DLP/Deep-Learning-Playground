@@ -1,21 +1,23 @@
+from dataclasses import dataclass
 import time
 from typing import Iterator, TypeVar
+import numpy as np
+from sklearn.metrics import confusion_matrix, roc_auc_score, roc_curve
 import torch
 from torch.utils.data import DataLoader
 import torch.nn as nn
 from training2.criterion import CriterionHandler
 
 
+@dataclass
 class EpochResult:
-    def __init__(
-        self,
-        train_loss: float,
-        test_loss: float,
-        epoch_time: float,
-    ):
-        self.train_loss = train_loss
-        self.test_loss = test_loss
-        self.epoch_time = epoch_time
+    epoch_num: int
+    train_loss: float
+    test_loss: float
+    epoch_time: float
+
+    def __str__(self) -> str:
+        return f"epoch: {self.epoch_num}, train loss: {self.train_loss}, test loss: {self.test_loss}"
 
 
 T = TypeVar("T", bound=EpochResult)
@@ -83,6 +85,7 @@ class Trainer(Iterator[T]):
 
     def _get_epoch_result(self):
         return EpochResult(
+            self.curr_epoch,
             self._mean_train_loss,
             self._mean_test_loss,
             self._epoch_time,
@@ -106,18 +109,30 @@ class Trainer(Iterator[T]):
             raise StopIteration
 
 
+@dataclass
 class ClassificationEpochResult(EpochResult):
+    epoch_num: int
+    train_loss: float
+    test_loss: float
+    epoch_time: float
+    train_accuracy: float
+    test_accuracy: float
+
     def __init__(
         self,
+        epoch_num: int,
         train_loss: float,
         test_loss: float,
         epoch_time: float,
         train_accuracy: float,
         test_accuracy: float,
     ):
-        super().__init__(train_loss, test_loss, epoch_time)
+        super().__init__(epoch_num, train_loss, test_loss, epoch_time)
         self.train_accuracy = train_accuracy
         self.test_accuracy = test_accuracy
+
+    def __str__(self) -> str:
+        return f"{super().__str__()} train_acc: {self.train_accuracy}, val_acc: {self.test_loss}"
 
 
 class ClassificationTrainer(Trainer[ClassificationEpochResult]):
@@ -129,6 +144,7 @@ class ClassificationTrainer(Trainer[ClassificationEpochResult]):
         optimizer: torch.optim.Optimizer,
         criterionHandler: CriterionHandler,
         epochs: int,
+        category_list: list[str],
     ):
         super().__init__(
             train_loader,
@@ -140,6 +156,7 @@ class ClassificationTrainer(Trainer[ClassificationEpochResult]):
         )
         self.labels_last_epoch = []
         self.y_pred_last_epoch = []
+        self.category_list = category_list
 
     def compute_correct(self, predicted, actual):
         """
@@ -211,12 +228,49 @@ class ClassificationTrainer(Trainer[ClassificationEpochResult]):
 
     def _get_epoch_result(self):
         return ClassificationEpochResult(
+            self.curr_epoch,
             self._mean_train_loss,
             self._mean_test_loss,
             self._epoch_time,
             self._train_accuracy,
             self._test_accuracy,
         )
+
+    def generate_confusion_matrix(self):
+        label = []
+        y_pred = []
+
+        label = np.array(self.labels_last_epoch).flatten()
+        for batch in self.y_pred_last_epoch:
+            y_pred = np.concatenate(
+                (y_pred, np.argmax(batch, axis=1)), axis=None
+            )  # flatten and concatenate
+        categoryList = np.arange(0, len(self.y_pred_last_epoch[0][0])).tolist()
+        return confusion_matrix(label, y_pred, labels=categoryList)
+
+    def generate_AUC_ROC_CURVE(self) -> list[tuple[list[float], list[float], float]]:
+        label_list = []
+        y_preds_list = []
+        plot_data = []
+
+        # generating a numerical category list for confusion matrix axis labels, and setting up the y_preds_list and label_list for each category
+        category_list = np.arange(0, len(self.y_pred_last_epoch[0][0])).tolist()
+        labels_last_epoch = np.array(self.labels_last_epoch).flatten()
+        label_list = np.zeros((len(self.category_list), len(labels_last_epoch)))
+
+        for i in range(len(labels_last_epoch)):
+            label_list[int(labels_last_epoch[i])][i] = 1
+
+        y_preds_list = np.transpose(np.concatenate(np.array(self.y_pred_last_epoch)))
+
+        for i in range(len(category_list)):
+            pred_prob = np.array(y_preds_list[i])
+            y_test = label_list[i]
+            fpr, tpr, _ = roc_curve(y_test, pred_prob)
+            auc = roc_auc_score(y_test, pred_prob)
+            # this data will be sent to frontend to make interactive plotly graph
+            plot_data.append((fpr.tolist(), tpr.tolist(), auc))
+        return plot_data
 
 
 class RegressionTrainer(Trainer[EpochResult]):

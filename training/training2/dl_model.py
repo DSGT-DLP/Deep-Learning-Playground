@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Any, Callable
 from ninja import Schema
 import torch
 import torch.nn as nn
@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 class LayerParams(Schema):
     value: str
-    parameters: list[str]
+    parameters: list[Any]
 
 
 class DLModel(nn.Module):
@@ -37,7 +37,6 @@ class DLModel(nn.Module):
         for layer_params in layer_params_list:
             if layer_params.value not in cls.LAYERS_MAPPING:
                 raise Exception(f"Layer ${layer_params.value} not supported")
-
             linear_layer = cls.LAYERS_MAPPING[layer_params.value](
                 *layer_params.parameters
             )

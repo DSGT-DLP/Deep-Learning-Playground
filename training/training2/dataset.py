@@ -46,7 +46,7 @@ class SklearnDatasetCreator(TrainTestDatasetCreator):
         category_list: Optional[list[str]],
     ) -> None:
         super().__init__()
-        self.category_list = category_list
+        self._category_list = category_list
         self._X_train, self._X_test, self._y_train, self._y_test = cast(
             tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series],
             train_test_split(X, y, test_size=test_size, shuffle=shuffle),
@@ -88,3 +88,8 @@ class SklearnDatasetCreator(TrainTestDatasetCreator):
         y_test_tensor = Variable(torch.Tensor(self._y_test.to_numpy()))
         y_test_tensor = torch.reshape(y_test_tensor, (y_test_tensor.size()[0], 1))
         return TensorDataset(X_test_tensor, y_test_tensor)
+
+    def getCategoryList(self) -> list[str]:
+        if self._category_list is None:
+            raise Exception("Category list not available")
+        return self._category_list

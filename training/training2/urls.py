@@ -17,6 +17,7 @@ Including another URLconf
 import datetime
 from typing import Callable, Literal, Optional, Union, cast
 from django.contrib import admin
+from django.http import HttpRequest
 from django.urls import path
 from ninja import NinjaAPI, Path, Schema
 from numpy import ndarray
@@ -28,7 +29,7 @@ from training2.criterion import getCriterionHandler
 from training2.dataset import SklearnDatasetCreator
 from training2.dl_model import DLModel, LayerParams
 from training2.optimizer import getOptimizer
-from training2.trainer import ClassificationTrainer, Trainer
+from training2.trainer import ClassificationTrainer, RegressionTrainer, Trainer
 
 api = NinjaAPI()
 
@@ -49,7 +50,7 @@ class TabularParams(Schema):
 
 
 @api.post("/tabular")
-def tabularTrain(request, tabularParams: TabularParams):
+def tabularTrain(request: HttpRequest, tabularParams: TabularParams):
     if tabularParams.default:
         dataCreator = SklearnDatasetCreator.fromDefault(
             tabularParams.default, tabularParams.test_size, tabularParams.shuffle
@@ -69,7 +70,6 @@ def tabularTrain(request, tabularParams: TabularParams):
         )
 
         model = DLModel.fromLayerParamsList(tabularParams.user_arch)
-
         optimizer = getOptimizer(model, tabularParams.optimizer_name, 0.05)
         criterionHandler = getCriterionHandler(tabularParams.criterion)
         if tabularParams.problem_type == "CLASSIFICATION":
@@ -80,11 +80,16 @@ def tabularTrain(request, tabularParams: TabularParams):
                 optimizer,
                 criterionHandler,
                 tabularParams.epochs,
+                dataCreator.getCategoryList(),
             )
             for epoch_result in trainer:
                 print(epoch_result)
+            print(trainer.labels_last_epoch, trainer.y_pred_last_epoch)
+            print(trainer.generate_confusion_matrix())
+            print(trainer.generate_AUC_ROC_CURVE())
+            return trainer.generate_AUC_ROC_CURVE()
         else:
-            trainer = Trainer(
+            trainer = RegressionTrainer(
                 train_loader,
                 test_loader,
                 model,
@@ -94,8 +99,6 @@ def tabularTrain(request, tabularParams: TabularParams):
             )
             for epoch_result in trainer:
                 print(epoch_result)
-
-    return tabularParams
 
 
 urlpatterns = [

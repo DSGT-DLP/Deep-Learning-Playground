@@ -10,7 +10,7 @@
     "installa": "cd aws_write && poetry install && poetry shell && ggshield auth login && pre-commit install",
     "startf": "cd frontend && yarn dev",
     "secrets": "cd backend && poetry run python -m aws_helpers.aws_secrets_utils.build_env",
-    "startb": "cd backend && poetry run python driver.py",
+    "startb": "cd backend && poetry run python app.py",
     "starta": "cd aws_write && poetry run python app.py",
     "docker:build": "docker build -t dlp ."
   },

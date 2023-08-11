@@ -25,7 +25,7 @@
  ┣ 📂ml
  ┃ ┗ 📜ml_trainer.py - train a classical machine learning learning model on the dataset
  ┣ 📜data.csv - data csv file for use in the playground
- ┣ 📜driver.py - run the backend (entrypoint script)
+ ┣ 📜app.py - run the backend (entrypoint script)
  ┣ 📜epoch_times.csv
  ┣ 📜test.py
  ┗ 📜__init__.py

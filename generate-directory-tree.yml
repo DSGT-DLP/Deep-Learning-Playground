@@ -1,0 +1,24 @@
+# This is a basic workflow that is manually triggered
+
+name: Directory Tree Generator
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  pull_request_target:
+    branches:
+      - 'nextjs'
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "greet"
+  generate-directory-tree:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Runs a single command using the runners shell
+    - name: Generate File Tree
+      run: python file_tree_generator.py

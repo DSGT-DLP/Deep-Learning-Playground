@@ -38,4 +38,8 @@ jobs:
         run: |
           echo "To implement depcheck, follow the instructions in the comments of this file."
 
+      - name: Add environment setup steps
+        run: |
+          # Add environment setup steps here
+
 # Add instructions here on how to implement depcheck

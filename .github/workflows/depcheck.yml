@@ -21,8 +21,7 @@ jobs:
           node-version: 18
 
       - name: Install depcheck
-        # Documentation: [Link to depcheck documentation](https://www.npmjs.com/package/depcheck)
-        run: npm install -g depcheck
+        run: yarn global add depcheck
 
       - name: Run depcheck
         run: depcheck ./frontend --fail-on-error

@@ -87,9 +87,9 @@ def traverse_directory(dir: str, is_root: bool, prefix: str) -> str:
     os.chdir(dir)
     output = ""
     if is_root:
-        output = '* ' + dir
+        output = '📦 ' + dir
     else:
-        output = prefix + dir + '/'
+        output = prefix + '📂 ' + dir + ':'
     output += '\n'
     
     files = []
@@ -110,7 +110,7 @@ def traverse_directory(dir: str, is_root: bool, prefix: str) -> str:
         if skip:
             continue
 
-        output += "|  " + prefix + file
+        output += "|  " + prefix + '📜 ' + file
         if file in file_descriptions:
             output += " : " + file_descriptions[file]
         output += '\n'
@@ -118,6 +118,7 @@ def traverse_directory(dir: str, is_root: bool, prefix: str) -> str:
     os.chdir('../')
     return output
 
+outputFileDirectory='.github/ArchitectureTest.md'
 
 output = "# Architecture\n\n"
 for directory in directories:
@@ -126,4 +127,7 @@ for directory in directories:
     output += traverse_directory(directory, True, "|- ")
     output += "```"
     output += "\n\n"
-print(output)
+
+f = open(outputFileDirectory, 'w', encoding='utf-8')
+f.write(output)
+f.close()

@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - nextjs
+
+jobs:
+  depcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js and Yarn
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run depcheck
+        run: yarn depcheck
+
+      - name: Print depcheck report
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('depcheck-report.txt', 'utf8');
+            console.log(report);
+
+      - name: Instructions
+        run: |
+          echo "To implement depcheck, follow the instructions in the comments of this file."
+
+# Add instructions here on how to implement depcheck

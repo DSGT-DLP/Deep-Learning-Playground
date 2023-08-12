@@ -21,7 +21,7 @@ jobs:
           node-version: 18
 
       - name: Install depcheck
-        # Documentation: [Link to depcheck documentation](https://example.com/depcheck)
+        # Documentation: [Link to depcheck documentation](https://www.npmjs.com/package/depcheck)
         run: npm install -g depcheck
 
       - name: Run depcheck

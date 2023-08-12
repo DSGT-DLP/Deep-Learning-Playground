@@ -1,0 +1,20 @@
+name: Depcheck Workflow
+
+on:
+  push:
+    branches:
+      - depcheck-sweep-action
+  pull_request:
+    branches:
+      - depcheck-sweep-action
+
+jobs:
+  depcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run depcheck
+        run: npx depcheck

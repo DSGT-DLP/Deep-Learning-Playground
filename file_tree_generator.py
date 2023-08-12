@@ -128,12 +128,7 @@ def traverse_directory(dir: str, is_root: bool, prefix: str) -> str:
     os.chdir("../")
     return output
 
-<<<<<<< HEAD
 outputFileDirectory='.github/Architecture.md'
-=======
-
-outputFileDirectory = ".github/ArchitectureTest.md"
->>>>>>> 68ea3e5773b29c5e010329251ac7cd4838e05d25
 
 output = "# Architecture\n\n"
 for directory in directories:

@@ -23,4 +23,5 @@ jobs:
     - name: Generate File Tree
       run: |
         cd ..
+        ls
         python file_tree_generator.py

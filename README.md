@@ -30,6 +30,7 @@ Have the following installed first:
 | Get secrets                                   | `yarn run secrets`             |
 | Running the Frontend                          | `yarn run startf`              |
 | Running the Backend                           | `yarn run startb`              |
+| Running depcheck locally                      | `yarn run depcheck`            |
 
 ## To run in `production` mode:
 
@@ -38,6 +39,20 @@ Have the following installed first:
   - If you're using Windows, run `set REACT_APP_MODE=prod && yarn run startf` from the root of the project
 - Run the backend as usual
 - To run the SQS container, run the command in this [document](https://docs.google.com/document/d/1yYzT7CCUqxnShncHEeHC1MssABntJuKUN88pTXnh_HQ/edit#)
+
+## Running depcheck locally
+
+To run depcheck locally, execute the following command from the root of the project:
+
+```
+yarn run depcheck
+```
+
+This will analyze the frontend codebase and check for any unused libraries in the yarn.lock file.
+
+## Interpreting depcheck results
+
+Depcheck will provide a list of unused libraries in the yarn.lock file. You can review this list and decide whether to remove the unused libraries from your project dependencies. Removing unused libraries can help reduce the package size and improve build times.
 
 # Development Practices
 

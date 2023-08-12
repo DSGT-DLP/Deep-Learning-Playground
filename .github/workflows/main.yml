@@ -1,0 +1,28 @@
+name: Depcheck
+
+on:
+  push:
+    branches:
+      - nextjs
+
+jobs:
+  depcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install frontend dependencies
+        run: yarn install
+
+      - name: Install depcheck
+        run: yarn global add depcheck
+      
+      - name: Install frontend dependencies
+        run: yarn install
+      
+      - name: Run depcheck
+        run: depcheck frontend/src --ignore-dirs=common,redux,components,styles

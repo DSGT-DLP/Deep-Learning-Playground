@@ -12,7 +12,8 @@
     "secrets": "cd backend && poetry run python -m aws_helpers.aws_secrets_utils.build_env",
     "startb": "cd backend && poetry run python app.py",
     "starta": "cd aws_write && poetry run python app.py",
-    "docker:build": "docker build -t dlp ."
+    "docker:build": "docker build -t dlp .",
+    "depcheck": "depcheck frontend/src --ignore-dirs=common,redux,components,styles"
   },
   "repository": {
     "type": "git",

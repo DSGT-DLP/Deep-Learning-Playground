@@ -21,4 +21,6 @@ jobs:
     steps:
     # Runs a single command using the runners shell
     - name: Generate File Tree
-      run: python file_tree_generator.py
+      run: |
+        cd ..
+        python file_tree_generator.py

@@ -21,8 +21,5 @@ jobs:
       - name: Install depcheck
         run: yarn global add depcheck
       
-      - name: Install frontend dependencies
-        run: yarn install
-      
       - name: Run depcheck
         run: depcheck frontend/src --ignore-dirs=common,redux,components,styles

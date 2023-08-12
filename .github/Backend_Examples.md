@@ -1,6 +1,6 @@
 # Examples of using the DLP backend
 
-Go to [`driver.py`](./driver.py) to implement these examples.
+Go to [`app.py`](./app.py) to implement these examples.
 
 ## Deep Learning
 

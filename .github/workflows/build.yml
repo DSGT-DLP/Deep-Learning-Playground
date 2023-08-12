@@ -28,7 +28,6 @@ jobs:
         run: |
           cd backend
           poetry check
-          poetry check
 
       - name: Check Poetry in aws_write directory
         run: |

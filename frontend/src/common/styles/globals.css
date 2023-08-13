@@ -153,9 +153,8 @@ input.form-control {
 #navbar-main .nav-link {
   color: white;
   font-size: large;
-  padding: 1rem;
+  padding: 1rem 0.5rem; /* Adjusted padding value */
 }
-
 #navbar-main .nav-link:hover,
 #navbar-main .nav-link:focus {
   background-color: white;

@@ -131,6 +131,7 @@ input.form-control {
   color: white;
 }
 
+/* This is the navbar or navigation bar of the website */
 #navbar-main {
   color: white;
   background-color: var(--primary);
@@ -150,6 +151,7 @@ input.form-control {
   color: var(--secondary);
 }
 
+/* These are the individual links within the navbar */
 @media (max-width: 600px) {
   #navbar-main .nav-link {
     color: white;

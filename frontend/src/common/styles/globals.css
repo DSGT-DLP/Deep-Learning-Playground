@@ -150,15 +150,43 @@ input.form-control {
   color: var(--secondary);
 }
 
-#navbar-main .nav-link {
-  color: white;
-  font-size: large;
-  padding: 1rem 0.5rem; /* Adjusted padding value */
+@media (max-width: 600px) {
+  #navbar-main .nav-link {
+    color: white;
+    font-size: large;
+    padding: 0.5rem; /* Adjusted padding value for small screens */
+  }
+  #navbar-main .nav-link:hover,
+  #navbar-main .nav-link:focus {
+    background-color: white;
+    color: var(--primary);
+  }
 }
-#navbar-main .nav-link:hover,
-#navbar-main .nav-link:focus {
-  background-color: white;
-  color: var(--primary);
+
+@media (min-width: 601px) and (max-width: 1200px) {
+  #navbar-main .nav-link {
+    color: white;
+    font-size: large;
+    padding: 0.75rem; /* Adjusted padding value for medium screens */
+  }
+  #navbar-main .nav-link:hover,
+  #navbar-main .nav-link:focus {
+    background-color: white;
+    color: var(--primary);
+  }
+}
+
+@media (min-width: 1201px) {
+  #navbar-main .nav-link {
+    color: white;
+    font-size: large;
+    padding: 1rem; /* Adjusted padding value for large screens */
+  }
+  #navbar-main .nav-link:hover,
+  #navbar-main .nav-link:focus {
+    background-color: white;
+    color: var(--primary);
+  }
 }
 
 #basic-nav-dropdown {

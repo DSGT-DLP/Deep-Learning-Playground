@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "aws-python-flask-api-project"
+version = "0.1.0"
+description = ""
+authors = ["Daniel Wu <dwu359@gatech.edu>"]
+readme = "README.md"
+packages = [{include = "aws_python_flask_api_project"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Flask = "^2.3.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

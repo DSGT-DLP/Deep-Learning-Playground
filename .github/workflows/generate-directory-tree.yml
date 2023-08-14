@@ -27,10 +27,12 @@ jobs:
       # working-directory: ./Deep-Learning-Playground
       run: |
         pip install regex
+        python ./file_tree_generator.py
         echo $?
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git commit -a -m "Add changes"
+        git commit -m "Add changes"
+        git pull origin ${{ github.head_ref }}
     
     - name: Push changes
       uses: ad-m/github-push-action@master

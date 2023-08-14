@@ -34,6 +34,7 @@ jobs:
         git commit -am "Automated report" &&
         git config --local user.email "alantao912@protonmail.ch" &&
         git config --local user.name "alantao912" &&
+        git config --local -l
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} &&
         git push
  

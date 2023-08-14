@@ -26,3 +26,4 @@ jobs:
       run: |
         pip install regex
         python ./file_tree_generator.py
+        echo $?

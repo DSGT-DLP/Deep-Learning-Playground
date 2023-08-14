@@ -23,5 +23,4 @@ jobs:
     - name: Generate File Tree
       working-directory: ./Deep-Learning-Playground
       run: |
-        cd ~/Deep-Learning-Playground
         python file_tree_generator.py

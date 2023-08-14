@@ -30,7 +30,7 @@ jobs:
         echo $?
     - name: Commit Changes to Branch
       run:
-        git checkout ${GITHUB_REF:11}
+        git checkout ${{ github.head_ref }}
         git commit -am "Automated report"
         git push
  

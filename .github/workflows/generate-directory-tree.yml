@@ -19,9 +19,8 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - uses: actions/checkout@master
-      with:
-        ref: ${{ github.ref }}
+    - uses: actions/checkout@v1
+
     # Runs a single command using the runners shell
     - name: Generate File Tree
       # working-directory: ./Deep-Learning-Playground
@@ -29,12 +28,16 @@ jobs:
         pip install regex
         python ./file_tree_generator.py
         echo $?
+    - name: Commit Changes to Branch
+      run:
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git commit -m "Add changes"
-        git pull origin ${{ github.head_ref }}
+        git checkout "${GITHUB_REF:11}"
+        git commit -am "Automated report"
+        git push
+ 
     
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        branch: ${{ github.head_ref }}
+    #- name: Push changes
+    #  uses: ad-m/github-push-action@master
+    #  with:
+    #    branch: ${{ github.head_ref }}

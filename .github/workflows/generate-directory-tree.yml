@@ -19,7 +19,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     # Runs a single command using the runners shell
     - name: Generate File Tree
       # working-directory: ./Deep-Learning-Playground
@@ -27,6 +27,3 @@ jobs:
         pip install regex
         python ./file_tree_generator.py
         echo $?
-        git add .
-        git commit -m "Generated directory tree documentation"
-        git push origin HEAD:${GITHUB_REF##*/}

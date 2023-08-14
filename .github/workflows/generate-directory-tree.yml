@@ -32,8 +32,8 @@ jobs:
       run:
         git checkout ${{ github.head_ref }} &&
         git commit -am "Automated report" &&
-        git config --global user.name github-actions &&
-        git config --global user.email github-actions@github.com &&
+        git config --global user.name "Alan Tao" &&
+        git config --global user.email "alantao912@protonmail.ch" &&
         git push
  
     

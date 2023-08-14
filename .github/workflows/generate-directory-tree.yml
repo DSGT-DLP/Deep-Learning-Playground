@@ -27,4 +27,6 @@ jobs:
         pip install regex
         python ./file_tree_generator.py
         echo $?
-        git push
+        git add .
+        git commit -m "Generated directory tree documentation"
+        git push origin HEAD:${GITHUB_REF##*/}

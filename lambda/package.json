@@ -1,0 +1,15 @@
+{
+  "name": "lambda",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "installv": "poetry config virtualenvs.in-project true && poetry env remove --all && pyenv local 3.9 && yarn updatev",
+    "updatev": "poetry install --no-root && poetry run ggshield auth login && poetry run pre-commit install",
+    "startv": "serverless offline",
+    "deployv": "serverless deploy"
+  },
+  "dependencies": {
+    "pre-commit": "^1.2.2",
+    "serverless-offline": "^12.0.4"
+  }
+}

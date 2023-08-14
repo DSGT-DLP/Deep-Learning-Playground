@@ -1,14 +1,16 @@
 [tool.poetry]
-name = "aws-python-flask-api-project"
+name = "lambda"
 version = "0.1.0"
 description = ""
-authors = ["Daniel Wu <dwu359@gatech.edu>"]
+authors = ["Your Name <you@example.com>"]
 readme = "README.md"
-packages = [{include = "aws_python_flask_api_project"}]
+packages = [{include = "lambda"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
-Flask = "^2.3.2"
+python = ">=3.9, <3.10"
+boto3 = "^1.28.25"
+ggshield = "^1.17.3"
+pre-commit = "^3.3.3"
 
 
 [build-system]

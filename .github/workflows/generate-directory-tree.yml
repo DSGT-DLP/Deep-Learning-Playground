@@ -27,3 +27,4 @@ jobs:
         pip install regex
         python ./file_tree_generator.py
         echo $?
+        git push

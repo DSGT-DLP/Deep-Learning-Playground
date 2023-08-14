@@ -32,8 +32,9 @@ jobs:
       run:
         git checkout ${{ github.head_ref }} &&
         git commit -am "Automated report" &&
-        git config --global user.name "Alan Tao" &&
-        git config --global user.email "alantao912@protonmail.ch" &&
+        git config user.name "Alan Tao" &&
+        git config user.email "alantao912@protonmail.ch" &&
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} &&
         git push
  
     

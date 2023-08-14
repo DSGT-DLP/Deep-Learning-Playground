@@ -24,5 +24,5 @@ jobs:
       # working-directory: ./Deep-Learning-Playground
       run: |
         cd ..
-        ls
+        ls | cat
         python file_tree_generator.py

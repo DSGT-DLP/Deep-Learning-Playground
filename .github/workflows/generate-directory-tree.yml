@@ -19,7 +19,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
 
     # Runs a single command using the runners shell
     - name: Generate File Tree
@@ -28,14 +28,13 @@ jobs:
         pip install regex
         python ./file_tree_generator.py
         echo $?
-    - name: Commit Changes to Branch
-      run:
-        git checkout ${{ github.head_ref }} &&
-        git commit -am "Automated report" &&
-        git config --local user.email "ghaction@github.com" &&
-        git config --local user.name "github-actions" &&
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} &&
-        git push
+        
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: ":art: Format Python code with psf/black"
+        commit_options: '--no-verify'
+        commit_user_name: github-actions
+        commit_user_email: ghaction@github.com
  
     
     #- name: Push changes

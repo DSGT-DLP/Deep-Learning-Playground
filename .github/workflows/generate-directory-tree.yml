@@ -27,11 +27,10 @@ jobs:
       run: |
         pip install regex
         python ./file_tree_generator.py
-        echo $?
         
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
-        commit_message: ":art: Format Python code with psf/black"
+        commit_message: ":art: Auto-generated directory tree for repository in Architecture.md"
         commit_options: '--no-verify'
         commit_user_name: github-actions
         commit_user_email: ghaction@github.com

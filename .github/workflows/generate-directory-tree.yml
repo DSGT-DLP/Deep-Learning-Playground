@@ -32,8 +32,8 @@ jobs:
       run:
         git checkout ${{ github.head_ref }} &&
         git commit -am "Automated report" &&
-        git config --local user.email ghaction@github.com &&
-        git config --local user.name github-actions &&
+        git config --local user.email "ghaction@github.com" &&
+        git config --local user.name "github-actions" &&
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} &&
         git push
  

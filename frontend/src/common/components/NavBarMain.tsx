@@ -1,13 +1,14 @@
-import AppBar from '@mui/material/AppBar';
+import AppBar from "@mui/material/AppBar";
 import { FormControlLabel, Icon, Switch } from "@mui/material";
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import MenuList from '@mui/material/Menu';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import MenuList from "@mui/material/Menu";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
 import Grid from "@mui/material/Grid";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import Stack from "@mui/material/Stack";
 
 import storage from "local-storage-fallback";
 import React, { useEffect, useState } from "react";
@@ -63,83 +64,114 @@ const NavbarMain = () => {
     <ThemeProvider theme={theme}>
       <AppBar id="navbar-main" className="p-0" position="static">
         <Container maxWidth="lg">
-          <Toolbar disableGutters 
+          <Toolbar
+            disableGutters
             sx={{
               display: { xs: "flex" },
               flexDirection: "row",
-              justifyContent: "space-between"
+              justifyContent: "space-between",
             }}
           >
-            <Icon sx={{ display: { xs: 'none', md: 'flex' }, ml: -5, mr: 1 }}>
-              <Image src={DSGTLogo} alt="DSGT Logo" width={40} height={40} />
-            </Icon>
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="/"
-              className="d-flex align-items-center logo-title"
+            <Link href="/" className="logo-redirect-link">
+              <Stack direction="row" alignItems="center">
+                <Icon
+                  sx={{ display: { xs: "none", md: "flex" }, ml: -5, mr: 1 }}
+                >
+                  <Image
+                    src={DSGTLogo}
+                    alt="DSGT Logo"
+                    width={40}
+                    height={40}
+                  />
+                </Icon>
+                <Typography
+                  noWrap
+                  className="d-flex align-items-center logo-title"
+                  sx={{
+                  mr: 2,
+                   display: { xs: "none", md: "flex" },
+                  //fontFamily:
+                  //color: inherit
+                   textDecoration: "none",
+                  }}
+                >
+                  Deep Learning Playground
+                </Typography>
+              </Stack>
+            </Link>
+
+            <Grid
               sx={{
-                mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontFamily: 'Lato, Arial, Helvetica, sans-serif',
-                color: 'inherit',
-                textDecoration: 'none',
+                flexGrow: 1,
+                display: { xs: "none", md: "flex", justifyContent: "right" },
               }}
             >
-              Deep Learning Playground
-            </Typography>
-
-            <Grid sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', justifyContent:'right'} }}>
               <Grid item>
-              {isSignedIn(user) ? (
-                <Link href="/train" passHref className="nav-link">Train</Link>
-              ) : null}
+                {isSignedIn(user) ? (
+                  <Link href="/train" passHref className="nav-link">
+                    Train
+                  </Link>
+                ) : null}
               </Grid>
               <Grid item>
-                <Link href="/about" passHref className="nav-link">About</Link>
+                <Link href="/about" passHref className="nav-link">
+                  About
+                </Link>
               </Grid>
               <Grid item>
-                <Link href="/wiki" passHref className="nav-link">Wiki</Link>
+                <Link href="/wiki" passHref className="nav-link">
+                  Wiki
+                </Link>
               </Grid>
               <Grid item>
-                <Link href="/feedback" passHref className="nav-link">Feedback</Link>
+                <Link href="/feedback" passHref className="nav-link">
+                  Feedback
+                </Link>
               </Grid>
               <Grid item>
-                <Link href={URLs.donate} passHref className="nav-link">Donate</Link>
+                <Link href={URLs.donate} passHref className="nav-link">
+                  Donate
+                </Link>
               </Grid>
               {isSignedIn(user) ? (
                 <Grid item>
                   <div>
-                      <Button 
+                    <Button
                       sx={{
                         my: -0.75,
                         mx: -1,
-                      }}>
-                        <Typography
-                          onClick={handleOpenUserMenu}
-                          className="nav-link"
-                          style={{
-                            fontFamily: 'Lato, Arial, Helvetica, sans-serif',
-                            textTransform: 'none'
-                          }}
-                        >
-                          Account <ArrowDropDownIcon />
-                        </Typography>
-                      </Button>
+                      }}
+                    >
+                      <Typography
+                        onClick={handleOpenUserMenu}
+                        className="nav-link"
+                        style={{
+                          fontFamily: "Lato, Arial, Helvetica, sans-serif",
+                          textTransform: "none",
+                        }}
+                      >
+                        Account <ArrowDropDownIcon />
+                      </Typography>
+                    </Button>
                     <MenuList
                       anchorEl={anchorEl}
                       open={open}
                       onClose={handleCloseUserMenu}
                     >
                       <MenuItem>
-                        <Link href="/dashboard" id="basic-nav-dropdown">Dashboard</Link>
+                        <Link href="/dashboard" id="basic-nav-dropdown">
+                          Dashboard
+                        </Link>
                       </MenuItem>
                       <MenuItem>
-                        <Link href="/settings" id="basic-nav-dropdown">Settings</Link>
+                        <Link href="/settings" id="basic-nav-dropdown">
+                          Settings
+                        </Link>
                       </MenuItem>
                       <MenuItem divider>
-                        <Link href="/learn-mod" id="basic-nav-dropdown">Learn</Link>
+                        <Link href="/learn-mod" id="basic-nav-dropdown">
+                          Learn
+                        </Link>
                       </MenuItem>
                       <Link href={""} passHref id="basic-nav-dropdown">
                         <MenuItem
@@ -147,24 +179,32 @@ const NavbarMain = () => {
                             dispatch(signOutUser());
                           }}
                         >
-                          <Typography sx={{fontFamily:'Lato, Arial, Helvetica, sans-serif'}}>Log out</Typography>
+                          <Typography
+                            sx={{
+                              fontFamily: "Lato, Arial, Helvetica, sans-serif",
+                            }}
+                          >
+                            Log out
+                          </Typography>
                         </MenuItem>
                       </Link>
                     </MenuList>
                   </div>
                 </Grid>
               ) : (
-                <Link href="/login" passHref className="nav-link">Log in</Link>
+                <Link href="/login" passHref className="nav-link">
+                  Log in
+                </Link>
               )}
             </Grid>
             <FormControlLabel
               style={{
                 marginLeft: "auto",
                 marginRight: 0,
-                flexDirection: "row-reverse"
+                flexDirection: "row-reverse",
               }}
               control={
-              <Switch
+                <Switch
                   id="mode-switch"
                   onChange={toggleTheme}
                   checked={theme.checked}

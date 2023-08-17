@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "sst dev",
     "build": "sst build",
-    "deploy": "sst deploy",
+    "deployprod": "sst deploy --stage prod",
     "remove": "sst remove",
+    "removeprod": "sst remove --stage prod",
     "console": "sst console",
     "typecheck": "tsc --noEmit"
   },
@@ -21,5 +22,7 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "@aws-sdk/s3-request-presigner": "^3.391.0"
+  }
 }

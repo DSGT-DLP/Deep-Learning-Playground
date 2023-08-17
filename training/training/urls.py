@@ -1,5 +1,5 @@
 """
-URL configuration for training2 project.
+URL configuration for training project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -25,11 +25,11 @@ import pandas as pd
 from sklearn.utils import Bunch
 import torch
 from torch.utils.data import DataLoader
-from training2.criterion import getCriterionHandler
-from training2.dataset import SklearnDatasetCreator
-from training2.dl_model import DLModel, LayerParams
-from training2.optimizer import getOptimizer
-from training2.trainer import ClassificationTrainer, RegressionTrainer, Trainer
+from training.criterion import getCriterionHandler
+from training.dataset import SklearnDatasetCreator
+from training.dl_model import DLModel, LayerParams
+from training.optimizer import getOptimizer
+from training.trainer import ClassificationTrainer, RegressionTrainer, Trainer
 
 api = NinjaAPI()
 

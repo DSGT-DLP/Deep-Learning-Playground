@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  trailingSlash: true,
   env: {
     REACT_APP_CAPTCHA_SITE_KEY: process.env.REACT_APP_CAPTCHA_SITE_KEY,
     REACT_APP_FEEDBACK_EMAIL: process.env.REACT_APP_FEEDBACK_EMAIL,
@@ -10,7 +11,7 @@ const nextConfig = {
       {
         source: "/",
         destination: "/login",
-        permanent: true,
+        permanent: false,
       },
     ];
   },
@@ -22,7 +23,7 @@ const nextConfig = {
     },
     {
       source: "/api/training/:path*",
-      destination: "http://127.0.0.1:8000/api/:path*",
+      destination: "http://localhost:8000/api/:path*",
     },
   ],
 };

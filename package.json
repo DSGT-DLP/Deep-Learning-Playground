@@ -14,6 +14,9 @@
     "secrets": "cd backend && poetry run python -m aws_helpers.aws_secrets_utils.build_env",
     "startb": "cd backend && poetry run python driver.py",
     "starta": "cd aws_write && poetry run python app.py",
+    "installt": "cd training && poetry env remove --all && pyenv local 3.9 && cd .. && yarn updatet",
+    "updatet": "cd training && poetry install --no-root && poetry run ggshield auth login && poetry run pre-commit install",
+    "startt": "cd training && poetry run python manage.py runserver",
     "docker:build": "docker build -t dlp ."
   },
   "repository": {

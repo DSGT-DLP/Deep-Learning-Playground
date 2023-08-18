@@ -53,7 +53,7 @@ class SklearnDatasetCreator(TrainTestDatasetCreator):
         )
 
     @classmethod
-    def fromDefault(cls, name: str, test_size: float, shuffle: bool):
+    def getDefaultDataset(cls, name: str):
         raw_data = cls.DEFAULT_DATASETS[name]()
         default_dataset = pd.DataFrame(
             data=np.c_[raw_data["data"], raw_data["target"]],  # type: ignore
@@ -62,7 +62,12 @@ class SklearnDatasetCreator(TrainTestDatasetCreator):
 
         # remove any empty lines
         default_dataset.dropna(how="all", inplace=True)
+        return default_dataset
 
+    @classmethod
+    def fromDefault(cls, name: str, test_size: float, shuffle: bool):
+        raw_data = cls.DEFAULT_DATASETS[name]()
+        default_dataset = cls.getDefaultDataset(name)
         y = default_dataset["target"]
         X = default_dataset.drop("target", axis=1)
         return cls(X, y, test_size, shuffle, list(raw_data.target_names) if hasattr(raw_data, "target_names") else None)  # type: ignore

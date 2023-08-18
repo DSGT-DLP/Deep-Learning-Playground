@@ -4,10 +4,7 @@ import torch
 import torch.nn as nn
 from typing import TYPE_CHECKING
 
-
-class LayerParams(Schema):
-    value: str
-    parameters: list[Any]
+from training.routes.tabular.schemas import LayerParams
 
 
 class DLModel(nn.Module):

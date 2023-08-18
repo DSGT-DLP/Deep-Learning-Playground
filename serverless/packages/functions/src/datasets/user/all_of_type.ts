@@ -13,10 +13,19 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
       Prefix: `${user_id}/${event.pathParameters.type}`,
     });
     const s3objects = await client.send(command);
+    const data = (s3objects.Contents ?? []).map((obj) => {
+      const [_, type, name] = (obj.Key ?? "").split("/");
+      return {
+        name: name,
+        size: obj.Size!,
+        last_modified: obj.LastModified!,
+        type: type,
+      };
+    });
     return {
       statusCode: 200,
       body: JSON.stringify({
-        data: s3objects.Contents ?? [],
+        data: data,
         message: "Success",
       }),
     };

@@ -4,7 +4,7 @@ import regex as re
 directories = ["backend", "frontend"]
 
 # Content to ignore
-ignored_directories = [
+IGNORED_DIRECTORIES = [
     ".next",
     "node_modules",
     ".venv",
@@ -20,7 +20,7 @@ ignored_directories = [
     "tests",
     "tmp",
 ]
-ignored_files = []
+IGNORED_FILES = []
 
 FILE_DESCRIPTIONS = {
     # Frontend file descriptions
@@ -107,13 +107,13 @@ def traverse_directory(dir: str, is_root: bool, prefix: str) -> str:
     for subdir in subdirs:
         if os.path.isfile(subdir):
             files.append(subdir)
-        elif subdir not in ignored_directories:
+        elif subdir not in IGNORED_DIRECTORIES:
             subtree = traverse_directory(subdir, False, "|  " + prefix)
             output += subtree
 
     for file in files:
         skip = False
-        for ignored_file in ignored_files:
+        for ignored_file in IGNORED_FILES:
             if re.match(ignored_file, file):
                 skip = True
                 break
@@ -129,16 +129,16 @@ def traverse_directory(dir: str, is_root: bool, prefix: str) -> str:
     return output
 
 
-outputFileDirectory = ".github/Architecture.md"
+OUTPUT_FILE_DIRECTORY = ".github/Architecture.md"
 
-output = "# Architecture\n\n"
+content = "# Architecture\n\n"
 for directory in directories:
-    output += "## " + directory.capitalize() + " Architecture\n\n"
-    output += "```\n"
-    output += traverse_directory(directory, True, "|- ")
-    output += "```"
-    output += "\n\n"
+    content += "## " + directory.capitalize() + " Architecture\n\n"
+    content += "```\n"
+    content += traverse_directory(directory, True, "|- ")
+    content += "```"
+    content += "\n\n"
 
-f = open(outputFileDirectory, "w", encoding="utf-8")
-f.write(output)
+f = open(OUTPUT_FILE_DIRECTORY, "w", encoding="utf-8")
+f.write(content)
 f.close()

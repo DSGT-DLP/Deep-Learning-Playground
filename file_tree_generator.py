@@ -22,7 +22,7 @@ ignored_directories = [
 ]
 ignored_files = []
 
-file_descriptions = {
+FILE_DESCRIPTIONS = {
     # Frontend file descriptions
     "settings.js": "List of layers and parameters supported in this playground",
     "iris.csv": "Sample CSV data",
@@ -121,8 +121,8 @@ def traverse_directory(dir: str, is_root: bool, prefix: str) -> str:
             continue
 
         output += "|  " + prefix + "📜 " + file
-        if file in file_descriptions:
-            output += " : " + file_descriptions[file]
+        if file in FILE_DESCRIPTIONS:
+            output += " : " + FILE_DESCRIPTIONS[file]
         output += "\n"
 
     os.chdir("../")

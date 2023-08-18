@@ -1,7 +1,7 @@
 import os
 import regex as re
 
-directories = ["backend", "frontend"]
+TARGET_DIRECTORIES = ["backend", "frontend"]
 
 # Content to ignore
 IGNORED_DIRECTORIES = [
@@ -132,7 +132,7 @@ def traverse_directory(dir: str, is_root: bool, prefix: str) -> str:
 OUTPUT_FILE_DIRECTORY = ".github/Architecture.md"
 
 content = "# Architecture\n\n"
-for directory in directories:
+for directory in TARGET_DIRECTORIES:
     content += "## " + directory.capitalize() + " Architecture\n\n"
     content += "```\n"
     content += traverse_directory(directory, True, "|- ")

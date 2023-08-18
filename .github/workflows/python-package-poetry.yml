@@ -7,7 +7,7 @@ on:
       - prod-deploy
   pull_request:
     paths:
-      - "backend/**"
+      - "training/**"
       - pyproject.toml
 
 jobs:
@@ -41,23 +41,23 @@ jobs:
         id: cached-poetry-dependencies
         uses: actions/cache@v3
         with:
-          path: backend/.venv
-          key: backend-venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/backend/poetry.lock') }}
+          path: training/.venv
+          key: training-venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/training/poetry.lock') }}
       #----------------------------------------------
       # install dependencies if cache does not exist
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: cd backend && poetry install --no-interaction --no-root
+        run: cd training && poetry install --no-interaction --no-root
 
       #----------------------------------------------
       #              run test suite with moto
       #----------------------------------------------
       - name: Run tests with moto
         run: |
-          source backend/.venv/bin/activate
+          source training/.venv/bin/activate
           moto_server s3 -p 5000 &  # Start moto S3 server in the background
           export AWS_ACCESS_KEY_ID=testing
           export AWS_SECRET_ACCESS_KEY=testing
           export AWS_DEFAULT_REGION=us-west-2
-          cd backend && pytest tests
+          cd training && pytest tests

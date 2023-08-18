@@ -12,7 +12,7 @@
     "updatea": "cd aws_write && poetry install --no-root && poetry run ggshield auth login && poetry run pre-commit install",
     "startf": "cd frontend && yarn dev",
     "secrets": "cd backend && poetry run python -m aws_helpers.aws_secrets_utils.build_env",
-    "startb": "cd backend && poetry run python driver.py",
+    "startb": "cd backend && poetry run python app.py",
     "starta": "cd aws_write && poetry run python app.py",
     "installt": "cd training && poetry env remove --all && pyenv local 3.9 && cd .. && yarn updatet",
     "updatet": "cd training && poetry install --no-root && poetry run ggshield auth login && poetry run pre-commit install",

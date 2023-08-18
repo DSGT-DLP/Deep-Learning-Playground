@@ -103,7 +103,7 @@ If this command works properly, you will be redirected to an auth route in the G
 
 ## Backend Infrastructure
 
-`poetry run python driver.py` from the `~/Deep-Learning-Playground` directory
+`poetry run python app.py` from the `~/Deep-Learning-Playground/backend` directory
 
 The backend supports training of a deep learning model and/or a classical ML model
 
@@ -113,7 +113,7 @@ See [Architecture.md](./.github/Architecture.md)
 
 ## Examples
 
-To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Examples.md)
+To see how `app.py` is used, see [`Backend_Examples.md`](./.github/Backend_Examples.md)
 
 # Further Details: Frontend
 

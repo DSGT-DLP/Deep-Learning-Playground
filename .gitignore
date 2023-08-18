@@ -4,6 +4,7 @@
 
 # VS Code
 .vscode/
+.github/ArchitectureTest.md
 
 # --------------------------------------------------------------------------
 #	Backend

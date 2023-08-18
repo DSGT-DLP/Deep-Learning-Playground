@@ -23,7 +23,6 @@ jobs:
 
     # Runs a single command using the runners shell
     - name: Generate File Tree
-      # working-directory: ./Deep-Learning-Playground
       run: |
         pip install regex
         python ./file_tree_generator.py

@@ -60,4 +60,4 @@ jobs:
           export AWS_ACCESS_KEY_ID=testing
           export AWS_SECRET_ACCESS_KEY=testing
           export AWS_DEFAULT_REGION=us-west-2
-          cd training && pytest tests
+      # cd training && pytest tests

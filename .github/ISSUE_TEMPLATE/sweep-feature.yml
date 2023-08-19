@@ -1,11 +1,23 @@
-name: Feature Request
+name: '🤖 Sweep: Feature Request'
 title: 'Sweep: '
-description: Write something like "Write an api endpoint that does "..." in the "..." file"
-labels: sweep
+description: Sweep-automated feature request
+labels: ["sweep"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        👋 Hello there. This is a feature request that will use Sweep's AI to automatically write code and resolve this issue.
+
+        ---
+
+        The title must start with "Sweep: " and you can write something like 
+        - "Sweep: Write an api endpoint that does ... in the ... file"
+        - "Sweep: Print hello world"
+
+        Include as much information/detail on the proposal. You may also build on top of another non-sweep feature request 👍
   - type: textarea
     id: description
     attributes:
       label: Details
       description: More details for Sweep
-      placeholder: The new endpoint should use the ... class from ... file because it contains ... logic
+      placeholder: Print "hello world" under the main method in "/backend/app.py... The new endpoint should use the ... class from ... file because it contains ... logic

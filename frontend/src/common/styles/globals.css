@@ -141,14 +141,6 @@ input.form-control {
   aspect-ratio: 1;
 }
 
-/* #navbar-main .logo-title {
-  color: white;
-} */
-
-/* #navbar-main .logo-title:hover,
-#navbar-main .logo-title:focus { */
-/* color: var(--secondary); */
-/* } */
 #navbar-main .logo-redirect-link {
   color: white;
   font-family: "Lato, Arial, Helvetica, sans-serif";

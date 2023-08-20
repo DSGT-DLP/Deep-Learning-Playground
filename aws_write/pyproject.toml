@@ -12,6 +12,8 @@ python = ">=3.9, <3.10"
 boto3 = "*"
 flask = "2.2.3"
 flask-cors = "*"
+ggshield = "^1.17.3"
+pre-commit = "^3.3.3"
 
 [tool.poetry.dev-dependencies]
 python = ">=3.9"

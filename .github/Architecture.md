@@ -40,6 +40,7 @@
 |  |- 📜 data.csv : data csv file for use in the playground
 |  |- 📜 poetry.lock
 |  |- 📜 middleware.py
+|  |- 📜 __init__.py
 |  |- 📜 app.py : run the backend (entrypoint script)
 ```
 

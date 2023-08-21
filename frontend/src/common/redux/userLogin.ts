@@ -11,6 +11,7 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signInWithRedirect,
   signOut,
   updateEmail,
@@ -290,7 +291,8 @@ export const signInViaGoogleRedirect = createAsyncThunk<
 >("currentUser/signInViaGoogle", async (_, thunkAPI) => {
   try {
     const googleProvider = new GoogleAuthProvider();
-    await signInWithRedirect(auth, googleProvider);
+    await signInWithPopup(auth, googleProvider);
+    //await signInWithRedirect(auth, googleProvider);
     return;
   } catch (e) {
     if (e instanceof FirebaseError) {
@@ -308,7 +310,9 @@ export const signInViaGithubRedirect = createAsyncThunk<
   try {
     const githubProvider = new GithubAuthProvider();
     storage.setItem("expect-user", "true");
-    await signInWithRedirect(auth, githubProvider);
+    await signInWithPopup(auth, githubProvider);
+    //await signInWithRedirect(auth, githubProvider);
+    //TODO: Replace with signInWithRedirect: https://firebase.google.com/docs/auth/web/redirect-best-practices
     return;
   } catch (e) {
     if (e instanceof FirebaseError) {

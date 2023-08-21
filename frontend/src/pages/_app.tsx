@@ -8,14 +8,12 @@ import { Provider } from "react-redux";
 import { setCurrentUser } from "@/common/redux/userLogin";
 import { auth } from "@/common/utils/firebase";
 import store from "@/common/redux/store";
-import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
+import { useAppDispatch } from "@/common/redux/hooks";
 import { ToastContainer } from "react-toastify";
 
 const FirebaseAuthState = () => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.currentUser.user);
   useEffect(() => {
-    const expectUser = storage.getItem("expect-user");
     auth.onAuthStateChanged((firebaseUser) => {
       if (firebaseUser && firebaseUser.email && firebaseUser.displayName) {
         dispatch(

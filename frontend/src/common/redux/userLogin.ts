@@ -353,7 +353,7 @@ export const fetchUserProgressData = createAsyncThunk<
 
 export const currentUserSlice = createSlice({
   name: "currentUser",
-  initialState: { user: "pending" } as UserState,
+  initialState: { user: undefined } as UserState,
   reducers: {
     setCurrentUser: (
       state,

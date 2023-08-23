@@ -5,7 +5,7 @@ const dashboardApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({
     getExecutionsData: builder.query<TrainResultsData[], void>({
       query: () => ({
-        url: "/api/test/",
+        url: "/api/training/test",
         method: "GET",
         /*body: {
           user: auth.currentUser,

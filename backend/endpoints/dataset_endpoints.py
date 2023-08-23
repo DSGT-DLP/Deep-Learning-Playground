@@ -16,7 +16,7 @@ dataset_bp = Blueprint("dataset", __name__)
 @dataset_bp.route("/defaultDataset", methods=["POST"])
 def send_columns():
     """
-    API Endpint to send columns of a user selected default dataset (eg: IRIS, California Housing, Wine, etc)
+    API Endpoint to send columns of a user selected default dataset (eg: IRIS, California Housing, Wine, etc)
 
     Params:
       - using_default_dataset: boolean indicating if a user selected a default dataset

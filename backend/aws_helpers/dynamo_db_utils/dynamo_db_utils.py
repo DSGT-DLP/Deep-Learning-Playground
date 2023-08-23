@@ -1,3 +1,4 @@
+from copy import deepcopy
 from decimal import Decimal
 import json
 import boto3
@@ -99,6 +100,24 @@ def get_dynamo_items_by_gsi(table_name: str, gsi_value: Union[int, str]) -> list
     return response_items
 
 
+def to_decimal(o):
+    if isinstance(o, dict):
+        for k, v in o.items():
+            if isinstance(v, float):
+                o[k] = Decimal(str(v))
+            else:
+                to_decimal(v)
+    elif isinstance(o, list):
+        for v in o:
+            to_decimal(v)
+
+
+def create_dynamo_item_from_obj(table_name: str, obj: object) -> bool:
+    obj_dict = deepcopy(obj.__dict__)
+    to_decimal(obj_dict)
+    return create_dynamo_item(table_name, obj_dict)
+
+
 def create_dynamo_item(table_name: str, input_item: dict) -> bool:
     """
     Creates item in DynamoDB table, replaces item if partition_key already exists
@@ -129,7 +148,7 @@ def create_dynamo_item(table_name: str, input_item: dict) -> bool:
     table = dynamodb.Table(table_name)
     response = table.put_item(Item=input_item)
     if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
-        raise Exception("Failed to delete item")
+        raise Exception("Failed to create item")
     return True
 
 

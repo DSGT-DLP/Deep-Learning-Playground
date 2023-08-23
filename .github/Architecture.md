@@ -3,118 +3,220 @@
 ## Backend Architecture
 
 ```
-📦backend
- ┣ 📂aws_helpers
- ┃ ┗ 📂dynamo_db_utils
- ┃ ┃ ┣ 📜base_db.py - General Dynamo DB Utility class that other Dynamo DB can inherit
- ┃ ┃ ┗ 📜status_db.py - General Dynamo DB table for status
- ┣ 📂common
- ┃ ┣ 📜constants.py - list of helpful constants
- ┃ ┣ 📜dataset.py - read in the dataset through URL or file upload
- ┃ ┣ 📜default_datasets.py - store logic to load in default datasets from scikit-learn
- ┃ ┣ 📜email_notifier.py - ENdpoint to send email notification of training results via API Gateway + AWS SES
- ┃ ┣ 📜loss_functions.py - loss function enum
- ┃ ┣ 📜optimizer.py - what optimizer to use (ie: SGD or Adam for now)
- ┃ ┗ 📜utils.py - utility functions that could be helpful
- ┣ 📂dl
- ┃ ┣ 📜dl_eval.py - Evaluation functions for deep learning models in Pytorch (eg: accuracy, loss, etc)
- ┃ ┣ 📜dl_model.py - torch model based on user specifications from drag and drop
- ┃ ┣ 📜dl_model_parser.py - parse the user specified pytorch model
- ┃ ┣ 📜dl_trainer.py - train a deep learning model on the dataset
- ┃ ┗ 📜pretrained.py - Functionality to support user training pretrained models (eg: alexnet, resnet, vgg16, etc) via timmodels + fast AI
- ┣ 📂ml
- ┃ ┗ 📜ml_trainer.py - train a classical machine learning learning model on the dataset
- ┣ 📜data.csv - data csv file for use in the playground
- ┣ 📜driver.py - run the backend (entrypoint script)
- ┣ 📜epoch_times.csv
- ┣ 📜test.py
- ┗ 📜__init__.py
+📦 backend
+|  |- 📂 aws_helpers:
+|  |  |- 📂 dynamo_db_utils:
+|  |  |  |- 📜 DynamoUnitTests.md
+|  |  |  |- 📜 dynamo_db_utils.py
+|  |  |  |- 📜 trainspace_db.py
+|  |  |  |- 📜 constants.py : list of helpful constants
+|  |  |  |- 📜 userprogress_db.py
+|  |  |- 📜 __init__.py
+|  |- 📂 ml:
+|  |  |- 📜 ml_trainer.py : train a classical machine learning learning model on the dataset
+|  |  |- 📜 __init__.py
+|  |  |- 📜 ml_model_parser.py
+|  |- 📂 dl:
+|  |  |- 📜 __init__.py
+|  |  |- 📜 dl_trainer.py : train a deep learning model on the dataset
+|  |  |- 📜 dl_model.py : torch model based on user specifications from drag and drop
+|  |  |- 📜 dl_model_parser.py : parse the user specified pytorch model
+|  |  |- 📜 detection.py
+|  |  |- 📜 dl_eval.py : Evaluation functions for deep learning models in Pytorch (eg: accuracy, loss, etc)
+|  |- 📂 common:
+|  |  |- 📜 default_datasets.py : store logic to load in default datasets from scikit-learn
+|  |  |- 📜 __init__.py
+|  |  |- 📜 preprocessing.py
+|  |  |- 📜 dataset.py : read in the dataset through URL or file upload
+|  |  |- 📜 constants.py : list of helpful constants
+|  |  |- 📜 optimizer.py : what optimizer to use (ie: SGD or Adam for now)
+|  |  |- 📜 ai_drive.py
+|  |  |- 📜 email_notifier.py : Endpoint to send email notification of training results via API Gateway + AWS SES
+|  |  |- 📜 loss_functions.py : loss function enum
+|  |  |- 📜 kernel.py
+|  |  |- 📜 utils.py : utility functions that could be helpful
+|  |- 📜 __init__.py
+|  |- 📜 middleware.py
+|  |- 📜 poetry.lock
+|  |- 📜 epoch_times.csv
+|  |- 📜 app.py : run the backend (entrypoint script)
+|  |- 📜 data.csv : data csv file for use in the playground
+|  |- 📜 pyproject.toml
 ```
 
 ## Frontend Architecture
 
 ```
-📦frontend
- ┣ 📂layer_docs
- ┃ ┣ 📜Linear.md - Doc for Linear layer
- ┃ ┣ 📜ReLU.md - Doc for ReLU later
- ┃ ┣ 📜Softmax.md - Doc for Softmax layer
- ┃ ┗ 📜softmax_equation.png - PNG file of Softmax equation
- ┣ 📂public
- ┃ ┣ 📜dlp-logo.ico - DLP Logo
- ┃ ┣ 📜dlp-logo.png - DLP Logo
- ┃ ┣ 📜dlp-logo.svg - DLP Logo
- ┃ ┣ 📜index.html - Base HTML file that will be initially rendered
- ┃ ┣ 📜manifest.json - Default React file for choosing icon based on
- ┃ ┗ 📜robots.txt
- ┣ 📂src
- ┃ ┣ 📂backend_outputs
- ┃ ┃ ┣ 📜model.pt - Last model.pt output
- ┃ ┃ ┗ 📜my_deep_learning_model.onnx - Last ONNX file output
- ┃ ┣ 📂components
- ┃ ┃ ┣ 📂About
- ┃ ┃ ┃ ┗ 📜About.js - Primary About page component
- ┃ ┃ ┣ 📂Feedback
- ┃ ┃ ┃ ┗ 📜Feedback.js - Primary Feedback page component
- ┃ ┃ ┣ 📂Footer
- ┃ ┃ ┃ ┣ 📜Footer.css - CSS file for Footer
- ┃ ┃ ┃ ┗ 📜Footer.js - Primary Footer page component
- ┃ ┃ ┣ 📂general
- ┃ ┃ ┃ ┣ 📜LargeFileUpload.js - Renders a dropzone component to upload large files
- ┃ ┃ ┃ ┗ 📜TitleText.js - Renders a simple header for a small subsection title
- ┃ ┃ ┣ 📂helper_functions
- ┃ ┃ ┃ ┗ 📜TalkWithBackend.js - Sends ML/DL parameters to the backend and receives the backend
- ┃ ┃ ┃ ┗ 📜TrainButtonFunctions.js - Stores the logic for validating and creating JSON to send to backend
- ┃ ┃ ┣ 📂Home
- ┃ ┃ ┃ ┣ 📜AddedLayer.js - Renders an added layer container in the topmost row
- ┃ ┃ ┃ ┣ 📜AddNewLayer.js - Renders a fillable layer container for the user to drag LayerChoice components into, where the new layer input will be filled by an AddedLayer component
- ┃ ┃ ┃ ┣ 📜BackgroundLayout.js - Renders a light blue horizontally-stretched row to serve as a background to contain other components in one subsection in the Homepage
- ┃ ┃ ┃ ┣ 📜ChoiceTab.js - Renders the navigation tab to switch between types of DL training
- ┃ ┃ ┃ ┣ 📜CodeSnippet.js - Renders the code snippet container
- ┃ ┃ ┃ ┣ 📜CSVInputFile.js - Renders the CSV file input contents (if any)
- ┃ ┃ ┃ ┣ 📜CSVInputURL.js - Renders the CSV URL input contents (if any)
- ┃ ┃ ┃ ┣ 📜DropDown.js - Renders the drop down components using react-select package
- ┃ ┃ ┃ ┣ 📜EmailInput.js - Renders the email input form
- ┃ ┃ ┃ ┣ 📜Input.js - Renders the Parameters for the machine/deep learning tools (often DropDown input components)
- ┃ ┃ ┃ ┣ 📜LayerChoice.js - Renders a layer container for all the possible layers, for the user to drag from into the AddNewLayer component
- ┃ ┃ ┃ ┣ 📜RectContainer.js - Renders a stylizable fixed-sized rectangle for the layers
- ┃ ┃ ┃ ┣ 📜Results.js - Renders the results after a train session, or a simple text if no train sessions have been done or a session has failed with the backend's message
- ┃ ┃ ┃ ┗ 📜TrainButton.js - Renders the Train button, clicking which will call the backend with the ML/DL parameters
- ┃ ┃ ┣ 📂ImageModels
- ┃ ┃ ┃ ┣ 📜DataCodeSnippet.js - Renders the dataloaders snippet
- ┃ ┃ ┃ ┣ 📜ImageModels.js - Primary Image Models page component
- ┃ ┃ ┃ ┗ 📜Transforms.js - Renders a dropdown select and drag and drop component
- ┃ ┃ ┣ 📂Navbar
- ┃ ┃ ┃ ┗ 📜Navbar.js
- ┃ ┃ ┣ 📂Pretrained
- ┃ ┃ ┃ ┗ 📜Pretrained.js - Primary Pretrained page component
- ┃ ┃ ┣ 📂Wiki
- ┃ ┃ ┃ ┣ 📜softmax_equation.png - Softmax equation screenshot for reference in Wiki
- ┃ ┃ ┃ ┗ 📜Wiki.js - Primary Wiki page component
- ┃ ┃ ┗ 📜index.js - Centralized location to import any components from outside of this ./components directory
- ┃ ┣ 📂images
- ┃ ┃ ┣ 📂logos
- ┃ ┃ ┃ ┣ 📂dlp_branding
- ┃ ┃ ┃ ┃ ┣ 📜dlp-logo.png - DLP Logo, duplicate of files in public, but essential as the frontend can't read public
- ┃ ┃ ┃ ┃ ┗ 📜dlp-logo.svg - DLP Logo, duplicate of files in public, but essential as the frontend can't read public
- ┃ ┃ ┃ ┣ 📜aws-logo.png
- ┃ ┃ ┃ ┣ 📜dsgt-logo-dark.png
- ┃ ┃ ┃ ┣ 📜dsgt-logo-light.png
- ┃ ┃ ┃ ┣ 📜dsgt-logo-white-back.png
- ┃ ┃ ┃ ┣ 📜flask-logo.png
- ┃ ┃ ┃ ┣ 📜pandas-logo.svg
- ┃ ┃ ┃ ┣ 📜python-logo.png
- ┃ ┃ ┃ ┣ 📜pytorch-logo.png
- ┃ ┃ ┃ ┗ 📜react-logo.png
- ┃ ┃ ┗ 📜demo_video.gif - GIF tutorial of a simple classification training session
- ┃ ┣ 📜App.css - General CSS file
- ┃ ┣ 📜App.js - Base React file
- ┃ ┣ 📜constants.js - Constants for the frontend
- ┃ ┣ 📜Home.js - Main project file that renders the Home frontpage
- ┃ ┣ 📜index.js - Calls the App.js file to render to the .root DOM element
- ┃ ┣ 📜iris.csv - Sample CSV data
- ┃ ┗ 📜settings.js - List of layers and parameters supported in this playground
- ┣ 📜.gitignore
- ┣ 📜package-lock.json
- ┗ 📜package.json
+📦 frontend
+|  |- 📂 src:
+|  |  |- 📂 backend_outputs:
+|  |  |  |- 📜 model.pt : Last model.pt output
+|  |  |  |- 📜 my_deep_learning_model.onnx : Last ONNX file output
+|  |  |  |- 📜 model.pkl
+|  |  |- 📂 pages:
+|  |  |  |- 📂 train:
+|  |  |  |  |- 📜 [train_space_id].tsx
+|  |  |  |  |- 📜 index.tsx
+|  |  |  |- 📜 feedback.tsx
+|  |  |  |- 📜 settings.tsx
+|  |  |  |- 📜 _app.tsx
+|  |  |  |- 📜 learn.tsx
+|  |  |  |- 📜 login.tsx
+|  |  |  |- 📜 wiki.tsx
+|  |  |  |- 📜 _document.tsx
+|  |  |  |- 📜 about.tsx
+|  |  |  |- 📜 forgot.tsx
+|  |  |  |- 📜 dashboard.tsx
+|  |  |  |- 📜 LearnContent.tsx
+|  |  |- 📂 features:
+|  |  |  |- 📂 Train:
+|  |  |  |  |- 📂 constants:
+|  |  |  |  |  |- 📜 trainConstants.ts
+|  |  |  |  |- 📂 features:
+|  |  |  |  |  |- 📂 Image:
+|  |  |  |  |  |  |- 📂 constants:
+|  |  |  |  |  |  |  |- 📜 imageConstants.ts
+|  |  |  |  |  |  |- 📂 components:
+|  |  |  |  |  |  |  |- 📜 ImageTrainspace.tsx
+|  |  |  |  |  |  |  |- 📜 ImageDatasetStep.tsx
+|  |  |  |  |  |  |  |- 📜 ImageReviewStep.tsx
+|  |  |  |  |  |  |  |- 📜 ImageParametersStep.tsx
+|  |  |  |  |  |  |- 📂 types:
+|  |  |  |  |  |  |  |- 📜 imageTypes.ts
+|  |  |  |  |  |  |- 📂 redux:
+|  |  |  |  |  |  |  |- 📜 imageActions.ts
+|  |  |  |  |  |  |  |- 📜 imageApi.ts
+|  |  |  |  |  |  |- 📜 index.ts
+|  |  |  |  |  |- 📂 Tabular:
+|  |  |  |  |  |  |- 📂 constants:
+|  |  |  |  |  |  |  |- 📜 tabularConstants.ts
+|  |  |  |  |  |  |- 📂 components:
+|  |  |  |  |  |  |  |- 📜 TabularParametersStep.tsx
+|  |  |  |  |  |  |  |- 📜 TabularDatasetStep.tsx
+|  |  |  |  |  |  |  |- 📜 TabularTrainspace.tsx
+|  |  |  |  |  |  |  |- 📜 TabularReviewStep.tsx
+|  |  |  |  |  |  |- 📂 types:
+|  |  |  |  |  |  |  |- 📜 tabularTypes.ts
+|  |  |  |  |  |  |- 📂 redux:
+|  |  |  |  |  |  |  |- 📜 tabularActions.ts
+|  |  |  |  |  |  |  |- 📜 tabularApi.ts
+|  |  |  |  |  |  |- 📜 index.ts
+|  |  |  |  |- 📂 components:
+|  |  |  |  |  |- 📜 CreateTrainspace.tsx
+|  |  |  |  |  |- 📜 DatasetStepLayout.tsx
+|  |  |  |  |  |- 📜 TrainspaceLayout.tsx
+|  |  |  |  |- 📂 types:
+|  |  |  |  |  |- 📜 trainTypes.ts
+|  |  |  |  |- 📂 redux:
+|  |  |  |  |  |- 📜 trainspaceApi.ts
+|  |  |  |  |  |- 📜 trainspaceSlice.ts
+|  |  |  |- 📂 Dashboard:
+|  |  |  |  |- 📂 components:
+|  |  |  |  |  |- 📜 TrainDoughnutChart.tsx
+|  |  |  |  |  |- 📜 TrainBarChart.tsx
+|  |  |  |  |  |- 📜 TrainDataGrid.tsx
+|  |  |  |  |- 📂 redux:
+|  |  |  |  |  |- 📜 dashboardApi.ts
+|  |  |  |- 📂 LearnMod:
+|  |  |  |  |- 📜 LearningModulesContent.tsx
+|  |  |  |  |- 📜 Exercise.tsx
+|  |  |  |  |- 📜 ImageComponent.tsx
+|  |  |  |  |- 📜 ModulesSideBar.tsx
+|  |  |  |  |- 📜 MCQuestion.tsx
+|  |  |  |  |- 📜 FRQuestion.tsx
+|  |  |  |  |- 📜 ClassCard.tsx
+|  |  |  |- 📂 Feedback:
+|  |  |  |  |- 📂 redux:
+|  |  |  |  |  |- 📜 feedbackApi.ts
+|  |  |  |- 📂 OpenAi:
+|  |  |  |  |- 📜 openAiUtils.ts
+|  |  |- 📂 common:
+|  |  |  |- 📂 styles:
+|  |  |  |  |- 📜 globals.css
+|  |  |  |  |- 📜 Home.module.css
+|  |  |  |- 📂 components:
+|  |  |  |  |- 📜 ClientOnlyPortal.tsx
+|  |  |  |  |- 📜 EmailInput.tsx
+|  |  |  |  |- 📜 TitleText.tsx
+|  |  |  |  |- 📜 NavBarMain.tsx
+|  |  |  |  |- 📜 Footer.tsx
+|  |  |  |  |- 📜 Spacer.tsx
+|  |  |  |- 📂 utils:
+|  |  |  |  |- 📜 firebase.ts
+|  |  |  |  |- 📜 dateFormat.ts
+|  |  |  |  |- 📜 dndHelpers.ts
+|  |  |  |- 📂 redux:
+|  |  |  |  |- 📜 backendApi.ts
+|  |  |  |  |- 📜 userLogin.ts
+|  |  |  |  |- 📜 hooks.ts
+|  |  |  |  |- 📜 store.ts
+|  |  |  |  |- 📜 train.ts
+|  |  |- 📜 iris.csv : Sample CSV data
+|  |  |- 📜 next-env.d.ts
+|  |  |- 📜 constants.ts
+|  |  |- 📜 GlobalStyle.ts
+|  |- 📂 layer_docs:
+|  |  |- 📜 Linear.md : Doc for Linear layer
+|  |  |- 📜 Softmax.md : Doc for Softmax layer
+|  |  |- 📜 softmax_equation.png : PNG file of Softmax equation
+|  |  |- 📜 ReLU.md : Doc for ReLU later
+|  |- 📂 public:
+|  |  |- 📂 images:
+|  |  |  |- 📂 logos:
+|  |  |  |  |- 📂 dlp_branding:
+|  |  |  |  |  |- 📜 dlp-logo.svg : DLP Logo, duplicate of files in public, but essential as the frontend can't read public
+|  |  |  |  |  |- 📜 dlp-logo.png : DLP Logo, duplicate of files in public, but essential as the frontend can't read public
+|  |  |  |  |- 📜 dsgt-logo-dark.png
+|  |  |  |  |- 📜 github.png
+|  |  |  |  |- 📜 dsgt-logo-light.png
+|  |  |  |  |- 📜 pandas-logo.png
+|  |  |  |  |- 📜 react-logo.png
+|  |  |  |  |- 📜 python-logo.png
+|  |  |  |  |- 📜 flask-logo.png
+|  |  |  |  |- 📜 pytorch-logo.png
+|  |  |  |  |- 📜 aws-logo.png
+|  |  |  |  |- 📜 google.png
+|  |  |  |  |- 📜 dsgt-logo-white-back.png
+|  |  |  |- 📂 learn_mod_images:
+|  |  |  |  |- 📜 lossExampleTable.png
+|  |  |  |  |- 📜 tanhactivation.png
+|  |  |  |  |- 📜 sigmoidactivation.png
+|  |  |  |  |- 📜 LeakyReLUactivation.png
+|  |  |  |  |- 📜 ReLUactivation.png
+|  |  |  |  |- 📜 robotImage.jpg
+|  |  |  |  |- 📜 lossExample.png
+|  |  |  |  |- 📜 binarystepactivation.png
+|  |  |  |  |- 📜 lossExampleEquation.png
+|  |  |  |  |- 📜 neuronWithEquation.png
+|  |  |  |  |- 📜 neuron.png
+|  |  |  |  |- 📜 neuralnet.png
+|  |  |  |  |- 📜 sigmoidfunction.png
+|  |  |  |- 📂 wiki_images:
+|  |  |  |  |- 📜 avgpool_maxpool.gif
+|  |  |  |  |- 📜 conv2d2.gif
+|  |  |  |  |- 📜 dropout_diagram.png
+|  |  |  |  |- 📜 batchnorm_diagram.png
+|  |  |  |  |- 📜 tanh_plot.png
+|  |  |  |  |- 📜 softmax_equation.png : PNG file of Softmax equation
+|  |  |  |  |- 📜 maxpool2d.gif
+|  |  |  |  |- 📜 tanh_equation.png
+|  |  |  |  |- 📜 conv2d.gif
+|  |  |  |  |- 📜 sigmoid_equation.png
+|  |  |  |- 📜 demo_video.gif : GIF tutorial of a simple classification training session
+|  |  |- 📜 dlp-logo.svg : DLP Logo, duplicate of files in public, but essential as the frontend can't read public
+|  |  |- 📜 robots.txt
+|  |  |- 📜 dlp-logo.png : DLP Logo, duplicate of files in public, but essential as the frontend can't read public
+|  |  |- 📜 manifest.json : Default React file for choosing icon based on
+|  |  |- 📜 index.html : Base HTML file that will be initially rendered
+|  |  |- 📜 dlp-logo.ico : DLP Logo
+|  |- 📜 package.json
+|  |- 📜 jest.config.js
+|  |- 📜 .eslintrc.json
+|  |- 📜 tsconfig.json
+|  |- 📜 yarn.lock
+|  |- 📜 .eslintignore
+|  |- 📜 next-env.d.ts
+|  |- 📜 babel.config.js
+|  |- 📜 next.config.js
 ```
+

@@ -1,24 +1,12 @@
 from django.http import HttpRequest
-import firebase_admin
 from ninja import Router, Schema
 from ninja.security import HttpBearer
 from training.core.dataset import SklearnDatasetCreator
 from training.routes.datasets.default.schemas import DefaultDatasetResponse
 from training.routes.schemas import NotFoundError
+from core.authenticator import FirebaseAuth
 
 router = Router()
-
-class FirebaseAuth(HttpBearer):
-    def authenticate(self, request, token):
-        if token is None or not token:
-            return
-        
-        try:
-            firebase_admin.auth.verify_id_token(token)
-        except Exception as e:
-            print(e)
-            return None
-        return token
 
 @router.get(
     "{name}/columns",

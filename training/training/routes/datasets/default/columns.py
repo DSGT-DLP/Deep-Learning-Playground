@@ -14,8 +14,7 @@ class FirebaseAuth(HttpBearer):
             return
         
         try:
-            authorization = token[7:]
-            firebase_admin.auth.verify_id_token(authorization)
+            firebase_admin.auth.verify_id_token(token)
         except Exception as e:
             print(e)
             return None

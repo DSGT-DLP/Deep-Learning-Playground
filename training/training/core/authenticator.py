@@ -1,6 +1,7 @@
 from ninja.security import HttpBearer
 import firebase_admin
 
+
 class FirebaseAuth(HttpBearer):
     def authenticate(self, request, token):
         if token is None or not token:

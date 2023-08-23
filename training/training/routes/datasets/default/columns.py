@@ -8,13 +8,18 @@ from core.authenticator import FirebaseAuth
 
 router = Router()
 
+
 @router.get(
     "{name}/columns",
     response={200: DefaultDatasetResponse, 404: NotFoundError},
-    auth=FirebaseAuth()
+    auth=FirebaseAuth(),
 )
 def defaultDatasets(request: HttpRequest, name: str):
     if not name in SklearnDatasetCreator.DEFAULT_DATASETS:
         return 404, {"message": "Dataset not found"}
     dataset = SklearnDatasetCreator.getDefaultDataset(name)
-    return 200, { "data" : dataset.columns.tolist(), "message" : "Success", "token" : request.auth }
+    return 200, {
+        "data": dataset.columns.tolist(),
+        "message": "Success",
+        "token": request.auth,
+    }

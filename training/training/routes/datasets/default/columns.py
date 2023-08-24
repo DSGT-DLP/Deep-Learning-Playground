@@ -14,7 +14,7 @@ class Request(HttpRequest):
 @router.get(
     "{name}/columns",
     response={200: DefaultDatasetResponse, 404: NotFoundError},
-    auth=FirebaseAuth()
+    auth=FirebaseAuth(),
 )
 def defaultDatasets(request: Request, name: str):
     if not name in SklearnDatasetCreator.DEFAULT_DATASETS:

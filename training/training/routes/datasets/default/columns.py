@@ -8,8 +8,10 @@ from training.routes.schemas import NotFoundError
 
 router = Router()
 
+
 class Request(HttpRequest):
     auth: str
+
 
 @router.get(
     "{name}/columns",
@@ -20,8 +22,8 @@ def defaultDatasets(request: Request, name: str):
     if not name in SklearnDatasetCreator.DEFAULT_DATASETS:
         return 404, {"message": "Dataset not found"}
     dataset = SklearnDatasetCreator.getDefaultDataset(name)
-    return 200, { 
-        "data" : dataset.columns.tolist(), 
-        "message" : "Success",
-        "token" : request.auth,
+    return 200, {
+        "data": dataset.columns.tolist(),
+        "message": "Success",
+        "token": request.auth,
     }

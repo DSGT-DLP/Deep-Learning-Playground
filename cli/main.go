@@ -7,6 +7,7 @@ import (
 	"github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/start"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/start/backend"
+	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/start/frontend"
 )
 
 func main() {

@@ -39,22 +39,6 @@ func Execute() {
 }
 
 func init() {
-	/*
-		viper.SetConfigName("dlpconfig") // name of config file (without extension)
-		viper.SetConfigType("yaml")      // REQUIRED if the config file does not have the extension in the name
-		viper.AddConfigPath(".")
-		err := viper.ReadInConfig() // Find and read the config file
-		if err != nil {             // Handle errors reading the config file
-			panic(fmt.Errorf("fatal error config file: %w", err))
-		}*/
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cli.yaml)")
 	RootCmd.PersistentFlags().String("project-dir", ".", "The directory of the project relative to the cli directory (cli-config.yaml project-dir overrides default value)")
 	viper.BindPFlag("project-dir", RootCmd.PersistentFlags().Lookup("project-dir"))
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	//RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

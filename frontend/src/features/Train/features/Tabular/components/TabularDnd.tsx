@@ -16,7 +16,6 @@ import ReactFlow, {
   Controls,
   Edge,
   Handle,
-  MiniMap,
   Node,
   NodeTypes,
   Position,
@@ -37,7 +36,7 @@ export default function TabularDnd(props: TabularDndProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  export function handleExportLayers(): ParameterData["layers"][] | undefined {
+  function handleExportLayers(): ParameterData["layers"][] | undefined {
     const layers: ParameterData["layers"][] = [];
 
     const directedEdges: Record<string, Node<NodeData>> = {};
@@ -46,6 +45,7 @@ export default function TabularDnd(props: TabularDndProps) {
       const sourceNode = nodes.find((node) => node.id === edge.source);
       const targetNode = nodes.find((node) => node.id === edge.target);
       directedEdges[sourceNode] = targetNode;
+    });
 
     return [];
   }

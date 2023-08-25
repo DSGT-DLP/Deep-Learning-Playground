@@ -24,6 +24,7 @@ import {
 } from "@/common/redux/userLogin";
 import Image from "next/image";
 import Link from "next/link";
+import { BoltRounded } from "@mui/icons-material";
 
 const NavbarMain = () => {
   const user = useAppSelector((state) => state.currentUser.user);
@@ -88,11 +89,11 @@ const NavbarMain = () => {
                   noWrap
                   className="d-flex align-items-center logo-title"
                   sx={{
-                  mr: 2,
-                   display: { xs: "none", md: "flex" },
-                  //fontFamily:
-                  //color: inherit
-                   textDecoration: "none",
+                    mr: 2,
+                    display: { xs: "none", md: "flex" },
+                    fontWeight: "500",
+                    textDecoration: "none",
+                    fontSize: "17px"
                   }}
                 >
                   Deep Learning Playground
@@ -220,4 +221,3 @@ const NavbarMain = () => {
 };
 
 export default NavbarMain;
-

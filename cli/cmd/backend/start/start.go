@@ -1,21 +1,21 @@
 /*
 Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 */
-package backend
+package start
 
 import (
 	"fmt"
 	"os/exec"
 	"strings"
 
-	"github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/start"
+	"github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/backend"
 	"github.com/DSGT-DLP/Deep-Learning-Playground/cli/pkg"
 	"github.com/spf13/cobra"
 )
 
-// BackendCmd represents the backend command
-var BackendCmd = &cobra.Command{
-	Use:   "backend",
+// StartCmd represents the backend start command
+var StartCmd = &cobra.Command{
+	Use:   "start",
 	Short: "Starts the training backend",
 	Long:  `Starts an instance of the training backend Django app in /training in the terminal`,
 	Args:  cobra.ExactArgs(0),
@@ -24,10 +24,11 @@ var BackendCmd = &cobra.Command{
 		bash_cmd.Dir = "./training"
 		fmt.Println(strings.Join(bash_cmd.Args, " "))
 		pkg.ExecBashCmd(bash_cmd)
+
 	},
 }
 
 func init() {
-	start.StartCmd.AddCommand(BackendCmd)
-	BackendCmd.PersistentFlags().Int("port", 8000, "A port to run the backend on")
+	backend.BackendCmd.AddCommand(StartCmd)
+	StartCmd.PersistentFlags().IntP("port", "p", 8000, "A port to run the backend on")
 }

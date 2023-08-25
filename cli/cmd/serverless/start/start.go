@@ -8,14 +8,14 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/start"
+	"github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless"
 	"github.com/DSGT-DLP/Deep-Learning-Playground/cli/pkg"
 	"github.com/spf13/cobra"
 )
 
-// ServerlessCmd represents the serverless command
-var ServerlessCmd = &cobra.Command{
-	Use:   "serverless",
+// StartCmd represents the serverless start command
+var StartCmd = &cobra.Command{
+	Use:   "start",
 	Short: "Starts the serverless environment",
 	Long:  `Starts SST's Live Lambda Development environment in the terminal`,
 	Args:  cobra.ExactArgs(0),
@@ -28,5 +28,5 @@ var ServerlessCmd = &cobra.Command{
 }
 
 func init() {
-	start.StartCmd.AddCommand(ServerlessCmd)
+	serverless.ServerlessCmd.AddCommand(StartCmd)
 }

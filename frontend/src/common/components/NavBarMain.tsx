@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Grid from "@mui/material/Grid";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import Stack from "@mui/material/Stack";
 
 import storage from "local-storage-fallback";
 import React, { useEffect, useState } from "react";
@@ -71,25 +72,33 @@ const NavbarMain = () => {
               justifyContent: "space-between",
             }}
           >
-            <Icon sx={{ display: { xs: "none", md: "flex" }, ml: -5, mr: 1 }}>
-              <Image src={DSGTLogo} alt="DSGT Logo" width={40} height={40} />
-            </Icon>
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="/"
-              className="d-flex align-items-center logo-title"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "Lato, Arial, Helvetica, sans-serif",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              Deep Learning Playground
-            </Typography>
+            <Link href="/" className="logo-redirect-link">
+              <Stack direction="row" alignItems="center">
+                <Icon
+                  sx={{ display: { xs: "none", md: "flex" }, ml: -5, mr: 1 }}
+                >
+                  <Image
+                    src={DSGTLogo}
+                    alt="DSGT Logo"
+                    width={40}
+                    height={40}
+                  />
+                </Icon>
+                <Typography
+                  noWrap
+                  className="d-flex align-items-center logo-title"
+                  sx={{
+                  mr: 2,
+                   display: { xs: "none", md: "flex" },
+                  //fontFamily:
+                  //color: inherit
+                   textDecoration: "none",
+                  }}
+                >
+                  Deep Learning Playground
+                </Typography>
+              </Stack>
+            </Link>
 
             <Grid
               sx={{
@@ -160,7 +169,7 @@ const NavbarMain = () => {
                         </Link>
                       </MenuItem>
                       <MenuItem divider>
-                        <Link href="/learn" id="basic-nav-dropdown">
+                        <Link href="/learn-mod" id="basic-nav-dropdown">
                           Learn
                         </Link>
                       </MenuItem>

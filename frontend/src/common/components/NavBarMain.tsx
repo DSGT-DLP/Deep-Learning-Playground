@@ -24,7 +24,7 @@ import {
 } from "@/common/redux/userLogin";
 import Image from "next/image";
 import Link from "next/link";
-import { BoltRounded } from "@mui/icons-material";
+
 
 const NavbarMain = () => {
   const user = useAppSelector((state) => state.currentUser.user);
@@ -170,7 +170,7 @@ const NavbarMain = () => {
                         </Link>
                       </MenuItem>
                       <MenuItem divider>
-                        <Link href="/learn-mod" id="basic-nav-dropdown">
+                        <Link href="/learn" id="basic-nav-dropdown">
                           Learn
                         </Link>
                       </MenuItem>

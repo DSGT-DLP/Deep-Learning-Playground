@@ -1,4 +1,5 @@
 import traceback
+import uuid
 
 from flask import Blueprint
 from flask import request
@@ -145,6 +146,40 @@ def createTrainspaceDataInDb():
             return send_success({"message": "Trainspace created", "success": success})
         else:
             return send_error("Trainspace not created")
+    except Exception:
+        print(traceback.format_exc())
+        return send_traceback_error()
+
+
+@trainspace_bp.route("/tabular", methods=["POST"])
+def tabular():
+    try:
+        request_data = json.loads(request.data)
+        print(
+            dl_tabular_drive(
+                request_data["user_arch"],
+                "",
+                {
+                    "target": request_data["target"],
+                    "features": request_data["features"],
+                    "problem_type": request_data["problem_type"],
+                    "optimizer_name": request_data["optimizer_name"],
+                    "criterion": request_data["criterion"],
+                    "default": request_data["default"],
+                    "epochs": request_data["epochs"],
+                    "shuffle": request_data["shuffle"],
+                    "test_size": request_data["test_size"],
+                    "batch_size": request_data["batch_size"],
+                },
+                None,
+                request_data["name"],
+            )
+        )
+        return send_success(
+            {
+                "message": "Trainspace trained",
+            }
+        )
     except Exception:
         print(traceback.format_exc())
         return send_traceback_error()

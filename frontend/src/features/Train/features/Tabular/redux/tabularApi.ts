@@ -8,33 +8,23 @@ const tabularApi = backendApi.injectEndpoints({
       TrainspaceData<"TRAIN">
     >({
       query: (trainspaceData) => ({
-        url: "/api/train/tabular-run",
+        url: "/api/training/tabular",
         method: "POST",
         body: {
           name: trainspaceData.name,
-          data_source: trainspaceData.dataSource,
-          dataset_data: {
-            name: trainspaceData.datasetData.name,
-            is_default_dataset: trainspaceData.datasetData.isDefaultDataset,
-          },
-          parameters_data: {
-            target_col: trainspaceData.parameterData.targetCol,
-            features: trainspaceData.parameterData.features,
-            problem_type: trainspaceData.parameterData.problemType,
-            criterion: trainspaceData.parameterData.criterion,
-            optimizer_name: trainspaceData.parameterData.optimizerName,
-            shuffle: trainspaceData.parameterData.shuffle,
-            epochs: trainspaceData.parameterData.epochs,
-            test_size: trainspaceData.parameterData.testSize,
-            batch_size: trainspaceData.parameterData.batchSize,
-            layers: trainspaceData.parameterData.layers,
-          },
-          review_data: {
-            notification_email:
-              trainspaceData.reviewData.notificationEmail ?? null,
-            notification_phone_number:
-              trainspaceData.reviewData.notificationPhoneNumber ?? null,
-          },
+          target: trainspaceData.parameterData.targetCol,
+          features: trainspaceData.parameterData.features,
+          default: trainspaceData.datasetData.isDefaultDataset
+            ? trainspaceData.datasetData.name
+            : undefined,
+          problem_type: trainspaceData.parameterData.problemType,
+          criterion: trainspaceData.parameterData.criterion,
+          optimizer_name: trainspaceData.parameterData.optimizerName,
+          shuffle: trainspaceData.parameterData.shuffle,
+          epochs: trainspaceData.parameterData.epochs,
+          test_size: trainspaceData.parameterData.testSize,
+          batch_size: trainspaceData.parameterData.batchSize,
+          user_arch: trainspaceData.parameterData.layers,
         },
       }),
       transformResponse: (response: { trainspace_id: string }) => {

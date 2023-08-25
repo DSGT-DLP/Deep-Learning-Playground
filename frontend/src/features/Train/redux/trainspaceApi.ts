@@ -15,21 +15,18 @@ const trainspaceApi = backendApi
         { dataSource: DATA_SOURCE }
       >({
         query: ({ dataSource }) => ({
-          url: "/api/s3/getUserDatasetFilesData",
-          method: "POST",
-          body: {
-            data_source: dataSource.toLowerCase(),
-          },
+          url: `/api/lambda/datasets/user/${dataSource}`,
         }),
         providesTags: ["UserDatasetFilesData"],
-        transformResponse: (response: { data: string }) => {
-          const data: {
+        transformResponse: (response: {
+          data: {
             name: string;
             type: string;
             last_modified: string;
             size: string;
-          }[] = JSON.parse(response.data);
-          return data.map<FileUploadData>((fileObj) => ({
+          }[];
+        }) => {
+          return response.data.map<FileUploadData>((fileObj) => ({
             name: fileObj.name,
             contentType: fileObj.type,
             lastModified: fileObj.last_modified,
@@ -86,19 +83,19 @@ const trainspaceApi = backendApi
       >({
         query: ({ dataSource, dataset }) => ({
           url: dataset.isDefaultDataset
-            ? "/api/dataset/defaultDataset"
+            ? `/api/training/datasets/default/${dataset.name}/columns`
             : "/api/dataset/getColumnsFromDatasetFile",
-          method: "POST",
-          body: {
+          method: "GET",
+          /*body: {
             data_source: dataSource.toLowerCase(),
             name: dataset.isDefaultDataset ? undefined : dataset.name,
             using_default_dataset: dataset.isDefaultDataset
               ? dataset.name
               : undefined,
-          },
+          },*/
         }),
-        transformResponse: (response: { columns: string }) => {
-          return JSON.parse(response.columns);
+        transformResponse: (response: { data: string[] }) => {
+          return response.data;
         },
       }),
     }),

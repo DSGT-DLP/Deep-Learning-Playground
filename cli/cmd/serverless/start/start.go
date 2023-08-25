@@ -4,7 +4,6 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package serverless
 
 import (
-	"fmt"
 	"os/exec"
 	"strings"
 
@@ -22,7 +21,7 @@ var StartCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		bash_cmd := exec.Command("yarn", "sst", "dev")
 		bash_cmd.Dir = serverless.ServerlessDir
-		fmt.Println(strings.Join(bash_cmd.Args, " "))
+		cmd.Println(strings.Join(bash_cmd.Args, " "))
 		pkg.ExecBashCmd(bash_cmd)
 	},
 }

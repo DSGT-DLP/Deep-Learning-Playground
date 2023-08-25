@@ -22,7 +22,7 @@ var StartCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		bash_cmd := exec.Command("yarn", "next", "dev", "-p", fmt.Sprintf("%v", cmd.Flag("port").Value))
 		bash_cmd.Dir = frontend.FrontendDir
-		fmt.Println(strings.Join(bash_cmd.Args, " "))
+		cmd.Println(strings.Join(bash_cmd.Args, " "))
 		pkg.ExecBashCmd(bash_cmd)
 	},
 }

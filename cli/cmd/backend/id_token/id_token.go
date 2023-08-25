@@ -5,7 +5,6 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 */
 
 import (
-	"fmt"
 	"os/exec"
 	"strings"
 
@@ -23,7 +22,7 @@ var IdTokenCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		bash_cmd := exec.Command("poetry", "run", "python", "cli.py", "get-id-token", args[0])
 		bash_cmd.Dir = backend.BackendDir
-		fmt.Println(strings.Join(bash_cmd.Args, " "))
+		cmd.Println(strings.Join(bash_cmd.Args, " "))
 		pkg.ExecBashCmd(bash_cmd)
 	},
 }

@@ -9,7 +9,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Grid from "@mui/material/Grid";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Stack from "@mui/material/Stack";
-
 import storage from "local-storage-fallback";
 import React, { useEffect, useState } from "react";
 import { ThemeProvider } from "styled-components";
@@ -24,7 +23,6 @@ import {
 } from "@/common/redux/userLogin";
 import Image from "next/image";
 import Link from "next/link";
-
 
 const NavbarMain = () => {
   const user = useAppSelector((state) => state.currentUser.user);

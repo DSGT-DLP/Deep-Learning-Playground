@@ -8,6 +8,7 @@ import (
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/backend"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/backend/id_token"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/backend/start"
+	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/backend/uid"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/frontend"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/frontend/start"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless"

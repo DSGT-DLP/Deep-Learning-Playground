@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const FrontendDir string = "./frontend"
+
 // FrontendCmd represents the frontend command
 var FrontendCmd = &cobra.Command{
 	Use:   "frontend",

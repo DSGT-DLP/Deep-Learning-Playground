@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const ServerlessDir string = "./serverless"
+
 // ServerlessCmd represents the serverless command
 var ServerlessCmd = &cobra.Command{
 	Use:   "serverless",

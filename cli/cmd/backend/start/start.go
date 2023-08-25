@@ -21,7 +21,7 @@ var StartCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		bash_cmd := exec.Command("poetry", "run", "python", "manage.py", "runserver", fmt.Sprintf("%v", cmd.Flag("port").Value))
-		bash_cmd.Dir = "./training"
+		bash_cmd.Dir = backend.BackendDir
 		fmt.Println(strings.Join(bash_cmd.Args, " "))
 		pkg.ExecBashCmd(bash_cmd)
 

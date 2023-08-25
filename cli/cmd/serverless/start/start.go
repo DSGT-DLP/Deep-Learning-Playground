@@ -21,7 +21,7 @@ var StartCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		bash_cmd := exec.Command("yarn", "sst", "dev")
-		bash_cmd.Dir = "./serverless"
+		bash_cmd.Dir = serverless.ServerlessDir
 		fmt.Println(strings.Join(bash_cmd.Args, " "))
 		pkg.ExecBashCmd(bash_cmd)
 	},

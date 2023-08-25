@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const BackendDir string = "./training"
+
 // BackendCmd represents the backend command
 var BackendCmd = &cobra.Command{
 	Use:   "backend",

@@ -20,6 +20,13 @@ var AddCmd = &cobra.Command{
 		if cmd.Flag("dev").Value.String() == "true" {
 			bash_args = append(bash_args, "--group", "dev")
 		}
+		/*
+			bash_cmd := exec.Command("poetry", bash_args...)
+			bash_cmd.Dir = backend.BackendDir
+			err := bash_cmd.Run()
+			cmd.Println(err)*/
+		//pkg.ExecBashCmd(backend.BackendDir, "ls")
+		//pkg.ExecBashCmd(backend.BackendDir, "poetry", "show")
 		pkg.ExecBashCmd(backend.BackendDir, "poetry", bash_args...)
 	},
 }

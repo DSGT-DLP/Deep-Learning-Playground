@@ -5,9 +5,6 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 */
 
 import (
-	"os/exec"
-	"strings"
-
 	"github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/backend"
 	"github.com/DSGT-DLP/Deep-Learning-Playground/cli/pkg"
 	"github.com/spf13/cobra"
@@ -20,10 +17,7 @@ var UidCmd = &cobra.Command{
 	Long:  `gets a user's uid by email from the backend`,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		bash_cmd := exec.Command("poetry", "run", "python", "cli.py", "get-uid", args[0])
-		bash_cmd.Dir = backend.BackendDir
-		cmd.Println(strings.Join(bash_cmd.Args, " "))
-		pkg.ExecBashCmd(bash_cmd)
+		pkg.ExecBashCmd(backend.BackendDir, "poetry", "run", "python", "cli.py", "get-uid", args[0])
 	},
 }
 

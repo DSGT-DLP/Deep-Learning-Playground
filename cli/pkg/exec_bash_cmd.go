@@ -1,16 +1,21 @@
 package pkg
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/creack/pty"
 	"golang.org/x/term"
 )
 
-func ExecBashCmd(bash_cmd *exec.Cmd) {
+func ExecBashCmd(dir string, name string, arg ...string) {
 	// Code below found in pty examples: https://github.com/creack/pty
+	bash_cmd := exec.Command(name, arg...)
+	bash_cmd.Dir = dir
+	fmt.Println(strings.Join(bash_cmd.Args, " "))
 	ptmx, err := pty.Start(bash_cmd)
 	if err != nil {
 		panic(err)

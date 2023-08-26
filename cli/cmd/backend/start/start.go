@@ -5,8 +5,6 @@ package start
 
 import (
 	"fmt"
-	"os/exec"
-	"strings"
 
 	"github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/backend"
 	"github.com/DSGT-DLP/Deep-Learning-Playground/cli/pkg"
@@ -20,11 +18,7 @@ var StartCmd = &cobra.Command{
 	Long:  `Starts an instance of the training backend Django app in /training in the terminal`,
 	Args:  cobra.ExactArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		bash_cmd := exec.Command("poetry", "run", "python", "manage.py", "runserver", fmt.Sprintf("%v", cmd.Flag("port").Value))
-		bash_cmd.Dir = backend.BackendDir
-		cmd.Println(strings.Join(bash_cmd.Args, " "))
-		pkg.ExecBashCmd(bash_cmd)
-
+		pkg.ExecBashCmd(backend.BackendDir, "poetry", "run", "python", "manage.py", "runserver", fmt.Sprintf("%v", cmd.Flag("port").Value))
 	},
 }
 

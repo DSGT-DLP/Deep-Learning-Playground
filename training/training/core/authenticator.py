@@ -13,6 +13,7 @@ class FirebaseAuth(HttpBearer):
             print(e)
             return
         return token
-    
+
+
 class Request(HttpRequest):
     auth: str

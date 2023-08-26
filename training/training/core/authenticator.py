@@ -1,4 +1,3 @@
-from django.http import HttpRequest
 from ninja.security import HttpBearer
 import firebase_admin
 
@@ -13,6 +12,3 @@ class FirebaseAuth(HttpBearer):
             print(e)
             return
         return token
-    
-class Request(HttpRequest):
-    auth: str

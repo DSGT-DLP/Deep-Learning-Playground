@@ -19,7 +19,6 @@ from django.contrib import admin
 from django.http import HttpRequest
 from django.urls import path
 from ninja import NinjaAPI, Schema
-from training.core.authenticator import FirebaseAuth
 from training.routes.datasets.default import get_default_datasets_router
 from training.routes.tabular import get_tabular_router
 
@@ -31,8 +30,8 @@ def test(request: HttpRequest):
     return 200, {"result": "200 Backend surface test successful"}
 
 
-api.add_router("/datasets/default/", get_default_datasets_router(), auth=FirebaseAuth())
-api.add_router("/tabular", get_tabular_router(), auth=FirebaseAuth())
+api.add_router("/datasets/default/", get_default_datasets_router())
+api.add_router("/tabular", get_tabular_router())
 
 urlpatterns = [
     path("admin/", admin.site.urls),

@@ -18,9 +18,13 @@ import (
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/frontend/remove"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/frontend/start"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless"
-	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless/add"
+	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless/core"
+	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless/core/add"
+	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless/core/remove"
+	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless/functions"
+	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless/functions/add"
+	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless/functions/remove"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless/install"
-	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless/remove"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless/start"
 )
 

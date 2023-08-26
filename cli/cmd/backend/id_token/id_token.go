@@ -12,7 +12,7 @@ import (
 
 // IdTokenCmd represents the IdToken command
 var IdTokenCmd = &cobra.Command{
-	Use:   "id-token [email]",
+	Use:   "id-token {email}",
 	Short: "gets a user's id token by email",
 	Long:  `gets a user's id token by email from the backend`,
 	Args:  cobra.ExactArgs(1),

@@ -12,7 +12,7 @@ import (
 
 // UidCmd represents the Uid command
 var UidCmd = &cobra.Command{
-	Use:   "uid [email]",
+	Use:   "uid {email}",
 	Short: "gets a user's uid by email",
 	Long:  `gets a user's uid by email from the backend`,
 	Args:  cobra.ExactArgs(1),

@@ -1,3 +1,4 @@
+from django.http import HttpRequest
 from ninja.security import HttpBearer
 import firebase_admin
 

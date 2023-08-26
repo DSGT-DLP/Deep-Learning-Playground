@@ -11,8 +11,10 @@ import (
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/backend/start"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/backend/uid"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/frontend"
+	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/frontend/install"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/frontend/start"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless"
+	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless/install"
 	_ "github.com/DSGT-DLP/Deep-Learning-Playground/cli/cmd/serverless/start"
 )
 

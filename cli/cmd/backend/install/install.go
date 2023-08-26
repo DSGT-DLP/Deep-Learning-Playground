@@ -12,8 +12,8 @@ import (
 // InstallCmd represents the backend install command
 var InstallCmd = &cobra.Command{
 	Use:   "install",
-	Short: "Starts the training backend",
-	Long:  `Starts an instance of the training backend Django app in /training in the terminal`,
+	Short: "Installs training backend packages from pyproject.toml",
+	Long:  `Installs training backend packages from pyproject.toml from /training in .venv`,
 	Args:  cobra.ExactArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		if cmd.Flag("force").Value.String() == "true" {

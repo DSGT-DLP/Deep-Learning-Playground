@@ -8,12 +8,11 @@ from torch.utils.data import DataLoader
 from training.core.optimizer import getOptimizer
 from training.core.trainer import ClassificationTrainer, RegressionTrainer
 from training.routes.tabular.schemas import TabularParams
-from core.authenticator import FirebaseAuth
 
 router = Router()
 
 
-@router.post("", auth=FirebaseAuth())
+@router.post("")
 def tabularTrain(request: HttpRequest, tabularParams: TabularParams):
     if tabularParams.default:
         dataCreator = SklearnDatasetCreator.fromDefault(

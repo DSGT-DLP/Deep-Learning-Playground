@@ -213,3 +213,6 @@ dlp-ssh.key
 
 # Firebase Admin API key
 backend/dlp-firebase-admin.json
+
+# cli
+dlp-cli

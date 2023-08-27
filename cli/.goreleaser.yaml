@@ -13,7 +13,7 @@ builds:
       - linux
       - windows
       - darwin
-    binary: cli
+    binary: dlp-cli
 
 archives:
   - format: tar.gz
@@ -41,6 +41,14 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+
+brews:
+  - install: |-
+      bin.install "dlp-cli"
+      bash_completion.install "completions/dlp-cli.bash" => "dlp-cli"
+      zsh_completion.install "completions/dlp-cli.zsh" => "_dlp-cli"
+      fish_completion.install "completions/dlp-cli.fish"
+
 # The lines beneath this are called `modelines`. See `:help modeline`
 # Feel free to remove those if you don't want/use them.
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json

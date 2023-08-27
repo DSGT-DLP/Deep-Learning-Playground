@@ -13,7 +13,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   "./cli",
+	Use:   "./dlp-cli",
 	Short: "DLP's CLI",
 	Long:  `Welcome to DLP's CLI!`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {

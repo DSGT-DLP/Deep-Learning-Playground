@@ -1,16 +1,12 @@
 from django.http import HttpRequest
 from ninja import Router, Schema
 from ninja.security import HttpBearer
-from training.core.authenticator import FirebaseAuth
+from training.core.authenticator import FirebaseAuth, Request
 from training.core.dataset import SklearnDatasetCreator
 from training.routes.datasets.default.schemas import DefaultDatasetResponse
 from training.routes.schemas import NotFoundError
 
 router = Router()
-
-
-class Request(HttpRequest):
-    auth: str
 
 
 @router.get(

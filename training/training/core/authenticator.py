@@ -1,14 +1,17 @@
 from django.http import HttpRequest
 from ninja.security import HttpBearer
-import firebase_admin
+from cli import init_firebase
+import firebase_admin.auth
 
 
 class FirebaseAuth(HttpBearer):
     def authenticate(self, request, token):
+        app = init_firebase()
         if token is None or not token:
             return
         try:
             firebase_admin.auth.verify_id_token(token)
+            firebase_admin.delete_app(app)
         except Exception as e:
             print(e)
             return

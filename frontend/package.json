@@ -35,7 +35,6 @@
     "chart.js": "^4.2.1",
     "chartjs-adapter-date-fns": "^3.0.0",
     "crypto-js": "^4.1.1",
-    "date-fns": "^2.29.3",
     "file-saver": "^2.0.5",
     "firebase": "^9.9.3",
     "gestalt": "^101.3.9",

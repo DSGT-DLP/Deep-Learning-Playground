@@ -2,7 +2,9 @@ from django.http import HttpRequest
 from ninja.security import HttpBearer
 from cli import init_firebase
 import firebase_admin.auth
+import logging
 
+logger = logging.getLogger()
 
 class FirebaseAuth(HttpBearer):
     def authenticate(self, request, token):
@@ -13,7 +15,7 @@ class FirebaseAuth(HttpBearer):
             firebase_admin.auth.verify_id_token(token)
             firebase_admin.delete_app(app)
         except Exception as e:
-            print(e)
+            logger.info(e)
             return
         return token
 

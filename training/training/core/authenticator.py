@@ -6,6 +6,7 @@ import logging
 
 logger = logging.getLogger()
 
+
 class FirebaseAuth(HttpBearer):
     def authenticate(self, request, token):
         app = init_firebase()

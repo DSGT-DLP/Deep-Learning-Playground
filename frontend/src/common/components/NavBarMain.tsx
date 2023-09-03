@@ -90,10 +90,8 @@ const NavbarMain = () => {
 
                   mr: 2,
                    display: { xs: "none", md: "flex" },
-                  //fontFamily:
-                  //color: inherit
                    textDecoration: "none",
-=======
+
                     mr: 2,
                     display: { xs: "none", md: "flex" },
                     fontWeight: "500",

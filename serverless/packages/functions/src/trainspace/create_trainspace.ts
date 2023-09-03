@@ -1,5 +1,4 @@
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
-import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import parseJwt from "@dlp-sst-app/core/parseJwt";
 import TrainspaceData from './trainspace-data';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,21 +13,23 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         event.pathParameters.filename
       ) {
         
-        const uid = parseJwt(event.headers.authorization ?? "")["user_id"];
-        const trainspace_id = uuidv4();
-        const trainspaceData = new TrainspaceData(trainspace_id, uid);
+        const uid: string = parseJwt(event.headers.authorization ?? "")["user_id"];
+        const trainspace_id: string = uuidv4();
+        const trainspaceData: TrainspaceData = new TrainspaceData(trainspace_id, uid);
 
-        const client = new DynamoDBClient({});
-        const docClient = new DynamoDBDocumentClient.from(client);
+        const client: DynamoDBClient = new DynamoDBClient({});
+        const docClient: DynamoDBDocumentClient = new DynamoDBDocumentClient.from(client);
         
-        const command = new PutCommand({
+        const command: PutCommand = new PutCommand({
             TableName: "trainspace",
             Item: trainspaceData
         });
 
         const response = await docClient.send(command);
-
-        return response;
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: "Successfully created a new trainspace."})
+        };
       }
     return {
         statusCode: 404,

@@ -175,7 +175,6 @@ const NavbarMain = () => {
                       <MenuItem divider>
 
                         <Link href="/learn-mod" id="basic-nav-dropdown">
-=======
                         <Link href="/learn" id="basic-nav-dropdown">
 
                           Learn

@@ -18,7 +18,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         const trainspaceData: TrainspaceData = new TrainspaceData(trainspace_id, uid);
 
         const client: DynamoDBClient = new DynamoDBClient({});
-        const docClient: DynamoDBDocumentClient = new DynamoDBDocumentClient.from(client);
+        const docClient: DynamoDBDocumentClient = DynamoDBDocumentClient.from(client);
         
         const command: PutCommand = new PutCommand({
             TableName: "trainspace",
@@ -26,8 +26,16 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         });
 
         const response = await docClient.send(command);
+        if (!response.data) {
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ message: "Internal server error."})
+            };
+        }
+        
         return {
             statusCode: 200,
+            trainspaceId: trainspace_id,
             body: JSON.stringify({ message: "Successfully created a new trainspace."})
         };
       }

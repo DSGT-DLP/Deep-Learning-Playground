@@ -127,7 +127,7 @@ const TabularParametersStep = ({
       layers: trainspace?.parameterData?.layers ?? [
         {
           value: "LINEAR",
-          parameters: [10, 3],
+          parameters: [4, 10],
         },
         {
           value: "RELU",
@@ -135,7 +135,7 @@ const TabularParametersStep = ({
         },
         {
           value: "LINEAR",
-          parameters: [3, 10],
+          parameters: [10, 3],
         },
         {
           value: "SOFTMAX",

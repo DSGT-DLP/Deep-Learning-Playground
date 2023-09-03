@@ -22,14 +22,17 @@ Have the following installed first:
 
 ## To start on localhost (in order):
 
-| Action                                        | Command                        |
-| --------------------------------------------- | ------------------------------ |
-| Install (one-time) / Update Frontend Packages | `yarn run installf`            |
-| Install Backend Packages (one-time)           | `yarn run installb`            |
-| Update Backend Packages                       | `cd backend && poetry install` |
-| Get secrets                                   | `yarn run secrets`             |
-| Running the Frontend                          | `yarn run startf`              |
-| Running the Backend                           | `yarn run startb`              |
+| Action                                        | Command             |
+| --------------------------------------------- | ------------------- |
+| Install (one-time) / Update Frontend Packages | `yarn run installf` |
+| Install Backend Packages (one-time)           | `yarn run installb` |
+| Install AWS-Write Packages (one-time)         | `yarn run installa` |
+| Update Backend Packages                       | `yarn run updateb`  |
+| Update AWS-Write Packages                     | `yarn run updatea`  |
+| Get secrets                                   | `yarn run secrets`  |
+| Running the Frontend                          | `yarn run startf`   |
+| Running the Backend                           | `yarn run startb`   |
+| Running the AWS-Write Microservice            | `yarn run starta`   |
 
 ## To run in `production` mode:
 
@@ -67,6 +70,14 @@ If this command works properly, you will be redirected to an auth route in the G
 
 - If you encounter any error related to "ChefBuildError", downgrade your poetry version to 1.3.2 by running `pip install poetry==1.3.2` before doing `poetry install` (See related github issue [here](https://github.com/python-poetry/poetry/issues/7611))
 
+## Poetry env setup with VSCode
+
+- Access the VSCode command palette via `Ctrl+Shift+P`. Press `Python: Select Interpreter`.
+
+- To select aws_write's python interpreter, select the interpreter with the path `./aws_write/.venv/bin/python` (may need to manually enter interpreter path)
+
+- To select backend's python interpreter, select the interpreter with the path `./backend/.venv/bin/python` (may need to manually enter interpreter path)
+
 ## pyenv setup
 
 ### Mac Instructions
@@ -92,7 +103,7 @@ If this command works properly, you will be redirected to an auth route in the G
 
 ## Backend Infrastructure
 
-`poetry run python driver.py` from the `~/Deep-Learning-Playground/backend` directory
+`poetry run python app.py` from the `~/Deep-Learning-Playground/backend` directory
 
 The backend supports training of a deep learning model and/or a classical ML model
 
@@ -102,7 +113,7 @@ See [Architecture.md](./.github/Architecture.md)
 
 ## Examples
 
-To see how `driver.py` is used, see [`Backend_Examples.md`](./.github/Backend_Examples.md)
+To see how `app.py` is used, see [`Backend_Examples.md`](./.github/Backend_Examples.md)
 
 # Further Details: Frontend
 

@@ -9,7 +9,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Grid from "@mui/material/Grid";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Stack from "@mui/material/Stack";
-
 import storage from "local-storage-fallback";
 import React, { useEffect, useState } from "react";
 import { ThemeProvider } from "styled-components";
@@ -88,11 +87,18 @@ const NavbarMain = () => {
                   noWrap
                   className="d-flex align-items-center logo-title"
                   sx={{
+
                   mr: 2,
                    display: { xs: "none", md: "flex" },
                   //fontFamily:
                   //color: inherit
                    textDecoration: "none",
+=======
+                    mr: 2,
+                    display: { xs: "none", md: "flex" },
+                    fontWeight: "500",
+                    textDecoration: "none",
+                    fontSize: "17px"
                   }}
                 >
                   Deep Learning Playground
@@ -169,7 +175,11 @@ const NavbarMain = () => {
                         </Link>
                       </MenuItem>
                       <MenuItem divider>
+
                         <Link href="/learn-mod" id="basic-nav-dropdown">
+=======
+                        <Link href="/learn" id="basic-nav-dropdown">
+
                           Learn
                         </Link>
                       </MenuItem>

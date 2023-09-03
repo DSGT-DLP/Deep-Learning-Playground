@@ -74,7 +74,7 @@ def updateStatus(trainspace_id: str, status: str, entryData: dict = None) -> boo
     """
     if entryData is None:
         entryData = {}
-    entryData["status"] = status
+    # entryData["status"] = status
     return updateTrainspaceData(trainspace_id, entryData)
 
 

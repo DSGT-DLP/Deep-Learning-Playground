@@ -3,7 +3,9 @@
 # --------------------------------------------------------------------------
 
 # VS Code
-.vscode/
+.vscode/*
+!.vscode/settings.json
+.github/ArchitectureTest.md
 
 # --------------------------------------------------------------------------
 #	Backend
@@ -211,3 +213,6 @@ dlp-ssh.key
 
 # Firebase Admin API key
 backend/dlp-firebase-admin.json
+
+#binaries
+bin

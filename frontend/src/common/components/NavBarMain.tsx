@@ -87,6 +87,11 @@ const NavbarMain = () => {
                   noWrap
                   className="d-flex align-items-center logo-title"
                   sx={{
+
+                  mr: 2,
+                   display: { xs: "none", md: "flex" },
+                   textDecoration: "none",
+
                     mr: 2,
                     display: { xs: "none", md: "flex" },
                     fontWeight: "500",
@@ -169,6 +174,7 @@ const NavbarMain = () => {
                       </MenuItem>
                       <MenuItem divider>
                         <Link href="/learn" id="basic-nav-dropdown">
+
                           Learn
                         </Link>
                       </MenuItem>

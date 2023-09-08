@@ -24,7 +24,7 @@ import ReactFlow, {
   useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { STEP_SETTINGS } from "../constants/tabularConstants";
+import { ALL_LAYERS, STEP_SETTINGS } from "../constants/tabularConstants";
 import { ParameterData } from "../types/tabularTypes";
 import assert from "assert";
 
@@ -227,8 +227,6 @@ function TextUpdaterNode(props: TextUpdaterNodeProps) {
     </>
   );
 }
-
-type ALL_LAYERS = keyof typeof STEP_SETTINGS.PARAMETERS.layers;
 
 interface OnChangeArgs {
   id: string;

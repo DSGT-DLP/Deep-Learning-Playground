@@ -81,19 +81,22 @@ export const STEP_SETTINGS = {
             type: "number",
           },
         ],
-        description: "A linear layer performs a mathematical operation called linear transformation on a set of input values. It applies a combination of scaling and shifting to the input values, resulting in a new set of transformed values as output."
+        description:
+          "A linear layer performs a mathematical operation called linear transformation on a set of input values. It applies a combination of scaling and shifting to the input values, resulting in a new set of transformed values as output.",
       },
       RELU: {
         label: "ReLU",
         objectName: "nn.ReLU",
         parameters: [],
-        description: "ReLU, short for Rectified Linear Unit, is an activation function that acts like a filter that selectively allows positive numbers to pass through unchanged, while converting negative numbers to zero."
+        description:
+          "ReLU, short for Rectified Linear Unit, is an activation function that acts like a filter that selectively allows positive numbers to pass through unchanged, while converting negative numbers to zero.",
       },
       TANH: {
         label: "Tanh",
         objectName: "nn.Tanh",
         parameters: [],
-        description: "The tanh function maps input numbers to a range between -1 and 1, emphasizing values close to zero while diminishing the impact of extremely large or small numbers, making it useful for capturing complex patterns in data."
+        description:
+          "The tanh function maps input numbers to a range between -1 and 1, emphasizing values close to zero while diminishing the impact of extremely large or small numbers, making it useful for capturing complex patterns in data.",
       },
       SOFTMAX: {
         label: "Softmax",
@@ -107,13 +110,15 @@ export const STEP_SETTINGS = {
             type: "number",
           },
         ],
-        description: "The softmax function takes a set of numbers as input and converts them into a probability distribution, assigning higher probabilities to larger numbers and lower probabilities to smaller numbers, making it useful for multi-class classification tasks."
+        description:
+          "The softmax function takes a set of numbers as input and converts them into a probability distribution, assigning higher probabilities to larger numbers and lower probabilities to smaller numbers, making it useful for multi-class classification tasks.",
       },
       SIGMOID: {
         label: "Sigmoid",
         objectName: "nn.Sigmoid",
         parameters: [],
-        description: "The sigmoid function takes any input number and squeezes it to a range between 0 and 1, effectively converting it into a probability-like value, often used for binary classification tasks and as an activation function in neural networks."
+        description:
+          "The sigmoid function takes any input number and squeezes it to a range between 0 and 1, effectively converting it into a probability-like value, often used for binary classification tasks and as an activation function in neural networks.",
       },
       LOGSOFTMAX: {
         label: "LogSoftmax",
@@ -127,8 +132,9 @@ export const STEP_SETTINGS = {
             type: "number",
           },
         ],
-        description: "The logsoftmax function converts a set of numbers into a probability distribution using the softmax function, and then applies a logarithm to the resulting probabilities. It is commonly used for multi-class classification tasks as an activation function and to calculate the logarithmic loss during neural network training."
-      }
+        description:
+          "The logsoftmax function converts a set of numbers into a probability distribution using the softmax function, and then applies a logarithm to the resulting probabilities. It is commonly used for multi-class classification tasks as an activation function and to calculate the logarithmic loss during neural network training.",
+      },
     },
   },
   REVIEW: {
@@ -137,3 +143,33 @@ export const STEP_SETTINGS = {
     component: TabularReviewStep,
   },
 } as const;
+
+type DEFAULT_DATASET_VALUES =
+  (typeof STEP_SETTINGS)["DATASET"]["defaultDatasets"][number]["value"];
+export type ALL_LAYERS = keyof typeof STEP_SETTINGS.PARAMETERS.layers;
+
+export const DEFAULT_LAYERS: Partial<{
+  [dataset in DEFAULT_DATASET_VALUES]: {
+    value: ALL_LAYERS;
+    parameters: number[];
+  }[];
+}> = {
+  IRIS: [
+    {
+      value: "LINEAR",
+      parameters: [4, 10],
+    },
+    {
+      value: "RELU",
+      parameters: [],
+    },
+    {
+      value: "LINEAR",
+      parameters: [10, 3],
+    },
+    {
+      value: "SOFTMAX",
+      parameters: [-1],
+    },
+  ],
+};

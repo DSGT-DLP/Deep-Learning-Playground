@@ -51,7 +51,7 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import { STEP_SETTINGS } from "../constants/tabularConstants";
+import { DEFAULT_LAYERS, STEP_SETTINGS } from "../constants/tabularConstants";
 import { updateTabularTrainspaceData } from "../redux/tabularActions";
 import { ParameterData, TrainspaceData } from "../types/tabularTypes";
 
@@ -101,24 +101,7 @@ const TabularParametersStep = ({
       epochs: trainspace?.parameterData?.epochs ?? 5,
       batchSize: trainspace?.parameterData?.batchSize ?? 20,
       testSize: trainspace?.parameterData?.testSize ?? 0.2,
-      layers: trainspace?.parameterData?.layers ?? [
-        {
-          value: "LINEAR",
-          parameters: [4, 10],
-        },
-        {
-          value: "RELU",
-          parameters: [],
-        },
-        {
-          value: "LINEAR",
-          parameters: [10, 3],
-        },
-        {
-          value: "SOFTMAX",
-          parameters: [-1],
-        },
-      ],
+      layers: trainspace?.parameterData?.layers ?? DEFAULT_LAYERS.IRIS,
     },
   });
 

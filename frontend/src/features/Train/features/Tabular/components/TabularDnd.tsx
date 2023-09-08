@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -26,28 +26,49 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import { STEP_SETTINGS } from "../constants/tabularConstants";
 import { ParameterData } from "../types/tabularTypes";
+import assert from "assert";
 
 interface TabularDndProps {
-  exportLayers?: (layers: ParameterData["layers"][]) => void;
+  setLayers?: (layers: ParameterData["layers"]) => void;
 }
 
 export default function TabularDnd(props: TabularDndProps) {
-  const { exportLayers } = props;
+  const { setLayers } = props;
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  function handleExportLayers(): ParameterData["layers"][] | undefined {
-    const layers: ParameterData["layers"][] = [];
+  useEffect(() => {
+    if (setLayers) {
+      const layers = handleExportLayers();
+      setLayers(layers);
+    }
+  }, [nodes, edges]);
 
-    const directedEdges: Record<string, Node<NodeData>> = {};
+  function handleExportLayers(): ParameterData["layers"] {
+    const layers: ParameterData["layers"] = [];
 
+    const directedEdges: Record<string, Node<LayerNodeData>> = {};
     edges.forEach((edge) => {
       const sourceNode = nodes.find((node) => node.id === edge.source);
       const targetNode = nodes.find((node) => node.id === edge.target);
-      directedEdges[sourceNode] = targetNode;
+      if (sourceNode && targetNode) {
+        directedEdges[sourceNode.id] = targetNode;
+      }
     });
 
-    return [];
+    let nextNode = directedEdges["root"];
+
+    // appending all layers from the graph
+    while (nextNode) {
+      assert(nextNode.data.value !== "root");
+      layers.push({
+        value: nextNode.data.value,
+        parameters: nextNode.data.parameters || [],
+      });
+      nextNode = directedEdges[nextNode.id];
+    }
+
+    return layers;
   }
 
   const onChange = useCallback((args: OnChangeArgs) => {
@@ -113,7 +134,10 @@ export default function TabularDnd(props: TabularDndProps) {
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
+          onEdgesChange={(e) => {
+            onEdgesChange(e);
+            handleExportLayers();
+          }}
           onConnect={(params) => setEdges((eds) => addEdge(params, eds))}
           nodeTypes={nodeTypes}
         >
@@ -127,7 +151,7 @@ export default function TabularDnd(props: TabularDndProps) {
 
 interface TextUpdaterNodeProps {
   id: string;
-  data: NodeData;
+  data: LayerNodeData;
   isConnectable: boolean;
 }
 
@@ -212,7 +236,7 @@ interface OnChangeArgs {
   parameterIndex: number;
 }
 
-interface NodeData {
+interface LayerNodeData {
   label:
     | (typeof STEP_SETTINGS.PARAMETERS.layers)[ALL_LAYERS]["label"]
     | "Start";
@@ -221,7 +245,7 @@ interface NodeData {
   onChange: (args: OnChangeArgs) => void;
 }
 
-const initialNodes: Node<NodeData>[] = [
+const initialNodes: Node<LayerNodeData>[] = [
   {
     id: `root`,
     type: "input",

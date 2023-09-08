@@ -11,6 +11,7 @@ import {
 } from "../constants/trainConstants";
 import { createTrainspaceData } from "../redux/trainspaceSlice";
 import TabularDnd from "../features/Tabular/components/TabularDnd";
+import { ParameterData } from "../features/Tabular/types/tabularTypes";
 const CreateTrainspace = () => {
   const {
     handleSubmit,
@@ -19,9 +20,7 @@ const CreateTrainspace = () => {
     control,
     setValue,
   } = useForm<BaseTrainspaceData>({
-    defaultValues: {
-      name: "My Trainspace",
-    },
+    defaultValues: { name: "My Trainspace" },
   });
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -33,6 +32,9 @@ const CreateTrainspace = () => {
       setValue("dataSource", router.query.source as DATA_SOURCE);
     }
   }, [router.isReady]);
+
+  const [layers, setLayers] = React.useState<ParameterData["layers"]>([]);
+
   return (
     <Grid
       container
@@ -42,7 +44,14 @@ const CreateTrainspace = () => {
       justifyContent="center"
       style={{ minHeight: "100vh" }}
     >
-      <TabularDnd />
+      <Button
+        onClick={() => {
+          console.log(layers);
+        }}
+      >
+        Get layers
+      </Button>
+      <TabularDnd setLayers={setLayers} />
       <Grid item>
         <Typography variant="h1" fontSize={50}>
           Create a Trainspace

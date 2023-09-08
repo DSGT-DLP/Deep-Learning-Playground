@@ -7,12 +7,9 @@ import { useAppDispatch } from "@/common/redux/hooks";
 import { useRouter } from "next/router";
 import {
   ALL_TRAINSPACE_SETTINGS,
-  DATA_SOURCE_ARR,
   IMPLEMENTED_DATA_SOURCE_ARR,
 } from "../constants/trainConstants";
 import { createTrainspaceData } from "../redux/trainspaceSlice";
-import TabularDnd from "../features/Tabular/components/TabularDnd";
-import { ParameterData } from "../features/Tabular/types/tabularTypes";
 const CreateTrainspace = () => {
   const {
     handleSubmit,
@@ -34,8 +31,6 @@ const CreateTrainspace = () => {
     }
   }, [router.isReady]);
 
-  const [layers, setLayers] = React.useState<ParameterData["layers"]>([]);
-
   return (
     <Grid
       container
@@ -45,14 +40,6 @@ const CreateTrainspace = () => {
       justifyContent="center"
       style={{ minHeight: "100vh" }}
     >
-      <Button
-        onClick={() => {
-          console.log(layers);
-        }}
-      >
-        Get layers
-      </Button>
-      <TabularDnd setLayers={setLayers} />
       <Grid item>
         <Typography variant="h1" fontSize={50}>
           Create a Trainspace

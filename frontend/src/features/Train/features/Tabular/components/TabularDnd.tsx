@@ -48,7 +48,7 @@ export default function TabularDnd(props: TabularDndProps) {
       type: "textUpdater",
       position: {
         x: DEFAULT_X_POSITION,
-        y: (i + 1) * 125,
+        y: (i + 1) * 100,
       },
       data: {
         label: STEP_SETTINGS.PARAMETERS.layers[layer.value].label,

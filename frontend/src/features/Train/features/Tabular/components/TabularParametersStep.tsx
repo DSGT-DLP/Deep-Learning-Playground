@@ -89,6 +89,7 @@ const TabularParametersStep = ({
     formState: { errors, isDirty },
     control,
     watch,
+    setValue,
   } = useForm<ParameterData>({
     defaultValues: {
       targetCol:
@@ -108,9 +109,11 @@ const TabularParametersStep = ({
   useEffect(() => {
     setIsModified(isDirty);
   }, [isDirty]);
-  if (!trainspace) return <></>;
+  if (!trainspace) return null;
   const targetCol = watch("targetCol");
   const features = watch("features");
+  const [layers, setLayers] = React.useState<ParameterData["layers"]>([]);
+
   return (
     <Stack spacing={3}>
       {error ? (
@@ -307,8 +310,9 @@ const TabularParametersStep = ({
         />
       </FormControl>
       <LayersDnd control={control} errors={errors} />
-      <TabularDnd />
+      <TabularDnd setLayers={setLayers} />
       {renderStepperButtons((trainspaceData) => {
+        setValue("layers", layers);
         handleSubmit((data) => {
           dispatch(
             updateTabularTrainspaceData({

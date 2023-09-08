@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import {
   ALL_TRAINSPACE_SETTINGS,
   DATA_SOURCE_ARR,
+  IMPLEMENTED_DATA_SOURCE_ARR,
 } from "../constants/trainConstants";
 import { createTrainspaceData } from "../redux/trainspaceSlice";
 import TabularDnd from "../features/Tabular/components/TabularDnd";
@@ -87,7 +88,7 @@ const CreateTrainspace = () => {
               value={value ?? ""}
               helperText={errors.dataSource ? "Data Source is required" : ""}
             >
-              {DATA_SOURCE_ARR.map((source) => (
+              {IMPLEMENTED_DATA_SOURCE_ARR.map((source) => (
                 <MenuItem key={source} value={source}>
                   {ALL_TRAINSPACE_SETTINGS[source].name}
                 </MenuItem>

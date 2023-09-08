@@ -144,32 +144,15 @@ export const STEP_SETTINGS = {
   },
 } as const;
 
-type DEFAULT_DATASET_VALUES =
-  (typeof STEP_SETTINGS)["DATASET"]["defaultDatasets"][number]["value"];
 export type ALL_LAYERS = keyof typeof STEP_SETTINGS.PARAMETERS.layers;
 
-export const DEFAULT_LAYERS: Partial<{
-  [dataset in DEFAULT_DATASET_VALUES]: {
-    value: ALL_LAYERS;
-    parameters: number[];
-  }[];
-}> = {
+export const DEFAULT_LAYERS: {
+  IRIS: { value: ALL_LAYERS; parameters: number[] }[];
+} = {
   IRIS: [
-    {
-      value: "LINEAR",
-      parameters: [4, 10],
-    },
-    {
-      value: "RELU",
-      parameters: [],
-    },
-    {
-      value: "LINEAR",
-      parameters: [10, 3],
-    },
-    {
-      value: "SOFTMAX",
-      parameters: [-1],
-    },
+    { value: "LINEAR", parameters: [4, 10] },
+    { value: "RELU", parameters: [] },
+    { value: "LINEAR", parameters: [10, 3] },
+    { value: "SOFTMAX", parameters: [-1] },
   ],
 };

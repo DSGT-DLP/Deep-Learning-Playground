@@ -27,6 +27,7 @@ import "reactflow/dist/style.css";
 import { ALL_LAYERS, STEP_SETTINGS } from "../constants/tabularConstants";
 import { ParameterData } from "../types/tabularTypes";
 import assert from "assert";
+import { randomUUID } from "crypto";
 
 interface TabularDndProps {
   setLayers?: (layers: ParameterData["layers"]) => void;
@@ -101,11 +102,11 @@ export default function TabularDnd(props: TabularDndProps) {
                 key={value}
                 variant="outlined"
                 color="primary"
-                onClick={() =>
+                onClick={() => {
                   setNodes((cur) => [
                     ...cur,
                     {
-                      id: `${value}-${Math.random() * 100}`,
+                      id: `${value}-${randomUUID()}`,
                       type: "textUpdater",
                       position: {
                         x: Math.random() * 50,
@@ -120,8 +121,9 @@ export default function TabularDnd(props: TabularDndProps) {
                         ].parameters.map(() => 0),
                       },
                     },
-                  ])
-                }
+                  ]);
+                  console.log(nodes);
+                }}
               >
                 {value}
               </Button>
@@ -134,10 +136,7 @@ export default function TabularDnd(props: TabularDndProps) {
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
-          onEdgesChange={(e) => {
-            onEdgesChange(e);
-            handleExportLayers();
-          }}
+          onEdgesChange={onEdgesChange}
           onConnect={(params) => setEdges((eds) => addEdge(params, eds))}
           nodeTypes={nodeTypes}
         >
@@ -157,7 +156,8 @@ interface TextUpdaterNodeProps {
 
 function TextUpdaterNode(props: TextUpdaterNodeProps) {
   const { data, isConnectable, id } = props;
-  const layer = STEP_SETTINGS.PARAMETERS.layers[data.value as ALL_LAYERS];
+  assert(data.value !== "root");
+  const layer = STEP_SETTINGS.PARAMETERS.layers[data.value];
 
   return (
     <>

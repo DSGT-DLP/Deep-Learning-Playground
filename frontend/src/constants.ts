@@ -8,7 +8,7 @@ export const COLORS = Object.freeze({
   gold: "#B3A36A", // secondary
   visited: "#808080",
 });
-``
+
 export const URLs = Object.freeze({
   donate: "https://buy.stripe.com/9AQ3e4eO81X57y8aEG",
   linkedin: "https://www.linkedin.com/company/dsgt/",

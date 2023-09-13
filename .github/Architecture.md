@@ -216,7 +216,6 @@
 |  |- 📜 yarn.lock
 |  |- 📜 .eslintignore
 |  |- 📜 next-env.d.ts
-|  |- 📜 babel.config.js
 |  |- 📜 next.config.js
 ```
 

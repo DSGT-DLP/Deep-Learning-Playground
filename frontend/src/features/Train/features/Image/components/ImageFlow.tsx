@@ -28,22 +28,22 @@ import {
   ALL_LAYERS,
   DEFAULT_LAYERS,
   STEP_SETTINGS,
-} from "../constants/tabularConstants";
-import { ParameterData } from "../types/tabularTypes";
+} from "../constants/imageConstants";
+import { ParameterData } from "../types/imageTypes";
 import assert from "assert";
 import { nanoid } from "nanoid/non-secure";
 import { toast } from "react-toastify";
 
-interface TabularDndProps {
+interface ImageFlowProps {
   setLayers?: (layers: ParameterData["layers"]) => void;
 }
 
-export default function TabularDnd(props: TabularDndProps) {
+export default function ImageFlow(props: ImageFlowProps) {
   const { setLayers } = props;
 
   const initialNodes: Node<LayerNodeData>[] = [
     ROOT_NODE,
-    ...DEFAULT_LAYERS.IRIS.map((layer, i) => ({
+    ...DEFAULT_LAYERS.MNIST.map((layer, i) => ({
       id: `${layer.value}-${i}`,
       type: "textUpdater",
       position: {
@@ -292,7 +292,7 @@ const nodeTypes: NodeTypes = { textUpdater: TextUpdaterNode };
 
 function createInitialEdges(): Edge[] {
   const edges: Edge[] = [];
-  const defaultLayers = DEFAULT_LAYERS.IRIS;
+  const defaultLayers = DEFAULT_LAYERS.MNIST;
 
   // connecting root to first layer
   edges.push({

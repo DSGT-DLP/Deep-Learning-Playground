@@ -25,7 +25,7 @@ import { ParameterData, TrainspaceData } from "../types/tabularTypes";
 
 import { useLazyGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
 import "reactflow/dist/style.css";
-import TabularDnd from "./TabularDnd";
+import TabularFlow from "./TabularFlow";
 
 const TabularParametersStep = ({
   renderStepperButtons,
@@ -277,7 +277,7 @@ const TabularParametersStep = ({
         />
       </FormControl>
       <Paper>
-        <TabularDnd setLayers={setLayers} />
+        <TabularFlow setLayers={setLayers} />
       </Paper>
       {renderStepperButtons((trainspaceData) => {
         setValue("layers", layers);

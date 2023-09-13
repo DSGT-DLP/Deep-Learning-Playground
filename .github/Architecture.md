@@ -77,6 +77,7 @@
 |  |  |  |  |  |  |- 📂 constants:
 |  |  |  |  |  |  |  |- 📜 imageConstants.ts
 |  |  |  |  |  |  |- 📂 components:
+|  |  |  |  |  |  |  |- 📜 ImageFlow.tsx
 |  |  |  |  |  |  |  |- 📜 ImageTrainspace.tsx
 |  |  |  |  |  |  |  |- 📜 ImageDatasetStep.tsx
 |  |  |  |  |  |  |  |- 📜 ImageReviewStep.tsx
@@ -93,6 +94,7 @@
 |  |  |  |  |  |  |- 📂 components:
 |  |  |  |  |  |  |  |- 📜 TabularParametersStep.tsx
 |  |  |  |  |  |  |  |- 📜 TabularDatasetStep.tsx
+|  |  |  |  |  |  |  |- 📜 TabularFlow.tsx
 |  |  |  |  |  |  |  |- 📜 TabularTrainspace.tsx
 |  |  |  |  |  |  |  |- 📜 TabularReviewStep.tsx
 |  |  |  |  |  |  |- 📂 types:
@@ -137,9 +139,11 @@
 |  |  |  |- 📂 components:
 |  |  |  |  |- 📜 ClientOnlyPortal.tsx
 |  |  |  |  |- 📜 EmailInput.tsx
+|  |  |  |  |- 📜 HtmlTooltip.tsx
 |  |  |  |  |- 📜 TitleText.tsx
 |  |  |  |  |- 📜 NavBarMain.tsx
 |  |  |  |  |- 📜 Footer.tsx
+|  |  |  |  |- 📜 DlpTooltip.tsx
 |  |  |  |  |- 📜 Spacer.tsx
 |  |  |  |- 📂 utils:
 |  |  |  |  |- 📜 firebase.ts

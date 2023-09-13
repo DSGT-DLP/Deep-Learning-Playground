@@ -3,7 +3,7 @@ import parseJwt from "@dlp-sst-app/core/parseJwt";
 import TrainspaceData from './trainspace-data';
 import { v4 as uuidv4 } from 'uuid';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { PutCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { PutItemCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     if (
@@ -20,10 +20,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         const client: DynamoDBClient = new DynamoDBClient({});
         const docClient: DynamoDBDocumentClient = DynamoDBDocumentClient.from(client);
         
-        const command: PutCommand = new PutCommand({
-            TableName: "trainspace",
-            Item: trainspaceData
-        });
+        const command: PutItemCommand = new PutItemCommand(trainspaceData.convertToDynamoItemInput("trainspace"));
 
         const response = await docClient.send(command);
         if (!response.data) {

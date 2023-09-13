@@ -1,30 +1,33 @@
-import { APIGatewayProxyHandlerV2 } from "aws-lambda";
+import { APIGatewayProxyHandlerV2, APIGatewayProxyEvent } from "aws-lambda";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import parseJwt from "@dlp-sst-app/core/parseJwt";
 
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { GetCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
+export const handler: APIGatewayProxyHandlerV2 = async (event : APIGatewayProxyEvent) => {
     const queryParams: object = event['queryStringParameters'];
     if (queryParams != null)
     {
-        const uuid: string = queryParams['id'];
-        const client: DynamoDBClient = new DynamoDBClient({});
+        const id: string = queryParams['id'];
 
+        const client: DynamoDBClient = new DynamoDBClient({});
         const documentClient: DynamoDBDocumentClient = DynamoDBDocumentClient.from(client);
 
-        const response = await documentClient.get({
-            TableName: "trainspace",
-            Key: {
-                id: uuid
+        const command : GetItemCommand = new GetItemCommand({
+            TableName : "trainspace",
+            Key : 
+            {
+                trainspace_id : id
             }
         });
 
+        const response = await documentClient.get(command);
+
         if (!response.Item) {
             return {
-                statusCode: 200,
-                body: "Trainspace id " + uuid + " does not exist."
+                statusCode: 400,
+                body: "Trainspace id " + id + " does not exist."
             }
         }
         return {
@@ -34,6 +37,6 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     }
     return {
         statusCode: 404,
-        body: JSON.stringify({ message: "Not Found" }),
+        body: JSON.stringify({ message: "Malformed request content" }),
     };
 };

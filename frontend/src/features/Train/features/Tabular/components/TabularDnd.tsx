@@ -118,7 +118,7 @@ export default function TabularDnd(props: TabularDndProps) {
 
   return (
     <>
-      <Paper elevation={1} style={{ backgroundColor: "transparent" }}>
+      <Paper sx={{ mb: 2 }}>
         <Stack alignItems="center" spacing={2} padding={2}>
           <Typography variant="h2" fontSize={25}>
             Layers

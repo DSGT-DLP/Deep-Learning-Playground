@@ -309,8 +309,9 @@ const TabularParametersStep = ({
           )}
         />
       </FormControl>
-      <LayersDnd control={control} errors={errors} />
-      <TabularDnd setLayers={setLayers} />
+      <Paper>
+        <TabularDnd setLayers={setLayers} />
+      </Paper>
       {renderStepperButtons((trainspaceData) => {
         setValue("layers", layers);
         handleSubmit((data) => {

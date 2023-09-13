@@ -1,25 +1,39 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useLazyGetColumnsFromDatasetQuery } from "@/features/Train/redux/trainspaceApi";
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
-import { styled } from "@mui/material/styles";
-import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import InfoIcon from "@mui/icons-material/Info";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
+import React, { useEffect, useMemo, useState } from "react";
 
+import ClientOnlyPortal from "@/common/components/ClientOnlyPortal";
 import {
-  Autocomplete,
+  useCustomKeyboardSensor,
+  useCustomPointerSensor,
+} from "@/common/utils/dndHelpers";
+import {
+  Active,
+  DndContext,
+  DragOverlay,
+  closestCenter,
+  useDraggable,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import DeleteIcon from "@mui/icons-material/Delete";
+import {
   Card,
   Container,
   Divider,
-  FormControl,
   FormControlLabel,
   FormGroup,
-  FormLabel,
   IconButton,
   MenuItem,
   Paper,
-  Radio,
-  RadioGroup,
-  Slider,
   Stack,
   Switch,
   TextField,
@@ -32,30 +46,9 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import { ParameterData, TrainspaceData } from "../types/imageTypes";
 import { STEP_SETTINGS } from "../constants/imageConstants";
-import { CSS } from "@dnd-kit/utilities";
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import {
-  Active,
-  DndContext,
-  DragOverlay,
-  closestCenter,
-  useDraggable,
-  useSensors,
-} from "@dnd-kit/core";
-import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  useCustomKeyboardSensor,
-  useCustomPointerSensor,
-} from "@/common/utils/dndHelpers";
-import ClientOnlyPortal from "@/common/components/ClientOnlyPortal";
 import { updateImageTrainspaceData } from "../redux/imageActions";
+import { ParameterData, TrainspaceData } from "../types/imageTypes";
 
 const HtmlTooltip = styled(
   ({

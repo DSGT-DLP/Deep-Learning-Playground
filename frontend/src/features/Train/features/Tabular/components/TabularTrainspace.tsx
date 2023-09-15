@@ -121,7 +121,8 @@ const TrainspaceStepInner = ({
         });
     }
   }, [trainspace]);
-  if (!Component) return <></>;
+  
+  if (!Component) return null;
   return (
     <Component
       renderStepperButtons={(submitTrainspace) => (

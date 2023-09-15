@@ -1,9 +1,9 @@
 
 export enum TrainStatus {
-    QUEUED,
-    STARTING,
-    UPLOADING,
-    TRAINING,
-    SUCCESS,
-    ERROR
+    QUEUED = "Q",
+    STARTING="S",
+    UPLOADING="U",
+    TRAINING="T",
+    SUCCESS="S",
+    ERROR="E"
 }

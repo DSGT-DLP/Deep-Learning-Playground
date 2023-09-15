@@ -2,18 +2,13 @@ import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 import parseJwt from "@dlp-sst-app/core/parseJwt";
 import TrainspaceData from './trainspace-data';
 import { v4 as uuidv4 } from 'uuid';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { PutItemCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb'; //@aws-sdk/client-dynamodb
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
-    if (
-        event &&
-        event.pathParameters &&
-        event.pathParameters.type &&
-        event.pathParameters.filename
-      ) {
-        
+    if (event) {
         const uid: string = parseJwt(event.headers.authorization ?? "")["user_id"];
+
         const trainspace_id: string = uuidv4();
         const trainspaceData: TrainspaceData = new TrainspaceData(trainspace_id, uid);
 
@@ -23,7 +18,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         const command: PutItemCommand = new PutItemCommand(trainspaceData.convertToDynamoItemInput("trainspace"));
 
         const response = await docClient.send(command);
-        if (!response.data) {
+        if (false) {
             return {
                 statusCode: 500,
                 body: JSON.stringify({ message: "Internal server error."})
@@ -32,8 +27,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         
         return {
             statusCode: 200,
-            trainspaceId: trainspace_id,
-            body: JSON.stringify({ message: "Successfully created a new trainspace."})
+            body: JSON.stringify({ trainspaceId: trainspace_id, message: "Successfully created a new trainspace."})
         };
       }
     return {

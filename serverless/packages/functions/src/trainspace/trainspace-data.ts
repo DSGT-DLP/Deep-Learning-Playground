@@ -7,9 +7,9 @@ export default class TrainspaceData
     uid: string;
     created: string = "";
     data_source: string = "";
-    dataset_data: object = null;
+    dataset_data: object = {};
     name: string = "";
-    parameters_data: object = null;
+    parameters_data: object = {};
     review_data: string = "";
     status: TrainStatus = TrainStatus.QUEUED;
 
@@ -21,6 +21,8 @@ export default class TrainspaceData
     convertToDynamoItemInput(tableName: string) : PutItemCommandInput {
         let output: PutItemCommandInput = 
         {
+            TableName : tableName,
+            
             Item : 
             {
                 trainspace_id : 
@@ -41,7 +43,7 @@ export default class TrainspaceData
                 },
                 dataset_data :
                 {
-                    B : this.dataset_data
+                    S : JSON.stringify(this.dataset_data)
                 },
                 name :
                 {
@@ -49,7 +51,7 @@ export default class TrainspaceData
                 },
                 parameters_data :
                 {
-                    B : this.parameters_data
+                    S : JSON.stringify(this.parameters_data)
                 },
                 review_data : 
                 {
@@ -57,10 +59,9 @@ export default class TrainspaceData
                 },
                 status :
                 {
-                    N : this.status
+                    S : this.status.toString()
                 }
-            },
-            TableName : tableName
+            }
         }
         return output;
     }

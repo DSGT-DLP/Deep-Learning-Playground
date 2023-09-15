@@ -19,6 +19,5 @@
   },
   "python.formatting.provider": "none",
   "python.terminal.activateEnvironment": false,
-  "python.analysis.typeCheckingMode": "basic",
-  "cSpell.words": ["reactflow"]
+  "python.analysis.typeCheckingMode": "basic"
 }

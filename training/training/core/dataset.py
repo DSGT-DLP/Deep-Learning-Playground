@@ -17,6 +17,7 @@ from sklearn.preprocessing import LabelEncoder
 import boto3
 import io
 
+
 class TrainTestDatasetCreator(ABC):
     "Creator that creates train and test PyTorch datasets"
 
@@ -104,7 +105,7 @@ class SklearnDatasetCreator(TrainTestDatasetCreator):
 
 
 class CustomDatasetCreator(TrainTestDatasetCreator):
-    '''Pulls user-uploaded dataset from S3 bucket and converts it to readable format'''
+    """Pulls user-uploaded dataset from S3 bucket and converts it to readable format"""
 
     def __init__(
         self,
@@ -122,13 +123,20 @@ class CustomDatasetCreator(TrainTestDatasetCreator):
         )
 
     @classmethod
-    def read_s3(cls, uid : str, name: str, test_size: float, target_name : str, shuffle: bool = True):
-        s3 = boto3.client('s3')
-        obj = s3.get_object(Bucket='dlp-upload-bucket', Key=f'{uid}/tabular/{name}')
-        data = pd.read_csv(io.BytesIO(obj['Body'].read()))
+    def read_s3(
+        cls,
+        uid: str,
+        name: str,
+        test_size: float,
+        target_name: str,
+        shuffle: bool = True,
+    ):
+        s3 = boto3.client("s3")
+        obj = s3.get_object(Bucket="dlp-upload-bucket", Key=f"{uid}/tabular/{name}")
+        data = pd.read_csv(io.BytesIO(obj["Body"].read()))
         y = data[target_name]
         X = data.drop(target_name, axis=1)
-        if y.apply(pd.to_numeric, errors='coerce').isnull().any():
+        if y.apply(pd.to_numeric, errors="coerce").isnull().any():
             le = LabelEncoder()
             le.fit(y)
             y = pd.Series(np.array(le.transform(y)))
@@ -155,10 +163,12 @@ class CustomDatasetCreator(TrainTestDatasetCreator):
         y_test_tensor = Variable(torch.Tensor(self._y_test.to_numpy()))
         y_test_tensor = torch.reshape(y_test_tensor, (y_test_tensor.size()[0], 1))
         return TensorDataset(X_test_tensor, y_test_tensor)
-    
+
 
 if __name__ == "__main__":
-    teehee = CustomDatasetCreator.read_s3("nolan", "antennae-length.csv", 0.2, "label", True)
+    teehee = CustomDatasetCreator.read_s3(
+        "nolan", "antennae-length.csv", 0.2, "label", True
+    )
     train = teehee.createTrainDataset()
     test = teehee.createTestDataset()
     breakpoint()

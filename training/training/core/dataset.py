@@ -163,12 +163,3 @@ class CustomDatasetCreator(TrainTestDatasetCreator):
         y_test_tensor = Variable(torch.Tensor(self._y_test.to_numpy()))
         y_test_tensor = torch.reshape(y_test_tensor, (y_test_tensor.size()[0], 1))
         return TensorDataset(X_test_tensor, y_test_tensor)
-
-
-if __name__ == "__main__":
-    teehee = CustomDatasetCreator.read_s3(
-        "nolan", "antennae-length.csv", 0.2, "label", True
-    )
-    train = teehee.createTrainDataset()
-    test = teehee.createTestDataset()
-    breakpoint()

@@ -2,9 +2,9 @@ name: Backend Checks
 
 on:
   push:
-    branches:
-      - main
-      - prod-deploy
+    # branches:
+    #   - main
+    #   - prod-deploy
   pull_request:
     paths:
       - "training/**"

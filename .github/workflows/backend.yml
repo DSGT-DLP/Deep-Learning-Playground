@@ -69,6 +69,7 @@ jobs:
           commit_user_email: ghaction@github.com
   
   test:
+    needs: lint
     runs-on: ubuntu-22.04
     steps:
       #----------------------------------------------

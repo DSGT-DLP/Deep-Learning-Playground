@@ -40,17 +40,21 @@ jobs:
         with:
           path: training/.venv
           key: training-venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/training/poetry.lock') }}
+          
       #----------------------------------------------
       # install dependencies if cache does not exist
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: cd training && poetry install --no-interaction --no-root
+        shell: bash
       
       #----------------------------------------------
       # pyright static checker
       #----------------------------------------------
-      - uses: jordemort/action-pyright@v1
+      - name: Run Pyright Static Checker
+        id: pyright-static-checker
+        uses: jordemort/action-pyright@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }} # You need this
           reporter: github-pr-review # Change reporter.
@@ -114,4 +118,5 @@ jobs:
           export AWS_ACCESS_KEY_ID=testing
           export AWS_SECRET_ACCESS_KEY=testing
           export AWS_DEFAULT_REGION=us-west-2
+        shell: bash
       # cd training && pytest tests

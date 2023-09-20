@@ -18,16 +18,18 @@ jobs:
       #----------------------------------------------
       #       check-out repo and set-up mamba env
       #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v3
+        
       - uses: mamba-org/setup-micromamba@v1
         with:
           micromamba-version: '1.4.5-0'
-          environment-file: environment.yml
+          environment-file: training/environment.yml
           init-shell: >-
             bash
           cache-environment: true
           post-cleanup: 'all'
-      - name: Check out repository
-        uses: actions/checkout@v3
+      
       #----------------------------------------------
       #       load cached venv if cache exists
       #----------------------------------------------

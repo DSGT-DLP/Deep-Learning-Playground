@@ -47,7 +47,7 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: cd training && poetry install --no-interaction --no-root
-        shell: bash
+        shell: micromamba-shell {0}
       
       #----------------------------------------------
       # pyright static checker

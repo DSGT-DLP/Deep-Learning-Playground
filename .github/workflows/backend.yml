@@ -82,16 +82,19 @@ jobs:
       #----------------------------------------------
       #       check-out repo and set-up mamba env
       #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v3
+      
       - uses: mamba-org/setup-micromamba@v1
         with:
           micromamba-version: '1.4.5-0'
-          environment-file: ../training/environment.yml
+          environment-file: training/environment.yml
           init-shell: >-
             bash
           cache-environment: true
+          cache-environment-key: environment-${{ github.sha }}
           post-cleanup: 'all'
-      - name: Check out repository
-        uses: actions/checkout@v3
+      
       #----------------------------------------------
       #       load cached venv if cache exists
       #----------------------------------------------
@@ -107,7 +110,7 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: cd training && poetry install --no-interaction --no-root
-      
+        shell: micromamba-shell {0}
       #----------------------------------------------
       #              run test suite with moto
       #----------------------------------------------
@@ -118,5 +121,5 @@ jobs:
           export AWS_ACCESS_KEY_ID=testing
           export AWS_SECRET_ACCESS_KEY=testing
           export AWS_DEFAULT_REGION=us-west-2
-        shell: bash
+        shell: micromamba-shell {0}
       # cd training && pytest tests

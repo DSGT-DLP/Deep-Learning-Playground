@@ -1,0 +1,10 @@
+name: dlp
+channels:
+  - conda-forge
+  - pytorch
+  - defaults
+dependencies:
+  - conda-forge::python=3.9
+  - conda-forge::poetry
+  - pytorch::pytorch
+  - pytorch::torchvision

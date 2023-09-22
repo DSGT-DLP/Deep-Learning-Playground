@@ -4,6 +4,7 @@ import {
   DatasetData,
   FileUploadData,
 } from "@/features/Train/types/trainTypes";
+import { gridColumnsTotalWidthSelector } from "@mui/x-data-grid";
 import { fetchBaseQuery } from "@reduxjs/toolkit/dist/query";
 
 const trainspaceApi = backendApi
@@ -36,41 +37,36 @@ const trainspaceApi = backendApi
       }),
       uploadDatasetFile: builder.mutation<
         null,
-        { dataSource: DATA_SOURCE; file: File }
+        { dataSource: DATA_SOURCE; file: File; url: string }
       >({
         queryFn: async ({ dataSource, file }, _, __, baseQuery) => {
-          const postObjResponse = await baseQuery({
-            url: "/api/s3/getUserDatasetFileUploadPresignedPostObj",
-            method: "POST",
-            body: {
-              name: file.name,
-              data_source: dataSource.toLowerCase(),
-            },
+          const getObjResponse = await baseQuery({
+            url: `/api/lambda/datasets/user/${dataSource}/${file.name}/presigned_upload_url`,
+            method: "GET",
           });
-          if (postObjResponse.error) {
-            return { error: postObjResponse.error };
+          if (getObjResponse.error) {
+            return { error: getObjResponse.error };
           }
-          const postObj = postObjResponse.data as {
-            presigned_post_obj: { url: string; fields: Record<string, string> };
+          const getObj = getObjResponse.data as {
+            data: string;
+            message: string;
           };
+          const getObjUrl = getObj.data;
           const formData = new FormData();
-          for (const [key, value] of Object.entries(
-            postObj.presigned_post_obj.fields
-          )) {
-            formData.append(key, value);
-          }
           formData.append("file", file);
           const uploadQuery = fetchBaseQuery();
           const response = await uploadQuery(
             {
-              url: postObj.presigned_post_obj.url,
-              method: "POST",
+              url: getObjUrl,
+              method: "PUT",
               body: formData,
             },
             _,
             __
           );
+
           if (response.error) {
+            console.log(response.error);
             return { error: response.error };
           }
           return { data: null };

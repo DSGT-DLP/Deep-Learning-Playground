@@ -34,8 +34,7 @@ jobs:
       #----------------------------------------------
       #       load cached venv if cache exists
       #----------------------------------------------
-      - name: List Cached Contents
-        run: ls -R /home/runner/micromamba/envs/dlp/training/.venv
+
 
       - name: Load cached venv
         id: cached-poetry-dependencies
@@ -43,7 +42,10 @@ jobs:
         with:
           path: /home/runner/micromamba/envs/dlp/training/.venv
           key: training-venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/training/poetry.lock') }}
-          
+      
+      - name: List Cached Contents
+        if: steps.cached-poetry-dependencies.outputs.cache-hit == 'true'
+        run: ls -R /home/runner/micromamba/envs/dlp/training/.venv
       #----------------------------------------------
       # install dependencies if cache does not exist
       #----------------------------------------------

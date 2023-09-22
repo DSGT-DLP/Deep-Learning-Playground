@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 import { useAppDispatch } from "@/common/redux/hooks";
 import {
   ALL_TRAINSPACE_SETTINGS,
-  DATA_SOURCE_ARR,
+  IMPLEMENTED_DATA_SOURCE_ARR,
 } from "@/features/Train/constants/trainConstants";
 import { formatDate } from "@/common/utils/dateFormat";
 import { removeTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
@@ -178,7 +178,7 @@ const NewTrainSpaceMenu = ({
         open={open}
         onClose={handleClose}
       >
-        {DATA_SOURCE_ARR.map((source) => (
+        {IMPLEMENTED_DATA_SOURCE_ARR.map((source) => (
           <MenuItem
             key={source}
             value={source}

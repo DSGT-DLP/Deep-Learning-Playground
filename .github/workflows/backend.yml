@@ -34,6 +34,9 @@ jobs:
       #----------------------------------------------
       #       load cached venv if cache exists
       #----------------------------------------------
+      - name: List Cached Contents
+        run: ls -R /home/runner/micromamba/envs/dlp/training/.venv
+
       - name: Load cached venv
         id: cached-poetry-dependencies
         uses: actions/cache@v3

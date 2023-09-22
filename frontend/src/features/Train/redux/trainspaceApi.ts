@@ -4,7 +4,6 @@ import {
   DatasetData,
   FileUploadData,
 } from "@/features/Train/types/trainTypes";
-import { gridColumnsTotalWidthSelector } from "@mui/x-data-grid";
 import { fetchBaseQuery } from "@reduxjs/toolkit/dist/query";
 
 const trainspaceApi = backendApi
@@ -66,7 +65,6 @@ const trainspaceApi = backendApi
           );
 
           if (response.error) {
-            console.log(response.error);
             return { error: response.error };
           }
           return { data: null };

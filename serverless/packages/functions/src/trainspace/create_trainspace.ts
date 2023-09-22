@@ -8,7 +8,7 @@ import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     if (event) {
         const uid: string = parseJwt(event.headers.authorization ?? "")["user_id"];
-
+        console.log("Uid: " + uid);
         const trainspace_id: string = uuidv4();
         const trainspaceData: TrainspaceData = new TrainspaceData(trainspace_id, uid);
 
@@ -18,7 +18,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         const command: PutItemCommand = new PutItemCommand(trainspaceData.convertToDynamoItemInput("trainspace"));
 
         const response = await docClient.send(command);
-        if (false) {
+        if (response.$metadata.httpStatusCode != 200) {
             return {
                 statusCode: 500,
                 body: JSON.stringify({ message: "Internal server error."})

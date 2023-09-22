@@ -1,15 +1,12 @@
 import { APIGatewayProxyHandlerV2, APIGatewayProxyEvent } from "aws-lambda";
-import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
-import parseJwt from "@dlp-sst-app/core/parseJwt";
-
 import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event : APIGatewayProxyEvent) => {
-    const queryParams: object = event['queryStringParameters'];
+    const queryParams = event['pathParameters'];
     if (queryParams != null)
     {
-        const id: string = queryParams['id'];
+        const trainspace_id: string = queryParams['id'];
 
         const client: DynamoDBClient = new DynamoDBClient({});
         const documentClient: DynamoDBDocumentClient = DynamoDBDocumentClient.from(client);
@@ -18,25 +15,28 @@ export const handler: APIGatewayProxyHandlerV2 = async (event : APIGatewayProxyE
             TableName : "trainspace",
             Key : 
             {
-                trainspace_id : id
+                "trainspace_id" : 
+                { 
+                    S: trainspace_id
+                }
             }
         });
 
-        const response = await documentClient.get(command);
-
-        if (!response.Item) {
+        const response = await documentClient.send(command);
+        if (!response.Item)
+        {
             return {
-                statusCode: 400,
-                body: "Trainspace id " + id + " does not exist."
+                statusCode: 404,
+                body: JSON.stringify({message: "Provided trainspaceId does not exist"})
             }
         }
         return {
             statusCode: 200,
-            body: response.Item
+            body: JSON.stringify({message: "Successfully retrieved trainspace data", trainspace: response.Item})
         }
     }
     return {
-        statusCode: 404,
-        body: JSON.stringify({ message: "Malformed request content" }),
+        statusCode: 400,
+        body: JSON.stringify({message: "Malformed request content"})
     };
 };

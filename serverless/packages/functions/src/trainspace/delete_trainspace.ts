@@ -1,16 +1,13 @@
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
-import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
-import parseJwt from "@dlp-sst-app/core/parseJwt";
 
 import { DynamoDBClient, DeleteItemCommand } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
-    const queryParams: object = event['queryStringParameters'];
-    if (queryParams != null)
-    {
-        const id : string = queryParams['id'];
-
+    let queryParams = null;
+    if (event && (queryParams = event['pathParameters']) != null) {
+        const trainspace_id : string = queryParams['id'];
+        console.log("trainspace_id: " + trainspace_id);
         const client: DynamoDBClient = new DynamoDBClient({});
         const documentClient: DynamoDBDocumentClient = DynamoDBDocumentClient.from(client);
         
@@ -18,15 +15,28 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
             TableName : "trainspace",
             Key :
             {
-                trainspace_id : id
+                "trainspace_id" :
+                {
+                     S: trainspace_id
+                }
             }
         });
 
         const response = await documentClient.send(command);
-        return response;
+        if (response.$metadata.httpStatusCode == undefined || response.$metadata.httpStatusCode != 200) 
+        {
+            return {
+                statusCode: 404,
+                body: JSON.stringify({ message : "Delete operation failed" })
+            }
+        }
+        return {
+            statusCode: 200,
+            body: "Successfully deleted trainspace with id " + trainspace_id
+        }
     }
     return {
         statusCode: 400,
-        body: JSON.stringify({ message: "Malformed request content" }),
+        body: JSON.stringify({ message : "Malformed request content" }),
     };
 };

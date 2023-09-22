@@ -203,9 +203,7 @@
 |  |  |  |  |- 📜 pytorch-logo.png
 |  |  |  |- 📜 demo_video.gif : GIF tutorial of a simple classification training session
 |  |  |- 📜 dlp-logo.ico : DLP Logo
-|  |  |- 📜 dlp-logo.svg : DLP Logo, duplicate of files in public, but essential as the frontend can't read public
 |  |  |- 📜 index.html : Base HTML file that will be initially rendered
-|  |  |- 📜 dlp-logo.png : DLP Logo, duplicate of files in public, but essential as the frontend can't read public
 |  |  |- 📜 manifest.json : Default React file for choosing icon based on
 |  |  |- 📜 robots.txt
 |  |- 📂 layer_docs:

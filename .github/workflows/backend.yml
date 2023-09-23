@@ -40,6 +40,9 @@ jobs:
       #----------------------------------------------
       #       load cached venv if cache exists
       #----------------------------------------------
+      - name: List .venv Directory (Before Caching)
+        run: ls -R /home/runner/micromamba/envs/dlp/training/.venv
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       - name: Load cached venv
         id: cached-poetry-dependencies
         uses: actions/cache@v3
@@ -55,7 +58,10 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: cd training && poetry install --no-interaction --no-root
         shell: micromamba-shell {0}
-      
+
+      - name: List .venv Directory (After Caching)
+        run: ls -R /home/runner/micromamba/envs/dlp/training/.venv
+        if: steps.cached-poetry-dependencies.outputs.cache-hit == 'true'
       #----------------------------------------------
       # pyright static checker
       #----------------------------------------------

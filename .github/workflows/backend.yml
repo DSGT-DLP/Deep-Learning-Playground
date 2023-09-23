@@ -44,9 +44,9 @@ jobs:
         id: cached-poetry-dependencies
         uses: actions/cache@v3
         with:
-          path: training/.venv
-          key: training-venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/training/poetry.lock') }}
-          restore-keys: training-venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-
+          path: /home/runner/micromamba/envs/dlp/training/.venv
+          key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
+          restore-keys: training-venv-${{ runner.os }}-
 
       #----------------------------------------------
       # install dependencies if cache does not exist
@@ -109,7 +109,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /home/runner/micromamba/envs/dlp/training/.venv
-          key: training-venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/training/poetry.lock') }}
+          key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
+          restore-keys: training-venv-${{ runner.os }}-
       #----------------------------------------------
       # install dependencies if cache does not exist
       #----------------------------------------------

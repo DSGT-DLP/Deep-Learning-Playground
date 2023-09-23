@@ -48,11 +48,6 @@ jobs:
           key: training-venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/training/poetry.lock') }}
           restore-keys: training-venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-
 
-      - name: Debug Cache
-        run: |
-          echo "Cache key: training-venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/training/poetry.lock') }}"
-          echo "Cache hit: ${{ steps.cached-poetry-dependencies.outputs.cache-hit }}"
-          ls -R training/.venv
       #----------------------------------------------
       # install dependencies if cache does not exist
       #----------------------------------------------

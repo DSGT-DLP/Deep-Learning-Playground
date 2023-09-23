@@ -41,7 +41,8 @@ jobs:
         with:
           path: /home/runner/micromamba/envs/dlp/training/.venv
           key: training-venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/training/poetry.lock') }}
-      
+          restore-keys: training-venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-
+        
       - name: List Cached Contents
         if: steps.cached-poetry-dependencies.outputs.cache-hit == 'true'
         run: ls -R /home/runner/micromamba/envs/dlp/training/.venv

@@ -10,7 +10,8 @@ on:
       - "training/**"
       - pyproject.toml
       - .github/workflows
-
+env:
+  PYTHON_VERSION: "3.9.17"
 jobs:
   lint:
     runs-on: ubuntu-22.04
@@ -20,6 +21,12 @@ jobs:
       #----------------------------------------------
       - name: Check out repository
         uses: actions/checkout@v3
+
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version:  ${{ env.PYTHON_VERSION }}
         
       - uses: mamba-org/setup-micromamba@v1
         with:

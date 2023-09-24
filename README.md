@@ -2,7 +2,7 @@
 
 Web Application where people new to Machine Learning can input a dataset and experiment around with basic Pytorch modules through a drag and drop interface
 
-> **Deployed website:** https://datasciencegt-dlp.com/ </br> > **GitHub repo:** https://github.com/DSGT-DLP/Deep-Learning-Playground </br> > **Owners:** See [CODEOWNERS](./CODEOWNERS)
+> **Deployed website:** https://datasciencegt-dlp.com/ </br> > **GitHub repo:** https://github.com/DSGT-DLP/Deep-Learning-Playground
 
 # How to Run
 

@@ -22,11 +22,11 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      - name: Set up python
-        id: setup-python
-        uses: actions/setup-python@v4
-        with:
-          python-version:  ${{ env.PYTHON_VERSION }}
+      # - name: Set up python
+      #   id: setup-python
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version:  ${{ env.PYTHON_VERSION }}
         
       - uses: mamba-org/setup-micromamba@v1
         with:

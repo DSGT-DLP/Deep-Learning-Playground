@@ -43,7 +43,7 @@ jobs:
         id: cached-poetry-dependencies
         uses: actions/cache@v3
         with:
-          path: /home/runner/micromamba/envs/dlp/training/.venv
+          path: /home/runner/micromamba/envs/dlp/
           key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
           restore-keys: training-venv-${{ runner.os }}-
 
@@ -58,12 +58,12 @@ jobs:
 
       - name: python version in poetry
         run: |
-          pwd
-          ls
           cd ~
           pwd
+          cd micromamba/envs/dlp 
           ls
-          source micromamba/envs/dlp/training/.venv/bin/activate
+          poetry shell
+          
           python --version
           poetry --version
         shell: micromamba-shell {0}

@@ -58,10 +58,11 @@ jobs:
 
       - name: python version in poetry
         run: |
+          pwd
+          ls
           source /home/runner/micromamba/envs/dlp/training/.venv
           python --version
           poetry --version
-          pwd
 
       #----------------------------------------------
       # pyright static checker

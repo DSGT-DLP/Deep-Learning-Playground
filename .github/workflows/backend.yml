@@ -53,7 +53,7 @@ jobs:
         
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: pwd && cd training && poetry install --no-interaction --no-root
+        run: pwd && cd training && poetry install --no-interaction --no-root && poetry env info -p
         shell: micromamba-shell {0}
 
       - name: python version in poetry

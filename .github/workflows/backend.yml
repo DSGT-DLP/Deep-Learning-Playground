@@ -44,7 +44,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: training/.venv
-          key: training-venv-${{ runner.os }}-${{ hashFiles('training/poetry.lock') }}
+          key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
           restore-keys: training-venv-${{ runner.os }}-
 
       #----------------------------------------------
@@ -55,6 +55,13 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: pwd && cd training && poetry install --no-interaction --no-root
         shell: micromamba-shell {0}
+
+      - name: python version in poetry
+        run: |
+          source training/.venv/bin/activate
+          python --version
+          poetry --version
+          pwd
 
       #----------------------------------------------
       # pyright static checker

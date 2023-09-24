@@ -58,12 +58,8 @@ jobs:
 
       - name: python version in poetry
         run: |
-          cd ~
-          pwd
-          cd micromamba/envs/dlp 
-          ls
+          cd training
           poetry shell
-          
           python --version
           poetry --version
         shell: micromamba-shell {0}

@@ -4,12 +4,11 @@ on:
   push:
     branches:
       - main
+      - nextjs
       - prod-deploy
   pull_request:
     paths:
       - "training/**"
-      - .github/workflows/**
-      - pyproject.toml
 
 jobs:
   lint:

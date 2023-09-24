@@ -60,7 +60,9 @@ jobs:
         run: |
           pwd
           ls
-          cd ~/home/runner
+          cd ~
+          pwd
+          ls
           source micromamba/envs/dlp/training/.venv/bin/activate
           python --version
           poetry --version

@@ -1,0 +1,125 @@
+name: Backend Checks
+
+on:
+  push:
+    branches:
+      - main
+      - nextjs
+      - prod-deploy
+  pull_request:
+    paths:
+      - "training/**"
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      #----------------------------------------------
+      #       check-out repo and set-up mamba env
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v3
+        
+      - uses: mamba-org/setup-micromamba@v1
+        with:
+          micromamba-version: '1.4.5-0'
+          environment-file: training/environment.yml
+          init-shell: >-
+            bash
+          cache-environment: true
+          cache-environment-key: mamba-env-${{ runner.os }}-${{ hashFiles('**/training/environment.yml') }}
+      
+      #----------------------------------------------
+      #       load cached venv if cache exists
+      #----------------------------------------------
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: /home/runner/micromamba/envs/dlp/
+          key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
+          restore-keys: training-venv-${{ runner.os }}-
+
+      #---------------------------------------------------
+      #       install dependencies if cache does not exist
+      #---------------------------------------------------
+        
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: pwd && cd training && poetry install --no-interaction --no-root && poetry env info -p
+        shell: micromamba-shell {0}
+
+      #----------------------------------------------
+      #       pyright static checker
+      #----------------------------------------------
+      - name: Run Pyright Static Checker
+        id: pyright-static-checker
+        uses: jordemort/action-pyright@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }} # You need this
+          reporter: github-pr-review # Change reporter.
+          lib: true
+      
+      #----------------------------------------------
+      #       black formatter
+      #----------------------------------------------
+      - uses: rickstaa/action-black@v1
+        id: action_black
+        with:
+          black_args: "."
+          
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        if: steps.action_black.outputs.is_formatted == 'true'
+        with:
+          commit_message: ":art: Format Python code with psf/black"
+          commit_options: '--no-verify'
+          commit_user_name: github-actions
+          commit_user_email: ghaction@github.com
+  
+  test:
+    needs: lint
+    runs-on: ubuntu-22.04
+    steps:
+      #----------------------------------------------
+      #       check-out repo and set-up mamba env
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v3
+      
+      - uses: mamba-org/setup-micromamba@v1
+        with:
+          micromamba-version: '1.4.5-0'
+          environment-file: training/environment.yml
+          init-shell: >-
+            bash
+          cache-environment: true
+          cache-environment-key: mamba-env-${{ runner.os }}-${{ hashFiles('**/training/environment.yml') }}
+      
+      #----------------------------------------------
+      #       load cached venv if cache exists
+      #----------------------------------------------
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: /home/runner/micromamba/envs/dlp/
+          key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
+          restore-keys: training-venv-${{ runner.os }}-
+      #----------------------------------------------
+      # install dependencies if cache does not exist
+      #----------------------------------------------
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: cd training && poetry install --no-interaction --no-root
+        shell: micromamba-shell {0}
+      #----------------------------------------------
+      #       run test suite
+      #----------------------------------------------
+      - name: Run tests with moto
+        run: |
+          export AWS_ACCESS_KEY_ID=testing
+          export AWS_SECRET_ACCESS_KEY=testing
+          export AWS_DEFAULT_REGION=us-west-2
+          # cd training && pytest tests
+        shell: micromamba-shell {0}
+     

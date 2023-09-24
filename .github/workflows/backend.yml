@@ -8,7 +8,7 @@ on:
   pull_request:
     paths:
       - "training/**"
-      - .github/workflows
+      - ".github/workflows"
 
 jobs:
   lint:

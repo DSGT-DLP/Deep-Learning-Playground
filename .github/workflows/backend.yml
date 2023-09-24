@@ -9,6 +9,7 @@ on:
     paths:
       - "training/**"
       - ".github/workflows"
+      - pyproject.toml
 
 jobs:
   lint:

@@ -15,7 +15,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         let lastEvaluatedKey = undefined;
 
         do {
-            const getCommand = new QueryCommand({
+            const getCommand: QueryCommand = new QueryCommand({
                 TableName: "trainspace",
                 IndexName: "uid",
                 KeyConditionExpression: "uid = :uid",

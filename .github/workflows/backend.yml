@@ -56,7 +56,7 @@ jobs:
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: micromamba activate dlp && pwd && cd training && poetry install --no-interaction --no-root
+        run: pwd && cd training && poetry install --no-interaction --no-root
         shell: micromamba-shell {0}
 
       - name: List .venv Directory (After Caching)

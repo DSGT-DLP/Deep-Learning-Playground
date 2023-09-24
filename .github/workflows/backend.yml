@@ -53,17 +53,11 @@ jobs:
       #----------------------------------------------
       # install dependencies if cache does not exist
       #----------------------------------------------
-      - uses: mamba-org/setup-micromamba@v1
-      - run: |
-          pwd
-          cd training && poetry install --no-interaction --no-root
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        shell: micromamba-shell {0}
         
-      # - name: Install dependencies
-      #   if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-      #   run: pwd && cd training && poetry install --no-interaction --no-root
-      #   shell: micromamba-shell {0}
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: pwd && cd training && poetry install --no-interaction --no-root
+        shell: micromamba-shell {0}
 
       - name: List .venv Directory (After Caching)
         run: pwd && ls -R /home/runner/micromamba/envs/dlp/training/.venv

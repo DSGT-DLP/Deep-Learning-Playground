@@ -2,13 +2,12 @@ name: Backend Checks
 
 on:
   push:
-    # branches:
-    #   - main
-    #   - prod-deploy
+    branches:
+      - main
+      - prod-deploy
   pull_request:
     paths:
       - "training/**"
-      - pyproject.toml
       - .github/workflows
 
 jobs:
@@ -20,12 +19,6 @@ jobs:
       #----------------------------------------------
       - name: Check out repository
         uses: actions/checkout@v3
-
-      # - name: Set up python
-      #   id: setup-python
-      #   uses: actions/setup-python@v4
-      #   with:
-      #     python-version:  ${{ env.PYTHON_VERSION }}
         
       - uses: mamba-org/setup-micromamba@v1
         with:
@@ -47,25 +40,17 @@ jobs:
           key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
           restore-keys: training-venv-${{ runner.os }}-
 
-      #----------------------------------------------
-      # install dependencies if cache does not exist
-      #----------------------------------------------
+      #---------------------------------------------------
+      #       install dependencies if cache does not exist
+      #---------------------------------------------------
         
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: pwd && cd training && poetry install --no-interaction --no-root && poetry env info -p
         shell: micromamba-shell {0}
 
-      - name: python version in poetry
-        run: |
-          cd training
-          poetry shell
-          python --version
-          poetry --version
-        shell: micromamba-shell {0}
-
       #----------------------------------------------
-      # pyright static checker
+      #       pyright static checker
       #----------------------------------------------
       - name: Run Pyright Static Checker
         id: pyright-static-checker
@@ -76,7 +61,7 @@ jobs:
           lib: true
       
       #----------------------------------------------
-      # black formatter
+      #       black formatter
       #----------------------------------------------
       - uses: rickstaa/action-black@v1
         id: action_black
@@ -90,52 +75,50 @@ jobs:
           commit_user_name: github-actions
           commit_user_email: ghaction@github.com
   
-  # test:
-  #   needs: lint
-  #   runs-on: ubuntu-22.04
-  #   steps:
-  #     #----------------------------------------------
-  #     #       check-out repo and set-up mamba env
-  #     #----------------------------------------------
-  #     - name: Check out repository
-  #       uses: actions/checkout@v3
+  test:
+    needs: lint
+    runs-on: ubuntu-22.04
+    steps:
+      #----------------------------------------------
+      #       check-out repo and set-up mamba env
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v3
       
-  #     - uses: mamba-org/setup-micromamba@v1
-  #       with:
-  #         micromamba-version: '1.4.5-0'
-  #         environment-file: training/environment.yml
-  #         init-shell: >-
-  #           bash
-  #         cache-environment: true
-  #         cache-environment-key: mamba-env-${{ runner.os }}-${{ hashFiles('**/training/environment.yml') }}
+      - uses: mamba-org/setup-micromamba@v1
+        with:
+          micromamba-version: '1.4.5-0'
+          environment-file: training/environment.yml
+          init-shell: >-
+            bash
+          cache-environment: true
+          cache-environment-key: mamba-env-${{ runner.os }}-${{ hashFiles('**/training/environment.yml') }}
       
-  #     #----------------------------------------------
-  #     #       load cached venv if cache exists
-  #     #----------------------------------------------
-  #     - name: Load cached venv
-  #       id: cached-poetry-dependencies
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: /home/runner/micromamba/envs/dlp/training/.venv
-  #         key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
-  #         restore-keys: training-venv-${{ runner.os }}-
-  #     #----------------------------------------------
-  #     # install dependencies if cache does not exist
-  #     #----------------------------------------------
-  #     - name: Install dependencies
-  #       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-  #       run: cd training && poetry install --no-interaction --no-root
-  #       shell: micromamba-shell {0}
-  #     #----------------------------------------------
-  #     #              run test suite with moto
-  #     #----------------------------------------------
-  #     - name: Run tests with moto
-  #       run: |
-  #         mamba activate dlp
-  #         source training/.venv/bin/activate
-  #         moto_server s3 -p 5000 &  # Start moto S3 server in the background
-  #         export AWS_ACCESS_KEY_ID=testing
-  #         export AWS_SECRET_ACCESS_KEY=testing
-  #         export AWS_DEFAULT_REGION=us-west-2
-  #       shell: micromamba-shell {0}
-  #     # cd training && pytest tests
+      #----------------------------------------------
+      #       load cached venv if cache exists
+      #----------------------------------------------
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: /home/runner/micromamba/envs/dlp/
+          key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
+          restore-keys: training-venv-${{ runner.os }}-
+      #----------------------------------------------
+      # install dependencies if cache does not exist
+      #----------------------------------------------
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: cd training && poetry install --no-interaction --no-root
+        shell: micromamba-shell {0}
+      #----------------------------------------------
+      #       run test suite
+      #----------------------------------------------
+      - name: Run tests with moto
+        run: |
+          export AWS_ACCESS_KEY_ID=testing
+          export AWS_SECRET_ACCESS_KEY=testing
+          export AWS_DEFAULT_REGION=us-west-2
+          # cd training && pytest tests
+        shell: micromamba-shell {0}
+     

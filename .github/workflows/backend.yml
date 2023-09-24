@@ -63,6 +63,7 @@ jobs:
           source /home/runner/micromamba/envs/dlp/training/.venv
           python --version
           poetry --version
+        shell: micromamba-shell {0}
 
       #----------------------------------------------
       # pyright static checker

@@ -79,7 +79,7 @@ Access the VSCode command palette via `Ctrl+Shift+P`. Press `Python: Select Inte
 
 Select the Python Interpreter named `dlp`.
 
-## To start on localhost (in order):
+## To start on localhost:
 
 Run the following commands in the project directory (the root folder created after cloning):
 

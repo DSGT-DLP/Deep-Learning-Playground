@@ -23,6 +23,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@aws-sdk/client-sesv2": "^3.418.0",
     "@aws-sdk/s3-request-presigner": "^3.391.0"
   }
 }

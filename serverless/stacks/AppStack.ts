@@ -35,6 +35,7 @@ export function AppStack({ stack }: StackContext) {
         "packages/functions/src/datasets/user/all_of_type.handler",
       "GET /datasets/user/{type}/{filename}/columns":
         "packages/functions/src/datasets/user/columns.handler",
+      "POST /notifications/"
     },
   });
 

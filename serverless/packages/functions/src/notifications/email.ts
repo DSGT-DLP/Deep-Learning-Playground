@@ -33,9 +33,9 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
   const input: SendEmailCommandInput = {
     FromEmailAddress: DLP_EMAIL,
     Destination: {
-      ToAddresses: toAddresses.split(","),
-      CcAddresses: ccAddresses.split(","),
-      BccAddresses: bccAddresses.split(","),
+      ToAddresses: toAddresses,
+      CcAddresses: ccAddresses,
+      BccAddresses: bccAddresses,
     },
     Content: {
       Simple: {

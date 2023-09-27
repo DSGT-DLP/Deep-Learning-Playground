@@ -104,7 +104,7 @@ class SklearnDatasetCreator(TrainTestDatasetCreator):
         return self._category_list
 
 
-class CustomDatasetCreator(TrainTestDatasetCreator):
+class TabularCustomDatasetCreator(TrainTestDatasetCreator):
     """Pulls user-uploaded dataset from S3 bucket and converts it to readable format"""
 
     def __init__(

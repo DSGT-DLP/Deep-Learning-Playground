@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 from training.core.dl_model import DLModel
 
+
 @pytest.mark.parametrize(
     "input_list",
     [

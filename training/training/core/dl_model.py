@@ -52,6 +52,7 @@ class DLModel(nn.Module):
         pred = self.model(x)  # apply model on input x
         return pred
 
+
 ##def getDLModel(layer_params_list: list[LayerParams]):
-   # model = DLModel.fromLayerParamsList(layer_params_list)
-   # return model
+# model = DLModel.fromLayerParamsList(layer_params_list)
+# return model

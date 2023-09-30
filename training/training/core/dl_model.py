@@ -2,9 +2,8 @@ from typing import Any, Callable
 from ninja import Schema
 import torch
 import torch.nn as nn
-from typing import TYPE_CHECKING
-if TYPE_CHECKING: 
-    from training.routes.tabular.schemas import LayerParams
+
+from training.routes.tabular.schemas import LayerParams
 
 
 class DLModel(nn.Module):

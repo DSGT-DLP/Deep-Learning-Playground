@@ -3,8 +3,8 @@ from ninja import Schema
 import torch
 import torch.nn as nn
 from typing import TYPE_CHECKING
-
-from training.routes.tabular.schemas import LayerParams
+if TYPE_CHECKING: 
+    from training.routes.tabular.schemas import LayerParams
 
 
 class DLModel(nn.Module):
@@ -52,3 +52,7 @@ class DLModel(nn.Module):
     def forward(self, x: torch.Tensor):
         pred = self.model(x)  # apply model on input x
         return pred
+
+##def getDLModel(layer_params_list: list[LayerParams]):
+   # model = DLModel.fromLayerParamsList(layer_params_list)
+   # return model

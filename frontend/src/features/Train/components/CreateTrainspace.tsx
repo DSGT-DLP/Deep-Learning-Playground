@@ -7,7 +7,7 @@ import { useAppDispatch } from "@/common/redux/hooks";
 import { useRouter } from "next/router";
 import {
   ALL_TRAINSPACE_SETTINGS,
-  DATA_SOURCE_ARR,
+  IMPLEMENTED_DATA_SOURCE_ARR,
 } from "../constants/trainConstants";
 import { createTrainspaceData } from "../redux/trainspaceSlice";
 const CreateTrainspace = () => {
@@ -18,9 +18,7 @@ const CreateTrainspace = () => {
     control,
     setValue,
   } = useForm<BaseTrainspaceData>({
-    defaultValues: {
-      name: "My Trainspace",
-    },
+    defaultValues: { name: "My Trainspace" },
   });
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -32,6 +30,7 @@ const CreateTrainspace = () => {
       setValue("dataSource", router.query.source as DATA_SOURCE);
     }
   }, [router.isReady]);
+
   return (
     <Grid
       container
@@ -76,7 +75,7 @@ const CreateTrainspace = () => {
               value={value ?? ""}
               helperText={errors.dataSource ? "Data Source is required" : ""}
             >
-              {DATA_SOURCE_ARR.map((source) => (
+              {IMPLEMENTED_DATA_SOURCE_ARR.map((source) => (
                 <MenuItem key={source} value={source}>
                   {ALL_TRAINSPACE_SETTINGS[source].name}
                 </MenuItem>

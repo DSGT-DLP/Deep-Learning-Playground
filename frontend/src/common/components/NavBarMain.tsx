@@ -1,28 +1,23 @@
-import AppBar from "@mui/material/AppBar";
+import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
+import { isSignedIn, signOutUser } from "@/common/redux/userLogin";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { FormControlLabel, Icon, Switch } from "@mui/material";
+import AppBar from "@mui/material/AppBar";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import MenuList from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import MenuList from "@mui/material/Menu";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
-import Grid from "@mui/material/Grid";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import Stack from "@mui/material/Stack";
 import storage from "local-storage-fallback";
+import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ThemeProvider } from "styled-components";
 import { URLs } from "../../constants";
 import DSGTLogo from "/public/images/logos/dlp_branding/dlp-logo.png";
-import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
-import {
-  UserType,
-  isSignedIn,
-  setCurrentUser,
-  signOutUser,
-} from "@/common/redux/userLogin";
-import Image from "next/image";
-import Link from "next/link";
 
 const NavbarMain = () => {
   const user = useAppSelector((state) => state.currentUser.user);
@@ -79,24 +74,19 @@ const NavbarMain = () => {
                   <Image
                     src={DSGTLogo}
                     alt="DSGT Logo"
-                    width={40}
-                    height={40}
+                    width={100}
+                    height={100}
                   />
                 </Icon>
                 <Typography
                   noWrap
                   className="d-flex align-items-center logo-title"
                   sx={{
-
-                  mr: 2,
-                   display: { xs: "none", md: "flex" },
-                   textDecoration: "none",
-
                     mr: 2,
                     display: { xs: "none", md: "flex" },
-                    fontWeight: "500",
                     textDecoration: "none",
-                    fontSize: "17px"
+                    fontWeight: "500",
+                    fontSize: "17px",
                   }}
                 >
                   Deep Learning Playground
@@ -174,7 +164,6 @@ const NavbarMain = () => {
                       </MenuItem>
                       <MenuItem divider>
                         <Link href="/learn" id="basic-nav-dropdown">
-
                           Learn
                         </Link>
                       </MenuItem>

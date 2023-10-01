@@ -21,7 +21,6 @@ pytest-django = "^4.5.2"
 
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.0"
 ggshield = "^1.18.0"
 moto = "^4.1.14"
 

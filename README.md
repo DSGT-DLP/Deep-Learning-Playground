@@ -12,7 +12,7 @@ Have the following installed first:
 
 1. [Node.js v18 via NVM](https://github.com/nvm-sh/nvm#installing-and-updating) (Install nvm first, and then install node & npm using nvm)
 1. [Yarn 1.x](https://classic.yarnpkg.com/lang/en/docs/install) (Must be installed after npm. May upgrade to Yarn Modern in the future, keep an eye out for that!)
-1. [Mamba](https://mamba.readthedocs.io/en/latest/mamba-installation.html#mamba-install) (On windows, remember to check the box that says that it will add mamba to path)
+1. [Mamba](https://github.com/conda-forge/miniforge#miniforge) (Make sure to install using the Miniforge distribution. On windows, remember to check the box that says that it will add mamba to path)
 1. [pip](https://pip.pypa.io/en/stable/installation/) (Is also automatically installed with Python via Python's installer, make sure this version of pip is installed globally)
 1. [dlp-cli](https://github.com/DSGT-DLP/dlp-cli#readme) (We have our own cli!)
 1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
@@ -39,7 +39,9 @@ Have the following installed first:
 
 ## Clone the Repository
 
-`git clone https://github.com/DSGT-DLP/Deep-Learning-Playground.git` in the directory of your choice. This can also be achieved through GitKraken.
+`git clone https://github.com/DSGT-DLP/Deep-Learning-Playground.git` in the directory of your choice. If this installation is for the beginner project, do `git clone https://github.com/DSGT-DLP/dlp-practice.git`.
+
+This can also be achieved through GitKraken.
 
 ## Frontend and Backend Package Installation
 
@@ -87,6 +89,8 @@ Run the following commands in the project directory (the root folder created aft
 | -------------------- | ------------------------ |
 | Running the Frontend | `dlp-cli frontend start` |
 | Running the Backend  | `dlp-cli backend start`  |
+
+Make sure to run the above two commands in separate terminals.
 
 # Architecture
 

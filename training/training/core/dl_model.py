@@ -39,7 +39,7 @@ class DLModel(nn.Module):
         return cls(layer_list)
 
     def build_model(self, layer_list):
-        print ("Hello World")
+        print("Hello World")
         model = nn.Sequential()
         ctr = 1
         for layer in layer_list:
@@ -48,5 +48,5 @@ class DLModel(nn.Module):
         return model
 
     def forward(self, x: torch.Tensor):
-        pred = self.model(x) 
+        pred = self.model(x)
         return pred

@@ -19,10 +19,12 @@ tensor_vstack_two = torch.vstack(
     [torch.tensor([[5646456], [634767], [37647346]]), torch.tensor([[6], [7], [8]])]
 ).reshape((6, 1, 1))
 
+
 def compute_loss(loss_function_name, output, labels):
     loss_function = getCriterionHandler(loss_function_name)
     return loss_function.compute_loss(output, labels)
-    
+
+
 @pytest.mark.parametrize(
     "output, labels, expected_number",
     [
@@ -34,6 +36,7 @@ def test_l1_loss_computation_correct(output, labels, expected_number):
     loss_function_name = "L1LOSS"
     computed_loss = compute_loss(loss_function_name, output, labels)
     assert pytest.approx(expected_number) == computed_loss
+
 
 @pytest.mark.parametrize(
     "output, labels, expected_number",

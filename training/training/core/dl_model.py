@@ -41,7 +41,6 @@ class DLModel(nn.Module):
     def build_model(self, layer_list):
         model = nn.Sequential()
         ctr = 1
-        print("Hello World")
         for layer in layer_list:
             model.add_module(f"layer #{ctr}: {str(layer.__class__.__name__)}", layer)
             ctr += 1

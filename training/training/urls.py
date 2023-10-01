@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.http import HttpRequest
 from django.urls import path
-from ninja import NinjaAPI, Schema
+from ninja import NinjaAPI
 from training.routes.datasets.default.columns import router as default_dataset_router
 from training.routes.tabular.tabular import router as tabular_router
 

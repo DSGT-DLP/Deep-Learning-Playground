@@ -1,4 +1,3 @@
-#from typing import Literal, Optional
 from django.http import HttpRequest
 from ninja import Router
 from training.core.criterion import getCriterionHandler

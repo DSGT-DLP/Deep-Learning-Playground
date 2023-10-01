@@ -1,5 +1,4 @@
 from typing import Any, Callable
-#from ninja import Schema
 import torch
 import torch.nn as nn
 
@@ -49,9 +48,8 @@ class DLModel(nn.Module):
         return model
 
     def forward(self, x: torch.Tensor):
-        pred = self.model(x)  # apply model on input x
+        pred = self.model(x)  
         return pred
 
-##def getDLModel(layer_params_list: list[LayerParams]):
-   # model = DLModel.fromLayerParamsList(layer_params_list)
-   # return model
+
+

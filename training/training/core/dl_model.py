@@ -48,8 +48,5 @@ class DLModel(nn.Module):
         return model
 
     def forward(self, x: torch.Tensor):
-        pred = self.model(x)  
+        pred = self.model(x)
         return pred
-
-
-

@@ -102,5 +102,6 @@
     "eslint-plugin-react": "^7.32.2",
     "redux-mock-store": "^1.5.4",
     "ts-jest": "^29.0.5"
-  }
+  },
+  "packageManager": "yarn@3.6.3"
 }

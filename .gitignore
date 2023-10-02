@@ -175,6 +175,13 @@ backend/firebase_helpers/firebase_creds.json
 node_modules/
 /.pnp
 .pnp.js
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
 # testing
 frontend/coverage

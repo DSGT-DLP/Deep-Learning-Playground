@@ -70,5 +70,8 @@ export function AppStack({ stack }: StackContext) {
     GetUserDatasetColumnsFunctionName:
       api.getFunction("GET /datasets/user/{type}/{filename}/columns")
         ?.functionName ?? "",
+    TrainspaceRunTableName: {
+      value: trainspaceRunTable.tableName
+    }
   });
 }

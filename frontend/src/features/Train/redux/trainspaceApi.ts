@@ -51,14 +51,12 @@ const trainspaceApi = backendApi
             message: string;
           };
           const getObjUrl = getObj.data;
-          const formData = new FormData();
-          formData.append("file", file);
           const uploadQuery = fetchBaseQuery();
           const response = await uploadQuery(
             {
               url: getObjUrl,
               method: "PUT",
-              body: formData,
+              body: file,
             },
             _,
             __
@@ -78,7 +76,7 @@ const trainspaceApi = backendApi
         query: ({ dataSource, dataset }) => ({
           url: dataset.isDefaultDataset
             ? `/api/training/datasets/default/${dataset.name}/columns`
-            : "/api/dataset/getColumnsFromDatasetFile",
+            : `/api/lambda/datasets/user/${dataSource}/${dataset.name}/columns`,
           method: "GET",
           /*body: {
             data_source: dataSource.toLowerCase(),

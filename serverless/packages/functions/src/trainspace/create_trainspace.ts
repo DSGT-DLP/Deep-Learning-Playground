@@ -4,18 +4,55 @@ import TrainspaceData from './trainspace-data';
 import { v4 as uuidv4 } from 'uuid';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb'; //@aws-sdk/client-dynamodb
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { DATA_SOURCE_ARR } from '../../../../../frontend/src/features/Train/constants/trainConstants';
+
+function validateRequestBody(eventBody: any) : boolean {
+    if (!eventBody['data_source']) {
+            return false;
+    }
+
+    if (!DATA_SOURCE_ARR.includes(eventBody['data_source'])) {
+        return false;
+    }
+
+    if (!eventBody['dataset_data']) {
+        return false;
+    }
+
+    if (!eventBody['name']) {
+        return false;
+    }
+
+    if (!eventBody['parameters_data']) {
+        return false;
+    }
+
+    if (!eventBody['review_data']) {
+        return false;
+    }
+    return true;
+}
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     if (event) {
         const uid: string = parseJwt(event.headers.authorization ?? "")["user_id"];
-        console.log("Uid: " + uid);
-        const trainspace_id: string = uuidv4();
-        const trainspaceData: TrainspaceData = new TrainspaceData(trainspace_id, uid);
-
-        const client: DynamoDBClient = new DynamoDBClient({});
-        const docClient: DynamoDBDocumentClient = DynamoDBDocumentClient.from(client);
+        const eventBody = JSON.parse(event.body? event.body : "");
         
-        const command: PutItemCommand = new PutItemCommand(trainspaceData.convertToDynamoItemInput("trainspace"));
+        if (!validateRequestBody(eventBody)) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ message: "Invalid request body" })
+            }
+        }
+
+        const trainspaceId = uuidv4();
+        const trainspaceData = new TrainspaceData(trainspaceId, uid, eventBody['data_source'], eventBody['dataset_data'], eventBody['name'], eventBody['parameters_data'], eventBody['review_data']);
+
+
+        const client = new DynamoDBClient({});
+        const docClient = DynamoDBDocumentClient.from(client);
+        
+        const command = new PutItemCommand(trainspaceData.convertToDynamoItemInput("trainspace"));
 
         const response = await docClient.send(command);
         if (response.$metadata.httpStatusCode != 200) {
@@ -27,7 +64,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         
         return {
             statusCode: 200,
-            body: JSON.stringify({ trainspaceId: trainspace_id, message: "Successfully created a new trainspace."})
+            body: JSON.stringify({ trainspaceId: trainspaceId, message: "Successfully created a new trainspace."})
         };
       }
     return {

@@ -6,7 +6,14 @@ export const handler: APIGatewayProxyHandlerV2 = async (event : APIGatewayProxyE
     const queryParams = event['pathParameters'];
     if (queryParams != null)
     {
-        const trainspace_id: string = queryParams['id'];
+        const trainspace_id: string | undefined = queryParams['id'];
+        
+        if (trainspace_id == undefined) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({message: "Malformed request content - trainspace ID missing."})
+            };
+        }
 
         const client: DynamoDBClient = new DynamoDBClient({});
         const documentClient: DynamoDBDocumentClient = DynamoDBDocumentClient.from(client);

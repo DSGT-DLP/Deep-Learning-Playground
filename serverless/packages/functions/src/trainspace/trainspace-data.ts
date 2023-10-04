@@ -1,4 +1,4 @@
-import { TrainStatus } from '../constants';
+import { TrainStatus } from './constants';
 import { PutItemCommandInput } from "@aws-sdk/client-dynamodb";
 
 export default class TrainspaceData
@@ -13,9 +13,20 @@ export default class TrainspaceData
     review_data: string = "";
     status: TrainStatus = TrainStatus.QUEUED;
 
-    constructor(trainspace_id: string, uid: string) {
+    constructor(trainspace_id: string, uid: string, data_source: string, dataset_data: object, name: string, parameters_data: object, review_data: string) {
         this.trainspace_id = trainspace_id;
         this.uid = uid;
+        this.created = this.getDateString();
+        this.data_source = data_source;
+        this.dataset_data = dataset_data;
+        this.name = name;
+        this.parameters_data = parameters_data;
+        this.review_data = review_data;
+    }
+
+    getDateString() : string {
+        // TODO: Implement
+        return "";
     }
 
     convertToDynamoItemInput(tableName: string) : PutItemCommandInput {

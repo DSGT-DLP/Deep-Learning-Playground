@@ -9,13 +9,13 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
             "user_id"
         ];
 
-        const client: DynamoDBClient = new DynamoDBClient({});
-        const docClient: DynamoDBDocumentClient = DynamoDBDocumentClient.from(client);
+        const client = new DynamoDBClient({});
+        const docClient = DynamoDBDocumentClient.from(client);
         const fetchedTrainspaceIds: Array<string> = [];
         let lastEvaluatedKey = undefined;
 
         do {
-            const getCommand: QueryCommand = new QueryCommand({
+            const getCommand = new QueryCommand({
                 TableName: "trainspace",
                 IndexName: "uid",
                 KeyConditionExpression: "uid = :uid",

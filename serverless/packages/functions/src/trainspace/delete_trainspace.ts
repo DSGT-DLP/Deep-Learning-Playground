@@ -6,18 +6,25 @@ import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     let queryParams = null;
     if (event && (queryParams = event['pathParameters']) != null) {
-        const trainspace_id : string = queryParams['id'];
-        console.log("trainspace_id: " + trainspace_id);
-        const client: DynamoDBClient = new DynamoDBClient({});
-        const documentClient: DynamoDBDocumentClient = DynamoDBDocumentClient.from(client);
+        const trainspace_id: string | undefined = queryParams['id'];
+
+        if (trainspace_id == undefined) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ message : "Malformed request content - trainspace ID missing." }),
+            };
+        }
         
-        const command : DeleteItemCommand = new DeleteItemCommand({
+        const client = new DynamoDBClient({});
+        const documentClient = DynamoDBDocumentClient.from(client);
+        
+        const command = new DeleteItemCommand({
             TableName : "trainspace",
             Key :
             {
                 "trainspace_id" :
                 {
-                     S: trainspace_id
+                     S: trainspace_id ? trainspace_id : ""
                 }
             }
         });

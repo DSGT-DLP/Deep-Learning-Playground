@@ -21,6 +21,7 @@ from django.urls import path
 from ninja import NinjaAPI, Schema
 from training.routes.datasets.default import get_default_datasets_router
 from training.routes.tabular import get_tabular_router
+from training.routes.image import get_image_router
 
 api = NinjaAPI()
 
@@ -32,6 +33,7 @@ def test(request: HttpRequest):
 
 api.add_router("/datasets/default/", get_default_datasets_router())
 api.add_router("/tabular", get_tabular_router())
+api.add_router("/image", get_image_router())
 
 urlpatterns = [
     path("admin/", admin.site.urls),

@@ -102,38 +102,74 @@ class SklearnDatasetCreator(TrainTestDatasetCreator):
             raise Exception("Category list not available")
         return self._category_list
 
+
 class DefaultImageDatasets(Enum):
     MNIST = "MNIST"
     FASHION_MNIST = "FashionMNIST"
     KMNIST = "KMNIST"
-class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
 
+
+class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
     def __init__(
-        self, 
-        dataset_name:str, 
-        train_tarnsform:None,
-        test_transform:None,
-        batch_size: int = 32, 
+        self,
+        dataset_name: str,
+        train_tarnsform: None,
+        test_transform: None,
+        batch_size: int = 32,
         shuffle: bool = True,
     ):
         if dataset_name not in DefaultImageDatasets.__members__:
-            raise Exception(f"The {dataset_name} file does not currently exist in our inventory. Please submit a request to the contributors of the repository")
-        self.train_transform = train_tarnsform or transforms.Compose([transforms.toTensor()])
-        self.test_transform = test_transform or transforms.Compose([transforms.toTensor()])
+            raise Exception(
+                f"The {dataset_name} file does not currently exist in our inventory. Please submit a request to the contributors of the repository"
+            )
+        self.train_transform = train_tarnsform or transforms.Compose(
+            [transforms.toTensor()]
+        )
+        self.test_transform = test_transform or transforms.Compose(
+            [transforms.toTensor()]
+        )
         self.batch_size = batch_size
         self.shuffle = shuffle
 
-        self.train_set = datasets.__dict__[dataset_name](root='./backend/image_data_uploads', train=True, download=True, transform=self.train_transform)
-        self.test_set = datasets.__dict__[dataset_name](root='./backend/image_data_uploads', train=False, download=True, transform=self.test_transform)
-
+        self.train_set = datasets.__dict__[dataset_name](
+            root="./backend/image_data_uploads",
+            train=True,
+            download=True,
+            transform=self.train_transform,
+        )
+        self.test_set = datasets.__dict__[dataset_name](
+            root="./backend/image_data_uploads",
+            train=False,
+            download=True,
+            transform=self.test_transform,
+        )
 
     @classmethod
-    def fromDefault(cls, dataset_name: str, train_transform=None, test_transform=None, batch_size: int = 32, shuffle: bool = True):
+    def fromDefault(
+        cls,
+        dataset_name: str,
+        train_transform=None,
+        test_transform=None,
+        batch_size: int = 32,
+        shuffle: bool = True,
+    ):
         return cls(dataset_name, train_transform, test_transform, batch_size, shuffle)
+
     def createTrainDataset(self) -> DataLoader:
-        return DataLoader(self.train_set, batch_size = self.batch_size, shuffle = self.shuffle, drop_last=True)
-    
+        return DataLoader(
+            self.train_set,
+            batch_size=self.batch_size,
+            shuffle=self.shuffle,
+            drop_last=True,
+        )
+
     def createTestDataset(self):
-        return DataLoader(self.test_set, batch_size = self.batch_size, shuffle = self.shuffle, drop_last=True)
+        return DataLoader(
+            self.test_set,
+            batch_size=self.batch_size,
+            shuffle=self.shuffle,
+            drop_last=True,
+        )
+
     def getCategoryList(self) -> list[str]:
         return self.train_set.classes if hasattr(self.train_set, "classes") else []

@@ -5,6 +5,7 @@ import torch.nn as nn
 from typing import TYPE_CHECKING
 
 from training.routes.tabular.schemas import LayerParams
+from training.routes.image.schemas import LayerParams
 
 
 class DLModel(nn.Module):

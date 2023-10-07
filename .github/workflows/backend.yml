@@ -27,7 +27,7 @@ jobs:
         uses: actions/cache@v3
         env:
           # Increase this value to reset cache if etc/example-environment.yml has not changed
-          CACHE_NUMBER: 0
+          CACHE_NUMBER: 1
         with:
           path: /usr/share/miniconda3/envs/dlp
           key:
@@ -124,7 +124,7 @@ jobs:
         uses: actions/cache@v3
         env:
           # Increase this value to reset cache if etc/example-environment.yml has not changed
-          CACHE_NUMBER: 0
+          CACHE_NUMBER: 1
         with:
           path: /usr/share/miniconda3/envs/dlp
           key:

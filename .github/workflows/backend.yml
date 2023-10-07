@@ -28,8 +28,8 @@ jobs:
           miniforge-version: latest
           use-mamba: true
           activate-environment: dlp
-        run: |
-          pwd
+          run: |
+            pwd
         
       # - uses: mamba-org/setup-micromamba@v1
       #   with:

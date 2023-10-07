@@ -13,7 +13,7 @@ import torch
 from torch.utils.data import Dataset
 from torch.autograd import Variable
 from torchvision import datasets, transforms
-from torch.util.data import DataLoader, random_split
+from torch.utils.data import DataLoader
 from enum import Enum
 
 
@@ -107,6 +107,7 @@ class DefaultImageDatasets(Enum):
     MNIST = "MNIST"
     FASHION_MNIST = "FashionMNIST"
     KMNIST = "KMNIST"
+    CIFAR = "CIFAR10"
 
 
 class ImageDefaultDatasetCreator(TrainTestDatasetCreator):

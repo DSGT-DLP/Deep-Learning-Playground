@@ -15,6 +15,8 @@ from torch.autograd import Variable
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 from enum import Enum
+import os
+import shutil
 
 
 class TrainTestDatasetCreator(ABC):
@@ -123,6 +125,9 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
             raise Exception(
                 f"The {dataset_name} file does not currently exist in our inventory. Please submit a request to the contributors of the repository"
             )
+        
+        self.dataset_dir = './training/image_data_uploads'
+
         self.train_transform = train_transform or transforms.Compose(
             [transforms.toTensor()]
         )
@@ -132,14 +137,17 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
         self.batch_size = batch_size
         self.shuffle = shuffle
 
+         # Ensure the directory exists
+        os.makedirs(self.dataset_dir, exist_ok=True)
+
         self.train_set = datasets.__dict__[dataset_name](
-            root="./backend/image_data_uploads",
+            root=self.dataset_dir,
             train=True,
             download=True,
             transform=self.train_transform,
         )
         self.test_set = datasets.__dict__[dataset_name](
-            root="./backend/image_data_uploads",
+            root=self.dataset_dir,
             train=False,
             download=True,
             transform=self.test_transform,
@@ -155,22 +163,30 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
         shuffle: bool = True,
     ):
         return cls(dataset_name, train_transform, test_transform, batch_size, shuffle)
+    
+    def delete_datasets_from_directory(self):
+        if os.path.exists(self.dataset_dir):
+            shutil.rmtree(self.dataset_dir)
 
     def createTrainDataset(self) -> DataLoader:
-        return DataLoader(
+        train_loader =  DataLoader(
             self.train_set,
             batch_size=self.batch_size,
             shuffle=self.shuffle,
             drop_last=True,
         )
+        self.delete_datasets_from_directory()
+        return train_loader
 
     def createTestDataset(self) -> DataLoader:
-        return DataLoader(
+        test_loader = DataLoader(
             self.test_set,
             batch_size=self.batch_size,
             shuffle=self.shuffle,
             drop_last=True,
         )
+        self.delete_datasets_from_directory()
+        return test_loader
 
     def getCategoryList(self) -> list[str]:
         return self.train_set.classes if hasattr(self.train_set, "classes") else []

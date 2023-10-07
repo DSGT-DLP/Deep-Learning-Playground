@@ -43,7 +43,7 @@ jobs:
         run:
           mamba env update -n dlp -f
           training/environment.yml
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cached-mamba-env.outputs.cache-hit != 'true'
         
       
       # - name: Install Mamba Env
@@ -133,7 +133,7 @@ jobs:
         run:
           mamba env update -n dlp -f
           training/environment.yml
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cached-mamba-env.outputs.cache-hit != 'true'
       
       # - name: Install Mamba Env
       #   uses: conda-incubator/setup-miniconda@v2

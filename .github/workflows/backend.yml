@@ -142,7 +142,6 @@ jobs:
           use-mamba: true
           activate-environment: dlp
           run-post: false
-          #use-only-tar-bz2: true
       
       # - uses: conda-incubator/setup-miniconda@v2
       #   with:
@@ -198,6 +197,6 @@ jobs:
           conda env list
           pwd
           cd training && poetry run pytest tests
-        shell: bash -el {0}
+        shell: bash -l {0}
         #shell: micromamba-shell {0}
      

@@ -19,17 +19,26 @@ jobs:
       #----------------------------------------------
       - name: Check out repository
         uses: actions/checkout@v3
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        
-      - uses: mamba-org/setup-micromamba@v1
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+      
+      - uses: conda-incubator/setup-miniconda@v2
         with:
-          micromamba-version: '1.4.5-0'
           environment-file: training/environment.yml
-          init-shell: >-
-            bash
-          cache-environment: true
-          cache-environment-key: mamba-env-${{ runner.os }}-${{ hashFiles('**/training/environment.yml') }}
+          miniforge-version: latest
+          use-mamba: true
+          activate-environment: dlp
+        run: |
+          pwd
+        
+      # - uses: mamba-org/setup-micromamba@v1
+      #   with:
+      #     micromamba-version: '1.4.5-0'
+      #     environment-file: training/environment.yml
+      #     init-shell: >-
+      #       bash
+      #     cache-environment: true
+      #     cache-environment-key: mamba-env-${{ runner.os }}-${{ hashFiles('**/training/environment.yml') }}
       
       #----------------------------------------------
       #       load cached venv if cache exists

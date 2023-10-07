@@ -22,7 +22,6 @@ jobs:
         
       
       - name: Install Mamba Env
-        if: steps.cached-mamba-env.outputs.cache-hit != 'true'
         uses: conda-incubator/setup-miniconda@v2
         with:
           environment-file: training/environment.yml
@@ -89,7 +88,6 @@ jobs:
         
       
       - name: Install Mamba Env
-        if: steps.cached-mamba-env.outputs.cache-hit != 'true'
         uses: conda-incubator/setup-miniconda@v2
         with:
           environment-file: training/environment.yml

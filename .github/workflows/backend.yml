@@ -6,6 +6,7 @@ on:
       - main
       - nextjs
       - prod-deploy
+      - backend-check-fix
   pull_request:
     paths:
       - "training/**"
@@ -19,15 +20,39 @@ jobs:
       #----------------------------------------------
       - name: Check out repository
         uses: actions/checkout@v3
-        
       
-      - name: Install Mamba Env
+      - name: Setup Mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
-          environment-file: training/environment.yml
           miniforge-version: latest
           use-mamba: true
           activate-environment: dlp
+      
+      - name: Cache Mamba env
+        id: cached-mamba-env
+        uses: actions/cache@v3
+        env:
+          # Increase this value to reset cache if etc/example-environment.yml has not changed
+          CACHE_NUMBER: 0
+        with:
+          path: /usr/share/miniconda3/envs/
+          key:
+            mamba-${{ runner.os }}-${{env.CACHE_NUMBER }}-${{hashFiles('**/training/environment.yml') }}
+
+      - name: Update environment
+        run:
+          mamba env update -n dlp -f
+          training/environment.yml
+        if: steps.cache.outputs.cache-hit != 'true'
+        
+      
+      # - name: Install Mamba Env
+      #   uses: conda-incubator/setup-miniconda@v2
+      #   with:
+      #     environment-file: training/environment.yml
+      #     miniforge-version: latest
+      #     use-mamba: true
+      #     activate-environment: dlp
       
       #----------------------------------------------
       #       load cached venv if cache exists
@@ -85,15 +110,38 @@ jobs:
       #----------------------------------------------
       - name: Check out repository
         uses: actions/checkout@v3
-        
-      
-      - name: Install Mamba Env
+
+      - name: Setup Mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
-          environment-file: training/environment.yml
           miniforge-version: latest
           use-mamba: true
           activate-environment: dlp
+      
+      - name: Cache Mamba env
+        id: cached-mamba-env
+        uses: actions/cache@v3
+        env:
+          # Increase this value to reset cache if etc/example-environment.yml has not changed
+          CACHE_NUMBER: 0
+        with:
+          path: /usr/share/miniconda3/envs/
+          key:
+            mamba-${{ runner.os }}-${{env.CACHE_NUMBER }}-${{hashFiles('**/training/environment.yml') }}
+
+      - name: Update environment
+        run:
+          mamba env update -n dlp -f
+          training/environment.yml
+        if: steps.cache.outputs.cache-hit != 'true'
+      
+      # - name: Install Mamba Env
+      #   uses: conda-incubator/setup-miniconda@v2
+      #   with:
+      #     environment-file: training/environment.yml
+      #     miniforge-version: latest
+      #     use-mamba: true
+      #     activate-environment: dlp
       
       #----------------------------------------------
       #       load cached venv if cache exists

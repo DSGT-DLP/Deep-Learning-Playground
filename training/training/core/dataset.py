@@ -113,7 +113,7 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
     def __init__(
         self,
         dataset_name: str,
-        train_tarnsform: None,
+        train_transform: None,
         test_transform: None,
         batch_size: int = 32,
         shuffle: bool = True,
@@ -122,7 +122,7 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
             raise Exception(
                 f"The {dataset_name} file does not currently exist in our inventory. Please submit a request to the contributors of the repository"
             )
-        self.train_transform = train_tarnsform or transforms.Compose(
+        self.train_transform = train_transform or transforms.Compose(
             [transforms.toTensor()]
         )
         self.test_transform = test_transform or transforms.Compose(
@@ -163,7 +163,7 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
             drop_last=True,
         )
 
-    def createTestDataset(self):
+    def createTestDataset(self) -> DataLoader:
         return DataLoader(
             self.test_set,
             batch_size=self.batch_size,

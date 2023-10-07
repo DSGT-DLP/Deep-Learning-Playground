@@ -13,7 +13,7 @@ class ImageParams(Schema):
     name: str
     problem_type: Literal["CLASSIFICATION"]
     default: Optional[str]
-    criterion: str 
+    criterion: str
     optimizer_name: str
     shuffle: bool
     epochs: int

@@ -12,6 +12,7 @@ from training.core.authenticator import FirebaseAuth
 
 router = Router()
 
+
 @router.post("", auth=FirebaseAuth())
 def imageTrain(request: HttpRequest, imageParams: ImageParams):
     if imageParams.default:

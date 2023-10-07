@@ -61,10 +61,13 @@ jobs:
       - name: Load cached venv
         id: cached-poetry-dependencies
         uses: actions/cache@v3
+        env:
+          # Increase this value to reset cache if poetry.lock has not changed
+          CACHE_NUMBER: 1
         with:
           path: /usr/share/miniconda3/envs/dlp
-          key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
-          restore-keys: training-venv-${{ runner.os }}-
+          key: training-venv-${{ runner.os }}-${{ env.CACHE_NUMBER }}-${{ hashFiles('**/training/poetry.lock') }}
+          restore-keys: training-venv-${{ runner.os }}-${{ env.CACHE_NUMBER }}-
       # - name: Load cached venv
       #   id: cached-poetry-dependencies
       #   uses: actions/cache@v3
@@ -166,10 +169,13 @@ jobs:
       - name: Load cached venv
         id: cached-poetry-dependencies
         uses: actions/cache@v3
+        env:
+          # Increase this value to reset cache if poetry.lock has not changed
+          CACHE_NUMBER: 1
         with:
           path: /usr/share/miniconda3/envs/dlp
-          key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
-          restore-keys: training-venv-${{ runner.os }}-
+          key: training-venv-${{ runner.os }}-${{ env.CACHE_NUMBER }}-${{ hashFiles('**/training/poetry.lock') }}
+          restore-keys: training-venv-${{ runner.os }}-${{ env.CACHE_NUMBER }}-
       
       # - name: Load cached venv
       #   id: cached-poetry-dependencies

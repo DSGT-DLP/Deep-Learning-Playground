@@ -195,7 +195,7 @@ jobs:
           export AWS_ACCESS_KEY_ID=testing
           export AWS_SECRET_ACCESS_KEY=testing
           export AWS_DEFAULT_REGION=us-west-2
-          conda envs --list
+          conda env --list
           pwd
           cd training && poetry run pytest tests
         shell: bash -el {0}

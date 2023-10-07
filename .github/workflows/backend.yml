@@ -19,20 +19,6 @@ jobs:
       #----------------------------------------------
       - name: Check out repository
         uses: actions/checkout@v3
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
-
-      # - name: Load Cached Mamba Env
-      #   id: cached-mamba-env
-      #   uses: actions/cache@v3
-      #   env:
-      #     # Increase this value to reset cache if etc/example-environment.yml has not changed
-      #     CACHE_NUMBER: 3
-      #   with:
-      #     path: /usr/share/miniconda3/envs/dlp
-      #     key:
-      #       mamba-env-${{ runner.os }}-${{ env.CACHE_NUMBER }}-${{ hashFiles('**/training/environment.yml') }}
-      #     #restore-keys: mamba-env-${{ runner.os }}-
         
       
       - name: Install Mamba Env
@@ -43,15 +29,6 @@ jobs:
           miniforge-version: latest
           use-mamba: true
           activate-environment: dlp
-        
-      # - uses: mamba-org/setup-micromamba@v1
-      #   with:
-      #     micromamba-version: '1.4.5-0'
-      #     environment-file: training/environment.yml
-      #     init-shell: >-
-      #       bash
-      #     cache-environment: true
-      #     cache-environment-key: mamba-env-${{ runner.os }}-${{ hashFiles('**/training/environment.yml') }}
       
       #----------------------------------------------
       #       load cached venv if cache exists
@@ -63,13 +40,6 @@ jobs:
           path: /usr/share/miniconda3/envs/dlp
           key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
           restore-keys: training-venv-${{ runner.os }}-
-      # - name: Load cached venv
-      #   id: cached-poetry-dependencies
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: /home/runner/micromamba/envs/dlp/
-      #     key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
-      #     restore-keys: training-venv-${{ runner.os }}-
 
       #---------------------------------------------------
       #       install dependencies if cache does not exist
@@ -79,7 +49,6 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: pwd && cd training && poetry install --no-interaction --no-root && poetry env info -p
         shell: bash -el {0}
-        #shell: micromamba-shell {0}
 
       #----------------------------------------------
       #       pyright static checker
@@ -117,18 +86,6 @@ jobs:
       #----------------------------------------------
       - name: Check out repository
         uses: actions/checkout@v3
-
-      # - name: Load Cached Mamba Env
-      #   id: cached-mamba-env
-      #   uses: actions/cache@v3
-      #   env:
-      #     # Increase this value to reset cache if etc/example-environment.yml has not changed
-      #     CACHE_NUMBER: 3
-      #   with:
-      #     path: /usr/share/miniconda3/envs/dlp
-      #     key:
-      #       mamba-env-${{ runner.os }}-${{ env.CACHE_NUMBER }}-${{ hashFiles('**/training/environment.yml') }}
-      #     #restore-keys: mamba-env-${{ runner.os }}-
         
       
       - name: Install Mamba Env
@@ -139,23 +96,6 @@ jobs:
           miniforge-version: latest
           use-mamba: true
           activate-environment: dlp
-          #run-post: false
-      
-      # - uses: conda-incubator/setup-miniconda@v2
-      #   with:
-      #     environment-file: training/environment.yml
-      #     miniforge-version: latest
-      #     use-mamba: true
-      #     activate-environment: dlp
-
-      # - uses: mamba-org/setup-micromamba@v1
-      #   with:
-      #     micromamba-version: '1.4.5-0'
-      #     environment-file: training/environment.yml
-      #     init-shell: >-
-      #       bash
-      #     cache-environment: true
-      #     cache-environment-key: mamba-env-${{ runner.os }}-${{ hashFiles('**/training/environment.yml') }}
       
       #----------------------------------------------
       #       load cached venv if cache exists
@@ -169,13 +109,6 @@ jobs:
           key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
           restore-keys: training-venv-${{ runner.os }}-
       
-      # - name: Load cached venv
-      #   id: cached-poetry-dependencies
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: /home/runner/micromamba/envs/dlp/
-      #     key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
-      #     restore-keys: training-venv-${{ runner.os }}-
       #----------------------------------------------
       # install dependencies if cache does not exist
       #----------------------------------------------
@@ -183,7 +116,6 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: cd training && poetry install --no-interaction --no-root
         shell: bash -el {0}
-        #shell: micromamba-shell {0}
       #----------------------------------------------
       #       run test suite
       #----------------------------------------------
@@ -192,9 +124,6 @@ jobs:
           export AWS_ACCESS_KEY_ID=testing
           export AWS_SECRET_ACCESS_KEY=testing
           export AWS_DEFAULT_REGION=us-west-2
-          conda env list
-          pwd
           cd training && poetry run pytest tests
         shell: bash -el {0}
-        #shell: micromamba-shell {0}
      

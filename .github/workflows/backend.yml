@@ -27,7 +27,7 @@ jobs:
         uses: actions/cache@v3
         env:
           # Increase this value to reset cache if etc/example-environment.yml has not changed
-          CACHE_NUMBER: 1
+          CACHE_NUMBER: 2
         with:
           path: /usr/share/miniconda3/envs/dlp
           key:
@@ -43,7 +43,8 @@ jobs:
           miniforge-version: latest
           use-mamba: true
           activate-environment: dlp
-          use-only-tar-bz2: true
+          run-post: false
+          #use-only-tar-bz2: true
         
       # - uses: mamba-org/setup-micromamba@v1
       #   with:
@@ -124,7 +125,7 @@ jobs:
         uses: actions/cache@v3
         env:
           # Increase this value to reset cache if etc/example-environment.yml has not changed
-          CACHE_NUMBER: 1
+          CACHE_NUMBER: 2
         with:
           path: /usr/share/miniconda3/envs/dlp
           key:
@@ -140,7 +141,8 @@ jobs:
           miniforge-version: latest
           use-mamba: true
           activate-environment: dlp
-          use-only-tar-bz2: true
+          run-post: false
+          #use-only-tar-bz2: true
       
       # - uses: conda-incubator/setup-miniconda@v2
       #   with:
@@ -193,6 +195,8 @@ jobs:
           export AWS_ACCESS_KEY_ID=testing
           export AWS_SECRET_ACCESS_KEY=testing
           export AWS_DEFAULT_REGION=us-west-2
+          conda envs --list
+          pwd
           cd training && poetry run pytest tests
         shell: bash -el {0}
         #shell: micromamba-shell {0}

@@ -119,7 +119,7 @@ jobs:
         id: cached-mamba-env
         uses: actions/cache@v3
         with:
-          path: ${{ env.CONDA }}/envs
+          path: /usr/share/miniconda3/envs/dlp
           key:
             mamba-env-${{ runner.os }}-${{ hashFiles('**/training/environment.yml') }}
           restore-keys: mamba-env-${{ runner.os }}-

@@ -28,8 +28,6 @@ jobs:
           miniforge-version: latest
           use-mamba: true
           activate-environment: dlp
-          run: |
-            pwd
         
       # - uses: mamba-org/setup-micromamba@v1
       #   with:
@@ -47,9 +45,16 @@ jobs:
         id: cached-poetry-dependencies
         uses: actions/cache@v3
         with:
-          path: /home/runner/micromamba/envs/dlp/
+          path: /usr/share/miniconda3/envs/dlp
           key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
           restore-keys: training-venv-${{ runner.os }}-
+      # - name: Load cached venv
+      #   id: cached-poetry-dependencies
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: /home/runner/micromamba/envs/dlp/
+      #     key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
+      #     restore-keys: training-venv-${{ runner.os }}-
 
       #---------------------------------------------------
       #       install dependencies if cache does not exist
@@ -58,7 +63,8 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: pwd && cd training && poetry install --no-interaction --no-root && poetry env info -p
-        shell: micromamba-shell {0}
+        shell: bash -el {0}
+        #shell: micromamba-shell {0}
 
       #----------------------------------------------
       #       pyright static checker

@@ -69,19 +69,19 @@ jobs:
       #       pyright static checker
       #----------------------------------------------
       - name: Add Poetry activated poetry to path
-        run: echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
+        run: cd training && echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
         shell: bash -el {0}
 
-      - name: Run Pyright Static Checker
-        uses: jakebailey/pyright-action@v1
-
       # - name: Run Pyright Static Checker
-      #   id: pyright-static-checker
-      #   uses: jordemort/action-pyright@v1
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }} # You need this
-      #     reporter: github-pr-review # Change reporter.
-      #     lib: true
+      #   uses: jakebailey/pyright-action@v1
+
+      - name: Run Pyright Static Checker
+        id: pyright-static-checker
+        uses: jordemort/action-pyright@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }} # You need this
+          reporter: github-pr-review # Change reporter.
+          lib: true
       
       #----------------------------------------------
       #       black formatter

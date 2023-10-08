@@ -64,6 +64,9 @@ jobs:
         run: pwd && cd training && poetry install --no-interaction --no-root && poetry env info -p
         shell: bash -el {0}
 
+      - name: Add Poetry env to PATH
+        run: cd training && echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
+        shell: bash -el {0}
       #----------------------------------------------
       #       pyright static checker
       #----------------------------------------------
@@ -73,7 +76,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }} # You need this
           reporter: github-pr-review # Change reporter.
-          lib: true
       
       #----------------------------------------------
       #       black formatter
@@ -143,6 +145,10 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: cd training && poetry install --no-interaction --no-root
+        shell: bash -el {0}
+
+      - name: Add Poetry env to PATH
+        run: cd training && echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
         shell: bash -el {0}
       #----------------------------------------------
       #       run test suite

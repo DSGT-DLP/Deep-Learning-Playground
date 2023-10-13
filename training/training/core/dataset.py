@@ -20,7 +20,7 @@ import shutil
 
 
 class TrainTestDatasetCreator(ABC):
-    "Creator that creates train and test PyTorch datasets"
+    "Creator that creates train and test PyTorch datasets from a given dataset"
 
     @abstractmethod
     def createTrainDataset(self) -> Dataset:

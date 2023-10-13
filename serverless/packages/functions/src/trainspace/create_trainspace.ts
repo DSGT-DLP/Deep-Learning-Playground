@@ -4,49 +4,143 @@ import TrainspaceData from './trainspace-data';
 import { v4 as uuidv4 } from 'uuid';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb'; //@aws-sdk/client-dynamodb
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-import { DATA_SOURCE_ARR } from '../../../../../frontend/src/features/Train/constants/trainConstants';
 
-function validateRequestBody(eventBody: any) : boolean {
-    if (!eventBody['data_source']) {
-            return false;
+function validateRequestBody(eventBody: any, trainspace_id: string, uid: string) : TrainspaceData | null {
+    console.log(eventBody);
+
+    if (!eventBody['name'])
+    {
+        return null;
     }
 
-    if (!DATA_SOURCE_ARR.includes(eventBody['data_source'])) {
-        return false;
+    if (!eventBody['data_source']) 
+    {
+        return null;
     }
+    
+    switch(eventBody['data_source'])
+    {
+        case "TABULAR":
+            if (!eventBody['target'])
+            {
+                return null;
+            }
 
-    if (!eventBody['dataset_data']) {
-        return false;
-    }
+            if (!eventBody['features'])
+            {
+                return null;
+            }
 
-    if (!eventBody['name']) {
-        return false;
-    }
+            if (!eventBody['default'])
+            {
+                return null;
+            }
 
-    if (!eventBody['parameters_data']) {
-        return false;
-    }
+            if (!eventBody['problem_type'])
+            {
+                return null;
+            }
 
-    if (!eventBody['review_data']) {
-        return false;
+            if (!eventBody['criterion'])
+            {
+                return null;
+            }
+
+            if (!eventBody['optimizer_name'])
+            {
+                return null;
+            }
+            
+            if (!eventBody['shuffle'])
+            {
+                return null;
+            }
+
+            if (!eventBody['epochs'])
+            {
+                return null;
+            }
+
+            if (!eventBody['test_size'])
+            {
+                return null;
+            }
+
+            if (!eventBody['batch_size'])
+            {
+                return null;
+            }
+
+            if (!eventBody['user_arch'])
+            {
+                return null;
+            }
+            return new TrainspaceData(trainspace_id, uid, "TABULAR", eventBody['default'], eventBody['name'], 
+                { 
+                    criterion: eventBody['criterion'],
+                    optimizer_name: eventBody['optimizer_name'],
+                    shuffle: eventBody['shuffle'],
+                    epochs: eventBody['epochs'],
+                    batch_size: eventBody['batch_size'],
+                    user_arch: eventBody['user_arch']
+                }, "");
+        case "PRETRAINED":
+
+            return null;
+        case "IMAGE":
+            if (!eventBody['dataset_data'])
+            {
+                return null;
+            }
+
+            if (!eventBody['parameters_data'])
+            {
+                return null;
+            }
+
+            if (!eventBody['review_data'])
+            {
+                return null;
+            }
+
+            if (!eventBody['review_data']['notification_email'])
+            {
+                return null;
+            }
+            
+            return new TrainspaceData(trainspace_id, uid, "IMAGE", eventBody['dataset_data'], eventBody['name'], eventBody['parameters_data'], eventBody['review_data']['notification_email']);
+        case "AUDIO":
+
+            return null;
+        case "TEXTUAL":
+
+            return null;
+        case "CLASSICAL_ML":
+
+            return null;
+        case "OBJECT_DETECTION":
+
+            return null;
+        default:
+            return null;
     }
-    return true;
 }
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     if (event) {
         const uid: string = parseJwt(event.headers.authorization ?? "")["user_id"];
         const eventBody = JSON.parse(event.body? event.body : "");
-        
-        if (!validateRequestBody(eventBody)) {
+
+        const trainspaceId = uuidv4();
+        const trainspaceData = validateRequestBody(eventBody);
+
+        if (trainspaceData == null)
+        {
             return {
                 statusCode: 400,
                 body: JSON.stringify({ message: "Invalid request body" })
             }
         }
-
-        const trainspaceId = uuidv4();
-        const trainspaceData = new TrainspaceData(trainspaceId, uid, eventBody['data_source'], eventBody['dataset_data'], eventBody['name'], eventBody['parameters_data'], eventBody['review_data']);
 
 
         const client = new DynamoDBClient({});

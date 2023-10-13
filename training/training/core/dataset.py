@@ -120,7 +120,6 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
         test_transform: None,
         batch_size: int = 32,
         shuffle: bool = True,
-        hello: str = "world"
     ):
         if dataset_name not in DefaultImageDatasets.__members__:
             raise Exception(
@@ -141,6 +140,7 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
         # Ensure the directory exists
         os.makedirs(self.dataset_dir, exist_ok=True)
 
+        # Load the datasets
         self.train_set = datasets.__dict__[dataset_name](
             root=self.dataset_dir,
             train=True,
@@ -167,7 +167,11 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
 
     def delete_datasets_from_directory(self):
         if os.path.exists(self.dataset_dir):
-            shutil.rmtree(self.dataset_dir)
+            try:
+                shutil.rmtree(self.dataset_dir)
+                print(f"Successfully deleted {self.dataset_dir}")
+            except Exception as e:
+                print(f"Failed to delete {self.dataset_dir} with error: {e}")
 
     def createTrainDataset(self) -> DataLoader:
         train_loader = DataLoader(
@@ -176,7 +180,7 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
             shuffle=self.shuffle,
             drop_last=True,
         )
-        self.delete_datasets_from_directory()
+        self.delete_datasets_from_directory() # Delete datasets after loading
         return train_loader
 
     def createTestDataset(self) -> DataLoader:
@@ -186,7 +190,7 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
             shuffle=self.shuffle,
             drop_last=True,
         )
-        self.delete_datasets_from_directory()
+        self.delete_datasets_from_directory() # Delete datasets after loading
         return test_loader
 
     def getCategoryList(self) -> list[str]:

@@ -120,7 +120,7 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
         test_transform: None,
         batch_size: int = 32,
         shuffle: bool = True,
-        hello: str = "world"
+        hello: str = "world",
     ):
         if dataset_name not in DefaultImageDatasets.__members__:
             raise Exception(

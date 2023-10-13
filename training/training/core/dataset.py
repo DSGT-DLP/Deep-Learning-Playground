@@ -125,8 +125,8 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
             raise Exception(
                 f"The {dataset_name} file does not currently exist in our inventory. Please submit a request to the contributors of the repository"
             )
-        
-        self.dataset_dir = './training/image_data_uploads'
+
+        self.dataset_dir = "./training/image_data_uploads"
 
         self.train_transform = train_transform or transforms.Compose(
             [transforms.toTensor()]
@@ -137,7 +137,7 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
         self.batch_size = batch_size
         self.shuffle = shuffle
 
-         # Ensure the directory exists
+        # Ensure the directory exists
         os.makedirs(self.dataset_dir, exist_ok=True)
 
         self.train_set = datasets.__dict__[dataset_name](
@@ -163,13 +163,13 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
         shuffle: bool = True,
     ) -> "ImageDefaultDatasetCreator":
         return cls(dataset_name, train_transform, test_transform, batch_size, shuffle)
-    
+
     def delete_datasets_from_directory(self):
         if os.path.exists(self.dataset_dir):
             shutil.rmtree(self.dataset_dir)
 
     def createTrainDataset(self) -> DataLoader:
-        train_loader =  DataLoader(
+        train_loader = DataLoader(
             self.train_set,
             batch_size=self.batch_size,
             shuffle=self.shuffle,

@@ -19,9 +19,13 @@ from django.contrib import admin
 from django.http import HttpRequest
 from django.urls import path
 from ninja import NinjaAPI, Schema
-from training.routes.datasets.default import get_default_datasets_router
-from training.routes.tabular import get_tabular_router
-from training.routes.image import get_image_router
+
+from training.routes.datasets.default.columns import router as default_dataset_router
+from training.routes.tabular.tabular import router as tabular_router
+from training.routes.image.image import router as image_router
+# from training.routes.datasets.default import get_default_datasets_router
+# from training.routes.tabular import get_tabular_router
+# from training.routes.image import image_router
 
 api = NinjaAPI()
 
@@ -31,9 +35,9 @@ def test(request: HttpRequest):
     return 200, {"result": "200 Backend surface test successful"}
 
 
-api.add_router("/datasets/default/", get_default_datasets_router())
-api.add_router("/tabular", get_tabular_router())
-api.add_router("/image", get_image_router())
+api.add_router("/datasets/default/", default_dataset_router)
+api.add_router("/tabular", tabular_router)
+api.add_router("/image", image_router)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

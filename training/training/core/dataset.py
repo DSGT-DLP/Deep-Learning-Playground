@@ -127,20 +127,22 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
             )
 
         self.dataset_dir = "./training/image_data_uploads"
-
         self.train_transform = train_transform or transforms.Compose(
-            [transforms.toTensor()]
+            [transforms.ToTensor()]
         )
+        
         self.test_transform = test_transform or transforms.Compose(
-            [transforms.toTensor()]
+            [transforms.ToTensor()]
         )
         self.batch_size = batch_size
         self.shuffle = shuffle
 
         # Ensure the directory exists
         os.makedirs(self.dataset_dir, exist_ok=True)
-
+        print(f'train transform: {train_transform}')
+        print(f'test transform: {test_transform}')
         # Load the datasets
+        
         self.train_set = datasets.__dict__[dataset_name](
             root=self.dataset_dir,
             train=True,

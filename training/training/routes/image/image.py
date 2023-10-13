@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from ninja import Router, Schema
 from training.core.criterion import getCriterionHandler
 from training.core.dl_model import DLModel
-from training.core.datasets import ImageDefaultDatasetCreator
+from training.core.dataset import ImageDefaultDatasetCreator
 from torch.utils.data import DataLoader
 from training.core.optimizer import getOptimizer
 from training.core.trainer import ClassificationTrainer
@@ -17,23 +17,27 @@ router = Router()
 def imageTrain(request: HttpRequest, imageParams: ImageParams):
     if imageParams.default:
         dataCreator = ImageDefaultDatasetCreator.fromDefault(
-            imageParams.default, imageParams.test_size, imageParams.shuffle
+            imageParams.default
         )
-        train_loader = DataLoader(
-            dataCreator.createTrainDataset(),
-            batch_size=imageParams.batch_size,
-            shuffle=False,
-            drop_last=True,
-        )
+        print(vars(dataCreator))
+        train_loader = dataCreator.createTrainDataset()
+        test_loader = dataCreator.createTestDataset()
+        # train_loader = DataLoader(
+        #     dataCreator.createTrainDataset(),
+        #     batch_size=imageParams.batch_size,
+        #     shuffle=False,
+        #     drop_last=True,
+        # )
 
-        test_loader = DataLoader(
-            dataCreator.createTestDataset(),
-            batch_size=imageParams.batch_size,
-            shuffle=False,
-            drop_last=True,
-        )
+        # test_loader = DataLoader(
+        #     dataCreator.createTestDataset(),
+        #     batch_size=imageParams.batch_size,
+        #     shuffle=False,
+        #     drop_last=True,
+        # )
 
         model = DLModel.fromLayerParamsList(imageParams.user_arch)
+        print(f'model is: {model}')
         optimizer = getOptimizer(model, imageParams.optimizer_name, 0.05)
         criterionHandler = getCriterionHandler(imageParams.criterion)
         if imageParams.problem_type == "CLASSIFICATION":

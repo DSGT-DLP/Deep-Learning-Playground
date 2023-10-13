@@ -161,7 +161,7 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
         test_transform=None,
         batch_size: int = 32,
         shuffle: bool = True,
-    ):
+    ) -> "ImageDefaultDatasetCreator":
         return cls(dataset_name, train_transform, test_transform, batch_size, shuffle)
     
     def delete_datasets_from_directory(self):

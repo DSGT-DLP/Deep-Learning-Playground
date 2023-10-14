@@ -1,8 +1,6 @@
 from typing import Any, Callable
-from ninja import Schema
 import torch
 import torch.nn as nn
-from typing import TYPE_CHECKING
 
 from training.routes.tabular.schemas import LayerParams
 
@@ -49,5 +47,5 @@ class DLModel(nn.Module):
         return model
 
     def forward(self, x: torch.Tensor):
-        pred = self.model(x)  # apply model on input x
+        pred = self.model(x)
         return pred

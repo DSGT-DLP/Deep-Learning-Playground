@@ -12,22 +12,37 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       #----------------------------------------------
       #       check-out repo and set-up mamba env
       #----------------------------------------------
       - name: Check out repository
         uses: actions/checkout@v3
-        
-      - uses: mamba-org/setup-micromamba@v1
+      
+      - name: Setup Mamba
+        uses: conda-incubator/setup-miniconda@v2
         with:
-          micromamba-version: '1.4.5-0'
-          environment-file: training/environment.yml
-          init-shell: >-
-            bash
-          cache-environment: true
-          cache-environment-key: mamba-env-${{ runner.os }}-${{ hashFiles('**/training/environment.yml') }}
+          miniforge-version: latest
+          use-mamba: true
+          activate-environment: dlp
+      
+      - name: Cache Mamba env
+        id: cached-mamba-env
+        uses: actions/cache@v3
+        env:
+          # Increase this value to reset cache if etc/example-environment.yml has not changed
+          CACHE_NUMBER: 0
+        with:
+          path: /usr/share/miniconda3/envs/
+          key:
+            mamba-${{ runner.os }}-${{env.CACHE_NUMBER }}-${{hashFiles('**/training/environment.yml') }}
+
+      - name: Update environment
+        run:
+          mamba env update -n dlp -f
+          training/environment.yml
+        if: steps.cached-mamba-env.outputs.cache-hit != 'true'
       
       #----------------------------------------------
       #       load cached venv if cache exists
@@ -36,7 +51,7 @@ jobs:
         id: cached-poetry-dependencies
         uses: actions/cache@v3
         with:
-          path: /home/runner/micromamba/envs/dlp/
+          path: /usr/share/miniconda3/envs/dlp
           key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
           restore-keys: training-venv-${{ runner.os }}-
 
@@ -47,8 +62,11 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: pwd && cd training && poetry install --no-interaction --no-root && poetry env info -p
-        shell: micromamba-shell {0}
+        shell: bash -el {0}
 
+      - name: Add Poetry env to PATH
+        run: cd training && echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
+        shell: bash -el {0}
       #----------------------------------------------
       #       pyright static checker
       #----------------------------------------------
@@ -58,7 +76,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }} # You need this
           reporter: github-pr-review # Change reporter.
-          lib: true
       
       #----------------------------------------------
       #       black formatter
@@ -85,33 +102,54 @@ jobs:
       #----------------------------------------------
       - name: Check out repository
         uses: actions/checkout@v3
-      
-      - uses: mamba-org/setup-micromamba@v1
+
+      - name: Setup Mamba
+        uses: conda-incubator/setup-miniconda@v2
         with:
-          micromamba-version: '1.4.5-0'
-          environment-file: training/environment.yml
-          init-shell: >-
-            bash
-          cache-environment: true
-          cache-environment-key: mamba-env-${{ runner.os }}-${{ hashFiles('**/training/environment.yml') }}
+          miniforge-version: latest
+          use-mamba: true
+          activate-environment: dlp
+      
+      - name: Cache Mamba env
+        id: cached-mamba-env
+        uses: actions/cache@v3
+        env:
+          # Increase this value to reset cache if etc/example-environment.yml has not changed
+          CACHE_NUMBER: 0
+        with:
+          path: /usr/share/miniconda3/envs/
+          key:
+            mamba-${{ runner.os }}-${{env.CACHE_NUMBER }}-${{hashFiles('**/training/environment.yml') }}
+
+      - name: Update environment
+        run:
+          mamba env update -n dlp -f
+          training/environment.yml
+        if: steps.cached-mamba-env.outputs.cache-hit != 'true'
       
       #----------------------------------------------
       #       load cached venv if cache exists
       #----------------------------------------------
+      
       - name: Load cached venv
         id: cached-poetry-dependencies
         uses: actions/cache@v3
         with:
-          path: /home/runner/micromamba/envs/dlp/
+          path: /usr/share/miniconda3/envs/dlp
           key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
           restore-keys: training-venv-${{ runner.os }}-
+      
       #----------------------------------------------
       # install dependencies if cache does not exist
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: cd training && poetry install --no-interaction --no-root
-        shell: micromamba-shell {0}
+        shell: bash -el {0}
+
+      - name: Add Poetry env to PATH
+        run: cd training && echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
+        shell: bash -el {0}
       #----------------------------------------------
       #       run test suite
       #----------------------------------------------
@@ -120,6 +158,6 @@ jobs:
           export AWS_ACCESS_KEY_ID=testing
           export AWS_SECRET_ACCESS_KEY=testing
           export AWS_DEFAULT_REGION=us-west-2
-          # cd training && pytest tests
-        shell: micromamba-shell {0}
+          cd training && poetry run pytest tests
+        shell: bash -el {0}
      

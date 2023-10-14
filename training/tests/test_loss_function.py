@@ -47,7 +47,6 @@ def test_l1_loss_computation_correct(output, labels, expected_number):
 )
 def test_mse_loss_computation_correct(output, labels, expected_number):
     loss_function_name = "MSELOSS"
-    loss_function = getCriterionHandler("MSELOSS")
     computed_loss = compute_loss(loss_function_name, output, labels)
     assert pytest.approx(expected_number) == torch.sqrt(computed_loss)
 

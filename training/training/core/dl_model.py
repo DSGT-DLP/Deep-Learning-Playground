@@ -39,7 +39,6 @@ class DLModel(nn.Module):
         return cls(layer_list)
 
     def build_model(self, layer_list):
-        print("Hello World")
         model = nn.Sequential()
         ctr = 1
         for layer in layer_list:

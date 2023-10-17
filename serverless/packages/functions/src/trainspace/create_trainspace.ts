@@ -7,74 +7,10 @@ import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 function validateRequestBody(eventBody: any, trainspace_id: string, uid: string) : TrainspaceData | null {
     console.log(eventBody);
-
-    if (!eventBody['name'])
-    {
-        return null;
-    }
-
-    if (!eventBody['data_source']) 
-    {
-        return null;
-    }
     
     switch(eventBody['data_source'])
     {
         case "TABULAR":
-            if (!eventBody['target'])
-            {
-                return null;
-            }
-
-            if (!eventBody['features'])
-            {
-                return null;
-            }
-
-            if (!eventBody['default'])
-            {
-                return null;
-            }
-
-            if (!eventBody['problem_type'])
-            {
-                return null;
-            }
-
-            if (!eventBody['criterion'])
-            {
-                return null;
-            }
-
-            if (!eventBody['optimizer_name'])
-            {
-                return null;
-            }
-            
-            if (!eventBody['shuffle'])
-            {
-                return null;
-            }
-
-            if (!eventBody['epochs'])
-            {
-                return null;
-            }
-
-            if (!eventBody['test_size'])
-            {
-                return null;
-            }
-
-            if (!eventBody['batch_size'])
-            {
-                return null;
-            }
-
-            if (!eventBody['user_arch'])
-            {
-                return null;
-            }
             return new TrainspaceData(trainspace_id, uid, "TABULAR", eventBody['default'], eventBody['name'], 
                 { 
                     criterion: eventBody['criterion'],
@@ -88,26 +24,6 @@ function validateRequestBody(eventBody: any, trainspace_id: string, uid: string)
 
             return null;
         case "IMAGE":
-            if (!eventBody['dataset_data'])
-            {
-                return null;
-            }
-
-            if (!eventBody['parameters_data'])
-            {
-                return null;
-            }
-
-            if (!eventBody['review_data'])
-            {
-                return null;
-            }
-
-            if (!eventBody['review_data']['notification_email'])
-            {
-                return null;
-            }
-            
             return new TrainspaceData(trainspace_id, uid, "IMAGE", eventBody['dataset_data'], eventBody['name'], eventBody['parameters_data'], eventBody['review_data']['notification_email']);
         case "AUDIO":
 

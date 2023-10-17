@@ -1,0 +1,16 @@
+name: Issue Form Handler
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  handleIssue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Handle Bug Request Form
+        if: ${{ github.event.issue.title == 'Bug Request Form' }}
+        run: |
+          echo "Thank you for submitting the 🐞Bug Request Form"

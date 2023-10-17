@@ -11,6 +11,26 @@ export function AppStack({ stack }: StackContext) {
       ),
     },
   });
+  const trainspaceRunTable = new Table(stack, "trainspace-run", {
+    fields: {
+      runId: "string",
+      trainspaceId: "string",
+      userId: "string",
+      timestamp: "string",
+      resultCsvUri: "string",
+      modelPtUri: "string",
+      onnxUri: "string",
+      confusionMatrixUri: "string",
+      aucRocUri: "string"
+    },
+    primaryIndex: {
+      partitionKey: "runId",
+    },
+    globalIndexes: {
+      "TrainspaceIndex": { partitionKey: "trainspaceId", sortKey: "timestamp"},
+      "UserIndex": {partitionKey: "userId"}
+    },
+  });
   const api = new Api(stack, "Api", {
     authorizers: {
       FirebaseAuthorizer: {
@@ -76,5 +96,8 @@ export function AppStack({ stack }: StackContext) {
     GetUserDatasetColumnsFunctionName:
       api.getFunction("GET /datasets/user/{type}/{filename}/columns")
         ?.functionName ?? "",
+    TrainspaceRunTableName: {
+      value: trainspaceRunTable.tableName
+    }
   });
 }

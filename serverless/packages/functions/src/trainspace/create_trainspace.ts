@@ -2,7 +2,7 @@ import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 import parseJwt from "@dlp-sst-app/core/parseJwt";
 import TrainspaceData from './trainspace-data';
 import { v4 as uuidv4 } from 'uuid';
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb'; //@aws-sdk/client-dynamodb
+import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 function validateRequestBody(eventBody: any, trainspace_id: string, uid: string) : TrainspaceData | null {

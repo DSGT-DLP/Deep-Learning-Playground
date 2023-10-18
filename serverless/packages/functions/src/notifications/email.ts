@@ -4,6 +4,7 @@ import {
   SendEmailCommand,
   SendEmailCommandInput,
 } from "@aws-sdk/client-sesv2";
+import assert from "assert";
 
 const DLP_EMAIL = "dlp@datasciencegt.org";
 
@@ -17,6 +18,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     };
   }
 
+  assert(event.body, "event.body is undefined");
   const bodyJson = JSON.parse(event.body);
 
   const {

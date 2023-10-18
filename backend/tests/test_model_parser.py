@@ -1,6 +1,5 @@
 import pytest
 import torch.nn as nn
-from torch.autograd import Variable
 from dl.dl_model_parser import *
 
 # come up with the expected parsing
@@ -27,9 +26,4 @@ from dl.dl_model_parser import *
     ],
 )
 def test_parse_user_architecture(user_model, expected):
-    print(
-        "parse_user_architecture(user_model): "
-        + str(parse_deep_user_architecture(user_model))
-    )
-    print("expected: " + str(expected))
     assert [i == j for i, j in zip(parse_deep_user_architecture(user_model), expected)]

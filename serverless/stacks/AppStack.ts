@@ -11,6 +11,7 @@ export function AppStack({ stack }: StackContext) {
       ),
     },
   });
+  /*
   const trainspaceRunTable = new Table(stack, "trainspace-run", {
     fields: {
       runId: "string",
@@ -31,6 +32,7 @@ export function AppStack({ stack }: StackContext) {
       "UserIndex": {partitionKey: "userId"}
     },
   });
+  */
   const api = new Api(stack, "Api", {
     authorizers: {
       FirebaseAuthorizer: {
@@ -60,25 +62,25 @@ export function AppStack({ stack }: StackContext) {
       "POST /trainspace": {
         function: {
           handler: "packages/functions/src/trainspace/create_trainspace.handler",
-          permissions: ["dynamodb"]
+          permissions: ["dynamodb:PutItem"]
         }
       },
       "GET /trainspace/{id}": {
         function: {
           handler: "packages/functions/src/trainspace/get_trainspace.handler",
-          permissions: ["dynamodb"]
+          permissions: ["dynamodb:GetItem"]
         }
       },
       "GET /trainspace": {
         function: {
           handler: "packages/functions/src/trainspace/get_all_trainspace.handler",
-          permissions: ["dynamodb"]
+          permissions: ["dynamodb:Query"]
         }
       },
       "DELETE /trainspace/{id}": {
         function: {
           handler: "packages/functions/src/trainspace/delete_trainspace.handler",
-          permissions: ["dynamodb"]
+          permissions: ["dynamodb:DeleteItem"]
         }
       }
     },
@@ -95,9 +97,6 @@ export function AppStack({ stack }: StackContext) {
       api.getFunction("GET /datasets/user/{type}")?.functionName ?? "",
     GetUserDatasetColumnsFunctionName:
       api.getFunction("GET /datasets/user/{type}/{filename}/columns")
-        ?.functionName ?? "",
-    TrainspaceRunTableName: {
-      value: trainspaceRunTable.tableName
-    }
+        ?.functionName ?? ""
   });
 }

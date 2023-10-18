@@ -25,8 +25,7 @@ export default class TrainspaceData
     }
 
     getDateString() : string {
-        // TODO: Implement
-        return "";
+        return Date.now().toString();
     }
 
     convertToDynamoItemInput(tableName: string) : PutItemCommandInput {

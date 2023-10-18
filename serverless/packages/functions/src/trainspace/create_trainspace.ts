@@ -6,8 +6,6 @@ import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb'; //@aw
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 function validateRequestBody(eventBody: any, trainspace_id: string, uid: string) : TrainspaceData | null {
-    console.log(eventBody);
-    
     switch(eventBody['data_source'])
     {
         case "TABULAR":
@@ -48,7 +46,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         const eventBody = JSON.parse(event.body? event.body : "");
 
         const trainspaceId = uuidv4();
-        const trainspaceData = validateRequestBody(eventBody);
+        const trainspaceData = validateRequestBody(eventBody, trainspaceId, uid);
 
         if (trainspaceData == null)
         {

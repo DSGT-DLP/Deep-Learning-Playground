@@ -2,6 +2,14 @@
 # yarn lockfile v1
 
 
+MD5@^1.2.1:
+  version "1.3.0"
+  resolved "https://registry.npmjs.org/MD5/-/MD5-1.3.0.tgz"
+  integrity sha512-kDyDOgf7CECKouVCQ8tcbASPTyLMxrHxlvKBTBaXbF4eff5VYdfy4GCkCIIbAice4JGxBK+ExRD/4LdxDNXvLg==
+  dependencies:
+    charenc ">= 0.0.1"
+    crypt ">= 0.0.1"
+
 "charenc@>= 0.0.1":
   version "0.0.2"
   resolved "https://registry.npmjs.org/charenc/-/charenc-0.0.2.tgz"
@@ -18,11 +26,3 @@ mamba@^0.0.2:
   integrity sha512-pBACjuQ+rIMFjClDTpE1m5c7G4kvdWAZtzDIymRll2gfdiJewgQfZ0XKyxf3xaFlVKwFe8u5+OV5QNOB0oNpkA==
   dependencies:
     MD5 "^1.2.1"
-
-MD5@^1.2.1:
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/MD5/-/MD5-1.3.0.tgz"
-  integrity sha512-kDyDOgf7CECKouVCQ8tcbASPTyLMxrHxlvKBTBaXbF4eff5VYdfy4GCkCIIbAice4JGxBK+ExRD/4LdxDNXvLg==
-  dependencies:
-    charenc ">= 0.0.1"
-    crypt ">= 0.0.1"

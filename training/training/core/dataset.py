@@ -13,6 +13,10 @@ import torch
 from torch.utils.data import Dataset
 from torch.autograd import Variable
 
+from sklearn.preprocessing import LabelEncoder
+import boto3
+import io
+
 
 class TrainTestDatasetCreator(ABC):
     "Creator that creates train and test PyTorch datasets"
@@ -98,3 +102,64 @@ class SklearnDatasetCreator(TrainTestDatasetCreator):
         if self._category_list is None:
             raise Exception("Category list not available")
         return self._category_list
+
+
+class TabularCustomDatasetCreator(TrainTestDatasetCreator):
+    """Pulls user-uploaded dataset from S3 bucket and converts it to readable format"""
+
+    def __init__(
+        self,
+        X: pd.DataFrame,
+        y: pd.Series,
+        test_size: float,
+        shuffle: bool,
+        category_list: Optional[list[str]],
+    ) -> None:
+        super().__init__()
+        self._category_list = category_list
+        self._X_train, self._X_test, self._y_train, self._y_test = cast(
+            tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series],
+            train_test_split(X, y, test_size=test_size, shuffle=shuffle),
+        )
+
+    @classmethod
+    def read_s3(
+        cls,
+        uid: str,
+        name: str,
+        test_size: float,
+        target_name: str,
+        shuffle: bool = True,
+    ):
+        s3 = boto3.client("s3")
+        obj = s3.get_object(Bucket="dlp-upload-bucket", Key=f"{uid}/tabular/{name}")
+        data = pd.read_csv(io.BytesIO(obj["Body"].read()))
+        y = data[target_name]
+        X = data.drop(target_name, axis=1)
+        if y.apply(pd.to_numeric, errors="coerce").isnull().any():
+            le = LabelEncoder()
+            le.fit(y)
+            y = pd.Series(np.array(le.transform(y)))
+        return cls(X, y, test_size, shuffle, [target_name])
+
+    def createTrainDataset(self) -> Dataset:
+        X_train_tensor = Variable(torch.Tensor(self._X_train.to_numpy()))
+        X_train_tensor = torch.reshape(
+            X_train_tensor, (X_train_tensor.size()[0], 1, X_train_tensor.size()[1])
+        )
+        X_train_tensor.requires_grad_(True)
+
+        y_train_tensor = Variable(torch.Tensor(self._y_train.to_numpy()))
+        y_train_tensor = torch.reshape(y_train_tensor, (y_train_tensor.size()[0], 1))
+        return TensorDataset(X_train_tensor, y_train_tensor)
+
+    def createTestDataset(self) -> Dataset:
+        X_test_tensor = Variable(torch.Tensor(self._X_test.to_numpy()))
+        X_test_tensor = torch.reshape(
+            X_test_tensor, (X_test_tensor.size()[0], 1, X_test_tensor.size()[1])
+        )
+        X_test_tensor.requires_grad_(True)
+
+        y_test_tensor = Variable(torch.Tensor(self._y_test.to_numpy()))
+        y_test_tensor = torch.reshape(y_test_tensor, (y_test_tensor.size()[0], 1))
+        return TensorDataset(X_test_tensor, y_test_tensor)

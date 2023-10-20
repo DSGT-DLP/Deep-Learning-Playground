@@ -59,9 +59,15 @@ export function AppStack({ stack }: StackContext) {
         "packages/functions/src/datasets/user/columns.handler",
       "DELETE /dataset/user/{type}/{filename}" :
         "packages/functions/src/datasets/user/delete_userdata.handler",
-      "POST /trainspace": {
+      "POST /trainspace/tabular": {
         function: {
-          handler: "packages/functions/src/trainspace/create_trainspace.handler",
+          handler: "packages/functions/src/trainspace/create_tabular_trainspace.handler",
+          permissions: ["dynamodb:PutItem"]
+        }
+      },
+      "POST /trainspace/image": {
+        function: {
+          handler: "packages/functions/src/trainspace/create_image_trainspace.handler",
           permissions: ["dynamodb:PutItem"]
         }
       },

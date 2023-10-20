@@ -6,38 +6,15 @@ import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 function validateRequestBody(eventBody: any, trainspace_id: string, uid: string) : TrainspaceData | null {
-    switch(eventBody['data_source'])
-    {
-        case "TABULAR":
-            return new TrainspaceData(trainspace_id, uid, "TABULAR", eventBody['default'], eventBody['name'], 
-                { 
-                    criterion: eventBody['criterion'],
-                    optimizer_name: eventBody['optimizer_name'],
-                    shuffle: eventBody['shuffle'],
-                    epochs: eventBody['epochs'],
-                    batch_size: eventBody['batch_size'],
-                    user_arch: eventBody['user_arch']
-                }, "");
-        case "PRETRAINED":
-
-            return null;
-        case "IMAGE":
-            return new TrainspaceData(trainspace_id, uid, "IMAGE", eventBody['dataset_data'], eventBody['name'], eventBody['parameters_data'], eventBody['review_data']['notification_email']);
-        case "AUDIO":
-
-            return null;
-        case "TEXTUAL":
-
-            return null;
-        case "CLASSICAL_ML":
-
-            return null;
-        case "OBJECT_DETECTION":
-
-            return null;
-        default:
-            return null;
-    }
+    return new TrainspaceData(trainspace_id, uid, "TABULAR", eventBody['default'], eventBody['name'], 
+        { 
+            criterion: eventBody['criterion'],
+            optimizer_name: eventBody['optimizer_name'],
+            shuffle: eventBody['shuffle'],
+            epochs: eventBody['epochs'],
+            batch_size: eventBody['batch_size'],
+            user_arch: eventBody['user_arch']
+        }, "");
 }
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {

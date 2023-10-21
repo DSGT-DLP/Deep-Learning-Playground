@@ -60,7 +60,7 @@ def test_iris_train_test_loader():
 
     train_batch_count = 0
     test_batch_count = 0
-    # go through the train_loader. Count up how many iterations and check the batch size is matching up with batch_size
+  
     for batch in train_loader:
         train_features, train_labels = batch 
         train_batch_count += 1
@@ -68,7 +68,6 @@ def test_iris_train_test_loader():
 
     assert train_batch_count == num_train_batches_expected
 
-    # do the same thing but for test loader
     for batch in test_loader:
         test_features, test_labels = batch 
         test_batch_count += 1

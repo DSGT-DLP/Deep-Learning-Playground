@@ -65,7 +65,7 @@ def test_iris_train_test_loader():
 
     train_batch_count = 0
     test_batch_count = 0
-  
+
     for batch in train_loader:
         train_features, train_labels = batch
         train_batch_count += 1

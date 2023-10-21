@@ -53,7 +53,7 @@ class SklearnDatasetCreator(TrainTestDatasetCreator):
         )
 
     @classmethod
-    def getDefaultDataset(cls, name: str):
+    def getDefaultDataset(cls, name: str) -> pd.DataFrame:
         raw_data = cls.DEFAULT_DATASETS[name]()
         default_dataset = pd.DataFrame(
             data=np.c_[raw_data["data"], raw_data["target"]],  # type: ignore

@@ -32,16 +32,11 @@ const TabularParametersStep = ({
   setIsModified,
   setStep,
 }: {
-  renderStepperButtons: (
-    submitTrainspace: (data: TrainspaceData<"PARAMETERS">) => void
-  ) => React.ReactNode;
+  renderStepperButtons: (submitTrainspace: (data: TrainspaceData<"PARAMETERS">) => void) => React.ReactNode;
   setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
   setStep: React.Dispatch<React.SetStateAction<number>>;
 }) => {
-  const trainspace = useAppSelector(
-    (state) =>
-      state.trainspace.current as TrainspaceData<"PARAMETERS"> | undefined
-  );
+  const trainspace = useAppSelector((state) => state.trainspace.current as TrainspaceData<"PARAMETERS"> | undefined);
   const dispatch = useAppDispatch();
   const [getColumns, { data, error }] = useLazyGetColumnsFromDatasetQuery();
   useEffect(() => {
@@ -59,8 +54,7 @@ const TabularParametersStep = ({
     setValue,
   } = useForm<ParameterData>({
     defaultValues: {
-      targetCol:
-        trainspace?.parameterData?.targetCol ?? (null as unknown as undefined),
+      targetCol: trainspace?.parameterData?.targetCol ?? (null as unknown as undefined),
       features: trainspace?.parameterData?.features ?? [],
       problemType: trainspace?.parameterData?.problemType ?? "CLASSIFICATION",
       criterion: trainspace?.parameterData?.criterion ?? "CELOSS",
@@ -85,7 +79,7 @@ const TabularParametersStep = ({
     <Stack spacing={3}>
       {error ? (
         <>
-          <Typography variant="h2" fontSize={25} textAlign={"center"}>
+          <Typography variant='h2' fontSize={25} textAlign={"center"}>
             Error Occurred!
           </Typography>
           <Button
@@ -104,7 +98,7 @@ const TabularParametersStep = ({
         <>
           <Controller
             control={control}
-            name="targetCol"
+            name='targetCol'
             rules={{ required: true }}
             render={({ field: { ref, onChange, ...field } }) => (
               <Autocomplete
@@ -119,25 +113,23 @@ const TabularParametersStep = ({
                       {...params}
                       inputRef={ref}
                       required
-                      label="Target Column"
-                      placeholder="Target"
+                      label='Target Column'
+                      placeholder='Target'
                       error={errors.targetCol ? true : false}
                     />
                   ) : (
-                    <Skeleton width="100%">
+                    <Skeleton width='100%'>
                       <TextField fullWidth />
                     </Skeleton>
                   )
                 }
-                options={
-                  data ? data.filter((col) => !features.includes(col)) : []
-                }
+                options={data ? data.filter((col) => !features.includes(col)) : []}
               />
             )}
           />
           <Controller
             control={control}
-            name="features"
+            name='features'
             rules={{ required: true }}
             render={({ field: { ref, onChange, ...field } }) => (
               <Autocomplete
@@ -153,12 +145,12 @@ const TabularParametersStep = ({
                       {...params}
                       inputRef={ref}
                       required
-                      label="Feature Columns"
-                      placeholder="Features"
+                      label='Feature Columns'
+                      placeholder='Features'
                       error={errors.features ? true : false}
                     />
                   ) : (
-                    <Skeleton width="100%">
+                    <Skeleton width='100%'>
                       <TextField fullWidth />
                     </Skeleton>
                   )
@@ -172,7 +164,7 @@ const TabularParametersStep = ({
       <FormControl>
         <FormLabel>Problem Type</FormLabel>
         <Controller
-          name="problemType"
+          name='problemType'
           control={control}
           rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
@@ -190,11 +182,11 @@ const TabularParametersStep = ({
         />
       </FormControl>
       <Controller
-        name="criterion"
+        name='criterion'
         control={control}
         rules={{ required: true }}
         render={({ field: { onChange, value } }) => (
-          <TextField select label="Criterion" onChange={onChange} value={value}>
+          <TextField select label='Criterion' onChange={onChange} value={value}>
             {STEP_SETTINGS["PARAMETERS"].criterions.map((criterion) => (
               <MenuItem key={criterion.value} value={criterion.value}>
                 {criterion.label}
@@ -204,11 +196,11 @@ const TabularParametersStep = ({
         )}
       />
       <Controller
-        name="optimizerName"
+        name='optimizerName'
         control={control}
         rules={{ required: true }}
         render={({ field: { onChange, value } }) => (
-          <TextField select label="Optimizer" onChange={onChange} value={value}>
+          <TextField select label='Optimizer' onChange={onChange} value={value}>
             {STEP_SETTINGS["PARAMETERS"].optimizers.map((optimizer) => (
               <MenuItem key={optimizer.value} value={optimizer.value}>
                 {optimizer.label}
@@ -219,63 +211,57 @@ const TabularParametersStep = ({
       />
       <FormGroup>
         <Controller
-          name="shuffle"
+          name='shuffle'
           control={control}
           rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
-            <FormControlLabel
-              control={
-                <Switch value={value} onChange={onChange} defaultChecked />
-              }
-              label="Shuffle"
-            />
+            <FormControlLabel control={<Switch value={value} onChange={onChange} defaultChecked />} label='Shuffle' />
           )}
         />
       </FormGroup>
       <Controller
-        name="epochs"
+        name='epochs'
         control={control}
         rules={{ required: true }}
         render={({ field: { onChange, value } }) => (
-          <TextField
-            label="Epochs"
-            type={"number"}
-            onChange={onChange}
-            value={value}
-          />
+          <TextField label='Epochs' type={"number"} onChange={onChange} value={value} />
         )}
       />
       <Controller
-        name="batchSize"
+        name='batchSize'
         control={control}
         rules={{ required: true }}
         render={({ field: { onChange, value } }) => (
-          <TextField
-            label="Batch Size"
-            type={"number"}
-            onChange={onChange}
-            value={value}
-          />
+          <TextField label='Batch Size' type={"number"} onChange={onChange} value={value} />
         )}
       />
       <FormControl>
         <FormLabel>Test Size</FormLabel>
         <Controller
-          name="testSize"
+          name='testSize'
           control={control}
           rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
-            <Slider
-              step={0.01}
-              value={value}
-              onChange={onChange}
-              min={0}
-              max={1}
-              valueLabelDisplay="auto"
-            />
+            <Slider step={0.01} value={value} onChange={onChange} min={0} max={1} valueLabelDisplay='auto' />
           )}
         />
       </FormControl>
+
+      <FormControl>
+        <FormLabel>Super Cool Dataset?</FormLabel>
+        <Controller
+          name='coolChecker'
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { onChange, value } }) => (
+            <RadioGroup row value={value} onChange={onChange}>
+              <FormControlLabel key='Cool' value='Cool' control={<Radio />} label='Yuhhh' />
+              <FormControlLabel key='notCool' value='notCool' control={<Radio />} label='Nawww' />
+            </RadioGroup>
+          )}
+        />
+      </FormControl>
+
       <Paper>
         <TabularFlow setLayers={setLayers} />
       </Paper>

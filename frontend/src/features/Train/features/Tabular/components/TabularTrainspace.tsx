@@ -3,27 +3,14 @@ import { TrainspaceData } from "@/features/Train/features/Tabular/types/tabularT
 import { UseFormHandleSubmit, useForm } from "react-hook-form";
 import React, { useEffect, useState } from "react";
 import TrainspaceLayout from "@/features/Train/components/TrainspaceLayout";
-import {
-  Button,
-  Stack,
-  Step,
-  StepButton,
-  Stepper,
-  TextField,
-  CircularProgress,
-} from "@mui/material";
-import {
-  TRAINSPACE_SETTINGS,
-  STEP_SETTINGS,
-} from "../constants/tabularConstants";
+import { Button, Stack, Step, StepButton, Stepper, TextField, CircularProgress } from "@mui/material";
+import { TRAINSPACE_SETTINGS, STEP_SETTINGS } from "../constants/tabularConstants";
 import { useTrainTabularMutation } from "../redux/tabularApi";
 import { useRouter } from "next/router";
 import { removeTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
 
 const TabularTrainspace = () => {
-  const trainspace = useAppSelector(
-    (state) => state.trainspace.current as TrainspaceData | undefined
-  );
+  const trainspace = useAppSelector((state) => state.trainspace.current as TrainspaceData | undefined);
   const {
     handleSubmit,
     formState: { errors, isDirty },
@@ -38,9 +25,9 @@ const TabularTrainspace = () => {
       code={`#Code to train your model locally\nprint("Hello World")`}
       nameField={
         <TextField
-          id="filled-basic"
-          label="Name"
-          variant="outlined"
+          id='filled-basic'
+          label='Name'
+          variant='outlined'
           required
           helperText={errors.name ? "Name is required" : ""}
           error={errors.name ? true : false}
@@ -49,17 +36,10 @@ const TabularTrainspace = () => {
         />
       }
       stepper={
-        <Stepper
-          activeStep={Math.min(
-            trainspace.step,
-            TRAINSPACE_SETTINGS.steps.length - 1
-          )}
-        >
+        <Stepper activeStep={Math.min(trainspace.step, TRAINSPACE_SETTINGS.steps.length - 1)}>
           {TRAINSPACE_SETTINGS.steps.map((step, index) => (
             <Step key={step}>
-              <StepButton onClick={() => setStep(index)}>
-                {STEP_SETTINGS[step].name}
-              </StepButton>
+              <StepButton onClick={() => setStep(index)}>{STEP_SETTINGS[step].name}</StepButton>
             </Step>
           ))}
         </Stepper>
@@ -109,29 +89,26 @@ const TrainspaceStepInner = ({
   }
 
   useEffect(() => {
-    if (trainspace.step < TRAINSPACE_SETTINGS.steps.length)
-      setStep(trainspace.step);
+    if (trainspace.step < TRAINSPACE_SETTINGS.steps.length) setStep(trainspace.step);
     else {
       train(trainspace)
         .unwrap()
         .then(({ trainspaceId }) => {
+          console.log("Trainspace submitted with ID:", trainspaceId);
           router.push({ pathname: `/train/${trainspaceId}` }).then(() => {
             dispatch(removeTrainspaceData());
           });
         });
     }
   }, [trainspace]);
-  
+
   if (!Component) return null;
   return (
     <Component
       renderStepperButtons={(submitTrainspace) => (
-        <Stack
-          direction={"row"}
-          justifyContent={step > 0 ? "space-between" : "end"}
-        >
+        <Stack direction={"row"} justifyContent={step > 0 ? "space-between" : "end"}>
           {step > 0 ? (
-            <Button variant="outlined" onClick={() => setStep(step - 1)}>
+            <Button variant='outlined' onClick={() => setStep(step - 1)}>
               Previous
             </Button>
           ) : null}
@@ -139,21 +116,13 @@ const TrainspaceStepInner = ({
           {isButtonClicked ? (
             <Button
               disabled
-              variant={
-                step < trainspace.step && !isStepModified && !isModified
-                  ? "outlined"
-                  : "contained"
-              }
+              variant={step < trainspace.step && !isStepModified && !isModified ? "outlined" : "contained"}
             >
               {trainbuttontext}
             </Button>
           ) : (
             <Button
-              variant={
-                step < trainspace.step && !isStepModified && !isModified
-                  ? "outlined"
-                  : "contained"
-              }
+              variant={step < trainspace.step && !isStepModified && !isModified ? "outlined" : "contained"}
               onClick={() => {
                 if (step < trainspace.step && !isStepModified && !isModified) {
                   setStep(step + 1);

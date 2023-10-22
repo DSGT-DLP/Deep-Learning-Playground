@@ -54,10 +54,8 @@ const LoadingOverlay = () => {
           alignItems: "center",
         }}
       >
-        <CircularProgress color="primary" size={80} />
-        <p style={{ marginTop: 10, fontSize: 16 }}>
-          Loading... Please wait a moment
-        </p>
+        <CircularProgress color='primary' size={80} />
+        <p style={{ marginTop: 10, fontSize: 16 }}>Loading... Please wait a moment</p>
       </div>
     </div>
   );
@@ -73,29 +71,31 @@ const Login = () => {
   const user = useAppSelector((state) => state.currentUser.user);
   const router = useRouter();
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     if (router.isReady && isSignedIn(user)) {
       router.replace({ pathname: "/dashboard" });
+      console.log("User email is " + user.email);
     }
   }, [user, router.isReady]);
   const Title = (
     <>
-      <h1 className="title mb-5">
+      <h1 className='title mb-5'>
         No-code Solution for <br />
         Machine Learning
       </h1>
-      <p className="description text-center mb-4">
-        DLP is a playground where you can experiment with machine learning tools
-        by inputting a dataset and use PyTorch modules without writing any code
+      <p className='description text-center mb-4'>
+        DLP is a playground where you can experiment with machine learning tools by inputting a dataset and use PyTorch
+        modules without writing any code
       </p>
     </>
   );
 
   const SocialLogins = (
     <>
-      <div className="d-flex justify-content-evenly mb-5">
+      <div className='d-flex justify-content-evenly mb-5'>
         <Button
-          className="login-button google"
+          className='login-button google'
           style={{
             position: "relative",
           }}
@@ -119,7 +119,7 @@ const Login = () => {
           />
         </Button>
         <Button
-          className="login-button github"
+          className='login-button github'
           style={{ position: "relative" }}
           onClick={async () => {
             setIsLoading(true);
@@ -147,53 +147,45 @@ const Login = () => {
   const EmailPasswordInput = (
     <>
       {isRegistering && (
-        <Form.Group className="mb-3" controlId="login-name">
+        <Form.Group className='mb-3' controlId='login-name'>
           <Form.Label>Name</Form.Label>
-          <Form.Control
-            placeholder="Enter name"
-            onBlur={(e) => setFullName(e.target.value)}
-            autoComplete="name"
-          />
+          <Form.Control placeholder='Enter name' onBlur={(e) => setFullName(e.target.value)} autoComplete='name' />
         </Form.Group>
       )}
 
-      <Form.Group className="mb-3" controlId="login-email">
+      <Form.Group className='mb-3' controlId='login-email'>
         <Form.Label>Email address</Form.Label>
         <Form.Control
-          type="email"
-          placeholder="someone@example.com"
+          type='email'
+          placeholder='someone@example.com'
           onBlur={(e) => setEmail(e.target.value)}
-          autoComplete="email"
+          autoComplete='email'
         />
       </Form.Group>
 
-      <Form.Group className="mb-5" controlId="login-password">
+      <Form.Group className='mb-5' controlId='login-password'>
         <Form.Label>Password</Form.Label>
         <Form.Control
-          type="password"
-          placeholder="Password"
+          type='password'
+          placeholder='Password'
           onBlur={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
+          autoComplete='current-password'
         />
         {!isRegistering && (
-          <div className="link">
-            <Link href="/forgot">Forgot Password?</Link>
+          <div className='link'>
+            <Link href='/forgot'>Forgot Password?</Link>
           </div>
         )}
       </Form.Group>
       {isRegistering && process.env.REACT_APP_CAPTCHA_SITE_KEY && (
-        <div className="reCaptcha">
-          <ReCAPTCHA
-            sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
-            theme="dark"
-            onChange={(e) => setRecaptcha(e)}
-          />
+        <div className='reCaptcha'>
+          <ReCAPTCHA sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY} theme='dark' onChange={(e) => setRecaptcha(e)} />
         </div>
       )}
-      <div className="email-buttons d-flex flex-column">
+      <div className='email-buttons d-flex flex-column'>
         <Button
-          id="log-in"
-          className="mb-2"
+          id='log-in'
+          className='mb-2'
           onClick={async () => {
             if (isRegistering) {
               setIsLoading(true);
@@ -218,9 +210,7 @@ const Login = () => {
             } else {
               setIsLoading(true);
               try {
-                await dispatch(
-                  signInViaEmailAndPassword({ email, password })
-                ).unwrap();
+                await dispatch(signInViaEmailAndPassword({ email, password })).unwrap();
               } catch (e) {
                 toast.error((e as SerializedError).message, {
                   position: toast.POSITION.TOP_CENTER,
@@ -232,11 +222,7 @@ const Login = () => {
         >
           {isRegistering ? "Register" : "Log in"}
         </Button>
-        <Button
-          variant="outline-dark"
-          id="sign-up"
-          onClick={() => setIsRegistering((e) => !e)}
-        >
+        <Button variant='outline-dark' id='sign-up' onClick={() => setIsRegistering((e) => !e)}>
           {isRegistering ? "Log in" : "Register"}
         </Button>
       </div>
@@ -258,14 +244,11 @@ const Login = () => {
   return (
     <>
       <NavbarMain />
-      <div
-        id="login-page"
-        className="text-center d-flex justify-content-center"
-      >
-        <div className="main-container mt-5 mb-5">
+      <div id='login-page' className='text-center d-flex justify-content-center'>
+        <div className='main-container mt-5 mb-5'>
           {Title}
 
-          <Form className="form-container p-5">
+          <Form className='form-container p-5'>
             {SocialLogins}
             {EmailPasswordInput}
           </Form>

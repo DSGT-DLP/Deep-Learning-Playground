@@ -15,6 +15,7 @@ export const URLs = Object.freeze({
   youtube: "https://www.youtube.com/channel/UC1DGL6Tb9ffwC-aHChadxMw",
   instagram: "https://www.instagram.com/datasciencegt/",
   github: "https://github.com/DSGT-DLP/Deep-Learning-Playground",
+  reactLink: "https://react.dev/",
 });
 
 export const GENERAL_STYLES = Object.freeze({

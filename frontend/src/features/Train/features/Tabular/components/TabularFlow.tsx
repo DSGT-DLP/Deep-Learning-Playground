@@ -1,14 +1,6 @@
 import HtmlTooltip from "@/common/components/HtmlTooltip";
 import InfoIcon from "@mui/icons-material/Info";
-import {
-  Button,
-  Card,
-  Divider,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Card, Divider, Paper, Stack, TextField, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import ReactFlow, {
   Background,
@@ -24,11 +16,7 @@ import ReactFlow, {
   useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import {
-  ALL_LAYERS,
-  DEFAULT_LAYERS,
-  STEP_SETTINGS,
-} from "../constants/tabularConstants";
+import { ALL_LAYERS, DEFAULT_LAYERS, STEP_SETTINGS } from "../constants/tabularConstants";
 import { ParameterData } from "../types/tabularTypes";
 import assert from "assert";
 import { nanoid } from "nanoid/non-secure";
@@ -119,21 +107,16 @@ export default function TabularFlow(props: TabularFlowProps) {
   return (
     <>
       <Paper sx={{ mb: 2 }}>
-        <Stack alignItems="center" spacing={2} padding={2}>
-          <Typography variant="h2" fontSize={25}>
+        <Stack alignItems='center' spacing={2} padding={2}>
+          <Typography variant='h2' fontSize={25}>
             Layers
           </Typography>
-          <Stack
-            direction="row"
-            gap={1}
-            flexWrap="wrap"
-            justifyContent="space-between"
-          >
+          <Stack direction='row' gap={1} flexWrap='wrap' justifyContent='space-between'>
             {STEP_SETTINGS.PARAMETERS.layerValues.map((value) => (
               <Button
                 key={value}
-                variant="outlined"
-                color="primary"
+                variant='outlined'
+                color='primary'
                 onClick={() => {
                   setNodes((cur) => [
                     ...cur,
@@ -148,9 +131,7 @@ export default function TabularFlow(props: TabularFlowProps) {
                         label: STEP_SETTINGS.PARAMETERS.layers[value].label,
                         value: value,
                         onChange: onChange,
-                        parameters: STEP_SETTINGS.PARAMETERS.layers[
-                          value
-                        ].parameters.map(() => 0),
+                        parameters: STEP_SETTINGS.PARAMETERS.layers[value].parameters.map(() => 0),
                       },
                     },
                   ]);
@@ -192,23 +173,14 @@ function TextUpdaterNode(props: TextUpdaterNodeProps) {
 
   return (
     <>
-      <Handle
-        type="target"
-        position={Position.Top}
-        isConnectable={isConnectable}
-      />
+      <Handle type='target' position={Position.Top} isConnectable={isConnectable} />
       <div>
         <Card sx={{ p: 3 }}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            spacing={3}
-          >
+          <Stack direction='row' justifyContent='space-between' alignItems='center' spacing={3}>
             <HtmlTooltip
               title={
                 <React.Fragment>
-                  <Typography color="inherit">{layer.label}</Typography>
+                  <Typography color='inherit'>{layer.label}</Typography>
                   {layer.description}
                 </React.Fragment>
               }
@@ -216,16 +188,16 @@ function TextUpdaterNode(props: TextUpdaterNodeProps) {
               <InfoIcon>Info</InfoIcon>
             </HtmlTooltip>
 
-            <Typography variant="h3" fontSize={18}>
+            <Typography variant='h3' fontSize={18}>
               {layer.label}
             </Typography>
-            <Stack direction="row" alignItems="center" spacing={3}>
+            <Stack direction='row' alignItems='center' spacing={3}>
               <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="flex-end"
+                direction='row'
+                alignItems='center'
+                justifyContent='flex-end'
                 spacing={2}
-                divider={<Divider orientation="vertical" flexItem />}
+                divider={<Divider orientation='vertical' flexItem />}
               >
                 {layer.parameters.map((parameter, index) => (
                   <TextField
@@ -239,7 +211,7 @@ function TextUpdaterNode(props: TextUpdaterNodeProps) {
                     key={index}
                     label={parameter.label}
                     defaultValue={data.parameters?.[index]}
-                    size="small"
+                    size='small'
                     type={parameter.type}
                     required
                   />
@@ -249,12 +221,7 @@ function TextUpdaterNode(props: TextUpdaterNodeProps) {
           </Stack>
         </Card>
       </div>
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        id="b"
-        isConnectable={isConnectable}
-      />
+      <Handle type='source' position={Position.Bottom} id='b' isConnectable={isConnectable} />
     </>
   );
 }
@@ -266,9 +233,7 @@ interface OnChangeArgs {
 }
 
 interface LayerNodeData {
-  label:
-    | (typeof STEP_SETTINGS.PARAMETERS.layers)[ALL_LAYERS]["label"]
-    | "Start";
+  label: (typeof STEP_SETTINGS.PARAMETERS.layers)[ALL_LAYERS]["label"] | "Beginning";
   value: ALL_LAYERS | "root";
   parameters?: number[];
   onChange: (args: OnChangeArgs) => void;
@@ -282,7 +247,7 @@ const ROOT_NODE: Node<LayerNodeData> = {
   position: { x: DEFAULT_X_POSITION, y: 0 },
   deletable: false,
   data: {
-    label: "Start",
+    label: "Beginning",
     value: "root",
     parameters: [],
     onChange: () => undefined,

@@ -1,5 +1,6 @@
 import { Api, Bucket, StackContext, Table } from "sst/constructs";
 import { Bucket as s3Bucket } from "aws-cdk-lib/aws-s3";
+import { table_exists } from "../packages/functions/src/dbutils/table_exists";
 
 export function AppStack({ stack }: StackContext) {
   const bucket = new Bucket(stack, "dlp-upload-bucket", {
@@ -11,26 +12,29 @@ export function AppStack({ stack }: StackContext) {
       ),
     },
   });
-  const trainspaceRunTable = new Table(stack, "trainspace-run", {
-    fields: {
-      runId: "string",
-      trainspaceId: "string",
-      userId: "string",
-      timestamp: "string",
-      resultCsvUri: "string",
-      modelPtUri: "string",
-      onnxUri: "string",
-      confusionMatrixUri: "string",
-      aucRocUri: "string"
-    },
-    primaryIndex: {
-      partitionKey: "runId",
-    },
-    globalIndexes: {
-      "TrainspaceIndex": { partitionKey: "trainspaceId", sortKey: "timestamp"},
-      "UserIndex": {partitionKey: "userId"}
-    },
-  });
+  let trainspaceRunTable = null;
+  if (!table_exists("trainspace")) {
+    trainspaceRunTable = new Table(stack, "trainspace-run", {
+      fields: {
+        runId: "string",
+        trainspaceId: "string",
+        userId: "string",
+        timestamp: "string",
+        resultCsvUri: "string",
+        modelPtUri: "string",
+        onnxUri: "string",
+        confusionMatrixUri: "string",
+        aucRocUri: "string"
+      },
+      primaryIndex: {
+        partitionKey: "runId",
+      },
+      globalIndexes: {
+        "TrainspaceIndex": { partitionKey: "trainspaceId", sortKey: "timestamp"},
+        "UserIndex": {partitionKey: "userId"}
+      },
+    });
+  }
   const api = new Api(stack, "Api", {
     authorizers: {
       FirebaseAuthorizer: {
@@ -71,7 +75,7 @@ export function AppStack({ stack }: StackContext) {
       api.getFunction("GET /datasets/user/{type}/{filename}/columns")
         ?.functionName ?? "",
     TrainspaceRunTableName: {
-      value: trainspaceRunTable.tableName
+      value: "trainspace"
     }
   });
 }

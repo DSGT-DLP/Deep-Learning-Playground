@@ -1,13 +1,9 @@
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 import parseJwt from "@dlp-sst-app/core/parseJwt";
-import TrainspaceData from './trainspace-data';
 import { v4 as uuidv4 } from 'uuid';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-
-function validateRequestBody(eventBody: any, trainspace_id: string, uid: string) : TrainspaceData | null {
-    return new TrainspaceData(trainspace_id, uid, "IMAGE", eventBody['dataset_data'], eventBody['name'], eventBody['parameters_data'], eventBody['review_data']['notification_email']);
-}
+import { create_trainspace } from "../dbutils/put_trainspace";
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     if (event) {
@@ -15,9 +11,9 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         const eventBody = JSON.parse(event.body? event.body : "");
 
         const trainspaceId = uuidv4();
-        const trainspaceData = validateRequestBody(eventBody, trainspaceId, uid);
+        const putQueryBody = create_trainspace(trainspaceId, uid, "IMAGE", eventBody['dataset_data'], eventBody['name'], eventBody['parameters_data'], eventBody['review_data']['notification_email']);
 
-        if (trainspaceData == null)
+        if (putQueryBody == null)
         {
             return {
                 statusCode: 400,
@@ -29,7 +25,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         const client = new DynamoDBClient({});
         const docClient = DynamoDBDocumentClient.from(client);
         
-        const command = new PutItemCommand(trainspaceData.convertToDynamoItemInput("trainspace"));
+        const command = new PutItemCommand(putQueryBody);
 
         const response = await docClient.send(command);
         if (response.$metadata.httpStatusCode != 200) {

@@ -24,7 +24,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
             {
                 "trainspace_id" :
                 {
-                     S: trainspace_id ? trainspace_id : ""
+                     S: trainspace_id
                 }
             }
         });

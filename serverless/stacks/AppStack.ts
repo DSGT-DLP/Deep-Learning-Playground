@@ -1,4 +1,4 @@
-import { Api, Bucket, StackContext, Table } from "sst/constructs";
+import { Api, Bucket, StackContext } from "sst/constructs";
 import { Bucket as s3Bucket } from "aws-cdk-lib/aws-s3";
 
 export function AppStack({ stack }: StackContext) {
@@ -11,28 +11,7 @@ export function AppStack({ stack }: StackContext) {
       ),
     },
   });
-  /*
-  const trainspaceRunTable = new Table(stack, "trainspace-run", {
-    fields: {
-      runId: "string",
-      trainspaceId: "string",
-      userId: "string",
-      timestamp: "string",
-      resultCsvUri: "string",
-      modelPtUri: "string",
-      onnxUri: "string",
-      confusionMatrixUri: "string",
-      aucRocUri: "string"
-    },
-    primaryIndex: {
-      partitionKey: "runId",
-    },
-    globalIndexes: {
-      "TrainspaceIndex": { partitionKey: "trainspaceId", sortKey: "timestamp"},
-      "UserIndex": {partitionKey: "userId"}
-    },
-  });
-  */
+  
   const api = new Api(stack, "Api", {
     authorizers: {
       FirebaseAuthorizer: {

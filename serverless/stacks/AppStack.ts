@@ -12,29 +12,33 @@ export function AppStack({ stack }: StackContext) {
       ),
     },
   });
-  let trainspaceRunTable = null;
-  if (!table_exists("trainspace")) {
-    trainspaceRunTable = new Table(stack, "trainspace-run", {
-      fields: {
-        runId: "string",
-        trainspaceId: "string",
-        userId: "string",
-        timestamp: "string",
-        resultCsvUri: "string",
-        modelPtUri: "string",
-        onnxUri: "string",
-        confusionMatrixUri: "string",
-        aucRocUri: "string"
-      },
-      primaryIndex: {
-        partitionKey: "runId",
-      },
-      globalIndexes: {
-        "TrainspaceIndex": { partitionKey: "trainspaceId", sortKey: "timestamp"},
-        "UserIndex": {partitionKey: "userId"}
-      },
-    });
-  }
+
+  table_exists("trainspace-run").then(exists =>
+  {
+    if (!exists) {
+      new Table(stack, "trainspace-run", {
+        fields: {
+          runId: "string",
+          trainspaceId: "string",
+          userId: "string",
+          timestamp: "string",
+          resultCsvUri: "string",
+          modelPtUri: "string",
+          onnxUri: "string",
+          confusionMatrixUri: "string",
+          aucRocUri: "string"
+        },
+        primaryIndex: {
+          partitionKey: "runId",
+        },
+        globalIndexes: {
+          "TrainspaceIndex": { partitionKey: "trainspaceId", sortKey: "timestamp"},
+          "UserIndex": {partitionKey: "userId"}
+        },
+      });
+    }
+  });
+  
   const api = new Api(stack, "Api", {
     authorizers: {
       FirebaseAuthorizer: {
@@ -73,9 +77,6 @@ export function AppStack({ stack }: StackContext) {
       api.getFunction("GET /datasets/user/{type}")?.functionName ?? "",
     GetUserDatasetColumnsFunctionName:
       api.getFunction("GET /datasets/user/{type}/{filename}/columns")
-        ?.functionName ?? "",
-    TrainspaceRunTableName: {
-      value: "trainspace"
-    }
+        ?.functionName ?? ""
   });
 }

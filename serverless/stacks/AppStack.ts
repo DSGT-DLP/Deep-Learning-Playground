@@ -1,5 +1,6 @@
 import { Api, Bucket, StackContext, Table } from "sst/constructs";
 import { Bucket as s3Bucket } from "aws-cdk-lib/aws-s3";
+import { DescribeTableCommand } from '@aws-sdk/client-dynamodb';
 import { table_exists } from "../packages/functions/src/dbutils/table_exists";
 
 export function AppStack({ stack }: StackContext) {

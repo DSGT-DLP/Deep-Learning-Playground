@@ -37,7 +37,7 @@ export function AppStack({ stack }: StackContext) {
       "GET /datasets/user/{type}/{filename}/columns":
         "packages/functions/src/datasets/user/columns.handler",
       "DELETE /dataset/user/{type}/{filename}" :
-        "packages/functions/src/datasets/user/delete_userdata.handler",
+        "packages/functions/src/datasets/user/delete_user_uploaded_data.handler",
       "POST /trainspace/tabular": {
         function: {
           handler: "packages/functions/src/trainspace/create_tabular_trainspace.handler",

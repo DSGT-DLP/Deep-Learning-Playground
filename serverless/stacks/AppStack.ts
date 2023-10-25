@@ -1,7 +1,7 @@
 import { Api, Bucket, StackContext, Table } from "sst/constructs";
 import { Bucket as s3Bucket } from "aws-cdk-lib/aws-s3";
 import { DescribeTableCommand } from '@aws-sdk/client-dynamodb';
-import { table_exists } from "../packages/functions/src/dbutils/table_exists";
+import { table_exists, table_attributes_exists } from "../packages/functions/src/dbutils/table_exists";
 
 export function AppStack({ stack }: StackContext) {
   const bucket = new Bucket(stack, "dlp-upload-bucket", {
@@ -13,31 +13,46 @@ export function AppStack({ stack }: StackContext) {
       ),
     },
   });
-
+  
   table_exists("trainspace-run").then(exists =>
   {
-    if (!exists) {
-      new Table(stack, "trainspace-run", {
-        fields: {
-          runId: "string",
-          trainspaceId: "string",
-          userId: "string",
-          timestamp: "string",
-          resultCsvUri: "string",
-          modelPtUri: "string",
-          onnxUri: "string",
-          confusionMatrixUri: "string",
-          aucRocUri: "string"
-        },
-        primaryIndex: {
-          partitionKey: "runId",
-        },
-        globalIndexes: {
-          "TrainspaceIndex": { partitionKey: "trainspaceId", sortKey: "timestamp"},
-          "UserIndex": {partitionKey: "userId"}
-        },
-      });
-    }
+    const tableFieldBody =
+    {
+      runId: "string",
+      trainspaceId: "string",
+      userId: "string",
+      timestamp: "string",
+      resultCsvUri: "string",
+      modelPtUri: "string",
+      onnxUri: "string",
+      confusionMatrixUri: "string",
+      aucRocUri: "string"
+    };
+
+    table_attributes_exists(exists, tableFieldBody).then(tableAttributesExists => {
+      if (!tableAttributesExists) {
+        new Table(stack, "trainspace-run", {
+          fields: {
+            runId: "string",
+            trainspaceId: "string",
+            userId: "string",
+            timestamp: "string",
+            resultCsvUri: "string",
+            modelPtUri: "string",
+            onnxUri: "string",
+            confusionMatrixUri: "string",
+            aucRocUri: "string"
+          },
+          primaryIndex: {
+            partitionKey: "runId",
+          },
+          globalIndexes: {
+            "TrainspaceIndex": { partitionKey: "trainspaceId", sortKey: "timestamp"},
+            "UserIndex": {partitionKey: "userId"}
+          },
+        });
+      }
+    });
   });
   
   const api = new Api(stack, "Api", {

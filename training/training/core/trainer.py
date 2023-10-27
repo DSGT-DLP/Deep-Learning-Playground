@@ -62,6 +62,10 @@ class Trainer(Iterator[T]):
         self.optimizer.zero_grad()  # zero out gradient for each batch
         self.model.forward(inputs)  # make prediction on input
         self._outputs: torch.Tensor = self.model(inputs)  # make prediction on input
+        print('MODEL FORWARD PASS DONE!!!!')
+        print(f'output dim: {self._outputs.shape}')
+        print(f'label dim: {labels.shape}')
+        print(f'loss function used: {self.criterionHandler}')
         loss = self.criterionHandler.compute_loss(self._outputs, labels)
         loss.backward()  # backpropagation
         self.optimizer.step()  # adjust optimizer weights
@@ -200,6 +204,8 @@ class ClassificationTrainer(Trainer[ClassificationEpochResult]):
         super()._train_init()
 
     def _train_step(self, inputs: torch.Tensor, labels: torch.Tensor):
+        print(f'input shape: {inputs.shape}')
+        print(f'labels shape: {labels.shape}')
         super()._train_step(inputs, labels)
         self._train_correct += self.compute_correct(self._outputs, labels)
 

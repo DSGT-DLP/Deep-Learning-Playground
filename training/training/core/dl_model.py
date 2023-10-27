@@ -17,7 +17,9 @@ class DLModel(nn.Module):
         "SIGMOID": nn.Sigmoid,
         "LOGSOFTMAX": nn.LogSoftmax,
         "CONV2D": nn.Conv2d,
-        "DROPOUT": nn.Dropout
+        "DROPOUT": nn.Dropout,
+        "MAXPOOL2D": nn.MaxPool2d,
+        "FLATTEN": nn.Flatten
     }
 
     def __init__(self, layer_list: list[nn.Module]):

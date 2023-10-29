@@ -1,14 +1,14 @@
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 
-import { DynamoDBClient, DeleteItemCommand } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     let queryParams = null;
     if (event && (queryParams = event['pathParameters']) != null) {
-        const trainspace_id: string | undefined = queryParams['id'];
+        const trainspaceId: string | undefined = queryParams['id'];
 
-        if (trainspace_id == undefined) {
+        if (trainspaceId == undefined) {
             return {
                 statusCode: 400,
                 body: JSON.stringify({ message : "Malformed request content - trainspace ID missing." }),
@@ -16,20 +16,17 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         }
         
         const client = new DynamoDBClient({});
-        const documentClient = DynamoDBDocumentClient.from(client);
+        const docClient = DynamoDBDocumentClient.from(client);
         
-        const command = new DeleteItemCommand({
+        const command = new DeleteCommand({
             TableName : "trainspace",
             Key :
             {
-                "trainspace_id" :
-                {
-                     S: trainspace_id
-                }
+                trainspace_id: trainspaceId
             }
         });
 
-        const response = await documentClient.send(command);
+        const response = await docClient.send(command);
         if (response.$metadata.httpStatusCode == undefined || response.$metadata.httpStatusCode != 200) 
         {
             return {
@@ -39,7 +36,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         }
         return {
             statusCode: 200,
-            body: "Successfully deleted trainspace with id " + trainspace_id
+            body: "Successfully deleted trainspace with id " + trainspaceId
         }
     }
     return {

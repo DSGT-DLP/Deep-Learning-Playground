@@ -1,8 +1,8 @@
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 import parseJwt from "@dlp-sst-app/core/parseJwt";
 import { v4 as uuidv4 } from 'uuid';
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { create_trainspace } from '../dbutils/put_trainspace';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
@@ -11,7 +11,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         const eventBody = JSON.parse(event.body? event.body : "");
 
         const trainspaceId = uuidv4();
-        const putQueryBody = create_trainspace(trainspaceId, uid, "TABULAR", eventBody['default'], eventBody['name'], 
+        const putCommandInput = create_trainspace(trainspaceId, uid, "TABULAR", eventBody['default'], eventBody['name'], 
             { 
                 criterion: eventBody['criterion'],
                 optimizer_name: eventBody['optimizer_name'],
@@ -21,7 +21,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
                 user_arch: eventBody['user_arch']
             }, "");
 
-        if (putQueryBody == null)
+        if (putCommandInput == null)
         {
             return {
                 statusCode: 400,
@@ -32,10 +32,10 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
         const client = new DynamoDBClient({});
         const docClient = DynamoDBDocumentClient.from(client);
-        
-        const command = new PutItemCommand(putQueryBody);
 
+        const command = new PutCommand(putCommandInput);
         const response = await docClient.send(command);
+
         if (response.$metadata.httpStatusCode != 200) {
             return {
                 statusCode: 500,

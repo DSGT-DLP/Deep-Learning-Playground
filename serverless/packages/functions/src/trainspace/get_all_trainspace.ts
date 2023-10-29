@@ -1,7 +1,6 @@
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 import parseJwt from "@dlp-sst-app/core/parseJwt";
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     if (event) {
@@ -10,12 +9,12 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         ];
 
         const client = new DynamoDBClient({});
-        const docClient = DynamoDBDocumentClient.from(client);
+
         const fetchedTrainspaceIds: Array<string> = [];
         let lastEvaluatedKey = undefined;
 
         do {
-            const getCommand = new QueryCommand({
+            const getCommand: QueryCommand = new QueryCommand({
                 TableName: "trainspace",
                 IndexName: "uid",
                 KeyConditionExpression: "uid = :uid",
@@ -28,10 +27,14 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
                 ExclusiveStartKey: lastEvaluatedKey
             });
 
-            const results = await docClient.send(getCommand);
+            const results = await client.send(getCommand);
             lastEvaluatedKey = results.LastEvaluatedKey;
-            const page: Array<string> = results['Items']?.map(trainspace => trainspace['trainspace_id'].S);
-            page.forEach(id => fetchedTrainspaceIds.push(id));
+
+            if (results['Items']) {
+                const page: Array<string | undefined> = results['Items']?.map(trainspace => trainspace['trainspace_id'].S);
+                page.forEach(id => { if (id) fetchedTrainspaceIds.push(id); });
+            }
+            
 
         } while (lastEvaluatedKey !== undefined);
         return { 

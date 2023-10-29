@@ -1,14 +1,14 @@
-import { APIGatewayProxyHandlerV2, APIGatewayProxyEvent } from "aws-lambda";
-import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
 
-export const handler: APIGatewayProxyHandlerV2 = async (event : APIGatewayProxyEvent) => {
+export const handler: APIGatewayProxyHandlerV2 = async (event : APIGatewayProxyEventV2) => {
     const queryParams = event['pathParameters'];
     if (queryParams != null)
     {
-        const trainspace_id: string | undefined = queryParams['id'];
+        const trainspaceId: string | undefined = queryParams['id'];
         
-        if (trainspace_id == undefined) {
+        if (trainspaceId == undefined) {
             return {
                 statusCode: 400,
                 body: JSON.stringify({message: "Malformed request content - trainspace ID missing."})
@@ -16,20 +16,17 @@ export const handler: APIGatewayProxyHandlerV2 = async (event : APIGatewayProxyE
         }
 
         const client: DynamoDBClient = new DynamoDBClient({});
-        const documentClient: DynamoDBDocumentClient = DynamoDBDocumentClient.from(client);
-
-        const command : GetItemCommand = new GetItemCommand({
+        const docClient = DynamoDBDocumentClient.from(client);
+        
+        const command : GetCommand = new GetCommand({
             TableName : "trainspace",
             Key : 
             {
-                "trainspace_id" : 
-                { 
-                    S: trainspace_id
-                }
+                trainspace_id : trainspaceId
             }
         });
 
-        const response = await documentClient.send(command);
+        const response = await docClient.send(command);
         if (!response.Item)
         {
             return {

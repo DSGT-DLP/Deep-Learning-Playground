@@ -1,6 +1,6 @@
 
 export enum TrainStatus {
-    QUEUED = "QUEUE",
+    QUEUED = "QUEUED",
     STARTING="STARTING",
     UPLOADING="UPLOADING",
     TRAINING="TRAINING",

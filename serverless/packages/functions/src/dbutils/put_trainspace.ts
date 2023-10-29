@@ -1,50 +1,23 @@
 import { TrainStatus } from '../trainspace/constants';
-import { PutItemCommandInput } from "@aws-sdk/client-dynamodb";
+import { PutCommandInput } from "@aws-sdk/lib-dynamodb";
 
-export function create_trainspace(trainspace_id: string, uid: string, data_source: string, dataset_data: object, name: string, parameters_data: object, review_data: string) : PutItemCommandInput | null
+export function create_trainspace(trainspaceId: string, user_id: string, dataSource: string, dataset_data: object, trainspaceName: string, parameters_data: object, reviewData: string) : PutCommandInput | null
 {
-    let output: PutItemCommandInput = 
+    let output: PutCommandInput = 
     {
         TableName : "trainspace",
         
         Item : 
         {
-            trainspace_id : 
-            {
-                S : trainspace_id
-            },
-            uid :
-            {
-                S : uid
-            },
-            created :
-            {
-                S : Date.now().toString()
-            },
-            data_source :
-            {
-                S : data_source
-            },
-            dataset_data :
-            {
-                S : JSON.stringify(dataset_data)
-            },
-            name :
-            {
-                S : name
-            },
-            parameters_data :
-            {
-                S : JSON.stringify(parameters_data)
-            },
-            review_data : 
-            {
-                S : review_data
-            },
-            status :
-            {
-                S : TrainStatus.QUEUED
-            }
+            trainspace_id : trainspaceId,
+            uid : user_id,
+            created : Date.now().toString(),
+            data_source : dataSource,
+            dataset_data : JSON.stringify(dataset_data),
+            name : trainspaceName,
+            parameters_data : JSON.stringify(parameters_data),
+            review_data : reviewData,
+            status : TrainStatus.QUEUED
         }
     }
     return output;

@@ -37,7 +37,7 @@ export function AppStack({ stack }: StackContext) {
       "GET /datasets/user/{type}/{filename}/columns":
         "packages/functions/src/datasets/user/columns.handler",
       "DELETE /dataset/user/{type}/{filename}" :
-        "packages/functions/src/datasets/user/delete_user_uploaded_data.handler",
+        "packages/functions/src/datasets/user/delete_url.handler",
       "POST /trainspace/tabular": {
         function: {
           handler: "packages/functions/src/trainspace/create_tabular_trainspace.handler",
@@ -82,6 +82,16 @@ export function AppStack({ stack }: StackContext) {
       api.getFunction("GET /datasets/user/{type}")?.functionName ?? "",
     GetUserDatasetColumnsFunctionName:
       api.getFunction("GET /datasets/user/{type}/{filename}/columns")
-        ?.functionName ?? ""
+        ?.functionName ?? "",
+    PutTabularTrainspaceFunctionName:
+        api.getFunction("POST /trainspace/tabular")?.functionName ?? "",
+    PutImageTrainspaceFunctionName:
+        api.getFunction("POST /trainspace/tabular")?.functionName ?? "",
+    GetAllTrainspaceIdsFunctionName:
+        api.getFunction("GET /trainspace")?.functionName ?? "",
+    GetTrainspaceByIdFunctionName:
+        api.getFunction("GET /trainspace/{id}")?.functionName ?? "",
+    DeleteTrainspaceByIdFunctionName:
+        api.getFunction("DELETE /trainspace/{id}")?.functionName ?? ""
   });
 }

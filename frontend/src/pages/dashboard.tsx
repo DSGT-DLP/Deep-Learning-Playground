@@ -22,7 +22,6 @@ const Dashboard = () => {
   useEffect(() => {
     if (router.isReady && !user) {
       router.replace({ pathname: "/login" });
-      console.log("remove me3");
     }
   }, [user, router.isReady]);
   if (!isSignedIn(user)) {

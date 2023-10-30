@@ -1,6 +1,5 @@
 {
   "name": "dlp-sst-app",
-  "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,16 +12,13 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@tsconfig/node16": "^16.1.0",
+    "@tsconfig/node16": "^16.1.1",
     "aws-cdk-lib": "2.91.0",
     "constructs": "10.2.69",
-    "sst": "^2.24.3",
-    "typescript": "^5.1.6"
+    "sst": "^2.32.2",
+    "typescript": "^5.2.2"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "dependencies": {
-    "@aws-sdk/s3-request-presigner": "^3.391.0"
+    "@aws-sdk/s3-request-presigner": "^3.438.0"
   }
 }

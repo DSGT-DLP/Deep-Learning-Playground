@@ -3,7 +3,9 @@
   "private": "true",
   "description": "",
   "scripts": {
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "lint": "next lint",
+    "start": "next dev"
   },
   "keywords": [],
   "author": "",
@@ -51,7 +53,13 @@
     "react-toastify": "^9.1.3",
     "reactflow": "^11.9.4",
     "styled-components": "^6.1.0",
-    "typescript": "^5.2.2",
     "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "eslint": "^8.52.0",
+    "eslint-plugin-react": "^7.33.2",
+    "typescript": "^5.2.2"
   }
 }

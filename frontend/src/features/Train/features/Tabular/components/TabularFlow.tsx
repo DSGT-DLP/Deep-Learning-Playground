@@ -268,7 +268,7 @@ interface OnChangeArgs {
 interface LayerNodeData {
   label:
     | (typeof STEP_SETTINGS.PARAMETERS.layers)[ALL_LAYERS]["label"]
-    | "Start";
+    | "Beginning";
   value: ALL_LAYERS | "root";
   parameters?: number[];
   onChange: (args: OnChangeArgs) => void;
@@ -282,7 +282,7 @@ const ROOT_NODE: Node<LayerNodeData> = {
   position: { x: DEFAULT_X_POSITION, y: 0 },
   deletable: false,
   data: {
-    label: "Start",
+    label: "Beginning",
     value: "root",
     parameters: [],
     onChange: () => undefined,

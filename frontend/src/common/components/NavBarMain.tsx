@@ -103,7 +103,7 @@ const NavbarMain = () => {
               <Grid item>
                 {isSignedIn(user) ? (
                   <Link href="/train" passHref className="nav-link">
-                    Train
+                    Hello World
                   </Link>
                 ) : null}
               </Grid>
@@ -123,7 +123,7 @@ const NavbarMain = () => {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href={URLs.donate} passHref className="nav-link">
+                <Link href="https://www.youtube.com/watch?v=QrR_gm6RqCo" passHref className="nav-link">
                   Donate
                 </Link>
               </Grid>

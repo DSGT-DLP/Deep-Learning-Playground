@@ -13,7 +13,7 @@ from training.core.authenticator import FirebaseAuth
 router = Router()
 
 
-@router.post("", auth=FirebaseAuth())
+@router.post("")
 def tabularTrain(request: HttpRequest, tabularParams: TabularParams):
     if tabularParams.default:
         dataCreator = SklearnDatasetCreator.fromDefault(

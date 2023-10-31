@@ -271,6 +271,7 @@ export const signInViaEmailAndPassword = createAsyncThunk<
   "currentUser/signInViaEmailAndPassword",
   async ({ email, password }, thunkAPI) => {
     try {
+      console.log("User's email:", email);
       await signInWithEmailAndPassword(auth, email, password);
       return;
     } catch (e) {

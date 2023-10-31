@@ -1,6 +1,8 @@
 import React from "react";
 import { COLORS, URLs } from "../../constants";
 import { LinkedIn, YouTube, Instagram, GitHub } from "@mui/icons-material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faReact } from "@fortawesome/free-brands-svg-icons";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
@@ -56,6 +58,13 @@ const Footer = () => {
             href={URLs.github}
           >
             <GitHub />
+          </a>
+          <a
+            className="foot-element"
+            data-testid="react-icon"
+            title="Pretty React Icon"
+          >
+            <FontAwesomeIcon icon={faReact} size="2x"/>
           </a>
         </div>
       </ThemeProvider>

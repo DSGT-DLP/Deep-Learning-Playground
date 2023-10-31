@@ -272,6 +272,7 @@ export const signInViaEmailAndPassword = createAsyncThunk<
   async ({ email, password }, thunkAPI) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      console.log(email);
       return;
     } catch (e) {
       if (e instanceof FirebaseError) {

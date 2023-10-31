@@ -10,7 +10,7 @@ export const COLORS = Object.freeze({
 });
 
 export const URLs = Object.freeze({
-  donate: "https://buy.stripe.com/9AQ3e4eO81X57y8aEG",
+  donate: "https://www.youtube.com/watch?v=6hhNNj67w1E&list=PLLx8oDgvdMbhvvLtmM3lmrxrHmNVoAaYf&index=1&t=2405s",
   linkedin: "https://www.linkedin.com/company/dsgt/",
   youtube: "https://www.youtube.com/channel/UC1DGL6Tb9ffwC-aHChadxMw",
   instagram: "https://www.instagram.com/datasciencegt/",

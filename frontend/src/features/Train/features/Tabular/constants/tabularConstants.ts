@@ -29,6 +29,7 @@ export const STEP_SETTINGS = {
     problemTypes: [
       { label: "Classification", value: "CLASSIFICATION" },
       { label: "Regression", value: "REGRESSION" },
+      { label: "Radio Button", value: "RADIO BUTTON" },
     ],
     criterions: [
       {

@@ -103,7 +103,7 @@ const NavbarMain = () => {
               <Grid item>
                 {isSignedIn(user) ? (
                   <Link href="/train" passHref className="nav-link">
-                    Train
+                    Hello World
                   </Link>
                 ) : null}
               </Grid>

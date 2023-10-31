@@ -282,7 +282,7 @@ const ROOT_NODE: Node<LayerNodeData> = {
   position: { x: DEFAULT_X_POSITION, y: 0 },
   deletable: false,
   data: {
-    label: "Start",
+    label: "Beginning",
     value: "root",
     parameters: [],
     onChange: () => undefined,

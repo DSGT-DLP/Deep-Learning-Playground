@@ -115,6 +115,7 @@ const TrainspaceStepInner = ({
       train(trainspace)
         .unwrap()
         .then(({ trainspaceId }) => {
+          console
           router.push({ pathname: `/train/${trainspaceId}` }).then(() => {
             dispatch(removeTrainspaceData());
           });
@@ -162,8 +163,6 @@ const TrainspaceStepInner = ({
                 if (step === TRAINSPACE_SETTINGS.steps.length - 1) {
                   setIsButtonClicked(true);
                 }
-
-                handleSubmit(submitTrainspace)();
               }}
             >
               {trainbuttontext}

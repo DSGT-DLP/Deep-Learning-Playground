@@ -1,7 +1,7 @@
 import { TrainStatus } from '../trainspace/constants';
 import { PutCommandInput } from "@aws-sdk/lib-dynamodb";
 
-export function create_trainspace(trainspaceId: string, user_id: string, dataSource: string, dataset_data: object, trainspaceName: string, parameters_data: object, reviewData: string) : PutCommandInput | null
+export function create_tabular_image_trainspace(trainspaceId: string, user_id: string, dataSource: string, dataset_data: object, trainspaceName: string, parameters_data: object, reviewData: string) : PutCommandInput | null
 {
     let output: PutCommandInput = 
     {

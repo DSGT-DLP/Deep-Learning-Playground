@@ -3,7 +3,7 @@ import parseJwt from "@dlp-sst-app/core/parseJwt";
 import { v4 as uuidv4 } from 'uuid';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
-import { create_trainspace } from '../dbutils/put_trainspace';
+import { create_tabular_image_trainspace } from '../dbutils/put_trainspace';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     if (event) {
@@ -11,7 +11,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         const eventBody = JSON.parse(event.body? event.body : "");
 
         const trainspaceId = uuidv4();
-        const putCommandInput = create_trainspace(trainspaceId, uid, "TABULAR", eventBody['default'], eventBody['name'], 
+        const putCommandInput = create_tabular_image_trainspace(trainspaceId, uid, "TABULAR", eventBody['default'], eventBody['name'], 
             { 
                 criterion: eventBody['criterion'],
                 optimizer_name: eventBody['optimizer_name'],

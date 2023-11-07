@@ -24,6 +24,7 @@ const customFetchBaseQuery =
         await prepareHeaders(args.headers);
       } catch (e) {
         const err = e as FirebaseError;
+        console.log("hi");
         return {
           error: {
             status: "CUSTOM_ERROR",

@@ -1,7 +1,6 @@
 name: Directory Tree Generator
 
 on:
-  push:
   pull_request:
     branches:
       - 'nextjs'

@@ -5,8 +5,8 @@ name: React Build Check
 
 on:
   push:
-    # paths:
-    #   - "frontend/**"
+    paths:
+      - "frontend/**"
   pull_request:
     paths:
       - "frontend/**"

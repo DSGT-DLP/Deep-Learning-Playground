@@ -11,7 +11,8 @@ const dashboardApi = backendApi.injectEndpoints({
           user: auth.currentUser,
         },*/
       }),
-      transformResponse: (response: { record: string }) => {
+      transformResponse: () => {
+      // transformResponse: (response: { record: string }) => {
         /*const data = JSON.parse(response.record);
         Object.entries(data).forEach(([key, value]) => {
           if (key === "created") {

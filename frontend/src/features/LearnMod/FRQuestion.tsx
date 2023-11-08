@@ -16,12 +16,12 @@ const FRQuestion = (props: FRQuestionProps) => {
 
   // function that makes call to backend to update user progress
   async function updateUserProgress() {
-    const requestData = {
-      uid: props.user.uid,
-      moduleID: props.moduleID,
-      sectionID: props.sectionID,
-      questionID: props.questionObject.questionID,
-    };
+    // const requestData = {
+    //   uid: props.user.uid,
+    //   moduleID: props.moduleID,
+    //   sectionID: props.sectionID,
+    //   questionID: props.questionObject.questionID,
+    // };
     //sendToBackend("updateUserProgressData", requestData);
   }
 

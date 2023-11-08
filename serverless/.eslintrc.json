@@ -7,25 +7,22 @@
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
+    "ecmaFeatures": { "jsx": true },
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "react"],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@next/next/recommended"
-  ],
+  "plugins": ["@typescript-eslint"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "rules": {
-    "react/no-unescaped-entities": 0,
     "object-shorthand": ["error", "consistent-as-needed"],
     "no-var": "error",
     "semi": "error",
     "eol-last": "error",
     "eqeqeq": ["error", "smart"],
-    "no-multiple-empty-lines": ["error", { "max": 1, "maxBOF": 0, "maxEOF": 1 }]
+    "no-multiple-empty-lines": [
+      "error",
+      { "max": 1, "maxBOF": 0, "maxEOF": 1 }
+    ],
+    "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "_" }]
   }
 }

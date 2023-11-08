@@ -1,0 +1,3 @@
+node_modules
+packages/**/sst-env.d.ts
+sst.config.ts

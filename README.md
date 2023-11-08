@@ -10,7 +10,7 @@ Web Application where people new to Machine Learning can input a dataset and exp
 
 Have the following installed first:
 
-1. [Node.js v18 via NVM](https://github.com/nvm-sh/nvm#installing-and-updating) (Install nvm first, and then install node & npm using nvm)
+1. [Node.js v20 via NVM](https://github.com/nvm-sh/nvm#installing-and-updating) (Install nvm first, and then install node & npm using nvm)
 1. [Yarn 1.x](https://classic.yarnpkg.com/lang/en/docs/install) (Must be installed after npm. May upgrade to Yarn Modern in the future, keep an eye out for that!)
 1. [Mamba](https://github.com/conda-forge/miniforge#miniforge) (Make sure to install using the Miniforge distribution. On windows, remember to check the box that says that it will add mamba to path)
 1. [pip](https://pip.pypa.io/en/stable/installation/) (Is also automatically installed with Python via Python's installer, make sure this version of pip is installed globally)
@@ -21,12 +21,13 @@ Have the following installed first:
 
 ### Recommended
 
-1. [GitKraken](https://help.gitkraken.com/gitkraken-client/how-to-install/) for helping with Git commands, especially if you're new to Git
-1. [Postman](https://www.postman.com/downloads/) (Extremely helpful for testing REST APIs)
-1. [Chrome](https://www.google.com/chrome/) (For Chrome developer tools)
-1. [Redux Devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) (Helpful for debugging any Redux)
-1. [Docker](https://www.docker.com/)
-1. [go](https://go.dev/doc/install) (In case if you ever need to contribute to the dlp-cli)
+1. [GitHub Student Developer Pack](https://education.github.com/pack) - Get GitHub Pro features and GitHub Copilot access for free
+1. [GitKraken](https://help.gitkraken.com/gitkraken-client/how-to-install/) - for helping with Git commands, especially if you're new to Git
+1. [Postman](https://www.postman.com/downloads/) - Extremely helpful for testing REST APIs
+1. [Chrome](https://www.google.com/chrome/) - For Chrome developer tools
+1. [Redux Devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) - Helpful for debugging any Redux
+1. [Docker](https://www.docker.com/) - For Docker images
+1. [go](https://go.dev/doc/install) - In case if you ever need to contribute to the dlp-cli
 1. VSCode Extensions:
    1. [Github Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)
    1. [IntelliCode](https://marketplace.visualstudio.com/items?itemName=VisualStudioExptTeam.vscodeintellicode)
@@ -91,6 +92,11 @@ Run the following commands in the project directory (the root folder created aft
 | Running the Backend  | `dlp-cli backend start`  |
 
 Make sure to run the above two commands in separate terminals.
+
+![](.github/readme_images/frontend_start.png)
+![](.github/readme_images/backend_start.png)
+
+You should see these after successfully running the above commands:
 
 ## AWS Setup
 If you will be working on tasks that interface with AWS resources/services, please follow the below steps (please install AWS CLI using this [link](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) first):

@@ -115,6 +115,7 @@ const TrainspaceStepInner = ({
       train(trainspace)
         .unwrap()
         .then(({ trainspaceId }) => {
+          console.log(trainspaceId);
           router.push({ pathname: `/train/${trainspaceId}` }).then(() => {
             dispatch(removeTrainspaceData());
           });

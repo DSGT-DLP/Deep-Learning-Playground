@@ -19,5 +19,8 @@
   },
   "python.formatting.provider": "none",
   "python.terminal.activateEnvironment": false,
-  "python.analysis.typeCheckingMode": "basic"
+  "python.analysis.typeCheckingMode": "basic",
+  "files.exclude": {
+    "**/.DS_Store": false
+  }
 }

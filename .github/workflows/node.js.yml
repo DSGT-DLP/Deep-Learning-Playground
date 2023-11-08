@@ -43,4 +43,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
         working-directory: ./frontend
+
+      - name: Lint checks
+        run: pnpm lint
+        working-directory: ./frontend
+        
       # future: add yarn build once build errors are resolved

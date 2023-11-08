@@ -17,7 +17,7 @@ jobs:
         pip install regex
         python ./file_tree_generator.py
         
-    - uses: stefanzweifel/git-auto-commit-action@v4
+    - uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: ":art: Auto-generated directory tree for repository in Architecture.md"
         commit_options: '--no-verify'

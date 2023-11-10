@@ -1,6 +1,5 @@
 {
   "name": "dlp-sst-app",
-  "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,18 +9,19 @@
     "remove": "sst remove",
     "removeprod": "sst remove --stage prod",
     "console": "sst console",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "npx eslint ."
   },
   "devDependencies": {
-    "@tsconfig/node16": "^16.1.0",
+    "@tsconfig/node16": "^16.1.1",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
     "aws-cdk-lib": "2.91.0",
     "constructs": "10.2.69",
-    "sst": "^2.24.3",
-    "typescript": "^5.1.6"
+    "eslint": "^8.53.0",
+    "sst": "^2.32.2",
+    "typescript": "^5.2.2"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.418.0",
     "@aws-sdk/lib-dynamodb": "^3.418.0",

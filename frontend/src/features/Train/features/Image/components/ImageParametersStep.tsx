@@ -1,7 +1,4 @@
 import { useAppDispatch, useAppSelector } from "@/common/redux/hooks";
-import InfoIcon from "@mui/icons-material/Info";
-import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
-import { styled } from "@mui/material/styles";
 import React, { useEffect, useMemo, useState } from "react";
 
 import ClientOnlyPortal from "@/common/components/ClientOnlyPortal";
@@ -50,31 +47,6 @@ import { DEFAULT_LAYERS, STEP_SETTINGS } from "../constants/imageConstants";
 import { updateImageTrainspaceData } from "../redux/imageActions";
 import { ParameterData, TrainspaceData } from "../types/imageTypes";
 import ImageFlow from "./ImageFlow";
-
-const HtmlTooltip = styled(
-  ({
-    className,
-    title,
-    children,
-    ...props
-  }: {
-    className?: string;
-    children: React.ReactElement;
-    title: React.ReactNode;
-  }) => (
-    <Tooltip title={title} {...props} classes={{ popper: className }}>
-      {children}
-    </Tooltip>
-  )
-)(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "rgba(255, 255, 255, 0.95)",
-    color: "rgba(0, 0, 0, 0.87)",
-    maxWidth: 220,
-    fontSize: theme.typography.pxToRem(12),
-    border: "none",
-  },
-}));
 
 const ImageParametersStep = ({
   renderStepperButtons,

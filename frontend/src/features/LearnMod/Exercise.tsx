@@ -1,12 +1,10 @@
-import Footer from "@/common/components/Footer";
-import NavbarMain from "@/common/components/NavBarMain";
-import React, { useEffect } from "react";
 import { useAppSelector } from "@/common/redux/hooks";
-import { useRouter } from "next/router";
 import { isSignedIn } from "@/common/redux/userLogin";
 import CreateTrainspace from "@/features/Train/components/CreateTrainspace";
 import { ALL_TRAINSPACE_SETTINGS } from "@/features/Train/constants/trainConstants";
 import { BaseTrainspaceData } from "@/features/Train/types/trainTypes";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const Exercise = () => {
   const user = useAppSelector((state) => state.currentUser.user);

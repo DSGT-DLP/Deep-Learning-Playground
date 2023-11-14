@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import Router, { withRouter } from "next/router";
+import Router from "next/router";
 import { ModuleType } from "./LearningModulesContent";
 
 const ClassCard = (props: {

@@ -21,6 +21,7 @@ import { auth } from "@/common/utils/firebase";
 import { FirebaseError } from "firebase/app";
 import storage from "local-storage-fallback";
 import { backendApi } from "./backendApi";
+import { isNameValid } from "../utils/nameFormat";
 
 export interface UserState {
   user?: UserType | "pending";
@@ -208,33 +209,49 @@ export const registerViaEmailAndPassword = createAsyncThunk<
   {
     email: string;
     password: string;
-    displayName: string;
+    passwordConfirmation: string;
+    firstName: string;
+    lastName: string;
     recaptcha: string | null;
   },
   ThunkApiType
 >(
   "currentUser/registerViaEmailAndPassword",
-  async ({ email, password, displayName, recaptcha }, thunkAPI) => {
+  async ({ email, password, passwordConfirmation, firstName, lastName, recaptcha }, thunkAPI) => {
     if (!recaptcha) {
       return thunkAPI.rejectWithValue({
-        message: "Please complete the recaptcha",
+        message: "Please complete the recaptcha"
       });
     }
-    if (email === "") {
+    if (!email || email === "") {
       return thunkAPI.rejectWithValue({
-        message: "Please enter your email",
+        message: "Please enter your email"
       });
     }
-    if (password === "") {
+    if (!password || password === "") {
       return thunkAPI.rejectWithValue({
-        message: "Please enter your password",
+        message: "Please enter your password"
       });
     }
-    if (displayName === "") {
+
+    if (password !== passwordConfirmation) {
       return thunkAPI.rejectWithValue({
-        message: "Please enter your display name",
+        message: "Passwords do not match"
+      })
+    }
+
+    if (!firstName || firstName === "" || !isNameValid(firstName)) {
+      return thunkAPI.rejectWithValue({
+        message: "Please enter your first name"
       });
     }
+
+    if (!lastName || lastName === "" || !isNameValid(lastName)) {
+      return thunkAPI.rejectWithValue({
+        message: "Please enter your last name"
+      });
+    }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -242,6 +259,7 @@ export const registerViaEmailAndPassword = createAsyncThunk<
         password
       );
       const user = userCredential.user;
+      const displayName = firstName + ' ' + lastName;
       if (displayName) {
         await updateProfile(user, { displayName });
       }

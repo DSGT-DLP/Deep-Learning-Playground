@@ -237,7 +237,7 @@ export const registerViaEmailAndPassword = createAsyncThunk<
     if (password !== passwordConfirmation) {
       return thunkAPI.rejectWithValue({
         message: "Passwords do not match"
-      })
+      });
     }
 
     if (!firstName || firstName === "" || !isNameValid(firstName)) {

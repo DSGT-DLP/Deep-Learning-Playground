@@ -109,7 +109,7 @@ class DefaultImageDatasets(Enum):
     MNIST = "MNIST"
     FASHION_MNIST = "FashionMNIST"
     KMNIST = "KMNIST"
-    CIFAR = "CIFAR10"
+    CIFAR10 = "CIFAR10"
 
 
 class ImageDefaultDatasetCreator(TrainTestDatasetCreator):

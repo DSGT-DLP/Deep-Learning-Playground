@@ -130,6 +130,7 @@
 |  |  |  |  |- 📜 dndHelpers.ts
 |  |  |  |  |- 📜 firebase.ts
 |  |  |  |  |- 📜 dateFormat.ts
+|  |  |  |  |- 📜 nameFormat.ts
 |  |  |  |- 📂 components:
 |  |  |  |  |- 📜 Spacer.tsx
 |  |  |  |  |- 📜 Footer.tsx

@@ -16,7 +16,7 @@ export function AppStack({ stack }: StackContext) {
   
   table_exists("trainspace-run").then(exists =>
   {
-    const tableFieldBody =
+    let tableFieldBody =
     {
       runId: "string",
       trainspaceId: "string",

@@ -22,20 +22,6 @@ def imageTrain(request: HttpRequest, imageParams: ImageParams):
         print(vars(dataCreator))
         train_loader = dataCreator.createTrainDataset()
         test_loader = dataCreator.createTestDataset()
-        # train_loader = DataLoader(
-        #     dataCreator.createTrainDataset(),
-        #     batch_size=imageParams.batch_size,
-        #     shuffle=False,
-        #     drop_last=True,
-        # )
-
-        # test_loader = DataLoader(
-        #     dataCreator.createTestDataset(),
-        #     batch_size=imageParams.batch_size,
-        #     shuffle=False,
-        #     drop_last=True,
-        # )
-
         model = DLModel.fromLayerParamsList(imageParams.user_arch)
         print(f'model is: {model}')
         optimizer = getOptimizer(model, imageParams.optimizer_name, 0.05)

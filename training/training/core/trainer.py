@@ -62,10 +62,6 @@ class Trainer(Iterator[T]):
         self.optimizer.zero_grad()  # zero out gradient for each batch
         self.model.forward(inputs)  # make prediction on input
         self._outputs: torch.Tensor = self.model(inputs)  # make prediction on input
-        print('MODEL FORWARD PASS DONE!!!!')
-        print(f'output dim: {self._outputs.shape}')
-        print(f'label dim: {labels.shape}')
-        print(f'loss function used: {self.criterionHandler}')
         loss = self.criterionHandler.compute_loss(self._outputs, labels)
         loss.backward()  # backpropagation
         self.optimizer.step()  # adjust optimizer weights

@@ -7,4 +7,4 @@ export const isNameValid = (name: string) : boolean => {
         }
     }
     return true;
-}
+};

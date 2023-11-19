@@ -204,8 +204,6 @@ class ClassificationTrainer(Trainer[ClassificationEpochResult]):
         super()._train_init()
 
     def _train_step(self, inputs: torch.Tensor, labels: torch.Tensor):
-        print(f'input shape: {inputs.shape}')
-        print(f'labels shape: {labels.shape}')
         super()._train_step(inputs, labels)
         self._train_correct += self.compute_correct(self._outputs, labels)
 

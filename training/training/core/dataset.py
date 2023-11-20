@@ -12,10 +12,21 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 from torch.autograd import Variable
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
+from enum import Enum
+import os
+import shutil
 
 
 class TrainTestDatasetCreator(ABC):
-    "Creator that creates train and test PyTorch datasets"
+    """
+    Creator that creates train and test PyTorch datasets from a given dataset.
+
+    This class serves as an abstract base class for creating training and testing
+    datasets compatible with PyTorch's dataset structure. Implementations should
+    define specific methods for dataset processing and loading.
+    """
 
     @abstractmethod
     def createTrainDataset(self) -> Dataset:
@@ -98,3 +109,97 @@ class SklearnDatasetCreator(TrainTestDatasetCreator):
         if self._category_list is None:
             raise Exception("Category list not available")
         return self._category_list
+
+
+class DefaultImageDatasets(Enum):
+    MNIST = "MNIST"
+    FASHION_MNIST = "FashionMNIST"
+    KMNIST = "KMNIST"
+    CIFAR10 = "CIFAR10"
+
+
+class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
+    def __init__(
+        self,
+        dataset_name: str,
+        train_transform: None,
+        test_transform: None,
+        batch_size: int = 32,
+        shuffle: bool = True,
+    ):
+        if dataset_name not in DefaultImageDatasets.__members__:
+            raise Exception(
+                f"The {dataset_name} file does not currently exist in our inventory. Please submit a request to the contributors of the repository"
+            )
+
+        self.dataset_dir = "./training/image_data_uploads"
+        self.train_transform = train_transform or transforms.Compose(
+            [transforms.ToTensor()]
+        )
+
+        self.test_transform = test_transform or transforms.Compose(
+            [transforms.ToTensor()]
+        )
+        self.batch_size = batch_size
+        self.shuffle = shuffle
+
+        # Ensure the directory exists
+        os.makedirs(self.dataset_dir, exist_ok=True)
+        print(f"train transform: {train_transform}")
+        print(f"test transform: {test_transform}")
+        # Load the datasets
+
+        self.train_set = datasets.__dict__[dataset_name](
+            root=self.dataset_dir,
+            train=True,
+            download=True,
+            transform=self.train_transform,
+        )
+        self.test_set = datasets.__dict__[dataset_name](
+            root=self.dataset_dir,
+            train=False,
+            download=True,
+            transform=self.test_transform,
+        )
+
+    @classmethod
+    def fromDefault(
+        cls,
+        dataset_name: str,
+        train_transform=None,
+        test_transform=None,
+        batch_size: int = 32,
+        shuffle: bool = True,
+    ) -> "ImageDefaultDatasetCreator":
+        return cls(dataset_name, train_transform, test_transform, batch_size, shuffle)
+
+    def delete_datasets_from_directory(self):
+        if os.path.exists(self.dataset_dir):
+            try:
+                shutil.rmtree(self.dataset_dir)
+                print(f"Successfully deleted {self.dataset_dir}")
+            except Exception as e:
+                print(f"Failed to delete {self.dataset_dir} with error: {e}")
+
+    def createTrainDataset(self) -> DataLoader:
+        train_loader = DataLoader(
+            self.train_set,
+            batch_size=self.batch_size,
+            shuffle=self.shuffle,
+            drop_last=True,
+        )
+        self.delete_datasets_from_directory()  # Delete datasets after loading
+        return train_loader
+
+    def createTestDataset(self) -> DataLoader:
+        test_loader = DataLoader(
+            self.test_set,
+            batch_size=self.batch_size,
+            shuffle=self.shuffle,
+            drop_last=True,
+        )
+        self.delete_datasets_from_directory()  # Delete datasets after loading
+        return test_loader
+
+    def getCategoryList(self) -> list[str]:
+        return self.train_set.classes if hasattr(self.train_set, "classes") else []

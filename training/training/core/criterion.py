@@ -46,7 +46,7 @@ class CELossHandler(CriterionHandler):
     def _compute_loss(self, output, labels):
         output = torch.reshape(
             output,
-            (output.shape[0], output.shape[2]),
+            (output.shape[0], output.shape[-1]),
         )
         labels = labels.squeeze_()
         return nn.CrossEntropyLoss(reduction="mean")(output, labels.long())

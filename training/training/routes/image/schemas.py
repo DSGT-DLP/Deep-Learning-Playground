@@ -8,8 +8,6 @@ class LayerParams(Schema):
 
 
 class ImageParams(Schema):
-    # target: str
-    # features: list[str]
     name: str
     problem_type: Literal["CLASSIFICATION"]
     default: Optional[str]

@@ -17,11 +17,9 @@ router = Router()
 def imageTrain(request: HttpRequest, imageParams: ImageParams):
     if imageParams.default:
         dataCreator = ImageDefaultDatasetCreator.fromDefault(imageParams.default)
-        print(vars(dataCreator))
         train_loader = dataCreator.createTrainDataset()
         test_loader = dataCreator.createTestDataset()
         model = DLModel.fromLayerParamsList(imageParams.user_arch)
-        # print(f'model is: {model}')
         optimizer = getOptimizer(model, imageParams.optimizer_name, 0.05)
         criterionHandler = getCriterionHandler(imageParams.criterion)
         if imageParams.problem_type == "CLASSIFICATION":

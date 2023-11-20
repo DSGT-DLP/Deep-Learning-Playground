@@ -16,9 +16,7 @@ router = Router()
 @router.post("", auth=FirebaseAuth())
 def imageTrain(request: HttpRequest, imageParams: ImageParams):
     if imageParams.default:
-        dataCreator = ImageDefaultDatasetCreator.fromDefault(
-            imageParams.default
-        )
+        dataCreator = ImageDefaultDatasetCreator.fromDefault(imageParams.default)
         print(vars(dataCreator))
         train_loader = dataCreator.createTrainDataset()
         test_loader = dataCreator.createTestDataset()

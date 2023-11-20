@@ -24,7 +24,7 @@ class TrainTestDatasetCreator(ABC):
     Creator that creates train and test PyTorch datasets from a given dataset.
 
     This class serves as an abstract base class for creating training and testing
-    datasets compatible with PyTorch's dataset structure. Implementations should 
+    datasets compatible with PyTorch's dataset structure. Implementations should
     define specific methods for dataset processing and loading.
     """
 
@@ -136,7 +136,7 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
         self.train_transform = train_transform or transforms.Compose(
             [transforms.ToTensor()]
         )
-        
+
         self.test_transform = test_transform or transforms.Compose(
             [transforms.ToTensor()]
         )
@@ -145,10 +145,10 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
 
         # Ensure the directory exists
         os.makedirs(self.dataset_dir, exist_ok=True)
-        print(f'train transform: {train_transform}')
-        print(f'test transform: {test_transform}')
+        print(f"train transform: {train_transform}")
+        print(f"test transform: {test_transform}")
         # Load the datasets
-        
+
         self.train_set = datasets.__dict__[dataset_name](
             root=self.dataset_dir,
             train=True,
@@ -188,7 +188,7 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
             shuffle=self.shuffle,
             drop_last=True,
         )
-        self.delete_datasets_from_directory() # Delete datasets after loading
+        self.delete_datasets_from_directory()  # Delete datasets after loading
         return train_loader
 
     def createTestDataset(self) -> DataLoader:
@@ -198,7 +198,7 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
             shuffle=self.shuffle,
             drop_last=True,
         )
-        self.delete_datasets_from_directory() # Delete datasets after loading
+        self.delete_datasets_from_directory()  # Delete datasets after loading
         return test_loader
 
     def getCategoryList(self) -> list[str]:

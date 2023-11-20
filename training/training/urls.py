@@ -22,6 +22,7 @@ from ninja import NinjaAPI, Schema
 from training.routes.datasets.default.columns import router as default_dataset_router
 from training.routes.tabular.tabular import router as tabular_router
 from training.routes.image.image import router as image_router
+
 api = NinjaAPI()
 
 

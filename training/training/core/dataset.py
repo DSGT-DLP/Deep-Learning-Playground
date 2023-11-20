@@ -20,7 +20,13 @@ import shutil
 
 
 class TrainTestDatasetCreator(ABC):
-    "Creator that creates train and test PyTorch datasets from a given dataset"
+    """
+    Creator that creates train and test PyTorch datasets from a given dataset.
+
+    This class serves as an abstract base class for creating training and testing
+    datasets compatible with PyTorch's dataset structure. Implementations should 
+    define specific methods for dataset processing and loading.
+    """
 
     @abstractmethod
     def createTrainDataset(self) -> Dataset:

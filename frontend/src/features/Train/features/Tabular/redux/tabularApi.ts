@@ -12,6 +12,7 @@ const tabularApi = backendApi.injectEndpoints({
         method: "POST",
         body: {
           name: trainspaceData.name,
+          data_source: trainspaceData.dataSource,
           target: trainspaceData.parameterData.targetCol,
           features: trainspaceData.parameterData.features,
           default: trainspaceData.datasetData.isDefaultDataset

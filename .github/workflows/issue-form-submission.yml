@@ -24,7 +24,7 @@ jobs:
               const branchName = `bug-${issueNumber}`;
               
               const branchSetupInstructions = `
-              Hello @${{ github.actor }}! Thank you for submitting the Bug Request Form. We appreciate your contribution. :wave:
+              Hello @${{ github.actor }}! Thank you for submitting the 🐞Bug Request Form. We appreciate your contribution. :wave:
               
               We will look into it and provide a response as soon as possible.
               

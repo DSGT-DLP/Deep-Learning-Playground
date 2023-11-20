@@ -71,7 +71,6 @@ class SklearnDatasetCreator(TrainTestDatasetCreator):
             columns=raw_data["feature_names"] + ["target"],  # type: ignore
         )
 
-        
         default_dataset.dropna(how="all", inplace=True)
         return default_dataset
 
@@ -145,7 +144,7 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
 
         # Ensure the directory exists
         os.makedirs(self.dataset_dir, exist_ok=True)
-        
+
         # Load the datasets
 
         self.train_set = datasets.__dict__[dataset_name](

@@ -246,21 +246,9 @@ export const registerViaEmailAndPassword = createAsyncThunk<
       });
     }
 
-    if (!isNameValid(firstName)) {
-      return thunkAPI.rejectWithValue({
-        message: "First name must contain only letters"
-      });
-    }
-
     if (!lastName || lastName === "") {
       return thunkAPI.rejectWithValue({
         message: "Please enter your last name"
-      });
-    }
-
-    if (!isNameValid(lastName)) {
-      return thunkAPI.rejectWithValue({
-        message: "Last name must contain only letters"
       });
     }
 

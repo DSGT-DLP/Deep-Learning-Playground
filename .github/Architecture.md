@@ -125,7 +125,6 @@
 |  |  |  |  |- 📜 NavBarMain.tsx
 |  |  |  |  |- 📜 ClientOnlyPortal.tsx
 |  |  |  |- 📂 utils:
-|  |  |  |  |- 📜 nameFormat.ts
 |  |  |  |  |- 📜 firebase.ts
 |  |  |  |  |- 📜 dndHelpers.ts
 |  |  |  |  |- 📜 dateFormat.ts

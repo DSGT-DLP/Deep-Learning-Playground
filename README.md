@@ -11,7 +11,6 @@ Web Application where people new to Machine Learning can input a dataset and exp
 Have the following installed first:
 
 1. [Node.js v20 via NVM](https://github.com/nvm-sh/nvm#installing-and-updating) (Install nvm first, and then install node & npm using nvm)
-1. [Yarn 1.x](https://classic.yarnpkg.com/lang/en/docs/install) (Must be installed after npm. May upgrade to Yarn Modern in the future, keep an eye out for that!)
 1. [Mamba](https://github.com/conda-forge/miniforge#miniforge) (Make sure to install using the Miniforge distribution. On windows, remember to check the box that says that it will add mamba to path)
 1. [pip](https://pip.pypa.io/en/stable/installation/) (Is also automatically installed with Python via Python's installer, make sure this version of pip is installed globally)
 1. [dlp-cli](https://github.com/DSGT-DLP/dlp-cli#readme) (We have our own cli!)
@@ -40,12 +39,12 @@ Have the following installed first:
 
 ## 1. Clone the Repository
 
-If you want the main project, run in the directory of your choice:
+If you want the **main** project, run in the directory of your choice:
 ```sh
 git clone https://github.com/DSGT-DLP/Deep-Learning-Playground.git
 ```
 
-If this installation is for the beginner project, instead do:
+If this installation is for the **beginner project**, instead do:
 ```sh
 git clone https://github.com/DSGT-DLP/dlp-practice.git
 ```

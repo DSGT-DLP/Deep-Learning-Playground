@@ -23,7 +23,6 @@
 |  |  |  |- 📜 DynamoUnitTests.md
 |  |  |  |- 📜 trainspace_db.py
 |  |  |  |- 📜 dynamo_db_utils.py
-|  |  |  |- 📜 userprogress_db.py
 |  |  |- 📜 __init__.py
 |  |- 📂 ml:
 |  |  |- 📜 ml_trainer.py : train a classical machine learning learning model on the dataset
@@ -49,53 +48,6 @@
 
 ```
 📦 frontend
-|  |- 📂 public:
-|  |  |- 📂 images:
-|  |  |  |- 📂 wiki_images:
-|  |  |  |  |- 📜 tanh_plot.png
-|  |  |  |  |- 📜 avgpool_maxpool.gif
-|  |  |  |  |- 📜 conv2d2.gif
-|  |  |  |  |- 📜 conv2d.gif
-|  |  |  |  |- 📜 sigmoid_equation.png
-|  |  |  |  |- 📜 maxpool2d.gif
-|  |  |  |  |- 📜 softmax_equation.png : PNG file of Softmax equation
-|  |  |  |  |- 📜 batchnorm_diagram.png
-|  |  |  |  |- 📜 dropout_diagram.png
-|  |  |  |  |- 📜 tanh_equation.png
-|  |  |  |- 📂 learn_mod_images:
-|  |  |  |  |- 📜 neuron.png
-|  |  |  |  |- 📜 tanhactivation.png
-|  |  |  |  |- 📜 neuronWithEquation.png
-|  |  |  |  |- 📜 sigmoidactivation.png
-|  |  |  |  |- 📜 lossExampleTable.png
-|  |  |  |  |- 📜 sigmoidfunction.png
-|  |  |  |  |- 📜 lossExampleEquation.png
-|  |  |  |  |- 📜 neuralnet.png
-|  |  |  |  |- 📜 LeakyReLUactivation.png
-|  |  |  |  |- 📜 ReLUactivation.png
-|  |  |  |  |- 📜 robotImage.jpg
-|  |  |  |  |- 📜 binarystepactivation.png
-|  |  |  |  |- 📜 lossExample.png
-|  |  |  |- 📂 logos:
-|  |  |  |  |- 📂 dlp_branding:
-|  |  |  |  |  |- 📜 dlp-logo.svg : DLP Logo, duplicate of files in public, but essential as the frontend can't read public
-|  |  |  |  |  |- 📜 dlp-logo.png : DLP Logo, duplicate of files in public, but essential as the frontend can't read public
-|  |  |  |  |- 📜 react-logo.png
-|  |  |  |  |- 📜 google.png
-|  |  |  |  |- 📜 pytorch-logo.png
-|  |  |  |  |- 📜 pandas-logo.png
-|  |  |  |  |- 📜 dsgt-logo-dark.png
-|  |  |  |  |- 📜 dsgt-logo-light.png
-|  |  |  |  |- 📜 python-logo.png
-|  |  |  |  |- 📜 dsgt-logo-white-back.png
-|  |  |  |  |- 📜 github.png
-|  |  |  |  |- 📜 aws-logo.png
-|  |  |  |  |- 📜 flask-logo.png
-|  |  |  |- 📜 demo_video.gif : GIF tutorial of a simple classification training session
-|  |  |- 📜 robots.txt
-|  |  |- 📜 dlp-logo.ico : DLP Logo
-|  |  |- 📜 index.html : Base HTML file that will be initially rendered
-|  |  |- 📜 manifest.json : Default React file for choosing icon based on
 |  |- 📂 layer_docs:
 |  |  |- 📜 Softmax.md : Doc for Softmax layer
 |  |  |- 📜 Linear.md : Doc for Linear layer
@@ -200,10 +152,6 @@
 |  |  |  |  |  |  |  |- 📜 ImageTrainspace.tsx
 |  |  |  |  |  |  |  |- 📜 ImageReviewStep.tsx
 |  |  |  |  |  |  |  |- 📜 ImageParametersStep.tsx
-|  |  |  |  |  |  |  |- 📜 ImageTrainspace.tsx
-|  |  |  |  |  |  |  |- 📜 ImageFlow.tsx
-|  |  |  |  |  |  |  |- 📜 ImageDatasetStep.tsx
-|  |  |  |  |  |  |  |- 📜 ImageReviewStep.tsx
 |  |  |  |  |  |  |- 📜 index.ts
 |  |  |  |  |  |- 📂 Tabular:
 |  |  |  |  |  |  |- 📂 constants:
@@ -222,6 +170,7 @@
 |  |  |  |  |  |  |- 📜 index.ts
 |  |  |  |  |- 📂 components:
 |  |  |  |  |  |- 📜 CreateTrainspace.tsx
+|  |  |  |  |  |- 📜 DatasetStepLayout.tsx
 |  |  |  |  |  |- 📜 TrainspaceLayout.tsx
 |  |  |  |- 📂 Feedback:
 |  |  |  |  |- 📂 redux:

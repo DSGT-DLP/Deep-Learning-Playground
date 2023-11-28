@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 
 from training.routes.tabular.schemas import LayerParams
+from training.routes.image.schemas import LayerParams
 
 
 class DLModel(nn.Module):
@@ -13,6 +14,10 @@ class DLModel(nn.Module):
         "SOFTMAX": nn.Softmax,
         "SIGMOID": nn.Sigmoid,
         "LOGSOFTMAX": nn.LogSoftmax,
+        "CONV2D": nn.Conv2d,
+        "DROPOUT": nn.Dropout,
+        "MAXPOOL2D": nn.MaxPool2d,
+        "FLATTEN": nn.Flatten,
     }
 
     def __init__(self, layer_list: list[nn.Module]):

@@ -98,12 +98,10 @@ Run the following commands in the project directory (the root folder created aft
 | Running the Frontend | `dlp-cli frontend start` |
 | Running the Backend  | `dlp-cli backend start`  |
 
-Make sure to run the above two commands in separate terminals.
+Make sure to run the above two commands in separate terminals. You should see these Terminal messages and be able to go to these URLs on success:
 
 ![](.github/readme_images/frontend_start.png)
 ![](.github/readme_images/backend_start.png)
-
-You should see these after successfully running the above commands:
 
 ## 5. AWS Setup
 If you will be working on tasks that interface with AWS resources/services, please follow the below steps (please install AWS CLI using this [link](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) first):

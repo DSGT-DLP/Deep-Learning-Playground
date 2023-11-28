@@ -21,7 +21,6 @@ import { auth } from "@/common/utils/firebase";
 import { FirebaseError } from "firebase/app";
 import storage from "local-storage-fallback";
 import { backendApi } from "./backendApi";
-import { isNameValid } from "../utils/nameFormat";
 
 export interface UserState {
   user?: UserType | "pending";

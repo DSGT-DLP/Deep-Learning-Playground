@@ -125,7 +125,7 @@ If you will be working on tasks that interface with AWS resources/services, plea
    1. Run `cat ~/.aws/config` to look for the sso profile configured.
    1. Run `export AWS_PROFILE=<sso_profile_name from step 6>`
 
-Please message in the DLP Discord if you have any difficulty/issue with these steps. 
+Please message in the DLP Discord or view the [Bug Manual page](https://github.com/DSGT-DLP/Deep-Learning-Playground/wiki/Bug-Manual) if you have any difficulty/issue with these steps. 
 
 # Architecture
 

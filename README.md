@@ -2,7 +2,7 @@
 
 Web Application where people new to Machine Learning can input a dataset and experiment around with basic Pytorch modules through a drag and drop interface
 
-> **Deployed website:** https://datasciencegt-dlp.com/ </br> > **GitHub repo:** https://github.com/DSGT-DLP/Deep-Learning-Playground
+> **Deployed website:** https://datasciencegt-dlp.com </br> **GitHub repo:** https://github.com/DSGT-DLP/Deep-Learning-Playground
 
 # Getting Started
 
@@ -38,13 +38,20 @@ Have the following installed first:
    1. [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
    1. [Go](https://marketplace.visualstudio.com/items?itemName=golang.Go)
 
-## Clone the Repository
+## 1. Clone the Repository
 
-`git clone https://github.com/DSGT-DLP/Deep-Learning-Playground.git` in the directory of your choice. If this installation is for the beginner project, do `git clone https://github.com/DSGT-DLP/dlp-practice.git`.
+If you want the main project, run in the directory of your choice:
+```sh
+git clone https://github.com/DSGT-DLP/Deep-Learning-Playground.git
+```
 
-This can also be achieved through GitKraken.
+If this installation is for the beginner project, instead do:
+```sh
+git clone https://github.com/DSGT-DLP/dlp-practice.git
+```
 
-## Frontend and Backend Package Installation
+
+## 2. Frontend and Backend Package Installation
 
 Run the following commands in the project directory (the root folder created after cloning):
 
@@ -53,7 +60,7 @@ Run the following commands in the project directory (the root folder created aft
 | Install/Update Frontend Packages | `dlp-cli frontend install` |
 | Install/Update Backend Packages  | `dlp-cli backend install`  |
 
-## GitGuardian Pre-commit Check
+## 3. GitGuardian Pre-commit Check
 
 To install the GitGuardian cli and pre-commit, run
 
@@ -76,13 +83,13 @@ ggshield auth login
 
 If this command works properly, you will be redirected to an auth route in the Git Guardian website. **Sign in using your Github account**. Then, you should be all set!
 
-## Additional VSCode Setup (Recommended)
+### Additional VSCode Setup (Recommended)
 
 Access the VSCode command palette via `Ctrl+Shift+P`. Press `Python: Select Interpreter`. You need the Python VSCode extension for this.
 
 Select the Python Interpreter named `dlp`.
 
-## To start on localhost:
+## 4. To start on localhost
 
 Run the following commands in the project directory (the root folder created after cloning):
 
@@ -98,7 +105,7 @@ Make sure to run the above two commands in separate terminals.
 
 You should see these after successfully running the above commands:
 
-## AWS Setup
+## 5. AWS Setup
 If you will be working on tasks that interface with AWS resources/services, please follow the below steps (please install AWS CLI using this [link](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) first):
 
 1. Request an AWS Account for Deep Learning Playground by messaging Faris, Karthik, or Daniel in the DLP Discord. Please include your Github username along with your personal email account

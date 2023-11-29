@@ -50,5 +50,13 @@ export const backendApi = createApi({
       }
     },
   }),
-  endpoints: () => ({}),
+  endpoints: (builder) => ({
+    getBeginnerMessage: builder.query<{ result: string }, void>({
+      query: () => {
+        return {
+          url: "/api/training/beginner_endpoint",
+        };
+      },
+    }),
+  }),
 });

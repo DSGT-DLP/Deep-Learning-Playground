@@ -29,6 +29,10 @@ api = NinjaAPI()
 def test(request: HttpRequest):
     return 200, {"result": "200 Backend surface test successful"}
 
+@api.get("/beginner_endpoint")
+def beginner_endpoint(request: HttpRequest):
+    return 200, {"result": "This is a response from the backend"}
+
 
 api.add_router("/datasets/default/", get_default_datasets_router())
 api.add_router("/tabular", get_tabular_router())

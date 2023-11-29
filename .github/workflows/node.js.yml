@@ -7,11 +7,11 @@ on:
   push:
     paths:
       - "frontend/**"
-      - ".github/workflows/nodejs.yml"
+      - ".github/workflows/node.js.yml"
   pull_request:
     paths:
        - "frontend/**"
-       - ".github/workflows/nodejs.yml"
+       - ".github/workflows/node.js.yml"
 jobs:
   build:
     runs-on: ubuntu-latest

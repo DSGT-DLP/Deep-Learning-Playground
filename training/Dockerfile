@@ -1,5 +1,4 @@
 # pull base image
-FROM python:3.9-slim-bookworm
 FROM condaforge/miniforge-pypy3
 
 WORKDIR /usr/src/training

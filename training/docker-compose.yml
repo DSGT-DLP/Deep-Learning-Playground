@@ -9,5 +9,3 @@ services:
       - $HOME/.aws/credentials:/home/app/.aws/credentials:ro
     ports:
       - 8000:8000
-    # env_file:
-    #   - ./.env.dev

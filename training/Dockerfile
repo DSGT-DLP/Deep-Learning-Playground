@@ -1,5 +1,7 @@
 # pull base image
 FROM condaforge/miniforge-pypy3
+ARG ENV=dev
+ENV NODE_ENV=${ENV}
 
 WORKDIR /usr/src/training
 
@@ -8,9 +10,13 @@ WORKDIR /usr/src/training
 # install dependencies
 RUN mamba create --name dlp -y
 
-COPY environment.yml pyproject.toml ./
+COPY environment.yml pyproject.toml poetry.lock ./
 RUN mamba run --live-stream -n dlp mamba env update --file environment.yml --prune
-RUN mamba run --live-stream -n dlp poetry install
+RUN if [ "$NODE_ENV" = "dev" ]; then \
+      mamba run --live-stream -n dlp poetry install; \
+    else \
+      mamba run --live-stream -n dlp poetry install --without dev; \
+    fi
 
 # create directory for the app user
 RUN mkdir -p /home/app

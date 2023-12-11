@@ -2,7 +2,10 @@ version: '3.8'
 
 services:
   web:
-    build: .
+    build:
+      context: .
+      args:
+        ENV: prod
     command: mamba run --live-stream -n dlp gunicorn training.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - ./:/usr/src/training/

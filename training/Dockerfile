@@ -1,5 +1,5 @@
 # pull base image
-FROM condaforge/miniforge-pypy3
+FROM condaforge/miniforge3
 ARG ENV=dev
 ENV NODE_ENV=${ENV}
 

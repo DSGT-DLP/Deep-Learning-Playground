@@ -1,10 +1,10 @@
 name: dlp
 channels:
-  - conda-forge
   - pytorch
+  - conda-forge
   - defaults
 dependencies:
-  - conda-forge::python=3.9
-  - conda-forge::poetry
-  - pytorch::pytorch
-  - pytorch::torchvision
+  - python=3.9
+  - poetry
+  - pytorch
+  - torchvision

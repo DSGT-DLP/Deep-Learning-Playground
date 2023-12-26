@@ -3,8 +3,6 @@ import { COLORS, URLs } from "../../constants";
 import { LinkedIn, YouTube, Instagram, GitHub } from "@mui/icons-material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
-//Comment for initial commit (Github)
-
 const theme = createTheme({
   components: {
     MuiSvgIcon: {

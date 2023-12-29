@@ -1,7 +1,7 @@
 import os
 import regex as re
 
-TARGET_DIRECTORIES = ["backend", "frontend"]
+TARGET_DIRECTORIES = ["training", "frontend"]
 
 # Content to ignore
 IGNORED_DIRECTORIES = [

@@ -1,6 +1,5 @@
 {
   "name": "frontend",
-  "private": "true",
   "description": "",
   "scripts": {
     "preinstall": "npx only-allow pnpm",

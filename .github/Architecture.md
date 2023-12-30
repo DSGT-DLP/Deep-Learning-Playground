@@ -222,5 +222,6 @@
 |  |- 📜 tsconfig.json
 |  |- 📜 pnpm-lock.yaml
 |  |- 📜 jest.config.js
+|  |- 📜 yarn.lock
 ```
 

@@ -6,6 +6,7 @@ from botocore.exceptions import ClientError
 import click
 import requests
 
+
 def init_firebase():
     secret_name = "DLP/Firebase/Admin_SDK"
     region_name = "us-east-1"

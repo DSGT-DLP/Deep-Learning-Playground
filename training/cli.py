@@ -14,11 +14,11 @@ def init_firebase():
     client = boto3.client("secretsmanager", region_name=region_name)
     try:
         get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+    # For a list of exceptions thrown, see
+    # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
     except ClientError as e:
         if 'UnrecognizedClientException' in str(e.response['Error']['Code']):
             raise Exception("AWS authentification incomplete. Make sure all credentials are set correctly including `export AWS_PROFILE=<profile-name>`")
-        # For a list of exceptions thrown, see
-        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
         raise e
 
     # Decrypts secret using the associated KMS key.

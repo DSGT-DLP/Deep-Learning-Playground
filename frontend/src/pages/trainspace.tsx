@@ -5,7 +5,15 @@ const TrainSpace = () => {
     return (
         <div>
             <NavbarMain />
+            //Menubar
+            <div style={{ 
+                width: '100%', 
+                height: '50px', 
+                backgroundColor: '#808080',
+            }}>
+            </div>
             <div style={{ display: 'flex' }}>
+                //Sidebar
                 <div style={{
                     width: '200px',
                     height: 'calc(100vh - 60px)',

@@ -6,13 +6,6 @@ from botocore.exceptions import ClientError
 import click
 import requests
 
-class AuthentificationError(Exception):
-    def __init__(self, message=None, errors=None):
-        if errors and 'UnrecognizedClientException' in str(errors):
-            message = "AWS authentification incomplete. Make sure all credentials are set correctly including `export AWS_PROFILE=<profile-name>`"
-        super().__init__(message)
-        self.errors = errors
-
 def init_firebase():
     secret_name = "DLP/Firebase/Admin_SDK"
     region_name = "us-east-1"
@@ -22,9 +15,11 @@ def init_firebase():
     try:
         get_secret_value_response = client.get_secret_value(SecretId=secret_name)
     except ClientError as e:
+        if 'UnrecognizedClientException' in str(e.response['Error']['Code']):
+            raise Exception("AWS authentification incomplete. Make sure all credentials are set correctly including `export AWS_PROFILE=<profile-name>`")
         # For a list of exceptions thrown, see
         # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-        raise AuthentificationError(errors=e)
+        raise e
 
     # Decrypts secret using the associated KMS key.
     secret_str = get_secret_value_response["SecretString"]

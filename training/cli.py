@@ -6,12 +6,14 @@ from botocore.exceptions import ClientError
 import click
 import requests
 
+
 class AuthentificationError(Exception):
     def __init__(self, message=None, errors=None):
-        if errors and 'UnrecognizedClientException' in str(errors):
+        if errors and "UnrecognizedClientException" in str(errors):
             message = "AWS authentification incomplete. Make sure all credentials are set correctly including `export AWS_PROFILE=<profile-name>`"
         super().__init__(message)
         self.errors = errors
+
 
 def init_firebase():
     secret_name = "DLP/Firebase/Admin_SDK"

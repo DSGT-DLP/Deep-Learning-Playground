@@ -59,7 +59,21 @@ Run the following commands in the project directory (the root folder created aft
 | Install/Update Frontend Packages | `dlp-cli frontend install` |
 | Install/Update Backend Packages  | `dlp-cli backend install`  |
 
-## 3. GitGuardian Pre-commit Check
+## 3. To start on localhost
+
+Run the following commands in the project directory (the root folder created after cloning):
+
+| Action               | Command                  |
+| -------------------- | ------------------------ |
+| Running the Frontend | `dlp-cli frontend start` |
+| Running the Backend  | `dlp-cli backend start`  |
+
+Make sure to run the above two commands in separate terminals. You should see these Terminal messages and be able to go to these URLs on success:
+
+![](.github/readme_images/frontend_start.png)
+![](.github/readme_images/backend_start.png)
+
+## 4. GitGuardian Pre-commit Check
 
 To install the GitGuardian cli and pre-commit, run
 
@@ -88,20 +102,6 @@ Access the VSCode command palette via `Ctrl+Shift+P`. Press `Python: Select Inte
 
 Select the Python Interpreter named `dlp`.
 
-## 4. To start on localhost
-
-Run the following commands in the project directory (the root folder created after cloning):
-
-| Action               | Command                  |
-| -------------------- | ------------------------ |
-| Running the Frontend | `dlp-cli frontend start` |
-| Running the Backend  | `dlp-cli backend start`  |
-
-Make sure to run the above two commands in separate terminals. You should see these Terminal messages and be able to go to these URLs on success:
-
-![](.github/readme_images/frontend_start.png)
-![](.github/readme_images/backend_start.png)
-
 ## 5. AWS Setup
 If you will be working on tasks that interface with AWS resources/services, please follow the below steps (please install AWS CLI using this [link](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) first):
 
@@ -120,7 +120,7 @@ If you will be working on tasks that interface with AWS resources/services, plea
    ````
    1. Make sure you follow the instructions in the terminal to ensure your credentials are set correctly (eg: allow botocore to access data should be selected as "yes")
    1. Run `cat ~/.aws/config` to look for the sso profile configured.
-   1. Run `export AWS_PROFILE=<sso_profile_name from the previous step>`
+   1. **IMPORTANT:** Run `export AWS_PROFILE=<sso_profile_name from the previous step>`. Note that when you close and reopen your terminal, you will **need** to rerun this export command
 
 Please message in the DLP Discord or view the [Bug Manual page](https://github.com/DSGT-DLP/Deep-Learning-Playground/wiki/Bug-Manual) and [Documentation](https://www.notion.so/General-011ddb00fda146048ec1beb2d18c8abc) if you have any difficulty/issue with these steps. 
 

@@ -11,6 +11,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install pnpm
+        run: npm install -g pnpm 
+
       - name: Install
         run: pnpm install --frozen-lockfile
         id: install
@@ -29,6 +32,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      
+      - name: Install pnpm
+        run: npm install -g pnpm 
 
       - name: Install
         run: pnpm install --frozen-lockfile
@@ -59,6 +65,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      
+      - name: Install pnpm
+        run: npm install -g pnpm 
 
       - name: Install
         run: pnpm install --frozen-lockfile

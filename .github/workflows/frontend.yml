@@ -1,0 +1,69 @@
+name: Frontend Workflow Check
+on: [pull_request, push]
+
+concurrency: preview-${{ github.ref }}
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        id: install
+
+      - name: Run prettier
+        run: yarn run format:check
+
+      - name: Run ESLint
+        run: yarn run lint
+        # Always run the linter, even if prettier failed
+        if: ${{ steps.install.outcome == 'success' }}
+
+  build:
+    name: Build & Stage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+        env:
+          CI: 'true'
+          PUBLIC_URL: ${{ env.npm_package_homepage }}/pr-preview/pr-${{ github.event.number }}/
+          REACT_APP_PREVIEW: 'true'
+          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY_DEV }}
+          REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN_DEV }}
+          REACT_APP_FIREBASE_PROJECT_ID: ${{ secrets.REACT_APP_FIREBASE_PROJECT_ID_DEV }}
+          REACT_APP_FIREBASE_STORAGE_BUCKET: ${{ secrets.REACT_APP_FIREBASE_STORAGE_BUCKET_DEV }}
+          REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID_DEV }}
+          REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID_DEV }}
+          REACT_APP_FIREBASE_MEASUREMENT_ID: ${{ secrets.REACT_APP_FIREBASE_MEASUREMENT_ID_DEV }}
+
+      - name: Stage
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./build/
+
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Test
+        run: pnpm run test --coverage
+        env:
+          CI: 'true'

@@ -120,7 +120,7 @@ If you will be working on tasks that interface with AWS resources/services, plea
    ````
    1. Make sure you follow the instructions in the terminal to ensure your credentials are set correctly (eg: allow botocore to access data should be selected as "yes")
    1. Run `cat ~/.aws/config` to look for the sso profile configured.
-   1. **IMPORTANT:** Run `export AWS_PROFILE=<sso_profile_name from the previous step>`. Note that when you close and reopen your terminal, you will **need** to rerun this export command
+   1. **IMPORTANT:** Run `export AWS_PROFILE=<sso_profile_name from the previous step>`, for Linux and Mac, or `setx AWS_PROFILE <sso_profile_name from the previous step>`. Note that when you close and reopen your terminal, you will **need** to rerun this export command
 
 Please message in the DLP Discord or view the [Bug Manual page](https://github.com/DSGT-DLP/Deep-Learning-Playground/wiki/Bug-Manual) and [Documentation](https://www.notion.so/General-011ddb00fda146048ec1beb2d18c8abc) if you have any difficulty/issue with these steps. 
 

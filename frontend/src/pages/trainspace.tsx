@@ -5,7 +5,7 @@ const TrainSpace = () => {
     return (
         <div>
             <NavbarMain />
-            //Menuba
+            //Menubar
             <div style={{ 
                 width: '100%', 
                 height: '50px', 

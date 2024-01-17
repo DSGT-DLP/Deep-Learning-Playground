@@ -4,7 +4,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "lint": "next lint",
-    "start": "next dev"
+    "start": "next dev","test": "pnpm run start","format:check": "eslint --ext .js,.jsx,.ts,.tsx --quiet --fix --ignore-path .gitignore .","build": "next build"
   },
   "keywords": [],
   "author": "",

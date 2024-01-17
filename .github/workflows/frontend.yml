@@ -26,7 +26,7 @@ jobs:
         working-directory: ./frontend
 
   build:
-    name: Build & Stage
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -43,19 +43,6 @@ jobs:
       - name: Build
         run: pnpm build
         env:
-          CI: 'true'
-          PUBLIC_URL: ${{ env.npm_package_homepage }}/pr-preview/pr-${{ github.event.number }}/
-          REACT_APP_PREVIEW: 'true'
-          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY_DEV }}
-          REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN_DEV }}
-          REACT_APP_FIREBASE_PROJECT_ID: ${{ secrets.REACT_APP_FIREBASE_PROJECT_ID_DEV }}
-          REACT_APP_FIREBASE_STORAGE_BUCKET: ${{ secrets.REACT_APP_FIREBASE_STORAGE_BUCKET_DEV }}
-          REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID_DEV }}
-          REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID_DEV }}
-          REACT_APP_FIREBASE_MEASUREMENT_ID: ${{ secrets.REACT_APP_FIREBASE_MEASUREMENT_ID_DEV }}
+          REACT_APP_CAPTCHA_SITE_KEY: ${{ secrets.REACT_APP_CAPTCHA_SITE_KEY }}
+          REACT_APP_FEEDBACK_EMAIL: ${{ secrets.REACT_APP_FEEDBACK_EMAIL }}
         working-directory: ./frontend
-
-      - name: Stage
-        uses: rossjrw/pr-preview-action@v1
-        with:
-          source-dir: ./build/

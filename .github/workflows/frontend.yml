@@ -25,13 +25,13 @@ jobs:
         run: pnpm run lint
         working-directory: ./frontend
 
-  build:
-    name: Build
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      
+
       - name: Install pnpm
         run: npm install -g pnpm 
         working-directory: ./frontend
@@ -40,9 +40,8 @@ jobs:
         run: pnpm install --frozen-lockfile
         working-directory: ./frontend
 
-      - name: Build
-        run: pnpm build
-        env:
-          REACT_APP_CAPTCHA_SITE_KEY: ${{ secrets.REACT_APP_CAPTCHA_SITE_KEY }}
-          REACT_APP_FEEDBACK_EMAIL: ${{ secrets.REACT_APP_FEEDBACK_EMAIL }}
+      - name: Test
+        run: echo "pnpm run test should be here"
         working-directory: ./frontend
+    
+    

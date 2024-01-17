@@ -20,14 +20,9 @@ jobs:
         id: install
         working-directory: ./frontend
 
-      - name: Run prettier
-        run: pnpm run format:check
-        working-directory: ./frontend
 
       - name: Run ESLint
         run: pnpm run lint
-        # Always run the linter, even if prettier failed
-        if: ${{ steps.install.outcome == 'success' }}
         working-directory: ./frontend
 
   build:

@@ -4,7 +4,7 @@ const nextConfig = {
   trailingSlash: true,
   env: {
     REACT_APP_CAPTCHA_SITE_KEY: process.env.REACT_APP_CAPTCHA_SITE_KEY,
-    REACT_APP_FEEDBACK_EMAIL: process.env.REACT_APP_FEEDBACK_EMAIL,
+    REACT_APP_FEEDBACK_EMAIL: "YOUR_FEEDBACK_EMAIL",
   },
   redirects: async () => {
     return [

@@ -21,11 +21,11 @@ jobs:
         working-directory: ./frontend
 
       - name: Run prettier
-        run: yarn run format:check
+        run: pnpm run format:check
         working-directory: ./frontend
 
       - name: Run ESLint
-        run: yarn run lint
+        run: pnpm run lint
         # Always run the linter, even if prettier failed
         if: ${{ steps.install.outcome == 'success' }}
         working-directory: ./frontend
@@ -46,7 +46,7 @@ jobs:
         working-directory: ./frontend
 
       - name: Build
-        run: yarn build
+        run: pnpm build
         env:
           CI: 'true'
           PUBLIC_URL: ${{ env.npm_package_homepage }}/pr-preview/pr-${{ github.event.number }}/

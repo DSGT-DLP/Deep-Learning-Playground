@@ -4,8 +4,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "lint": "next lint",
-    "start": "next dev",
-    "build": "next build"
+    "start": "next dev"
   },
   "keywords": [],
   "author": "",

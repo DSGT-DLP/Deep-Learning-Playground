@@ -12,66 +12,35 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
         const trainspaceId = uuidv4();
         let putCommandInput: PutCommandInput = {
-            TableName: "trainspace",
+            TableName: "TrainspaceTable",
             Item:
             {
-                //list of models
-                //list of blocks
                 trainspace_id: trainspaceId,
                 created: Date.now().toString(),
                 uid: user_id,
-                //Source (default, s3)
-                //dataset id
-                //s3 url (if s3 source)
-                //should this be a list?
-                dataset_data: eventBody['dataset_source'] == 's3' ? {
+                dataset: eventBody['dataset_source'] == 's3' ? {
                     data_source: eventBody['dataset_source'],
                     dataset_id: eventBody['dataset_id'],
-                    s3_url: eventBody['dataset_source'].s3_url,
+                    s3_url: eventBody['s3_url'],
                 } : {
                     data_source: eventBody['dataset_source'],
                     dataset_id: eventBody['dataset_id'],
                 },
-                parameters_data: eventBody['data_source'] == 'IMAGE' ? JSON.stringify(eventBody['parameters_data']) : { 
-                    criterion: eventBody['criterion'],
-                    optimizer_name: eventBody['optimizer_name'],
-                    shuffle: eventBody['shuffle'],
-                    epochs: eventBody['epochs'],
-                    batch_size: eventBody['batch_size'],
-                    user_arch: eventBody['user_arch']
-                },
-                /**
-                 * Name
-                 * Model id
-                 * Dataset id
-                 * list of model versions:
-                 * Model versions:
-                 *      Name of model version
-                 *      s3 url to mode
-                 */
                 models: {
                     model_name: eventBody['model_name'],
                     model_id: eventBody['model_id'],
                     dataset_id: eventBody['dataset_id'],
                     model_versions: {
                         model_name: eventBody['model_name'],
-                        s3_url: eventBody['model_s3_url']
+                        s3_url: eventBody['s3_url']
                     }
                 },
-                /**
-                 * Blocks (stored within trainspace item):
-                Block id
-                Type of block
-                Other info based on the type of block
-                Run data
-                    s3 url, string, number, etc based on the type of block
-                 */
                 blocks: {
                     block_id: eventBody['block_id'],
                     block_type: eventBody['block_type'],
                     //not sure what to do with "other info based on the type of block"
                     run_data: {
-                        s3_url: eventBody['run_s3_url'],
+                        s3_url: eventBody['s3_url'],
                         string: eventBody['run_string'],
                         number: eventBody['run_number']
                     }

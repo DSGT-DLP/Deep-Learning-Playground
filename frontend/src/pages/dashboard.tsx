@@ -114,7 +114,7 @@ const BlankGrid = () => {
           id="blank-grid-button"
           onClick={() => router.push({ pathname: "/train" })}
         >
-          Train Model
+          Create Model
         </button>
       </div>
     </div>

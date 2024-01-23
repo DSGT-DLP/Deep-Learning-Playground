@@ -50,6 +50,13 @@ export function AppStack({ stack }: StackContext) {
           permissions: ["dynamodb:PutItem"]
         }
       },
+      //general trainspace
+      "POST /trainspace/create": {
+        function: {
+          handler: "packages/functions/src/trainspace/create_trainspace.handler",
+          permissions: ["dynamodb:PutItem"]
+        }
+      },
       "GET /trainspace/{id}": {
         function: {
           handler: "packages/functions/src/trainspace/get_trainspace.handler",

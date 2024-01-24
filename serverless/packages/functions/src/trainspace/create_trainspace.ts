@@ -9,8 +9,12 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     if (event) {
         const user_id: string = parseJwt(event.headers.authorization ?? "")["user_id"];
         const eventBody = JSON.parse(event.body? event.body : "");
-
         const trainspaceId = uuidv4();
+
+        const datasetArray = eventBody['datasets'];
+        const modelArray = eventBody['models'];
+        const blockArray = eventBody['blocks'];
+        
         let putCommandInput: PutCommandInput = {
             TableName: "TrainspaceTable",
             Item:
@@ -18,33 +22,40 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
                 trainspace_id: trainspaceId,
                 created: Date.now().toString(),
                 uid: user_id,
-                dataset: eventBody['dataset_source'] == 's3' ? {
-                    data_source: eventBody['dataset_source'],
-                    dataset_id: eventBody['dataset_id'],
-                    s3_url: eventBody['s3_url'],
-                } : {
-                    data_source: eventBody['dataset_source'],
-                    dataset_id: eventBody['dataset_id'],
-                },
-                models: {
-                    model_name: eventBody['model_name'],
-                    model_id: eventBody['model_id'],
-                    dataset_id: eventBody['dataset_id'],
-                    model_versions: {
-                        model_name: eventBody['model_name'],
-                        s3_url: eventBody['s3_url']
-                    }
-                },
-                blocks: {
-                    block_id: eventBody['block_id'],
-                    block_type: eventBody['block_type'],
-                    //not sure what to do with "other info based on the type of block"
-                    run_data: {
-                        s3_url: eventBody['s3_url'],
-                        string: eventBody['run_string'],
-                        number: eventBody['run_number']
-                    }
-                },
+
+                datasets: datasetArray.map((eventBody: {[x: string] : any;}) => ({
+                    dataset: removeUndefinedValues(eventBody['dataset_source'] == 's3' ? {
+                        data_source: eventBody['dataset_source']?.trim(),
+                        dataset_id: eventBody['dataset_id']?.trim(),
+                        s3_url: eventBody['s3_url']?.trim(),
+                    } : {
+                        data_source: eventBody['dataset_source']?.trim(),
+                        dataset_id: eventBody['dataset_id']?.trim()
+                    })
+                })),
+                models: modelArray.map((eventBody: { [x: string]: any; }) => ({
+                    model: removeUndefinedValues({
+                      model_name: eventBody['model_name']?.trim(),
+                      model_id: eventBody['model_id']?.trim(),
+                      //dataset_id: eventBody['dataset_id']?.trim(),
+                      model_versions: {
+                        model_name: eventBody['model_name']?.trim(),
+                        s3_url: eventBody['model_s3_url']?.trim()
+                      }
+                    })
+                  })),
+                blocks: blockArray.map((eventBody: {[x: string] : any;}) => ({
+                    block: removeUndefinedValues({
+                        block_id: eventBody['block_id']?.trim(),
+                        block_type: eventBody['block_type']?.trim(),
+                        //not sure what to do with "other info based on the type of block"
+                        run_data: {
+                            s3_url: eventBody['block_s3_url']?.trim(),
+                            string: eventBody['run_string']?.trim(),
+                            number: eventBody['run_number']?.trim()
+                        }
+                    })
+                })),
                 status: TrainStatus.QUEUED
             }
         }
@@ -80,3 +91,12 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         body: JSON.stringify({ message: "Not Found" }),
     };
 };
+function removeUndefinedValues(obj: { [key: string]: any }) {
+    const newObj: { [key: string]: any } = {};
+    for (const key in obj) {
+        if (obj[key] !== undefined) {
+            newObj[key] = obj[key];
+        }
+    }
+    return newObj;
+}

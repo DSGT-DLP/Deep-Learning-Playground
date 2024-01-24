@@ -45,9 +45,6 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
                         number: eventBody['run_number']
                     }
                 },
-                //keep?
-                name: eventBody['name'],
-                review_data: eventBody['review_data'],
                 status: TrainStatus.QUEUED
             }
         }

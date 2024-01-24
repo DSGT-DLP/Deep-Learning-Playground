@@ -15,7 +15,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
         do {
             const getCommand: QueryCommand = new QueryCommand({
-                TableName: "trainspace",
+                TableName: "TrainspaceTable",
                 IndexName: "uid",
                 KeyConditionExpression: "uid = :uid",
                 ExpressionAttributeValues: {

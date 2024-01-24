@@ -1,47 +1,50 @@
 # Architecture
 
-## Backend Architecture
+## Training Architecture
 
 ```
-📦 backend
-|  |- 📂 ml:
+📦 training
+|  |- 📂 training:
+|  |  |- 📂 routes:
+|  |  |  |- 📂 datasets:
+|  |  |  |  |- 📂 default:
+|  |  |  |  |  |- 📜 columns.py
+|  |  |  |  |  |- 📜 __init__.py
+|  |  |  |  |  |- 📜 schemas.py
+|  |  |  |  |- 📜 __init__.py
+|  |  |  |- 📂 tabular:
+|  |  |  |  |- 📜 __init__.py
+|  |  |  |  |- 📜 tabular.py
+|  |  |  |  |- 📜 schemas.py
+|  |  |  |- 📂 image:
+|  |  |  |  |- 📜 image.py
+|  |  |  |  |- 📜 __init__.py
+|  |  |  |  |- 📜 schemas.py
+|  |  |  |- 📜 __init__.py
+|  |  |  |- 📜 schemas.py
+|  |  |- 📂 core:
+|  |  |  |- 📜 dataset.py : read in the dataset through URL or file upload
+|  |  |  |- 📜 __init__.py
+|  |  |  |- 📜 authenticator.py
+|  |  |  |- 📜 optimizer.py : what optimizer to use (ie: SGD or Adam for now)
+|  |  |  |- 📜 trainer.py
+|  |  |  |- 📜 dl_model.py : torch model based on user specifications from drag and drop
+|  |  |  |- 📜 criterion.py
+|  |  |- 📜 settings.py
+|  |  |- 📜 asgi.py
+|  |  |- 📜 wsgi.py
 |  |  |- 📜 __init__.py
-|  |  |- 📜 ml_model_parser.py
-|  |  |- 📜 ml_trainer.py : train a classical machine learning learning model on the dataset
-|  |- 📂 common:
-|  |  |- 📜 ai_drive.py
-|  |  |- 📜 preprocessing.py
-|  |  |- 📜 email_notifier.py : Endpoint to send email notification of training results via API Gateway + AWS SES
-|  |  |- 📜 default_datasets.py : store logic to load in default datasets from scikit-learn
-|  |  |- 📜 dataset.py : read in the dataset through URL or file upload
-|  |  |- 📜 constants.py : list of helpful constants
-|  |  |- 📜 utils.py : utility functions that could be helpful
-|  |  |- 📜 __init__.py
-|  |  |- 📜 loss_functions.py : loss function enum
-|  |  |- 📜 kernel.py
-|  |  |- 📜 optimizer.py : what optimizer to use (ie: SGD or Adam for now)
-|  |- 📂 dl:
-|  |  |- 📜 detection.py
-|  |  |- 📜 dl_model_parser.py : parse the user specified pytorch model
-|  |  |- 📜 dl_eval.py : Evaluation functions for deep learning models in Pytorch (eg: accuracy, loss, etc)
-|  |  |- 📜 __init__.py
-|  |  |- 📜 dl_model.py : torch model based on user specifications from drag and drop
-|  |  |- 📜 dl_trainer.py : train a deep learning model on the dataset
-|  |- 📂 aws_helpers:
-|  |  |- 📂 dynamo_db_utils:
-|  |  |  |- 📜 trainspace_db.py
-|  |  |  |- 📜 userprogress_db.py
-|  |  |  |- 📜 constants.py : list of helpful constants
-|  |  |  |- 📜 DynamoUnitTests.md
-|  |  |  |- 📜 dynamo_db_utils.py
-|  |  |- 📜 __init__.py
-|  |- 📜 app.py : run the backend (entrypoint script)
+|  |  |- 📜 urls.py
+|  |- 📜 environment.yml
 |  |- 📜 poetry.lock
-|  |- 📜 middleware.py
-|  |- 📜 __init__.py
-|  |- 📜 data.csv : data csv file for use in the playground
-|  |- 📜 epoch_times.csv
+|  |- 📜 manage.py
+|  |- 📜 docker-compose.yml
+|  |- 📜 cli.py
+|  |- 📜 docker-compose.prod.yml
+|  |- 📜 pytest.ini
 |  |- 📜 pyproject.toml
+|  |- 📜 README.md
+|  |- 📜 Dockerfile
 ```
 
 ## Frontend Architecture
@@ -219,5 +222,6 @@
 |  |- 📜 tsconfig.json
 |  |- 📜 pnpm-lock.yaml
 |  |- 📜 jest.config.js
+|  |- 📜 yarn.lock
 ```
 

@@ -9,16 +9,19 @@ import requests
 
 def init_firebase():
     secret_name = "DLP/Firebase/Admin_SDK"
-    region_name = "us-west-2"
+    region_name = "us-east-1"
     # Create a Secrets Manager client
 
     client = boto3.client("secretsmanager", region_name=region_name)
-
     try:
         get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+    # For a list of exceptions thrown, see
+    # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
     except ClientError as e:
-        # For a list of exceptions thrown, see
-        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        if "UnrecognizedClientException" in str(e.response["Error"]["Code"]):
+            raise RuntimeError(
+                "AWS authentification incomplete. Make sure all credentials are set correctly including `export AWS_PROFILE=<profile-name>`"
+            )
         raise e
 
     # Decrypts secret using the associated KMS key.

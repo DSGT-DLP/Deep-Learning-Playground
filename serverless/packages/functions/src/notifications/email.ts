@@ -4,7 +4,7 @@ import {
   SendEmailCommand,
   SendEmailCommandInput,
 } from "@aws-sdk/client-sesv2";
-import assert from "assert";
+import * as assert from "assert";
 
 const DLP_EMAIL = "dlp@datasciencegt.org";
 

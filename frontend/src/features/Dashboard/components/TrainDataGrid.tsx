@@ -133,7 +133,7 @@ const CustomGridToolBar = () => {
           endIcon={<KeyboardArrowDown></KeyboardArrowDown>}
           onClick={(e) => setAnchorEl(e.currentTarget)}
         >
-          Train Model
+          Create Model
         </Button>
         <NewTrainSpaceMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
         <GridToolbarFilterButton />

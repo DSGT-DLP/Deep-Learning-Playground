@@ -25,7 +25,7 @@ def tabularTrain(request: HttpRequest, tabularParams: TabularParams):
             shuffle=False,
             drop_last=True,
         )
-
+        print("hi")
         test_loader = DataLoader(
             dataCreator.createTestDataset(),
             batch_size=tabularParams.batch_size,

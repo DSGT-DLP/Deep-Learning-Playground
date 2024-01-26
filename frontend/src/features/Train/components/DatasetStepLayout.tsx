@@ -1,12 +1,20 @@
 import React from "react";
 
-import { Controller, UseFormReturn } from "react-hook-form";
+import { useAppSelector } from "@/common/redux/hooks";
+import { formatDate } from "@/common/utils/dateFormat";
+import { ALL_STEP_SETTINGS } from "@/features/Train/constants/trainConstants";
 import {
-  FileUploadData,
+  useGetDatasetFilesDataQuery,
+  useUploadDatasetFileMutation,
+} from "@/features/Train/redux/trainspaceApi";
+import {
   DATA_SOURCE,
   DatasetData,
+  FileUploadData,
 } from "@/features/Train/types/trainTypes";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import {
+  Alert,
   Button,
   FormControl,
   FormControlLabel,
@@ -16,21 +24,12 @@ import {
   Stack,
   Tab,
   Tabs,
-  Typography,
-  Paper,
-  Alert,
+  Typography
 } from "@mui/material";
-import { useAppSelector } from "@/common/redux/hooks";
-import { ALL_STEP_SETTINGS } from "@/features/Train/constants/trainConstants";
 import { DataGrid } from "@mui/x-data-grid";
-import {
-  useGetDatasetFilesDataQuery,
-  useUploadDatasetFileMutation,
-} from "@/features/Train/redux/trainspaceApi";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { formatDate } from "@/common/utils/dateFormat";
-import { toast } from "react-toastify";
 import prettyBytes from "pretty-bytes";
+import { Controller, UseFormReturn } from "react-hook-form";
+import { toast } from "react-toastify";
 
 export const DatasetStepTabLayout = ({
   currTab,

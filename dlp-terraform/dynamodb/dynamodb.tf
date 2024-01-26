@@ -10,7 +10,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-west-2"
+  region = "us-east-1"
 }
 
 resource "aws_dynamodb_table" "execution-table" {
@@ -93,9 +93,9 @@ resource "aws_dynamodb_table" "userprogress_table" {
 }
 
 resource "aws_dynamodb_table" "trainspace" {
-  name           = "trainspace"
-  hash_key       = "trainspace_id"
+  name           = "TrainspaceTable"
   billing_mode   = "PROVISIONED"
+  hash_key       = "trainspace_id"
   write_capacity = 10
   read_capacity  = 10
   attribute {
@@ -103,16 +103,12 @@ resource "aws_dynamodb_table" "trainspace" {
     type = "S"
   }
   attribute {
-    name = "uid"
+    name = "user_id"
     type = "S"
   }
-  ttl {
-    enabled        = true
-    attribute_name = "expiryPeriod"
-  }
   global_secondary_index {
-    name            = "uid"
-    hash_key        = "uid"
+    name            = "user_id_index"
+    hash_key        = "user_id"
     write_capacity  = 10
     read_capacity   = 10
     projection_type = "ALL"

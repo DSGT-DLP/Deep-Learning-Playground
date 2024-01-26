@@ -66,9 +66,11 @@ const LoadingOverlay = () => {
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
-  const [fullName, setFullName] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [recaptcha, setRecaptcha] = useState<string | null>(null);
   const user = useAppSelector((state) => state.currentUser.user);
   const router = useRouter();
@@ -148,12 +150,25 @@ const Login = () => {
     <>
       {isRegistering && (
         <Form.Group className="mb-3" controlId="login-name">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            placeholder="Enter name"
-            onBlur={(e) => setFullName(e.target.value)}
-            autoComplete="name"
-          />
+          <div className="row">
+            <div className="col">
+              <Form.Label>First Name</Form.Label>
+              <Form.Control
+                placeholder="Enter First Name"
+                onBlur={(e) => setFirstName(e.target.value)}
+                autoComplete="name"
+              />
+            </div>
+
+            <div className="col">
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control
+                placeholder="Enter Last Name"
+                onBlur={(e) => setLastName(e.target.value)}
+                autoComplete="name"
+              />
+            </div>
+          </div>
         </Form.Group>
       )}
 
@@ -167,7 +182,7 @@ const Login = () => {
         />
       </Form.Group>
 
-      <Form.Group className="mb-5" controlId="login-password">
+      <Form.Group className="mb-3" controlId="login-password">
         <Form.Label>Password</Form.Label>
         <Form.Control
           type="password"
@@ -181,6 +196,19 @@ const Login = () => {
           </div>
         )}
       </Form.Group>
+
+      {isRegistering && (
+        <Form.Group className="mb-5" controlId="confirm-password">
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control 
+            type="password"
+            placeholder="Confirm Password"
+            onBlur={e => setConfirmPassword(e.target.value)}
+            autoComplete="current-password"
+          />
+        </Form.Group>
+      )}
+
       {isRegistering && process.env.REACT_APP_CAPTCHA_SITE_KEY && (
         <div className="reCaptcha">
           <ReCAPTCHA
@@ -202,11 +230,13 @@ const Login = () => {
                   registerViaEmailAndPassword({
                     email: email,
                     password: password,
-                    displayName: fullName,
+                    passwordConfirmation: confirmPassword,
+                    firstName: firstName,
+                    lastName: lastName,
                     recaptcha: recaptcha,
                   })
                 ).unwrap();
-                toast.success(`Welcome ${fullName}`, {
+                toast.success(`Welcome ${firstName + " " + lastName}`, {
                   position: toast.POSITION.TOP_CENTER,
                 });
               } catch (e) {

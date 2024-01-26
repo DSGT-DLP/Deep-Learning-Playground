@@ -1,4 +1,4 @@
-import { Api, Bucket, StackContext, Table } from "sst/constructs";
+import { Api, Bucket, StackContext } from "sst/constructs";
 import { Bucket as s3Bucket } from "aws-cdk-lib/aws-s3";
 
 export function AppStack({ stack }: StackContext) {
@@ -11,26 +11,7 @@ export function AppStack({ stack }: StackContext) {
       ),
     },
   });
-  const trainspaceRunTable = new Table(stack, "trainspace-run", {
-    fields: {
-      runId: "string",
-      trainspaceId: "string",
-      userId: "string",
-      timestamp: "string",
-      resultCsvUri: "string",
-      modelPtUri: "string",
-      onnxUri: "string",
-      confusionMatrixUri: "string",
-      aucRocUri: "string"
-    },
-    primaryIndex: {
-      partitionKey: "runId",
-    },
-    globalIndexes: {
-      "TrainspaceIndex": { partitionKey: "trainspaceId", sortKey: "timestamp"},
-      "UserIndex": {partitionKey: "userId"}
-    },
-  });
+  
   const api = new Api(stack, "Api", {
     authorizers: {
       FirebaseAuthorizer: {
@@ -55,6 +36,45 @@ export function AppStack({ stack }: StackContext) {
         "packages/functions/src/datasets/user/all_of_type.handler",
       "GET /datasets/user/{type}/{filename}/columns":
         "packages/functions/src/datasets/user/columns.handler",
+      "DELETE /dataset/user/{type}/{filename}" :
+        "packages/functions/src/datasets/user/delete_url.handler",
+      "POST /trainspace/tabular": {
+        function: {
+          handler: "packages/functions/src/trainspace/create_tabular_trainspace.handler",
+          permissions: ["dynamodb:PutItem"]
+        }
+      },
+      "POST /trainspace/image": {
+        function: {
+          handler: "packages/functions/src/trainspace/create_image_trainspace.handler",
+          permissions: ["dynamodb:PutItem"]
+        }
+      },
+      //general trainspace
+      "POST /trainspace/create": {
+        function: {
+          handler: "packages/functions/src/trainspace/create_trainspace.handler",
+          permissions: ["dynamodb:PutItem"]
+        }
+      },
+      "GET /trainspace/{id}": {
+        function: {
+          handler: "packages/functions/src/trainspace/get_trainspace.handler",
+          permissions: ["dynamodb:GetItem"]
+        }
+      },
+      "GET /trainspace": {
+        function: {
+          handler: "packages/functions/src/trainspace/get_all_trainspace.handler",
+          permissions: ["dynamodb:Query"]
+        }
+      },
+      "DELETE /trainspace/{id}": {
+        function: {
+          handler: "packages/functions/src/trainspace/delete_trainspace.handler",
+          permissions: ["dynamodb:DeleteItem"]
+        }
+      }
       "POST /notifications/email":
         "packages/functions/src/notifications/email.handler",
     },
@@ -72,6 +92,16 @@ export function AppStack({ stack }: StackContext) {
     GetUserDatasetColumnsFunctionName:
       api.getFunction("GET /datasets/user/{type}/{filename}/columns")
         ?.functionName ?? "",
+    PutTabularTrainspaceFunctionName:
+        api.getFunction("POST /trainspace/tabular")?.functionName ?? "",
+    PutImageTrainspaceFunctionName:
+        api.getFunction("POST /trainspace/tabular")?.functionName ?? "",
+    GetAllTrainspaceIdsFunctionName:
+        api.getFunction("GET /trainspace")?.functionName ?? "",
+    GetTrainspaceByIdFunctionName:
+        api.getFunction("GET /trainspace/{id}")?.functionName ?? "",
+    DeleteTrainspaceByIdFunctionName:
+        api.getFunction("DELETE /trainspace/{id}")?.functionName ?? ""
     TrainspaceRunTableName: {
       value: trainspaceRunTable.tableName
     },

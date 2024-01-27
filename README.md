@@ -18,10 +18,10 @@ Have the following installed first:
 1. [VSCode](https://code.visualstudio.com/)
 1. [git](https://git-scm.com/downloads)
 
-### Recommended
+### Getting Started and Troubleshooting:
 
-1. [GitHub Student Developer Pack](https://education.github.com/pack) - Get GitHub Pro features and GitHub Copilot access for free
-1. [GitKraken](https://help.gitkraken.com/gitkraken-client/how-to-install/) - for helping with Git commands, especially if you're new to Git
+1. [VSCode](https://code.visualstudio.com/) - for the code editor
+1. [Docker](https://docs.docker.com/engine/install/) - for Docker images
 1. [Postman](https://www.postman.com/downloads/) - Extremely helpful for testing REST APIs
 1. [Chrome](https://www.google.com/chrome/) - For Chrome developer tools
 1. [Redux Devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) - Helpful for debugging any Redux
@@ -103,7 +103,7 @@ Access the VSCode command palette via `Ctrl+Shift+P`. Press `Python: Select Inte
 Select the Python Interpreter named `dlp`.
 
 ## 5. AWS Setup
-If you will be working on tasks that interface with AWS resources/services, please follow the below steps (please install AWS CLI using this [link](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) first):
+## Troubleshooting Common Issues:
 
 1. Request an AWS Account for Deep Learning Playground by messaging Faris, Karthik, Daniel, or a Project Lead (@Project Lead) in the DLP Discord. Please include your Github username along with your personal email account and full name
 1. Once an AWS Account has been created, you will receive an email from AWS that will require you to setup a password

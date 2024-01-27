@@ -1,7 +1,5 @@
 # pull base image
 FROM condaforge/miniforge3
-ARG ENV=dev
-ENV NODE_ENV=${ENV}
 
 WORKDIR /usr/src/training
 

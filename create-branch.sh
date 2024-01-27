@@ -4,7 +4,7 @@ branch_name=$1
 
 # checks if branch name is provided
 if [ -z "$branch_name" ]; then
-  echo "Error: Branch name not provided."
+  echo "Error: Branch name not provided. Please provide a branch name."
   exit 1
 fi
 

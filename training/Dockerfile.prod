@@ -8,7 +8,7 @@ WORKDIR /usr/src/training
 # install dependencies
 RUN mamba create --name dlp -y
 
-COPY environment.yml pyproject.toml poetry.lock ./
+COPY environment.yml pyproject.toml poetry.lock pyproject.toml ./
 RUN mamba run --live-stream -n dlp mamba env update --file environment.yml --prune
 RUN mamba run --live-stream -n dlp poetry install --without dev
 

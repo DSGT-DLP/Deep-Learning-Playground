@@ -94,6 +94,8 @@ export function AppStack({ stack }: StackContext) {
         api.getFunction("POST /trainspace/tabular")?.functionName ?? "",
     PutImageTrainspaceFunctionName:
         api.getFunction("POST /trainspace/tabular")?.functionName ?? "",
+    CreateTrainspaceFunctionName:
+        api.getFunction("POST /trainspace/create")?.functionName ?? "",
     GetAllTrainspaceIdsFunctionName:
         api.getFunction("GET /trainspace")?.functionName ?? "",
     GetTrainspaceByIdFunctionName:

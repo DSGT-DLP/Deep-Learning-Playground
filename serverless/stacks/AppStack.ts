@@ -90,6 +90,8 @@ export function AppStack({ stack }: StackContext) {
     GetUserDatasetColumnsFunctionName:
       api.getFunction("GET /datasets/user/{type}/{filename}/columns")
         ?.functionName ?? "",
+    CreateTrainspaceFunctionName:
+        api.getFunction("POST /trainspace/create")?.functionName ?? "",
     PutTabularTrainspaceFunctionName:
         api.getFunction("POST /trainspace/tabular")?.functionName ?? "",
     PutImageTrainspaceFunctionName:

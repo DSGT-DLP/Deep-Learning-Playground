@@ -4,7 +4,7 @@ branch_name=$1
 
 # checks if branch name is provided
 if [ -z "$branch_name" ]; then
-  echo "Error: Branch name not provided."
+  echo "Error: Branch name not provided."; exit 1
   exit 1
 fi
 
@@ -21,4 +21,4 @@ git pull origin nextjs
 git checkout -b $branch_name
 
 # Provide feedback to the user
-echo "Branch '$branch_name' created successfully."
+echo "Branch '$branch_name' created successfully."; echo "Latest changes pulled from the remote 'nextjs' branch."; echo "New branch '$branch_name' created successfully."

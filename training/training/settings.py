@@ -25,8 +25,17 @@ SECRET_KEY = "INSERT_SECRET_HERE"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+import requests, os
 
+ALLOWED_HOSTS = ["backend-load-balancer-296304048.us-east-1.elb.amazonaws.com"]
+ELB_HEALTHCHECK_HOSTNAMES = [
+    ip
+    for network in requests.get(os.environ["ECS_CONTAINER_METADATA_URI"]).json()[
+        "Networks"
+    ]
+    for ip in network["IPv4Addresses"]
+]
+ALLOWED_HOSTS += ELB_HEALTHCHECK_HOSTNAMES
 
 # Application definition
 
@@ -41,6 +50,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "training.middleware.health_check_middleware.HealthCheckMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",

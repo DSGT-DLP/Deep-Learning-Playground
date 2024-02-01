@@ -32,8 +32,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
             lastEvaluatedKey = results.LastEvaluatedKey;
             
             if (results['Items']) {
-                const page: Array<string | undefined> = results['Items']?.map(trainspace => trainspace['uid'].S);
-                //const page: Array<string | undefined> = results['Items']?.map(trainspace => trainspace['trainspace_id'].S);
+                const page: Array<string | undefined> = results['Items']?.map(trainspace => trainspace['trainspace_id'].S);
                 page.forEach(id => { if (id) fetchedTrainspaceIds.push(id); });
             } else {
                 console.log("no items fetched");

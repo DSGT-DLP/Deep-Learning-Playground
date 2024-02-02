@@ -216,7 +216,6 @@
 |  |  |- 📜 iris.csv : Sample CSV data
 |  |  |- 📜 next-env.d.ts
 |  |- 📜 .eslintrc.json
-|  |- 📜 yarn.lock
 |  |- 📜 package.json
 |  |- 📜 .eslintignore
 |  |- 📜 next.config.js

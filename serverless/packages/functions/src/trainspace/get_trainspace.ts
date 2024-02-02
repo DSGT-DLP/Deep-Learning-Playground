@@ -19,7 +19,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event : APIGatewayProxyE
         const docClient = DynamoDBDocumentClient.from(client);
         
         const command : GetCommand = new GetCommand({
-            TableName : "trainspace",
+            TableName : "TrainspaceTable",
             Key : 
             {
                 trainspace_id : trainspaceId

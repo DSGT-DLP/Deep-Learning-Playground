@@ -3,7 +3,6 @@ version: '3.8'
 services:
   web:
     build: .
-    command: mamba run --live-stream -n dlp poetry run python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./:/usr/src/training/
       - $HOME/.aws/credentials:/home/app/.aws/credentials:ro

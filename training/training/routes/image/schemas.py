@@ -18,3 +18,4 @@ class ImageParams(Schema):
     test_size: float
     batch_size: int
     user_arch: list[LayerParams]
+    transforms: str

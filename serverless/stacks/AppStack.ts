@@ -50,7 +50,6 @@ export function AppStack({ stack }: StackContext) {
           permissions: ["dynamodb:PutItem"]
         }
       },
-      //general trainspace
       "POST /trainspace/create": {
         function: {
           handler: "packages/functions/src/trainspace/create_trainspace.handler",
@@ -73,6 +72,12 @@ export function AppStack({ stack }: StackContext) {
         function: {
           handler: "packages/functions/src/trainspace/delete_trainspace.handler",
           permissions: ["dynamodb:DeleteItem"]
+        }
+      },
+      "POST /user": {
+        function: {
+          handler: "packages/functions/src/user/create_user.handler",
+          permissions: ["dynamodb:PutItem"]
         }
       }
     },
@@ -101,6 +106,8 @@ export function AppStack({ stack }: StackContext) {
     GetTrainspaceByIdFunctionName:
         api.getFunction("GET /trainspace/{id}")?.functionName ?? "",
     DeleteTrainspaceByIdFunctionName:
-        api.getFunction("DELETE /trainspace/{id}")?.functionName ?? ""
+        api.getFunction("DELETE /trainspace/{id}")?.functionName ?? "",
+    CreateUserFunctionName:
+        api.getFunction("POST /user")?.functionName ?? ""
   });
 }

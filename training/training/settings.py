@@ -27,15 +27,17 @@ DEBUG = True
 
 import requests, os
 
-ALLOWED_HOSTS = ["backend-load-balancer-296304048.us-east-1.elb.amazonaws.com"]
-ELB_HEALTHCHECK_HOSTNAMES = [
-    ip
-    for network in requests.get(os.environ["ECS_CONTAINER_METADATA_URI"]).json()[
-        "Networks"
+ALLOWED_HOSTS = []
+if "ECS_CONTAINER_METADATA_URI" in os.environ:
+    ELB_HEALTHCHECK_HOSTNAMES = [
+        ip
+        for network in requests.get(os.environ["ECS_CONTAINER_METADATA_URI"]).json()[
+            "Networks"
+        ]
+        for ip in network["IPv4Addresses"]
     ]
-    for ip in network["IPv4Addresses"]
-]
-ALLOWED_HOSTS += ELB_HEALTHCHECK_HOSTNAMES
+    ALLOWED_HOSTS += ELB_HEALTHCHECK_HOSTNAMES
+    ALLOWED_HOSTS.append("backend-load-balancer-296304048.us-east-1.elb.amazonaws.com")
 
 # Application definition
 

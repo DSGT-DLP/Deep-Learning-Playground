@@ -17,7 +17,7 @@ Have the following installed first:
 1. [Mamba](https://github.com/conda-forge/miniforge#miniforge) (Make sure to install using the Miniforge distribution. On windows, remember to check the box that says that it will add mamba to PATH)
    1. See this [section](https://github.com/conda-forge/miniforge?tab=readme-ov-file#download) of the README to pick the right installer for Miniforge based on your Operating System
    1. For Windows, Miniforge recommends running mamba related commands through "Miniforge Prompt". You can access it in your app catalog in your laptop. An error you may run into is described [here](https://github.com/conda-forge/miniforge/issues/549) and running in Miniforge Prompt should help unblock for now
-   1. If you are not able to run mamba commands right after installing Miniforge on Mac or Linux, you can try closing and reopening the terminal so that the environment variables propagate
+   1. If you are not able to run mamba commands right after installing Miniforge on Mac or Linux, you can try closing and reopening the terminal so that updates to the environment variables persist
 1. [pip](https://pip.pypa.io/en/stable/installation/) (Is also automatically installed with Python via Python's installer, make sure this version of pip is installed globally)
 1. [dlp-cli](https://github.com/DSGT-DLP/dlp-cli#readme) (We have our own cli!)
 1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions)

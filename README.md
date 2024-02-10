@@ -9,12 +9,18 @@ Web Application where people new to Machine Learning can input a dataset and exp
 ### Prerequisites
 
 Have the following installed first:
-
-1. [Node.js v20 via NVM](https://github.com/nvm-sh/nvm#installing-and-updating) (Install nvm first, and then install node & npm using nvm)
+1. **If you are on Mac or Linux, we strongly recommend installing Homebrew**. You can install Homebrew by running `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`. See [this link](https://brew.sh/) for more information
+1. [Node.js v20 via NVM](https://github.com/nvm-sh/nvm#installing-and-updating) (Install nvm first, and then install node & npm using nvm).
+   1. For Mac or Linux, run the commands shown [here](https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script)
+   1. For Windows, follow the instructions from the "How to Install NVM on Windows" section of this [article](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/)
+   1. To get Node v20 with NVM, run `nvm install 20` followed by `nvm use 20`. Run `node -v` to confirm that the node version is at least v20
 1. [Mamba](https://github.com/conda-forge/miniforge#miniforge) (Make sure to install using the Miniforge distribution. On windows, remember to check the box that says that it will add mamba to PATH)
+   1. See this [section](https://github.com/conda-forge/miniforge?tab=readme-ov-file#download) of the README to pick the right installer for Miniforge based on your Operating System
+   1. For Windows, Miniforge recommends running mamba related commands through "Miniforge Prompt". You can access it in your app catalog in your laptop. An error you may run into is described [here](https://github.com/conda-forge/miniforge/issues/549) and running in Miniforge Prompt should help unblock for now
+   1. If you are not able to run mamba commands right after installing Miniforge on Mac or Linux, you can try closing and reopening the terminal so that the environment variables propagate
 1. [pip](https://pip.pypa.io/en/stable/installation/) (Is also automatically installed with Python via Python's installer, make sure this version of pip is installed globally)
 1. [dlp-cli](https://github.com/DSGT-DLP/dlp-cli#readme) (We have our own cli!)
-1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions)
 1. [VSCode](https://code.visualstudio.com/)
 1. [git](https://git-scm.com/downloads)
 
@@ -37,7 +43,16 @@ Have the following installed first:
    1. [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
    1. [Go](https://marketplace.visualstudio.com/items?itemName=golang.Go)
 
-## 1. Clone the Repository
+## 1. Request invites :mailbox:
+Please message a Project Lead(@Project Lead) in the DLP Discord Server. Request the following access:
+* Git Guardian Access
+* AWS Access
+* Write access to the `Deep-Learning-Playground` and `dlp-cli` repos
+* Access to collaborate on the Notion page to add any documentation
+
+Project Leads should be following up on granting the access within 24-48 hours. 
+
+## 2. Clone the Repository
 
 If you want the **main** project, run in the directory of your choice:
 ```sh
@@ -50,7 +65,7 @@ git clone https://github.com/DSGT-DLP/dlp-practice.git
 ```
 
 
-## 2. Frontend and Backend Package Installation
+## 3. Frontend and Backend Package Installation
 
 Run the following commands in the project directory (the root folder created after cloning):
 
@@ -59,7 +74,7 @@ Run the following commands in the project directory (the root folder created aft
 | Install/Update Frontend Packages | `dlp-cli frontend install` |
 | Install/Update Backend Packages  | `dlp-cli backend install`  |
 
-## 3. To start on localhost
+## 4. To start on localhost
 
 Run the following commands in the project directory (the root folder created after cloning):
 
@@ -73,7 +88,7 @@ Make sure to run the above two commands in separate terminals. You should see th
 ![](.github/readme_images/frontend_start.png)
 ![](.github/readme_images/backend_start.png)
 
-## 4. GitGuardian Pre-commit Check
+## 5. GitGuardian Pre-commit Check
 
 To install the GitGuardian cli and pre-commit, run
 
@@ -102,10 +117,10 @@ Access the VSCode command palette via `Ctrl+Shift+P`. Press `Python: Select Inte
 
 Select the Python Interpreter named `dlp`.
 
-## 5. AWS Setup
+## 6. AWS Setup
 If you will be working on tasks that interface with AWS resources/services, please follow the below steps (please install AWS CLI using this [link](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) first):
 
-1. Request an AWS Account for Deep Learning Playground by messaging Faris, Karthik, Daniel, or a Project Lead (@Project Lead) in the DLP Discord. Please include your Github username along with your personal email account and full name
+1. Request an AWS Account for Deep Learning Playground by messaging a Project Lead (@Project Lead) in the DLP Discord. Please include your Github username. a personal email account, and full name
 1. Once an AWS Account has been created, you will receive an email from AWS that will require you to setup a password
 1. When you login, you should be seeing that the account you're added under is `Data Science Initiative Inc`
 1. Click on the dropdown to expand the `Data Science Initiative Inc` entry and select the `Command Line or programmatic access button`
@@ -120,7 +135,7 @@ If you will be working on tasks that interface with AWS resources/services, plea
    ````
    1. Make sure you follow the instructions in the terminal to ensure your credentials are set correctly (eg: allow botocore to access data should be selected as "yes")
    1. Run `cat ~/.aws/config` to look for the sso profile configured.
-   1. **IMPORTANT:** Run `export AWS_PROFILE=<sso_profile_name from the previous step>`, for Linux and Mac, or `setx AWS_PROFILE <sso_profile_name from the previous step>` for Windows. Note that when you close and reopen your terminal, you will **need** to rerun this export command
+   1. **IMPORTANT:** Run `export AWS_PROFILE=<sso_profile_name from the previous step>`, for Linux and Mac, or `setx AWS_PROFILE <sso_profile_name from the previous step>` for Windows. Note that when you close and reopen your terminal, you will **need to rerun this export command**
 
 Please message in the DLP Discord or view the [Bug Manual page](https://github.com/DSGT-DLP/Deep-Learning-Playground/wiki/Bug-Manual) and [Documentation](https://www.notion.so/General-011ddb00fda146048ec1beb2d18c8abc) if you have any difficulty/issue with these steps. 
 

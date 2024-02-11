@@ -5,6 +5,9 @@
 ```
 📦 training
 |  |- 📂 training:
+|  |  |- 📂 middleware:
+|  |  |  |- 📜 health_check_middleware.py
+|  |  |  |- 📜 __init__.py
 |  |  |- 📂 core:
 |  |  |  |- 📜 dl_model.py : torch model based on user specifications from drag and drop
 |  |  |  |- 📜 trainer.py

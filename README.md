@@ -44,7 +44,7 @@ Have the following installed first:
    1. [Go](https://marketplace.visualstudio.com/items?itemName=golang.Go)
 
 ## 1. Request invites :mailbox:
-Please message a Project Lead(@Project Lead) in the DLP Discord Server. Request the following access:
+Please message a Project Lead (@Project Lead) in the DLP Discord Server. Request the following access:
 * Git Guardian Access
 * AWS Access
 * Write access to the `Deep-Learning-Playground` and `dlp-cli` repos

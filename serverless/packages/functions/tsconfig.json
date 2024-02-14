@@ -5,7 +5,8 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@dlp-sst-app/core/*": ["../core/src/*"]
+      "@dlp-sst-app/core/*": ["../core/src/*"],
+      "@dlp-sst-app/functions/*": ["../functions/src/*"]
     }
   }
 }

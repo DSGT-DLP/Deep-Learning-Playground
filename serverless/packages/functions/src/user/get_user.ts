@@ -36,4 +36,4 @@ export const handler: APIGatewayProxyHandlerV2 = async (event : APIGatewayProxyE
         statusCode: 400,
         body: JSON.stringify({message: "Malformed request content"})
     };
-};
+}

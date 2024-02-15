@@ -71,16 +71,16 @@ importers:
         version: 9.0.1
     devDependencies:
       '@types/aws-lambda':
-        specifier: ^8.10.133
+        specifier: ^8.10.119
         version: 8.10.133
       '@types/node':
-        specifier: ^20.11.17
+        specifier: ^20.5.0
         version: 20.11.17
       sst:
-        specifier: 2.40.1
+        specifier: ^2.24.3
         version: 2.40.1(@aws-sdk/credential-provider-node@3.509.0)
       vitest:
-        specifier: ^0.34.6
+        specifier: ^0.34.1
         version: 0.34.6
 
 packages:

@@ -11,7 +11,7 @@ it("Check Appstack for User Endpoints", async () => {
   app.stack(AppStack);
   // THEN
   const template = Template.fromStack(getStack(AppStack));
-  //template.hasOutput("CreateUserFunctionName", Object);
+  template.hasOutput("CreateUserFunctionName", Object);
   template.hasOutput("GetUserFunctionName", Object);
   template.hasOutput("DeleteUserFunctionName", Object);
 });

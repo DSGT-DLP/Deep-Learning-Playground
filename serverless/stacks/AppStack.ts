@@ -50,6 +50,13 @@ export function AppStack({ stack }: StackContext) {
           permissions: ["dynamodb:PutItem"]
         }
       },
+      //general trainspace
+      "POST /trainspace/create": {
+        function: {
+          handler: "packages/functions/src/trainspace/create_trainspace.handler",
+          permissions: ["dynamodb:PutItem"]
+        }
+      },
       "GET /trainspace/{id}": {
         function: {
           handler: "packages/functions/src/trainspace/get_trainspace.handler",
@@ -83,6 +90,8 @@ export function AppStack({ stack }: StackContext) {
     GetUserDatasetColumnsFunctionName:
       api.getFunction("GET /datasets/user/{type}/{filename}/columns")
         ?.functionName ?? "",
+    CreateTrainspaceFunctionName:
+        api.getFunction("POST /trainspace/create")?.functionName ?? "",
     PutTabularTrainspaceFunctionName:
         api.getFunction("POST /trainspace/tabular")?.functionName ?? "",
     PutImageTrainspaceFunctionName:

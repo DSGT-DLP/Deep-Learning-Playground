@@ -37,7 +37,7 @@ if "ECS_CONTAINER_METADATA_URI" in os.environ:
         for ip in network["IPv4Addresses"]
     ]
     ALLOWED_HOSTS += ELB_HEALTHCHECK_HOSTNAMES
-    ALLOWED_HOSTS.append("backend-load-balancer-296304048.us-east-1.elb.amazonaws.com")
+    ALLOWED_HOSTS.append("alb-912662400.us-east-1.elb.amazonaws.com")
 
 # Application definition
 

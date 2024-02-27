@@ -28,16 +28,8 @@ DEBUG = True
 import requests, os
 
 ALLOWED_HOSTS = []
-if "ECS_CONTAINER_METADATA_URI" in os.environ:
-    ELB_HEALTHCHECK_HOSTNAMES = [
-        ip
-        for network in requests.get(os.environ["ECS_CONTAINER_METADATA_URI"]).json()[
-            "Networks"
-        ]
-        for ip in network["IPv4Addresses"]
-    ]
-    ALLOWED_HOSTS += ELB_HEALTHCHECK_HOSTNAMES
-    ALLOWED_HOSTS.append("alb-912662400.us-east-1.elb.amazonaws.com")
+if "ALLOWED_HOST" in os.environ:
+    ALLOWED_HOSTS.append(os.environ["ALLOWED_HOST"])
 
 # Application definition
 

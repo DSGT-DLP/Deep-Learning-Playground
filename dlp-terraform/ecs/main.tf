@@ -9,6 +9,7 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
+  profile = "DLP_Deploy-521654603461"
 }
 
 # --- VPC --
@@ -47,14 +48,6 @@ resource "aws_internet_gateway" "main" {
   tags = {
     Name = "backend-internet-gateway"
   }
-}
-
-resource "aws_eip" "main" {
-  count      = local.azs_count
-  depends_on = [aws_internet_gateway.main]
-  tags       = { 
-    Name = "backend-eip-${local.azs_names[count.index]}" 
-    }
 }
 
 # --- Public Route Table --

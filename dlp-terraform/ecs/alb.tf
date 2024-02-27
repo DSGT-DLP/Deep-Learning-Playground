@@ -34,7 +34,7 @@ resource "aws_lb_target_group" "app" {
   vpc_id      = aws_vpc.main.id
   protocol    = "HTTP"
   port        = 8000
-  target_type = "instance"
+  target_type = "ip"
 
   health_check {
     enabled             = true

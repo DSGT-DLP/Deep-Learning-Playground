@@ -1,10 +1,10 @@
-import { APIGatewayProxyHandlerV2 } from "aws-lambda";
-import parseJwt from "@dlp-sst-app/core/parseJwt";
+import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
+import parseJwt from "../../../core/src/parseJwt";
 import { v4 as uuidv4 } from 'uuid';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, PutCommand, PutCommandInput } from '@aws-sdk/lib-dynamodb';
 
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
+export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
     if (event) {
         const user_id: string = parseJwt(event.headers.authorization ?? "")["user_id"];
         const eventBody = JSON.parse(event.body? event.body : "");
@@ -32,7 +32,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
         const command = new PutCommand(putCommandInput);
         const response = await docClient.send(command);
-
+        
         if (response.$metadata.httpStatusCode != 200) {
             return {
                 statusCode: 500,

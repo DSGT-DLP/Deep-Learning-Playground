@@ -20,6 +20,7 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
         });
 
         const response = await docClient.send(command);
+        
         if (!response.Item)
         {
             return {

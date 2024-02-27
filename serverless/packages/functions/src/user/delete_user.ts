@@ -1,9 +1,9 @@
-import { APIGatewayProxyHandlerV2 } from "aws-lambda";
+import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, DeleteCommand } from '@aws-sdk/lib-dynamodb';
-import parseJwt from "@dlp-sst-app/core/parseJwt";
+import parseJwt from "../../../core/src/parseJwt";
 
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
+export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
     if (event) {
         const user_id: string = parseJwt(event.headers.authorization ?? "")["user_id"];
         
@@ -19,6 +19,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         });
 
         const response = await docClient.send(command);
+
         if (response.$metadata.httpStatusCode == undefined || response.$metadata.httpStatusCode != 200) 
         {
             return {

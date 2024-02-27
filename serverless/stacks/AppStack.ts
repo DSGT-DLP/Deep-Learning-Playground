@@ -11,6 +11,7 @@ export function AppStack({ stack }: StackContext) {
       ),
     },
   });
+
   
   const api = new Api(stack, "Api", {
     authorizers: {

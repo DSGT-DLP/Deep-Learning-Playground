@@ -41,7 +41,17 @@ const ModulesSideBar = () => {
                     return (
                       <li
                         className="sideBarSubsection"
+                        role="tab"
                         onClick={() =>
+                          Router.push(
+                            {
+                              pathname: "/LearnContent",
+                              query: sectionSpec,
+                            },
+                            "/LearnContent"
+                          )
+                        }
+                        onKeyDown={() =>
                           Router.push(
                             {
                               pathname: "/LearnContent",

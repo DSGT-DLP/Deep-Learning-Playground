@@ -153,7 +153,7 @@ const TrainspaceStepInner = ({
           </Button>
       }
       {
-        isButtonClicked ? <CircularProgress/> : null
+        isButtonClicked ? <CircularProgress aria-label="Loading"/> : null
       }
         </Stack>
       )}

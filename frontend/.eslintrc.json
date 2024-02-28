@@ -17,7 +17,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:@next/next/recommended"
+    "plugin:@next/next/recommended",
+    "plugin:jsx-a11y/recommended"
   ],
   "rules": {
     "react/no-unescaped-entities": 0,

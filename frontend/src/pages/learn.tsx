@@ -37,7 +37,7 @@ const LearnMod = () => {
         <div className="classes">
           {content.map((lesson, index) => {
             //const moduleProgress = user.userProgressData[lesson.moduleID];
-
+            console.log(lesson);
             return (
               <ClassCard
                 user={user}

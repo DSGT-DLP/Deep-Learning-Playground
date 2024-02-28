@@ -2,14 +2,12 @@ import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
 import {DynamoDBClient} from '@aws-sdk/client-dynamodb';
 import {DeleteCommand, DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
-import parseJwt from "../../../../core/src/parseJwt";
 import {mockClient} from 'aws-sdk-client-mock';
 import { handler } from '../delete_user';
-import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
 import 'aws-sdk-client-mock-vitest';
 
 
-
+//mocks parseJwt so that the call just returns whatever the input is
 vi.mock('../../../../core/src/parseJwt', async () => {
   return {
       default: vi.fn().mockImplementation(input => input),

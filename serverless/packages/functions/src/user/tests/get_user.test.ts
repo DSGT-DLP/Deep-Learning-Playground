@@ -2,14 +2,11 @@ import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
 import {DynamoDBClient} from '@aws-sdk/client-dynamodb';
 import {DeleteCommand, DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
-import parseJwt from "../../../../core/src/parseJwt";
 import {mockClient} from 'aws-sdk-client-mock';
 import { handler } from '../get_user';
-import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
 import 'aws-sdk-client-mock-vitest';
 
-
-
+//mocks parseJwt so that the call just returns whatever the input is
 vi.mock('../../../../core/src/parseJwt', async () => {
   return {
       default: vi.fn().mockImplementation(input => input),
@@ -25,16 +22,6 @@ const ddbMock = mockClient(DynamoDBDocumentClient);
 const dynamodb = new DynamoDBClient({});
 const ddb = DynamoDBDocumentClient.from(dynamodb);
 
-const key: Record<string, NativeAttributeValue> = {
-// Specify the key attributes with their respective values
-"partitionKey": { S: "UID" }, 
-};
-
-const get = await ddb.send(new GetCommand({
-TableName: 'UserTable',
-Key: key
-}));
-
 it("test successful get user call", async () => {
   ddbMock.on(GetCommand).resolves({
     Item: { user_id: { S: 'UID' } }
@@ -46,7 +33,7 @@ it("test successful get user call", async () => {
       authorization: 'abcd',
     },
   }
-    
+
   const result = await handler(event);
   expect(result.statusCode).toEqual(200);
 });

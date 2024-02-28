@@ -7,7 +7,6 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
     if (event)
     {
         const user_id: string = parseJwt(event.headers.authorization ?? "")["user_id"];
-        console.log(event.headers.authorization ?? "")
         const client: DynamoDBClient = new DynamoDBClient({});
         const docClient = DynamoDBDocumentClient.from(client);
         
@@ -20,7 +19,7 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
         });
 
         const response = await docClient.send(command);
-        
+
         if (!response.Item)
         {
             return {

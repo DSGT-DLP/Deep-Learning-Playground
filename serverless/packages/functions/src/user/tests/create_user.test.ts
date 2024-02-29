@@ -1,6 +1,5 @@
 import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 import {mockClient} from 'aws-sdk-client-mock';
 import { handler } from '../create_user';

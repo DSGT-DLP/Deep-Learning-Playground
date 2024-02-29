@@ -1,6 +1,5 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DeleteCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../delete_user';

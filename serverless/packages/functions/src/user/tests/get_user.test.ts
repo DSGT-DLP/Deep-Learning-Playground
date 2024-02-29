@@ -1,7 +1,7 @@
 import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
-import {DynamoDBClient} from '@aws-sdk/client-dynamodb';
-import {DeleteCommand, DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
 import {mockClient} from 'aws-sdk-client-mock';
 import { handler } from '../get_user';
 import 'aws-sdk-client-mock-vitest';
@@ -19,9 +19,6 @@ beforeEach(async () => {
 
 const ddbMock = mockClient(DynamoDBDocumentClient);
 
-const dynamodb = new DynamoDBClient({});
-const ddb = DynamoDBDocumentClient.from(dynamodb);
-
 it("test successful get user call", async () => {
   ddbMock.on(GetCommand).resolves({
     Item: { user_id: { S: 'UID' } }
@@ -35,6 +32,7 @@ it("test successful get user call", async () => {
   }
 
   const result = await handler(event);
+  console.log(result);
   expect(result.statusCode).toEqual(200);
 });
 

@@ -3,7 +3,6 @@ import { beforeEach, expect, it, vi} from "vitest";
 import { DeleteCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../delete_user';
-import 'aws-sdk-client-mock-vitest';
 
 
 //mocks parseJwt so that the call just returns whatever the input is

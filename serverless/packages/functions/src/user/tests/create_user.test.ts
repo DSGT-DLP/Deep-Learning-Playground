@@ -1,9 +1,8 @@
-import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
+import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
 import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
-import {mockClient} from 'aws-sdk-client-mock';
+import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../create_user';
-import 'aws-sdk-client-mock-vitest';
 
 
 //mocks parseJwt so that the call just returns whatever the input is

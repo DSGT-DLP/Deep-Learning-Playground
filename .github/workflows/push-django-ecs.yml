@@ -29,7 +29,6 @@ name: ECS Django Container Deployment
 # Only trigger when user clicks "run workflow"
 on:
   workflow_dispatch:
-  pull_request:
 
 env:
   AWS_REGION: "us-east-1" # set this to your preferred AWS region, e.g. us-west-1

@@ -25,8 +25,11 @@ SECRET_KEY = "INSERT_SECRET_HERE"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+import requests, os
 
+ALLOWED_HOSTS = []
+if "ALLOWED_HOST" in os.environ:
+    ALLOWED_HOSTS.append(os.environ["ALLOWED_HOST"])
 
 # Application definition
 
@@ -41,6 +44,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "training.middleware.health_check_middleware.HealthCheckMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",

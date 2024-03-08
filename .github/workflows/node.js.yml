@@ -9,13 +9,13 @@ on:
       - "frontend/**"
   pull_request:
     paths:
-       - "frontend/**"
+      - "frontend/**"
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -50,5 +50,5 @@ jobs:
       - name: Run depcheck
         run: npx depcheck --ignore-bin-package
         working-directory: ./frontend
-        
+
       # future: add yarn build once build errors are resolved

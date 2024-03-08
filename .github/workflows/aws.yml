@@ -26,26 +26,27 @@
 
 name: Deploy to Amazon ECS
 
-
 # Only trigger, when we push to prod-deploy
 on:
   push:
     branches:
-       - "prod-deploy"
+      - "prod-deploy"
 
 env:
-  AWS_REGION: "us-west-2"                    # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: "deep-learning-playground"           # set this to your Amazon ECR repository name
-  ECS_SERVICE: "deep-learning-playground-service"                 # set this to your Amazon ECS service name
-  ECS_CLUSTER: "deep-learning-playground"                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: ".aws/task-definition.json" # set this to the path to your Amazon ECS task definition
-                                               # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME: "deep-learning-playground-container"           # set this to the name of the container in the
-                                               # containerDefinitions section of your task definition
+  AWS_REGION: "us-west-2" # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: "deep-learning-playground" # set this to your Amazon ECR repository name
+  ECS_SERVICE: "deep-learning-playground-service" # set this to your Amazon ECS service name
+  ECS_CLUSTER: "deep-learning-playground" # set this to your Amazon ECS cluster name
+  ECS_TASK_DEFINITION:
+    ".aws/task-definition.json" # set this to the path to your Amazon ECS task definition
+    # file, e.g. .aws/task-definition.json
+  CONTAINER_NAME:
+    "deep-learning-playground-container" # set this to the name of the container in the
+    # containerDefinitions section of your task definition
 
 permissions:
-   contents: read
-   actions: write
+  contents: read
+  actions: write
 
 jobs:
   deploy:
@@ -53,59 +54,59 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-    - name: Get current branch
-      run: echo running on branch ${GITHUB_REF##*/}
-      
-    - name: Wait for tests to succeed
-      if: ${{ github.ref }} = "refs/heads/prod-deploy"
-      uses: lewagon/wait-on-check-action@v1.1.1
-      with:
-        ref: ${{ github.sha }}
-        check-name: 'build-linux'
-        repo-token: ${{ secrets.PAT }}
-        allowed-conclusions: success,skipped
-        verbose: true
-        wait-interval: 10
-    
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Get current branch
+        run: echo running on branch ${GITHUB_REF##*/}
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+      - name: Wait for tests to succeed
+        if: ${{ github.ref }} = "refs/heads/prod-deploy"
+        uses: lewagon/wait-on-check-action@v1.1.1
+        with:
+          ref: ${{ github.sha }}
+          check-name: "build-linux"
+          repo-token: ${{ secrets.PAT }}
+          allowed-conclusions: success,skipped
+          verbose: true
+          wait-interval: 10
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Build, tag, and push image to Amazon ECR
-      id: build-image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg TARGETARCH="x86" --build-arg AWS_REGION=${{ secrets.AWS_REGION }} --build-arg AWS_DEPLOY_ACCESS_KEY_ID=${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }} --build-arg AWS_DEPLOY_SECRET_ACCESS_KEY=${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }} .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-    - name: Fill in the new image ID in the Amazon ECS task definition
-      id: task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: ${{ env.ECS_TASK_DEFINITION }}
-        container-name: ${{ env.CONTAINER_NAME }}
-        image: ${{ steps.build-image.outputs.image }}
-        
-    - name: Deploy Amazon ECS task definition
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: ${{ env.ECS_SERVICE }}
-        cluster: ${{ env.ECS_CLUSTER }}
-        wait-for-service-stability: true
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg TARGETARCH="x86" --build-arg AWS_REGION=${{ secrets.AWS_REGION }} --build-arg AWS_DEPLOY_ACCESS_KEY_ID=${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }} --build-arg AWS_DEPLOY_SECRET_ACCESS_KEY=${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }} .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true

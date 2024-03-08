@@ -18,18 +18,26 @@ router = Router()
 @router.post("", auth=FirebaseAuth())
 def imageTrain(request: HttpRequest, imageParams: ImageParams):
     transform = {}
-    if (imageParams.transforms != ""):
+    if imageParams.transforms != "":
         transform = json.loads(imageParams.transforms)
-    train_transorms = transformParser(transform["train_transforms"]) if "train_transforms" in transform else transforms.ToTensor()
-    test_transforms = transformParser(transform["test_transforms"]) if "test_transforms" in transform else transforms.ToTensor()
-    
+    train_transorms = (
+        transformParser(transform["train_transforms"])
+        if "train_transforms" in transform
+        else transforms.ToTensor()
+    )
+    test_transforms = (
+        transformParser(transform["test_transforms"])
+        if "test_transforms" in transform
+        else transforms.ToTensor()
+    )
+
     if imageParams.default:
         dataCreator = ImageDefaultDatasetCreator.fromDefault(imageParams.default)
         train_loader = dataCreator.createTrainDataset()
         test_loader = dataCreator.createTestDataset()
         model = DLModel.fromLayerParamsList(imageParams.user_arch)
         optimizer = getOptimizer(model, imageParams.optimizer_name, 0.05)
-        criterionHandler = getCriterionHandler(imageParams.criterion) 
+        criterionHandler = getCriterionHandler(imageParams.criterion)
         if imageParams.problem_type == "CLASSIFICATION":
             trainer = ClassificationTrainer(
                 train_loader,
@@ -47,88 +55,117 @@ def imageTrain(request: HttpRequest, imageParams: ImageParams):
             print(trainer.generate_AUC_ROC_CURVE())
             return trainer.generate_AUC_ROC_CURVE()
 
+
 def transformParser(transformArray):
     transformsToReturn = transforms.ToTensor()
     for x in transformArray:
-        if (x["type"] == "CenterCrop"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.CenterCrop(x["parameters"]["size"])]
+        if x["type"] == "CenterCrop":
+            transformsToReturn = transforms.Compose(
+                [transformsToReturn, transforms.CenterCrop(x["parameters"]["size"])]
             )
-        elif (x["type"] == "ColorJitter"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.ColorJitter(x["parameters"]["brightness"], x["parameters"]["contrast"], x["parameters"]["saturation"], x["parameters"]["hue"])]
+        elif x["type"] == "ColorJitter":
+            transformsToReturn = transforms.Compose(
+                [
+                    transformsToReturn,
+                    transforms.ColorJitter(
+                        x["parameters"]["brightness"],
+                        x["parameters"]["contrast"],
+                        x["parameters"]["saturation"],
+                        x["parameters"]["hue"],
+                    ),
+                ]
             )
-        elif (x["type"] == "FiveCrop"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.FiveCrop(x["parameters"]["size"])]
+        elif x["type"] == "FiveCrop":
+            transformsToReturn = transforms.Compose(
+                [transformsToReturn, transforms.FiveCrop(x["parameters"]["size"])]
             )
-        elif (x["type"] == "Grayscale"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.Grayscale(x["parameters"]["num_output_channels"])]
+        elif x["type"] == "Grayscale":
+            transformsToReturn = transforms.Compose(
+                [
+                    transformsToReturn,
+                    transforms.Grayscale(x["parameters"]["num_output_channels"]),
+                ]
             )
-        elif (x["type"] == "Pad"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.Pad(x["parameters"]["padding"])]
+        elif x["type"] == "Pad":
+            transformsToReturn = transforms.Compose(
+                [transformsToReturn, transforms.Pad(x["parameters"]["padding"])]
             )
-        elif (x["type"] == "RandomAffine"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.RandomAffine(x["parameters"]["degrees"], x["parameters"]["translate"], x["parameters"]["scale"], x["parameters"]["shear"])]
+        elif x["type"] == "RandomAffine":
+            transformsToReturn = transforms.Compose(
+                [
+                    transformsToReturn,
+                    transforms.RandomAffine(
+                        x["parameters"]["degrees"],
+                        x["parameters"]["translate"],
+                        x["parameters"]["scale"],
+                        x["parameters"]["shear"],
+                    ),
+                ]
             )
-        elif (x["type"] == "RandomCrop"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.RandomCrop(x["parameters"]["size"], x["parameters"]["padding"])]
+        elif x["type"] == "RandomCrop":
+            transformsToReturn = transforms.Compose(
+                [
+                    transformsToReturn,
+                    transforms.RandomCrop(
+                        x["parameters"]["size"], x["parameters"]["padding"]
+                    ),
+                ]
             )
-        elif (x["type"] == "RandomGrayscale"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.RandomGrayscale(x["parameters"]["p"])]
+        elif x["type"] == "RandomGrayscale":
+            transformsToReturn = transforms.Compose(
+                [transformsToReturn, transforms.RandomGrayscale(x["parameters"]["p"])]
             )
-        elif (x["type"] == "RandomHorizontalFlip"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.RandomHorizontalFlip(x["parameters"]["p"])]
+        elif x["type"] == "RandomHorizontalFlip":
+            transformsToReturn = transforms.Compose(
+                [
+                    transformsToReturn,
+                    transforms.RandomHorizontalFlip(x["parameters"]["p"]),
+                ]
             )
-        elif (x["type"] == "Resize"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.Resize(x["parameters"]["size"])]
+        elif x["type"] == "Resize":
+            transformsToReturn = transforms.Compose(
+                [transformsToReturn, transforms.Resize(x["parameters"]["size"])]
             )
-        elif (x["type"] == "RandomPerspective"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.RandomPerspective(x["parameters"]["distortion_scale"], x["parameters"]["p"])]
+        elif x["type"] == "RandomPerspective":
+            transformsToReturn = transforms.Compose(
+                [
+                    transformsToReturn,
+                    transforms.RandomPerspective(
+                        x["parameters"]["distortion_scale"], x["parameters"]["p"]
+                    ),
+                ]
             )
-        elif (x["type"] == "RandomResizedCrop"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                #What do we want to do for other non-single value params
-                transforms.RandomResizedCrop(x["parameters"]["size"])]
+        elif x["type"] == "RandomResizedCrop":
+            transformsToReturn = transforms.Compose(
+                [
+                    transformsToReturn,
+                    # What do we want to do for other non-single value params
+                    transforms.RandomResizedCrop(x["parameters"]["size"]),
+                ]
             )
-        elif (x["type"] == "RandomVerticalFlip"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.RandomVerticalFlip(x["parameters"]["p"])]
+        elif x["type"] == "RandomVerticalFlip":
+            transformsToReturn = transforms.Compose(
+                [
+                    transformsToReturn,
+                    transforms.RandomVerticalFlip(x["parameters"]["p"]),
+                ]
             )
-        elif (x["type"] == "RandomRotation"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.RandomRotation(x["parameters"]["degrees"])]
+        elif x["type"] == "RandomRotation":
+            transformsToReturn = transforms.Compose(
+                [
+                    transformsToReturn,
+                    transforms.RandomRotation(x["parameters"]["degrees"]),
+                ]
             )
-        elif (x["type"] == "TenCrop"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.TenCrop(x["parameters"]["size"])]
+        elif x["type"] == "TenCrop":
+            transformsToReturn = transforms.Compose(
+                [transformsToReturn, transforms.TenCrop(x["parameters"]["size"])]
             )
-        elif (x["type"] == "GaussianBlur"):
-            transformsToReturn = transforms.Compose([
-                transformsToReturn,
-                transforms.GaussianBlur(x["parameters"]["kernel_size"])]
+        elif x["type"] == "GaussianBlur":
+            transformsToReturn = transforms.Compose(
+                [
+                    transformsToReturn,
+                    transforms.GaussianBlur(x["parameters"]["kernel_size"]),
+                ]
             )
     return transformsToReturn

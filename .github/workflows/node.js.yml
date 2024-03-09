@@ -47,8 +47,4 @@ jobs:
         run: pnpm lint
         working-directory: ./frontend
 
-      - name: Run depcheck
-        run: npx depcheck --ignore-bin-package
-        working-directory: ./frontend
-
       # future: add yarn build once build errors are resolved

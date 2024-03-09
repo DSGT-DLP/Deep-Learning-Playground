@@ -7,7 +7,7 @@ jobs:
     name: Black Formatter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: rickstaa/action-black@v1
         id: action_black
         with:
@@ -16,7 +16,6 @@ jobs:
         if: steps.action_black.outputs.is_formatted == 'true'
         with:
           commit_message: ":art: Format Python code with psf/black"
-          commit_options: '--no-verify'
+          commit_options: "--no-verify"
           commit_user_name: github-actions
           commit_user_email: ghaction@github.com
-          

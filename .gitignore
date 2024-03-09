@@ -201,12 +201,14 @@ frontend/src/backend_outputs/*
 !frontend/src/backend_outputs/my_deep_learning_model.onnx
 
 # Terraform Files
+dlp-terraform/dynamodb/terraform.tfstate
 dlp-terraform/.terraform
 dlp-terraform/.terraform.lock.hcl
 dlp-terraform/terraform.tfstate
 dlp-terraform/terraform.tfstate.backup
 dlp-terraform/**/*.hcl
 dlp-terraform/**/.terraform/
+dlp-terraform/**/*.tfstate*
 
 # SSH keys
 dlp-ssh.key

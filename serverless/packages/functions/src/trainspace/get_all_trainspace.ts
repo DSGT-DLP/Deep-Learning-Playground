@@ -4,9 +4,10 @@ import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     if (event) {
-        const user_id: string = parseJwt(event.headers.authorization ?? "")[
+        const uid: string = parseJwt(event.headers.authorization ?? "")[
             "user_id"
         ];
+        
 
         const client = new DynamoDBClient({});
 
@@ -15,24 +16,26 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
         do {
             const getCommand: QueryCommand = new QueryCommand({
-                TableName: "trainspace",
-                IndexName: "uid",
+                TableName: "TrainspaceTable",
+                IndexName: "uid-index",
                 KeyConditionExpression: "uid = :uid",
                 ExpressionAttributeValues: {
-                    ":uid" : 
+                    ":uid" :
                     { 
-                        S: user_id
+                        "S": uid
                     }
                 },
                 ExclusiveStartKey: lastEvaluatedKey
             });
-
+            
             const results = await client.send(getCommand);
             lastEvaluatedKey = results.LastEvaluatedKey;
-
+            
             if (results['Items']) {
                 const page: Array<string | undefined> = results['Items']?.map(trainspace => trainspace['trainspace_id'].S);
                 page.forEach(id => { if (id) fetchedTrainspaceIds.push(id); });
+            } else {
+                console.log("no items fetched");
             }
             
 

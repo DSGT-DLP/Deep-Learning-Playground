@@ -11,6 +11,7 @@ export function AppStack({ stack }: StackContext) {
       ),
     },
   });
+
   
   const api = new Api(stack, "Api", {
     authorizers: {
@@ -50,6 +51,12 @@ export function AppStack({ stack }: StackContext) {
           permissions: ["dynamodb:PutItem"]
         }
       },
+      "POST /trainspace/create": {
+        function: {
+          handler: "packages/functions/src/trainspace/create_trainspace.handler",
+          permissions: ["dynamodb:PutItem"]
+        }
+      },
       "GET /trainspace/{id}": {
         function: {
           handler: "packages/functions/src/trainspace/get_trainspace.handler",
@@ -65,6 +72,24 @@ export function AppStack({ stack }: StackContext) {
       "DELETE /trainspace/{id}": {
         function: {
           handler: "packages/functions/src/trainspace/delete_trainspace.handler",
+          permissions: ["dynamodb:DeleteItem"]
+        }
+      },
+      "POST /user": {
+        function: {
+          handler: "packages/functions/src/user/create_user.handler",
+          permissions: ["dynamodb:PutItem"]
+        }
+      }, 
+      "GET /user": {
+        function : {
+          handler: "packages/functions/src/user/get_user.handler",
+          permissions: ["dynamodb:GetItem"]
+        }
+      },
+      "DELETE /user": {
+        function : {
+          handler: "packages/functions/src/user/delete_user.handler",
           permissions: ["dynamodb:DeleteItem"]
         }
       }
@@ -83,6 +108,8 @@ export function AppStack({ stack }: StackContext) {
     GetUserDatasetColumnsFunctionName:
       api.getFunction("GET /datasets/user/{type}/{filename}/columns")
         ?.functionName ?? "",
+    CreateTrainspaceFunctionName:
+        api.getFunction("POST /trainspace/create")?.functionName ?? "",
     PutTabularTrainspaceFunctionName:
         api.getFunction("POST /trainspace/tabular")?.functionName ?? "",
     PutImageTrainspaceFunctionName:
@@ -92,6 +119,12 @@ export function AppStack({ stack }: StackContext) {
     GetTrainspaceByIdFunctionName:
         api.getFunction("GET /trainspace/{id}")?.functionName ?? "",
     DeleteTrainspaceByIdFunctionName:
-        api.getFunction("DELETE /trainspace/{id}")?.functionName ?? ""
+        api.getFunction("DELETE /trainspace/{id}")?.functionName ?? "",
+    CreateUserFunctionName:
+        api.getFunction("POST /user")?.functionName ?? "",
+    GetUserFunctionName:
+        api.getFunction("GET /user")?.functionName ?? "",
+    DeleteUserFunctionName:
+        api.getFunction("DELETE /user")?.functionName ?? "",
   });
 }

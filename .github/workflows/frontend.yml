@@ -40,8 +40,23 @@ jobs:
         run: pnpm install --frozen-lockfile
         working-directory: ./frontend
 
-      - name: Test
-        run: echo "pnpm run test should be here"
-        working-directory: ./frontend
-    
+  test:
+  name: Test
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install pnpm
+      run: npm install -g pnpm 
+      working-directory: ./frontend
+
+    - name: Install
+      run: pnpm install --frozen-lockfile
+      working-directory: ./frontend
+
+    - name: Test
+      run: pnpm test
+      working-directory: ./frontend
+
     

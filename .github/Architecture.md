@@ -214,6 +214,10 @@
 |  |  |  |- 📜 about.tsx
 |  |  |  |- 📜 wiki.tsx
 |  |  |  |- 📜 _document.tsx
+|  |  |- 📂 __tests__:
+|  |  |  |- 📂 common:
+|  |  |  |  |- 📂 components:
+|  |  |  |  |  |- 📜 TitleText.test.tsx
 |  |  |- 📜 constants.ts
 |  |  |- 📜 iris.csv : Sample CSV data
 |  |  |- 📜 GlobalStyle.ts
@@ -221,8 +225,8 @@
 |  |- 📜 .eslintignore
 |  |- 📜 tsconfig.json
 |  |- 📜 .eslintrc.json
+|  |- 📜 jest.config.ts
 |  |- 📜 pnpm-lock.yaml
-|  |- 📜 jest.config.js
 |  |- 📜 package.json
 |  |- 📜 next.config.js
 |  |- 📜 next-env.d.ts

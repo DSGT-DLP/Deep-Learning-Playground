@@ -5,7 +5,7 @@ import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../get_user';
 
 //mocks parseJwt so that the call just returns whatever the input is
-vi.mock('../../../../core/src/parseJwt', async () => {
+vi.mock('@dlp-sst-app/core/src/parseJwt', async () => {
   return {
       default: vi.fn().mockImplementation(input => input),
   }

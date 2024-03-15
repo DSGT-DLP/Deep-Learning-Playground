@@ -1,14 +1,12 @@
-import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
+import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
-import {DynamoDBClient} from '@aws-sdk/client-dynamodb';
-import {DeleteCommand, DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
-import {mockClient} from 'aws-sdk-client-mock';
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
+import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../create_user';
-import 'aws-sdk-client-mock-vitest';
 
 
 //mocks parseJwt so that the call just returns whatever the input is
-vi.mock('../../../../core/src/parseJwt', async () => {
+vi.mock('@dlp-sst-app/core/src/parseJwt', async () => {
   return {
       default: vi.fn().mockImplementation(input => input),
   }
@@ -19,9 +17,6 @@ beforeEach(async () => {
 })
 
 const ddbMock = mockClient(DynamoDBDocumentClient);
-
-const dynamodb = new DynamoDBClient({});
-const ddb = DynamoDBDocumentClient.from(dynamodb);
 
 it("test successful create user call", async () => {
   ddbMock.on(PutCommand).resolves({
@@ -40,7 +35,6 @@ it("test successful create user call", async () => {
         '    "phone": "123-456-7890"\n' +
               '}',
   }
-    
   const result = await handler(event);
   expect(result.statusCode).toEqual(200);
 });

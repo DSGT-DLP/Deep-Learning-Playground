@@ -1,13 +1,11 @@
-import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
+import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
-import {DynamoDBClient} from '@aws-sdk/client-dynamodb';
-import {DeleteCommand, DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
-import {mockClient} from 'aws-sdk-client-mock';
+import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
+import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../get_user';
-import 'aws-sdk-client-mock-vitest';
 
 //mocks parseJwt so that the call just returns whatever the input is
-vi.mock('../../../../core/src/parseJwt', async () => {
+vi.mock('@dlp-sst-app/core/src/parseJwt', async () => {
   return {
       default: vi.fn().mockImplementation(input => input),
   }
@@ -18,9 +16,6 @@ beforeEach(async () => {
 })
 
 const ddbMock = mockClient(DynamoDBDocumentClient);
-
-const dynamodb = new DynamoDBClient({});
-const ddb = DynamoDBDocumentClient.from(dynamodb);
 
 it("test successful get user call", async () => {
   ddbMock.on(GetCommand).resolves({

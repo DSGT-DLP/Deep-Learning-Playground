@@ -42,7 +42,7 @@ const TrainspaceLayout = ({
             >
               {code}
             </SyntaxHighlighter>
-            <IconButton style={{ position: "absolute", right: 15, top: 5 }}>
+            <IconButton style={{ position: "absolute", right: 15, top: 5 }} aria-label = "Copy code snippet">
               <ContentCopy />
             </IconButton>
           </Card>

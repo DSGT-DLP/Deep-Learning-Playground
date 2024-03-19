@@ -192,6 +192,7 @@ const NavbarMain = () => {
               )}
             </Grid>
             <FormControlLabel
+              aria-label = {`${theme.mode === "dark" ? "Button to toggle between light and dark mode; currently in dark mode" : "Button to toggle between light and dark mode; currently in light mode"}`}
               style={{
                 marginLeft: "auto",
                 marginRight: 0,

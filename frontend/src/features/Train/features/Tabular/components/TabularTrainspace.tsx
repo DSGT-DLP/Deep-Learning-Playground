@@ -99,7 +99,7 @@ const TrainspaceStepInner = ({
 
   let trainbuttontext: string | JSX.Element;
   if (isButtonClicked) {
-    trainbuttontext = <CircularProgress />;
+    trainbuttontext = <CircularProgress aria-label="Loading"/>;
   } else {
     if (step < TRAINSPACE_SETTINGS.steps.length - 1) {
       trainbuttontext = "Next";

@@ -6,15 +6,15 @@ import parseJwt from "../../../core/src/parseJwt";
 export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
     if (event)
     {
-        const user_id: string = parseJwt(event.headers.authorization ?? "")["user_id"];
+        const model_id: string = parseJwt(event.headers.authorization ?? "")["model_id"];
         const client: DynamoDBClient = new DynamoDBClient({});
         const docClient = DynamoDBDocumentClient.from(client);
         
         const command : GetCommand = new GetCommand({
-            TableName : "UserTable",
+            TableName : "ModelTable",
             Key : 
             {
-                user_id : user_id
+                model_id : model_id
             }
         });
 
@@ -24,12 +24,12 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
         {
             return {
                 statusCode: 404,
-                body: JSON.stringify({message: "Provided User ID does not exist"})
+                body: JSON.stringify({message: "Provided Model ID does not exist"})
             }
         }
         return {
             statusCode: 200,
-            body: JSON.stringify({message: "Successfully retrieved User data", user: response.Item})
+            body: JSON.stringify({message: "Successfully retrieved Model data", model: response.Item})
         }
     }
     return {

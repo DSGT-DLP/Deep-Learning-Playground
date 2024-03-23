@@ -1,10 +1,8 @@
-import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
+import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
-import {DynamoDBClient} from '@aws-sdk/client-dynamodb';
-import {DeleteCommand, DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
-import {mockClient} from 'aws-sdk-client-mock';
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
+import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../create_model';
-import 'aws-sdk-client-mock-vitest';
 
 
 //mocks parseJwt so that the call just returns whatever the input is
@@ -20,10 +18,7 @@ beforeEach(async () => {
 
 const ddbMock = mockClient(DynamoDBDocumentClient);
 
-const dynamodb = new DynamoDBClient({});
-const ddb = DynamoDBDocumentClient.from(dynamodb);
-
-it("test successful create user call", async () => {
+it("test successful create model call", async () => {
   ddbMock.on(PutCommand).resolves({
     $metadata: {
       httpStatusCode: 200,
@@ -34,11 +29,10 @@ it("test successful create user call", async () => {
     headers: {
       authorization: 'abcd',
     },
-      body: '{\n' +
-        '    "name": "SETH SHI BUT UPDATED",\n' +
-        '    "email": "TESTEMAIL@GMAIL.COM",\n' +
-        '    "phone": "123-456-7890"\n' +
-              '}',
+    body: '{\n' +
+    '    "name": "TEST MODEL",\n' +
+    '    "model_structure": "MODEL STRUCTURE DATA"\n' +
+          '}',
   }
     
   const result = await handler(event);
@@ -57,9 +51,8 @@ it("test internal service error", async () => {
         authorization: 'abcd',
       },
         body: '{\n' +
-          '    "name": "SETH SHI BUT UPDATED",\n' +
-          '    "email": "TESTEMAIL@GMAIL.COM",\n' +
-          '    "phone": "123-456-7890"\n' +
+          '    "name": "TEST MODEL",\n' +
+          '    "model_structure": "MODEL STRUCTURE DATA"\n' +
                 '}',
     }
       

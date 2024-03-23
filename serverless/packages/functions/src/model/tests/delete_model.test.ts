@@ -23,7 +23,7 @@ const ddbMock = mockClient(DynamoDBDocumentClient);
 const dynamodb = new DynamoDBClient({});
 const ddb = DynamoDBDocumentClient.from(dynamodb);
 
-it("test successful delete user call", async () => {
+it("test successful delete model call", async () => {
   ddbMock.on(DeleteCommand).resolves({
     $metadata: {
       httpStatusCode: 200,
@@ -34,11 +34,10 @@ it("test successful delete user call", async () => {
     headers: {
       authorization: 'abcd',
     },
-      body: '{\n' +
-        '    "name": "SETH SHI BUT UPDATED",\n' +
-        '    "email": "TESTEMAIL@GMAIL.COM",\n' +
-        '    "phone": "123-456-7890"\n' +
-              '}',
+    body: '{\n' +
+    '    "name": "TEST MODEL",\n' +
+    '    "model_structure": "MODEL STRUCTURE DATA"\n' +
+          '}',
 }
     
   const result = await handler(event);
@@ -56,11 +55,10 @@ it("test no response failed operation call", async () => {
       headers: {
         authorization: 'abcd',
       },
-        body: '{\n' +
-          '    "name": "SETH SHI BUT UPDATED",\n' +
-          '    "email": "TESTEMAIL@GMAIL.COM",\n' +
-          '    "phone": "123-456-7890"\n' +
-                '}',
+      body: '{\n' +
+      '    "name": "TEST MODEL",\n' +
+      '    "model_structure": "MODEL STRUCTURE DATA"\n' +
+            '}',
     }
 
     const result = await handler(event);
@@ -78,11 +76,10 @@ it("test different status code failed operation call", async () => {
       headers: {
         authorization: 'abcd',
       },
-        body: '{\n' +
-          '    "name": "SETH SHI BUT UPDATED",\n' +
-          '    "email": "TESTEMAIL@GMAIL.COM",\n' +
-          '    "phone": "123-456-7890"\n' +
-                '}',
+      body: '{\n' +
+      '    "name": "TEST MODEL",\n' +
+      '    "model_structure": "MODEL STRUCTURE DATA"\n' +
+            '}',
   }
       
     const result = await handler(event);

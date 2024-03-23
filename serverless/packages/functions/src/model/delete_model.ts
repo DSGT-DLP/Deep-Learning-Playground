@@ -5,16 +5,16 @@ import parseJwt from "../../../core/src/parseJwt";
 
 export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
     if (event) {
-        const user_id: string = parseJwt(event.headers.authorization ?? "")["user_id"];
+        const model_id: string = parseJwt(event.headers.authorization ?? "")["model_id"];
         
         const client = new DynamoDBClient({});
         const docClient = DynamoDBDocumentClient.from(client);
         
         const command = new DeleteCommand({
-            TableName : "UserTable",
+            TableName : "ModelTable",
             Key :
             {
-                user_id: user_id
+                model_id: model_id
             }
         });
 
@@ -29,7 +29,7 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
         }
         return {
             statusCode: 200,
-            body: "Successfully deleted user with id " + user_id
+            body: "Successfully deleted model with id " + model_id
         }
     }
     return {

@@ -22,9 +22,9 @@ const ddbMock = mockClient(DynamoDBDocumentClient);
 const dynamodb = new DynamoDBClient({});
 const ddb = DynamoDBDocumentClient.from(dynamodb);
 
-it("test successful get user call", async () => {
+it("test successful get model call", async () => {
   ddbMock.on(GetCommand).resolves({
-    Item: { user_id: { S: 'UID' } }
+    Item: { model_id: { S: 'MID' } }
   })
 
   //error is fine, doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
@@ -38,7 +38,7 @@ it("test successful get user call", async () => {
   expect(result.statusCode).toEqual(200);
 });
 
-it("test no existing user id", async () => {
+it("test no existing model id", async () => {
   ddbMock.on(GetCommand).resolves({
     Item: undefined
   })

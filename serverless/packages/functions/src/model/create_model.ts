@@ -7,15 +7,17 @@ import { DynamoDBDocumentClient, PutCommand, PutCommandInput } from '@aws-sdk/li
 export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
     if (event) {
         const user_id: string = parseJwt(event.headers.authorization ?? "")["user_id"];
+        const model_id = uuidv4();
         const eventBody = JSON.parse(event.body? event.body : "");
         let putCommandInput: PutCommandInput = {
-            TableName: "UserTable",
+            TableName: "ModelTable",
             Item:
             {
                 user_id: user_id,
+                // model_id: eventBody['model_id'],
+                model_id: model_id,
                 name: eventBody['name'],
-                email: eventBody['email'],
-                phone: eventBody['phone']   
+                model_structure: eventBody['model_structure']
             }
         }
 
@@ -42,7 +44,7 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
         
         return {
             statusCode: 200,
-            body: JSON.stringify({ user_id: user_id, message: "Successfully created a new user."})
+            body: JSON.stringify({ user_id: user_id, message: "Successfully created a new model."})
         };
       }
     return {

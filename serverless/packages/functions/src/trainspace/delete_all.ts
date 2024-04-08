@@ -1,6 +1,6 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
 import parseJwt from "@dlp-sst-app/core/src/parseJwt";
-import { DynamoDBClient, QueryCommand, BatchWriteItemCommand, BatchExecuteStatementCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, QueryCommand, BatchExecuteStatementCommand, BatchStatementRequest } from '@aws-sdk/client-dynamodb';
 
 export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
     if (event) {
@@ -11,7 +11,7 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
 
         const foundTrainspaceIds: Array<String> = []
         const deletedTrainspaceIds: Array<string> = [];
-        let toDelete = 0;
+        let lastEvaluatedKey = undefined;
         do {
             const queryCommand: QueryCommand = new QueryCommand({
                 TableName: "TrainspaceTable",
@@ -20,48 +20,57 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
                 ExpressionAttributeValues: {
                     ":uid" : {"S": uid}
                 },
+                Limit: 25,
+                ExclusiveStartKey: lastEvaluatedKey
             });
 
+            const currentTrainspaceIds: Array<String> = []
             const getResults = await client.send(queryCommand);
-            
+            console.log(getResults["Count"]);
             if (getResults["Count"] !== 0 && getResults['Items']) {
                 const page: Array<string | undefined> = getResults['Items'].map(trainspace => trainspace['trainspace_id'].S);
-                page.forEach(id => { if (id) foundTrainspaceIds.push(id); });
+                page.forEach(id => {
+                    if (id) foundTrainspaceIds.push(id); 
+                    if (id) currentTrainspaceIds.push(id); 
+                });
             } else {
-                if (deletedTrainspaceIds.length !== 0) {
-                    return { 
-                        statusCode: 200, 
-                        body: JSON.stringify({ message: "deleted trainspaces", trainspace_ids : deletedTrainspaceIds}) 
-                    };
-                }
                 return {
                     statusCode: 405,
                     body: JSON.stringify({ message: "no trainspaces deleted: none found associated with user"})
                 }
             }
-
-            const JSONedDelete = {
-                Statement: "DELETE FROM TrainspaceTable where trainspace_id=?",
-                    Parameters: [{"S": "0f70d308-7cf2-4d4f-9e11-019310714bdd"}]
-            }
-            const command = new BatchExecuteStatementCommand({
-                Statements: [
-                    JSONtest
-                ],
-            });
-                const response = await client.send(command);
-                console.log(response.Responses);
-
-                if (response.$metadata.httpStatusCode == undefined || response.$metadata.httpStatusCode != 200) 
-                {
-                    return {
-                        statusCode: 404,
-                        body: JSON.stringify({ message : "Delete operation failed" })
-                    }
-                }
-        
             
-        } while (toDelete !== 0);
+            lastEvaluatedKey = getResults.LastEvaluatedKey;
+
+            const statements: BatchStatementRequest[] = [];
+            for (const id of currentTrainspaceIds) {
+                statements.push( {
+                    Statement: "DELETE FROM TrainspaceTable where trainspace_id=?",
+                    Parameters: [{ "S": id.valueOf() }]
+                })
+            }
+
+            const command = new BatchExecuteStatementCommand({
+                Statements: statements
+            });
+            
+            const response = await client.send(command);
+            console.log(response.Responses);
+
+            if (response.$metadata.httpStatusCode == undefined || response.$metadata.httpStatusCode != 200) 
+            {
+                return {
+                    statusCode: 404,
+                    body: JSON.stringify({ message : "Delete operation failed" })
+                }
+            }
+        } while (lastEvaluatedKey !== undefined);
+        if (deletedTrainspaceIds.length === 0) {
+            return { 
+                statusCode: 200, 
+                body: JSON.stringify({ message: "deleted trainspaces", trainspace_ids : foundTrainspaceIds}) 
+            };
+        }
     }
     return {
         statusCode: 400,

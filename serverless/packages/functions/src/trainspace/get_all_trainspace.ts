@@ -1,44 +1,41 @@
-import { APIGatewayProxyHandlerV2 } from "aws-lambda";
-import parseJwt from "@dlp-sst-app/core/parseJwt";
+import { APIGatewayProxyEventV2 } from "aws-lambda";
+import parseJwt from "@dlp-sst-app/core/src/parseJwt";
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
+export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
     if (event) {
         const uid: string = parseJwt(event.headers.authorization ?? "")[
             "user_id"
         ];
-        
-
+        console.log(uid);
         const client = new DynamoDBClient({});
-
         const fetchedTrainspaceIds: Array<string> = [];
         let lastEvaluatedKey = undefined;
-
         do {
-            const getCommand: QueryCommand = new QueryCommand({
+            const queryCommand: QueryCommand = new QueryCommand({
                 TableName: "TrainspaceTable",
-                IndexName: "uid-index",
-                KeyConditionExpression: "uid = :uid",
+                IndexName: "user_id_index",
+                KeyConditionExpression: "user_id = :uid",
                 ExpressionAttributeValues: {
-                    ":uid" :
-                    { 
-                        "S": uid
-                    }
+                    ":uid" : {"S": uid}
                 },
                 ExclusiveStartKey: lastEvaluatedKey
             });
             
-            const results = await client.send(getCommand);
-            lastEvaluatedKey = results.LastEvaluatedKey;
-            
-            if (results['Items']) {
-                const page: Array<string | undefined> = results['Items']?.map(trainspace => trainspace['trainspace_id'].S);
-                page.forEach(id => { if (id) fetchedTrainspaceIds.push(id); });
-            } else {
-                console.log("no items fetched");
-            }
-            
-
+            const results = await client.send(queryCommand); 
+            console.log(results);
+                if (results.Items && results.Count != 0) {
+                    const page: Array<string | undefined> = results['Items']?.map(trainspace => trainspace['trainspace_id'].S);
+                    console.log(page);
+                    page.forEach(id => { if (id) fetchedTrainspaceIds.push(id); });
+                } else {
+                    return {
+                        statusCode: 404,
+                        body: JSON.stringify({message: "no trainspaces associated with user"})
+                    }
+                }
+                lastEvaluatedKey = results.LastEvaluatedKey;
+                console.log(lastEvaluatedKey);
         } while (lastEvaluatedKey !== undefined);
         return { 
             statusCode: 200, 
@@ -47,7 +44,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     }
 
     return {
-        statusCode: 404,
+        statusCode: 400,
         body: JSON.stringify({ message: "Not Found" }),
     };
 };

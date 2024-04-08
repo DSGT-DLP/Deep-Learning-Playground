@@ -1,0 +1,6 @@
+{
+	"dependencies": {
+		"mamba": "^0.0.2",
+		"poetry": "^0.6.28"
+	}
+}

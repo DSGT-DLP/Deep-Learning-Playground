@@ -1,7 +1,7 @@
 import pytest
 import torch.nn as nn
 from torch.autograd import Variable
-from training.core.dl_model import DLModel
+from training.core.celery.dl_model import DLModel
 
 
 @pytest.mark.parametrize(

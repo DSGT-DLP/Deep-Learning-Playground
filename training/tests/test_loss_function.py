@@ -1,7 +1,7 @@
 import pytest
 import torch
 import torch.nn as nn
-from training.core.criterion import getCriterionHandler
+from training.core.celery.criterion import getCriterionHandler
 
 
 """

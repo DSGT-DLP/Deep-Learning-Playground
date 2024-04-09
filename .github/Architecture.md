@@ -59,11 +59,15 @@
 
 ```
 📦 frontend
+|  |- 📂 layer_docs:
+|  |  |- 📜 Linear.md : Doc for Linear layer
+|  |  |- 📜 Softmax.md : Doc for Softmax layer
+|  |  |- 📜 softmax_equation.png : PNG file of Softmax equation
+|  |  |- 📜 ReLU.md : Doc for ReLU later
 |  |- 📂 public:
 |  |  |- 📂 images:
 |  |  |  |- 📂 logos:
 |  |  |  |  |- 📂 dlp_branding:
-|  |  |  |  |  |- 📜 dlp-logo.png : DLP Logo, duplicate of files in public, but essential as the frontend can't read public
 |  |  |  |  |  |- 📜 dlp-logo.svg : DLP Logo, duplicate of files in public, but essential as the frontend can't read public
 |  |  |  |  |- 📜 dsgt-logo-white-back.png
 |  |  |  |  |- 📜 python-logo.png

@@ -2,6 +2,7 @@ import { backendApi } from "@/common/redux/backendApi";
 import {
   DATA_SOURCE,
   DatasetData,
+  DetailedTrainResultsData,
   FileUploadData,
 } from "@/features/Train/types/trainTypes";
 import { fetchBaseQuery } from "@reduxjs/toolkit/dist/query";
@@ -10,6 +11,12 @@ const trainspaceApi = backendApi
   .enhanceEndpoints({ addTagTypes: ["UserDatasetFilesData"] })
   .injectEndpoints({
     endpoints: (builder) => ({
+      getTrainResultsData: builder.query<DetailedTrainResultsData, { trainspaceId: string }>({
+        query: ( {trainspaceId}) => ({
+          url: `/api/training/training/results/${trainspaceId}`
+        })
+      }
+      ),
       getDatasetFilesData: builder.query<
         FileUploadData[],
         { dataSource: DATA_SOURCE }
@@ -95,6 +102,7 @@ const trainspaceApi = backendApi
   });
 
 export const {
+  useGetTrainResultsDataQuery,
   useGetDatasetFilesDataQuery,
   useUploadDatasetFileMutation,
   useLazyGetColumnsFromDatasetQuery,

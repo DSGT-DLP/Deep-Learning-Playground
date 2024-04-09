@@ -1,4 +1,4 @@
-from training.core.dataset import SklearnDatasetCreator
+from training.core.celery.dataset import SklearnDatasetCreator
 from torch.utils.data import DataLoader
 
 

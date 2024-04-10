@@ -1,7 +1,6 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
-import { GetCommand } from '@aws-sdk/lib-dynamodb';
-import { DynamoDBClient} from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../get_trainspace';
 
@@ -20,11 +19,11 @@ const ddbMock = mockClient(DynamoDBClient);
 
 
 it("test successful get trainspace call", async () => {
-  ddbMock.on(GetCommand).resolves({
+  ddbMock.on(GetItemCommand).resolves({
     Item: { trainspaceID: { S: 'sample trainspace id' } }
   })
 
-  //error is fine, doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
   const event: APIGatewayProxyEventV2 =  {
     pathParameters: {
       id: "some trainspace_id"
@@ -37,11 +36,11 @@ it("test successful get trainspace call", async () => {
 
 
 it("test no existing trainspace id", async () => {
-  ddbMock.on(GetCommand).resolves({
+  ddbMock.on(GetItemCommand).resolves({
     Item: undefined
   })
 
-  //error is fine, doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
   const event: APIGatewayProxyEventV2 =  {
     pathParameters: {
       id: "some trainspace_id"
@@ -52,9 +51,23 @@ it("test no existing trainspace id", async () => {
   expect(result.statusCode).toEqual(404);
 });
 
+it("test no trainspace id given", async () => {
+  ddbMock.on(GetItemCommand).resolves({
+    Item: { trainspaceID: { S: 'sample trainspace id' } }
+  })
+
+  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  const event: APIGatewayProxyEventV2 =  {
+    pathParameters: {
+    }
+  }
+    
+  const result = await handler(event);
+  expect(result.statusCode).toEqual(401);
+});
 
 it("test malformed request", async () => {
-    
+  // @ts-expect-error : we are trying to cause an error
   const result = await handler(undefined);
   expect(result.statusCode).toEqual(400);
 });

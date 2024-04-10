@@ -26,7 +26,6 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
 
             const currentTrainspaceIds: Array<String> = []
             const getResults = await client.send(queryCommand);
-            console.log(getResults["Count"]);
             if (getResults["Count"] !== 0 && getResults['Items']) {
                 const page: Array<string | undefined> = getResults['Items'].map(trainspace => trainspace['trainspace_id'].S);
                 page.forEach(id => {
@@ -47,7 +46,8 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
                 statements.push( {
                     Statement: "DELETE FROM TrainspaceTable where trainspace_id=?",
                     Parameters: [{ "S": id.valueOf() }]
-                })
+                });
+                deletedTrainspaceIds.push(id.valueOf());
             }
 
             const command = new BatchExecuteStatementCommand({
@@ -55,7 +55,6 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
             });
             
             const response = await client.send(command);
-            console.log(response.Responses);
 
             if (response.$metadata.httpStatusCode == undefined || response.$metadata.httpStatusCode != 200) 
             {
@@ -65,10 +64,10 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
                 }
             }
         } while (lastEvaluatedKey !== undefined);
-        if (deletedTrainspaceIds.length === 0) {
+        if (deletedTrainspaceIds.length !== 0) {
             return { 
                 statusCode: 200, 
-                body: JSON.stringify({ message: "deleted trainspaces", trainspace_ids : foundTrainspaceIds}) 
+                body: JSON.stringify({ message: "Succesfully deleted trainspaces", trainspace_ids : foundTrainspaceIds}) 
             };
         }
     }

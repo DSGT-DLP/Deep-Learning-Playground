@@ -8,7 +8,7 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
 
         if (trainspaceId == undefined) {
             return {
-                statusCode: 400,
+                statusCode: 401,
                 body: JSON.stringify({ message : "Malformed request content - trainspace ID missing." }),
             };
         }

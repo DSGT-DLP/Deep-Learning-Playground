@@ -1,7 +1,6 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
-import { PutCommand } from '@aws-sdk/lib-dynamodb';
-import { DynamoDBClient} from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, PutItemCommand} from '@aws-sdk/client-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../create_trainspace';
 
@@ -19,12 +18,12 @@ beforeEach(async () => {
 const ddbMock = mockClient(DynamoDBClient);
 
 it("test successful create trainspace call", async () => {
-  ddbMock.on(PutCommand).resolves({
+  ddbMock.on(PutItemCommand).resolves({
     $metadata: {
       httpStatusCode: 200,
     }
   })
-  //error is fine, doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -44,12 +43,12 @@ it("test successful create trainspace call", async () => {
 });
 
 it("test internal service error", async () => {
-    ddbMock.on(PutCommand).resolves({
+    ddbMock.on(PutItemCommand).resolves({
       $metadata: {
         httpStatusCode: 456,
       }
     })
-    //error is fine, doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+    // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -69,11 +68,12 @@ it("test internal service error", async () => {
   });
 
 it("test undefined event", async () => {
-    ddbMock.on(PutCommand).resolves({
+    ddbMock.on(PutItemCommand).resolves({
       $metadata: {
         httpStatusCode: 400,
       }
     })
+    // @ts-expect-error : we are trying to cause an error
     const result = await handler(undefined);
     expect(result.statusCode).toEqual(404);
   });

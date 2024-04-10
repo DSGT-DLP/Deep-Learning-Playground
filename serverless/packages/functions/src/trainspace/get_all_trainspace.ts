@@ -7,7 +7,7 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
         const uid: string = parseJwt(event.headers.authorization ?? "")[
             "user_id"
         ];
-        console.log(uid);
+        
         const client = new DynamoDBClient({});
         const fetchedTrainspaceIds: Array<string> = [];
         let lastEvaluatedKey = undefined;
@@ -23,20 +23,19 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
             });
             
             const results = await client.send(queryCommand); 
-            console.log(results);
-                if (results.Items && results.Count != 0) {
-                    const page: Array<string | undefined> = results['Items']?.map(trainspace => trainspace['trainspace_id'].S);
-                    console.log(page);
-                    page.forEach(id => { if (id) fetchedTrainspaceIds.push(id); });
-                } else {
-                    return {
-                        statusCode: 404,
-                        body: JSON.stringify({message: "no trainspaces associated with user"})
-                    }
+            
+            if (results.Items && results.Count != 0) {
+                const page: Array<string | undefined> = results['Items']?.map(trainspace => trainspace['trainspace_id'].S);
+                page.forEach(id => { if (id) fetchedTrainspaceIds.push(id); });
+            } else {
+                return {
+                    statusCode: 404,
+                    body: JSON.stringify({message: "no trainspaces associated with user"})
                 }
-                lastEvaluatedKey = results.LastEvaluatedKey;
-                console.log(lastEvaluatedKey);
+            }
+            lastEvaluatedKey = results.LastEvaluatedKey;
         } while (lastEvaluatedKey !== undefined);
+        
         return { 
             statusCode: 200, 
             body: JSON.stringify({ trainspace_ids : fetchedTrainspaceIds}) 

@@ -1,7 +1,6 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
-import { DeleteCommand } from '@aws-sdk/lib-dynamodb';
-import { DynamoDBClient} from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, DeleteItemCommand } from '@aws-sdk/client-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../delete_trainspace';
 
@@ -19,12 +18,12 @@ beforeEach(async () => {
 const ddbMock = mockClient(DynamoDBClient);
 
 it("test successful delete trainspace call", async () => {
-  ddbMock.on(DeleteCommand).resolves({
+  ddbMock.on(DeleteItemCommand).resolves({
     $metadata: {
       httpStatusCode: 200,
     }
   })
-  //error is fine, doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -45,12 +44,13 @@ it("test successful delete trainspace call", async () => {
 
 
 it("test no response failed operation call", async () => {
-    ddbMock.on(DeleteCommand).resolves({
+    ddbMock.on(DeleteItemCommand).resolves({
       $metadata: {
         httpStatusCode: undefined,
       }
     })
     
+    // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -71,12 +71,12 @@ it("test no response failed operation call", async () => {
 
 
 it("test different status code failed operation call", async () => {
-    ddbMock.on(DeleteCommand).resolves({
+    ddbMock.on(DeleteItemCommand).resolves({
       $metadata: {
         httpStatusCode: 267,
       }
     })
-    //error is fine, doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+    // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -95,8 +95,26 @@ it("test different status code failed operation call", async () => {
     expect(result.statusCode).toEqual(404);
 });
 
+it("test no trainspace id given", async () => {
+  ddbMock.on(DeleteItemCommand).resolves({
+    $metadata: {
+      httpStatusCode: 267,
+    }
+  })
+
+  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  const event: APIGatewayProxyEventV2 =  {
+    pathParameters: {
+    }
+  }
+    
+  const result = await handler(event);
+  expect(result.statusCode).toEqual(401);
+});
+
 
 it("test malformed call", async () => {
-    const result = await handler(undefined);
-    expect(result.statusCode).toEqual(400);
+  // @ts-expect-error : we are trying to cause an error
+  const result = await handler(undefined);
+  expect(result.statusCode).toEqual(400);
 });

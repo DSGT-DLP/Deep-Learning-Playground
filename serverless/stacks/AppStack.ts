@@ -65,7 +65,7 @@ export function AppStack({ stack }: StackContext) {
       },
       "DELETE /trainspace": {
         function: {
-          handler: "packages/functions/src/trainspace/delete_all.handler",
+          handler: "packages/functions/src/trainspace/delete_all_trainspace.handler",
           permissions: ["dynamodb:PartiQLDelete", "dynamodb:Query"]
         }
       },

@@ -1,8 +1,7 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
-import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
-import {DynamoDBClient} from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { handler } from '../get_all_trainspace';
 
 //mocks parseJwt so that the call just returns whatever the input is
@@ -26,7 +25,7 @@ it("test successful get all trainspace call", async () => {
     }],
     "Count": 4
   });
-  //error is fine, doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -43,7 +42,7 @@ it("test no existing trainspaces for user id", async () => {
     Items: undefined
   })
 
-  //error is fine, doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -55,7 +54,7 @@ it("test no existing trainspaces for user id", async () => {
 });
 
 it("test malformed request", async () => {
-    
+  // @ts-expect-error : we are trying to cause an error
   const result = await handler(undefined);
   expect(result.statusCode).toEqual(400);
 });

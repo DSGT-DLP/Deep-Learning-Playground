@@ -12,10 +12,6 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
 
         const client = new DynamoDBClient({});
 
-        console.log(user_id);
-        console.log(trainspaceId);
-        console.log(TrainStatus.QUEUED);
-        console.log(eventBody);
         const putCommand : PutItemCommand = new PutItemCommand({
             TableName : "TrainspaceTable",
             Item: {
@@ -54,7 +50,7 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
       }
     return {
         statusCode: 404,
-        body: JSON.stringify({ message: "Not Found" }),
+        body: JSON.stringify({ message: "Event not Found" }),
     };
 };
 function removeUndefinedValues(obj: { [key: string]: any }) {

@@ -15,3 +15,16 @@ it("Check Appstack for User Endpoints", async () => {
   template.hasOutput("GetUserFunctionName", Object);
   template.hasOutput("DeleteUserFunctionName", Object);
 });
+
+it("Check Appstack for Trainspace Endpoints", async () => {
+  await initProject({});
+  const app = new App({ mode: "deploy" });
+  // WHEN
+  app.stack(AppStack);
+  // THEN
+  const template = Template.fromStack(getStack(AppStack));
+  template.hasOutput("CreateTrainspaceFunctionName", Object);
+  template.hasOutput("GetAllTrainspaceIdsFunctionName", Object);
+  template.hasOutput("DeleteTrainspaceByIdFunctionName", Object);
+  template.hasOutput("DeleteAllTrainspaceByUIDFunctionName", Object);
+});

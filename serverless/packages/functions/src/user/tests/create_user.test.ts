@@ -3,7 +3,8 @@ import { beforeEach, expect, it, vi} from "vitest";
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../create_user';
-
+//note: event declaration errors are supressed becasue we only need
+//      certain parts of them for that specific function
 //mocks parseJwt so that the call just returns whatever the input is
 vi.mock('@dlp-sst-app/core/src/parseJwt', async () => {
   return {
@@ -23,7 +24,7 @@ it("test successful create user call", async () => {
       httpStatusCode: 200,
     }
   })
-  // @ts-expect-error : doesn't affect functionality. We don't need the rest of the event
+  // @ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -44,7 +45,7 @@ it("test internal service error", async () => {
         httpStatusCode: 456,
       }
     })
-    // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event
+    // @ts-expect-error
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',

@@ -3,7 +3,8 @@ import { beforeEach, expect, it, vi} from "vitest";
 import { DynamoDBClient, DeleteItemCommand } from '@aws-sdk/client-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../delete_trainspace';
-
+//note: event declaration errors are supressed becasue we only need
+//      certain parts of them for that specific function
 //mocks parseJwt so that the call just returns whatever the input is
 vi.mock('@dlp-sst-app/core/src/parseJwt', async () => {
   return {
@@ -23,7 +24,7 @@ it("test successful delete trainspace call", async () => {
       httpStatusCode: 200,
     }
   })
-  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  // @ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -50,7 +51,7 @@ it("test no response failed operation call", async () => {
       }
     })
     
-    // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+    // @ts-expect-error
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -76,7 +77,7 @@ it("test different status code failed operation call", async () => {
         httpStatusCode: 267,
       }
     })
-    // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+    // @ts-expect-error
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -102,7 +103,7 @@ it("test no trainspace id given", async () => {
     }
   })
 
-  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  // @ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     pathParameters: {
     }

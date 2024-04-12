@@ -23,7 +23,7 @@ it("test successful create user call", async () => {
       httpStatusCode: 200,
     }
   })
-  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  // @ts-expect-error : doesn't affect functionality. We don't need the rest of the event
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -44,7 +44,7 @@ it("test internal service error", async () => {
         httpStatusCode: 456,
       }
     })
-    // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+    // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',

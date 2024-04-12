@@ -3,8 +3,7 @@ import { beforeEach, expect, it, vi} from "vitest";
 import { mockClient } from 'aws-sdk-client-mock';
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { handler } from '../get_all_trainspace';
-//note: event declaration errors are supressed becasue we only need
-//      certain parts of them for that specific function
+
 //mocks parseJwt so that the call just returns whatever the input is
 vi.mock('@dlp-sst-app/core/src/parseJwt', async () => {
   return {

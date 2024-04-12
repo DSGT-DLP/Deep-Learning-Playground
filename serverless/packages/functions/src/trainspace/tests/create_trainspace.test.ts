@@ -3,6 +3,7 @@ import { beforeEach, expect, it, vi} from "vitest";
 import { DynamoDBClient, PutItemCommand} from '@aws-sdk/client-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../create_trainspace';
+
 //note: event declaration errors are supressed becasue we only need
 //      certain parts of them for that specific function
 //mocks parseJwt so that the call just returns whatever the input is

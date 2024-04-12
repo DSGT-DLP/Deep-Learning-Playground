@@ -1,21 +1,20 @@
 import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
 import parseJwt from "@dlp-sst-app/core/src/parseJwt";
 import { v4 as uuidv4 } from 'uuid';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, PutCommand, PutCommandInput } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBClient, PutItemCommand, PutItemCommandInput } from '@aws-sdk/client-dynamodb';
 
 export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
     if (event) {
         const user_id: string = parseJwt(event.headers.authorization ?? "")["user_id"];
         const eventBody = JSON.parse(event.body? event.body : "");
-        let putCommandInput: PutCommandInput = {
+        let putCommandInput: PutItemCommandInput = {
             TableName: "UserTable",
             Item:
             {
-                user_id: user_id,
-                name: eventBody['name'],
-                email: eventBody['email'],
-                phone: eventBody['phone']   
+                user_id: {"S": user_id},
+                name: {"S": eventBody['name']},
+                email: {"S": eventBody['email']},
+                phone: {"S": eventBody['phone']}
             }
         }
 
@@ -28,10 +27,9 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
         }
 
         const client = new DynamoDBClient({});
-        const docClient = DynamoDBDocumentClient.from(client);
 
-        const command = new PutCommand(putCommandInput);
-        const response = await docClient.send(command);
+        const command = new PutItemCommand(putCommandInput);
+        const response = await client.send(command);
 
         if (response.$metadata.httpStatusCode != 200) {
             return {

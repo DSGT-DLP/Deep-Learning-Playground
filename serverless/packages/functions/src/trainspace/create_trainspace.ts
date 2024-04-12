@@ -9,7 +9,6 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
         const user_id: string = parseJwt(event.headers.authorization ?? "")["user_id"];
         const eventBody = JSON.parse(event.body? event.body : "");
         const trainspaceId = uuidv4();
-
         const client = new DynamoDBClient({});
 
         const putCommand : PutItemCommand = new PutItemCommand({

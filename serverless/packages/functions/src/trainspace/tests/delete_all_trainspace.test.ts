@@ -4,7 +4,6 @@ import { DynamoDBClient, QueryCommand, BatchExecuteStatementCommand } from '@aws
 import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../delete_all_trainspace';
 
-
 //mocks parseJwt so that the call just returns whatever the input is
 vi.mock('@dlp-sst-app/core/src/parseJwt', async () => {
   return {

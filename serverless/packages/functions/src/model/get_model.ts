@@ -6,7 +6,7 @@ import parseJwt from "../../../core/src/parseJwt";
 export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
     if (event)
     {
-        const model_id: string = parseJwt(event.headers.authorization ?? "")["model_id"];
+        const eventBody = JSON.parse(event.body? event.body : "");
         const client: DynamoDBClient = new DynamoDBClient({});
         const docClient = DynamoDBDocumentClient.from(client);
         
@@ -14,7 +14,7 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
             TableName : "ModelTable",
             Key : 
             {
-                model_id : model_id
+                model_id : eventBody['model_id']
             }
         });
 

@@ -92,6 +92,24 @@ export function AppStack({ stack }: StackContext) {
           handler: "packages/functions/src/user/delete_user.handler",
           permissions: ["dynamodb:DeleteItem"]
         }
+      },
+      "POST /model": {
+        function: {
+          handler: "packages/functions/src/model/create_model.handler",
+          permissions: ["dynamodb:PutItem"]
+        }
+      }, 
+      "GET /model": {
+        function : {
+          handler: "packages/functions/src/model/get_model.handler",
+          permissions: ["dynamodb:GetItem"]
+        }
+      },
+      "DELETE /model": {
+        function : {
+          handler: "packages/functions/src/model/delete_model.handler",
+          permissions: ["dynamodb:DeleteItem"]
+        }
       }
     },
   });
@@ -126,5 +144,11 @@ export function AppStack({ stack }: StackContext) {
         api.getFunction("GET /user")?.functionName ?? "",
     DeleteUserFunctionName:
         api.getFunction("DELETE /user")?.functionName ?? "",
+    CreateModelFunctionName:
+        api.getFunction("POST /model")?.functionName ?? "",
+    GetModelFunctionName:
+        api.getFunction("GET /model")?.functionName ?? "",
+    DeleteModelFunctionName:
+        api.getFunction("DELETE /model")?.functionName ?? "",
   });
 }

@@ -6,7 +6,7 @@ import { handler } from '../delete_user';
 
 
 //mocks parseJwt so that the call just returns whatever the input is
-vi.mock('../../../../core/src/parseJwt', async () => {
+vi.mock('@dlp-sst-app/core/src/parseJwt', async () => {
   return {
       default: vi.fn().mockImplementation(input => input),
   }

@@ -18,15 +18,15 @@ jobs:
       #       check-out repo and set-up mamba env
       #----------------------------------------------
       - name: Check out repository
-        uses: actions/checkout@v3
-      
+        uses: actions/checkout@v4
+
       - name: Setup Mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
           miniforge-version: latest
           use-mamba: true
           activate-environment: dlp
-      
+
       - name: Cache Mamba env
         id: cached-mamba-env
         uses: actions/cache@v3
@@ -35,15 +35,13 @@ jobs:
           CACHE_NUMBER: 0
         with:
           path: /usr/share/miniconda3/envs/
-          key:
-            mamba-${{ runner.os }}-${{env.CACHE_NUMBER }}-${{hashFiles('**/training/environment.yml') }}
+          key: mamba-${{ runner.os }}-${{env.CACHE_NUMBER }}-${{hashFiles('**/training/environment.yml') }}
 
       - name: Update environment
-        run:
-          mamba env update -n dlp -f
+        run: mamba env update -n dlp -f
           training/environment.yml
         if: steps.cached-mamba-env.outputs.cache-hit != 'true'
-      
+
       #----------------------------------------------
       #       load cached venv if cache exists
       #----------------------------------------------
@@ -58,7 +56,7 @@ jobs:
       #---------------------------------------------------
       #       install dependencies if cache does not exist
       #---------------------------------------------------
-        
+
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: pwd && cd training && poetry install --no-interaction --no-root && poetry env info -p
@@ -76,7 +74,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }} # You need this
           reporter: github-pr-review # Change reporter.
-      
+
       #----------------------------------------------
       #       black formatter
       #----------------------------------------------
@@ -84,15 +82,15 @@ jobs:
         id: action_black
         with:
           black_args: "."
-          
+
       - uses: stefanzweifel/git-auto-commit-action@v4
         if: steps.action_black.outputs.is_formatted == 'true'
         with:
           commit_message: ":art: Format Python code with psf/black"
-          commit_options: '--no-verify'
+          commit_options: "--no-verify"
           commit_user_name: github-actions
           commit_user_email: ghaction@github.com
-  
+
   test:
     needs: lint
     runs-on: ubuntu-22.04
@@ -101,7 +99,7 @@ jobs:
       #       check-out repo and set-up mamba env
       #----------------------------------------------
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Mamba
         uses: conda-incubator/setup-miniconda@v2
@@ -109,7 +107,7 @@ jobs:
           miniforge-version: latest
           use-mamba: true
           activate-environment: dlp
-      
+
       - name: Cache Mamba env
         id: cached-mamba-env
         uses: actions/cache@v3
@@ -118,19 +116,17 @@ jobs:
           CACHE_NUMBER: 0
         with:
           path: /usr/share/miniconda3/envs/
-          key:
-            mamba-${{ runner.os }}-${{env.CACHE_NUMBER }}-${{hashFiles('**/training/environment.yml') }}
+          key: mamba-${{ runner.os }}-${{env.CACHE_NUMBER }}-${{hashFiles('**/training/environment.yml') }}
 
       - name: Update environment
-        run:
-          mamba env update -n dlp -f
+        run: mamba env update -n dlp -f
           training/environment.yml
         if: steps.cached-mamba-env.outputs.cache-hit != 'true'
-      
+
       #----------------------------------------------
       #       load cached venv if cache exists
       #----------------------------------------------
-      
+
       - name: Load cached venv
         id: cached-poetry-dependencies
         uses: actions/cache@v3
@@ -138,7 +134,7 @@ jobs:
           path: /usr/share/miniconda3/envs/dlp
           key: training-venv-${{ runner.os }}-${{ hashFiles('**/training/poetry.lock') }}
           restore-keys: training-venv-${{ runner.os }}-
-      
+
       #----------------------------------------------
       # install dependencies if cache does not exist
       #----------------------------------------------
@@ -160,4 +156,3 @@ jobs:
           export AWS_DEFAULT_REGION=us-west-2
           cd training && poetry run pytest tests
         shell: bash -el {0}
-     

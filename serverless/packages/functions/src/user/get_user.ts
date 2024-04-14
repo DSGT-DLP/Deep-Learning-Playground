@@ -1,7 +1,7 @@
 import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
-import parseJwt from "../../../core/src/parseJwt";
+import parseJwt from "@dlp-sst-app/core/src/parseJwt";
 
 export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
     if (event)

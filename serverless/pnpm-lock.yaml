@@ -57,6 +57,9 @@ importers:
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
+      vite-tsconfig-paths:
+        specifier: 4.3.1
+        version: 4.3.1(typescript@5.2.2)
       vitest:
         specifier: ^0.34.6
         version: 0.34.6
@@ -88,6 +91,9 @@ importers:
       sst:
         specifier: ^2.24.3
         version: 2.40.1(@aws-sdk/credential-provider-node@3.509.0)
+      vite-tsconfig-paths:
+        specifier: 4.3.1
+        version: 4.3.1(typescript@5.2.2)
       vitest:
         specifier: ^0.34.1
         version: 0.34.6
@@ -148,6 +154,9 @@ packages:
   /@aws-cdk/cloud-assembly-schema@2.124.0:
     resolution: {integrity: sha512-vVGGXVwqug0/oSRf2meLerqxu11aN/ULKjcVnBw339kiWLBfZYXktqxWYtgXoaAiZBS7eGSuhKrPYDE2Jx2kdA==}
     engines: {node: '>= 14.15.0'}
+    dependencies:
+      jsonschema: 1.4.1
+      semver: 7.5.4
     dev: true
     bundledDependencies:
       - jsonschema
@@ -173,6 +182,7 @@ packages:
       '@aws-cdk/cloud-assembly-schema': 2.124.0
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 2.124.0
+      semver: 7.5.4
     dev: true
     bundledDependencies:
       - semver
@@ -5849,6 +5859,10 @@ packages:
       slash: 3.0.0
     dev: true
 
+  /globrex@0.1.2:
+    resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
+    dev: true
+
   /gopd@1.0.1:
     resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==}
     dependencies:
@@ -6255,6 +6269,10 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.11
+    dev: true
+
+  /jsonschema@1.4.1:
+    resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
     dev: true
 
   /just-extend@6.2.0:
@@ -7603,6 +7621,19 @@ packages:
       typescript: 5.2.2
     dev: true
 
+  /tsconfck@3.0.3(typescript@5.2.2):
+    resolution: {integrity: sha512-4t0noZX9t6GcPTfBAbIbbIU4pfpCwh0ueq3S4O/5qXI1VwK1outmxhe9dOiEWqMz3MW2LKgDTpqWV+37IWuVbA==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
+    peerDependencies:
+      typescript: ^5.0.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 5.2.2
+    dev: true
+
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
 
@@ -7777,6 +7808,22 @@ packages:
       - sugarss
       - supports-color
       - terser
+    dev: true
+
+  /vite-tsconfig-paths@4.3.1(typescript@5.2.2):
+    resolution: {integrity: sha512-cfgJwcGOsIxXOLU/nELPny2/LUD/lcf1IbfyeKTv2bsupVbTH/xpFtdQlBmIP1GEK2CjjLxYhFfB+QODFAx5aw==}
+    peerDependencies:
+      vite: '*'
+    peerDependenciesMeta:
+      vite:
+        optional: true
+    dependencies:
+      debug: 4.3.4
+      globrex: 0.1.2
+      tsconfck: 3.0.3(typescript@5.2.2)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
     dev: true
 
   /vite@5.1.0(@types/node@20.11.17):

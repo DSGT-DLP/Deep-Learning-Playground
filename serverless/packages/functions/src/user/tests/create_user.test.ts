@@ -6,7 +6,7 @@ import { handler } from '../create_user';
 
 
 //mocks parseJwt so that the call just returns whatever the input is
-vi.mock('../../../../core/src/parseJwt', async () => {
+vi.mock('@dlp-sst-app/core/src/parseJwt', async () => {
   return {
       default: vi.fn().mockImplementation(input => input),
   }
@@ -35,7 +35,6 @@ it("test successful create user call", async () => {
         '    "phone": "123-456-7890"\n' +
               '}',
   }
-    
   const result = await handler(event);
   expect(result.statusCode).toEqual(200);
 });

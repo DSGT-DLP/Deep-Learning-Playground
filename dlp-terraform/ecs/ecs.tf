@@ -1,89 +1,81 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.16"
+resource "aws_ecs_cluster" "main" {
+  name = "backend"
+}
+
+# --- ECS Node Role ---
+data "aws_iam_policy_document" "ecs_node_doc" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
     }
   }
-
-  required_version = ">= 1.2.0"
 }
 
-provider "aws" {
-  region = "us-west-2"
+resource "aws_iam_role" "ecs_node_role" {
+  name_prefix        = "backend-ecs-node-role-"
+  assume_role_policy = data.aws_iam_policy_document.ecs_node_doc.json
 }
 
-resource "aws_ecs_cluster" "deep-learning-playground-kernels" {
-  name = "deep-learning-playground-kernels-test"
-  setting {
-    name  = "containerInsights"
-    value = "enabled"
-  }
+resource "aws_iam_role_policy_attachment" "ecs_node_role_policy" {
+  role       = aws_iam_role.ecs_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
-resource "aws_ecs_service" "dlp-training-service" {
-  name            = "dlp-training-service-test"
-  cluster         = aws_ecs_cluster.deep-learning-playground-kernels.id
-  task_definition = "arn:aws:ecs:us-west-2:521654603461:task-definition/dlp-training-task:9"
-  desired_count   = 1
 
-  launch_type = "FARGATE"
-
-  deployment_maximum_percent         = "200"
-  deployment_minimum_healthy_percent = "100"
-  scheduling_strategy                = "REPLICA"
-
-  network_configuration {
-    security_groups  = ["sg-09291eb84a19daeed"]
-    subnets          = ["subnet-0bebe768ad78b896c", "subnet-0f3e41ad21cfe6ff5"]
-    assign_public_ip = true
-  }
+resource "aws_iam_instance_profile" "ecs_node" {
+  name_prefix = "backend-ecs-node-profile-"
+  path        = "/ecs/instance/"
+  role        = aws_iam_role.ecs_node_role.name
 }
-resource "aws_appautoscaling_target" "dev_to_target" {
-  max_capacity       = 1
-  min_capacity       = 1
-  resource_id        = "service/${aws_ecs_cluster.deep-learning-playground-kernels.name}/${aws_ecs_service.dlp-training-service.name}"
-  scalable_dimension = "ecs:service:DesiredCount"
-  service_namespace  = "ecs"
-}
-resource "aws_appautoscaling_policy" "training_service_auto_scaling_policy" {
-  name               = "TrainingServiceAutoScalingPolicy"
-  policy_type        = "StepScaling"
-  resource_id        = "service/${aws_ecs_cluster.deep-learning-playground-kernels.name}/${aws_ecs_service.dlp-training-service.name}"
-  scalable_dimension = "ecs:service:DesiredCount"
-  service_namespace  = "ecs"
 
-  step_scaling_policy_configuration {
-    adjustment_type         = "ChangeInCapacity"
-    cooldown                = 30
-    metric_aggregation_type = "Average"
+# --- ECS Task Role ---
+data "aws_iam_policy_document" "ecs_task_doc" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
 
-    step_adjustment {
-      metric_interval_lower_bound = 0
-      scaling_adjustment          = 3
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
     }
   }
-
-  depends_on = [
-    aws_appautoscaling_target.dev_to_target
-  ]
 }
-resource "aws_appautoscaling_policy" "dlp-queue-size-too-small-policy" {
-  name               = "DLPQueueSizeTooSmallPolicy"
-  policy_type        = "StepScaling"
-  resource_id        = "service/${aws_ecs_cluster.deep-learning-playground-kernels.name}/${aws_ecs_service.dlp-training-service.name}"
-  scalable_dimension = "ecs:service:DesiredCount"
-  service_namespace  = "ecs"
 
-  step_scaling_policy_configuration {
-    adjustment_type         = "ExactCapacity"
-    cooldown                = 30
-    metric_aggregation_type = "Average"
+resource "aws_iam_role" "ecs_task_role" {
+  name_prefix        = "backend-ecs-task-role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_doc.json
+}
 
-    step_adjustment {
+resource "aws_iam_role_policy_attachment" "ecs_task_role_policy" {
+  for_each = toset([
+    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+    "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+  ])
 
-      metric_interval_upper_bound = 0 
-      scaling_adjustment          = 1
-    }
-  }
-  depends_on = [aws_appautoscaling_target.dev_to_target]
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = each.value
+}
+
+
+resource "aws_iam_role" "ecs_exec_role" {
+  name_prefix        = "backend-ecs-exec-role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_doc.json
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_exec_role_policy" {
+  role       = aws_iam_role.ecs_exec_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_cloudwatch_log_group" "training" {
+  name              = "/ecs/training"
+  retention_in_days = 14
+}
+
+resource "aws_cloudwatch_log_group" "django" {
+  name              = "/ecs/django"
+  retention_in_days = 14
 }

@@ -1,32 +1,29 @@
-import { APIGatewayProxyHandlerV2 } from "aws-lambda";
+import { APIGatewayProxyEventV2 } from "aws-lambda";
+import { DynamoDBClient, DeleteItemCommand } from '@aws-sdk/client-dynamodb';
 
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, DeleteCommand } from '@aws-sdk/lib-dynamodb';
-
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
+export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
     let queryParams = null;
     if (event && (queryParams = event['pathParameters']) != null) {
         const trainspaceId: string | undefined = queryParams['id'];
 
         if (trainspaceId == undefined) {
             return {
-                statusCode: 400,
+                statusCode: 401,
                 body: JSON.stringify({ message : "Malformed request content - trainspace ID missing." }),
             };
         }
         
         const client = new DynamoDBClient({});
-        const docClient = DynamoDBDocumentClient.from(client);
-        
-        const command = new DeleteCommand({
-            TableName : "trainspace",
+
+        const command = new DeleteItemCommand({
+            TableName : "TrainspaceTable",
             Key :
             {
-                trainspace_id: trainspaceId
+                trainspace_id: {"S": trainspaceId}
             }
         });
 
-        const response = await docClient.send(command);
+        const response = await client.send(command);
         if (response.$metadata.httpStatusCode == undefined || response.$metadata.httpStatusCode != 200) 
         {
             return {

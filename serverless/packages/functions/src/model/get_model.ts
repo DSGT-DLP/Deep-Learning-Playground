@@ -1,24 +1,30 @@
-import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
-import parseJwt from "../../../core/src/parseJwt";
+import { APIGatewayProxyEventV2 } from "aws-lambda";
+import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 
-export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
-    if (event)
+export async function handler(event : APIGatewayProxyEventV2) {
+    let queryParams = null;
+
+    if (event && ((queryParams = event['pathParameters']) != null))
     {
-        const eventBody = JSON.parse(event.body? event.body : "");
+        const model_id: string | undefined = queryParams['model_id'];
+        if (model_id == undefined) {
+            return {
+                statusCode: 401,
+                body: JSON.stringify({message: "Malformed request content - model ID missing."})
+            }
+        }
+
         const client: DynamoDBClient = new DynamoDBClient({});
-        const docClient = DynamoDBDocumentClient.from(client);
-        
-        const command : GetCommand = new GetCommand({
+
+        const command : GetItemCommand = new GetItemCommand({
             TableName : "ModelTable",
             Key : 
             {
-                model_id : eventBody['model_id']
+                model_id : {"S": model_id}
             }
         });
 
-        const response = await docClient.send(command);
+        const response = await client.send(command);
 
         if (!response.Item)
         {

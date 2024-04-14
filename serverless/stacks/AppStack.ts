@@ -99,13 +99,13 @@ export function AppStack({ stack }: StackContext) {
           permissions: ["dynamodb:PutItem"]
         }
       }, 
-      "GET /model": {
+      "GET /model/{model_id}": {
         function : {
           handler: "packages/functions/src/model/get_model.handler",
           permissions: ["dynamodb:GetItem"]
         }
       },
-      "DELETE /model": {
+      "DELETE /model/{model_id}": {
         function : {
           handler: "packages/functions/src/model/delete_model.handler",
           permissions: ["dynamodb:DeleteItem"]
@@ -147,8 +147,8 @@ export function AppStack({ stack }: StackContext) {
     CreateModelFunctionName:
         api.getFunction("POST /model")?.functionName ?? "",
     GetModelFunctionName:
-        api.getFunction("GET /model")?.functionName ?? "",
+        api.getFunction("GET /model/{model_id}")?.functionName ?? "",
     DeleteModelFunctionName:
-        api.getFunction("DELETE /model")?.functionName ?? "",
+        api.getFunction("DELETE /model/{model_id}")?.functionName ?? "",
   });
 }

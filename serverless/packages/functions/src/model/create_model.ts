@@ -1,27 +1,28 @@
-import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
-import parseJwt from "../../../core/src/parseJwt";
+import { APIGatewayProxyEventV2 } from "aws-lambda";
+import parseJwt from "@dlp-sst-app/core/src/parseJwt";
 import { v4 as uuidv4 } from 'uuid';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, PutCommand, PutCommandInput } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 
-export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
+export async function handler(event : APIGatewayProxyEventV2) {
     if (event) {
         const user_id: string = parseJwt(event.headers.authorization ?? "")["user_id"];
         const model_id = uuidv4();
+
+        const client = new DynamoDBClient({});
+
         const eventBody = JSON.parse(event.body? event.body : "");
-        let putCommandInput: PutCommandInput = {
+        const putCommand: PutItemCommand = new PutItemCommand({
             TableName: "ModelTable",
             Item:
             {
-                user_id: user_id,
-                // model_id: eventBody['model_id'],
-                model_id: model_id,
-                name: eventBody['name'],
-                model_structure: eventBody['model_structure']
+                user_id: {"S": user_id},
+                model_id: {"S": model_id},
+                name: {"S": eventBody['name']},
+                model_structure: {"S": eventBody['model_structure']}
             }
-        }
+        });
 
-        if (putCommandInput == null)
+        if (putCommand == null)
         {
             return {
                 statusCode: 400,
@@ -29,11 +30,7 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
             }
         }
 
-        const client = new DynamoDBClient({});
-        const docClient = DynamoDBDocumentClient.from(client);
-
-        const command = new PutCommand(putCommandInput);
-        const response = await docClient.send(command);
+        const response = await client.send(putCommand);
         
         if (response.$metadata.httpStatusCode != 200) {
             return {
@@ -44,7 +41,7 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
         
         return {
             statusCode: 200,
-            body: JSON.stringify({ user_id: user_id, message: "Successfully created a new model."})
+            body: JSON.stringify({ model_id: model_id, message: "Successfully created a new model."})
         };
       }
     return {
@@ -52,12 +49,3 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
         body: JSON.stringify({ message: "Not Found" }),
     };
 };
-function removeUndefinedValues(obj: { [key: string]: any }) {
-    const newObj: { [key: string]: any } = {};
-    for (const key in obj) {
-        if (obj[key] !== undefined) {
-            newObj[key] = obj[key];
-        }
-    }
-    return newObj;
-}

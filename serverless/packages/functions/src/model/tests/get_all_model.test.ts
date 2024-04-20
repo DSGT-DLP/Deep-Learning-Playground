@@ -1,13 +1,13 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
-import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
-import { handler } from '../get_model';
+import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
+import { handler } from '../get_all_model';
 
 //mocks parseJwt so that the call just returns whatever the input is
 vi.mock('@dlp-sst-app/core/src/parseJwt', async () => {
   return {
-      default: vi.fn().mockImplementation(input => input),
+    default: (input: String) => ({ user_id: input })
   }
 })
 
@@ -17,53 +17,40 @@ beforeEach(async () => {
 
 const ddbMock = mockClient(DynamoDBClient);
 
-
-it("test successful get model call", async () => {
-  ddbMock.on(GetItemCommand).resolves({
-    Item: { modelID: { S: 'sample model id' } }
-  })
-
+it("test successful get all model call", async () => {
+  ddbMock.on(QueryCommand).resolves({
+    "Items": [{
+      "user_id":{"S":"abcd"},
+      "model_id": { "S": "test id" },
+    }],
+    "Count": 4
+  });
   // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
   const event: APIGatewayProxyEventV2 =  {
-    pathParameters: {
-      model_id: "some model_id"
+    headers: {
+      authorization: 'abcd',
     },
   }
 
   const result = await handler(event);
+
   expect(result.statusCode).toEqual(200);
 });
 
-
-it("test no existing model id", async () => {
-  ddbMock.on(GetItemCommand).resolves({
-    Item: undefined
+it("test no existing models for user id", async () => {
+  ddbMock.on(QueryCommand).resolves({
+    Items: undefined
   })
 
   // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
   const event: APIGatewayProxyEventV2 =  {
-    pathParameters: {
-      model_id: "some model_id"
+    headers: {
+      authorization: 'abcd',
     },
   }
     
   const result = await handler(event);
   expect(result.statusCode).toEqual(404);
-});
-
-it("test no model id given", async () => {
-  ddbMock.on(GetItemCommand).resolves({
-    Item: { modelId: { S: 'sample model id' } }
-  })
-
-  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
-  const event: APIGatewayProxyEventV2 =  {
-    pathParameters: {
-    }
-  }
-    
-  const result = await handler(event);
-  expect(result.statusCode).toEqual(401);
 });
 
 it("test malformed request", async () => {

@@ -33,7 +33,7 @@ export async function handler(event : APIGatewayProxyEventV2) {
         }
         return {
             statusCode: 200,
-            body: "Successfully deleted model with id " + model_id
+            body: "Successfully deleted model with id: " + model_id
         }
     }
     return {

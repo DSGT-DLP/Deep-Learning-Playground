@@ -86,6 +86,36 @@ export function AppStack({ stack }: StackContext) {
           handler: "packages/functions/src/user/delete_user.handler",
           permissions: ["dynamodb:DeleteItem"]
         }
+      },
+      "POST /model": {
+        function: {
+          handler: "packages/functions/src/model/create_model.handler",
+          permissions: ["dynamodb:PutItem"]
+        }
+      }, 
+      "GET /model/{model_id}": {
+        function : {
+          handler: "packages/functions/src/model/get_model.handler",
+          permissions: ["dynamodb:GetItem"]
+        }
+      },
+      "GET /model": {
+        function : {
+          handler: "packages/functions/src/model/get_all_model.handler",
+          permissions: ["dynamodb:Query"]
+        }
+      },
+      "DELETE /model/{model_id}": {
+        function : {
+          handler: "packages/functions/src/model/delete_model.handler",
+          permissions: ["dynamodb:DeleteItem"]
+        }
+      },
+      "DELETE /model": {
+        function : {
+          handler: "packages/functions/src/model/delete_all_model.handler",
+          permissions: ["dynamodb:PartiQLDelete", "dynamodb:Query"]
+        }
       }
     },
   });
@@ -118,5 +148,15 @@ export function AppStack({ stack }: StackContext) {
         api.getFunction("GET /user")?.functionName ?? "",
     DeleteUserFunctionName:
         api.getFunction("DELETE /user")?.functionName ?? "",
+    CreateModelFunctionName:
+        api.getFunction("POST /model")?.functionName ?? "",
+    GetModelFunctionName:
+        api.getFunction("GET /model/{model_id}")?.functionName ?? "",
+    GetAllModelFunctionName:
+        api.getFunction("GET /model")?.functionName ?? "",
+    DeleteModelFunctionName:
+        api.getFunction("DELETE /model/{model_id}")?.functionName ?? "",
+    DeleteAllModelFunctionName:
+        api.getFunction("DELETE /model")?.functionName ?? "",
   });
 }

@@ -22,6 +22,7 @@ from ninja import NinjaAPI, Schema
 from training.routes.datasets.default.columns import router as default_dataset_router
 from training.routes.tabular.tabular import router as tabular_router
 from training.routes.image.image import router as image_router
+from training.routes.audio.audio import router as audio_router
 
 api = NinjaAPI()
 
@@ -34,6 +35,7 @@ def test(request: HttpRequest):
 api.add_router("/datasets/default/", default_dataset_router)
 api.add_router("/tabular", tabular_router)
 api.add_router("/image", image_router)
+api.add_router("/audio", audio_router)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

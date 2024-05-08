@@ -14,6 +14,10 @@
 |  |  |  |  |- 📜 __init__.py
 |  |  |  |  |- 📜 image.py
 |  |  |  |  |- 📜 schemas.py
+|  |  |  |- 📂 audio:
+|  |  |  |  |- 📜 __init__.py
+|  |  |  |  |- 📜 audio.py
+|  |  |  |  |- 📜 schemas.py
 |  |  |  |- 📂 datasets:
 |  |  |  |  |- 📂 default:
 |  |  |  |  |  |- 📜 columns.py

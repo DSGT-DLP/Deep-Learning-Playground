@@ -7,13 +7,13 @@ import { DetailedTrainResultsData } from "@/features/Train/types/trainTypes";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { Data, XAxisName, YAxisName } from "plotly.js";
 import React, { useEffect } from "react";
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
-
-const LINE_CHART_COLORS = ["red", "blue", "green"];
+import {
+  mapMetricToLinePlot,
+  mapMetricToAucRocPlot,
+  mapMetricToConfusionMatrixPlot,
+} from "./metrics_to_charts";
 
 const mapTrainResultsDataToCharts = (
   detailedTrainResultsData: DetailedTrainResultsData
@@ -27,120 +27,11 @@ const mapTrainResultsDataToCharts = (
   while (i < sortedData.length) {
     const metric = sortedData[i];
     if (metric.chart_type === "LINE") {
-      const data = [];
-      for (let i = 0; i < metric.time_series.length; i++) {
-        const time_series = metric.time_series[i];
-        data.push({
-          name: time_series.y_name,
-          x: time_series.x_values,
-          y: time_series.y_values,
-          type: "scatter",
-          mode: "markers",
-          marker: { color: LINE_CHART_COLORS[i], size: 10 },
-        });
-      }
-      charts.push(
-        <Plot
-          data={data as Data[]}
-          layout={{
-            height: 350,
-            width: 525,
-            xaxis: { title: metric.time_series[0].x_name },
-            // yaxis: { title: "Y axis" },
-            title: metric.name,
-            showlegend: true,
-            paper_bgcolor: "rgba(0,0,0,0)",
-            plot_bgcolor: "rgba(0,0,0,0)",
-          }}
-          config={{ responsive: true }}
-        />
-      );
+      charts.push(mapMetricToLinePlot(metric));
     } else if (metric.chart_type === "AUC/ROC") {
-      charts.push(
-        <Plot
-          data={[
-            {
-              name: "baseline",
-              x: [0, 1],
-              y: [0, 1],
-              type: "scatter",
-              marker: { color: "grey" },
-              line: {
-                dash: "dash",
-              },
-            },
-            ...(metric.values.map((x) => ({
-              name: `(AUC: ${x[2]})`,
-              x: x[0] as number[],
-              y: x[1] as number[],
-              type: "scatter",
-            })) as Data[]),
-          ]}
-          layout={{
-            height: 350,
-            width: 525,
-            xaxis: { title: "False Positive Rate" },
-            yaxis: { title: "True Positive Rate" },
-            title: "AUC/ROC Curves for your Deep Learning Model",
-            showlegend: true,
-            paper_bgcolor: "rgba(0,0,0,0)",
-            plot_bgcolor: "rgba(0,0,0,0)",
-          }}
-          config={{ responsive: true }}
-        />
-      );
+      charts.push(mapMetricToAucRocPlot(metric));
     } else if (metric.chart_type === "CONFUSION_MATRIX") {
-      charts.push(
-        <Plot
-          data={[
-            {
-              z: metric.values,
-              type: "heatmap",
-              colorscale: [
-                [0, "#e6f6fe"],
-                [1, "#003058"],
-              ],
-            },
-          ]}
-          layout={{
-            height: 525,
-            width: 525,
-            title: "Confusion Matrix (Last Epoch)",
-            xaxis: {
-              title: "Predicted",
-            },
-            yaxis: {
-              title: "Actual",
-              autorange: "reversed",
-            },
-            showlegend: true,
-            annotations: metric.values
-              .map((row, i) =>
-                row.map((_, j) => ({
-                  xref: "x1" as XAxisName,
-                  yref: "y1" as YAxisName,
-                  x: j,
-                  y: (i + metric.values.length - 1) % metric.values.length,
-                  text: metric.values[
-                    (i + metric.values.length - 1) % metric.values.length
-                  ][j].toString(),
-                  font: {
-                    color:
-                      metric.values[
-                        (i + metric.values.length - 1) % metric.values.length
-                      ][j] > 0
-                        ? "white"
-                        : "black",
-                  },
-                  showarrow: false,
-                }))
-              )
-              .flat(),
-            paper_bgcolor: "rgba(0,0,0,0)",
-            plot_bgcolor: "rgba(0,0,0,0)",
-          }}
-        />
-      );
+      charts.push(mapMetricToConfusionMatrixPlot(metric));
     } else {
       throw Error("Undefined chart type received");
     }
@@ -163,7 +54,7 @@ const TrainSpace = () => {
       router.replace({ pathname: "/login" });
     }
   }, [user, router.isReady]);
-  
+
   if (error) {
     setTimeout(() => refetch(), 3000);
   }

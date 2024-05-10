@@ -6,6 +6,11 @@
 📦 training
 |  |- 📂 training:
 |  |  |- 📂 routes:
+|  |  |  |- 📂 training:
+|  |  |  |  |- 📂 results:
+|  |  |  |  |  |- 📜 results.py
+|  |  |  |  |  |- 📜 __init__.py
+|  |  |  |  |  |- 📜 schemas.py
 |  |  |  |- 📂 tabular:
 |  |  |  |  |- 📜 tabular.py
 |  |  |  |  |- 📜 __init__.py
@@ -30,18 +35,24 @@
 |  |  |  |- 📜 __init__.py
 |  |  |  |- 📜 health_check_middleware.py
 |  |  |- 📂 core:
-|  |  |  |- 📜 trainer.py
-|  |  |  |- 📜 criterion.py
-|  |  |  |- 📜 dl_model.py : torch model based on user specifications from drag and drop
-|  |  |  |- 📜 dataset.py : read in the dataset through URL or file upload
+|  |  |  |- 📂 celery:
+|  |  |  |  |- 📜 trainer.py
+|  |  |  |  |- 📜 criterion.py
+|  |  |  |  |- 📜 dl_model.py : torch model based on user specifications from drag and drop
+|  |  |  |  |- 📜 dataset.py : read in the dataset through URL or file upload
+|  |  |  |  |- 📜 __init__.py
+|  |  |  |  |- 📜 worker.py
+|  |  |  |  |- 📜 optimizer.py : what optimizer to use (ie: SGD or Adam for now)
 |  |  |  |- 📜 __init__.py
 |  |  |  |- 📜 authenticator.py
-|  |  |  |- 📜 optimizer.py : what optimizer to use (ie: SGD or Adam for now)
 |  |  |- 📜 asgi.py
+|  |  |- 📜 constants.py : list of helpful constants
+|  |  |- 📜 celery_app.py
 |  |  |- 📜 settings.py
 |  |  |- 📜 __init__.py
 |  |  |- 📜 wsgi.py
 |  |  |- 📜 urls.py
+|  |  |- 📜 celeryconfig.py
 |  |- 📜 README.md
 |  |- 📜 docker-compose.yml
 |  |- 📜 cli.py
@@ -59,15 +70,11 @@
 
 ```
 📦 frontend
-|  |- 📂 layer_docs:
-|  |  |- 📜 Linear.md : Doc for Linear layer
-|  |  |- 📜 Softmax.md : Doc for Softmax layer
-|  |  |- 📜 softmax_equation.png : PNG file of Softmax equation
-|  |  |- 📜 ReLU.md : Doc for ReLU later
 |  |- 📂 public:
 |  |  |- 📂 images:
 |  |  |  |- 📂 logos:
 |  |  |  |  |- 📂 dlp_branding:
+|  |  |  |  |  |- 📜 dlp-logo.png : DLP Logo, duplicate of files in public, but essential as the frontend can't read public
 |  |  |  |  |  |- 📜 dlp-logo.svg : DLP Logo, duplicate of files in public, but essential as the frontend can't read public
 |  |  |  |  |- 📜 dsgt-logo-white-back.png
 |  |  |  |  |- 📜 python-logo.png
@@ -214,6 +221,7 @@
 |  |  |- 📂 pages:
 |  |  |  |- 📂 train:
 |  |  |  |  |- 📜 [train_space_id].tsx
+|  |  |  |  |- 📜 metrics_to_charts.tsx
 |  |  |  |  |- 📜 index.tsx
 |  |  |  |- 📜 _app.tsx
 |  |  |  |- 📜 forgot.tsx

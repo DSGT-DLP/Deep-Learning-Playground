@@ -9,6 +9,7 @@ django.setup()
 import boto3
 
 
+from training.constants import DLP_EXECUTIONS_BUCKET_NAME
 from training.core.celery.criterion import getCriterionHandler
 from training.core.celery.dataset import SklearnDatasetCreator
 from training.core.celery.dataset import ImageDefaultDatasetCreator
@@ -34,7 +35,7 @@ def saveDetailedTrainResultsDataToS3(
 ):
     s3 = boto3.resource("s3")
     s3.Object(
-        "dlp-executions", f"{detailedTrainResultsData.basic_info.trainspaceId}.json"
+        DLP_EXECUTIONS_BUCKET_NAME, f"{detailedTrainResultsData.basic_info.trainspaceId}.json"
     ).put(Body=detailedTrainResultsData.json())
 
 

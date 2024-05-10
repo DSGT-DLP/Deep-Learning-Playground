@@ -35,7 +35,8 @@ def saveDetailedTrainResultsDataToS3(
 ):
     s3 = boto3.resource("s3")
     s3.Object(
-        DLP_EXECUTIONS_BUCKET_NAME, f"{detailedTrainResultsData.basic_info.trainspaceId}.json"
+        DLP_EXECUTIONS_BUCKET_NAME,
+        f"{detailedTrainResultsData.basic_info.trainspaceId}.json",
     ).put(Body=detailedTrainResultsData.json())
 
 

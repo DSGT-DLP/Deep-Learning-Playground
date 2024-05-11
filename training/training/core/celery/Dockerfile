@@ -21,7 +21,7 @@ RUN mkdir $APP_HOME
 
 
 
-######################## development target ######################## 
+######################## development target ########################
 FROM base AS development
 ENV ENVIRONMENT development
 
@@ -33,9 +33,7 @@ WORKDIR $APP_HOME
 RUN chown -R app:app $APP_HOME 
 USER app
 
-CMD mamba run --live-stream -n dlp poetry run python manage.py runserver 0.0.0.0:8000
-
-
+CMD mamba run --live-stream -n dlp celery -A training.core.celery.worker worker --loglevel=INFO
 
 ######################## production target ######################### 
 FROM base AS production
@@ -50,4 +48,4 @@ COPY . $APP_HOME
 RUN chown -R app:app $APP_HOME
 USER app
 
-CMD mamba run --live-stream -n dlp gunicorn training.wsgi:application --bind 0.0.0.0:8000
+CMD mamba run --live-stream -n dlp celery -A training.core.celery.worker worker --loglevel=INFO

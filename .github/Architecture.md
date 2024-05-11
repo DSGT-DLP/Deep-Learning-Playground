@@ -41,6 +41,7 @@
 |  |  |  |  |- 📜 dl_model.py : torch model based on user specifications from drag and drop
 |  |  |  |  |- 📜 dataset.py : read in the dataset through URL or file upload
 |  |  |  |  |- 📜 __init__.py
+|  |  |  |  |- 📜 Dockerfile
 |  |  |  |  |- 📜 worker.py
 |  |  |  |  |- 📜 optimizer.py : what optimizer to use (ie: SGD or Adam for now)
 |  |  |  |- 📜 __init__.py
@@ -63,7 +64,6 @@
 |  |- 📜 manage.py
 |  |- 📜 environment.yml
 |  |- 📜 docker-compose.prod.yml
-|  |- 📜 Dockerfile.prod
 ```
 
 ## Frontend Architecture

@@ -51,6 +51,7 @@ const TrainSpace = () => {
   const router = useRouter();
   useEffect(() => {
     if (router.isReady && !user) {
+      console.log("redirect to login");
       router.replace({ pathname: "/login" });
     }
   }, [user, router.isReady]);

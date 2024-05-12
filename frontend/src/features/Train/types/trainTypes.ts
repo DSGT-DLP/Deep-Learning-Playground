@@ -1,6 +1,6 @@
 import { DATA_SOURCE_ARR } from "../constants/trainConstants";
 
-// keep in sync with worker.py
+// keep in sync with schemas.py
 export type DATA_SOURCE = typeof DATA_SOURCE_ARR[number];
 
 export type TRAIN_STATUS =
@@ -24,7 +24,6 @@ export interface TrainResultsData {
   dataSource: DATA_SOURCE;
   status: TRAIN_STATUS;
   created: Date;
-  step: string;
   uid: string;
 }
 

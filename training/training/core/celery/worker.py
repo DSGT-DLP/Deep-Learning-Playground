@@ -105,7 +105,6 @@ def tabularTrainTask(input: dict, uid: str):
             "dataSource": "TABULAR",
             "status": "SUCCESS",
             "created": date.today(),
-            "step": "step",
             "uid": uid,
         }
     )
@@ -168,7 +167,6 @@ def imageTrainTask(input: dict, uid: str):
             "dataSource": "IMAGE",
             "status": "SUCCESS",
             "created": date.today(),
-            "step": "step",
             "uid": uid,
         }
     )

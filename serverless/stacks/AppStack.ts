@@ -48,7 +48,7 @@ export function AppStack({ stack }: StackContext) {
       "GET /trainspace/{id}": {
         function: {
           handler: "packages/functions/src/trainspace/get_trainspace.handler",
-          permissions: ["dynamodb:GetItem"]
+          permissions: ["dynamodb:GetItem", "s3:ListBucket", "s3:GetObject"]
         }
       },
       "GET /trainspace": {

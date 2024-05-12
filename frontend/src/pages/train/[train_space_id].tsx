@@ -2,7 +2,7 @@ import Footer from "@/common/components/Footer";
 import NavbarMain from "@/common/components/NavBarMain";
 import { useAppSelector } from "@/common/redux/hooks";
 import { isSignedIn } from "@/common/redux/userLogin";
-import { useGetTrainResultsDataQuery } from "@/features/Train/redux/trainspaceApi";
+import { useGetTrainspaceQuery } from "@/features/Train/redux/trainspaceApi";
 import { DetailedTrainResultsData } from "@/features/Train/types/trainTypes";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
@@ -43,8 +43,9 @@ const mapTrainResultsDataToCharts = (
 
 const TrainSpace = () => {
   const { train_space_id } = useRouter().query;
-  const { data, isLoading, refetch, error } = useGetTrainResultsDataQuery({
+  const { data, isLoading, refetch, error } = useGetTrainspaceQuery({
     trainspaceId: train_space_id,
+    withResults: true
   });
 
   const user = useAppSelector((state) => state.currentUser.user);
@@ -64,7 +65,7 @@ const TrainSpace = () => {
     return <></>;
   }
 
-  const charts = mapTrainResultsDataToCharts(data);
+  const charts = mapTrainResultsDataToCharts(data.trainspace.detailedTrainResultsData);
   return (
     <div style={{ height: "100vh" }}>
       <NavbarMain />

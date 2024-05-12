@@ -37,6 +37,7 @@ export async function handler<APIGatewayProxyHandlerV2>(
         name: { S: eventBody["name"] },
         user_id: { S: user_id },
         data_source: { S: eventBody["data_source"] },
+        created: {N: (Math.floor(Date.now() / 1000)).toString() },
         dataset_data: {
           M: {
             name: { S: eventBody["dataset_data"]["name"] },

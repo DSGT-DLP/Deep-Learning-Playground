@@ -13,14 +13,6 @@ const trainspaceApi = backendApi
   .enhanceEndpoints({ addTagTypes: ["UserDatasetFilesData"] })
   .injectEndpoints({
     endpoints: (builder) => ({
-      getTrainResultsData: builder.query<
-        DetailedTrainResultsData,
-        { trainspaceId: string }
-      >({
-        query: ({ trainspaceId }) => ({
-          url: `/api/training/training/results/${trainspaceId}`,
-        }),
-      }),
       getDatasetFilesData: builder.query<
         FileUploadData[],
         { dataSource: DATA_SOURCE }
@@ -117,14 +109,29 @@ const trainspaceApi = backendApi
           },
         }),
       }),
+      getTrainspace: builder.query<
+        {
+          config: unknown;
+          detailedTrainResultsData: DetailedTrainResultsData | undefined;
+        },
+        { trainspaceId: string; withResults: boolean }
+      >({
+        query: ({ trainspaceId, withResults }) => ({
+          url: `/api/lambda/trainspace/${trainspaceId}`,
+          method: "GET",
+          params: {
+            with_results: withResults,
+          },
+        }),
+      }),
     }),
     overrideExisting: true,
   });
 
 export const {
-  useGetTrainResultsDataQuery,
   useGetDatasetFilesDataQuery,
   useUploadDatasetFileMutation,
   useLazyGetColumnsFromDatasetQuery,
   useCreateTrainspaceMutation,
+  useGetTrainspaceQuery,
 } = trainspaceApi;

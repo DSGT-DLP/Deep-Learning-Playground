@@ -6,11 +6,6 @@
 📦 training
 |  |- 📂 training:
 |  |  |- 📂 routes:
-|  |  |  |- 📂 training:
-|  |  |  |  |- 📂 results:
-|  |  |  |  |  |- 📜 results.py
-|  |  |  |  |  |- 📜 __init__.py
-|  |  |  |  |  |- 📜 schemas.py
 |  |  |  |- 📂 tabular:
 |  |  |  |  |- 📜 tabular.py
 |  |  |  |  |- 📜 __init__.py

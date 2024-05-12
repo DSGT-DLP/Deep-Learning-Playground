@@ -19,7 +19,7 @@ from training.core.celery.optimizer import getOptimizer
 from training.core.celery.trainer import ClassificationTrainer, RegressionTrainer
 from training.routes.tabular.schemas import TabularParams
 from training.routes.image.schemas import ImageParams
-from training.routes.training.results.schemas import (
+from training.core.celery.train_types import (
     DetailedTrainResultsData,
     TrainResultsData,
 )

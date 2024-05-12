@@ -45,7 +45,7 @@ const TrainSpace = () => {
   const { train_space_id } = useRouter().query;
   const { data, isLoading, refetch, error } = useGetTrainspaceQuery({
     trainspaceId: train_space_id,
-    withResults: true
+    withResults: true,
   });
 
   const user = useAppSelector((state) => state.currentUser.user);
@@ -65,7 +65,9 @@ const TrainSpace = () => {
     return <></>;
   }
 
-  const charts = mapTrainResultsDataToCharts(data.trainspace.detailedTrainResultsData);
+  const charts = mapTrainResultsDataToCharts(
+    data.trainspace.detailedTrainResultsData
+  );
   return (
     <div style={{ height: "100vh" }}>
       <NavbarMain />
@@ -73,7 +75,7 @@ const TrainSpace = () => {
         <h1>{train_space_id}</h1>
         <Grid container spacing={2}>
           {charts.map((chart) => (
-            <Grid item>
+            <Grid item key={chart.name}>
               <Paper>{chart}</Paper>
             </Grid>
           ))}

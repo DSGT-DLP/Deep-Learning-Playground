@@ -1,4 +1,4 @@
-FROM condaforge/miniforge3 AS base
+FROM condaforge/miniforge3:24.1.2-0 AS base
 
 WORKDIR /usr/src/build
 
@@ -17,7 +17,7 @@ RUN addgroup --system app && adduser --system --group app
 # create the appropriate directories
 ARG HOME=/home/app
 ARG APP_HOME=/home/app/training
-RUN mkdir $APP_HOME
+RUN mkdir "$APP_HOME"
 
 
 
@@ -30,7 +30,7 @@ RUN mamba run --live-stream -n dlp poetry install
 
 # we previously mounted training/ to APP_HOME
 WORKDIR $APP_HOME
-RUN chown -R app:app $APP_HOME 
+RUN chown -R app:app "$APP_HOME"
 USER app
 
 CMD mamba run --live-stream -n dlp celery -A training.core.celery.worker worker --loglevel=INFO
@@ -45,7 +45,7 @@ RUN mamba run --live-stream -n dlp poetry install --without dev
 WORKDIR $APP_HOME
 COPY . $APP_HOME
 
-RUN chown -R app:app $APP_HOME
+RUN chown -R app:app "$APP_HOME"
 USER app
 
 CMD mamba run --live-stream -n dlp celery -A training.core.celery.worker worker --loglevel=INFO

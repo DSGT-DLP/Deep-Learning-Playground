@@ -11,7 +11,7 @@ router = Router()
 
 @router.post("", auth=FirebaseAuth())
 def tabularTrain(request: Request, tabularParams: TabularParams):
-    task = celery_app.send_task(
+    celery_app.send_task(
         "tabularTrainTask", [tabularParams.dict(), request.auth["uid"]]
     )
 

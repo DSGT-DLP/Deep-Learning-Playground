@@ -1,4 +1,4 @@
-FROM condaforge/miniforge3 AS base
+FROM condaforge/miniforge3:24.1.2-0 AS base
 
 WORKDIR /usr/src/build
 
@@ -30,7 +30,7 @@ RUN mamba run --live-stream -n dlp poetry install
 
 # we previously mounted training/ to APP_HOME
 WORKDIR $APP_HOME
-RUN chown -R app:app $APP_HOME 
+RUN chown -R app:app "$APP_HOME" 
 USER app
 
 CMD mamba run --live-stream -n dlp poetry run python manage.py runserver 0.0.0.0:8000
@@ -47,7 +47,7 @@ RUN mamba run --live-stream -n dlp poetry install --without dev
 WORKDIR $APP_HOME
 COPY . $APP_HOME
 
-RUN chown -R app:app $APP_HOME
+RUN chown -R app:app "$APP_HOME"
 USER app
 
 CMD mamba run --live-stream -n dlp gunicorn training.wsgi:application --bind 0.0.0.0:8000

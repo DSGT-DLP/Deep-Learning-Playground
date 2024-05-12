@@ -56,8 +56,8 @@ const mapMetricToAucRocPlot = (metric: AucRocChart) => {
         },
         ...(metric.values.map((x) => ({
           name: `(AUC: ${x[2]})`,
-          x: x[0] as number[],
-          y: x[1] as number[],
+          x: x[0],
+          y: x[1],
           type: "scatter",
         })) as Data[]),
       ]}
@@ -77,55 +77,57 @@ const mapMetricToAucRocPlot = (metric: AucRocChart) => {
 };
 
 const mapMetricToConfusionMatrixPlot = (metric: ConfusionMatrixChart) => {
-  <Plot
-    data={[
-      {
-        z: metric.values,
-        type: "heatmap",
-        colorscale: [
-          [0, "#e6f6fe"],
-          [1, "#003058"],
-        ],
-      },
-    ]}
-    layout={{
-      height: 525,
-      width: 525,
-      title: "Confusion Matrix (Last Epoch)",
-      xaxis: {
-        title: "Predicted",
-      },
-      yaxis: {
-        title: "Actual",
-        autorange: "reversed",
-      },
-      showlegend: true,
-      annotations: metric.values
-        .map((row, i) =>
-          row.map((_, j) => ({
-            xref: "x1" as XAxisName,
-            yref: "y1" as YAxisName,
-            x: j,
-            y: (i + metric.values.length - 1) % metric.values.length,
-            text: metric.values[
-              (i + metric.values.length - 1) % metric.values.length
-            ][j].toString(),
-            font: {
-              color:
-                metric.values[
-                  (i + metric.values.length - 1) % metric.values.length
-                ][j] > 0
-                  ? "white"
-                  : "black",
-            },
-            showarrow: false,
-          }))
-        )
-        .flat(),
-      paper_bgcolor: "rgba(0,0,0,0)",
-      plot_bgcolor: "rgba(0,0,0,0)",
-    }}
-  />;
+  return (
+    <Plot
+      data={[
+        {
+          z: metric.values,
+          type: "heatmap",
+          colorscale: [
+            [0, "#e6f6fe"],
+            [1, "#003058"],
+          ],
+        },
+      ]}
+      layout={{
+        height: 525,
+        width: 525,
+        title: "Confusion Matrix (Last Epoch)",
+        xaxis: {
+          title: "Predicted",
+        },
+        yaxis: {
+          title: "Actual",
+          autorange: "reversed",
+        },
+        showlegend: true,
+        annotations: metric.values
+          .map((row, i) =>
+            row.map((_, j) => ({
+              xref: "x1" as XAxisName,
+              yref: "y1" as YAxisName,
+              x: j,
+              y: (i + metric.values.length - 1) % metric.values.length,
+              text: metric.values[
+                (i + metric.values.length - 1) % metric.values.length
+              ][j].toString(),
+              font: {
+                color:
+                  metric.values[
+                    (i + metric.values.length - 1) % metric.values.length
+                  ][j] > 0
+                    ? "white"
+                    : "black",
+              },
+              showarrow: false,
+            }))
+          )
+          .flat(),
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+      }}
+    />
+  );
 };
 
 export {

@@ -34,6 +34,7 @@
 |  |  |  |  |- 📜 trainer.py
 |  |  |  |  |- 📜 criterion.py
 |  |  |  |  |- 📜 dl_model.py : torch model based on user specifications from drag and drop
+|  |  |  |  |- 📜 train_types.py
 |  |  |  |  |- 📜 dataset.py : read in the dataset through URL or file upload
 |  |  |  |  |- 📜 __init__.py
 |  |  |  |  |- 📜 Dockerfile

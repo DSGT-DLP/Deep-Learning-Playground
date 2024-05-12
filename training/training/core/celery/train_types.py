@@ -26,7 +26,6 @@ class TrainResultsData(Schema):
     dataSource: DATA_SOURCE
     status: TRAIN_STATUS
     created: datetime.date
-    step: str
     uid: str
 
 

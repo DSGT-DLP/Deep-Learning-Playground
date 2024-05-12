@@ -96,12 +96,12 @@ def collectTrainingResults(trainer, basic_info, is_classification):
 
 
 @celery_app.task(name="tabularTrainTask")
-def tabularTrainTask(input: dict, trainspaceId: str, uid: str):
+def tabularTrainTask(input: dict, uid: str):
     tabularParams = TabularParams(**input)
     basic_info = TrainResultsData(
         **{
             "name": tabularParams.name,
-            "trainspaceId": trainspaceId,
+            "trainspaceId": tabularParams.trainspace_id,
             "dataSource": "TABULAR",
             "status": "SUCCESS",
             "created": date.today(),
@@ -159,12 +159,12 @@ def tabularTrainTask(input: dict, trainspaceId: str, uid: str):
 
 
 @celery_app.task(name="imageTrainTask")
-def imageTrainTask(input: dict, trainspaceId: str, uid: str):
+def imageTrainTask(input: dict, uid: str):
     imageParams = ImageParams(**input)
     basic_info = TrainResultsData(
         **{
             "name": imageParams.name,
-            "trainspaceId": trainspaceId,
+            "trainspaceId": imageParams.trainspace_id,
             "dataSource": "IMAGE",
             "status": "SUCCESS",
             "created": date.today(),

@@ -12,7 +12,7 @@ router = Router()
 def imageTrain(request: Request, imageParams: ImageParams):
     trainspaceId = str(uuid.uuid4())
     task = celery_app.send_task(
-        "imageTrainTask", [imageParams.dict(), trainspaceId, request.auth["uid"]]
+        "imageTrainTask", [imageParams.dict(), request.auth["uid"]]
     )
 
-    return 200, {"trainspace_id": trainspaceId}
+    return 200, {"trainspace_id": imageParams.trainspace_id}

@@ -9,8 +9,10 @@ export async function handler<APIGatewayProxyHandlerV2>(
   if (event && (pathParams = event["pathParameters"]) != null) {
     const trainspaceId: string | undefined = pathParams["id"];
     const queryParams = event["queryStringParameters"];
-    const withResults: boolean =
-      "with_results" in queryParams ? queryParams["with_results"] === 'true' : false;
+    let withResults = false;
+    if (queryParams !== undefined) {
+      withResults = "with_results" in queryParams ? queryParams["with_results"] === 'true' : false;
+    }
 
     if (trainspaceId === undefined) {
       return {

@@ -32,8 +32,8 @@ it("test successful create trainspace call", async () => {
       body: '{\n' +
         '    "name": "SOME NAME",\n' +
         '    "data_source": "SOME DATA SOURCE",\n' +
-        '    "dataset_data": "SOME DATA",\n' +
-        '    "review_data": "SOME REVIEW DATA",\n' +
+        '    "dataset_data": {"name": "name", "isDefaultDataset": false },\n' +
+        '    "review_data": {"notificationEmail": "email", "notificationPhoneNumer": "number"},\n' +
         '    "model_id": "SOME MODEL ID",\n' +
         '    "results_s3": "SOME RESULTS"\n' +
               '}',
@@ -56,8 +56,8 @@ it("test internal service error", async () => {
       body: '{\n' +
         '    "name": "SOME NAME",\n' +
         '    "data_source": "SOME DATA SOURCE",\n' +
-        '    "dataset_data": "SOME DATA",\n' +
-        '    "review_data": "SOME REVIEW DATA",\n' +
+        '    "dataset_data": {"name": "name", "isDefaultDataset": false },\n' +
+        '    "review_data": {"notificationEmail": "email", "notificationPhoneNumer": "number"},\n' +
         '    "model_id": "SOME MODEL ID",\n' +
         '    "results_s3": "SOME RESULTS"\n' +
               '}',

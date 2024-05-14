@@ -17,6 +17,8 @@ from torch.utils.data import DataLoader
 from enum import Enum
 import os
 import shutil
+import torchaudio
+import soundata
 
 
 class TrainTestDatasetCreator(ABC):
@@ -201,3 +203,80 @@ class ImageDefaultDatasetCreator(TrainTestDatasetCreator):
 
     def getCategoryList(self) -> list[str]:
         return self.train_set.classes if hasattr(self.train_set, "classes") else []
+
+class UrbanSoundDataset(Dataset):
+    
+    def __init__(self, dataset, folderList):
+        # Initialize lists to hold file names, labels, and folder numbers
+        self.file_names = []
+        self.labels = []
+        self.folders = []
+        self.dataset = dataset
+        
+        # Loop through the dataset and only add entries from folders in the folder list
+        for clip in dataset.clip_ids:
+            clip_metadata = dataset.clip(clip)
+            fold = int(clip_metadata.subset.split('_')[1])  # Extract fold number
+            if fold in folderList:
+                self.file_names.append(clip_metadata.audio_path)
+                self.labels.append(clip_metadata.tags[0])  # Assuming the first tag is the label
+                self.folders.append(fold)
+        
+        self.folderList = folderList
+        
+    def __getitem__(self, index):
+        # Load the file
+        path = self.file_names[index]
+        sound, sample_rate = torchaudio.load(path)
+        
+        # Convert to mono if stereo. Otherwise, just take the first channel. 
+        # we need this bc the UrbanSound8k dataset is stereo, but torchaudio defaults to mono
+        if sound.size(0) > 1:
+            sound = torch.mean(sound, dim=0, keepdim=True)
+        
+        # Normalize the audio. Mean and std are calculated from the training set
+        sound = (sound - sound.mean()) / sound.std()
+
+        # Downsample the audio to ~8kHz
+        tempData = torch.zeros([160000, 1])  # tempData accounts for audio clips that are too short
+        if sound.numel() < 160000:
+            tempData[:sound.numel()] = sound[:]
+        else:
+            tempData[:] = sound[:160000]
+        
+        soundData = tempData
+        soundFormatted = torch.zeros([32000, 1])
+        soundFormatted[:32000] = soundData[::5]  # Take every fifth sample of soundData
+        soundFormatted = soundFormatted.permute(1, 0)
+        return soundFormatted, self.labels[index]
+    
+    def __len__(self):
+        return len(self.file_names)
+
+class UrbanSoundDatasetCreator(TrainTestDatasetCreator):
+    def __init__(self, folderList_train, folderList_test, batch_size=128, shuffle=True):
+        # Initialize and download the dataset using soundata
+        self.dataset = soundata.initialize('urbansound8k')
+        self.dataset.download()  # Download the dataset
+        
+        self.folderList_train = folderList_train
+        self.folderList_test = folderList_test
+        self.batch_size = batch_size
+        self.shuffle = shuffle
+
+        self.train_set = UrbanSoundDataset(self.dataset, self.folderList_train)
+        self.test_set = UrbanSoundDataset(self.dataset, self.folderList_test)
+    
+    @classmethod
+    def fromDefault(cls, batch_size=128, shuffle=True):
+        folderList_train = range(1, 10)
+        folderList_test = [10]
+        return cls(folderList_train, folderList_test, batch_size, shuffle)
+    
+    def createTrainDataset(self) -> DataLoader:
+        train_loader = DataLoader(self.train_set, batch_size=self.batch_size, shuffle=self.shuffle)
+        return train_loader
+
+    def createTestDataset(self) -> DataLoader:
+        test_loader = DataLoader(self.test_set, batch_size=self.batch_size, shuffle=self.shuffle)
+        return test_loader

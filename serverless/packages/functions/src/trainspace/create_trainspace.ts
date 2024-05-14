@@ -47,8 +47,7 @@ export async function handler<APIGatewayProxyHandlerV2>(
           },
         },
         ...(Object.keys(review_data).length && { review_data }),
-        // model_id: { S: eventBody["model_id"] }, # to be implemented
-        // results_s3: { S: eventBody["results_s3"] }, # not needed
+        // model_id: { S: eventBody["model_id"] }, # TODO: add model_id
         status: { S: TrainStatus.QUEUED },
       },
     });

@@ -105,7 +105,7 @@ const trainspaceApi = backendApi
             data_source: trainspaceData.dataSource,
             dataset_data: trainspaceData.datasetData,
             review_data: trainspaceData.reviewData,
-            // model_id: not implemented yet
+            // TODO: add model_id
           },
         }),
       }),

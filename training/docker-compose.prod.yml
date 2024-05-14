@@ -1,11 +1,13 @@
-version: '3.8'
+version: "3.8"
 
 services:
   web:
     build:
-      dockerfile: Dockerfile.prod
+      context: .
+      target: production
     volumes:
-      - ./:/usr/src/training/
-      - $HOME/.aws/credentials:/home/app/.aws/credentials:ro
+      - $HOME/.aws:/home/app/.aws:ro
     ports:
       - 8000:8000
+    environment:
+      - AWS_PROFILE=$AWS_PROFILE

@@ -8,6 +8,7 @@ class LayerParams(Schema):
 
 
 class ImageParams(Schema):
+    trainspace_id: str
     name: str
     problem_type: Literal["CLASSIFICATION"]
     default: Optional[str]

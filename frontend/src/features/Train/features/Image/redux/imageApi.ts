@@ -5,12 +5,13 @@ const imageApi = backendApi.injectEndpoints({
   endpoints: (builder) => ({
     trainImage: builder.mutation<
       { trainspaceId: string },
-      TrainspaceData<"TRAIN">
+      { trainspaceData: TrainspaceData<"TRAIN">; trainspaceId: string }
     >({
-      query: (trainspaceData) => ({
+      query: ({ trainspaceData, trainspaceId }) => ({
         url: "/api/train/img-run",
         method: "POST",
         body: {
+          trainspace_id: trainspaceId,
           name: trainspaceData.name,
           data_source: trainspaceData.dataSource,
           dataset_data: {

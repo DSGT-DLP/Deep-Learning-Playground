@@ -30,18 +30,26 @@
 |  |  |  |- 📜 __init__.py
 |  |  |  |- 📜 health_check_middleware.py
 |  |  |- 📂 core:
-|  |  |  |- 📜 trainer.py
-|  |  |  |- 📜 criterion.py
-|  |  |  |- 📜 dl_model.py : torch model based on user specifications from drag and drop
-|  |  |  |- 📜 dataset.py : read in the dataset through URL or file upload
+|  |  |  |- 📂 celery:
+|  |  |  |  |- 📜 trainer.py
+|  |  |  |  |- 📜 criterion.py
+|  |  |  |  |- 📜 dl_model.py : torch model based on user specifications from drag and drop
+|  |  |  |  |- 📜 train_types.py
+|  |  |  |  |- 📜 dataset.py : read in the dataset through URL or file upload
+|  |  |  |  |- 📜 __init__.py
+|  |  |  |  |- 📜 Dockerfile
+|  |  |  |  |- 📜 worker.py
+|  |  |  |  |- 📜 optimizer.py : what optimizer to use (ie: SGD or Adam for now)
 |  |  |  |- 📜 __init__.py
 |  |  |  |- 📜 authenticator.py
-|  |  |  |- 📜 optimizer.py : what optimizer to use (ie: SGD or Adam for now)
 |  |  |- 📜 asgi.py
+|  |  |- 📜 constants.py : list of helpful constants
+|  |  |- 📜 celery_app.py
 |  |  |- 📜 settings.py
 |  |  |- 📜 __init__.py
 |  |  |- 📜 wsgi.py
 |  |  |- 📜 urls.py
+|  |  |- 📜 celeryconfig.py
 |  |- 📜 README.md
 |  |- 📜 docker-compose.yml
 |  |- 📜 cli.py
@@ -52,7 +60,6 @@
 |  |- 📜 manage.py
 |  |- 📜 environment.yml
 |  |- 📜 docker-compose.prod.yml
-|  |- 📜 Dockerfile.prod
 ```
 
 ## Frontend Architecture
@@ -210,6 +217,7 @@
 |  |  |- 📂 pages:
 |  |  |  |- 📂 train:
 |  |  |  |  |- 📜 [train_space_id].tsx
+|  |  |  |  |- 📜 metrics_to_charts.tsx
 |  |  |  |  |- 📜 index.tsx
 |  |  |  |- 📜 _app.tsx
 |  |  |  |- 📜 forgot.tsx

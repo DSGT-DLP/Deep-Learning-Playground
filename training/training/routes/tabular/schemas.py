@@ -8,6 +8,7 @@ class LayerParams(Schema):
 
 
 class TabularParams(Schema):
+    trainspace_id: str
     target: str
     features: list[str]
     name: str

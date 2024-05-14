@@ -17,7 +17,7 @@ pre-commit = "^3.3.3"
 click = "^8.1.7"
 requests = "^2.31.0"
 django-cors-headers = "^4.2.0"
-gunicorn = "^21.2.0"
+gunicorn = "^22.0.0"
 pytest = "^7.4.0"
 celery = {extras = ["redis", "sqs"], version = "^5.3.6"}
 

@@ -9,7 +9,7 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
-  profile = "DLP_Deploy-521654603461"
+  profile = "dlp"
 }
 
 # --- VPC --

@@ -10,7 +10,8 @@ resource "aws_sqs_queue" "training_queue" {
 }
 
 resource "aws_sqs_queue" "training_queue_deadletter" {
-  name = "training-deadletter-queue"
+  name = "training-deadletter-queue.fifo"
+  fifo_queue = true
 }
 
 resource "aws_sqs_queue_redrive_allow_policy" "training_queue_redrive_allow_policy" {

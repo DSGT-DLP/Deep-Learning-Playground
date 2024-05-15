@@ -32,14 +32,14 @@ on:
 
 env:
   AWS_REGION: "us-east-1" # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: "dlp-backend-image" # set this to your Amazon ECR repository name
-  ECS_SERVICE: "BackendService" # set this to your Amazon ECS service name
-  ECS_CLUSTER: "BackendCluster" # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION:
-    ".aws/training-task-definition.json" # set this to the path to your Amazon ECS task definition
+  ECR_REPOSITORY: "training" # set this to your Amazon ECR repository name
+  ECS_SERVICE: "training" # set this to your Amazon ECS service name
+  ECS_CLUSTER: "backend" # set this to your Amazon ECS cluster name
+  # ECS_TASK_DEFINITION:
+  #   ".aws/training-task-definition.json" # set this to the path to your Amazon ECS task definition
     # file, e.g. .aws/task-definition.json
   CONTAINER_NAME:
-    "backend" # set this to the name of the container in the
+    "training" # set this to the name of the container in the
     # containerDefinitions section of your task definition
 
 permissions:
@@ -78,15 +78,19 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG training -f training/Dockerfile.prod
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG training -f training/training/core/celery/Dockerfile
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition training --query taskDefinition > temp-task-definition.json
+          
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          task-definition: temp-task-definition.json
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
 

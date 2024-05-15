@@ -52,7 +52,9 @@ resource "aws_iam_role" "ecs_task_role" {
 resource "aws_iam_role_policy_attachment" "ecs_task_role_policy" {
   for_each = toset([
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
-    "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+    "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
+    "arn:aws:iam::aws:policy/AmazonSQSFullAccess",
+    "arn:aws:iam::aws:policy/AmazonS3FullAccess"
   ])
 
   role       = aws_iam_role.ecs_task_role.name

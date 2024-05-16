@@ -25,7 +25,7 @@ it("test successful create trainspace call", async () => {
       httpStatusCode: 200,
     }
   })
-  //@ts-expect-error 1
+  //@ts-expect-error : we only need authorization and body
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -50,7 +50,7 @@ it("test internal service error", async () => {
         httpStatusCode: 456,
       }
     })
-    // @ts-expect-error 2
+    //@ts-expect-error
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -75,7 +75,7 @@ it("test undefined event", async () => {
         httpStatusCode: 400,
       }
     })
-    // @ts-expect-error 3
+    //@ts-expect-error : see test name
     const result = await handler(undefined);
     expect(result.statusCode).toEqual(404);
   });

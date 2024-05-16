@@ -40,7 +40,7 @@ it("test no existing trainspace id", async () => {
     Item: undefined
   })
 
-  // @ts-expect-error
+  //@ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     pathParameters: {
       id: "some trainspace_id"
@@ -56,7 +56,7 @@ it("test no trainspace id given", async () => {
     Item: { trainspaceID: { S: 'sample trainspace id' } }
   })
 
-  // @ts-expect-error 
+  //@ts-expect-error 
   const event: APIGatewayProxyEventV2 =  {
     pathParameters: {
     }
@@ -67,7 +67,7 @@ it("test no trainspace id given", async () => {
 });
 
 it("test malformed request", async () => {
-  // @ts-expect-error : we are trying to cause an error
+  //@ts-expect-error
   const result = await handler(undefined);
   expect(result.statusCode).toEqual(400);
 });

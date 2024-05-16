@@ -22,7 +22,7 @@ it("test successful get user call", async () => {
     Item: { user_id: { S: 'UID' } }
   })
 
-  // @ts-expect-error
+  //@ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -38,7 +38,7 @@ it("test no existing user id", async () => {
     Item: undefined
   })
 
-  // @ts-expect-error
+  //@ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -50,7 +50,7 @@ it("test no existing user id", async () => {
 });
 
 it("test malformed request", async () => {
-  // @ts-expect-error : we are trying to cause an error
+  //@ts-expect-error
   const result = await handler(undefined);
   expect(result.statusCode).toEqual(400);
 });

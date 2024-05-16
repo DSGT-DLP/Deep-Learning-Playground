@@ -23,7 +23,7 @@ it("test successful delete user call", async () => {
       httpStatusCode: 200,
     }
   })
-  // @ts-expect-error
+  //@ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -46,7 +46,7 @@ it("test no response failed operation call", async () => {
       }
     })
     
-    // @ts-expect-error
+    //@ts-expect-error
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -68,7 +68,7 @@ it("test different status code failed operation call", async () => {
         httpStatusCode: 267,
       }
     })
-    // @ts-expect-error
+    //@ts-expect-error
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -85,7 +85,7 @@ it("test different status code failed operation call", async () => {
 });
 
 it("test malformed call", async () => {
-  // @ts-expect-error : we are trying to cause an error
+  //@ts-expect-error
   const result = await handler(undefined);
   expect(result.statusCode).toEqual(400);
 });

@@ -25,7 +25,7 @@ it("test successful get all trainspace call", async () => {
     }],
     "Count": 4
   });
-  // @ts-expect-error 1
+  //@ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -42,7 +42,7 @@ it("test no existing trainspaces for user id", async () => {
     Items: undefined
   })
 
-  //@ts-expect-error 2
+  //@ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -54,7 +54,7 @@ it("test no existing trainspaces for user id", async () => {
 });
 
 it("test malformed request", async () => {
-  // @ts-expect-error 3
+  //@ts-expect-error
   const result = await handler(undefined);
   expect(result.statusCode).toEqual(400);
 });

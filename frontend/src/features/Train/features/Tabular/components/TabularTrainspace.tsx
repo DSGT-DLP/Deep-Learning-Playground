@@ -19,6 +19,7 @@ import {
 import { useTrainTabularMutation } from "../redux/tabularApi";
 import { useRouter } from "next/router";
 import { removeTrainspaceData } from "@/features/Train/redux/trainspaceSlice";
+import { useCreateTrainspaceMutation } from "@/features/Train/redux/trainspaceApi";
 
 const TabularTrainspace = () => {
   const trainspace = useAppSelector(
@@ -93,6 +94,7 @@ const TrainspaceStepInner = ({
   const Component = STEP_SETTINGS[TRAINSPACE_SETTINGS.steps[step]].component;
   const [isStepModified, setIsStepModified] = useState<boolean>(false);
   const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
+  const [createTrainspace] = useCreateTrainspaceMutation();
   const [train] = useTrainTabularMutation();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -112,16 +114,20 @@ const TrainspaceStepInner = ({
     if (trainspace.step < TRAINSPACE_SETTINGS.steps.length)
       setStep(trainspace.step);
     else {
-      train(trainspace)
-        .unwrap()
-        .then(({ trainspaceId }) => {
-          router.push({ pathname: `/train/${trainspaceId}` }).then(() => {
-            dispatch(removeTrainspaceData());
-          });
+      const inner = async () => {
+        const { trainspaceId } = await createTrainspace(trainspace).unwrap();
+        await train({
+          trainspaceData: trainspace,
+          trainspaceId: trainspaceId,
+        }).unwrap();
+        router.push({ pathname: `/train/${trainspaceId}` }).then(() => {
+          dispatch(removeTrainspaceData());
         });
+      };
+      inner();
     }
   }, [trainspace]);
-  
+
   if (!Component) return null;
   return (
     <Component

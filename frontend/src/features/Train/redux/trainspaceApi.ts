@@ -2,9 +2,12 @@ import { backendApi } from "@/common/redux/backendApi";
 import {
   DATA_SOURCE,
   DatasetData,
+  DetailedTrainResultsData,
   FileUploadData,
 } from "@/features/Train/types/trainTypes";
 import { fetchBaseQuery } from "@reduxjs/toolkit/dist/query";
+import { TrainspaceData as TabularTrainspaceData } from "../features/Tabular/types/tabularTypes";
+import { TrainspaceData as ImageTrainspaceData } from "../features/Image/types/imageTypes";
 
 const trainspaceApi = backendApi
   .enhanceEndpoints({ addTagTypes: ["UserDatasetFilesData"] })
@@ -90,6 +93,37 @@ const trainspaceApi = backendApi
           return response.data;
         },
       }),
+      createTrainspace: builder.mutation<
+        { trainspaceId: string },
+        TabularTrainspaceData<"TRAIN"> | ImageTrainspaceData<"TRAIN">
+      >({
+        query: (trainspaceData) => ({
+          url: "/api/lambda/trainspace",
+          method: "POST",
+          body: {
+            name: trainspaceData.name,
+            data_source: trainspaceData.dataSource,
+            dataset_data: trainspaceData.datasetData,
+            review_data: trainspaceData.reviewData,
+            // TODO: add model_id
+          },
+        }),
+      }),
+      getTrainspace: builder.query<
+        {
+          config: unknown;
+          detailedTrainResultsData: DetailedTrainResultsData | undefined;
+        },
+        { trainspaceId: string; withResults: boolean }
+      >({
+        query: ({ trainspaceId, withResults }) => ({
+          url: `/api/lambda/trainspace/${trainspaceId}`,
+          method: "GET",
+          params: {
+            with_results: withResults,
+          },
+        }),
+      }),
     }),
     overrideExisting: true,
   });
@@ -98,4 +132,6 @@ export const {
   useGetDatasetFilesDataQuery,
   useUploadDatasetFileMutation,
   useLazyGetColumnsFromDatasetQuery,
+  useCreateTrainspaceMutation,
+  useGetTrainspaceQuery,
 } = trainspaceApi;

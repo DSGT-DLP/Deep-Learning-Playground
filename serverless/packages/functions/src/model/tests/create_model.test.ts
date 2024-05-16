@@ -2,10 +2,8 @@ import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { beforeEach, expect, it, vi} from "vitest";
 import { DynamoDBClient, PutItemCommand} from '@aws-sdk/client-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
-import { handler } from '../create_trainspace';
+import { handler } from '../create_model';
 
-//note: event declaration errors are supressed becasue we only need
-//      certain parts of them for that specific function
 //mocks parseJwt so that the call just returns whatever the input is
 vi.mock('@dlp-sst-app/core/src/parseJwt', async () => {
   return {
@@ -19,25 +17,23 @@ beforeEach(async () => {
 
 const ddbMock = mockClient(DynamoDBClient);
 
-it("test successful create trainspace call", async () => {
+it("test successful create model call", async () => {
   ddbMock.on(PutItemCommand).resolves({
     $metadata: {
       httpStatusCode: 200,
     }
   })
-  // @ts-expect-error
+  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
       
     },
       body: '{\n' +
-        '    "name": "SOME NAME",\n' +
-        '    "data_source": "SOME DATA SOURCE",\n' +
-        '    "dataset_data": {"name": "name", "isDefaultDataset": false },\n' +
-        '    "review_data": {"notificationEmail": "email", "notificationPhoneNumer": "number"},\n' +
+        '    "user_id": "SOME USER ID",\n' +
         '    "model_id": "SOME MODEL ID",\n' +
-        '    "results_s3": "SOME RESULTS"\n' +
+        '    "name": "SOME NAME",\n' +
+        '    "model_structure": "SOME MODEL STRUCTURE"\n' +
               '}',
   }
   const result = await handler(event);
@@ -50,18 +46,16 @@ it("test internal service error", async () => {
         httpStatusCode: 456,
       }
     })
-    // @ts-expect-error
+    // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
       },
       body: '{\n' +
-        '    "name": "SOME NAME",\n' +
-        '    "data_source": "SOME DATA SOURCE",\n' +
-        '    "dataset_data": {"name": "name", "isDefaultDataset": false },\n' +
-        '    "review_data": {"notificationEmail": "email", "notificationPhoneNumer": "number"},\n' +
+        '    "user_id": "SOME USER ID",\n' +
         '    "model_id": "SOME MODEL ID",\n' +
-        '    "results_s3": "SOME RESULTS"\n' +
+        '    "name": "SOME NAME",\n' +
+        '    "model_structure": "SOME MODEL STRUCTURE"\n' +
               '}',
     }
       

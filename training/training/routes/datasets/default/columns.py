@@ -2,7 +2,7 @@ from django.http import HttpRequest
 from ninja import Router, Schema
 from ninja.security import HttpBearer
 from training.core.authenticator import FirebaseAuth, Request
-from training.core.dataset import SklearnDatasetCreator
+from training.core.celery.dataset import SklearnDatasetCreator
 from training.routes.datasets.default.schemas import DefaultDatasetResponse
 from training.routes.schemas import NotFoundError
 
@@ -21,5 +21,4 @@ def defaultDatasets(request: Request, name: str):
     return 200, {
         "data": dataset.columns.tolist(),
         "message": "Success",
-        "token": request.auth,
     }

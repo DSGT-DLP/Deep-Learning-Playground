@@ -19,7 +19,7 @@ const nextConfig = {
     {
       source: "/api/lambda/:path*",
       destination:
-        "https://em9iri9g4j.execute-api.us-west-2.amazonaws.com/:path*",
+        "https://qt6nzp3sjd.execute-api.us-east-1.amazonaws.com/:path*",
     },
     {
       source: "/api/training/:path*",

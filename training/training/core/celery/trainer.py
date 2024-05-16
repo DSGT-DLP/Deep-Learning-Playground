@@ -6,7 +6,7 @@ from sklearn.metrics import confusion_matrix, roc_auc_score, roc_curve
 import torch
 from torch.utils.data import DataLoader
 import torch.nn as nn
-from training.core.criterion import CriterionHandler
+from training.core.celery.criterion import CriterionHandler
 
 
 @dataclass

@@ -1,9 +1,8 @@
 ## Run docker
-From the training/ directory
-Dev: docker-compose up
-Production: docker-compose -f docker-compose.prod.yml up
+Ensure you have logged in to AWS, using (`aws configure sso`) then (`aws sso login --profile=dlp`)
 
-## Rebuild and run docker
 From the training/ directory
-Dev: docker-compose up --build
-Production: docker-compose -f docker-compose.prod.yml up --build
+Dev: `AWS_PROFILE=dlp docker-compose up`
+Production: `AWS_PROFILE=dlp docker compose -f docker-compose.prod.yml up`
+
+To rebuild, add a --build flag to the command

@@ -2,9 +2,31 @@ version: '3.8'
 
 services:
   web:
-    build: .
+    build:
+      context: .
+      target: development
     volumes:
-      - ./:/usr/src/training/
-      - $HOME/.aws/credentials:/home/app/.aws/credentials:ro
+      - ./:/home/app/training
+      - $HOME/.aws:/home/app/.aws:ro
     ports:
       - 8000:8000
+    environment:
+      - AWS_PROFILE=$AWS_PROFILE
+    depends_on:
+      - celery
+  celery:
+    build:
+      context: .
+      dockerfile: ./training/core/celery/Dockerfile
+      target: development
+    volumes:
+      - ./:/home/app/training
+      - $HOME/.aws:/home/app/.aws:ro
+    environment:
+      - AWS_PROFILE=$AWS_PROFILE
+    depends_on:
+      - redis
+  redis:
+    image: redis:7.2.4
+    expose:
+      - 6379

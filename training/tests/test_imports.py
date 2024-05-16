@@ -1,6 +1,6 @@
 def test_all_imports():
-    import training.core.dataset
-    import training.core.criterion
-    import training.core.optimizer
-    import training.core.dl_model
-    import training.core.trainer
+    import training.core.celery.dataset
+    import training.core.celery.criterion
+    import training.core.celery.optimizer
+    import training.core.celery.dl_model
+    import training.core.celery.trainer

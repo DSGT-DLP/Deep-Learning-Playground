@@ -25,7 +25,7 @@ it("test successful create trainspace call", async () => {
       httpStatusCode: 200,
     }
   })
-  // @ts-expect-error
+  //@ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',

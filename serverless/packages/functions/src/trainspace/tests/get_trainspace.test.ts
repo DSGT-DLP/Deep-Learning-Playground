@@ -23,7 +23,7 @@ it("test successful get trainspace call", async () => {
     Item: { trainspaceID: { S: 'sample trainspace id' } }
   })
 
-  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  //@ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     pathParameters: {
       id: "some trainspace_id"
@@ -40,7 +40,7 @@ it("test no existing trainspace id", async () => {
     Item: undefined
   })
 
-  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  // @ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     pathParameters: {
       id: "some trainspace_id"
@@ -56,7 +56,7 @@ it("test no trainspace id given", async () => {
     Item: { trainspaceID: { S: 'sample trainspace id' } }
   })
 
-  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  // @ts-expect-error 
   const event: APIGatewayProxyEventV2 =  {
     pathParameters: {
     }

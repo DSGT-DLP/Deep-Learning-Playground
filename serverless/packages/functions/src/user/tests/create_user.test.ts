@@ -5,7 +5,7 @@ import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../create_user';
 
 //note: event declaration errors are supressed becasue we only need
-//      certain parts of them for that specific function
+//certain parts of them for that specific function
 //mocks parseJwt so that the call just returns whatever the input is
 vi.mock('@dlp-sst-app/core/src/parseJwt', async () => {
   return {
@@ -25,7 +25,7 @@ it("test successful create user call", async () => {
       httpStatusCode: 200,
     }
   })
-  // @ts-expect-error
+  //@ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',

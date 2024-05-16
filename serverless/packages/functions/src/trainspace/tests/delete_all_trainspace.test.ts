@@ -55,7 +55,7 @@ it("test no batch delete response call", async () => {
       }
     })
     
-    // @ts-expect-error
+    //@ts-expect-error
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -103,7 +103,7 @@ it("test delete all on no existing trainspaces call", async () => {
     }
   })
 
-  // @ts-expect-error
+  //@ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',

@@ -42,7 +42,7 @@ it("test no existing trainspaces for user id", async () => {
     Items: undefined
   })
 
-  // @ts-expect-error
+  //@ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',

@@ -30,7 +30,7 @@ it("test successful delete all trainspace call", async () => {
     }
   })
 
-  // @ts-expect-error
+  //@ts-expect-error 1
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -55,7 +55,7 @@ it("test no batch delete response call", async () => {
       }
     })
     
-    //@ts-expect-error
+    //@ts-expect-error 2
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -80,7 +80,7 @@ it("test incorrect batch delete response failed call", async () => {
       }
     })
 
-    // @ts-expect-error
+    //@ts-expect-error 3
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -103,7 +103,7 @@ it("test delete all on no existing trainspaces call", async () => {
     }
   })
 
-  //@ts-expect-error
+  //@ts-expect-error 4
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -116,7 +116,7 @@ it("test delete all on no existing trainspaces call", async () => {
 
 it("test malformed call", async () => {
 
-  // @ts-expect-error : we are trying to cause an error
+  // @ts-expect-error 5
     const result = await handler(undefined);
     expect(result.statusCode).toEqual(400);
 });

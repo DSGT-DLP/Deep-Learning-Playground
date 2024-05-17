@@ -11,6 +11,11 @@ resource "aws_iam_role" "django_ecs_task_role" {
 
 data "aws_iam_policy_document" "django_inline_policy" {
   statement {
+    actions   = ["sqs:SendMessage", "sqs:GetQueueAttributes"]
+    resources = [aws_sqs_queue.training_queue.arn]
+  }
+
+  statement {
     actions   = ["secretsmanager:GetSecretValue"]
     resources = ["arn:aws:secretsmanager:us-east-1:521654603461:secret:DLP/Firebase/Admin_SDK-8g8IDn"]
   }
@@ -93,7 +98,7 @@ resource "aws_ecs_service" "django" {
   }
 
   lifecycle {
-    ignore_changes = [desired_count]
+    ignore_changes = [desired_count, task_definition]
   }
 
   load_balancer {

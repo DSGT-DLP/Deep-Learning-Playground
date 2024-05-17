@@ -11,13 +11,13 @@ resource "aws_iam_role" "training_ecs_task_role" {
 
 data "aws_iam_policy_document" "training_inline_policy" {
   statement {
-    actions   = ["sqs:ReceiveMessage"]
+    actions   = ["sqs:ReceiveMessage", "sqs:GetQueueAttributes", "sqs:ChangeMessageVisibility", "sqs:DeleteMessage"]
     resources = [aws_sqs_queue.training_queue.arn]
   }
 
   statement {
-    actions   = ["s3:ListBucket", "s3:GetObject"]
-    resources = [aws_s3_bucket.s3bucket_executions.arn]
+    actions   = ["s3:GetObject", "s3:PutObject"]
+    resources = [aws_s3_bucket.s3bucket_executions.arn, "${aws_s3_bucket.s3bucket_executions.arn}/*"]
   }
 }
 
@@ -70,16 +70,8 @@ resource "aws_ecs_service" "training" {
   }
 
   lifecycle {
-    ignore_changes = [desired_count]
+    ignore_changes = [desired_count, task_definition]
   }
-
-  # load_balancer {
-  #   target_group_arn = aws_lb_target_group.app.arn
-  #   container_name = "training"
-  #   container_port = 8000
-  # }
-
-  # depends_on = [aws_lb_target_group.app]
 }
 
 # --- ECS Service Auto Scaling ---

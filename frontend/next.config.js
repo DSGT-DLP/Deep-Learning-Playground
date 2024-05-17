@@ -23,7 +23,10 @@ const nextConfig = {
     },
     {
       source: "/api/training/:path*",
-      destination: "http://127.0.0.1:8000/api/:path*",
+      destination:
+        process.env.ENVIRONMENT === "production"
+          ? "http://alb-785155211.us-east-1.elb.amazonaws.com/api/:path*" // note, this url changes every time you destroy/apply Terraform
+          : "http://127.0.0.1:8000/api/:path*",
     },
   ],
 };

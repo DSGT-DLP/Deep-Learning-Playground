@@ -1,20 +1,38 @@
+# --- ECS Task Role --- #
+resource "aws_iam_role" "django_ecs_task_role" {
+  name_prefix        = "django-ecs-task-role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_doc.json
+
+  inline_policy {
+    name   = "django-inline-policy"
+    policy = data.aws_iam_policy_document.django_inline_policy.json
+  }
+}
+
+data "aws_iam_policy_document" "django_inline_policy" {
+  statement {
+    actions   = ["secretsmanager:GetSecretValue"]
+    resources = ["arn:aws:secretsmanager:us-east-1:521654603461:secret:DLP/Firebase/Admin_SDK-8g8IDn"]
+  }
+}
+
 resource "aws_ecs_task_definition" "django" {
-  family = "django"
-  task_role_arn      = aws_iam_role.ecs_task_role.arn
-  execution_role_arn = aws_iam_role.ecs_exec_role.arn
-  network_mode = "awsvpc"
+  family                   = "django"
+  task_role_arn            = aws_iam_role.django_ecs_task_role.arn
+  execution_role_arn       = aws_iam_role.ecs_exec_role.arn
+  network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                = 1024
-  memory             = 2048
+  cpu                      = 1024
+  memory                   = 2048
 
   container_definitions = jsonencode([
     {
-      "name": "django",
+      "name" : "django",
       "image" : "${aws_ecr_repository.django.repository_url}:latest",
-      "cpu": 1024,
-      "memory": 2048,
-      "essential": true,
-      "portMappings": [
+      "cpu" : 1024,
+      "memory" : 2048,
+      "essential" : true,
+      "portMappings" : [
         {
           "name" : "gunicorn-port",
           "containerPort" : 8000,
@@ -31,10 +49,10 @@ resource "aws_ecs_task_definition" "django" {
           "awslogs-stream-prefix" : "ecs"
         }
       },
-      "environment": [
+      "environment" : [
         {
-          "name": "ALLOWED_HOST",
-          "value": "${aws_lb.main.dns_name}"
+          "name" : "ALLOWED_HOST",
+          "value" : "${aws_lb.main.dns_name}"
         }
       ]
     }
@@ -50,27 +68,27 @@ resource "aws_security_group" "ecs_django_sg" {
 resource "aws_vpc_security_group_ingress_rule" "ecs_django_sg_ingress" {
   security_group_id = aws_security_group.ecs_django_sg.id
 
-  ip_protocol    = "-1"
+  ip_protocol                  = "-1"
   referenced_security_group_id = aws_security_group.http.id
-} 
+}
 
 resource "aws_vpc_security_group_egress_rule" "ecs_django_sg_egress" {
   security_group_id = aws_security_group.ecs_django_sg.id
 
-  ip_protocol    = "-1"
-  cidr_ipv4 = "0.0.0.0/0"
-} 
+  ip_protocol = "-1"
+  cidr_ipv4   = "0.0.0.0/0"
+}
 
 resource "aws_ecs_service" "django" {
   name            = "django"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.django.arn
-  desired_count   = 2
-  launch_type = "FARGATE"
+  desired_count   = 1
+  launch_type     = "FARGATE"
 
   network_configuration {
-    security_groups = [ aws_security_group.ecs_django_sg.id]
-    subnets = aws_subnet.public[*].id
+    security_groups  = [aws_security_group.ecs_django_sg.id]
+    subnets          = aws_subnet.public[*].id
     assign_public_ip = true
   }
 
@@ -80,8 +98,8 @@ resource "aws_ecs_service" "django" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.app.arn
-    container_name = "django"
-    container_port = 8000
+    container_name   = "django"
+    container_port   = 8000
   }
 
   depends_on = [aws_lb_target_group.app]

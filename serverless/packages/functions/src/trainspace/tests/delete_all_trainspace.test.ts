@@ -4,7 +4,6 @@ import { DynamoDBClient, QueryCommand, BatchExecuteStatementCommand } from '@aws
 import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../delete_all_trainspace';
 
-
 //mocks parseJwt so that the call just returns whatever the input is
 vi.mock('@dlp-sst-app/core/src/parseJwt', async () => {
   return {
@@ -31,7 +30,7 @@ it("test successful delete all trainspace call", async () => {
     }
   })
 
-  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  //@ts-expect-error : we only need the authorization
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -56,7 +55,7 @@ it("test no batch delete response call", async () => {
       }
     })
     
-    // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+    //@ts-expect-error : see above note
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -81,7 +80,7 @@ it("test incorrect batch delete response failed call", async () => {
       }
     })
 
-    // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+    //@ts-expect-error
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -104,7 +103,7 @@ it("test delete all on no existing trainspaces call", async () => {
     }
   })
 
-  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  //@ts-expect-error
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -117,7 +116,7 @@ it("test delete all on no existing trainspaces call", async () => {
 
 it("test malformed call", async () => {
 
-  // @ts-expect-error : we are trying to cause an error
+  //@ts-expect-error : testing call with undefined parameters
     const result = await handler(undefined);
     expect(result.statusCode).toEqual(400);
 });

@@ -23,7 +23,7 @@ it("test successful delete trainspace call", async () => {
       httpStatusCode: 200,
     }
   })
-  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  //@ts-expect-error : we only need authorization, id, and a body
   const event: APIGatewayProxyEventV2 =  {
     headers: {
       authorization: 'abcd',
@@ -50,7 +50,7 @@ it("test no response failed operation call", async () => {
       }
     })
     
-    // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+    //@ts-expect-error : same as above
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -76,7 +76,7 @@ it("test different status code failed operation call", async () => {
         httpStatusCode: 267,
       }
     })
-    // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+    //@ts-expect-error : see above
     const event: APIGatewayProxyEventV2 =  {
       headers: {
         authorization: 'abcd',
@@ -102,7 +102,7 @@ it("test no trainspace id given", async () => {
     }
   })
 
-  // @ts-expect-error : error doesn't affect functionality. We don't need the rest of the event, and it's really long for no reason
+  //@ts-expect-error : we are giving an empty event
   const event: APIGatewayProxyEventV2 =  {
     pathParameters: {
     }
@@ -114,7 +114,7 @@ it("test no trainspace id given", async () => {
 
 
 it("test malformed call", async () => {
-  // @ts-expect-error : we are trying to cause an error
+  // @ts-expect-error : testing for null parameter response
   const result = await handler(undefined);
   expect(result.statusCode).toEqual(400);
 });

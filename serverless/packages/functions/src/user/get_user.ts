@@ -1,6 +1,5 @@
-import { APIGatewayProxyHandlerV2, APIGatewayProxyEventV2 } from "aws-lambda";
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
+import { APIGatewayProxyEventV2 } from "aws-lambda";
+import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import parseJwt from "@dlp-sst-app/core/src/parseJwt";
 
 export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyEventV2) {
@@ -8,17 +7,16 @@ export async function handler<APIGatewayProxyHandlerV2>(event : APIGatewayProxyE
     {
         const user_id: string = parseJwt(event.headers.authorization ?? "")["user_id"];
         const client: DynamoDBClient = new DynamoDBClient({});
-        const docClient = DynamoDBDocumentClient.from(client);
         
-        const command : GetCommand = new GetCommand({
+        const command : GetItemCommand = new GetItemCommand({
             TableName : "UserTable",
             Key : 
             {
-                user_id : user_id
+                user_id : {"S": user_id}
             }
         });
 
-        const response = await docClient.send(command);
+        const response = await client.send(command);
 
         if (!response.Item)
         {

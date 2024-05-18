@@ -44,22 +44,7 @@ data "aws_iam_policy_document" "ecs_task_doc" {
   }
 }
 
-resource "aws_iam_role" "ecs_task_role" {
-  name_prefix        = "backend-ecs-task-role"
-  assume_role_policy = data.aws_iam_policy_document.ecs_task_doc.json
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_task_role_policy" {
-  for_each = toset([
-    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
-    "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
-  ])
-
-  role       = aws_iam_role.ecs_task_role.name
-  policy_arn = each.value
-}
-
-
+# --- ECS Exec Role ---
 resource "aws_iam_role" "ecs_exec_role" {
   name_prefix        = "backend-ecs-exec-role"
   assume_role_policy = data.aws_iam_policy_document.ecs_task_doc.json

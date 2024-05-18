@@ -1,6 +1,30 @@
+# --- ECS Task Role --- #
+resource "aws_iam_role" "training_ecs_task_role" {
+  name_prefix        = "training-ecs-task-role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_doc.json
+
+  inline_policy {
+    name   = "training-inline-policy"
+    policy = data.aws_iam_policy_document.training_inline_policy.json
+  }
+}
+
+data "aws_iam_policy_document" "training_inline_policy" {
+  statement {
+    actions   = ["sqs:ReceiveMessage", "sqs:GetQueueAttributes", "sqs:ChangeMessageVisibility", "sqs:DeleteMessage"]
+    resources = [aws_sqs_queue.training_queue.arn]
+  }
+
+  statement {
+    actions   = ["s3:GetObject", "s3:PutObject"]
+    resources = [aws_s3_bucket.s3bucket_executions.arn, "${aws_s3_bucket.s3bucket_executions.arn}/*"]
+  }
+}
+
+# --- ECS Task Definition --- #
 resource "aws_ecs_task_definition" "training" {
   family             = "training"
-  task_role_arn      = aws_iam_role.ecs_task_role.arn
+  task_role_arn      = aws_iam_role.training_ecs_task_role.arn
   execution_role_arn = aws_iam_role.ecs_exec_role.arn
   network_mode       = "bridge"
   cpu                = 1024
@@ -10,15 +34,6 @@ resource "aws_ecs_task_definition" "training" {
     {
       "name" : "training",
       "image" : "${aws_ecr_repository.training.repository_url}:latest",
-      "portMappings" : [
-        {
-          "name" : "gunicorn-port",
-          "containerPort" : 8000,
-          "hostPort" : 0,
-          "protocol" : "tcp",
-          "appProtocol" : "http"
-        }
-      ],
       "essential" : true,
       "environment" : [],
       "mountPoints" : [],
@@ -55,32 +70,24 @@ resource "aws_ecs_service" "training" {
   }
 
   lifecycle {
-    ignore_changes = [desired_count]
+    ignore_changes = [desired_count, task_definition]
   }
-
-  # load_balancer {
-  #   target_group_arn = aws_lb_target_group.app.arn
-  #   container_name = "training"
-  #   container_port = 8000
-  # }
-
-  # depends_on = [aws_lb_target_group.app]
 }
 
 # --- ECS Service Auto Scaling ---
 resource "aws_appautoscaling_target" "training_ecs_target" {
-  service_namespace = "ecs"
+  service_namespace  = "ecs"
   scalable_dimension = "ecs:service:DesiredCount"
-  resource_id = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.training.name}"
-  min_capacity = 0
-  max_capacity = 2
+  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.training.name}"
+  min_capacity       = 0
+  max_capacity       = 2
 }
 
 resource "aws_appautoscaling_policy" "training_ecs_target_cpu" {
-  name = "training-application-scaling-policy-cpu"
-  policy_type = "TargetTrackingScaling"
-  service_namespace = aws_appautoscaling_target.training_ecs_target.service_namespace
-  resource_id = aws_appautoscaling_target.training_ecs_target.resource_id
+  name               = "training-application-scaling-policy-cpu"
+  policy_type        = "TargetTrackingScaling"
+  service_namespace  = aws_appautoscaling_target.training_ecs_target.service_namespace
+  resource_id        = aws_appautoscaling_target.training_ecs_target.resource_id
   scalable_dimension = aws_appautoscaling_target.training_ecs_target.scalable_dimension
 
   target_tracking_scaling_policy_configuration {
@@ -88,17 +95,17 @@ resource "aws_appautoscaling_policy" "training_ecs_target_cpu" {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
     }
 
-    target_value = 80
-    scale_in_cooldown = 300
+    target_value       = 80
+    scale_in_cooldown  = 300
     scale_out_cooldown = 300
   }
 }
 
 resource "aws_appautoscaling_policy" "training_ecs_target_memory" {
-  name = "training-application-scaling-policy-memory"
-  policy_type = "TargetTrackingScaling"
-  service_namespace = aws_appautoscaling_target.training_ecs_target.service_namespace
-  resource_id = aws_appautoscaling_target.training_ecs_target.resource_id
+  name               = "training-application-scaling-policy-memory"
+  policy_type        = "TargetTrackingScaling"
+  service_namespace  = aws_appautoscaling_target.training_ecs_target.service_namespace
+  resource_id        = aws_appautoscaling_target.training_ecs_target.resource_id
   scalable_dimension = aws_appautoscaling_target.training_ecs_target.scalable_dimension
 
   target_tracking_scaling_policy_configuration {
@@ -106,8 +113,8 @@ resource "aws_appautoscaling_policy" "training_ecs_target_memory" {
       predefined_metric_type = "ECSServiceAverageMemoryUtilization"
     }
 
-    target_value = 80
-    scale_in_cooldown = 300
+    target_value       = 80
+    scale_in_cooldown  = 300
     scale_out_cooldown = 300
   }
 }
@@ -121,17 +128,17 @@ resource "aws_security_group" "ecs_training_sg" {
 resource "aws_vpc_security_group_ingress_rule" "ecs_training_sg_ingress" {
   security_group_id = aws_security_group.ecs_training_sg.id
 
-  ip_protocol    = "-1"
+  ip_protocol = "-1"
   # cidr_blocks = [aws_vpc.main.cidr_block]
   referenced_security_group_id = aws_security_group.ecs_django_sg.id
-} 
+}
 
 resource "aws_vpc_security_group_egress_rule" "ecs_training_sg_egress" {
   security_group_id = aws_security_group.ecs_training_sg.id
 
-  ip_protocol    = "-1"
-  cidr_ipv4 = "0.0.0.0/0"
-} 
+  ip_protocol = "-1"
+  cidr_ipv4   = "0.0.0.0/0"
+}
 
 # --- ECS Launch Template ---
 resource "aws_launch_template" "ecs_lt_training" {

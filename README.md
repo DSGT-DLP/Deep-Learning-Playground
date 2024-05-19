@@ -23,6 +23,7 @@ Have the following installed first:
 1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions)
 1. [VSCode](https://code.visualstudio.com/)
 1. [git](https://git-scm.com/downloads)
+1. [Docker Desktop](https://docs.docker.com/get-docker/)
 
 ### Recommended
 
@@ -31,7 +32,6 @@ Have the following installed first:
 1. [Postman](https://www.postman.com/downloads/) - Extremely helpful for testing REST APIs
 1. [Chrome](https://www.google.com/chrome/) - For Chrome developer tools
 1. [Redux Devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) - Helpful for debugging any Redux
-1. [Docker](https://docs.docker.com/engine/install/) - For Docker images
 1. [go](https://go.dev/doc/install) - In case if you ever need to contribute to the dlp-cli
 1. VSCode Extensions:
    1. [Github Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)
@@ -67,12 +67,13 @@ git clone https://github.com/DSGT-DLP/dlp-practice.git
 
 ## 3. Frontend and Backend Package Installation
 
-Run the following commands in the project directory (the root folder created after cloning):
+Run the following command in the project directory (the root folder created after cloning):
 
 | Action                           | Command                    |
 | -------------------------------- | -------------------------- |
 | Install/Update Frontend Packages | `dlp-cli frontend install` |
-| Install/Update Backend Packages  | `dlp-cli backend install`  |
+
+It's no longer necessary to install the backend, as the dependencies will be automatically installed when running `dlp-cli backend start`.
 
 ## 4. To start on localhost
 

@@ -9,7 +9,7 @@ services:
       - ./:/home/app/training
       - $HOME/.aws:/home/app/.aws:ro
     ports:
-      - 8000:8000
+      - ${BACKEND_PORT:-8000}:8000
     environment:
       - AWS_PROFILE=$AWS_PROFILE
     depends_on:

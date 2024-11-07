@@ -52,7 +52,7 @@ const ClassCard = (props: {
             }
           >
             <div className="circleInFill">
-              <span className="textInCircle">
+              <span className="textInCircle" aria-label="Module progress percentage">
                 {Math.floor((pointsEarned / points) * 100)}%
               </span>
             </div>

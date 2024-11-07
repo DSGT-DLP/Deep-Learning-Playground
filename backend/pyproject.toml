@@ -34,7 +34,7 @@ moto = "*"
 ggshield = "*"
 psutil = "^5.9.5"
 logger = "^1.4"
-flask-cors = "^4.0.0"
+flask-cors = "^4.0.1"
 aiohttp = "^3.9.2"
 
 [tool.poetry.group.dev.dependencies]

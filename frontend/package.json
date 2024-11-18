@@ -32,7 +32,7 @@
     "chart.js": "^4.4.0",
     "chartjs-adapter-date-fns": "^3.0.0",
     "date-fns": "^2.30.0",
-    "firebase": "^10.5.2",
+    "firebase": "^10.9.0",
     "gestalt": "^127.5.5",
     "local-storage-fallback": "^4.1.2",
     "nanoid": "^5.0.2",

@@ -35,7 +35,7 @@
     "firebase": "^10.5.2",
     "gestalt": "^127.5.5",
     "local-storage-fallback": "^4.1.2",
-    "nanoid": "^5.0.2",
+    "nanoid": "^5.0.9",
     "next": "^14.0.0",
     "openai": "^4.14.1",
     "plotly.js": "^2.27.0",

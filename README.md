@@ -149,6 +149,42 @@ poetry run python manage.py runserver 0.0.0.0:8000
 
 That last path will not start Celery/Redis for you.
 
+#### Verified: run the training backend locally without AWS (2026-10-25)
+
+The Django + Celery + Redis stack **boots without AWS credentials**. AWS is only
+reached at two runtime edges: Firebase auth via Secrets Manager (`authenticator.py`
+→ `cli.py init_firebase()`) and saving results to S3 (`worker.py`). Booting and the
+unauthenticated surface need neither.
+
+```sh
+mkdir -p ~/.aws          # lets the $HOME/.aws bind mount succeed even with no AWS
+cd training
+docker compose up --build
+```
+
+Verify it is up:
+
+```sh
+curl http://localhost:8000/api/test            # -> {"result": "200 Backend surface test successful"}
+docker compose exec redis redis-cli ping        # -> PONG
+docker compose exec web mamba run -n dlp poetry run pytest tests
+```
+
+Expected: `/api/test` returns 200, Redis replies `PONG`, and pytest reports
+`17 passed, 1 failed`. The single failure (`test_columns_endpoint[CALIFORNIA_HOUSING]`)
+is an environment gap, not a pipeline bug: `/home/app` is root-owned while the
+container runs as user `app`, so `fetch_california_housing` cannot write its download
+cache. Run `pytest tests -k "not CALIFORNIA_HOUSING"` for an all-green run.
+
+Two fixes on a fresh checkout were needed to reach this state (both in this branch):
+the unpinned `pytorch`/`torchvision` in `environment.yml` resolve to a build that is
+incompatible with Python 3.9 (`import torch` → `ImportError: cannot import name
+'TypeIs'`), so they are pinned to `pytorch=2.5.1` / `torchvision=0.20.1`; and the
+training `Dockerfile`s needed `README.md` available before `poetry install`.
+
+A full end-to-end training job (`POST /api/tabular`) still requires AWS for Firebase
+auth and the S3 result save, so it cannot complete on a no-AWS setup.
+
 ### 3. Flask API (`backend/`)
 
 ```sh

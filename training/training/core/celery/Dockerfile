@@ -5,7 +5,9 @@ WORKDIR /usr/src/build
 # install dependencies
 RUN mamba create --name dlp -y
 
-COPY environment.yml pyproject.toml poetry.lock ./
+COPY environment.yml pyproject.toml poetry.lock README.md ./
+# This is to just see if the readme file exists
+
 RUN mamba run --live-stream -n dlp mamba env update --file environment.yml --prune
 
 # create directory for the app user
@@ -20,12 +22,11 @@ ARG APP_HOME=/home/app/training
 RUN mkdir "$APP_HOME"
 
 
-
 ######################## development target ########################
 FROM base AS development
 ENV ENVIRONMENT development
 
-RUN mamba run --live-stream -n dlp poetry install
+RUN mamba run --live-stream -n dlp poetry install --no-root
 
 
 # we previously mounted training/ to APP_HOME

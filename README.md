@@ -1,5 +1,8 @@
 # Deep Learning Playground
 
+# IMPORTANT ⚠️
+This repo is archived in favor of DSGT maintaining this codebase. The latest state of this repository located [here](https://github.com/DataScience-GT/Deep-Learning-Playground)
+
 Web Application where people new to Machine Learning can input a dataset and experiment around with basic Pytorch modules through a drag and drop interface
 
 > **Deployed website:** https://datasciencegt-dlp.com </br> **GitHub repo:** https://github.com/DSGT-DLP/Deep-Learning-Playground
